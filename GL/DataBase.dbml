@@ -7971,22 +7971,6 @@
       <Column Name="IGP_Balance" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetPODetailByPOID" Method="sp_GetPODetailByPOID">
-    <Parameter Name="POId" Parameter="pOId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetPODetailByPOIDResult">
-      <Column Name="PO_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="BlncQty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="PO_Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Delivery_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="Pack_Quantity" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="IsBatch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_LoadAdvancePaymentforPurchaseInvoice" Method="sp_LoadAdvancePaymentforPurchaseInvoice">
     <Parameter Name="InvId" Parameter="invId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_LoadAdvancePaymentforPurchaseInvoiceResult">
@@ -10542,37 +10526,6 @@
     <Parameter Name="userID" Type="System.String" DbType="VarChar(200)" />
     <Return Type="System.String" />
   </Function>
-  <Function Name="dbo.sp_GetGRNDetailByVendorId" Method="sp_GetGRNDetailByVendorId">
-    <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetGRNDetailByVendorIdResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="AdvigpagainstPo" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GRNQty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="IGPQty" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
-      <Column Name="IRNQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
-      <Column Name="Igp_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Igp_num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Igp_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="PO_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="PO_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Stax" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="sTaxAmount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="DiscPer" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="DiscAmt" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="VendorName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="InvType" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="AdvTaxId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AdvTaxAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="FurtherTax_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="FurtherTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_LoadPurchaseDetailInvoice" Method="sp_LoadPurchaseDetailInvoice">
     <Parameter Name="InvId" Parameter="invId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_LoadPurchaseDetailInvoiceResult">
@@ -11021,6 +10974,54 @@
       <Column Name="remarks_call_to_doctor" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Refer_To_OPD" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Patient_Category" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetPODetailByPOID" Method="sp_GetPODetailByPOID">
+    <Parameter Name="POId" Parameter="pOId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetPODetailByPOIDResult">
+      <Column Name="PO_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="BlncQty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="PO_Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Delivery_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Pack_Quantity" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="IsBatch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetGRNDetailByVendorId" Method="sp_GetGRNDetailByVendorId">
+    <Parameter Name="VendorId" Parameter="vendorId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetGRNDetailByVendorIdResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="AdvigpagainstPo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRNQty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="IGPQty" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="IRNQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Igp_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Igp_num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Igp_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PO_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PO_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Stax" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="sTaxAmount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="DiscPer" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="DiscAmt" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="VendorName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="InvType" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="AdvTaxId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AdvTaxAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
