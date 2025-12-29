@@ -120,7 +120,7 @@ namespace PMS
             }
             else
             {
-                getitemcode = DBClass.getField("select Item_ID from INV_Items where Item_ID=" + itemcodess);
+                getitemcode = DBClass.getField("select Item_ID from INV_Items where Item_code=" + itemcodess);
                 Stock_Adj.Item_Id = getitemcode;
                 Stock_Adj.Item_Code = txtItem_Code.Text;
             }
