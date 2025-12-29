@@ -855,7 +855,11 @@
                 var BonusQty = parseFloat($($(value).find('td input[name=txtBonusQty]')[0]).val()) || 0;
                 var bonusTaxTotal = 0;
                 if (BonusQty > 0) {
-                    bonusTaxTotal = STAmount + AdvAmount + FurtherAmount;
+                    var bonusBase = BonusQty * Rate;
+                    var bonusST = (STpercent / 100) * bonusBase;
+                    var bonusAdv = (AdvPercent / 100) * bonusBase;
+                    var bonusFurther = (FurtherPercent / 100) * bonusBase;
+                    bonusTaxTotal = bonusST + bonusAdv + bonusFurther;
                 }
                 $($(value).find('td input[name=txtBonusAmount]')[0]).val(bonusTaxTotal.toFixed(2));
                 totalBonusTax += bonusTaxTotal;
@@ -874,6 +878,8 @@
             $('#txtst_amou').val((totalstamount + totalAdvAmount + totalFurtherAmount).toFixed(2));
             $('#txtAdv_amou').val(totalAdvAmount.toFixed(2));
             $('#txtFurther_amou').val(totalFurtherAmount.toFixed(2));
+
+            $('#txtBonusTaxTotal').val(totalBonusTax.toFixed(2));
 
             var freightTotal = parseFloat($('#ctl00_MainContent_Freight').val()) || 0;
             var totalFinalAmt = totalfinalamount + totalBonusTax + freightTotal;
@@ -1485,6 +1491,12 @@
                 </div>
                 <div class="col-lg-12 col-md-8 col-sm-12">
                     <asp:TextBox runat="server" ReadOnly="true" ID="txtst_amou" ClientIDMode="Static" Style="text-align: right;" />
+                </div>
+                <div class="col-lg-12 col-md-8 col-sm-12">
+                    <asp:Label ID="lblBonusTax" runat="server" Text="Bonus Tax"></asp:Label>
+                </div>
+                <div class="col-lg-12 col-md-8 col-sm-12">
+                    <asp:TextBox runat="server" ReadOnly="true" ID="txtBonusTaxTotal" ClientIDMode="Static" Style="text-align: right;" />
                 </div>
                 <div class="col-lg-12 col-md-8 col-sm-12">
                     <asp:Label ID="lblfreight_charges" runat="server" Text="Freight Charges"></asp:Label>
