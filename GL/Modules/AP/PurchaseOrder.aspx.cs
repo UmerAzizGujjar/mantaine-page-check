@@ -229,6 +229,7 @@ namespace PMS.AP
                                d.CS_Ven_No,
                                d.AdvanceTax_ID,
                                d.Bonus_Tax,
+                               d.Bonus_Qty,
                                pr_id = DBClass.getField("select PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID = " + d.PRDetailId)
                            }).ToList();
 
