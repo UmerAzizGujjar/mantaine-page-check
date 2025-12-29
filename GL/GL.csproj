@@ -3805,6 +3805,7 @@
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.11.1.min.js" />
     <Content Include="upload\UploadEmergency.ashx" />
     <Content Include="upload\UploadVoucherFiles.ashx" />
+    <Content Include="Reports\Student\rptAttendanceDetails.rpt" />
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />

@@ -302,6 +302,7 @@
 
                     }
 
+
                     else if (rptTitle == "GroupTestsRateList") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
@@ -403,7 +404,12 @@
                         var url = 'ReportViewer.aspx?ReportName=TotalpatientsandRevisitpatientsreport&ReportTitle=Total Patients and Rvisit Patients from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val();
                         window.open(url, '_blanks');
                     }
-
+                    else if (rptTitle == "StudentAttendanceList") {
+                        debugger;
+                        var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
+                        var url = 'ReportViewer.aspx?ReportName=StudentAttendanceList&ReportTitle=Student Attendance List Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Program=' + $('#ctl00_MainContent_ddlMainDepartment').val() + '&Class=' + $('#ctl00_MainContent_ddlMedicalSubsidy').val() + '&Batch=' + $('#ctl00_MainContent_ddlTestResult').val() + '&Group=' + $('#ctl00_MainContent_ddlProcedure').val() + '&Subject=' + $('#ctl00_MainContent_ddlDepartments').val() + '&SubSubject=' + $('#ctl00_MainContent_oprators').val();
+                        window.open(url, '_blanks');
+                    }
 
                     else if (rptTitle == "PatientsTypesDetails") {
                         debugger;
