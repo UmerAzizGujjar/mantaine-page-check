@@ -298,6 +298,8 @@
                         '<td style="display:none">' + (Test[i].AdvTaxId || 0) + '</td>' +
                         '<td style="display:none">' + parseFloat(Test[i].FurtherTax_Amount || 0).toFixed(2) + '</td>' +
                         '<td style="display:none">' + (Test[i].FurtherTax_Id || 0) + '</td>' +
+                        '<td style="display:none">' + parseFloat(Test[i].Bonus_Qty || 0).toFixed(2) + '</td>' + 
+                        '<td style="display:none">' + parseFloat(Test[i].Bonus_Tax || 0).toFixed(2) + '</td>' + 
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                     global = rows;
@@ -379,6 +381,8 @@
             var AdvTaxId = $($(row).find('td')[26]).text();
             var FurtherTaxAmount = $($(row).find('td')[27]).text();
             var FurtherTaxId = $($(row).find('td')[28]).text();
+            var BonusQty = $($(row).find('td')[29]).text(); 
+            var BonusTax = $($(row).find('td')[30]).text();
 
             var length = $("#tblItemDescription tr:gt(0)").length;
             if (length > 0) {
@@ -420,6 +424,8 @@
                 '<td class="long">' + parseFloat(AccQty).toFixed(2) + '</td>' +
                 '<td class="long">' + parseFloat(RecQty).toFixed(2) + '</td>' +
                 '<td class="headcol2_1"><input type="hidden" id="txtQty' + length + '" name="txtQty" value="' + parseFloat(Qty).toFixed(2) + '"/>' + parseFloat(Qty).toFixed(2) + '</td>' +
+                '<td class="headcol2_bonus_qty">' + parseFloat(BonusQty || 0).toFixed(2) + '<input type="hidden" name="BonusQty" value="' + parseFloat(BonusQty || 0).toFixed(2) + '" />' +
+                '</td>' +
                 '<td class="headcol2_2"><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + parseFloat(Rate).toFixed(2) + '"/>' + parseFloat(Rate).toFixed(2) + '</td>' +
                 '<td class="headcol2_3"><input type="hidden" id="txtdiscper' + length + '" name="txtdiscper" value="' + parseFloat(DiscPer).toFixed(2) + '"/>' + parseFloat(DiscPer).toFixed(2) + '</td>' +
                 '<td class="headcol2_4"><input type="hidden" id="txtdiscamt' + length + '" name="txtdiscamt" value="' + parseFloat(DiscAmt).toFixed(2) + '"/>' + parseFloat(DiscAmt).toFixed(2) + '</td>' +
@@ -427,6 +433,8 @@
                 '<td class="headcol2_6"><input type="text" readonly="readonly" id="staxamou' + length + '" name="staxamou" value="' + parseFloat(staxAmt).toFixed(2) + '" /></td>' +
                 '<td class="headcol2_9">' + parseFloat(TotalAdvAmt || 0).toFixed(2) + '</td>' +
                 '<td class="headcol2_further_tax">' + parseFloat(FurtherTaxAmount || 0).toFixed(2) + '</td>' +
+                '<td class="headcol2_bonus_tax">' + parseFloat(BonusTax || 0).toFixed(2) + '<input type="hidden" name="BonusTax" value="' + parseFloat(BonusTax || 0).toFixed(2) + '" />' +
+                '</td>' +
                 '<td class="headcol2_7">' + Value + '</td>' +
                 '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + parseFloat(TotalAmount).toFixed(2) + '" name="txtTotalAmount" value="' + parseFloat(TotalAmount).toFixed(2) + '"/>' + parseFloat(TotalAmount).toFixed(2) + '</td>' +
                 '<td style="display:none"><input type="hidden" id="txtGRNId' + length + '" name="txtGRNId" value="' + GRNId + '"/></td>' +
@@ -494,7 +502,7 @@
             }
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
                 debugger;
-                var totamount = $($(value).find('td')[18]).text();
+                var totamount = $($(value).find('td')[21]).text();
                 totalinvamount += parseFloat(totamount);
             });
             $('#tot_inv_amount').val(totalinvamount.toFixed());
@@ -587,6 +595,9 @@
                         '<td class="long">' + parseFloat(value.GRNQty).toFixed(2) + '</td>' +
                         '<td class="long">' + parseFloat(value.IRNQty).toFixed(2) + '</td>' +
                         '<td class="headcol2_1"><input type="hidden" id="txtQty' + (key + 1) + '" name="txtQty" value="' + parseFloat(value.Qty).toFixed(2) + '"/>' + parseFloat(value.Qty).toFixed(2) + '</td>' +
+                        '<td class="headcol2_bonus_qty">' + parseFloat(value.Bonus_Qty || 0).toFixed(2) +
+                        '<input type="hidden" name="BonusQty" value="' + parseFloat(value.Bonus_Qty || 0).toFixed(2) + '" />' +
+                        '</td>' +
                         '<td class="headcol2_2"><input type="hidden" id="txtRate' + (key + 1) + '" name="txtRate" value="' + parseFloat(value.Rate).toFixed(2) + '"/>' + parseFloat(value.Rate).toFixed(2) + '</td>' +
                         '<td class="headcol2_3"><input type="hidden" id="txtdiscper' + (key + 1) + '" name="txtdiscper" value="' + parseFloat(value.DiscPer).toFixed(2) + '"/>' + parseFloat(value.DiscPer).toFixed(2) + '</td>' +
                         '<td class="headcol2_4"><input type="hidden" id="txtdiscamt' + (key + 1) + '" name="txtdiscamt" value="' + parseFloat(value.DiscAmt).toFixed(2) + '"/>' + parseFloat(value.DiscAmt).toFixed(2) + '</td>' +
@@ -594,6 +605,9 @@
                         '<td class="headcol2_6"><input type="hidden" id="staxamou' + (key + 1) + '" name="staxamou" value="' + value.Stax_Perc + '"/>' + value.Stax_Perc + '</td>' +
                         '<td class="headcol2_adv_tax">' + parseFloat(value.AdvTax_Amount || 0).toFixed(2) + '</td>' + 
                         '<td class="headcol2_further_tax">' + parseFloat(value.FurtherTax_Amount || 0).toFixed(2) + '</td>' +
+                        '<td class="headcol2_bonus_tax">' + parseFloat(value.Bonus_Tax || 0).toFixed(2) +
+                        '<input type="hidden" name="BonusTax" value="' + parseFloat(value.Bonus_Tax || 0).toFixed(2) + '" />' +
+                        '</td>' +
                         '<td class="headcol2_7">' + Value + '</td>' +                     
                         '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount" value="' + parseFloat(value.Amount).toFixed() + '"/>' + parseFloat(value.Amount).toFixed() + '</td>' +
                         '<td style="display:none"><input type="hidden" id="txtGRNId' + (key + 1) + '" name="txtGRNId" value="' + value.GRN_ID + '"/></td>' +
@@ -629,45 +643,46 @@
                     alert(error.get_message());
                 })
         }
+        debugger;
         function CulculateAmonut() {
             debugger;
-            var Amount = 0;
-            var DisAmt = 0;
-            var NetAmount = 0;
-            var amountwithdiscount = 0;
             var tbl = document.getElementById('tblItemDescription');
             for (var i = 1; i < tbl.rows.length; i++) {
-                var qty = $('#txtQty' + i + '').val();
-                var rate = $('#txtRate' + i + '').val();
-                var discpercentage = $('#txtdiscper' + i + '').val();
-                if (qty != undefined || rate != undefined) {
-                    Amount = qty * rate;
-                }
-                else {
-                    var qty = 0;
-                    var rate = 0;
-                    Amount = qty * rate;
-                }
-                var STpercent = 0;
-                if ($("#Staxddl" + i + " option:selected").text() != "Please Select")
-                    STpercent = $("#Staxddl" + i + " option:selected").text();
+                var qty = parseFloat($('#txtQty' + i).val() || 0);
+                var rate = parseFloat($('#txtRate' + i).val() || 0);
+                var discpercentage = parseFloat($('#txtdiscper' + i).val() || 0);
 
-                if (discpercentage == null || discpercentage == '' || discpercentage == undefined) {
-                    DisAmt = 0;
-                    tbl.rows[i].cells[13].innerText = 0;
+                var Amount = qty * rate;
+                var DisAmt = (discpercentage / 100) * Amount;
+                var amountwithdiscount = Amount - DisAmt;
+
+                var STpercent = 0;
+                if ($("#Staxddl" + i + " option:selected").text() !== "Please Select") {
+                    STpercent = parseFloat($("#Staxddl" + i + " option:selected").text() || 0);
                 }
-                else {
-                    DisAmt = (discpercentage / 100) * Amount;
-                    tbl.rows[i].cells[13].innerText = DisAmt.toFixed();
-                }
-                amountwithdiscount = (Amount - DisAmt);
-                STAmount = (STpercent / 100) * amountwithdiscount;
-                NetAmount = amountwithdiscount + STAmount;
-               tbl.rows[i].cells[15].innerText = STAmount.toFixed();  
-               tbl.rows[i].cells[18].innerText = amountwithdiscount.toFixed();
-               tbl.rows[i].cells[19].innerText = NetAmount.toFixed(); 
+                var STAmount = (STpercent / 100) * amountwithdiscount;
+
+                var cleanNumber = function (str) {
+                    if (!str) return 0;
+                    var cleaned = str.toString().trim().replace(/[^0-9.\-]/g, '');
+                    return cleaned === '' ? 0 : parseFloat(cleaned);
+                };
+
+                var FurtherTax = cleanNumber($(tbl.rows[i]).find('td.headcol2_further_tax').text());
+                var BonusTax = cleanNumber($(tbl.rows[i]).find('td.headcol2_bonus_tax').text());
+                var AdvanceTax = cleanNumber($(tbl.rows[i]).find('td.headcol2_9').text()); 
+
+                var NetAmount = amountwithdiscount + STAmount + FurtherTax + BonusTax + AdvanceTax;
+
+                // Update UI cells
+                tbl.rows[i].cells[13].innerText = DisAmt.toFixed(2); 
+                tbl.rows[i].cells[16].innerText = STAmount.toFixed(2); 
+                tbl.rows[i].cells[20].innerText = amountwithdiscount.toFixed(2); 
+                tbl.rows[i].cells[21].innerText = NetAmount.toFixed(2); 
+
                 calculateadvance(tbl.rows[i]);
             }
+            calculateRowData();
         }
         function SaveAllRecord() {
             if (validateSave()) {
@@ -710,7 +725,9 @@
                     Item_list.push({
                         'ItemId': $(value).find('td input[name=txtItemId]').val(), 'GRNId': $(value).find('td input[name=txtGRNId]').val(), 'GRNDetailId': $(value).find('td input[name=txtGRNDetailId]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'TotalAmount': totalamt, 'staxid': $(value).find('td select[name=Staxddl]').val(), 'staxperc': staxperc, 'DiscPer': $(value).find('td input[name=txtdiscper]').val(), 'DiscAmt': disamt, 'Amount': amount, 'AdvigpagainstPo': AdvigpagainstPo, 'AdvTaxId': $(value).find('td input[name=AdvTaxId]').val() || '0',
                         'AdvTaxAmount': $(value).find('td input[name=AdvTaxAmount]').val() || '0', 'AdvTotalAmount': $(value).find('td input[name=AdvTotalAmount]').val() || '0',
-                        'FurtherTax_Id': $(value).find('td input[name=FurtherTaxId]').val() || '0', 'FurtherTax_Amount': $(value).find('td input[name=FurtherTaxAmount]').val() || '0'
+                        'FurtherTax_Id': $(value).find('td input[name=FurtherTaxId]').val() || '0', 'FurtherTax_Amount': $(value).find('td input[name=FurtherTaxAmount]').val() || '0',
+                        'Bonus_Qty': $(value).find('td input[name=BonusQty]').val() || '0',
+                        'Bonus_Tax': $(value).find('td input[name=BonusTax]').val() || '0'
                     });
                 });
                 table2.find('tr').each(function (key, value) {
@@ -943,7 +960,7 @@
             }
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
                 debugger;
-                var totamount = $($(value).find('td')[18]).text();
+                var totamount = $($(value).find('td')[21]).text();
                 totalinvamount += parseFloat(totamount);
             });
             $('#tot_inv_amount').val(totalinvamount.toFixed());
@@ -1114,6 +1131,7 @@
                                         <th>GRN Qty</th>
                                         <th>IRN Qty</th>
                                         <th>Qty</th>
+                                        <th>Bonus Qty</th>
                                         <th>Rate</th>
                                         <th>Disc%</th>
                                         <th>Disc Amnt</th>
@@ -1121,6 +1139,7 @@
                                         <th>S.Tax Amnt</th>
                                         <th>Total Advance</th>
                                         <th>Further Tax</th>
+                                        <th>Bonus Tax</th>
                                         <th>Value</th>
                                         <th>Total Amnt</th>
                                         <th>Action</th>
