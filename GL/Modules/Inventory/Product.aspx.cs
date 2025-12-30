@@ -305,15 +305,15 @@ namespace PMS.Inventory
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public static string AddItems(
-    string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory,
-    string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth,string basesize, string baseqty, string SalesRate, string PurchRate,
-    string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable,
-    string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock,string Procedure_Time,
-    string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes,
-    string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
-    string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue,
-    string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate,string Discount_Block,
-    List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
+string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory,
+string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string basesize, string baseqty, string SalesRate, string PurchRate,
+string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable,
+string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string Procedure_Time,
+string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes,
+string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
+string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue,
+string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate, string Discount_Block,
+List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
         {
             string Id = "";
             DataBaseDataContext db = new DataBaseDataContext();
@@ -323,7 +323,6 @@ namespace PMS.Inventory
             {
                 if (btnValue == "Save")
                 {
-         
                     obj = new INV_Item();
 
                     obj.Item_Code = Item_Code;
@@ -394,9 +393,9 @@ namespace PMS.Inventory
                     if (itemExists)
                     {
                         var maxCode = DBClass.getField(@"
-                    SELECT ISNULL(MAX(CONVERT(INT, 
-                        SUBSTRING(Item_Code, PATINDEX('%[0-9]%', Item_Code), LEN(Item_Code)))), 0) + 1 
-                    FROM INV_Items");
+                SELECT ISNULL(MAX(CONVERT(INT, 
+                    SUBSTRING(Item_Code, PATINDEX('%[0-9]%', Item_Code), LEN(Item_Code)))), 0) + 1 
+                FROM INV_Items");
                         obj.Item_Code = maxCode;
                     }
 
@@ -442,11 +441,11 @@ namespace PMS.Inventory
                 }
                 else
                 {
-    
                     int itemId = Convert.ToInt32(ItemId);
                     obj = db.INV_Items.FirstOrDefault(x => x.Item_ID == itemId);
                     if (obj == null)
                         return "Error";
+
                     obj.Description = Desc;
                     obj.Active = Convert.ToBoolean(Active);
                     obj.Unit = PackUnit;
@@ -505,12 +504,14 @@ namespace PMS.Inventory
                     obj.Services = Convert.ToBoolean(IsService);
                     obj.issehatCard_item = Convert.ToBoolean(SehatSahulat);
                     obj.sehatCard_Rate = decimal.TryParse(SehatCardRate, out decimal sehatRate) ? sehatRate : 0;
+
                     var pkg = db.Packages_Details.FirstOrDefault(y => y.Item_Code == obj.Item_ID);
                     if (pkg != null && !string.IsNullOrEmpty(SalesRate))
                     {
                         pkg.Price = Convert.ToDecimal(SalesRate);
                         pkg.Amount = Convert.ToDecimal(SalesRate);
                     }
+
                     if (batchList != null)
                     {
                         foreach (var bth in batchList)
@@ -540,27 +541,53 @@ namespace PMS.Inventory
                             }
                         }
                     }
+
                     if (PatientTypeList != null)
                     {
+                        var submittedRateIds = new List<int>();
+                        foreach (var ptr in PatientTypeList)
+                        {
+                        }
+
+                       
+
+                        var validRateIds = PatientTypeList
+                            .Where(p => p.Item_Rate_Id.HasValue)
+                            .Select(p => p.Item_Rate_Id.Value)
+                            .ToList();
+
+                        var existingRates = db.INV_Item_PatientWises.Where(x => x.Item_Id == itemId);
+                        if (validRateIds.Any())
+                        {
+                            var toDelete = existingRates.Where(x => !validRateIds.Contains(x.Item_Rate_Id)).ToList();
+                            db.INV_Item_PatientWises.DeleteAllOnSubmit(toDelete);
+                        }
+                        else
+                        {
+                            db.INV_Item_PatientWises.DeleteAllOnSubmit(existingRates);
+                        }
+
                         foreach (var ptr in PatientTypeList)
                         {
                             if (string.IsNullOrEmpty(ptr.pat_type)) continue;
-                            var existingPatientRate = db.INV_Item_PatientWises
-                                .FirstOrDefault(x => x.Item_Id == Convert.ToInt32(ItemId) && x.Patient_Type == ptr.pat_type);
 
-                            if (existingPatientRate != null)
+                            if (ptr.Item_Rate_Id.HasValue)
                             {
-                                existingPatientRate.Item_Sale_Rate = ptr.SaleRate;
+                                var existing = db.INV_Item_PatientWises
+                                    .FirstOrDefault(x => x.Item_Rate_Id == ptr.Item_Rate_Id.Value);
+                                if (existing != null)
+                                {
+                                    existing.Item_Sale_Rate = ptr.SaleRate;
+                                }
                             }
                             else
                             {
-                                INV_Item_PatientWise ratewise = new INV_Item_PatientWise
+                                db.INV_Item_PatientWises.InsertOnSubmit(new INV_Item_PatientWise
                                 {
-                                    Item_Id = Convert.ToInt32(ItemId),
+                                    Item_Id = itemId,
                                     Patient_Type = ptr.pat_type,
                                     Item_Sale_Rate = ptr.SaleRate,
-                                };
-                                db.INV_Item_PatientWises.InsertOnSubmit(ratewise);
+                                });
                             }
                         }
                     }
@@ -574,10 +601,10 @@ namespace PMS.Inventory
             }
             catch (Exception ex)
             {
-        
                 return "Error";
             }
         }
+
         [WebMethod]
         public static string LoadItemInventory(int ID)
         {
@@ -603,9 +630,11 @@ namespace PMS.Inventory
                                      obj.Item_Category,
                                      Item_Category_Text = db.GetDataValueName("item Category", obj.Item_Category),
                                      obj.Item_Account_category,
-                                     AccountCategory_Text = (from a in db.Account_Categories
-                                                             where a.Account_Category_Id == obj.Item_Account_category
-                                                             select a.CategoryName).FirstOrDefault(),
+                                     AccountCategory_Text = db.Account_Categories
+                                     .Where(a => a.Account_Category_Id == obj.Item_Account_category)
+                                     .Select(a => a.CategoryName)
+                                     .Distinct()  // ← Prevent duplicates
+                                     .FirstOrDefault(),
                                      obj.Financial_Integration,
                                      obj.locatorAddress,
                                      obj.Length,
@@ -747,6 +776,8 @@ namespace PMS.Inventory
             public string Item_Id { get; set; }
             public string pat_type { get; set; }
             public decimal SaleRate { get; set; }
+
+            public int? Item_Rate_Id { get; set; }
 
         }
     }

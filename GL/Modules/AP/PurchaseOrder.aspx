@@ -1,6 +1,13 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseOrder.aspx.cs" Inherits="PMS.AP.PurchaseOrder" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style type="text/css">
+        .form-check-input{
+            margin-left:-20px !important;
+        }
+
+    </style>
+
     <script type="text/javascript">
 
         function FillStaxtype() {
@@ -166,6 +173,7 @@
                     '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '"  value="' + item_name + '"/> ' + item_name + ' </td>' +
                     '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '"  value="' + unit + '" />' + unit + ' </td>' +
                     '<td><input type="text"  id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + Qty + '"/></input></td>' +
+                    '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" /></td>' +
                     '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '"  value="' + Rate + '" /></td>' +
                     '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"   name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '"  value="0" /></td>' +
                     '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()"  style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + length + '" name="txtDisAmount"  ></input></td>' +
@@ -177,6 +185,7 @@
                     '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
                     '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;" class="duplicate"><option value="0">0</option>' + optionsList + '</select></td>' +
                     '<td style="padding-top: 7px!important;display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;  id="txtFedAmount' + length + '" name="txtFedAmount" style="width:50px !important;"></input></td>' +
+                    '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
                     '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
                     '<td><input type="text" name="txtddate" id="txtddate' + length + '" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
                     '<td  style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;" i=""></i></a> </td></tr>');
@@ -436,6 +445,8 @@
                 $('#ctl00_MainContent_Net_Amount').val(data.PO_Amount);
                 $('#txtst_amou').val(data.Total_ST_Amount);
                 $('#ctl00_MainContent_txtStatus').val(data.Status);
+                $('#chkManual').prop('checked', data.IsManual === true);
+                $('#chkByDefault').prop('checked', data.IsByDefault === true);
                 LoadPOItemDetail(PO_ID);
                 $('#txtAdv_amou').val(data.Total_Adv_Amt);
                 $('#txtFurther_amou').val(data.Total_Further_Amt);
@@ -493,6 +504,7 @@
                         '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + (key + 1) + '"  value="' + value.Item_Name + '" /> ' + value.Item_Name + ' </td>' +
                         '<td style="text-align:left!important;"><input type="hidden" name="txtUnit" id="txtUnit' + (key + 1) + '"  value="' + value.Unit + '" />' + value.Unit + ' </td>' +
                         '<td><input type="text"  id="txtQty' + (key + 1) + '" name="txtQty" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" value=' + parseFloat(value.Qty).toFixed(2) + '></input></td>' +
+                        '<td><input type="text" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.Bonus_Qty != null ? parseFloat(value.Bonus_Qty).toFixed(2) : '0') + '" id="txtBonusQty' + (key + 1) + '" name="txtBonusQty" /></td>' +
                         '<td><input type="text" name="txtRate" style="text-align:right ;width:50px !important;font-size:9px;height:20px" onkeyup="CulculateAmonutWithQty(this)" id="txtRate' + (key + 1) + '"  value="' + parseFloat(value.Rate).toFixed(2) + '" /></td>' +
                         '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" readonly="readonly"  name="txtDisPer" id="txtDisPer' + (key + 1) + '"  value="' + value.Discount_Percentage + '" /></td>' +
                         '<td style="text-align:right;padding-top: 7px!important;"><input type="text"  onkeyup="calcTotal()" value="' + value.Discount_Amount + '" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + (key + 1) + '" name="txtDisAmount" ></input></td>' +
@@ -508,6 +520,7 @@
                         'value="' + value.AdvanceTax_Amount + '" id="txtAdvanceTaxAmount' + (key + 1) + '" name="txtAdvanceTaxAmount"></td>' +
 
                         '<td style="padding-top: 7px!important;display:none;"><input type="hidden" value="' + value.Fed_Percentage + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"  id="txtFedAmount' + (key + 1) + '" name="txtFedAmount" style="text-align:right ;width:59px !important;font-size:9px;height:20px;"></input>' + value.Fed_Percentage + '</td>' +
+                        '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="' + (value.Bonus_Tax != null ? parseFloat(value.Bonus_Tax).toFixed(2) : '0') + '" id="txtBonusAmount' + (key + 1) + '" name="txtBonusAmount" /></td>' +
                         '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + value.Amount + '" readonly="readonly"  id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount"></input></td>' +
                         '<td><input type="text" name="txtddate" id="txtddate' + (key + 1) + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /></td>' +
                         '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;" i=""></i></a> </td></tr>';
@@ -799,6 +812,8 @@
             var FurtherPercent = 0;
             var FurtherAmount = 0;
             var totalFurtherAmount = 0;
+            var totalBonusTax = 0; 
+
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
                 debugger;
                 var DiscAmount = parseFloat($($(value).find('td input[name=txtDisAmount]')[0]).val()) || 0;
@@ -817,48 +832,58 @@
                 }
                 $($(value).find('td input[name=txtDisPer]')[0]).val(discpercent);
                 subtotal += amountExclusiveTaxes;
+
                 var selectedSTAX = $($(value).find('td select[name=ddlSTAX] :selected')[0]).text();
-                if (selectedSTAX) {
-                    STpercent = parseFloat(selectedSTAX) || 0;
-                } else {
-                    STpercent = 0;
-                }
+                STpercent = selectedSTAX ? parseFloat(selectedSTAX) || 0 : 0;
+
                 var selectedAdvTax = $($(value).find('td select[name=ddlAdvanceTax] :selected')[0]).text();
-                if (selectedAdvTax) {
-                    AdvPercent = parseFloat(selectedAdvTax) || 0;
-                } else {
-                    AdvPercent = 0;
-                }
+                var AdvPercent = selectedAdvTax ? parseFloat(selectedAdvTax) || 0 : 0;
+
                 var selectedFurtherTax = $($(value).find('td select[name=ddlFurtherTax] :selected')[0]).text();
-                if (selectedFurtherTax) {
-                    FurtherPercent = parseFloat(selectedFurtherTax) || 0;
-                } else {
-                    FurtherPercent = 0;
-                }
+                FurtherPercent = selectedFurtherTax ? parseFloat(selectedFurtherTax) || 0 : 0;
+
                 FurtherAmount = parseFloat((FurtherPercent / 100) * (amountExclusiveTaxes - DiscAmount));
                 $($(value).find('td input[name=txtFurtherTaxAmount]')[0]).val(FurtherAmount.toFixed(2));
                 totalFurtherAmount += FurtherAmount;
+
                 AdvAmount = parseFloat((AdvPercent / 100) * (amountExclusiveTaxes - DiscAmount));
                 $($(value).find('td input[name=txtAdvanceTaxAmount]')[0]).val(AdvAmount.toFixed(2));
+
                 STAmount = parseFloat((STpercent / 100) * (amountExclusiveTaxes - DiscAmount));
                 $($(value).find('td input[name=txtSalAmount]')[0]).val(STAmount.toFixed(2));
+
+                var BonusQty = parseFloat($($(value).find('td input[name=txtBonusQty]')[0]).val()) || 0;
+                var bonusTaxTotal = 0;
+                if (BonusQty > 0) {
+                    var bonusBase = BonusQty * Rate;
+                    var bonusST = (STpercent / 100) * bonusBase;
+                    var bonusAdv = (AdvPercent / 100) * bonusBase;
+                    var bonusFurther = (FurtherPercent / 100) * bonusBase;
+                    bonusTaxTotal = bonusST + bonusAdv + bonusFurther;
+                }
+                $($(value).find('td input[name=txtBonusAmount]')[0]).val(bonusTaxTotal.toFixed(2));
+                totalBonusTax += bonusTaxTotal;
+
                 netAmount = parseFloat(amountExclusiveTaxes + STAmount + AdvAmount + FurtherAmount - DiscAmount);
                 $($(value).find('td input[name=txtTotalAmount]')[0]).val(netAmount.toFixed(2));
+
                 totamount += netAmount;
                 totalstamount += STAmount;
                 totalAdvAmount += AdvAmount;
                 TotalDiscAmount += DiscAmount;
                 totalfinalamount = totamount;
-
             });
-            //var totalFurtherAmount = 0;
+
             $('#txtSub_Total').val(subtotal.toFixed(2));
-            //$('#txtst_amou').val(totalstamount.toFixed(2));
             $('#txtst_amou').val((totalstamount + totalAdvAmount + totalFurtherAmount).toFixed(2));
             $('#txtAdv_amou').val(totalAdvAmount.toFixed(2));
             $('#txtFurther_amou').val(totalFurtherAmount.toFixed(2));
+
+            $('#txtBonusTaxTotal').val(totalBonusTax.toFixed(2));
+
             var freightTotal = parseFloat($('#ctl00_MainContent_Freight').val()) || 0;
-            var totalFinalAmt = totalfinalamount + freightTotal;
+            var totalFinalAmt = totalfinalamount + totalBonusTax + freightTotal;
+
             $('#ctl00_MainContent_Net_Amount').val(totalFinalAmt.toFixed(2));
             $('#ctl00_MainContent_txtTotalDiscAmt').val(TotalDiscAmount.toFixed(2));
             $('#txtTotalDiscAmt').val(TotalDiscAmount.toFixed(2));
@@ -1094,6 +1119,8 @@
                 var txtst_amou = $('#txtst_amou').val();
                 var Adv_amount = $('#txtAdv_amou').val();
                 var Further_amount = $('#txtFurther_amou').val();
+                var IsManual = $('#chkManual').is(':checked');
+                var IsByDefault = $('#chkByDefault').is(':checked');
                 var Item_list = [];
                 debugger;
                 if (Purchase_No == "(New)" || Purchase_No == "")
@@ -1107,7 +1134,7 @@
                     }
                     else {
                         Item_list.push({
-                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val(), 'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(), 'AdvanceTax_Amount': $(value).find('td input[name=txtAdvanceTaxAmount]').val(), 'FurtherTax_Id': $("#ddlFurtherTax" + (key + 1) + " option:selected").val(),
+                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'BonusQty': $(value).find('td input[name=txtBonusQty]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val(), 'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(), 'AdvanceTax_Amount': $(value).find('td input[name=txtAdvanceTaxAmount]').val(), 'FurtherTax_Id': $("#ddlFurtherTax" + (key + 1) + " option:selected").val(), 'BonusTax': $(value).find('td input[name=txtBonusAmount]').val(),
                             'FurtherTax_Amount': $(value).find('td input[name=txtFurtherTaxAmount]').val(),
 
                         });
@@ -1132,7 +1159,9 @@
                     return false;
                 }
                 else {
-                    var AllItemDetail = { 'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Further_amount': Further_amount };
+                    var AllItemDetail = {
+                        'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Further_amount': Further_amount, 'IsManual': IsManual,
+                        'IsByDefault': IsByDefault };
                     PageMethods.SavePurchaseItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;
                         sendFile(res);
@@ -1360,12 +1389,19 @@
                 <asp:Label ID="LblDisclaimer" runat="server" Text="Disclaimer"></asp:Label>
                 <asp:TextBox runat="server" ID="txtDisclaimer" class="form-control" />
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="col-lg-1 col-md-6 col-sm-12">
                 <label class="col-form-label">Attachment</label>
                 <input type="file" id="chosePofile" name="chosePofile" />
                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
             </div>
-
+            <div class="col-lg-1 col-md-6 col-sm-12">
+                 <label class="form-check-label" for="chkByDefault">By Default</label>
+                 <input class="form-check-input" type="checkbox" id="chkByDefault" />
+            </div>
+            <div class="col-lg-1 col-md-6 col-sm-12">
+                <label class="form-check-label" for="chkManual">Manual</label>
+                <input class="form-check-input" type="checkbox" id="chkManual" />
+            </div>
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -1388,6 +1424,7 @@
                     <th style="width: 218px; text-align: center;">Item Description</th>
                     <th style="width: 60px;">Unit</th>
                     <th style="width: 60px;">Qty</th>
+                    <th style="width: 60px;">Bonus Qty</th>
                     <th style="width: 60px;">Rate</th>
                     <th style="width: 63px;">Dis %</th>
                     <th style="width: 69px;">Dis Amount</th>
@@ -1399,6 +1436,7 @@
                     <th style="width: 66px;">Adv Amount</th>
                     <th style="width: 58px; display: none;">Fed%</th>
                     <th style="width: 70px; display: none;">Fed Amount</th>
+                    <th style="width: 75px;">Bonus Tax</th>
                     <th style="width: 75px;">Total</th>
                     <th style="width: 75px;">Delivery Date</th>
                     <th style="width: 45px;">Action</th>
@@ -1453,6 +1491,12 @@
                 </div>
                 <div class="col-lg-12 col-md-8 col-sm-12">
                     <asp:TextBox runat="server" ReadOnly="true" ID="txtst_amou" ClientIDMode="Static" Style="text-align: right;" />
+                </div>
+                <div class="col-lg-12 col-md-8 col-sm-12">
+                    <asp:Label ID="lblBonusTax" runat="server" Text="Bonus Tax"></asp:Label>
+                </div>
+                <div class="col-lg-12 col-md-8 col-sm-12">
+                    <asp:TextBox runat="server" ReadOnly="true" ID="txtBonusTaxTotal" ClientIDMode="Static" Style="text-align: right;" />
                 </div>
                 <div class="col-lg-12 col-md-8 col-sm-12">
                     <asp:Label ID="lblfreight_charges" runat="server" Text="Freight Charges"></asp:Label>

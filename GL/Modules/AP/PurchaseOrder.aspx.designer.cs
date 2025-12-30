@@ -384,6 +384,24 @@ namespace PMS.AP
         protected global::System.Web.UI.WebControls.TextBox txtst_amou;
 
         /// <summary>
+        /// lblBonusTax control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblBonusTax;
+
+        /// <summary>
+        /// txtBonusTaxTotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBonusTaxTotal;
+
+        /// <summary>
         /// lblfreight_charges control.
         /// </summary>
         /// <remarks>

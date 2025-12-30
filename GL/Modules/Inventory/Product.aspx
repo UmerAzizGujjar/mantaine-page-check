@@ -537,7 +537,12 @@
                 $('#tbodypatientRateList tr').each(function (key, value) {
                     var pat_type = $(this).find('input[name="patient_type_value"]').val();
                     var SaleRate = $(this).find('input[name="txtsalerate"]').val();
-                    PatientTypeList.push({ pat_type: pat_type, SaleRate: SaleRate });
+                    var rateId = $(this).find('input[name="item_rate_id"]').val(); 
+                    PatientTypeList.push({
+                        pat_type: pat_type,
+                        SaleRate: SaleRate,
+                        Item_Rate_Id: rateId || null  
+                    });
                 });
                 $('#btnValue').attr('disabled', true);
                 $.ajax({
@@ -1044,6 +1049,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <input type="hidden" name="item_rate_id" value="${rowId}" />
      <form  id="item">
      <div class="row">
          <div class="col-lg-3 col-md-6 col-sm-12 ">
@@ -1487,7 +1493,7 @@
         </div>
 
 
-
+    
 
 
 

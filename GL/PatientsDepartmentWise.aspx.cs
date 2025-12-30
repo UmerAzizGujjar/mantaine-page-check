@@ -112,7 +112,7 @@ namespace PMS
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
-                    trDoctor.Visible = false;
+                    trDoctor.Visible = true;
                     tr_Summary.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
@@ -135,6 +135,23 @@ namespace PMS
                     ddlPatientType.DataValueField = "UserId";
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlPatientType.DataBind();
+
+                    DataBaseDataContext db1 = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in db1.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlFilterClinic.DataSource = valusets;
+                    ddlFilterClinic.DataTextField = "DataValue_Description";
+                    ddlFilterClinic.DataValueField = "DataValue_Name";
+                    ddlFilterClinic.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlFilterClinic.DataBind();
+                    op_FilterClinic.Visible = true;
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+
                 }
                 else if (this.PageTitle == "OPD_Department_Wise_Report")
                 {
@@ -750,6 +767,7 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlPatientType.DataBind();
                     ddlPatientType.Visible = true;
+
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = (from p in db.DataValues where p.ValueSet_ID == 3162 orderby p.DataValue_Description select new { p.DataValue_Name, p.DataValue_Description }).ToList();
                     ddlFilterClinic.DataSource = valusets;
@@ -2470,6 +2488,132 @@ namespace PMS
                     dpROw.Visible = false;
 
                 }
+                else if (PageTitle == "StudentAttendanceList")
+                {
+
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+
+
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Text = "Program";
+                    ddlMainDepartment.Visible = true;
+
+                    lblMedical.Text = "Class";
+                    tr1MedicalSubsidy.Visible = true;
+
+                    ddlTestName.Visible = true;
+                    ddlTestName.Text = "Batch";
+
+                    AllowPatientRecord = false;
+
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                    MainDeptDiv.Visible = true;
+
+                    object valusets;
+
+                    DataBaseDataContext dbd = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in dbd.DataValues
+                               where d.ValueSet_ID == 3188
+                               select new { d.DataValue_Description, d.DataValue_Name };
+                    ddlMainDepartment.DataSource = valusets;
+                    ddlMainDepartment.Items.Clear();
+                    ddlMainDepartment.DataTextField = "DataValue_Description";
+                    ddlMainDepartment.DataValueField = "DataValue_Name";
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+
+                   DataBaseDataContext dbb = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in dbb.DataValues
+                               where d.ValueSet_ID == 3187
+                               select new { d.DataValue_Description, d.DataValue_Name };
+                    ddlMedicalSubsidy.DataSource = valusets;
+                    ddlMedicalSubsidy.Items.Clear();
+                    ddlMedicalSubsidy.DataTextField = "DataValue_Description";
+                    ddlMedicalSubsidy.DataValueField = "DataValue_Name";
+                    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMedicalSubsidy.DataBind();
+
+                    trServiceName.Visible = true;
+
+                    lblService.Text = "Batch";
+
+                    valusets = DBClass.GetValueSet("Batch");
+                    //DataTable dt = DBClass.getDataTable("Select DataValue_Name,DataValue_Description from DataValues Where ValueSet_ID=20");
+                    ddlTestResult.DataSource = valusets;
+                    ddlTestResult.Items.Clear();
+                    ddlTestResult.DataValueField = "DataValue_Name";
+                    ddlTestResult.DataTextField = "DataValue_Description";
+                    ddlTestResult.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlTestResult.DataBind();
+
+                    trProcedure1.Visible = true;
+                    lbProcedure.Text = "Group";
+
+                    DataBaseDataContext dbbb = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in dbbb.DataValues
+                               where d.ValueSet_ID == 3177
+                               select new { d.DataValue_Description, d.DataValue_Name };
+                    ddlProcedure.DataSource = valusets;
+                    ddlProcedure.Items.Clear();
+                    ddlProcedure.DataTextField = "DataValue_Description";
+                    ddlProcedure.DataValueField = "DataValue_Name";
+                    ddlProcedure.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlProcedure.DataBind();
+
+
+                    var program = ddlMainDepartment.SelectedValue;
+                    var classs = ddlMedicalSubsidy.SelectedValue;
+
+                    dpROw.Visible = true;
+                    lblDepartment.Text = "Subject";
+
+                    DataBaseDataContext db1 = new DataBaseDataContext(DBClass.ConnectionString());
+                    var listItems = (from s in db1.Subject_Definitions
+                                     join sd in db1.Subject_Definition_Lists
+                                     on s.subject_Id equals sd.Subject_ID
+                                     select new
+                                     {
+                                         sd.Subject_Detail_ID,
+                                         sd.Subject_Name
+
+                                     }).ToList();
+                    ddlDepartments.DataSource = listItems;
+                    ddlDepartments.DataTextField = "Subject_Name";
+                    ddlDepartments.DataValueField = "Subject_Detail_ID";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
+
+
+
+
+
+
+
+                    var Subject = ddlDepartments.SelectedValue;
+
+
+                    optRw.Visible = true;
+                    lboperator.Text = "Sub Subject";
+
+                    valusets = DBClass.GetValueSet("Subject Type");
+                    ddloprators.DataSource = valusets;
+                    ddloprators.Items.Clear();
+                    ddloprators.DataValueField = "DataValue_Name";
+                    ddloprators.DataTextField = "DataValue_Description";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+
+                }
+
                 if (this.PageTitle == "Physiotherapy_Cash_Collection")
                 {
 
