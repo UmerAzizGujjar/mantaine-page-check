@@ -525,7 +525,7 @@
          
             var ddlProgram = $("#program").find('option:selected').val();
             var ddlWeek = $("#ddlWeek").find('option:selected').val();
-            window.open('ReportViewer.aspx?ReportName=StudentTimeTable&ReportTitle=Student Time Table' + '&Class=' + Class + '&Program=' + ddlProgram + '&ddlWeek=' + ddlWeek);
+            window.open('/ReportViewer.aspx?ReportName=StudentTimeTable&ReportTitle=Student Time Table' + '&Class=' + Class + '&Program=' + ddlProgram + '&ddlWeek=' + ddlWeek);
         }
 
         var GetStudentSubject;

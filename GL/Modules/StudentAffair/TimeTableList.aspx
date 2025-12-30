@@ -8,7 +8,7 @@
         });
 
         function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle=Test Defination&Test_IDs=' + id);
+            window.open('/ReportViewer.aspx?ReportName=TestDefination&ReportTitle=Test Defination&Test_IDs=' + id);
         }
 
         function LoadPage() {
