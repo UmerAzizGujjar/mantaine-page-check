@@ -1875,6 +1875,68 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", companyAddress);
             }
+            else if (reportName == "SubjectWiseAttendance")
+            {
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                var Class = Request.QueryString["Class"];
+                var Program = Request.QueryString["Program"];
+                var Batch = Request.QueryString["Batch"];
+                var Group = Request.QueryString["Group"];
+                var Subject = Request.QueryString["Subject"];
+                var SubSubject = Request.QueryString["SubSubject"];
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+
+                reportPath += "Student/rptAttendanceSubjectWise.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@classs", Class);
+
+                rd.SetParameterValue("@program", Program);
+                rd.SetParameterValue("@batch", Batch);
+                rd.SetParameterValue("@Group", Group);
+                rd.SetParameterValue("@Subject", Subject);
+                rd.SetParameterValue("@SubSubject", SubSubject);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", companyAddress);
+            }
+            else if (reportName == "AttendancePercentage")
+            {
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                var Class = Request.QueryString["Class"];
+                var Program = Request.QueryString["Program"];
+                var Batch = Request.QueryString["Batch"];
+                var Group = Request.QueryString["Group"];
+                var Subject = Request.QueryString["Subject"];
+                var SubSubject = Request.QueryString["SubSubject"];
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+
+                reportPath += "Student/rptAttendancePercentage.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@classs", Class);
+
+                rd.SetParameterValue("@program", Program);
+                rd.SetParameterValue("@batch", Batch);
+                rd.SetParameterValue("@Group", Group);
+                rd.SetParameterValue("@Subject", Subject);
+                rd.SetParameterValue("@SubSubject", SubSubject);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", companyAddress);
+            }
 
             else if (reportName == "HospitalServices")
             {
