@@ -189,12 +189,12 @@ namespace PMS
                                         select (decimal?)apoi.Amount).Sum() ?? 0m;
 
 
-                        if (poAmount > remainingAmount)
-                        {
-                            string alertMessage = $"Total PO Amount: ({poAmount}) exceeds the Remaining Amount: ({remainingAmount}).";
-                            ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('{alertMessage}');", true);
-                            return;
-                        }
+                        //if (poAmount > remainingAmount)
+                        //{
+                        //    string alertMessage = $"Total PO Amount: ({poAmount}) exceeds the Remaining Amount: ({remainingAmount}).";
+                        //    ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('{alertMessage}');", true);
+                        //    return;
+                        //}
 
                         var IsFinalApprovals = (from SASD in db.Sys_Approval_Stage_Details
                                                 join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
