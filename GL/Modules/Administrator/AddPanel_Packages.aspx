@@ -37,7 +37,7 @@
                 if (Amount == "" || Amount == null) Amount = 0;
                 var isExpense = $(value).find('td input[name=chkExpense]').is(':checked') ? true : false;
 
-                Pkg_list.push({ 'Item': $(value).find('td input[name=txtDes]').val(), 'QTy': $(value).find('td input[name=txtQTy]').val(), 'Price': $(value).find('td input[name=txPrice]').val(), 'isExpense': isExpense, 'Amount': Amount, 'ItemType': $(value).find('td input[name=ItemType]').val() });
+                Pkg_list.push({ 'Item': $(value).find('td input[name=txtDes]').val(), 'QTy': $(value).find('td input[name=txtQTy]').val(), 'Price': $(value).find('td input[name=txPrice]').val(), 'isExpense': isExpense, 'Amount': Amount, 'ItemType': $(value).find('td input[name=ItemType]').val(), 'MainDepartment': $(value).find('td input[name=Main_Department]').val() });
 
             });
             debugger;
@@ -108,6 +108,7 @@
                  '<td>' + lenght + '</td>' +
                  '<td><input type="hidden" name="txtDes" id="txtDes' + lenght + '" value="' + value.TestID + '" />' +
                  '<input type="hidden" name="txtRotation" value="0"> ' +
+                 '<input type="hidden" name="Main_Department" value="' + value.Main_Department + '"> ' +
                  (value.MainDepartmentName == null ? '' : value.MainDepartmentName + ', ') + ' ' + value.TestName +
                  ' ' + (value.GroupName == null ? ' ' : ', ' + value.GroupName) + '</td>' +
                  '<td><input type="text" name="txtQTy" id="txtQty' + lenght + '" style="width:57px;height:28px;" value="1" onkeyup="UpdateAmount(' + lenght + ')"/></td>' +
@@ -183,7 +184,7 @@
 
                 var rows = '<tr>' +
                     '<td>' + lenght + ' </td>' +
-                    '<td><input type="hidden" name="txtDes" id="txtDes' + lenght + '" style="width: 189px !important;" value="' + value.Item_Code + '"/>' + value.itemanme + '</td>' +
+                    '<td><input type="hidden" name="Main_Department" value="' + value.Main_Department + '"><input type="hidden" name="txtDes" id="txtDes' + lenght + '" style="width: 189px !important;" value="' + value.Item_Code + '"/>' + value.itemanme + '</td>' +
                     '<td><input type="text" name="txtQTy" id="txtQty' + lenght + '" style="width: 57px !important; height: 28px;" value="' + value.QTY + '" onkeyup="UpdateAmount(' + lenght + ') "/></td>' +
                     '<td><input type="text" name="txPrice" id="txPrice' + lenght + '" value="' + value.Price + '" style="width: 75px !important; height: 28px;" onkeyup="UpdateAmount(' + lenght + ')"/></td>' +
                     '<td><input type="checkbox" class="chkExpense" name="chkExpense" id="chkExpense' + lenght + '" onclick="calculateTotals()" ' + expenseChecked + '/></td>' +
