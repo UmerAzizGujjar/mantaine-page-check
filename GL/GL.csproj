@@ -232,6 +232,7 @@
     <Content Include="Modules\Billing\BillApproval.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
     <Content Include="Modules\Billing\Share_Distribution.aspx" />
+    <Content Include="Modules\Billing\Share_Distribution_List.aspx" />
     <Content Include="Modules\Dashboards\AccountSection.aspx" />
     <Content Include="Modules\Dashboards\AdminSection.aspx" />
     <Content Include="Modules\Dashboards\BillingSection.aspx" />
@@ -25890,6 +25891,13 @@
     </Compile>
     <Compile Include="Modules\Billing\Share_Distribution.aspx.designer.cs">
       <DependentUpon>Share_Distribution.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\Share_Distribution_List.aspx.cs">
+      <DependentUpon>Share_Distribution_List.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\Share_Distribution_List.aspx.designer.cs">
+      <DependentUpon>Share_Distribution_List.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\AccountSection.aspx.cs">
       <DependentUpon>AccountSection.aspx</DependentUpon>

@@ -1932,16 +1932,22 @@
         <elementListCompartment Id="24e6eebe-228a-40f1-89c6-87c2140f1629" absoluteBounds="1.3899999999999997, 50.71, 1.9700000000000002, 5.4415283203125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="0bed4b14-2579-4718-95a8-b88ea1ec916d" absoluteBounds="0.75, 40.75, 2, 3.1170068359375023">
-      <DataClassMoniker Name="/DataBaseDataContext/IPD_Distribution_Master" />
+    <classShape Id="ca9883c6-9dce-4a60-b68b-6cf3cfc9a66c" absoluteBounds="3.375, 19.75, 2, 2.3478011067708309">
+      <DataClassMoniker Name="/DataBaseDataContext/IPD_Doctor_Distribution_Detail" />
       <nestedChildShapes>
-        <elementListCompartment Id="d447ea9c-d650-44e0-bc2c-309825a47dc5" absoluteBounds="0.765, 41.21, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="c56c0803-f6a6-40fd-ae9f-f24ddcd5f513" absoluteBounds="3.39, 20.21, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="d3be1a00-e51c-48e4-98e4-5b5d61069c4b" absoluteBounds="3.75, 19.75, 2, 2.1554996744791666">
+    <classShape Id="09477433-59d3-436f-a6da-ef63da1b333c" absoluteBounds="45.375, 54.75, 2, 2.3478011067708309">
       <DataClassMoniker Name="/DataBaseDataContext/IPD_Distribution_Detail" />
       <nestedChildShapes>
-        <elementListCompartment Id="6f41e5ec-8f5e-434e-8960-9900367d4362" absoluteBounds="3.765, 20.21, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="bc962e5c-3b7d-4a7e-97f1-be3409a28d75" absoluteBounds="45.39, 55.21, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="28cf4e14-152d-4e30-a28a-d695d3b341fd" absoluteBounds="6.25, 44.25, 2, 3.8862125651041666">
+      <DataClassMoniker Name="/DataBaseDataContext/IPD_Distribution_Master" />
+      <nestedChildShapes>
+        <elementListCompartment Id="249ff7c0-622d-426b-8970-8c79ed31a520" absoluteBounds="6.265, 44.71, 1.9700000000000002, 3.3262125651041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

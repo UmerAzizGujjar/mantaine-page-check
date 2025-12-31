@@ -14,6 +14,9 @@
             LoadDetailDoctor()
             GetIPDAccounts()
 
+            var Dist_ID = '<% =Request.QueryString["ID"] %>';
+
+
 
             $(document).on('keyup', '.disc-perc', function () {
 
@@ -224,7 +227,7 @@
             var row = `
             <tr>
                 <td style="text-align:center;"><input type="hidden" id="Account_ID" name="Account_ID" value="${accountId}"><input type="text" id="Account_Code" name="Account_Code" value="${accountCode}" readonly></td>
-                <td style="text-align:center;"><input type="text" id="Account_Code" name="Account_Code" value="${accountName}" readonly></td>
+                <td style="text-align:center;"><input type="text" id="Account_Name" name="Account_Name" value="${accountName}" readonly></td>
                 <td style="text-align:center;">
                     <input type="number" class="form-control total-amount" id="txtRevenuAmount" name="txtRevenuAmount" value="0">
                 </td>
@@ -262,7 +265,7 @@
             var row = `
             <tr>
                 <td style="text-align:center;"><input type="hidden" id="Account_ID" name="Account_ID" value="${accountId}"><input type="text" id="Account_Code" name="Account_Code" value="${accountCode}" readonly></td>
-                <td style="text-align:center;"><input type="text" id="Account_Code" name="Account_Code" value="${doctorText}" readonly></td>
+                <td style="text-align:center;"><input type="text" id="Account_Name" name="Account_Name" value="${doctorText}" readonly></td>
                 <td style="text-align:center;">
                     <input type="number" class="form-control total-amount" id="txtRevenuAmount" name="txtRevenuAmount" value="0">
                 </td>
@@ -279,23 +282,18 @@
         `;
             $('#tblDoctorShareDetails tbody').append(row);
         }
-
-        function SaveRecord() {
-            if (validateSave()) {
+        debugger;
+        function SaveRecord() {       
                 debugger;
                 var Patient_ID = $("#hdPatientID").text();
                 var Bill_ID = $("#hdBillID").text();
-
                 var remarks = $("#txtRemarks").text();
                 var Distributuion_Date = $("#txtDistributuionDate").val();
                 var saveVal = $('#btnSave').val();
-                var advID = '<% =Request.QueryString["advID"] %>';
-
+              
                 var DepartmentDistribution = [];
                 $.each($('#tblDetails tbody tr'), function (key, value) {
-                    debugger;
-                   // var Bill_Detial_ID = document.getElementById('tblDetails').rows[key + 1].cells[1].innerText;
-                    var Account_ID = $(value).find('input[name="ddlGlAccounts"]').val();
+                    var Account_ID = $(value).find('select[name="ddlGlAccounts"]').val();
                     var txtDescription = $(value).find('input[name="txtDescription"]').val();
                     var txtTotalAmount = $(value).find('input[name="txtTotalAmount"]').val();
                     var txtDiscountPer = $(value).find('input[name="txtDiscountPer"]').val();
@@ -307,19 +305,17 @@
                     });
                 });
                 var IPDDistribution = [];
-                $.each($('#Doctor_Share_Table tbody tr'), function (key, value) {
+            $.each($('#tblDoctorShareDetails tbody tr'), function (key, value) {
                     debugger;
-                   // var Emp_ID = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[1].innerText;
-                    //var Record_Id = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[2].innerText;
                     var Account_ID = $(value).find('input[name="Account_ID"]').val();
-                    var Account_Code = $(value).find('input[name="Account_Code"]').val();
+                    var Account_Name = $(value).find('input[name="Account_Name"]').val();
                     var txtRevenuAmount = $(value).find('input[name="txtRevenuAmount"]').val();
                     var txtRevenuDiscPer = $(value).find('input[name="txtRevenuDiscPer"]').val();
                     var txtRevenuDiscAmount = $(value).find('input[name="txtRevenuDiscAmount"]').val();
                     var txtRevenuNetAmount = $(value).find('input[name="txtRevenuNetAmount"]').val();
 
                     IPDDistribution.push({
-                        Account_ID: Account_ID, Account_Code: Account_Code, txtRevenuAmount: txtRevenuAmount, txtRevenuDiscPer: txtRevenuDiscPer, txtRevenuDiscAmount: txtRevenuDiscAmount, txtRevenuNetAmount: txtRevenuNetAmount
+                        Account_ID: Account_ID, Account_Name: Account_Name, txtRevenuAmount: txtRevenuAmount, txtRevenuDiscPer: txtRevenuDiscPer, txtRevenuDiscAmount: txtRevenuDiscAmount, txtRevenuNetAmount: txtRevenuNetAmount
                     });
                 });
                 var data = { Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };
@@ -341,7 +337,7 @@
                 }, function (error) {
                     alert(error.get_message());
                 });
-            }
+            
         }
 
     </script>
@@ -597,6 +593,10 @@
         </div>
 
     </div>
-
+    <div class="row">
+       <div class="col-lg-2 col-md-6 col-sm-6">
+           <input type="button" id="btnSave" onclick="SaveRecord();" class="btn btn-primry" value="Save" />
+       </div>
+    </div>
 
 </asp:Content>

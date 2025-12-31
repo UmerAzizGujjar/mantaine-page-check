@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "NoorHospital_Uat_New")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH_Uat")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -906,12 +906,15 @@ namespace PMS
         partial void InsertPurchase_Invoice_Detail(Purchase_Invoice_Detail instance);
         partial void UpdatePurchase_Invoice_Detail(Purchase_Invoice_Detail instance);
         partial void DeletePurchase_Invoice_Detail(Purchase_Invoice_Detail instance);
-        partial void InsertIPD_Distribution_Master(IPD_Distribution_Master instance);
-        partial void UpdateIPD_Distribution_Master(IPD_Distribution_Master instance);
-        partial void DeleteIPD_Distribution_Master(IPD_Distribution_Master instance);
+        partial void InsertIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
+        partial void UpdateIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
+        partial void DeleteIPD_Doctor_Distribution_Detail(IPD_Doctor_Distribution_Detail instance);
         partial void InsertIPD_Distribution_Detail(IPD_Distribution_Detail instance);
         partial void UpdateIPD_Distribution_Detail(IPD_Distribution_Detail instance);
         partial void DeleteIPD_Distribution_Detail(IPD_Distribution_Detail instance);
+        partial void InsertIPD_Distribution_Master(IPD_Distribution_Master instance);
+        partial void UpdateIPD_Distribution_Master(IPD_Distribution_Master instance);
+        partial void DeleteIPD_Distribution_Master(IPD_Distribution_Master instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -3310,11 +3313,11 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<IPD_Distribution_Master> IPD_Distribution_Masters
+        public System.Data.Linq.Table<IPD_Doctor_Distribution_Detail> IPD_Doctor_Distribution_Details
         {
             get
             {
-                return this.GetTable<IPD_Distribution_Master>();
+                return this.GetTable<IPD_Doctor_Distribution_Detail>();
             }
         }
 
@@ -3323,6 +3326,14 @@ namespace PMS
             get
             {
                 return this.GetTable<IPD_Distribution_Detail>();
+            }
+        }
+
+        public System.Data.Linq.Table<IPD_Distribution_Master> IPD_Distribution_Masters
+        {
+            get
+            {
+                return this.GetTable<IPD_Distribution_Master>();
             }
         }
 
@@ -158833,6 +158844,466 @@ namespace PMS
         }
     }
 
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.IPD_Doctor_Distribution_Detail")]
+    public partial class IPD_Doctor_Distribution_Detail : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Doctor_Distribution_Id;
+
+        private System.Nullable<int> _Distribution_Id;
+
+        private System.Nullable<int> _Account_Id;
+
+        private string _Share_Account_Name;
+
+        private System.Nullable<decimal> _Total_Amount;
+
+        private System.Nullable<decimal> _Discount_Percentage;
+
+        private System.Nullable<decimal> _Discount_Amount;
+
+        private System.Nullable<decimal> _Net_Amount;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnDoctor_Distribution_IdChanging(int value);
+        partial void OnDoctor_Distribution_IdChanged();
+        partial void OnDistribution_IdChanging(System.Nullable<int> value);
+        partial void OnDistribution_IdChanged();
+        partial void OnAccount_IdChanging(System.Nullable<int> value);
+        partial void OnAccount_IdChanged();
+        partial void OnShare_Account_NameChanging(string value);
+        partial void OnShare_Account_NameChanged();
+        partial void OnTotal_AmountChanging(System.Nullable<decimal> value);
+        partial void OnTotal_AmountChanged();
+        partial void OnDiscount_PercentageChanging(System.Nullable<decimal> value);
+        partial void OnDiscount_PercentageChanged();
+        partial void OnDiscount_AmountChanging(System.Nullable<decimal> value);
+        partial void OnDiscount_AmountChanged();
+        partial void OnNet_AmountChanging(System.Nullable<decimal> value);
+        partial void OnNet_AmountChanged();
+        #endregion
+
+        public IPD_Doctor_Distribution_Detail()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Distribution_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Doctor_Distribution_Id
+        {
+            get
+            {
+                return this._Doctor_Distribution_Id;
+            }
+            set
+            {
+                if ((this._Doctor_Distribution_Id != value))
+                {
+                    this.OnDoctor_Distribution_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Doctor_Distribution_Id = value;
+                    this.SendPropertyChanged("Doctor_Distribution_Id");
+                    this.OnDoctor_Distribution_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Distribution_Id", DbType = "Int")]
+        public System.Nullable<int> Distribution_Id
+        {
+            get
+            {
+                return this._Distribution_Id;
+            }
+            set
+            {
+                if ((this._Distribution_Id != value))
+                {
+                    this.OnDistribution_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Distribution_Id = value;
+                    this.SendPropertyChanged("Distribution_Id");
+                    this.OnDistribution_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_Id", DbType = "Int")]
+        public System.Nullable<int> Account_Id
+        {
+            get
+            {
+                return this._Account_Id;
+            }
+            set
+            {
+                if ((this._Account_Id != value))
+                {
+                    this.OnAccount_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Account_Id = value;
+                    this.SendPropertyChanged("Account_Id");
+                    this.OnAccount_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Share_Account_Name", DbType = "VarChar(500)")]
+        public string Share_Account_Name
+        {
+            get
+            {
+                return this._Share_Account_Name;
+            }
+            set
+            {
+                if ((this._Share_Account_Name != value))
+                {
+                    this.OnShare_Account_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Share_Account_Name = value;
+                    this.SendPropertyChanged("Share_Account_Name");
+                    this.OnShare_Account_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Total_Amount
+        {
+            get
+            {
+                return this._Total_Amount;
+            }
+            set
+            {
+                if ((this._Total_Amount != value))
+                {
+                    this.OnTotal_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Total_Amount = value;
+                    this.SendPropertyChanged("Total_Amount");
+                    this.OnTotal_AmountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Percentage", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount_Percentage
+        {
+            get
+            {
+                return this._Discount_Percentage;
+            }
+            set
+            {
+                if ((this._Discount_Percentage != value))
+                {
+                    this.OnDiscount_PercentageChanging(value);
+                    this.SendPropertyChanging();
+                    this._Discount_Percentage = value;
+                    this.SendPropertyChanged("Discount_Percentage");
+                    this.OnDiscount_PercentageChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount_Amount
+        {
+            get
+            {
+                return this._Discount_Amount;
+            }
+            set
+            {
+                if ((this._Discount_Amount != value))
+                {
+                    this.OnDiscount_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Discount_Amount = value;
+                    this.SendPropertyChanged("Discount_Amount");
+                    this.OnDiscount_AmountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Net_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Net_Amount
+        {
+            get
+            {
+                return this._Net_Amount;
+            }
+            set
+            {
+                if ((this._Net_Amount != value))
+                {
+                    this.OnNet_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Net_Amount = value;
+                    this.SendPropertyChanged("Net_Amount");
+                    this.OnNet_AmountChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.IPD_Distribution_Detail")]
+    public partial class IPD_Distribution_Detail : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Distribution_Detail_Id;
+
+        private System.Nullable<int> _Distribution_Id;
+
+        private System.Nullable<int> _Account_Id;
+
+        private string _Share_Calculation;
+
+        private System.Nullable<decimal> _Total_Amount;
+
+        private System.Nullable<decimal> _Discount_Percentage;
+
+        private System.Nullable<decimal> _Discount_Amount;
+
+        private System.Nullable<decimal> _Net_Amount;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnDistribution_Detail_IdChanging(int value);
+        partial void OnDistribution_Detail_IdChanged();
+        partial void OnDistribution_IdChanging(System.Nullable<int> value);
+        partial void OnDistribution_IdChanged();
+        partial void OnAccount_IdChanging(System.Nullable<int> value);
+        partial void OnAccount_IdChanged();
+        partial void OnShare_CalculationChanging(string value);
+        partial void OnShare_CalculationChanged();
+        partial void OnTotal_AmountChanging(System.Nullable<decimal> value);
+        partial void OnTotal_AmountChanged();
+        partial void OnDiscount_PercentageChanging(System.Nullable<decimal> value);
+        partial void OnDiscount_PercentageChanged();
+        partial void OnDiscount_AmountChanging(System.Nullable<decimal> value);
+        partial void OnDiscount_AmountChanged();
+        partial void OnNet_AmountChanging(System.Nullable<decimal> value);
+        partial void OnNet_AmountChanged();
+        #endregion
+
+        public IPD_Distribution_Detail()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Distribution_Detail_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Distribution_Detail_Id
+        {
+            get
+            {
+                return this._Distribution_Detail_Id;
+            }
+            set
+            {
+                if ((this._Distribution_Detail_Id != value))
+                {
+                    this.OnDistribution_Detail_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Distribution_Detail_Id = value;
+                    this.SendPropertyChanged("Distribution_Detail_Id");
+                    this.OnDistribution_Detail_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Distribution_Id", DbType = "Int")]
+        public System.Nullable<int> Distribution_Id
+        {
+            get
+            {
+                return this._Distribution_Id;
+            }
+            set
+            {
+                if ((this._Distribution_Id != value))
+                {
+                    this.OnDistribution_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Distribution_Id = value;
+                    this.SendPropertyChanged("Distribution_Id");
+                    this.OnDistribution_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_Id", DbType = "Int")]
+        public System.Nullable<int> Account_Id
+        {
+            get
+            {
+                return this._Account_Id;
+            }
+            set
+            {
+                if ((this._Account_Id != value))
+                {
+                    this.OnAccount_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Account_Id = value;
+                    this.SendPropertyChanged("Account_Id");
+                    this.OnAccount_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Share_Calculation", DbType = "VarChar(500)")]
+        public string Share_Calculation
+        {
+            get
+            {
+                return this._Share_Calculation;
+            }
+            set
+            {
+                if ((this._Share_Calculation != value))
+                {
+                    this.OnShare_CalculationChanging(value);
+                    this.SendPropertyChanging();
+                    this._Share_Calculation = value;
+                    this.SendPropertyChanged("Share_Calculation");
+                    this.OnShare_CalculationChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Total_Amount
+        {
+            get
+            {
+                return this._Total_Amount;
+            }
+            set
+            {
+                if ((this._Total_Amount != value))
+                {
+                    this.OnTotal_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Total_Amount = value;
+                    this.SendPropertyChanged("Total_Amount");
+                    this.OnTotal_AmountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Percentage", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount_Percentage
+        {
+            get
+            {
+                return this._Discount_Percentage;
+            }
+            set
+            {
+                if ((this._Discount_Percentage != value))
+                {
+                    this.OnDiscount_PercentageChanging(value);
+                    this.SendPropertyChanging();
+                    this._Discount_Percentage = value;
+                    this.SendPropertyChanged("Discount_Percentage");
+                    this.OnDiscount_PercentageChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount_Amount
+        {
+            get
+            {
+                return this._Discount_Amount;
+            }
+            set
+            {
+                if ((this._Discount_Amount != value))
+                {
+                    this.OnDiscount_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Discount_Amount = value;
+                    this.SendPropertyChanged("Discount_Amount");
+                    this.OnDiscount_AmountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Net_Amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Net_Amount
+        {
+            get
+            {
+                return this._Net_Amount;
+            }
+            set
+            {
+                if ((this._Net_Amount != value))
+                {
+                    this.OnNet_AmountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Net_Amount = value;
+                    this.SendPropertyChanged("Net_Amount");
+                    this.OnNet_AmountChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.IPD_Distribution_Master")]
     public partial class IPD_Distribution_Master : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -158863,6 +159334,14 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _Updated_Time;
 
+        private System.Nullable<bool> _IsCancel;
+
+        private System.Nullable<System.Guid> _Cancel_By;
+
+        private System.Nullable<System.DateTime> _Cancel_Time;
+
+        private string _Cancel_Remarks;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -158891,6 +159370,14 @@ namespace PMS
         partial void OnUpdated_ByChanged();
         partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
         partial void OnUpdated_TimeChanged();
+        partial void OnIsCancelChanging(System.Nullable<bool> value);
+        partial void OnIsCancelChanged();
+        partial void OnCancel_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCancel_ByChanged();
+        partial void OnCancel_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCancel_TimeChanged();
+        partial void OnCancel_RemarksChanging(string value);
+        partial void OnCancel_RemarksChanged();
         #endregion
 
         public IPD_Distribution_Master()
@@ -159138,208 +159625,82 @@ namespace PMS
             }
         }
 
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.IPD_Distribution_Detail")]
-    public partial class IPD_Distribution_Detail : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Distribution_Detail_Id;
-
-        private System.Nullable<int> _Distribution_Id;
-
-        private System.Nullable<int> _Account_Id;
-
-        private string _Share_Calculation;
-
-        private System.Nullable<decimal> _Total_Amount;
-
-        private System.Nullable<decimal> _Discount_Amount;
-
-        private System.Nullable<decimal> _Net_Amount;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnDistribution_Detail_IdChanging(int value);
-        partial void OnDistribution_Detail_IdChanged();
-        partial void OnDistribution_IdChanging(System.Nullable<int> value);
-        partial void OnDistribution_IdChanged();
-        partial void OnAccount_IdChanging(System.Nullable<int> value);
-        partial void OnAccount_IdChanged();
-        partial void OnShare_CalculationChanging(string value);
-        partial void OnShare_CalculationChanged();
-        partial void OnTotal_AmountChanging(System.Nullable<decimal> value);
-        partial void OnTotal_AmountChanged();
-        partial void OnDiscount_AmountChanging(System.Nullable<decimal> value);
-        partial void OnDiscount_AmountChanged();
-        partial void OnNet_AmountChanging(System.Nullable<decimal> value);
-        partial void OnNet_AmountChanged();
-        #endregion
-
-        public IPD_Distribution_Detail()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Distribution_Detail_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Distribution_Detail_Id
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsCancel", DbType = "Bit")]
+        public System.Nullable<bool> IsCancel
         {
             get
             {
-                return this._Distribution_Detail_Id;
+                return this._IsCancel;
             }
             set
             {
-                if ((this._Distribution_Detail_Id != value))
+                if ((this._IsCancel != value))
                 {
-                    this.OnDistribution_Detail_IdChanging(value);
+                    this.OnIsCancelChanging(value);
                     this.SendPropertyChanging();
-                    this._Distribution_Detail_Id = value;
-                    this.SendPropertyChanged("Distribution_Detail_Id");
-                    this.OnDistribution_Detail_IdChanged();
+                    this._IsCancel = value;
+                    this.SendPropertyChanged("IsCancel");
+                    this.OnIsCancelChanged();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Distribution_Id", DbType = "Int")]
-        public System.Nullable<int> Distribution_Id
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cancel_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Cancel_By
         {
             get
             {
-                return this._Distribution_Id;
+                return this._Cancel_By;
             }
             set
             {
-                if ((this._Distribution_Id != value))
+                if ((this._Cancel_By != value))
                 {
-                    this.OnDistribution_IdChanging(value);
+                    this.OnCancel_ByChanging(value);
                     this.SendPropertyChanging();
-                    this._Distribution_Id = value;
-                    this.SendPropertyChanged("Distribution_Id");
-                    this.OnDistribution_IdChanged();
+                    this._Cancel_By = value;
+                    this.SendPropertyChanged("Cancel_By");
+                    this.OnCancel_ByChanged();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_Id", DbType = "Int")]
-        public System.Nullable<int> Account_Id
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cancel_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Cancel_Time
         {
             get
             {
-                return this._Account_Id;
+                return this._Cancel_Time;
             }
             set
             {
-                if ((this._Account_Id != value))
+                if ((this._Cancel_Time != value))
                 {
-                    this.OnAccount_IdChanging(value);
+                    this.OnCancel_TimeChanging(value);
                     this.SendPropertyChanging();
-                    this._Account_Id = value;
-                    this.SendPropertyChanged("Account_Id");
-                    this.OnAccount_IdChanged();
+                    this._Cancel_Time = value;
+                    this.SendPropertyChanged("Cancel_Time");
+                    this.OnCancel_TimeChanged();
                 }
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Share_Calculation", DbType = "VarChar(500)")]
-        public string Share_Calculation
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cancel_Remarks", DbType = "VarChar(500)")]
+        public string Cancel_Remarks
         {
             get
             {
-                return this._Share_Calculation;
+                return this._Cancel_Remarks;
             }
             set
             {
-                if ((this._Share_Calculation != value))
+                if ((this._Cancel_Remarks != value))
                 {
-                    this.OnShare_CalculationChanging(value);
+                    this.OnCancel_RemarksChanging(value);
                     this.SendPropertyChanging();
-                    this._Share_Calculation = value;
-                    this.SendPropertyChanged("Share_Calculation");
-                    this.OnShare_CalculationChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Total_Amount
-        {
-            get
-            {
-                return this._Total_Amount;
-            }
-            set
-            {
-                if ((this._Total_Amount != value))
-                {
-                    this.OnTotal_AmountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Total_Amount = value;
-                    this.SendPropertyChanged("Total_Amount");
-                    this.OnTotal_AmountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Discount_Amount
-        {
-            get
-            {
-                return this._Discount_Amount;
-            }
-            set
-            {
-                if ((this._Discount_Amount != value))
-                {
-                    this.OnDiscount_AmountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Discount_Amount = value;
-                    this.SendPropertyChanged("Discount_Amount");
-                    this.OnDiscount_AmountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Net_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Net_Amount
-        {
-            get
-            {
-                return this._Net_Amount;
-            }
-            set
-            {
-                if ((this._Net_Amount != value))
-                {
-                    this.OnNet_AmountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Net_Amount = value;
-                    this.SendPropertyChanged("Net_Amount");
-                    this.OnNet_AmountChanged();
+                    this._Cancel_Remarks = value;
+                    this.SendPropertyChanged("Cancel_Remarks");
+                    this.OnCancel_RemarksChanged();
                 }
             }
         }

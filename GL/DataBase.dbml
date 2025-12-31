@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NoorHospital_Uat_New" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="IITH_Uat" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7111,6 +7111,30 @@
       <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.IPD_Doctor_Distribution_Detail" Member="IPD_Doctor_Distribution_Details">
+    <Type Name="IPD_Doctor_Distribution_Detail">
+      <Column Name="Doctor_Distribution_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Distribution_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Share_Account_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.IPD_Distribution_Detail" Member="IPD_Distribution_Details">
+    <Type Name="IPD_Distribution_Detail">
+      <Column Name="Distribution_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Distribution_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Share_Calculation" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.IPD_Distribution_Master" Member="IPD_Distribution_Masters">
     <Type Name="IPD_Distribution_Master">
       <Column Name="Distribution_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7125,17 +7149,10 @@
       <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.IPD_Distribution_Detail" Member="IPD_Distribution_Details">
-    <Type Name="IPD_Distribution_Detail">
-      <Column Name="Distribution_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Distribution_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Account_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Share_Calculation" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="IsCancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cancel_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Cancel_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Cancel_Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

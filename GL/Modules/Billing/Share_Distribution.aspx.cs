@@ -6,6 +6,8 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static PMS.Modules.Billing.Share_Distribution;
+using static PMS.Refund;
 
 namespace PMS.Modules.Billing
 {
@@ -105,6 +107,90 @@ namespace PMS.Modules.Billing
                          }).ToList();
             string data = string.Empty;
             return (new JavaScriptSerializer()).Serialize(query);
+        }
+
+        public class Detial
+        {
+            public int Patient_ID { get; set; }
+            public int Bill_ID { get; set; }
+            public DateTime Distributuion_Date { get; set; }
+            public string remarks { get; set; }
+            public List<DepartmentDistribution> DepartmentDistribution { get; set; }
+            public List<IPDDistributions> IPDDistribution { get; set; }
+        }
+        public class DepartmentDistribution
+        {
+            public int ddlGlAccounts { get; set; }
+            public string txtDescription { get; set; }
+            public decimal txtTotalAmount { get; set; }
+            public decimal txtDiscountPer { get; set; }
+            public decimal txtDiscountAmount { get; set; }
+            public decimal txtNetAmount { get; set; }
+        }
+        public class IPDDistributions
+        {
+            public int Account_ID { get; set; }
+            public string Account_Name { get; set; }
+            public decimal txtRevenuAmount { get; set; }
+            public decimal txtRevenuDiscPer { get; set; }
+            public decimal txtRevenuDiscAmount { get; set; }
+            public decimal txtRevenuNetAmount { get; set; }
+        }
+        [WebMethod]
+        public static string SaveDistribution(string data)
+        {
+
+
+            return (new JavaScriptSerializer()).Serialize(Save(data));
+        }
+        [WebMethod]
+        public static string Save(string data)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            JavaScriptSerializer JSS = new JavaScriptSerializer();
+            var dt = JSS.Deserialize<Detial>(data);
+            string value = string.Empty;
+            IPD_Distribution_Master Ref = new IPD_Distribution_Master();
+            var Distribution_Id = DBClass.GetNewNumber("Distribution_Id", "IPD_Distribution_Master", "").ToString();
+            Ref.Patient_Id = dt.Patient_ID;
+            Ref.Bill_Id = dt.Bill_ID;
+            Ref.Distribution_Date = dt.Distributuion_Date; 
+            Ref.Remarks = dt.remarks;
+
+            List<IPD_Distribution_Detail> ListOfshare = new List<IPD_Distribution_Detail>();
+            foreach (DepartmentDistribution dtls in dt.DepartmentDistribution)
+            {
+                IPD_Distribution_Detail Service = new IPD_Distribution_Detail();
+                Service.Distribution_Id = Convert.ToInt32(Distribution_Id);
+                Service.Account_Id = dtls.ddlGlAccounts;
+                Service.Share_Calculation = dtls.txtDescription;
+                Service.Total_Amount = dtls.txtTotalAmount;
+                Service.Net_Amount = dtls.txtNetAmount;
+                Service.Discount_Percentage = dtls.txtDiscountPer;
+                Service.Discount_Amount = dtls.txtDiscountAmount;
+                ListOfshare.Add(Service);
+            }
+
+            List<IPD_Doctor_Distribution_Detail> ListOfRefund = new List<IPD_Doctor_Distribution_Detail>();
+            foreach (IPDDistributions dts in dt.IPDDistribution)
+            {
+                IPD_Doctor_Distribution_Detail Doctor = new IPD_Doctor_Distribution_Detail();
+                Doctor.Distribution_Id = Convert.ToInt32(Distribution_Id);
+                Doctor.Account_Id = dts.Account_ID;
+                Doctor.Share_Account_Name = dts.Account_Name;
+                Doctor.Total_Amount = dts.txtRevenuAmount;
+                Doctor.Net_Amount = dts.txtRevenuNetAmount;
+                Doctor.Discount_Percentage = dts.txtRevenuDiscPer;
+                Doctor.Discount_Amount = dts.txtRevenuDiscAmount;
+                ListOfRefund.Add(Doctor);
+
+
+            }
+            db.IPD_Distribution_Masters.InsertOnSubmit(Ref);
+            db.IPD_Distribution_Details.InsertAllOnSubmit(ListOfshare);
+            db.IPD_Doctor_Distribution_Details.InsertAllOnSubmit(ListOfRefund);
+            db.SubmitChanges();
+            return value;
         }
     }
 }
