@@ -161,26 +161,25 @@
         <div class="row">
         <h1 id="h1">DEPARTMENT WISE STATISTICS</h1>
     </div>
-    <br />
-    <br />
-         <div class="row" style="margin-top: 25px">
-         <div class="col-md-4" style="margin-left: 40px;">
+         <div class="row">
+         <div class="col-md-2" style="margin-left: 40px;">
              <label>Doctor</label>
              <select id="ddlDoctor"></select>
          </div>
 
-         <div class="col-md-3" style="margin-left: -50px;">
+         <div class="col-md-2">
              <label>From Date:</label>
-             <input type="text" id="StartDate" style="border-radius: 5px!important" />
+             <input type="text" id="StartDate"  />
          </div>
 
-         <div class="col-md-3" >
+         <div class="col-md-2" >
              <label>To Date:</label>
-             <input type="text" id="EndDate" style="border-radius: 5px!important" />
+             <input type="text" id="EndDate"  />
          </div>
 
-         <div class="col-md-2" style="padding-left:60px!important;" >
-             <input type="button" id="btnSearch" value="Search" onclick="SearchDate()"  style="margin-top: 0px; border-radius:5px!important;"/>
+         <div class="col-md-1">
+             <label></label>
+             <input type="button" id="btnSearch" class="btn btn-primry" value="Search" onclick="SearchDate()" />
          </div>
 
      </div>

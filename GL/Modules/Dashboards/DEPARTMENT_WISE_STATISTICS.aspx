@@ -1,8 +1,4 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DEPARTMENT_WISE_STATISTICS.aspx.cs" Inherits="PMS.DEPARTMENT_WISE_STATISTICS" %>
-
-
-
-
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="js/select2.min.css" rel="stylesheet" />
     <script src="js/select2.min.js"></script>
@@ -166,28 +162,25 @@
     <div class="row">
         <h1 id="h1">DEPARTMENT WISE STATISTICS</h1>
     </div>
-    <br />
-    <br />
-         <div class="row" style="margin-top: 25px">
-         <div class="col-md-4" style="margin-left: 40px;">
+         <div class="row">
+         <div class="col-md-2">
              <label>Department</label>
              <select id="ddlDoctor"></select>
          </div>
 
-         <div class="col-md-3" style="margin-left: -50px;">
+         <div class="col-md-2">
              <label>From Date:</label>
-             <input type="text" id="StartDate" style="border-radius: 5px!important" />
+             <input type="text" id="StartDate" />
          </div>
 
-         <div class="col-md-3" >
+         <div class="col-md-2" >
              <label>To Date:</label>
-             <input type="text" id="EndDate" style="border-radius: 5px!important" />
+             <input type="text" id="EndDate" />
          </div>
-
-         <div class="col-md-2" style="padding-left:60px!important;" >
-             <input type="button" id="btnSearch" value="Search" onclick="SearchDate()"  style="margin-top: 0px; border-radius:5px!important;"/>
-         </div>
-
+         <div class="col-md-1" >
+             <label></label>
+             <input type="button" id="btnSearch" value="Search" class="btn btn-primry" onclick="SearchDate()" />
+        </div>
      </div>
 
     <div class="row">
