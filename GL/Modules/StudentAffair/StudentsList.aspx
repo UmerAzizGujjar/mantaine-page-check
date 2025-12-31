@@ -265,7 +265,7 @@
             var ddlGroup = $("#ddlGroup").find('option:selected').val();
             var txt_WholeClass = $("#txt_WholeClass").prop("checked");
 
-            window.open('ReportViewer.aspx?ReportName=StudentList&ReportTitle=StudentList' + '&Class=' + Class + '&Isactive=' + Isactive + '&Noactive=' + Noactive + '&Program=' + ddlProgram + '&Batch=' + ddlBatch + '&Group=' + ddlGroup + '&WholeClass=' + txt_WholeClass);
+            window.open('/ReportViewer.aspx?ReportName=StudentList&ReportTitle=StudentList' + '&Class=' + Class + '&Isactive=' + Isactive + '&Noactive=' + Noactive + '&Program=' + ddlProgram + '&Batch=' + ddlBatch + '&Group=' + ddlGroup + '&WholeClass=' + txt_WholeClass);
         }
 
 
