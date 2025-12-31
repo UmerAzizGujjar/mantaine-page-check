@@ -18,7 +18,7 @@
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'BillingProcess.aspx'; } }, 'copy', 'excel', 'pdf'],
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'Share_Distribution.aspx'; } }, 'copy', 'excel', 'pdf'],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -48,8 +48,9 @@
                     });
                 },
                 "columns": [
+                    { "data": "Distribution_Id", "visible": false, "width": "0%" },
                     { "data": "Bill_ID", "visible": false, "width": "0%" },
-                    { "data": "Bill_No", "name": "Bill_No", "width": "5%", "orderable": true },
+                    { "data": "Bill_No", "name": "Bill_No", "width": "7%", "orderable": true },
                     {
                         "data": "Bill_Date", "name": "Bill_Date",
                         "render": function (data, type, full) {
@@ -57,18 +58,18 @@
                             var date = full.Bill_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "7%", "orderable": true
+                        }, "width": "13%", "orderable": true
                     },
-                    { "data": "MrNo", "name": "MrNo", "width": "8%", "orderable": true },
-                    { "data": "Full_Name", "width": "13%", "orderable": false },
-                    { "data": "Total_Amount", "width": "7%", "orderable": false },
-                    { "data": "Status", "width": "7%", "orderable": false },
-                    { "data": "Remarks", "width": "9%", "orderable": false },
+                    { "data": "MrNo", "name": "MrNo", "width": "20%", "orderable": true },
+                    { "data": "Full_Name", "width": "20%", "orderable": false },
+                    { "data": "Total_Amount", "width": "5%", "orderable": false },
+                    { "data": "Status", "width": "5%", "orderable": false },
+                    { "data": "Remarks", "width": "10%", "orderable": false },
                     
                     {
                         render: function (data, type, full) {
                             debugger;
-                            var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Bill_ID + ')" style="border-radius: 4px;color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
+                            var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Distribution_Id + ')" style="border-radius: 4px;color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
 
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=cancelPatient(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
 
@@ -77,7 +78,7 @@
                             result = res + Del;//+ print;
                             return result;
 ;
-                        }, "width": "23%", "orderable": false
+                        }, "width": "20%", "orderable": false
                     }
 
                 ],
@@ -107,7 +108,7 @@
 
 
         function editOpen(id) {
-            window.open("BillingProcess.aspx?Bill_ID=" + id + "");
+            window.open("Share_Distribution.aspx?ID=" + id + "");
         }
         function CancelConfirm(anchorTag) {
 
@@ -117,8 +118,8 @@
             var Bill_ID = $($(row).find('td')[0]).text();
             var BillNo = $($(row).find('td')[1]).text();
 
-            $("#tbloutPatients tr").find('th:eq(14)').show();
-            $("#tbloutPatients tr").find('td:eq(14)').show();
+            $("#tbloutPatients tr").find('th:eq(10)').show();
+            $("#tbloutPatients tr").find('td:eq(10)').show();
             cell = row.insertCell(-1);
             cell.innerHTML = '<span class="show" style="width:100px;"><input type="text" id="txtCancel" onchange="cancelPatient(this)"/></span>';
 
@@ -128,7 +129,7 @@
 
             var row = $(anchorTag).parents('tr')[0];
             var Bill_No = $($(row).find('td')[0]).text();
-            if (confirm('Are you sure want to Cancel this Bill:- ' + Bill_No)) {
+            if (confirm('Are you sure want to Cancel this Distribution')) {
                 PageMethods.CancelPatient(Bill_No,  function (msg) {
                     if (msg == "Allowdlt") {
                         alert('You have no right to Cancel. ')
@@ -147,7 +148,7 @@
                     );
             }
 
-            window.location.href = "BillingProcessView.aspx";
+            window.location.href = "Share_Distribution_List.aspx";
         }
 
         function deleteConfirm(anchorTag) {
@@ -175,6 +176,7 @@
                  <table class="table table-hover table-striped table-bordered" id="tbloutPatients">
                      <thead id="ihead">
                          <tr>
+                             <th class="hide">Distribution ID</th>
                              <th class="hide">Bill ID</th>
                              <th>Bill No</th>
                              <th>Distribution Date</th>
@@ -183,8 +185,8 @@
                              <th>Total Amount</th>
                              <th>Status</th>
                              <th>Remarks</th>
-
                              <th>Actions</th>
+                             <%--<th>Cancel Remarks</th>--%>
                          </tr>
                      </thead>
                      <tbody id="ibody">
