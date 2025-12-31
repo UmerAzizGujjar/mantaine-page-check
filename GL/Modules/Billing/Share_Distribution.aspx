@@ -13,9 +13,11 @@
             getAccounts();
             LoadDetailDoctor()
             GetIPDAccounts()
-
+            $("#btnApprove").hide()
             var Dist_ID = '<% =Request.QueryString["ID"] %>';
-
+            if (Dist_ID != "") {
+                LoadDistributionHead(Dist_ID)
+            }
 
 
             $(document).on('keyup', '.disc-perc', function () {
@@ -27,6 +29,177 @@
                 row.find('.net-amount').val(discAmount.toFixed(2));
             });
         });
+        function LoadDistributionHead(Dist_ID) {
+            var id = Dist_ID
+            $.ajax({
+                type: "post",
+                url: "Share_Distribution.aspx/LoadDistributionHead",
+                data: JSON.stringify({
+                    "id": id
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var parse = JSON.parse(response.d);
+                    var TrnsDate = new Date(parseInt(parse[0].Distribution_Date.substr(6)));
+                    TrnsDate = moment(TrnsDate).format('DD-MMM-YYYY');
+                    var BillId = parse[0].Bill_Id
+                    var Voucher_Status = parse[0].Voucher_Status
+                    $("#txtDistributuionDate").val(TrnsDate);
+                    $("#txtRemarks").val(parse[0].Remarks);
+                    $("#hdBillID").val(BillId); 
+                    $("#hdPatientID").val(parse[0].Patient_Id);
+                    if (Voucher_Status == "Approved") {
+                        $("#btnApprove").show()
+                    }
+                    
+
+                    var Dist_ID = '<% =Request.QueryString["ID"] %>';
+                    GetPatientDetailByBillID(BillId)
+                    LoadDistributionDetail(Dist_ID)
+                    LoadIPDDistributionShare(Dist_ID)
+                    $("#btnSave").val("Update")
+                }
+
+            });
+        }
+
+        function LoadIPDDistributionShare(Dist_ID) {
+            var id = Dist_ID
+            PageMethods.LoadIPDDistributionShare(id, function (resp) {
+
+                var data = JSON.parse(resp);
+                var rows = '';
+
+                $.each(data, function (key, value) {
+
+                    rows += `
+<tr>
+    <td style="text-align:center;">
+        <input type="hidden" name="Account_ID" value="${value.Account_Id}">
+        <input type="text" name="Account_Code" value="${value.Account_Code}" readonly>
+    </td>
+
+    <td style="text-align:center;">
+        <input type="text" name="Account_Name" value="${value.Share_Account_Name}" readonly>
+    </td>
+
+    <td style="text-align:center;">
+        <input type="number" class="form-control total-amount"
+               name="txtRevenuAmount" value="${value.Total_Amount}">
+    </td>
+
+    <td style="text-align:center;">
+        <input type="number" class="form-control disc-perc"
+               name="txtRevenuDiscPer" value="${value.Discount_Percentage}">
+    </td>
+
+    <td style="text-align:center;">
+        <input type="number" class="form-control disc-amount"
+               name="txtRevenuDiscAmount" value="${value.Discount_Amount}">
+    </td>
+
+    <td style="text-align:center;">
+        <input type="number" class="form-control net-amount"
+               name="txtRevenuNetAmount" value="${value.Net_Amount}">
+    </td>
+</tr>`;
+                });
+                $('#tblDoctorShareDetails tbody')
+                    .empty()
+                    .append(rows);
+            });
+        }
+
+        function LoadDistributionDetail(Dist_ID) {
+
+            PageMethods.LoadDistributionDetail(Dist_ID, function (resp) {
+
+                var data = JSON.parse(resp);
+                var rows = '';
+
+                $.each(data, function (key, value) {
+                    debugger;
+                    var options = Account.replace(
+                        `value="${value.Account_Id}"`,
+                        `value="${value.Account_Id}" selected`
+                    );
+                    if (value.Share_Calculation === 'IPD REVENUE') {
+                        shareableIncome = value.Net_Amount;
+                        $('#txtShareableIncome').val(shareableIncome)
+                    }
+
+                    rows += `
+<tr>
+    <td>
+        <select id="ddlGlAccounts${key}" name="ddlGlAccounts" data-account="${value.Account_Id}">
+            ${options}
+        </select>
+    </td>
+    <td style="text-align:center;">
+        <input type="text" name="txtDescription" readonly value="${value.Share_Calculation}">
+    </td>
+    <td style="text-align:center;">
+        <input type="text" readonly name="txtTotalAmount" value="${value.Total_Amount}">
+    </td>
+    <td style="text-align:center;">
+        <input type="text" readonly name="txtDiscountPer" value="${value.Discount_Percentage}">
+    </td>
+    <td style="text-align:center;">
+        <input type="text" readonly name="txtDiscountAmount" value="${value.Discount_Amount}">
+    </td>
+    <td style="text-align:center;">
+        <input type="text" readonly name="txtNetAmount" value="${value.Net_Amount}">
+    </td>
+</tr>`;
+                });
+
+                $('#tblDetails tbody').empty().append(rows);
+                //$('#tblDetails tbody select[name="ddlGlAccounts"]').each(function () {
+                //    var accId = $(this).data('account');
+                //    $(this).val(accId).trigger('change');
+                //});
+            });
+        }
+
+        function GetPatientDetailByBillID(BillId) {
+            debugger;
+            $.ajax({
+                type: "post",
+                url: "Share_Distribution.aspx/LoadPatientDetailsByBillID",
+                data: JSON.stringify({
+                    "BillId": BillId
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: OnSuccess ,
+
+            });
+        }
+        function OnSuccess(data) {
+            debugger;
+            var parse = JSON.parse(data.d);
+            debugger;
+            $('#hdPatientID').text(parse[0].Patient_ID);
+            $('#hdBillID').text(parse[0].bill_ID);
+            $('#lblMRNo').text(parse[0].Patient_No);
+            $('#lblPatienName').text(parse[0].Full_Name);
+            $('#lblAgeYears').text(parse[0].Age_years);
+            $('#lblGender').text(parse[0].Gender);
+            $('#lblRegDate').text(parse[0].Creation_Date);
+            $('#lblAddress').text(parse[0].Permanent_Address);
+            $('#txtToT_amount').val(parse[0].Total_Amount);
+            $('#txt_netAmount').val(parse[0].Net_Amount);
+            $('#txt_RcvdAmount').val(parse[0].Received_Amount);
+            $('#txt_DiscAmount').val(parse[0].Discount_Amount);
+            $('#txt_BalAmount').val(parse[0].balance_Amount);
+            $('#txtAdv_amount').val(parse[0].Advance_Amount);
+            $('#lblContactNo').text(parse[0].Mobile1);
+            $('#lblDepartment').text(parse[0].Department);
+            $('#lblPatientCategory').text(parse[0].Patient_Type);
+
+        }
         function GetPatientDetailByBill() {
             debugger;
             var Bill_No = $('#txtBillNo').val();
@@ -38,32 +211,7 @@
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (response) {
-                    debugger;
-                    var parse = JSON.parse(response.d);
-                    var length = parse.length;
-                    var rows;
-                    debugger;
-                    $('#hdPatientID').text(parse[0].Patient_ID);
-                    $('#hdBillID').text(parse[0].bill_ID);
-                    $('#lblMRNo').text(parse[0].Patient_No);
-                    $('#lblPatienName').text(parse[0].Full_Name);
-                    $('#lblAgeYears').text(parse[0].Age_years);
-                    $('#lblGender').text(parse[0].Gender);
-                    $('#lblRegDate').text(parse[0].Creation_Date);
-                    $('#lblAddress').text(parse[0].Permanent_Address);
-                    $('#txtToT_amount').val(parse[0].Total_Amount);
-                    $('#txt_netAmount').val(parse[0].Net_Amount);
-                    $('#txt_RcvdAmount').val(parse[0].Received_Amount);
-                    $('#txt_DiscAmount').val(parse[0].Discount_Amount);
-                    $('#txt_BalAmount').val(parse[0].balance_Amount);
-                    $('#txtAdv_amount').val(parse[0].Advance_Amount);
-                    $('#lblContactNo').text(parse[0].Mobile1);
-                    $('#lblDepartment').text(parse[0].Department);
-                    $('#lblPatientCategory').text(parse[0].Patient_Type);
-  
-                }
-
+                success: OnSuccess,
             });
             
             $.ajax({
@@ -290,7 +438,7 @@
                 var remarks = $("#txtRemarks").text();
                 var Distributuion_Date = $("#txtDistributuionDate").val();
                 var saveVal = $('#btnSave').val();
-              
+                var Distribution_Id = '<% =Request.QueryString["ID"] %>'
                 var DepartmentDistribution = [];
                 $.each($('#tblDetails tbody tr'), function (key, value) {
                     var Account_ID = $(value).find('select[name="ddlGlAccounts"]').val();
@@ -318,7 +466,9 @@
                         Account_ID: Account_ID, Account_Name: Account_Name, txtRevenuAmount: txtRevenuAmount, txtRevenuDiscPer: txtRevenuDiscPer, txtRevenuDiscAmount: txtRevenuDiscAmount, txtRevenuNetAmount: txtRevenuNetAmount
                     });
                 });
-                var data = { Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };
+            var data = { Distribution_Id: Distribution_Id,Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };
+
+            if (saveVal == "Save") {
                 PageMethods.SaveDistribution(JSON.stringify(data), function (res) {
                     Swal.fire({
                         icon: 'success',
@@ -337,7 +487,27 @@
                 }, function (error) {
                     alert(error.get_message());
                 });
-            
+            }
+            else {
+                PageMethods.Update(JSON.stringify(data), function (res) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Successfully Save',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    window.location.reload();
+                    $('#btnSave').attr('disabled', 'disabled');
+                }, function (error) {
+                    alert(error.get_message());
+                });
+            }
         }
 
     </script>
@@ -593,10 +763,21 @@
         </div>
 
     </div>
-    <div class="row">
-       <div class="col-lg-2 col-md-6 col-sm-6">
-           <input type="button" id="btnSave" onclick="SaveRecord();" class="btn btn-primry" value="Save" />
-       </div>
-    </div>
 
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" id="btnSave" onclick="SaveRecord();" class="btn btn-primry" value="Save" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" class="btn btn-gray" value="List View" onclick="window.open('Share_Distribution_List.aspx')" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" id="" class="btn btn-primry" value="New" onclick="window.location = 'Share_Distribution.aspx'" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" id="btnApprove" class="btn btn-primry" value="Approve" onclick="Approve()" />
+            </div>
+        </div>
+    </div>
 </asp:Content>

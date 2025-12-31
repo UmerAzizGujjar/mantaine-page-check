@@ -27,7 +27,7 @@ namespace PMS.Modules.Billing
                     var Billing = from b in _dbContext.IPD_Distribution_Masters
                                   join p in _dbContext.Reg_patients on b.Patient_Id equals p.pat_id
                                   join u in _dbContext.Ar_Billings on b.Bill_Id equals u.Bill_ID
-                                  where  (
+                                  where ( b.IsCancel == false || b.IsCancel == null ) && (
                                         (u.Bill_No.ToString().Contains(searchValue) || p.Full_Name.Contains(searchValue) || p.mr_no_sequence.Contains(searchValue)))
                                   select new
                                   {
@@ -38,6 +38,7 @@ namespace PMS.Modules.Billing
                                       MrNo = p.mr_no_sequence,
                                       Full_Name = p.Full_Name,
                                       Bill_ID = u.Bill_ID,
+                                      Distribution_Id = b.Distribution_Id,
                                       Status = b.Voucher_Status
                                   };
 
@@ -68,6 +69,33 @@ namespace PMS.Modules.Billing
             {
                 throw new Exception("Error fetching patient list", ex);
             }
+        }
+        [WebMethod]
+        public static string CancelPatient(int Bill_No)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            int billPK_ID = (from b in db.Ar_Billings where b.Bill_No == Convert.ToString(Bill_No) select b.Bill_ID).FirstOrDefault();
+            string status = "Allowdlt";
+            string AllowPatientDelete = DBClass.getField("select dbo.GetRights('AllowBillDelete','" + AppConfig.UserID + "')");
+
+            if (Convert.ToBoolean(AllowPatientDelete) == true)
+            {
+                status = "Fail";
+               
+                    Ar_Billing p = new Ar_Billing();
+                    var query = db.IPD_Distribution_Masters.SingleOrDefault(x => x.Distribution_Id == (Bill_No));
+                    if (query != null)
+                    {
+                        query.IsCancel = true;
+                        query.Cancel_By = AppConfig.UserID;
+                        query.Cancel_Time = DateTime.Now;
+                        db.SubmitChanges();
+                        status = "success";
+                    }
+                
+                return status;
+            }
+            return status;
         }
     }
 }
