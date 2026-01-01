@@ -20,7 +20,10 @@
 
         });
         function PrintTest(Receipt_ID) {
-            var url = '../../ReportViewer.aspx?ReportName=PrinAllReceiptDetail&ReportTitle=Bill Detail (IPD)  ' + '&PatientID=' + Receipt_ID;
+
+
+            var url = '/ReportViewer.aspx?ReportName=ReceiptbasePrint&ReportTitle=Cash  Receipt ' + '&Receipt_ID=' + Receipt_ID;
+            //var url = '../../ReportViewer.aspx?ReportName=PrinAllReceiptDetail&ReportTitle=Bill Detail (IPD)  ' + '&PatientID=' + Receipt_ID;
             window.open(url, '_blank');
 
         }
