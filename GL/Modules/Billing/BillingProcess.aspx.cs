@@ -2742,14 +2742,14 @@ namespace PMS
         }
 
 
-        [WebMethod]
-        public static string approve_Bill(string BillId)
-        {
-            var user_id = AppConfig.UserID;
-            DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.SpApproveBillingProcess(Convert.ToInt32(BillId), user_id);
-            return (new JavaScriptSerializer()).Serialize(Details);
-        }
+      //  [WebMethod]
+      //  public static string approve_Bill(string BillId)
+      //  {
+      //      var user_id = AppConfig.UserID;
+      //      DataBaseDataContext db = new DataBaseDataContext();
+      ////      var Details = db.SpApproveBillingProcess(Convert.ToInt32(BillId), user_id);
+      //      return (new JavaScriptSerializer()).Serialize(Details);
+      //  }
         [WebMethod]
         public static string LoadDocShare(int Bill_ID)
         {
