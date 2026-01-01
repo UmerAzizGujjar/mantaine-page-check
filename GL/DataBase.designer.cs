@@ -4820,13 +4820,6 @@ namespace PMS
             return ((System.Nullable<decimal>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemcode, inventory_Org).ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApproveBillingProcess")]
-        public ISingleResult<SpApproveBillingProcessResult> SpApproveBillingProcess([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "BillId", DbType = "BigInt")] System.Nullable<long> billId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), billId, user_id);
-            return ((ISingleResult<SpApproveBillingProcessResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAuditRecordAginstPurIvo")]
         public ISingleResult<spGetAuditRecordAginstPurIvoResult> spGetAuditRecordAginstPurIvo([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Invoice_id", DbType = "Int")] System.Nullable<int> invoice_id)
         {
@@ -181659,32 +181652,6 @@ namespace PMS
                 if ((this._WithHoldTax_Check != value))
                 {
                     this._WithHoldTax_Check = value;
-                }
-            }
-        }
-    }
-
-    public partial class SpApproveBillingProcessResult
-    {
-
-        private string _Message;
-
-        public SpApproveBillingProcessResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(29) NOT NULL", CanBeNull = false)]
-        public string Message
-        {
-            get
-            {
-                return this._Message;
-            }
-            set
-            {
-                if ((this._Message != value))
-                {
-                    this._Message = value;
                 }
             }
         }

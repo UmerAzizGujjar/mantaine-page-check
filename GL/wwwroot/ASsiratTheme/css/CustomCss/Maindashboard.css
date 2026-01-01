@@ -7,7 +7,7 @@
 }
 
 .headercolor {
-    background-color: #EFA63E !important;
+    background-color: #308665 !important;
     height: 45px !important;
 }
 
@@ -30,12 +30,12 @@ span {
 }
 
 .card-outline-yellow {
-    border: 2px solid #EFA63E;
+    border: 2px solid #308665;
     background-color: white !important;
 }
 
 .yellow-icon {
-    color: #EFA63E !important;
+    color: #308665 !important;
     font-size: 34px !important;
     margin-right: 0px;
     margin-top: 0px;
@@ -84,6 +84,6 @@ a {
 }
 
     a:hover {
-        color: #EFA63E !important;
+        color: #308665 !important;
         text-decoration: none;
     }
