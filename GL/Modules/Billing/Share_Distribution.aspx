@@ -527,7 +527,31 @@
                 });
             }
         }
-
+            function Approve() {
+                debugger;
+               
+                var Dist_ID = '<% =Request.QueryString["ID"] %>';
+                PageMethods.approve(Dist_ID, function (Tests) {
+                 debugger
+                 var message = JSON.parse(Tests);
+                 if (message[0].Message != null || message[0].Message != "") {
+                     Swal.fire({
+                         icon: 'success',
+                         title: 'Success!',
+                         text: message[0].Message,
+                         showConfirmButton: false,
+                         timer: 2500,
+                         customClass: {
+                             popup: 'swal-big-popup',
+                             title: 'swal-big-title',
+                             htmlContainer: 'swal-big-text'
+                         }
+                     });
+                     //alert(message[0].Message);
+                     location.reload();
+                 }
+             });
+         }
     </script>
 
 </asp:Content>
