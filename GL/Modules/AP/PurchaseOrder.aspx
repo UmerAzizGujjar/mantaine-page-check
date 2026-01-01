@@ -2,8 +2,20 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
-        .form-check-input{
-            margin-left:-20px !important;
+        .form-check-input {
+            margin-left: -20px !important;
+        }
+
+        .tooltip-inner {
+            background-color: #ffc107 !important;
+            color: #000 !important;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tooltip-arrow::before {
+            border-top-color: #ffc107 !important;
+            border-bottom-color: #ffc107 !important;
         }
 
     </style>
@@ -173,7 +185,9 @@
                     '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '"  value="' + item_name + '"/> ' + item_name + ' </td>' +
                     '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '"  value="' + unit + '" />' + unit + ' </td>' +
                     '<td><input type="text"  id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + Qty + '"/></input></td>' +
-                    '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" /></td>' +
+                    '<td>' + '<input type="text" id="txtBonusQty' + length + '"' + ' style="text-align:right;width:50px!important;font-size:9px;height:20px;"' + ' name="txtBonusQty" value="0"' +
+                    ' data-toggle="tooltip"' +  ' data-placement="bottom"' +  ' title="Enter Bonus quantity in Loose"' +  '/>' +
+                    '</td>' +
                     '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '"  value="' + Rate + '" /></td>' +
                     '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"   name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '"  value="0" /></td>' +
                     '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()"  style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + length + '" name="txtDisAmount"  ></input></td>' +
@@ -194,7 +208,7 @@
                 populateAdvanceTaxddl(length);
                 populateFurtherTaxddl(length);
                 CulculateAmonutWithQty(length);
-                
+                $('[data-toggle="tooltip"]').tooltip();
                 length++;
                 $('input[name="txtddate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
                 calcTotal();

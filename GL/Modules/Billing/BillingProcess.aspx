@@ -1726,14 +1726,29 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (data) {
+                     debugger;
+                    var result = JSON.parse(data.d);
+                    var hos_share = parseFloat(result["hos_share"]) || 0;
+                    var doc_share = parseFloat(result["doc_share"]) || 0;
 
-                        debugger;
-                        var hos_share = JSON.parse(data.d)["hos_share"];
-                        var doc_share = JSON.parse(data.d)["doc_share"];
-                        debugger;
-                        $(rows).closest('tr').find('td input[name="DocShare"]').val(doc_share);
-                        $(rows).closest('tr').find('td input[name="HocShare"]').val(hos_share);
+                    // 🔍 Find the <tr> from 'rows'
+                    var $row = $(rows).closest('tr');
+
+                    // ✅ Read DisPer from *this row* (not 'value')
+                    var disPerStr = $row.find('input[name="DisPer"]').val();
+                    var disPerNum = parseFloat(disPerStr) || 0;
+
+                    // 🔧 Apply discount % to hospital & doctor shares (if > 0)
+                    if (disPerNum > 0) {
+                        var factor = disPerNum / 100; // e.g. 20 → 0.2
+                        hos_share = hos_share * (1 - factor);
+                        doc_share = doc_share * (1 - factor);
                     }
+
+                    // ✅ Set final (discounted) values back
+                    $row.find('input[name="HocShare"]').val(hos_share.toFixed(2));
+                    $row.find('input[name="DocShare"]').val(doc_share.toFixed(2));
+                }
                 })
             }
 
@@ -1897,6 +1912,26 @@
                         var type = $(value).find('input[name="hdnItemType"]').val();
                         var _Procedure = $(value).find('input[name="hdnProcedure"]').val();
                         var _Package = $(value).find('input[name="hdnParentTrans_Type"]').val();
+
+                        var hospital_share = $(value).find('input[name="HocShare"]').val();
+                        var doctor_share = $(value).find('input[name="DocShare"]').val();
+
+                        // --- Apply discount % to hospital & doctor shares (localized change) ---
+                        if (DisPer && !isNaN(DisPer)) {
+                            var disPerNum = parseFloat(DisPer) / 100; // e.g. 20% → 0.2
+                            var disAmtHosp = parseFloat(hospital_share || 0) * disPerNum;
+                            var disAmtDoc  = parseFloat(doctor_share  || 0) * disPerNum;
+
+                            // Update *displayed* shares (after discount deduction)
+                            var newHospShare = parseFloat(hospital_share || 0) - disAmtHosp;
+                            var newDocShare  = parseFloat(doctor_share  || 0) - disAmtDoc;
+
+                            // Set back to inputs (as numbers, rounded to 2 decimals for UI)
+                            $(value).find('input[name="HocShare"]').val(newHospShare.toFixed(2));
+                            $(value).find('input[name="DocShare"]').val(newDocShare.toFixed(2));
+
+                            // Optional: keep original values elsewhere? Not overwritten unless needed.
+                        }
 
                         if (localStorage.OnlyPercentage == 1) {
 

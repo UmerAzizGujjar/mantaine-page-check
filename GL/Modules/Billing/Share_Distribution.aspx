@@ -8,8 +8,198 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            $("#txtDistributuionDate").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#txtDistributuionDate").val($.datepicker.formatDate('mm/dd/yy', new Date()));
+            getAccounts();
+            LoadDetailDoctor()
+            GetIPDAccounts()
+            $("#btnApprove").hide()
+            var Dist_ID = '<% =Request.QueryString["ID"] %>';
+            if (Dist_ID != "") {
+                LoadDistributionHead(Dist_ID)
+            }
 
+
+            $(document).on('keyup', '.disc-perc', function () {
+
+                var perc = parseFloat($(this).val()) || 0;
+                var shareableIncome = parseFloat($('#txtShareableIncome').val()) || 0;
+                var row = $(this).closest('tr');
+                var discAmount = (shareableIncome * perc) / 100;
+                row.find('.net-amount').val(discAmount.toFixed(2));
+            });
         });
+        function LoadDistributionHead(Dist_ID) {
+            var id = Dist_ID
+            $.ajax({
+                type: "post",
+                url: "Share_Distribution.aspx/LoadDistributionHead",
+                data: JSON.stringify({
+                    "id": id
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var parse = JSON.parse(response.d);
+                    var TrnsDate = new Date(parseInt(parse[0].Distribution_Date.substr(6)));
+                    TrnsDate = moment(TrnsDate).format('DD-MMM-YYYY');
+                    var BillId = parse[0].Bill_Id
+                    var Voucher_Status = parse[0].Voucher_Status
+                    $("#txtDistributuionDate").val(TrnsDate);
+                    $("#txtRemarks").val(parse[0].Remarks);
+                    $("#hdBillID").val(BillId); 
+                    $("#hdPatientID").val(parse[0].Patient_Id);
+                    if (Voucher_Status == "Approved") {
+                        $("#btnApprove").show()
+                    }
+                    
+
+                    var Dist_ID = '<% =Request.QueryString["ID"] %>';
+                    GetPatientDetailByBillID(BillId)
+                    LoadDistributionDetail(Dist_ID)
+                    LoadIPDDistributionShare(Dist_ID)
+                    $("#btnSave").val("Update")
+                }
+
+            });
+        }
+
+        function LoadIPDDistributionShare(Dist_ID) {
+            var id = Dist_ID
+            PageMethods.LoadIPDDistributionShare(id, function (resp) {
+
+                var data = JSON.parse(resp);
+                var rows = '';
+
+                $.each(data, function (key, value) {
+
+                    rows += `
+<tr>
+    <td style="text-align:center;">
+        <input type="hidden" name="Account_ID" value="${value.Account_Id}">
+        <input type="text" name="Account_Code" value="${value.Account_Code}" readonly>
+    </td>
+
+    <td style="text-align:center;">
+        <input type="text" name="Account_Name" value="${value.Share_Account_Name}" readonly>
+    </td>
+
+    <td style="text-align:center;">
+        <input type="number" class="form-control total-amount"
+               name="txtRevenuAmount" value="${value.Total_Amount}">
+    </td>
+
+    <td style="text-align:center;">
+        <input type="number" class="form-control disc-perc"
+               name="txtRevenuDiscPer" value="${value.Discount_Percentage}">
+    </td>
+
+    <td style="text-align:center;">
+        <input type="number" class="form-control disc-amount"
+               name="txtRevenuDiscAmount" value="${value.Discount_Amount}">
+    </td>
+
+    <td style="text-align:center;">
+        <input type="number" class="form-control net-amount"
+               name="txtRevenuNetAmount" value="${value.Net_Amount}">
+    </td>
+</tr>`;
+                });
+                $('#tblDoctorShareDetails tbody')
+                    .empty()
+                    .append(rows);
+            });
+        }
+
+        function LoadDistributionDetail(Dist_ID) {
+
+            PageMethods.LoadDistributionDetail(Dist_ID, function (resp) {
+
+                var data = JSON.parse(resp);
+                var rows = '';
+
+                $.each(data, function (key, value) {
+                    debugger;
+                    var options = Account.replace(
+                        `value="${value.Account_Id}"`,
+                        `value="${value.Account_Id}" selected`
+                    );
+                    if (value.Share_Calculation === 'IPD REVENUE') {
+                        shareableIncome = value.Net_Amount;
+                        $('#txtShareableIncome').val(shareableIncome)
+                    }
+
+                    rows += `
+<tr>
+    <td>
+        <select id="ddlGlAccounts${key}" name="ddlGlAccounts" data-account="${value.Account_Id}">
+            ${options}
+        </select>
+    </td>
+    <td style="text-align:center;">
+        <input type="text" name="txtDescription" readonly value="${value.Share_Calculation}">
+    </td>
+    <td style="text-align:center;">
+        <input type="text" readonly name="txtTotalAmount" value="${value.Total_Amount}">
+    </td>
+    <td style="text-align:center;">
+        <input type="text" readonly name="txtDiscountPer" value="${value.Discount_Percentage}">
+    </td>
+    <td style="text-align:center;">
+        <input type="text" readonly name="txtDiscountAmount" value="${value.Discount_Amount}">
+    </td>
+    <td style="text-align:center;">
+        <input type="text" readonly name="txtNetAmount" value="${value.Net_Amount}">
+    </td>
+</tr>`;
+                });
+
+                $('#tblDetails tbody').empty().append(rows);
+                //$('#tblDetails tbody select[name="ddlGlAccounts"]').each(function () {
+                //    var accId = $(this).data('account');
+                //    $(this).val(accId).trigger('change');
+                //});
+            });
+        }
+
+        function GetPatientDetailByBillID(BillId) {
+            debugger;
+            $.ajax({
+                type: "post",
+                url: "Share_Distribution.aspx/LoadPatientDetailsByBillID",
+                data: JSON.stringify({
+                    "BillId": BillId
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: OnSuccess ,
+
+            });
+        }
+        function OnSuccess(data) {
+            debugger;
+            var parse = JSON.parse(data.d);
+            debugger;
+            $('#hdPatientID').text(parse[0].Patient_ID);
+            $('#hdBillID').text(parse[0].bill_ID);
+            $('#lblMRNo').text(parse[0].Patient_No);
+            $('#lblPatienName').text(parse[0].Full_Name);
+            $('#lblAgeYears').text(parse[0].Age_years);
+            $('#lblGender').text(parse[0].Gender);
+            $('#lblRegDate').text(parse[0].Creation_Date);
+            $('#lblAddress').text(parse[0].Permanent_Address);
+            $('#txtToT_amount').val(parse[0].Total_Amount);
+            $('#txt_netAmount').val(parse[0].Net_Amount);
+            $('#txt_RcvdAmount').val(parse[0].Received_Amount);
+            $('#txt_DiscAmount').val(parse[0].Discount_Amount);
+            $('#txt_BalAmount').val(parse[0].balance_Amount);
+            $('#txtAdv_amount').val(parse[0].Advance_Amount);
+            $('#lblContactNo').text(parse[0].Mobile1);
+            $('#lblDepartment').text(parse[0].Department);
+            $('#lblPatientCategory').text(parse[0].Patient_Type);
+
+        }
         function GetPatientDetailByBill() {
             debugger;
             var Bill_No = $('#txtBillNo').val();
@@ -21,31 +211,303 @@
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
+                success: OnSuccess,
+            });
+            
+            $.ajax({
+                type: "post",
+                url: "Share_Distribution.aspx/LoadDistributionDetailsByBillNO",
+                data: JSON.stringify({ "Bill_No": Bill_No }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
                 success: function (response) {
                     debugger;
+
                     var parse = JSON.parse(response.d);
-                    var length = parse.length;
-                    var rows;
-                    debugger;
-                    $('#hdPatientID').text(parse[0].Patient_ID);
-                    $('#lblMRNo').text(parse[0].Patient_No);
-                    $('#lblPatienName').text(parse[0].Full_Name);
-                    $('#lblAgeYears').text(parse[0].Age_years);
-                    $('#lblGender').text(parse[0].Gender);
-                    $('#lblRegDate').text(parse[0].Creation_Date);
-                    $('#lblAddress').text(parse[0].Permanent_Address);
-                    $('#lblContactNo').text(parse[0].Mobile1);
-                    $('#lblDepartment').text(parse[0].Department);
-                    $('#lblPatientCategory').text(parse[0].Patient_Type);
-                    for (var i = 0; i < length; i++) {
-                        debugger;
-                        rows += '<tr><td style="display:none">' + parse[i].Patient_ID + '</td><td style="display:none">' + parse[i].Bill_Details_ID + '  </td><td style="display:none">' + parse[i].Item_Id + '</td><td style="text-align: center;">' + parse[i].Item_Name + '</td><td style="text-align: center;">' + parse[i].Doctor_Share + '</td><td style="text-align: center;">' + parse[i].Hospital_Share + '</td><td><input type="text"  id="DocRefund' + i + '"  name="DocRefund" value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="text" name="HosRefund" value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td></tr>';
+                    var rows = '';
+                    var shareableIncome = $('#txtShareableIncome').val() || 0;
+
+                    for (var i = 0; i < parse.length; i++) {
+                        var netAmount = parse[i].Net_Amount;
+                        if (parse[i].Description === 'IPD REVENUE') {
+                            shareableIncome = netAmount;
+                            $('#txtShareableIncome').val(shareableIncome)
+                        }
+                        rows += `
+                <tr>
+                    <td>
+                        <select id="ddlGlAccounts${i}" name="ddlGlAccounts">
+                            ${Account}
+                        </select>
+                    </td>
+                    <td style="text-align:center;">
+                        <input type="text" id="txtDescription" name="txtDescription" readonly value="${parse[i].Description}">
+                    </td>
+                    <td style="text-align:center;">
+                        <input type="text" readonly id="txtTotalAmount" name="txtTotalAmount" value="${parse[i].Total_Amount}">
+                    </td>
+                    <td style="text-align:center;">
+                        <input type="text" readonly id="txtDiscountPer" name="txtDiscountPer" value="${parse[i].Discount_Percentage}">
+                    </td>
+                    <td style="text-align:center;">
+                        <input type="text" readonly id="txtDiscountAmount" name="txtDiscountAmount" value="${parse[i].Discount_Amount}">
+                    </td>
+                    <td style="text-align:center;">
+                        <input type="text" readonly id="txtNetAmount" name="txtNetAmount" value="${netAmount}">
+                    </td>
+                </tr>`;
                     }
-                    $('#tblDetails tbody tr').remove();
+
+                    $('#tblDetails tbody').empty();
                     $('#tblDetails tbody').append(rows);
                 }
-
             });
+
+        }
+
+        function LoadDetailDoctor() {
+            debugger;
+            var options = '<option value="0">Select Doctor</option>';
+            $.ajax({
+                type: "post",
+                url: "Share_Distribution.aspx/GetDoctors",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    debugger;
+                    $.each(JSON.parse(response.d), function (key, value) {
+
+                        options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                    });
+                    Doctors = options;
+                    $('#ddlDoctor').html(options);
+                    $('#ddlDoctor').select2();
+                },
+                failure: function (response) {
+                    alert("Error!!!");
+                }
+            });
+        }
+        var Account = '';
+        function getAccounts() {
+            $.ajax({
+                url: 'Share_Distribution.aspx/filldropdowns',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    let options = '<option value="0">Please Select</option>';
+                    let data = JSON.parse(response.d);
+                    $.each(data, function (key, value) {
+                        options += `<option value="${value.Account_ID}">${value.Account_Code} - ${value.Account_Name}</option>`;
+                    });
+                    $('#ddlGlAccounts').html(options);
+                    $('#ddlGlAccounts').select2();
+                    Account = options
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching accounts:', error);
+                    callback('<option value="0">Error</option>');
+                }
+            });
+        }
+
+        function GetIPDAccounts() {
+            $.ajax({
+                url: 'Share_Distribution.aspx/fillIpddropdowns',
+                type: 'POST',
+                data: JSON.stringify({
+                    
+                }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    let options = '';
+                    let data = JSON.parse(response.d);
+                    $.each(data, function (key, value) {
+                         options += `<option value="${value.Account_ID}">${value.Account_Code} - ${value.Account_Name}</option>`;
+                    });
+                    $('#ddlIpdAccount').html(options);
+                    $('#ddlIpdAccount').select2();
+                    $('#ddlIpdAccount').prop('disabled', false);
+                },
+            });
+        }
+
+        function GetDocAccounts() {
+            var doc_id = $('#ddlDoctor').val();
+            $.ajax({
+                url: 'Share_Distribution.aspx/fillDocdropdowns',
+                type: 'POST',
+                data: JSON.stringify({
+                    "doc_id": doc_id
+                }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    let options = '';
+                    let data = JSON.parse(response.d);
+                    $.each(data, function (key, value) {
+                        options += `<option value="${value.Account_ID}">${value.Account_Code} - ${value.Account_Name}</option>`;
+                    });
+                    $('#ddlGlDocAccounts').html(options);
+                    $('#ddlGlDocAccounts').select2();
+                },
+            });
+        }
+        debugger;
+        function GenerateIPDRows() {
+            debugger;
+
+            var accountId = $('#ddlIpdAccount').val();
+            var IPDShare = $('#IPD_Share').val();
+            var fullAccountText = $('#ddlIpdAccount option:selected').text();
+
+            if (!IPDShare || !accountId) {
+                alert('Please select both Doctor and Account');
+                return;
+            }
+            var parts = fullAccountText.split('-');
+            var accountCode = parts[0].trim();
+            var accountName = parts.length > 1 ? parts[1].trim() : '';
+            var row = `
+            <tr>
+                <td style="text-align:center;"><input type="hidden" id="Account_ID" name="Account_ID" value="${accountId}"><input type="text" id="Account_Code" name="Account_Code" value="${accountCode}" readonly></td>
+                <td style="text-align:center;"><input type="text" id="Account_Name" name="Account_Name" value="${accountName}" readonly></td>
+                <td style="text-align:center;">
+                    <input type="number" class="form-control total-amount" id="txtRevenuAmount" name="txtRevenuAmount" value="0">
+                </td>
+                <td style="text-align:center;">
+                    <input type="number" class="form-control disc-perc" id="txtRevenuDiscPer"  name="txtRevenuDiscPer" value="0">
+                </td>
+                <td style="text-align:center;">
+                    <input type="number" class="form-control disc-amount" id="txtRevenuDiscAmount"  name="txtRevenuDiscAmount" value="${IPDShare}">
+                </td>
+                <td style="text-align:center;">
+                    <input type="number" class="form-control net-amount" id="txtRevenuNetAmount"  name="txtRevenuNetAmount" value="0" >
+                </td>
+            </tr>
+        `;
+
+            $('#tblDoctorShareDetails tbody').append(row);
+        }
+
+        debugger;
+        function GenerateRows() {
+
+            var doctorId = $('#ddlDoctor').val();
+            var doctorText = $('#ddlDoctor option:selected').text();
+
+            var accountId = $('#ddlGlDocAccounts').val();
+            var fullAccountText = $('#ddlGlDocAccounts option:selected').text();
+
+            if (!doctorId || !accountId) {
+                alert('Please select both Doctor and Account');
+                return;
+            }
+            var parts = fullAccountText.split('-');
+            var accountCode = parts[0].trim();
+            var accountName = parts.length > 1 ? parts[1].trim() : '';
+            var row = `
+            <tr>
+                <td style="text-align:center;"><input type="hidden" id="Account_ID" name="Account_ID" value="${accountId}"><input type="text" id="Account_Code" name="Account_Code" value="${accountCode}" readonly></td>
+                <td style="text-align:center;"><input type="text" id="Account_Name" name="Account_Name" value="${doctorText}" readonly></td>
+                <td style="text-align:center;">
+                    <input type="number" class="form-control total-amount" id="txtRevenuAmount" name="txtRevenuAmount" value="0">
+                </td>
+                <td style="text-align:center;">
+                    <input type="number" class="form-control disc-perc" id="txtRevenuDiscPer"  name="txtRevenuDiscPer" value="0">
+                </td>
+                <td style="text-align:center;">
+                    <input type="number" class="form-control disc-amount" id="txtRevenuDiscAmount"  name="txtRevenuDiscAmount" value="0">
+                </td>
+                <td style="text-align:center;">
+                    <input type="number" class="form-control net-amount" id="txtRevenuNetAmount"  name="txtRevenuNetAmount" value="0" readonly>
+                </td>
+            </tr>
+        `;
+            $('#tblDoctorShareDetails tbody').append(row);
+        }
+        debugger;
+        function SaveRecord() {       
+                debugger;
+                var Patient_ID = $("#hdPatientID").text();
+                var Bill_ID = $("#hdBillID").text();
+                var remarks = $("#txtRemarks").text();
+                var Distributuion_Date = $("#txtDistributuionDate").val();
+                var saveVal = $('#btnSave').val();
+                var Distribution_Id = '<% =Request.QueryString["ID"] %>'
+                var DepartmentDistribution = [];
+                $.each($('#tblDetails tbody tr'), function (key, value) {
+                    var Account_ID = $(value).find('select[name="ddlGlAccounts"]').val();
+                    var txtDescription = $(value).find('input[name="txtDescription"]').val();
+                    var txtTotalAmount = $(value).find('input[name="txtTotalAmount"]').val();
+                    var txtDiscountPer = $(value).find('input[name="txtDiscountPer"]').val();
+                    var txtDiscountAmount = $(value).find('input[name="txtDiscountAmount"]').val();
+                    var txtNetAmount = $(value).find('input[name="txtNetAmount"]').val();
+                   // var Item_ID = document.getElementById('tblDetails').rows[key + 1].cells[2].innerText;
+                    DepartmentDistribution.push({
+                         Account_ID: Account_ID, txtDescription: txtDescription, txtTotalAmount: txtTotalAmount, txtDiscountPer: txtDiscountPer, txtDiscountAmount: txtDiscountAmount, txtNetAmount: txtNetAmount
+                    });
+                });
+                var IPDDistribution = [];
+            $.each($('#tblDoctorShareDetails tbody tr'), function (key, value) {
+                    debugger;
+                    var Account_ID = $(value).find('input[name="Account_ID"]').val();
+                    var Account_Name = $(value).find('input[name="Account_Name"]').val();
+                    var txtRevenuAmount = $(value).find('input[name="txtRevenuAmount"]').val();
+                    var txtRevenuDiscPer = $(value).find('input[name="txtRevenuDiscPer"]').val();
+                    var txtRevenuDiscAmount = $(value).find('input[name="txtRevenuDiscAmount"]').val();
+                    var txtRevenuNetAmount = $(value).find('input[name="txtRevenuNetAmount"]').val();
+
+                    IPDDistribution.push({
+                        Account_ID: Account_ID, Account_Name: Account_Name, txtRevenuAmount: txtRevenuAmount, txtRevenuDiscPer: txtRevenuDiscPer, txtRevenuDiscAmount: txtRevenuDiscAmount, txtRevenuNetAmount: txtRevenuNetAmount
+                    });
+                });
+            var data = { Distribution_Id: Distribution_Id,Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };
+
+            if (saveVal == "Save") {
+                PageMethods.SaveDistribution(JSON.stringify(data), function (res) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Successfully Save',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    window.location.reload();
+                    $('#btnSave').attr('disabled', 'disabled');
+                }, function (error) {
+                    alert(error.get_message());
+                });
+            }
+            else {
+                PageMethods.Update(JSON.stringify(data), function (res) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Successfully Save',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    window.location.reload();
+                    $('#btnSave').attr('disabled', 'disabled');
+                }, function (error) {
+                    alert(error.get_message());
+                });
+            }
         }
 
     </script>
@@ -56,6 +518,7 @@
 
     <div class="container-fluid">
     <input type="hidden" id="hdPatientID" />
+    <input type="hidden" id="hdBillID" />
     <div class="row">
 <!-- Left Card -->
 <div class="col-lg-5 col-md-5 col-sm-12">
@@ -172,25 +635,149 @@
             <input type="button" value="Search" id="btnSearch" class="btn btn-primry"  onclick="GetPatientDetailByBill()" />
         </div>
     </div>
-   <div class="row">
-       <div class="col-lg-2 col-md-4 col-sm-6">
-           <label>Refund Date :</label>
-           <input type="text" id="txtAdvanceDate" class="form-control" />
-       </div>
-       <div class="col-lg-3 col-md-4 col-sm-6">
-            <label>Remarks:</label>
-           <textarea id="txtRemarks" class="form-control" style="height:35px"></textarea>
-       </div>
-       <div class="col-lg-3 col-md-4 col-sm-6">
-            <label>Total Bill:</label>
-         <input type="text" id="txtToT_amount" disabled="disabled" />
-       </div>
-       <div class="col-lg-3 col-md-4 col-sm-6">
-            <label>Recieved Amount:</label>
-         <input type="text" id="txt_RcvdAmount" disabled="disabled" />
-       </div>
-   </div>       
-</div>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Total Bill:</label>
+                <input type="text" id="txtToT_amount" disabled="disabled" />
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Discount Amount:</label>
+                <input type="text" id="txt_DiscAmount" disabled="disabled" />
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Net Amount :</label>
+                <input type="text" id="txt_netAmount" class="form-control" />
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Recieved Amount:</label>
+                <input type="text" id="txt_RcvdAmount" class="form-control" />
+            </div>
 
 
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Advance Amount:</label>
+                <input type="text" id="txtAdv_amount" disabled="disabled" />
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Balance Amount:</label>
+                <input type="text" id="txt_BalAmount" disabled="disabled" />
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Distribution Date :</label>
+                <input type="text" id="txtDistributuionDate" class="form-control" />
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <label>Remarks:</label>
+                <textarea id="txtRemarks" class="form-control" style="height: 35px"></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-6 col-sm-6" style="margin-top: 2%">
+                <div class="table-responsive" style="height: 250px;">
+                    <table class="table table-borderless" id="tblDetails">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; width: 20%;">Account</th>
+                                <th style="text-align: center; width: 20%;">Description</th>
+                                <th style="text-align: center; width: 15%;">Total Amount</th>
+                                <th style="text-align: center; width: 15%;">Disc Percentage</th>
+                                <th style="text-align: center; width: 15%;">Disc Amount</th>
+                                <th style="text-align: center; width: 15%;">Net Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="background-color: greenyellow;">
+            <div class="col-lg-5 col-md-6 col-sm-6"></div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <h4>Net Sharable Income</h4>
+            </div>
+
+            <div class="col-lg-1 col-md-6 col-sm-6">
+                <input type="text" id="txtShareableIncome" name="txtShareableIncome" value="0" readonly style="margin-top: 8px;" />
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6"></div>
+        </div>
+
+                <div class="row" style="margin-top: 10px;" >
+
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <select id="ddlIpdAccount" onchange="GetDocAccounts()">
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+              <input type="text" id ="IPD_Share"/>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" onclick="GenerateIPDRows();" class="btn-primry" value="+" id="generateRowss" />
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px;" >
+
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <select id="ddlDoctor" onchange="GetDocAccounts()">
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <select id="ddlGlDocAccounts">
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" onclick="GenerateRows();" class="btn-primry" value="+" id="generateRows" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-md-6 col-sm-6" style="margin-top: 2%">
+                <div class="table-responsive" style="height: 250px;">
+                    <table class="table table-borderless" id="tblDoctorShareDetails">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; width: 20%;">Account</th>
+                                <th style="text-align: center; width: 20%;">Doctor </th>
+                                <th style="text-align: center; width: 15%;">Total Amount</th>
+                                <th style="text-align: center; width: 15%;">Disc Percentage</th>
+                                <th style="text-align: center; width: 15%;">Disc Amount</th>
+                                <th style="text-align: center; width: 15%;">Net Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" id="btnSave" onclick="SaveRecord();" class="btn btn-primry" value="Save" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" class="btn btn-gray" value="List View" onclick="window.open('Share_Distribution_List.aspx')" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" id="" class="btn btn-primry" value="New" onclick="window.location = 'Share_Distribution.aspx'" />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" id="btnApprove" class="btn btn-primry" value="Approve" onclick="Approve()" />
+            </div>
+        </div>
+    </div>
 </asp:Content>

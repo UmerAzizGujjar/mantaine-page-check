@@ -84,6 +84,7 @@ namespace PMS.Modules.Inventory
                                  pkgd.Item_Type,
                                  pkgd.IsFixed,
                                  pkgd.is_expense,
+                                 Main_Department = pkgd.Category_ID,
                                  ItemsOrderBy = pkgd.ItemsOrderBy == null ? 0 : pkgd.ItemsOrderBy
 
                              }
@@ -207,6 +208,7 @@ namespace PMS.Modules.Inventory
             public string Price { get; set; }
             public string Amount { get; set; }
             public string ItemType { get; set; }
+            public string MainDepartment { get; set; }
             public int ItemsOrder { get; set; }
             public bool isExpense { get; set; }
 
@@ -362,6 +364,7 @@ namespace PMS.Modules.Inventory
                 pkgdetail.Price = Convert.ToDecimal(test.Price);
                 pkgdetail.Amount = Convert.ToDecimal(test.Amount);
                 pkgdetail.Item_Type = test.ItemType;
+                pkgdetail.Category_ID = test.MainDepartment;
                 pkgdetail.ItemsOrderBy = test.ItemsOrder;
                 pkgdetail.is_expense = test.isExpense;
                 if (test.IsFix == "true" || test.IsFix == "True")
@@ -444,8 +447,10 @@ namespace PMS.Modules.Inventory
                             t.Test_ID,
                             t.Test_Name,
                             t.Group_Category,
+                            
                             TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(),
                             GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString(),
+                            t.Main_Department,
 
                         };
             List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
@@ -461,6 +466,7 @@ namespace PMS.Modules.Inventory
                 obj.CategoryID = test.Group_Category;
                 obj.MainDepartmentName = test.TestMainDepartmentName;
                 obj.GroupName = test.GroupCategoryName;
+                obj.Main_Department = test.Main_Department;
                 listOfTest.Add(obj);
                 counter++;
             }
@@ -489,7 +495,7 @@ namespace PMS.Modules.Inventory
                     {
                         tests = from t in db.Lab_Tests
                                 where t.Group_Category == item.TestID
-                                select new { t.Rate, t.Test_ID, t.Test_Name, t.Group_Category, TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(), GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString() };
+                                select new { t.Rate, t.Test_ID, t.Test_Name, t.Group_Category, TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(), GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString(), t.Main_Department };
                         listOfTest = new List<TestIDsAndGroupCategory>();
                         foreach (var test in tests)
                         {
@@ -502,6 +508,7 @@ namespace PMS.Modules.Inventory
                             obj.CategoryID = test.Group_Category;
                             obj.MainDepartmentName = test.TestMainDepartmentName;
                             obj.GroupName = test.GroupCategoryName;
+                            obj.Main_Department = test.Main_Department;
                             listOfTest.Add(obj);
                             counter++;
                         }
@@ -518,7 +525,7 @@ namespace PMS.Modules.Inventory
                         {
                             tests = from t in db.Lab_Tests
                                     where t.Test_ID == Convert.ToInt32(item.TestID)
-                                    select new { t.Rate, t.Test_ID, t.Test_Name, t.Group_Category, TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(), GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString() };
+                                    select new { t.Rate, t.Test_ID, t.Test_Name, t.Group_Category, TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(), GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString(),t.Main_Department };
                             listOfTest = new List<TestIDsAndGroupCategory>();
                             foreach (var test in tests)
                             {
@@ -531,6 +538,7 @@ namespace PMS.Modules.Inventory
                                 obj.CategoryID = test.Group_Category;
                                 obj.MainDepartmentName = test.TestMainDepartmentName;
                                 obj.GroupName = test.GroupCategoryName;
+                                obj.Main_Department = test.Main_Department;
                                 listOfTest.Add(obj);
                                 counter++;
                             }
@@ -550,6 +558,7 @@ namespace PMS.Modules.Inventory
             public string CategoryID { get; set; }
             public bool IsGroupCategory { get; set; }
             public string GroupName { get; set; }
+            public string Main_Department { get; set; }
             public string MainDepartmentName { get; set; }
         }
 

@@ -2932,7 +2932,7 @@ namespace PMS
                         pt.MainDepartment = "03";
                         pt.Package_Type = inpat.Package_Type_Id;
                         pt.Package_Name = inpat.Package_Name_Id;
-                        pt.pkg_name = inpat.packagae_type;
+                        pt.pkg_name = inpat.packagae_name;
                         pt.pkg_type = inpat.packagae_type;
                         pt.Request_Discharge = Convert.ToBoolean(inpat.Discharge_Request);
                         pt.In_Patient_ID = Convert.ToString(inpat.In_Patient_ID);

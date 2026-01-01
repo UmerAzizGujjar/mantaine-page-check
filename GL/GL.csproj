@@ -232,6 +232,7 @@
     <Content Include="Modules\Billing\BillApproval.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
     <Content Include="Modules\Billing\Share_Distribution.aspx" />
+    <Content Include="Modules\Billing\Share_Distribution_List.aspx" />
     <Content Include="Modules\Dashboards\AccountSection.aspx" />
     <Content Include="Modules\Dashboards\AdminSection.aspx" />
     <Content Include="Modules\Dashboards\BillingSection.aspx" />
@@ -605,6 +606,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Approvepr.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\AddNewLabTest.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\AddpurchaseInvoice.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Maindashboard.css" />
@@ -670,6 +672,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\jquery-ui.min.css" />
     <Content Include="wwwroot\ASsiratTheme\css\jquery.gritter.min.css" />
     <Content Include="wwwroot\ASsiratTheme\css\Loader\Loader.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\MainDashboard.min.css" />
     <Content Include="wwwroot\ASsiratTheme\css\prettify.min.css" />
     <Content Include="wwwroot\ASsiratTheme\css\RegPat.css" />
     <Content Include="wwwroot\ASsiratTheme\css\Report.css" />
@@ -4045,6 +4048,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\AssetCategoryCss.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Billing.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\BloodBank.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\ComparativeStatement.css" />
@@ -7601,6 +7605,7 @@
     <Content Include="wwwroot\khurshid\css\CustomCss\AssetCategoryCss.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Billing.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\BloodBank.css" />
+    <Content Include="wwwroot\khurshid\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\ComparativeStatement.css" />
@@ -11030,6 +11035,7 @@
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\AssetCategoryCss.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\Billing.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\BloodBank.css" />
+    <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\ComparativeStatement.css" />
@@ -14456,6 +14462,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\AddNewLabTest.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Approvepr.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Datavalue.css" />
@@ -17654,6 +17661,7 @@
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.js" />
     <Content Include="wwwroot\Pakred\Scripts\jquery-1.11.1.min.js" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Approvepr.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\LoginPage.css" />
@@ -17702,6 +17710,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\AssetCategoryCss.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Billing.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\BloodBank.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\ClinicalFinancial.css" />
@@ -25890,6 +25899,13 @@
     </Compile>
     <Compile Include="Modules\Billing\Share_Distribution.aspx.designer.cs">
       <DependentUpon>Share_Distribution.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\Share_Distribution_List.aspx.cs">
+      <DependentUpon>Share_Distribution_List.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\Share_Distribution_List.aspx.designer.cs">
+      <DependentUpon>Share_Distribution_List.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\AccountSection.aspx.cs">
       <DependentUpon>AccountSection.aspx</DependentUpon>
