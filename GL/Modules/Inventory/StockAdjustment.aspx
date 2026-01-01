@@ -140,16 +140,31 @@
                 }
             });
 
-            var currentDate = new Date();
-            var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
-            $("#ctl00_MainContent_txtAdustment_date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
-           // $("#ctl00_MainContent_txtExpiredate").datepicker({dateFormat: 'dd M yy',readOnly: true});
-            $("#ctl00_MainContent_txtExpiredate").datepicker({
-                dateFormat: 'dd M yy',
-                changeMonth: true,   // Enables month dropdown
-                changeYear: true,    // Enables year dropdown
-                yearRange: "1900:2100" // (optional) restricts the range of years
+            var ad_ID = '<%= Request.QueryString["ID"] %>';
+            var $adjustDate = $('#ctl00_MainContent_txtAdustment_date');
+            var $expireDate = $('#ctl00_MainContent_txtExpiredate');
+
+            var dateFormat = "dd M yy";
+
+            $adjustDate.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                dateFormat: dateFormat
             });
+
+            $expireDate.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                dateFormat: dateFormat
+            });
+
+            if (ad_ID === "") {
+                var currentDate = $.datepicker.formatDate(dateFormat, new Date());
+                $adjustDate.val(currentDate);
+                $expireDate.val(currentDate);
+            }
             window.onunload = refreshParent;
             function refreshParent() {
             }
@@ -391,7 +406,7 @@
         <div class="row">
             <div class="col-lg-2 col-md-3 col-sm-4">
                 <asp:Label Text="Expire Date" runat="server" ID="Label1" />
-                <asp:TextBox runat="server" ID="txtExpiredate" readonly/>
+                <asp:TextBox runat="server" ID="txtExpiredate" />
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ErrorMessage="Date is required."
                     ControlToValidate="txtExpiredate" runat="server" SetFocusOnError="true"  Display="Dynamic" InitialValue="0" />
             </div>

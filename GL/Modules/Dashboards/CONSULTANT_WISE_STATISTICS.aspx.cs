@@ -16,20 +16,50 @@ namespace PMS
 
         }
         [WebMethod]
-        public static string GetTotalDoctor(string txt_sdate, string txt_edate, string Doctor)
+        public static string GetTotalDoctor(string txt_sdate, string txt_edate, string doctorArrayJson)
         {
-            string result = string.Empty;
+            List<int> doctorIds = new JavaScriptSerializer().Deserialize<List<int>>(doctorArrayJson);
+            DateTime startDate = DateTime.Parse(txt_sdate);
+            DateTime endDate = DateTime.Parse(txt_edate);
 
-            using (DataBaseDataContext db = new DataBaseDataContext())
+            using (var db = new DataBaseDataContext())
             {
-                var query = db.sp_loadPatientsDoctorWise(Doctor, txt_sdate, txt_edate).ToList();
+                int numDays = (endDate - startDate).Days + 1;
 
+                var query = (from p in db.Patients
+                             join opd in db.Out_Patients on p.Patient_ID equals opd.Patient_ID
+                             join drm in db.Doctor_Rouster_Masters on p.Doctor_ID equals Convert.ToString(drm.Doctor_Id)
+                             join drd in db.Doctor_Rouster_Details on drm.Rouster_id equals drd.Rouster_id
+                             where opd.Discharge == true
+                                   && p.filter_clinic == null
+                                   && p.Created_Time >= startDate
+                                   && p.Created_Time <= endDate
+                                   && drd.Rouster_Date >= startDate
+                                   && drd.Rouster_Date <= endDate
+                                   && (doctorIds.Contains(Convert.ToInt32(p.Doctor_ID)) || !doctorIds.Any())
+                             group drd by p.Doctor_ID into g
+                             select new DoctorStatistics
+                             {
+                                 DoctorName = db.HR_Employees.Where(hr => hr.Emp_ID == Convert.ToInt32(g.Key))
+                                                             .Select(hr => hr.Emp_Name).FirstOrDefault(),
+                                 PatientCount = g.Count(),
+                                 NumberOfDays = g.Select(d => d.Rouster_Date).Distinct().Count()
+                             })
+                             .Take(5)
+                             .ToList();
 
-                result = (new JavaScriptSerializer()).Serialize(query);
+                return new JavaScriptSerializer().Serialize(query);
             }
-
-            return result;
         }
+
+        public class DoctorStatistics
+        {
+            public string DoctorName { get; set; }
+            public int PatientCount { get; set; }
+            public int NumberOfDays { get; set; }
+        }
+
+
         [WebMethod]
         public static string LoadDoctor()
         {
