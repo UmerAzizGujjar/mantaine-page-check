@@ -134,16 +134,41 @@ namespace PMS.Modules.Billing
                          .Any(x => x.Bill_Id == Bill_ID);
             }
         }
+        [WebMethod]
+        public static string approve_Bill(string BillId)
+        {
+            try
+            {
+                var user_id = AppConfig.UserID;
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    int billId = Convert.ToInt32(BillId);
 
-        //[WebMethod]
-        //public static string approve_Bill(string BillId)
-        //{
-        //    var user_id = AppConfig.UserID;
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var Details = db.SpApproveBillingProcess(Convert.ToInt32(BillId), user_id);
-        //    var ShareDetails = db.SpApproveBillingProcesssss(Convert.ToInt32(BillId), user_id);
-        //    return (new JavaScriptSerializer()).Serialize(Details);
-        //}
+                    // Execute first procedure
+                    var result1 = db.SpApproveIPDDistribution(billId, user_id).FirstOrDefault();
+
+                    // Execute second procedure
+                    var result2 = db.SpApproveIPDShareDistribution(billId, user_id).FirstOrDefault();
+
+                    return (new JavaScriptSerializer()).Serialize(new
+                    {
+                        Status = true,
+                        Message = "Share Approved Successfully",
+                        Proc1Message = result1,
+                        Proc2Message = result2
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return (new JavaScriptSerializer()).Serialize(new
+                {
+                    Status = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
         public class Detial
         {
             public int Patient_ID { get; set; }
