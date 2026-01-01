@@ -125,10 +125,22 @@ namespace PMS.Modules.Billing
             string data = string.Empty;
             return (new JavaScriptSerializer()).Serialize(query);
         }
+        [WebMethod]
+        public static bool CheckBillExist(int Bill_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                return db.IPD_Distribution_Masters
+                         .Any(x => x.Bill_Id == Bill_ID);
+            }
+        }
+
 
         public class Detial
         {
             public int Patient_ID { get; set; }
+            public decimal IPD_Revenue { get; set; }
+
             public int Bill_ID { get; set; }
             public int Distribution_Id { get; set; }
             public DateTime Distributuion_Date { get; set; }
@@ -173,7 +185,8 @@ namespace PMS.Modules.Billing
                             data.Patient_Id,
                             data.Remarks,
                             data.Voucher_Status,
-                            data.Voucher_ID
+                            data.Voucher_ID,
+                            data.Total_Amount
                         };
 
             return (new JavaScriptSerializer()).Serialize(query);
@@ -230,7 +243,9 @@ namespace PMS.Modules.Billing
             Ref.Bill_Id = dt.Bill_ID;
             Ref.Distribution_Date = dt.Distributuion_Date; 
             Ref.Remarks = dt.remarks;
+            Ref.Total_Amount = dt.IPD_Revenue;
             Ref.Voucher_Status = "Created";
+            //Ref.Share_Voucher_Status = "Created";
             Ref.Created_By = AppConfig.UserID;
             Ref.Creation_Time = DateTime.Now;
 
@@ -290,6 +305,8 @@ namespace PMS.Modules.Billing
             Ref.Distribution_Date = dt.Distributuion_Date;
             Ref.Remarks = dt.remarks;
             Ref.Voucher_Status = "Created";
+            //Ref.Share_Voucher_Status = "Created";
+            Ref.Total_Amount = dt.IPD_Revenue;
             Ref.Updated_Time = DateTime.Now;
             Ref.Updated_By = AppConfig.UserID;
             var oldDetails = db.IPD_Distribution_Details

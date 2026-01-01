@@ -7,6 +7,7 @@
 
         $(document).ready(function () {
             OPDloadSavedRows();
+            IPDloadSavedRows();
             OPDShareloadSavedRows();
             RegloadSavedRows();
             DiagnosticloadSavedRows();
@@ -28,6 +29,7 @@
 
             let isEmptyFound = false;
             let allData = [];
+            let categoryNamesIPD = new Set();
             let categoryNamesOPD = new Set();
             let categoryNamesOPDShare = new Set();
             let categoryNamesReg = new Set();
@@ -40,6 +42,7 @@
             let categoryNamesSpecialService = new Set();
             let duplicateFound = false;
             let rowsOPD = $('#tableOPD .data-row');
+            let rowsIPD = $('#tableIPD .data-row');
             let rowsOPDShare = $('#tableOPDShare .data-row');
             let rowsReg = $('#tableReg .data-row');
             let rowsDiagnostic = $('#tableDiagnostic .data-row');
@@ -55,6 +58,29 @@
                 isEmptyFound = true;
             }
 
+            //getAllData
+            rowsIPD.each(function () {
+                let row = $(this);
+                let rowDataIPD = {
+
+                    financialdepartment: row.find('.financialDepartmentOPD').val(),
+                    categoryname: row.find('.categorynameOPD').val(),
+                    cashinhand: row.find('.cashinhandOPD').val(),
+                    discount: row.find('.discountOPD').val(),
+                    revenue: row.find('.revenueOPD').val()
+                };
+                // Check if any value is empty
+                if (rowDataIPD.categoryname == 0 || rowDataIPD.cashinhand == 0 ||  rowDataIPD.revenue == 0) {
+                    isEmptyFound = true;
+                }
+                // Check for duplicate categoryname
+                if (categoryNamesIPD.has(rowDataIPD.categoryname)) {
+                    duplicateFound = true;
+                } else {
+                    categoryNamesIPD.add(rowDataIPD.categoryname);
+                }
+                allData.push(rowDataIPD);
+            });
             //getAllData
             rowsOPD.each(function () {
                 let row = $(this);
@@ -358,44 +384,170 @@
 
                                 savedData.forEach(item => {
                                     let row = `
-<tr class="data-row">
-    <td style="display: none">
-
-        <input type="hidden" class="financialDepartmentOPD" value="${item.financialdepartment}"/>
-    </td>
-    <td>
-        <select class="categorynameOPD select2select" style="background-color: white; height:32px;" disabled>
-            ${setSelected(categoryOptions, item.categoryname)}
-        </select>
-    </td>
-                          <td>
-                          <select class="cashinhandOPD select2select" style="background-color: white;" disabled>
-                              ${setSelected(optionsVen, item.cashinhand)}
-                          </select>
-                      </td>
-    <td>
-        <select class="discountOPD select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.discount)}
-        </select>
-    </td>
-    <td>
-        <select class="revenueOPD select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.revenue)}
-        </select>
-    </td>
-    <td>
-        <a href="#" onclick="removeRow(this)">
-            <i class="fa fa-trash fa-lg " style="color: black;"></i>
-        </a>
-        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
-            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
-        </a>
-    </td>
-</tr>`;
+                                        <tr class="data-row">
+                                            <td style="display: none">
+                                        
+                                                <input type="hidden" class="financialDepartmentOPD" value="${item.financialdepartment}"/>
+                                            </td>
+                                            <td>
+                                                <select class="categorynameOPD select2select" style="background-color: white; height:32px;" disabled>
+                                                    ${setSelected(categoryOptions, item.categoryname)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                              <select class="cashinhandOPD select2select" style="background-color: white;" disabled>
+                                                  ${setSelected(optionsVen, item.cashinhand)}
+                                              </select>
+                                            </td>
+                                            <td>
+                                                <select class="discountOPD select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.discount)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="revenueOPD select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.revenue)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <a href="#" onclick="removeRow(this)">
+                                                    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                                </a>
+                                                <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                                    <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+                                                </a>
+                                            </td>
+                                        </tr>`;
 
                                     $('.financialDepartmentOPD option[value="001"]').prop('selected', true);
 
                                     $('#tableOPD tbody').append(row);
+                                });
+
+                                $('.select2select').select2(); 
+                            });
+                        });
+                    });
+                }
+            });
+        }
+        //function IPDShareloadSavedRows() {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "ClinicalFinancial.aspx/loadSavedRowsIPDShare",
+        //        data: '{}',
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (response) {
+        //            const savedData = response.d;
+        //            console.log(savedData);
+        //            getClinicalFinancialAcoountsDropdown(function (options) {
+        //                getPatientTypes(function (categoryOptions) {
+        //                    getAccounts(function (optionsVen) {
+
+        //                        savedData.forEach(item => {
+        //                            let row = `
+        //                        <tr class="data-row">
+        //                            <td style="display: none">
+                                
+        //                                <input type="hidden" class="financialDepartmentIPDShare" value="${item.financialdepartment}"/>
+        //                            </td>
+        //                            <td>
+        //                                <select class="categorynameIPDShare select2select" style="background-color: white; height:32px;" disabled>
+        //                                    ${setSelected(categoryOptions, item.categoryname)}
+        //                                </select>
+        //                            </td>
+        //                            <td>
+        //                              <select class="cashinhandIPDShare select2select" style="background-color: white;" disabled>
+        //                                  ${setSelected(optionsVen, item.cashinhand)}
+        //                              </select>
+        //                            </td>
+        //                            <td>
+        //                                <select class="discountIPDShare select2select" style="background-color: white;" disabled>
+        //                                    ${setSelected(optionsVen, item.discount)}
+        //                                </select>
+        //                            </td>
+        //                            <td>
+        //                                <select class="revenueIPDShare select2select" style="background-color: white;" disabled>
+        //                                    ${setSelected(optionsVen, item.revenue)}
+        //                                </select>
+        //                            </td>
+        //                            <td>
+        //                                <a href="#" onclick="removeRow(this)">
+        //                                    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+        //                                </a>
+        //                                <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+        //                                    <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+        //                                </a>
+        //                            </td>
+        //                        </tr>`;
+
+        //                            $('.financialDepartmentIPDShare option[value="012"]').prop('selected', true);
+
+        //                            $('#tableIPDShare tbody').append(row);
+        //                        });
+
+        //                        $('.select2select').select2(); // reinit after DOM update
+        //                    });
+        //                });
+        //            });
+        //        }
+        //    });
+        //}
+        function IPDloadSavedRows() {
+            $.ajax({
+                type: "POST",
+                url: "ClinicalFinancial.aspx/loadSavedRowsIPD",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const savedData = response.d;
+                    console.log(savedData);
+                    getClinicalFinancialAcoountsDropdown(function (options) {
+                        getPatientTypes(function (categoryOptions) {
+                            getAccounts(function (optionsVen) {
+
+                                savedData.forEach(item => {
+                                    let row = `
+                                <tr class="data-row">
+                                    <td style="display: none">
+                                
+                                        <input type="hidden" class="financialDepartmentIPD" value="${item.financialdepartment}"/>
+                                    </td>
+                                    <td>
+                                        <select class="categorynameIPD select2select" style="background-color: white; height:32px;" disabled>
+                                            ${setSelected(categoryOptions, item.categoryname)}
+                                        </select>
+                                    </td>
+                                    <td>
+                                      <select class="cashinhandIPD select2select" style="background-color: white;" disabled>
+                                          ${setSelected(optionsVen, item.cashinhand)}
+                                      </select>
+                                    </td>
+                                    <td>
+                                        <select class="discountIPD select2select" style="background-color: white;" disabled>
+                                            ${setSelected(optionsVen, item.discount)}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="revenueIPD select2select" style="background-color: white;" disabled>
+                                            ${setSelected(optionsVen, item.revenue)}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a href="#" onclick="removeRow(this)">
+                                            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                        </a>
+                                        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+                                        </a>
+                                    </td>
+                                </tr>`;
+
+                                    $('.financialDepartmentIPD option[value="011"]').prop('selected', true);
+
+                                    $('#tableIPD tbody').append(row);
                                 });
 
                                 $('.select2select').select2(); // reinit after DOM update
@@ -1000,39 +1152,82 @@
                 getPatientTypes(function (categoryOptions) {
                     getAccounts(function (optionsVen) {
                         let newRow = `
-                <tr class="data-row">
-                    <td style="display: none">
-                         <input type = "hidden" class="financialDepartmentOPD" value = "001">                   
-                    <td>
-                        <select class="categorynameOPD select2select" style="background-color: white; height:32px;">
-                            ${categoryOptions}
-                        </select>
-                    </td>
-                    <td>
-    <select class="cashinhandOPD select2select" style="background-color: white;">
-        ${optionsVen}
-    </select>
-</td>
-                    <td>
-                        <select class="discountOPD select2select" style="background-color: white;">
-                            ${optionsVen}
-                        </select>
-                    </td>
-                    <td>
-                        <select class="revenueOPD select2select" style="background-color: white;">
-                            ${optionsVen}
-                        </select>
-                    </td>
-                    <td>
-                        <a href="#" onclick="removeRow(this)">
-    <i class="fa fa-trash fa-lg " style="color: black;"></i>
-</a>
+                                  <tr class="data-row">
+                                      <td style="display: none">
+                                           <input type = "hidden" class="financialDepartmentOPD" value = "001">                   
+                                      <td>
+                                          <select class="categorynameOPD select2select" style="background-color: white; height:32px;">
+                                              ${categoryOptions}
+                                          </select>
+                                      </td>
+                                      <td>
+                                          <select class="cashinhandOPD select2select" style="background-color: white;">
+                                              ${optionsVen}
+                                          </select>
+                                      </td>
+                                      <td>
+                                          <select class="discountOPD select2select" style="background-color: white;">
+                                              ${optionsVen}
+                                          </select>
+                                      </td>
+                                      <td>
+                                          <select class="revenueOPD select2select" style="background-color: white;">
+                                              ${optionsVen}
+                                          </select>
+                                      </td>
+                                      <td>
+                                          <a href="#" onclick="removeRow(this)">
+                                              <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                          </a>
 
-                    </td>
-                </tr>
-            `;
+                                      </td>
+                                  </tr>
+                              `;
                         $('#tableOPD tbody').append(newRow);
                         $('.financialDepartmentOPD option[value="001"]').prop('selected', true);
+                        $('.select2select').select2(); // initialize Select2
+                    });
+                });
+            });
+        }
+        function addNewRowIPD() {
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getPatientTypes(function (categoryOptions) {
+                    getAccounts(function (optionsVen) {
+                        let newRow = `
+                                <tr class="data-row">
+                                    <td style="display: none">
+                                         <input type = "hidden" class="financialDepartmentIPD" value = "011">                   
+                                    <td>
+                                        <select class="categorynameIPD select2select" style="background-color: white; height:32px;">
+                                            ${categoryOptions}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="cashinhandIPD select2select" style="background-color: white;">
+                                            ${optionsVen}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="discountIPD select2select" style="background-color: white;">
+                                            ${optionsVen}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="revenueIPD select2select" style="background-color: white;">
+                                            ${optionsVen}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <a href="#" onclick="removeRow(this)">
+                                            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            `;
+                        $('#tableIPD tbody').append(newRow);
+                        $('.financialDepartmentIPD option[value="011"]').prop('selected', true);
                         $('.select2select').select2(); // initialize Select2
                     });
                 });
@@ -1052,10 +1247,10 @@
                         </select>
                     </td>
                     <td>
-    <select class="cashinhandOPDShare select2select" style="background-color: white;">
-        ${optionsVen}
-    </select>
-</td>
+                        <select class="cashinhandOPDShare select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
+                    </td>
                     <td>
                         <select class="discountOPDShare select2select" style="background-color: white;">
                             ${optionsVen}
@@ -1068,8 +1263,8 @@
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
-    <i class="fa fa-trash fa-lg " style="color: black;"></i>
-</a>
+                            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                        </a>
 
                     </td>
                 </tr>
@@ -1559,6 +1754,7 @@
             <li ><a href="#Tab-5">Pharmacy</a></li>
             <li><a href="#Tab-7">Procedure</a></li>
             <li><a href="#Tab-8">Diagnostic Share</a></li>
+            <li><a href="#Tab-11">IPD</a></li>
 
         </ul>
 
@@ -1584,6 +1780,32 @@
                     </tr>
                 </thead>
                 <tbody id="tbodyOPD">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="Tab-11">
+            <div class="row">
+
+                <div class="col-lg-11 col-md-11 col-sm-11"></div>
+                <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
+                    <a href="#" id="btnaddrowIPD" onclick="addNewRowIPD()">
+                        <i class="fa fa-plus-circle" style="font-size: 30px;"></i>
+                    </a>
+                </div>
+            </div>
+            <table id="tableIPD" class="table table-bordered table-hover table-striped" style="margin-top: 10px;">
+                <thead id="theadIPD">
+                    <tr>
+                        <th style="display: none">Financial Department  </th>
+                        <th style="width: 16%;">Category Name         </th>
+                        <th style="width: 25%;">Cash in Hand (C.I.H.) </th>
+                        <th style="width: 25%;">Discount              </th>
+                        <th style="width: 25%;">Revenue               </th>
+                        <th style="width: 9%;">Action                </th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyIPD">
                 </tbody>
             </table>
         </div>
