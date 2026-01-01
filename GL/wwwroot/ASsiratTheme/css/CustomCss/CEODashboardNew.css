@@ -6,7 +6,7 @@
 #topTestsChartsContainer .card-header {
     border-radius: 10px 10px 0 0 !important;
     padding: 10px;
-    background-color: #EFA63E !important;
+    background-color: #308665db !important;
     font-weight: bold !important
 }
 
@@ -110,7 +110,7 @@ input {
 }
 
 .headercolor {
-    background: #EFA63E !important;
+    background: #308665db !important;
     width: fit-content;
     padding: 2px 10px;
     color: white;
