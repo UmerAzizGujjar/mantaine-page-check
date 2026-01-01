@@ -9431,13 +9431,6 @@
     <Parameter Name="Inventory_Org" Parameter="inventory_Org" Type="System.String" DbType="VarChar(100)" />
     <Return Type="System.Decimal" />
   </Function>
-  <Function Name="dbo.SpApproveBillingProcess" Method="SpApproveBillingProcess">
-    <Parameter Name="BillId" Parameter="billId" Type="System.Int64" DbType="BigInt" />
-    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="SpApproveBillingProcessResult">
-      <Column Name="Message" Type="System.String" DbType="VarChar(29) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spGetAuditRecordAginstPurIvo" Method="spGetAuditRecordAginstPurIvo">
     <Parameter Name="Invoice_id" Parameter="invoice_id" Type="System.Int32" DbType="Int" />
     <ElementType Name="spGetAuditRecordAginstPurIvoResult">
