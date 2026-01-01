@@ -136,12 +136,18 @@ namespace PMS
             if (txtRemarks.Text != "")
             Stock_Adj.Remarks = txtRemarks.Text;
             var checkbatch = txtBatchNo.Text;
+            var txtempiry = txtExpiredate.Text;
             Stock_Adj.Batch_No = txtBatchNo.Text;
             if (txtAdustment_date.Text != "")
-                Stock_Adj.Adjustment_Date = Convert.ToDateTime(txtAdustment_date.Text);
+            {
+                DateTime dateOnly = Convert.ToDateTime(txtAdustment_date.Text);
+                DateTime fullDateTime = dateOnly.Date.Add(DateTime.Now.TimeOfDay);
+                Stock_Adj.Adjustment_Date = fullDateTime;
+            }
             if (txtExpiredate.Text != "")
                 Stock_Adj.Expire_Date = Convert.ToDateTime(txtExpiredate.Text);
-            
+
+
             if (btnSave.Text == "Save")
             {
                 db.INV_Stock_Adjustments.InsertOnSubmit(Stock_Adj);
