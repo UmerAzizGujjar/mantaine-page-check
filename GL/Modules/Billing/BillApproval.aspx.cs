@@ -20,14 +20,39 @@ namespace PMS
         {
 
         }
-        //[WebMethod]
-        //public static string ApproveBill(string billid)
-        //{
-        //    var user_id = AppConfig.UserID;
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //  //  var Details = db.SpApproveBillingProcess(Convert.ToInt32(billid), user_id);
-        //    return (new JavaScriptSerializer()).Serialize(Details);
-        //}
+        [WebMethod]
+        public static string ApproveBill(string billid)
+        {
+            try
+            {
+                var user_id = AppConfig.UserID;
+                int billId = Convert.ToInt32(billid);
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    db.ExecuteCommand(
+                        "EXEC dbo.SpApproveBillingProcess {0}, {1}",
+                        billId,
+                        user_id
+                    );
+                }
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Success = true,
+                    Message = "Bill approved successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
         [WebMethod]
         public static string LoadBillsToApprove(string search)
         {
