@@ -7153,6 +7153,8 @@
       <Column Name="Cancel_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Cancel_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Cancel_Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Share_Voucher_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Share_Voucher_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -7437,27 +7439,6 @@
       <Column Name="Bill_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Bill_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Bill_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_Operation_Theater_View" Method="sp_Operation_Theater_View">
-    <ElementType Name="sp_Operation_Theater_ViewResult">
-      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
-      <Column Name="PatientType" Type="System.String" DbType="VarChar(3) NOT NULL" CanBeNull="false" />
-      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Gender" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Biometry_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Fitness_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Operation_Date" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Biometry_ID1" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Referred_Doctor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Out_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Diagnosis_No" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
-      <Column Name="Bill_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Procedures" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
-      <Column Name="Package_Name" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_Operation_Theater_View_Assigned" Method="sp_Operation_Theater_View_Assigned">
@@ -9431,13 +9412,6 @@
     <Parameter Name="Inventory_Org" Parameter="inventory_Org" Type="System.String" DbType="VarChar(100)" />
     <Return Type="System.Decimal" />
   </Function>
-  <Function Name="dbo.SpApproveBillingProcess" Method="SpApproveBillingProcess">
-    <Parameter Name="BillId" Parameter="billId" Type="System.Int64" DbType="BigInt" />
-    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="SpApproveBillingProcessResult">
-      <Column Name="Message" Type="System.String" DbType="VarChar(29) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spGetAuditRecordAginstPurIvo" Method="spGetAuditRecordAginstPurIvo">
     <Parameter Name="Invoice_id" Parameter="invoice_id" Type="System.Int32" DbType="Int" />
     <ElementType Name="spGetAuditRecordAginstPurIvoResult">
@@ -11116,6 +11090,42 @@
       <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
       <Column Name="Advance_Amount" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Bill_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Operation_Theater_View" Method="sp_Operation_Theater_View">
+    <ElementType Name="sp_Operation_Theater_ViewResult">
+      <Column Name="Sr_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
+      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Biometry_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Fitness_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Operation_Date" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Biometry_ID1" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Emp_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="Out_Patient_ID" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="Diagnosis_No" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="Bill_No" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Procedures" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SpApproveIPDDistribution" Method="SpApproveIPDDistribution">
+    <Parameter Name="Distribution_Id" Parameter="distribution_Id" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="SpApproveIPDDistributionResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(37) NOT NULL" CanBeNull="false" />
+      <Column Name="VoucherID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SpApproveIPDShareDistribution" Method="SpApproveIPDShareDistribution">
+    <Parameter Name="Distribution_Id" Parameter="distribution_Id" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="SpApproveIPDShareDistributionResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(37) NOT NULL" CanBeNull="false" />
+      <Column Name="VoucherID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

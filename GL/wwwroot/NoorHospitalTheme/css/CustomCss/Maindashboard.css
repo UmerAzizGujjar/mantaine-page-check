@@ -7,7 +7,7 @@
 }
 
 .headercolor {
-    background-color: #EFA63E !important;
+    background-color: #438eb9 !important;
     height: 45px !important;
 }
 
@@ -29,12 +29,12 @@ span {
 }
 
 .card-outline-yellow {
-    border: 2px solid #EFA63E;
+    border: 2px solid #438eb9;
     background-color: white !important;
 }
 
 .yellow-icon {
-    color: #EFA63E !important;
+    color: #438eb9 !important;
     font-size: 34px !important;
     margin-right: 0px;
     margin-top: 0px;
@@ -45,7 +45,7 @@ span {
 }
 
 .yellow-hr {
-    border-top: 1px solid #EFA63E;
+    border-top: 1px solid #438eb9;
 }
 
 .card .card-statistic-3 .card-icon-large .fas,
@@ -83,6 +83,6 @@ a {
 }
 
     a:hover {
-        color: #EFA63E !important;
+        color: #438eb9 !important;
         text-decoration: none;
     }

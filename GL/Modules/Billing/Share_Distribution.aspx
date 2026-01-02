@@ -50,7 +50,7 @@
                     $("#txtRemarks").val(parse[0].Remarks);
                     $("#hdBillID").val(BillId); 
                     $("#hdPatientID").val(parse[0].Patient_Id);
-                    if (Voucher_Status == "Approved") {
+                    if (Voucher_Status != "Approved") {
                         $("#btnApprove").show()
                     }
                     
@@ -75,36 +75,36 @@
                 $.each(data, function (key, value) {
 
                     rows += `
-<tr>
-    <td style="text-align:center;">
-        <input type="hidden" name="Account_ID" value="${value.Account_Id}">
-        <input type="text" name="Account_Code" value="${value.Account_Code}" readonly>
-    </td>
-
-    <td style="text-align:center;">
-        <input type="text" name="Account_Name" value="${value.Share_Account_Name}" readonly>
-    </td>
-
-    <td style="text-align:center;">
-        <input type="number" class="form-control total-amount"
-               name="txtRevenuAmount" value="${value.Total_Amount}">
-    </td>
-
-    <td style="text-align:center;">
-        <input type="number" class="form-control disc-perc"
-               name="txtRevenuDiscPer" value="${value.Discount_Percentage}">
-    </td>
-
-    <td style="text-align:center;">
-        <input type="number" class="form-control disc-amount"
-               name="txtRevenuDiscAmount" value="${value.Discount_Amount}">
-    </td>
-
-    <td style="text-align:center;">
-        <input type="number" class="form-control net-amount"
-               name="txtRevenuNetAmount" value="${value.Net_Amount}">
-    </td>
-</tr>`;
+                            <tr>
+                                <td style="text-align:center;">
+                                    <input type="hidden" name="Account_ID" value="${value.Account_Id}">
+                                    <input type="text" name="Account_Code" value="${value.Account_Code}" readonly>
+                                </td>
+                            
+                                <td style="text-align:center;">
+                                    <input type="text" name="Account_Name" value="${value.Share_Account_Name}" readonly>
+                                </td>
+                            
+                                <td style="text-align:center;">
+                                    <input type="number" class="form-control total-amount"
+                                           name="txtRevenuAmount" value="${value.Total_Amount}">
+                                </td>
+                            
+                                <td style="text-align:center;">
+                                    <input type="number" class="form-control disc-perc"
+                                           name="txtRevenuDiscPer" value="${value.Discount_Percentage}">
+                                </td>
+                            
+                                <td style="text-align:center;">
+                                    <input type="number" class="form-control disc-amount"
+                                           name="txtRevenuDiscAmount" value="${value.Discount_Amount}">
+                                </td>
+                            
+                                <td style="text-align:center;">
+                                    <input type="number" class="form-control net-amount"
+                                           name="txtRevenuNetAmount" value="${value.Net_Amount}">
+                                </td>
+                            </tr>`;
                 });
                 $('#tblDoctorShareDetails tbody')
                     .empty()
@@ -131,35 +131,32 @@
                     }
 
                     rows += `
-<tr>
-    <td>
-        <select id="ddlGlAccounts${key}" name="ddlGlAccounts" data-account="${value.Account_Id}">
-            ${options}
-        </select>
-    </td>
-    <td style="text-align:center;">
-        <input type="text" name="txtDescription" readonly value="${value.Share_Calculation}">
-    </td>
-    <td style="text-align:center;">
-        <input type="text" readonly name="txtTotalAmount" value="${value.Total_Amount}">
-    </td>
-    <td style="text-align:center;">
-        <input type="text" readonly name="txtDiscountPer" value="${value.Discount_Percentage}">
-    </td>
-    <td style="text-align:center;">
-        <input type="text" readonly name="txtDiscountAmount" value="${value.Discount_Amount}">
-    </td>
-    <td style="text-align:center;">
-        <input type="text" readonly name="txtNetAmount" value="${value.Net_Amount}">
-    </td>
-</tr>`;
+                    <tr>
+                        <td>
+                            <select id="ddlGlAccounts${key}" name="ddlGlAccounts" data-account="${value.Account_Id}">
+                                ${options}
+                            </select>
+                        </td>
+                        <td style="text-align:center;">
+                            <input type="text" name="txtDescription" readonly value="${value.Share_Calculation}">
+                        </td>
+                        <td style="text-align:center;">
+                            <input type="text" readonly name="txtTotalAmount" value="${value.Total_Amount}">
+                        </td>
+                        <td style="text-align:center;">
+                            <input type="text" readonly name="txtDiscountPer" value="${value.Discount_Percentage}">
+                        </td>
+                        <td style="text-align:center;">
+                            <input type="text" readonly name="txtDiscountAmount" value="${value.Discount_Amount}">
+                        </td>
+                        <td style="text-align:center;">
+                            <input type="text" readonly name="txtNetAmount" value="${value.Net_Amount}">
+                        </td>
+                    </tr>`;
                 });
 
                 $('#tblDetails tbody').empty().append(rows);
-                //$('#tblDetails tbody select[name="ddlGlAccounts"]').each(function () {
-                //    var accId = $(this).data('account');
-                //    $(this).val(accId).trigger('change');
-                //});
+
             });
         }
 
@@ -383,10 +380,10 @@
                     <input type="number" class="form-control disc-perc" id="txtRevenuDiscPer"  name="txtRevenuDiscPer" value="0">
                 </td>
                 <td style="text-align:center;">
-                    <input type="number" class="form-control disc-amount" id="txtRevenuDiscAmount"  name="txtRevenuDiscAmount" value="${IPDShare}">
+                    <input type="number" class="form-control disc-amount" id="txtRevenuDiscAmount"  name="txtRevenuDiscAmount" value="0">
                 </td>
                 <td style="text-align:center;">
-                    <input type="number" class="form-control net-amount" id="txtRevenuNetAmount"  name="txtRevenuNetAmount" value="0" >
+                    <input type="number" class="form-control net-amount" id="txtRevenuNetAmount"  name="txtRevenuNetAmount" value="${IPDShare}" >
                 </td>
             </tr>
         `;
@@ -437,8 +434,12 @@
                 var Bill_ID = $("#hdBillID").text();
                 var remarks = $("#txtRemarks").text();
                 var Distributuion_Date = $("#txtDistributuionDate").val();
+                var IPD_Revenue = $("#txtShareableIncome").val();
                 var saveVal = $('#btnSave').val();
-                var Distribution_Id = '<% =Request.QueryString["ID"] %>'
+            var Distribution_Id = '<% =Request.QueryString["ID"] %>'
+            if (Distribution_Id == "") {
+                Distribution_Id = 0;
+            }
                 var DepartmentDistribution = [];
                 $.each($('#tblDetails tbody tr'), function (key, value) {
                     var Account_ID = $(value).find('select[name="ddlGlAccounts"]').val();
@@ -449,7 +450,7 @@
                     var txtNetAmount = $(value).find('input[name="txtNetAmount"]').val();
                    // var Item_ID = document.getElementById('tblDetails').rows[key + 1].cells[2].innerText;
                     DepartmentDistribution.push({
-                         Account_ID: Account_ID, txtDescription: txtDescription, txtTotalAmount: txtTotalAmount, txtDiscountPer: txtDiscountPer, txtDiscountAmount: txtDiscountAmount, txtNetAmount: txtNetAmount
+                        Account_ID: Account_ID, IPD_Revenue: IPD_Revenue, txtDescription: txtDescription, txtTotalAmount: txtTotalAmount, txtDiscountPer: txtDiscountPer, txtDiscountAmount: txtDiscountAmount, txtNetAmount: txtNetAmount
                     });
                 });
                 var IPDDistribution = [];
@@ -469,24 +470,46 @@
             var data = { Distribution_Id: Distribution_Id,Patient_ID: Patient_ID, Bill_ID: Bill_ID, Distributuion_Date: Distributuion_Date, remarks: remarks, DepartmentDistribution: DepartmentDistribution, IPDDistribution: IPDDistribution };
 
             if (saveVal == "Save") {
-                PageMethods.SaveDistribution(JSON.stringify(data), function (res) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Data Successfully Save',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                    window.location.reload();
-                    $('#btnSave').attr('disabled', 'disabled');
-                }, function (error) {
-                    alert(error.get_message());
-                });
+
+                PageMethods.CheckBillExist(Bill_ID, function (res) {
+                    debugger;
+                    if (res == true) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Distribution Against This Bill Already Exist',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $('#btnSave').attr('disabled', 'disabled');
+                        return false;
+                    }
+                    else {
+                        PageMethods.SaveDistribution(JSON.stringify(data), function (res) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Successfully Save',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                            window.location.reload();
+                            $('#btnSave').attr('disabled', 'disabled');
+                        }, function (error) {
+                            alert(error.get_message());
+                        });
+                    }
+                })
             }
             else {
                 PageMethods.Update(JSON.stringify(data), function (res) {
@@ -509,7 +532,76 @@
                 });
             }
         }
+        function Approve() {
+            debugger;
 
+            var BillId = '<%= Request.QueryString["ID"] %>';
+
+            PageMethods.approve_Bill(BillId, function (response) {
+                debugger;
+
+                var result = JSON.parse(response);
+
+                if (result.Status === true) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: result.Message,
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    location.reload();
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: result.Message,
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+                function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: error.get_message(),
+                        confirmButtonText: 'OK'
+                    });
+                });
+        }
+
+            <%--function Approve() {
+                debugger;
+               
+                var BillId = '<% =Request.QueryString["ID"] %>';
+                PageMethods.approve_Bill(BillId, function (Tests) {
+                 debugger
+                 var message = JSON.parse(Tests);
+                 if (message[0].Message != null || message[0].Message != "") {
+                     Swal.fire({
+                         icon: 'success',
+                         title: 'Success!',
+                         text: message[0].Message,
+                         showConfirmButton: false,
+                         timer: 2500,
+                         customClass: {
+                             popup: 'swal-big-popup',
+                             title: 'swal-big-title',
+                             htmlContainer: 'swal-big-text'
+                         }
+                     });
+                     //alert(message[0].Message);
+                     location.reload();
+                 }
+             });
+         }--%>
     </script>
 
 </asp:Content>
@@ -701,10 +793,10 @@
             </div>
         </div>
 
-        <div class="row" style="background-color: greenyellow;">
+        <div class="row" style="background-color: #000000;">
             <div class="col-lg-5 col-md-6 col-sm-6"></div>
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <h4>Net Sharable Income</h4>
+                <h4 style="color:aliceblue">Net Sharable Income</h4>
             </div>
 
             <div class="col-lg-1 col-md-6 col-sm-6">
@@ -716,14 +808,14 @@
                 <div class="row" style="margin-top: 10px;" >
 
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <select id="ddlIpdAccount" onchange="GetDocAccounts()">
+                <select id="ddlIpdAccount" >
                 </select>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
               <input type="text" id ="IPD_Share"/>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <input type="button" onclick="GenerateIPDRows();" class="btn-primry" value="+" id="generateRowss" />
+                <input type="button" onclick="GenerateIPDRows();" class="btn-primry" value="Add IPD Revenue" id="generateRowss" />
             </div>
         </div>
         <div class="row" style="margin-top: 10px;" >
@@ -737,7 +829,7 @@
                 </select>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <input type="button" onclick="GenerateRows();" class="btn-primry" value="+" id="generateRows" />
+                <input type="button" onclick="GenerateRows();" class="btn-primry" value="Add Doctor" id="generateRows" />
             </div>
         </div>
 
