@@ -56,12 +56,13 @@
                 var BillId = '<% =Request.QueryString["Bill_ID"] %>';
                             PageMethods.approve_Bill(BillId, function (Tests) {
                                 debugger
-                                var message = JSON.parse(Tests);
-                                if (message[0].Message != null || message[0].Message != "") {
+                                var result = JSON.parse(Tests);
+
+                                if (result.Success === true) {
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Success!',
-                                        text: message[0].Message,
+                                        text: result.Message,
                                         showConfirmButton: false,
                                         timer: 2500,
                                         customClass: {
@@ -70,11 +71,30 @@
                                             htmlContainer: 'swal-big-text'
                                         }
                                     });
-                                    //alert(message[0].Message);
-                                    location.reload();
+
+                                    setTimeout(function () {
+                                        location.reload();
+                                    }, 2500);
                                 }
-                            });
+                                else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: result.Message
+                                    });
+                                }
+                            },
+                                function (error) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: error.get_message()
+                                    });
+                                });
                         }
+
+
+
             function BackToPrintPatient() {
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
                 var PatID = document.getElementById('<%=hdfPatient_ID.ClientID%>').value;

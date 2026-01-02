@@ -50,7 +50,7 @@
                     $("#txtRemarks").val(parse[0].Remarks);
                     $("#hdBillID").val(BillId); 
                     $("#hdPatientID").val(parse[0].Patient_Id);
-                    if (Voucher_Status == "Approved") {
+                    if (Voucher_Status != "Approved") {
                         $("#btnApprove").show()
                     }
                     
@@ -380,10 +380,10 @@
                     <input type="number" class="form-control disc-perc" id="txtRevenuDiscPer"  name="txtRevenuDiscPer" value="0">
                 </td>
                 <td style="text-align:center;">
-                    <input type="number" class="form-control disc-amount" id="txtRevenuDiscAmount"  name="txtRevenuDiscAmount" value="${IPDShare}">
+                    <input type="number" class="form-control disc-amount" id="txtRevenuDiscAmount"  name="txtRevenuDiscAmount" value="0">
                 </td>
                 <td style="text-align:center;">
-                    <input type="number" class="form-control net-amount" id="txtRevenuNetAmount"  name="txtRevenuNetAmount" value="0" >
+                    <input type="number" class="form-control net-amount" id="txtRevenuNetAmount"  name="txtRevenuNetAmount" value="${IPDShare}" >
                 </td>
             </tr>
         `;
@@ -436,7 +436,10 @@
                 var Distributuion_Date = $("#txtDistributuionDate").val();
                 var IPD_Revenue = $("#txtShareableIncome").val();
                 var saveVal = $('#btnSave').val();
-                var Distribution_Id = '<% =Request.QueryString["ID"] %>'
+            var Distribution_Id = '<% =Request.QueryString["ID"] %>'
+            if (Distribution_Id == "") {
+                Distribution_Id = 0;
+            }
                 var DepartmentDistribution = [];
                 $.each($('#tblDetails tbody tr'), function (key, value) {
                     var Account_ID = $(value).find('select[name="ddlGlAccounts"]').val();
@@ -469,7 +472,8 @@
             if (saveVal == "Save") {
 
                 PageMethods.CheckBillExist(Bill_ID, function (res) {
-                    if (res.d === true) {
+                    debugger;
+                    if (res == true) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -482,7 +486,7 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-
+                        $('#btnSave').attr('disabled', 'disabled');
                         return false;
                     }
                     else {
@@ -505,6 +509,7 @@
                             alert(error.get_message());
                         });
                     }
+                })
             }
             else {
                 PageMethods.Update(JSON.stringify(data), function (res) {
@@ -527,11 +532,56 @@
                 });
             }
         }
-            function Approve() {
+        function Approve() {
+            debugger;
+
+            var BillId = '<%= Request.QueryString["ID"] %>';
+
+            PageMethods.approve_Bill(BillId, function (response) {
+                debugger;
+
+                var result = JSON.parse(response);
+
+                if (result.Status === true) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: result.Message,
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    location.reload();
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: result.Message,
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+                function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: error.get_message(),
+                        confirmButtonText: 'OK'
+                    });
+                });
+        }
+
+            <%--function Approve() {
                 debugger;
                
-                var Dist_ID = '<% =Request.QueryString["ID"] %>';
-                PageMethods.approve(Dist_ID, function (Tests) {
+                var BillId = '<% =Request.QueryString["ID"] %>';
+                PageMethods.approve_Bill(BillId, function (Tests) {
                  debugger
                  var message = JSON.parse(Tests);
                  if (message[0].Message != null || message[0].Message != "") {
@@ -551,7 +601,7 @@
                      location.reload();
                  }
              });
-         }
+         }--%>
     </script>
 
 </asp:Content>
@@ -743,10 +793,10 @@
             </div>
         </div>
 
-        <div class="row" style="background-color: greenyellow;">
+        <div class="row" style="background-color: #000000;">
             <div class="col-lg-5 col-md-6 col-sm-6"></div>
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <h4>Net Sharable Income</h4>
+                <h4 style="color:aliceblue">Net Sharable Income</h4>
             </div>
 
             <div class="col-lg-1 col-md-6 col-sm-6">
@@ -758,14 +808,14 @@
                 <div class="row" style="margin-top: 10px;" >
 
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <select id="ddlIpdAccount" onchange="GetDocAccounts()">
+                <select id="ddlIpdAccount" >
                 </select>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
               <input type="text" id ="IPD_Share"/>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <input type="button" onclick="GenerateIPDRows();" class="btn-primry" value="+" id="generateRowss" />
+                <input type="button" onclick="GenerateIPDRows();" class="btn-primry" value="Add IPD Revenue" id="generateRowss" />
             </div>
         </div>
         <div class="row" style="margin-top: 10px;" >
@@ -779,7 +829,7 @@
                 </select>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
-                <input type="button" onclick="GenerateRows();" class="btn-primry" value="+" id="generateRows" />
+                <input type="button" onclick="GenerateRows();" class="btn-primry" value="Add Doctor" id="generateRows" />
             </div>
         </div>
 
