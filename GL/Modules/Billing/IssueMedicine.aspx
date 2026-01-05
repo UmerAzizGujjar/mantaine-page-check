@@ -1009,41 +1009,41 @@
                 }
             });
         }
-        debugger;
+        //debugger;
+        //function Print_Prescription() {
+        //    debugger;
+        //    var PatNo = $('#ddlPatient_No option:selected').text();
+        //    var parts = PatNo.split('-');
+        //    var number = parts[1];
+        //    var opdNo = number;
 
-        function Print_Prescription() {
-            var PatNo = $('#ddlPatient_No option:selected').text();
-            var parts = PatNo.split('-');
-            var number = parts[1];
-            var opdNo = number;
+        //    var url = 'IssueMedicine.aspx/GetOutPatientIDByOPDNo';
 
-            var url = 'IssueMedicine.aspx/GetOutPatientIDByOPDNo';
+        //    $.ajax({
+        //        url: url,
+        //        type: 'POST',
+        //        dataType: 'json',
+        //        contentType: 'application/json; charset=utf-8',
+        //        data: JSON.stringify({ opdNo: opdNo }),
 
-            $.ajax({
-                url: url,
-                type: 'POST',
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({ opdNo: opdNo }),
+        //        success: function (response) {
+        //            // response.d is the standard wrapper for ASP.NET WebMethods
+        //            var outPatientID = response.d;
 
-                success: function (response) {
-                    // response.d is the standard wrapper for ASP.NET WebMethods
-                    var outPatientID = response.d;
+        //            if (outPatientID && outPatientID !== "0" && outPatientID !== "null") {
+        //                var reportUrl = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + outPatientID;
+        //                window.open(reportUrl, '_blank');
+        //            } else {
+        //                alert('Out Patient ID not found');
+        //            }
+        //        },
 
-                    if (outPatientID && outPatientID !== "0" && outPatientID !== "null") {
-                        var reportUrl = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + outPatientID;
-                        window.open(reportUrl, '_blank');
-                    } else {
-                        alert('Out Patient ID not found');
-                    }
-                },
-
-                error: function (xhr, status, error) {
-                    console.error('Error getting Out Patient ID:', error);
-                    alert('Error: Could not retrieve Out Patient ID. Status: ' + status);
-                }
-            });
-        }
+        //        error: function (xhr, status, error) {
+        //            console.error('Error getting Out Patient ID:', error);
+        //            alert('Error: Could not retrieve Out Patient ID. Status: ' + status);
+        //        }
+        //    });
+        //}
         function OnHoldBill() {
             var CheckVisting = $('#chkHold:checked').val();
             if (CheckVisting == "on") {
@@ -1373,12 +1373,24 @@
             var finalbalance = parseFloat(TotalAmount) - parseFloat(txtLineDisc) - parseFloat(txtDisAmt).toFixed(2) - parseFloat(flatdisc);
             $('#txtBalances').val((finalbalance).toFixed());
         }
-        //function Print_Prescription(selectedValue) {
-        //    debugger;
-        //    var id = selectedValue;
-        //    var url = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id;
-        //    window.open(url, '_blanks');
-        //}
+
+        function Print_Prescription() {
+            var id = $('#ddlPatient_No').val();
+            console.log('id =' + id)
+            var PatNo = $('#ddlPatient_No option:selected').text();
+            var parts = PatNo.split('-');
+            var prefix = parts[0];
+            var number = parts[1];
+            if (prefix == 'OPD') {
+                window.open('../../ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + id);
+            }
+            if (prefix == 'IPD') {
+                window.open('../../ReportViewer.aspx?ReportName=InpatientDetail&Title=In Patient Detail Print&InPatient_ID=' + id);
+            }
+            if (prefix == 'Emergency') {
+                window.open('../../ReportViewer.aspx?ReportName=Emergencypatient&Title=Emergency Patient Report&Emergency_ID=' + id);
+            }
+        }
         function AssignValue(ControlID, value) {
             if (ControlID.value == '')
                 ControlID.value = value;
