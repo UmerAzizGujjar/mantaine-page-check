@@ -519,6 +519,10 @@
                                         <select class="categorynameIPD select2select" style="background-color: white; height:32px;" disabled>
                                             ${setSelected(categoryOptions, item.categoryname)}
                                         </select>
+                                        <select class="categorynameIPD" style="background-color: white; height:32px;" disabled>
+                                            <option value="0">Please Select</option>
+                                            <option value="03" selected>IPD</option>
+                                        </select>
                                     </td>
                                     <td>
                                       <select class="cashinhandIPD select2select" style="background-color: white;" disabled>
@@ -573,40 +577,40 @@
 
                                 savedData.forEach(item => {
                                     let row = `
-<tr class="data-row">
-    <td style="display: none">
-
-        <input type="hidden" class="financialDepartmentOPDShare" value="${item.financialdepartment}"/>
-    </td>
-    <td>
-        <select class="categorynameOPDShare select2select" style="background-color: white; height:32px;" disabled>
-            ${setSelected(categoryOptions, item.categoryname)}
-        </select>
-    </td>
-                          <td>
-                          <select class="cashinhandOPDShare select2select" style="background-color: white;" disabled>
-                              ${setSelected(optionsVen, item.cashinhand)}
-                          </select>
-                      </td>
-    <td>
-        <select class="discountOPDShare select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.discount)}
-        </select>
-    </td>
-    <td>
-        <select class="revenueOPDShare select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.revenue)}
-        </select>
-    </td>
-    <td>
-        <a href="#" onclick="removeRow(this)">
-            <i class="fa fa-trash fa-lg " style="color: black;"></i>
-        </a>
-        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
-            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
-        </a>
-    </td>
-</tr>`;
+                                        <tr class="data-row">
+                                            <td style="display: none">
+                                        
+                                                <input type="hidden" class="financialDepartmentOPDShare" value="${item.financialdepartment}"/>
+                                            </td>
+                                            <td>
+                                                <select class="categorynameOPDShare select2select" style="background-color: white; height:32px;" disabled>
+                                                    ${setSelected(categoryOptions, item.categoryname)}
+                                                </select>
+                                            </td>
+                                                                  <td>
+                                                                  <select class="cashinhandOPDShare select2select" style="background-color: white;" disabled>
+                                                                      ${setSelected(optionsVen, item.cashinhand)}
+                                                                  </select>
+                                                              </td>
+                                            <td>
+                                                <select class="discountOPDShare select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.discount)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="revenueOPDShare select2select" style="background-color: white;" disabled>
+                                                    ${setSelected(optionsVen, item.revenue)}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <a href="#" onclick="removeRow(this)">
+                                                    <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                                </a>
+                                                <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                                    <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+                                                </a>
+                                            </td>
+                                        </tr>`;
 
                                     $('.financialDepartmentOPDShare option[value="010"]').prop('selected', true);
 
@@ -636,40 +640,40 @@
 
                                 savedData.forEach(item => {
                                     let row = `
-<tr class="data-row">
-    <td style="display: none">
-
-        <input type="hidden" class="financialDepartmentReg" value="${item.financialdepartment}"/>
-    </td>
-    <td>
-        <select class="categorynameReg select2select" style="background-color: white; height:32px;" disabled>
-            ${setSelected(categoryOptions, item.categoryname)}
-        </select>
-    </td>
-                          <td>
-                          <select class="cashinhandReg select2select" style="background-color: white;" disabled>
-                              ${setSelected(optionsVen, item.cashinhand)}
-                          </select>
-                      </td>
-    <td>
-        <select class="discountReg select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.discount)}
-        </select>
-    </td>
-    <td>
-        <select class="revenueReg select2select" style="background-color: white;" disabled>
-            ${setSelected(optionsVen, item.revenue)}
-        </select>
-    </td>
-    <td>
-        <a href="#" onclick="removeRow(this)">
-            <i class="fa fa-trash fa-lg " style="color: black;"></i>
-        </a>
-        <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
-            <i class="fa fa-pencil fa-lg " style="color: black;"></i>
-        </a>
-    </td>
-</tr>`;
+                                            <tr class="data-row">
+                                                <td style="display: none">
+                                            
+                                                    <input type="hidden" class="financialDepartmentReg" value="${item.financialdepartment}"/>
+                                                </td>
+                                                <td>
+                                                    <select class="categorynameReg select2select" style="background-color: white; height:32px;" disabled>
+                                                        ${setSelected(categoryOptions, item.categoryname)}
+                                                    </select>
+                                                </td>
+                                                                      <td>
+                                                                      <select class="cashinhandReg select2select" style="background-color: white;" disabled>
+                                                                          ${setSelected(optionsVen, item.cashinhand)}
+                                                                      </select>
+                                                                  </td>
+                                                <td>
+                                                    <select class="discountReg select2select" style="background-color: white;" disabled>
+                                                        ${setSelected(optionsVen, item.discount)}
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="revenueReg select2select" style="background-color: white;" disabled>
+                                                        ${setSelected(optionsVen, item.revenue)}
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <a href="#" onclick="removeRow(this)">
+                                                        <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                                                    </a>
+                                                    <a href="#" onclick="enableSelectsInRow(this)" style="margin-left:20px">
+                                                        <i class="fa fa-pencil fa-lg " style="color: black;"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>`;
 
                                     $('.financialDepartmentReg option[value="009"]').prop('selected', true);
 
@@ -1199,8 +1203,9 @@
                                     <td style="display: none">
                                          <input type = "hidden" class="financialDepartmentIPD" value = "011">                   
                                     <td>
-                                        <select class="categorynameIPD select2select" style="background-color: white; height:32px;">
-                                            ${categoryOptions}
+                                        <select class="categorynameIPD" disabled style="background-color: white; height:32px;">
+                                            <option value="0">Please Select</option>
+                                            <option value="03" selected >IPD</option>
                                         </select>
                                     </td>
                                     <td>
@@ -1351,8 +1356,8 @@
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
-    <i class="fa fa-trash fa-lg " style="color: black;"></i>
-</a>
+                        <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                    </a>
 
                     </td>
                 </tr>
@@ -1396,8 +1401,8 @@
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
-    <i class="fa fa-trash fa-lg " style="color: black;"></i>
-</a>
+                        <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                    </a>
 
                     </td>
                 </tr>
@@ -1441,8 +1446,8 @@
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
-    <i class="fa fa-trash fa-lg " style="color: black;"></i>
-</a>
+                            <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                        </a>
 
                     </td>
                 </tr>
@@ -1487,8 +1492,8 @@
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
-    <i class="fa fa-trash fa-lg " style="color: black;"></i>
-</a>
+                        <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                    </a>
 
                     </td>
                 </tr>
@@ -1530,8 +1535,8 @@
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
-    <i class="fa fa-trash fa-lg " style="color: black;"></i>
-</a>
+                        <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                    </a>
 
                     </td>
                 </tr>
@@ -1614,8 +1619,8 @@
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
-    <i class="fa fa-trash fa-lg " style="color: black;"></i>
-</a>
+                        <i class="fa fa-trash fa-lg " style="color: black;"></i>
+                    </a>
 
                     </td>
                 </tr>
