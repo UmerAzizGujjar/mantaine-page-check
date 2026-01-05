@@ -1407,6 +1407,7 @@
                         debugger;
                         var Patient_ID = $('#txtMRNo').val();
                         var Opd_id = $('#hdnOpd_id').val();
+                        var opd_procedure = $('#hdn_opd_procedure').val();
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
                         var TotalPayable = $('#txtTotalPayable').val();
@@ -1598,7 +1599,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -3672,7 +3673,7 @@
                             console.log("No service/item found for this patient.");
                             return;
                         }
-
+                      
                         var rowIndex = $('#tblDetails tbody tr').length; 
                         var remarks = $("#ctl00_MainContent_ddlpro_dis").val() || "";
                         var itemtype = data.Services === true ? 'Service' : 'Item';
@@ -3722,7 +3723,7 @@
 
                         $('#tblDetails tbody').append(servicerow);
 
-                      
+                        $('#hdn_opd_procedure').val("1");
                         //setTimeout(function () {
                             CalculateSummarieDiscountPerWise(rowIndex);
                         //}, 500);
@@ -5731,6 +5732,7 @@
          <input type="hidden" name="hdn_pkgtype" value="0" id="hdn_pkgtype" />
          <input type="hidden" name="hdn_PatienttypeId" value="0" id="hdn_PatienttypeId" />
          <input type="hidden" name="hdn_InPatienttype" value="0" id="hdn_InPatienttype" />
+         <input type="hidden" name="hdn_opd_procedure" value="0" id="hdn_opd_procedure" />
        <div class="row">
            <div class="col-md-2 text-end">
             <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" style="border-radius: 28px; width: 100%;" />
