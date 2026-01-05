@@ -8,7 +8,7 @@ ul.token-input-list {
 }
 
 .labelcolor {
-    color: #EFA63E !important;
+    color: #438eb9 !important;
 }
 
 #token-input-ctl00_MainContent_txtPatNO {
@@ -121,7 +121,7 @@ body {
 .badge {
     font-size: 1.2em;
     color: white;
-    background-color: #EFA63E !important;
+    background-color: #438eb9 !important;
     padding: 5px 10px;
     border-radius: 5px;
     height: 26px;
@@ -357,7 +357,7 @@ body {
     }
 
 h4 {
-    color: #EFA63E !important;
+    color: #438eb9 !important;
     font-weight: bold !important;
 }
 
