@@ -3467,6 +3467,8 @@
 
 
                     $('#tblDetails tbody').append(rows);
+                    $('.ddlDoctor').select2();
+
                      loadBOMDetails(localStorage.SelectedItemID)
          
                     debugger;
