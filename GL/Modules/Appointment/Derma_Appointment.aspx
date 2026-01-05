@@ -2165,7 +2165,7 @@
                 <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'AppointmentView.aspx'" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Appointment.aspx'" />
+                <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Derma_Appointment.aspx'" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />

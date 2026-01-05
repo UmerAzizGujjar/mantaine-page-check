@@ -483,12 +483,12 @@
                 debugger;
                 var id = '<%=Request.QueryString["Bill_ID"]%>';
             var locationInfo = window.location;
-                var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
+                var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
             if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
+                url = 'http://' + ip + '/'+ foldername +'/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
             }
             window.open(url, '_blank');
         }
