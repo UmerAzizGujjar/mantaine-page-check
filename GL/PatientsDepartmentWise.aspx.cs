@@ -3070,7 +3070,7 @@ namespace PMS
                     ddlMainDepartment.DataBind();
 
 
-                    DataTable Tests = DBClass.getDataTable("select Test_ID,Test_Name from Lab_Tests where main_department in ('002','003')");
+                    DataTable Tests = DBClass.getDataTable("select Test_id ,Test_Name from Lab_Tests where main_department in ('002','003')");
                     DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
 
                     foreach (DataRow dr in TestCategories.Rows)
@@ -3084,7 +3084,7 @@ namespace PMS
                     trTestResult1.Visible = true;
                     ddlTestName.DataSource = Tests;
                     ddlTestName.DataTextField = "Test_Name";
-                    ddlTestName.DataValueField = "Test_ID";
+                    ddlTestName.DataValueField = "Test_Name";
                     ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlTestName.DataBind();
 
