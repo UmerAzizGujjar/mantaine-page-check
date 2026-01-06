@@ -23,7 +23,9 @@
                 debugger
                 $('#VendorModal').modal('show');
             });
+            GetWareHouseCondition();
 
+            getprNoBy_WareHouseRFQ();
             $('#ctl00_MainContent_ddlWareHouse').change(function () {
 
                 $("#ctl00_MainContent_ddlWareHouse").attr('disabled', true);
@@ -78,7 +80,30 @@
                 }
             }, 1000);
         });
+        var warehouseCond;
+        function GetWareHouseCondition() {
 
+            $.ajax({
+                type: "POST",
+                url: "RequestForQuotation.aspx/GetWareHouseCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    warehouseCond = JSON.parse(response.d);
+                    if (warehouseCond == '01') {
+                        $('#warehouse').show();
+                    }
+                    else {
+                        $('#warehouse').hide();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
         function GetNewRFQNo() {
             PageMethods.GetNewRFQNo(function (resp) {
                 $('#ctl00_MainContent_txtRFQ_No').val(resp);
@@ -87,15 +112,10 @@
                     alert(error.get_message());
                 });
         }
-        function getprNoBy_WareHouseRFQ(item) {
+        function getprNoBy_WareHouseRFQ() {
             debugger;
-            var optionsRFQ = '';
-            var Warehouse;
-            Warehouse = item.value;
-            if (typeof Warehouse == "undefined" || Warehouse == "") {
-                VendorId = item;
-            }
-            PageMethods.GetPRNoByWarehouse_RFQ(Warehouse, function (res) {
+         
+            PageMethods.GetPRNoByWarehouse_RFQ(function (res) {
                 var item = JSON.parse(res);
                 optionsRFQ = '<option value="0">Please Select</option>';
                 $.each(item, function (key, value) {
@@ -105,6 +125,7 @@
                 $('#ctl00_MainContent_ddlPrNo').html(optionsRFQ);
             });
         }
+       
         function LoadRFQData(RFQ_ID) {
             PageMethods.LoadRFQHeaderDetail(RFQ_ID, function (resp) {
                 var data = JSON.parse(resp);
@@ -189,6 +210,17 @@
                 function (error) {
                     alert(error.get_message());
                 })
+        }
+
+        function GetWareHouse() {
+            debugger;
+            var prno = $("#ctl00_MainContent_ddlPrNo").val();
+            PageMethods.GetwarehousebyPrno(prno, function (res) {
+                var item = JSON.parse(res);
+                setTimeout(function () {
+                    $('#ctl00_MainContent_ddlWareHouse').val(item.Warehouse).trigger('change');
+                }, 1000);
+            });
         }
         function LoadRFQVendor(RFQ_ID) {
             debugger;
@@ -626,7 +658,7 @@
         </div>
         <div class="col-lg-2 col-md-6 col-sm-12">
             <asp:Label ID="lblPrNo" runat="server" Text="Pr.No"> </asp:Label>
-            <asp:DropDownList runat="server" ID="ddlPrNo" class="form-control"></asp:DropDownList>
+            <asp:DropDownList runat="server" ID="ddlPrNo" onchange="GetWareHouse()" class="form-control"></asp:DropDownList>
         </div>
         <div class="col-lg-1 col-md-2 col-sm-4">
             <input type="button" value="Add" id="btnPRSave" class="btn btn-primry" style="margin-top: 16px;" />
@@ -662,9 +694,9 @@
     </div>
  
     <div class="row">
-           <div class="col-lg-3 col-md-6 col-sm-12">
+           <div class="col-lg-3 col-md-6 col-sm-12" id="warehouse">
             <asp:Label ID="lblwarehouse" runat="server" Text="Ware House"></asp:Label>
-            <asp:DropDownList runat="server" ID="ddlWareHouse" onchange="getprNoBy_WareHouseRFQ(this)" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+            <asp:DropDownList runat="server" ID="ddlWareHouse"  class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
         </div>
         <div class="col-lg-7 col-md-12 col-sm-12">
             <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>

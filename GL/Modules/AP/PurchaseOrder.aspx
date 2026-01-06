@@ -970,21 +970,21 @@
                 return false;
             }
 
-            if (Warehouse == '0') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please Select Warehouse',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return false;
-            }
+            //if (Warehouse == '0') {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Please Select Warehouse',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return false;
+            //}
 
             if (Vendor == '0') {
                 $("#ctl00_MainContent_ddlVendor").addClass('ErrorAlert');

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Text;
 using System.Web;
+using System.Web.Script.Serialization;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.Services;
-using System.Web.Script.Serialization;
-using System.Text;
-using System.Data;
 using Telerik.Web;
 
 namespace PMS
@@ -197,6 +198,7 @@ namespace PMS
                     var itemId = (from p in db.Reg_patients
                                   join vs in db.Patients on p.pat_id equals vs.Reg_PatId
                                   where vs.Reg_PatId == Pat_id
+                                  && vs.Is_billed != true
                                   orderby vs.Created_Time descending   // 👈 sort newest first
                                   select vs.Service_id)
                                 .FirstOrDefault();
@@ -1215,7 +1217,10 @@ namespace PMS
             newBill.Opd_Id = data.Opd_id;
             newBill.Bill_Date = DateTime.Now;
             newBill.Remarks = data.Remarks;
-            newBill.Discount_Percentage = data.Discount_Percentage;
+            var opd_proc = data.opd_procedure;
+           
+
+                newBill.Discount_Percentage = data.Discount_Percentage;
             newBill.Discount_Amount = data.Discount_Amount;
             newBill.Total_Amount = data.TotalPayable;
             newBill.Net_Amount = data.Net_Amount;
@@ -1238,6 +1243,28 @@ namespace PMS
             // Handle In-Patient logic
             var patient_no = DBClass.getField("select Patient_No from Reg_patient where pat_id=" + data.Patient_ID);
             var ipdid = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID=" + data.Patient_ID + " order by Created_Time desc");
+
+            if (data.hdn_docid != 0)
+            {
+                newBill.Doctor_ID = data.hdn_docid;
+
+                DateTime today = DateTime.Today;
+                int maxToken = db.Ar_Billings
+                    .Where(b =>
+                        b.Doctor_ID == data.hdn_docid &&
+                        b.Creation_Date.HasValue &&
+                        b.Creation_Date.Value.Year == today.Year &&
+                        b.Creation_Date.Value.Month == today.Month &&
+                        b.Creation_Date.Value.Day == today.Day)
+                    .Max(b => (int?)b.Doc_token) ?? 0;
+
+                newBill.Doc_token = maxToken + 1;
+            }
+            else
+            {
+                newBill.Doc_token = null; // or = 0 if column is non-nullable int
+            }
+
 
             if (ipdid != "There is no row at position 0.")
             {
@@ -1313,6 +1340,14 @@ namespace PMS
             {
                 db.Ar_Billings.InsertOnSubmit(newBill);
                 db.SubmitChanges(); // Needed to get new Bill_ID for details
+                if (opd_proc == "1")
+                {
+                    DBClass.executeNonQueryWithoutBegin("Update patients SET Is_billed ='1' WHERE patient_id=" + data.Opd_id  );
+                }
+                else
+                {
+
+                }
             }
 
             // >>>>>>>>>>>>>>>>>> ✅ SAVE BOM CONSUMPTION (ADDED SECTION) <<<<<<<<<<<<<<<<<<<<
@@ -2399,6 +2434,7 @@ namespace PMS
             public int Bill_ID { get; set; }
             public int Patient_ID { get; set; }
             public int Opd_id { get; set; }
+            public string opd_procedure { get; set; }
             public string referred_by_doctor { get; set; }
             public string PackageName { get; set; }
             public string BillDepartment { get; set; }
@@ -2423,6 +2459,7 @@ namespace PMS
             public string ChargePolicy { get; set; }
             public string Cash_In_Hand_Account { get; set; }
             public decimal Bank_Cash { get; set; }
+            public int? hdn_docid { get; set; }
             public string Main_Department { get; set; }
             //public string Remarks { get; set; }
             public List<BillingProcessDetails> Details { get; set; }

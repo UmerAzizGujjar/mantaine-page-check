@@ -1407,6 +1407,8 @@
                         debugger;
                         var Patient_ID = $('#txtMRNo').val();
                         var Opd_id = $('#hdnOpd_id').val();
+                        var hdn_docid = $("#hdn_docid").val();
+                        var opd_procedure = $('#hdn_opd_procedure').val();
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
                         var TotalPayable = $('#txtTotalPayable').val();
@@ -1598,7 +1600,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory,hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -1719,6 +1721,9 @@
             debugger;
             function GetDocAgreementValuess(rows) {
                 debugger;
+                var doc_1 = $("#ddldoctor1").val();
+                $("#hdn_docid").val(doc_1);
+
                 var InPatient_Type = $("#hdn_InPatienttype").val();
                 var Patient_Type = $("#hdn_PatienttypeId").val();
                 var Aggreement_Type = '02'
@@ -1767,10 +1772,19 @@
 
                     // ✅ Set final (discounted) values back
                     $row.find('input[name="HocShare"]').val(hos_share.toFixed(2));
-                    $row.find('input[name="DocShare"]').val(doc_share.toFixed(2));
+                        $row.find('input[name="DocShare"]').val(doc_share.toFixed(2));
+
+                        $row.find('input[name="hdnPerUnitDocShare"]').remove();
+                        $row.find('input[name="hdnPerUnitHocShare"]').remove();
+
+                        $row.append('<input type="hidden" name="hdnPerUnitDocShare" value="' + doc_share.toFixed(6) + '" />');
+                        $row.append('<input type="hidden" name="hdnPerUnitHocShare" value="' + hos_share.toFixed(6) + '" />');
+
                 }
-                })
+              })
             }
+
+            
 
             function AssignValue(ControlID, value) {
                 if (ControlID.value == '')
@@ -1901,6 +1915,29 @@
                         Qty = $(value).find('input[name="txtQty"]').val();
                         Amount = $($(value).find('td')[5]).text();
                         DisPer = $(value).find('input[name="DisPer"]').val();
+                        // --- Recompute Doctor & Hospital Share based on editable amount ---
+                        var $row = $(value);
+                        var origPerUnitDoc = parseFloat($row.find('input[name="hdnPerUnitDocShare"]').val()) || 0;
+                        var origPerUnitHoc = parseFloat($row.find('input[name="hdnPerUnitHocShare"]').val()) || 0;
+                        var actualQty = parseFloat(Qty) || 1;
+
+                        var originalRate = parseFloat($row.find('input[name="txtActualAmount"]').val()) || Amount;
+                        if (originalRate > 0 && (origPerUnitDoc > 0 || origPerUnitHoc > 0)) {
+                            var scaleFactor = Amount / originalRate;
+                            var newDocShare = (origPerUnitDoc * actualQty) * scaleFactor;
+                            var newHocShare = (origPerUnitHoc * actualQty) * scaleFactor;
+
+                            var disPerNum = parseFloat(DisPer) || 0;
+                            if (disPerNum > 0) {
+                                var factor = disPerNum / 100;
+                                newDocShare *= (1 - factor);
+                                newHocShare *= (1 - factor);
+                            }
+
+                            $row.find('input[name="DocShare"]').val(newDocShare.toFixed(2));
+                            $row.find('input[name="HocShare"]').val(newHocShare.toFixed(2));
+                        }
+
                         $(value).find('input[name="hdnDisPer"]').val(DisPer);
                         DisAmt = (Qty * Amount) * DisPer / 100;
                         if (localStorage.OnlyPercentage == 1) {
@@ -1933,25 +1970,25 @@
                         var _Procedure = $(value).find('input[name="hdnProcedure"]').val();
                         var _Package = $(value).find('input[name="hdnParentTrans_Type"]').val();
 
-                        var hospital_share = $(value).find('input[name="HocShare"]').val();
-                        var doctor_share = $(value).find('input[name="DocShare"]').val();
+                        //var hospital_share = $(value).find('input[name="HocShare"]').val();
+                        //var doctor_share = $(value).find('input[name="DocShare"]').val();
 
-                        // --- Apply discount % to hospital & doctor shares (localized change) ---
-                        if (DisPer && !isNaN(DisPer)) {
-                            var disPerNum = parseFloat(DisPer) / 100; // e.g. 20% → 0.2
-                            var disAmtHosp = parseFloat(hospital_share || 0) * disPerNum;
-                            var disAmtDoc  = parseFloat(doctor_share  || 0) * disPerNum;
+                        //// --- Apply discount % to hospital & doctor shares (localized change) ---
+                        //if (DisPer && !isNaN(DisPer)) {
+                        //    var disPerNum = parseFloat(DisPer) / 100; // e.g. 20% → 0.2
+                        //    var disAmtHosp = parseFloat(hospital_share || 0) * disPerNum;
+                        //    var disAmtDoc  = parseFloat(doctor_share  || 0) * disPerNum;
 
-                            // Update *displayed* shares (after discount deduction)
-                            var newHospShare = parseFloat(hospital_share || 0) - disAmtHosp;
-                            var newDocShare  = parseFloat(doctor_share  || 0) - disAmtDoc;
+                        //    // Update *displayed* shares (after discount deduction)
+                        //    var newHospShare = parseFloat(hospital_share || 0) - disAmtHosp;
+                        //    var newDocShare  = parseFloat(doctor_share  || 0) - disAmtDoc;
 
-                            // Set back to inputs (as numbers, rounded to 2 decimals for UI)
-                            $(value).find('input[name="HocShare"]').val(newHospShare.toFixed(2));
-                            $(value).find('input[name="DocShare"]').val(newDocShare.toFixed(2));
+                        //    // Set back to inputs (as numbers, rounded to 2 decimals for UI)
+                        //    $(value).find('input[name="HocShare"]').val(newHospShare.toFixed(2));
+                        //    $(value).find('input[name="DocShare"]').val(newDocShare.toFixed(2));
 
-                            // Optional: keep original values elsewhere? Not overwritten unless needed.
-                        }
+                        //    // Optional: keep original values elsewhere? Not overwritten unless needed.
+                        //}
 
                         if (localStorage.OnlyPercentage == 1) {
 
@@ -2608,8 +2645,7 @@
                         $('#txtBalances').val(TotalNetAmount.toFixed());
                     }
                 }
-
-
+                
             }
             var Temporary = 0;
             debugger;
@@ -3149,6 +3185,24 @@
                     }
 
                 }
+
+                var $currentRow = $(anchor).closest('tr');
+                var currentQty = parseFloat($currentRow.find('input[name="txtQty"]').val()) || 1;
+
+                var perUnitDoc = parseFloat($currentRow.find('input[name="hdnPerUnitDocShare"]').val());
+                var perUnitHoc = parseFloat($currentRow.find('input[name="hdnPerUnitHocShare"]').val());
+
+                if (!isNaN(perUnitDoc) && !isNaN(perUnitHoc)) {
+                    var newDocShare = perUnitDoc * currentQty;
+                    var newHocShare = perUnitHoc * currentQty;
+
+                    $currentRow.find('input[name="DocShare"]').val(newDocShare.toFixed(2));
+                    $currentRow.find('input[name="HocShare"]').val(newHocShare.toFixed(2));
+
+                    if (typeof calculateDoctorShare === 'function') {
+                        calculateDoctorShare();
+                    }
+                }
             }
 
 
@@ -3623,7 +3677,7 @@
                             console.log("No service/item found for this patient.");
                             return;
                         }
-
+                      
                         var rowIndex = $('#tblDetails tbody tr').length; 
                         var remarks = $("#ctl00_MainContent_ddlpro_dis").val() || "";
                         var itemtype = data.Services === true ? 'Service' : 'Item';
@@ -3673,7 +3727,7 @@
 
                         $('#tblDetails tbody').append(servicerow);
 
-                      
+                        $('#hdn_opd_procedure').val("1");
                         //setTimeout(function () {
                             CalculateSummarieDiscountPerWise(rowIndex);
                         //}, 500);
@@ -5682,6 +5736,8 @@
          <input type="hidden" name="hdn_pkgtype" value="0" id="hdn_pkgtype" />
          <input type="hidden" name="hdn_PatienttypeId" value="0" id="hdn_PatienttypeId" />
          <input type="hidden" name="hdn_InPatienttype" value="0" id="hdn_InPatienttype" />
+         <input type="hidden" name="hdn_opd_procedure" value="0" id="hdn_opd_procedure" />
+         <input type="hidden" name="hdn_docid" value="0" id="hdn_docid" />
        <div class="row">
            <div class="col-md-2 text-end">
             <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" style="border-radius: 28px; width: 100%;" />

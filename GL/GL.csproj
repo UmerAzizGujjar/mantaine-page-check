@@ -333,6 +333,7 @@
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
     <Content Include="Modules\PatientManagement\NewEmergencyCase.aspx" />
     <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
+    <Content Include="Modules\PatientManagement\OldOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OPD.aspx" />
     <Content Include="Modules\PatientManagement\OPDPolicy.aspx" />
     <Content Include="Modules\PatientManagement\OPDView.aspx" />
@@ -26732,6 +26733,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\NewOutPatient.aspx.designer.cs">
       <DependentUpon>NewOutPatient.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OldOutPatient.aspx.cs">
+      <DependentUpon>OldOutPatient.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OldOutPatient.aspx.designer.cs">
+      <DependentUpon>OldOutPatient.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD.aspx.cs">
       <DependentUpon>OPD.aspx</DependentUpon>

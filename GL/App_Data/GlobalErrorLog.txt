@@ -36522,3 +36522,1622 @@ Source: System.Web
 URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
 User: visionplus
 
+[ERROR:285c7e11 1/5/2026 4:59:03 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2._qfrla51.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2._qfrla51.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434524
+User: VisionPlus
+
+[ERROR:5be29d14 1/5/2026 5:30:23 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:4dd38733 1/5/2026 5:30:24 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:f3a36b04 1/5/2026 5:30:24 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:fc9bd795 1/5/2026 5:30:24 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:a954f4c0 1/5/2026 5:36:46 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:e2251297 1/5/2026 5:36:47 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:5bfec09f 1/5/2026 5:36:47 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:cde18ed7 1/5/2026 5:36:47 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:bde27785 1/5/2026 5:43:45 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.qec7eyde.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.qec7eyde.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=PurchaseOrderList&ReportTitle=Purchase Order List&POid=1
+User: VisionPlus
+
+[ERROR:ea689b13 1/5/2026 5:43:46 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:8500afa6 1/5/2026 5:59:59 PM]
+Type: HttpUnhandledException
+Message: Exception of type 'System.Web.HttpUnhandledException' was thrown.
+Stack Trace:    at System.Web.UI.Page.HandleError(Exception e)
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.login_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_login.aspx.cdcab7d2.jjhsu-bt.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Login.aspx
+User: 
+
+[ERROR:a75969a3 1/5/2026 6:03:23 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.hko22eam.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.hko22eam.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=2
+User: VisionPlus
+
+[ERROR:306c6258 1/5/2026 6:03:25 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:d1f45e0b 1/5/2026 6:03:27 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.hko22eam.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.hko22eam.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=2
+User: VisionPlus
+
+[ERROR:b05835ea 1/5/2026 6:03:27 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:d177c46b 1/6/2026 10:48:32 AM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:306f7cdb 1/6/2026 10:48:33 AM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:67d30681 1/6/2026 10:48:33 AM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:b5f279dd 1/6/2026 10:48:33 AM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:28148483 1/6/2026 3:02:57 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:da9ae546 1/6/2026 3:03:01 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:9708f5c1 1/6/2026 3:26:36 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:967b33d4 1/6/2026 3:26:39 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:221f82bd 1/6/2026 3:26:39 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:95c5808a 1/6/2026 3:29:41 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:6f69e016 1/6/2026 3:29:45 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:5c825209 1/6/2026 3:29:45 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:e8e68c7f 1/6/2026 3:33:12 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:a28946d5 1/6/2026 3:33:13 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:1454f077 1/6/2026 3:33:13 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:77371305 1/6/2026 3:33:13 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:bc0d2bee 1/6/2026 3:34:56 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:50abdb65 1/6/2026 3:34:57 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:7d524a8e 1/6/2026 3:34:58 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:02dc0199 1/6/2026 3:34:58 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:f7e0f78e 1/6/2026 3:41:48 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:7809ff4b 1/6/2026 3:55:14 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:000fdd54 1/6/2026 3:55:17 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:aa26b886 1/6/2026 3:57:59 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:17661139 1/6/2026 3:58:00 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:303e0af2 1/6/2026 3:58:00 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:ee464a8d 1/6/2026 3:58:49 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:f9fea515 1/6/2026 3:58:50 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:078ba088 1/6/2026 3:58:50 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:2d6ea634 1/6/2026 3:58:51 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:a74643a5 1/6/2026 3:59:18 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:19807fd1 1/6/2026 3:59:19 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:e8c51c11 1/6/2026 3:59:19 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:80a0618b 1/6/2026 3:59:19 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:d0d920ac 1/6/2026 4:02:24 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:e6a8735b 1/6/2026 4:02:25 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:fab04438 1/6/2026 4:02:25 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:90b2ec8b 1/6/2026 4:02:25 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:2dff3436 1/6/2026 4:03:52 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:b861ab2b 1/6/2026 4:03:53 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:d14e806d 1/6/2026 4:03:53 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:4686ecbc 1/6/2026 4:03:53 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:00596ea2 1/6/2026 4:11:17 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:ae02eeeb 1/6/2026 4:11:18 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:589ac46f 1/6/2026 4:11:18 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:6497942c 1/6/2026 4:11:18 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:a9e7b472 1/6/2026 4:16:23 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:7434247f 1/6/2026 4:16:25 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:4900d0ea 1/6/2026 4:16:25 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:85ffbc6a 1/6/2026 4:16:25 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:ecf47599 1/6/2026 4:17:03 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:4f73803e 1/6/2026 4:17:03 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:3fb27808 1/6/2026 4:17:05 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:a7f65019 1/6/2026 4:17:14 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: VisionPlus
+
+[ERROR:183363c8 1/6/2026 4:17:14 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/js/jquery.min.map
+User: VisionPlus
+
+[ERROR:d57db17c 1/6/2026 4:17:14 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
+User: VisionPlus
+
+[ERROR:0534da61 1/6/2026 4:17:15 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: VisionPlus
+
+[ERROR:ff8ffb9d 1/6/2026 4:42:37 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.6fnotmug.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.6fnotmug.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434525
+User: VisionPlus
+
+[ERROR:8d0a852b 1/6/2026 4:42:44 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:3c826bc4 1/6/2026 4:43:45 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.6fnotmug.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.6fnotmug.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434526
+User: VisionPlus
+
+[ERROR:25e09668 1/6/2026 4:43:45 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:21c0948d 1/6/2026 4:46:27 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.w1eag7gf.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.w1eag7gf.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434527
+User: VisionPlus
+
+[ERROR:2ca37ffb 1/6/2026 4:46:34 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:63161fe9 1/6/2026 4:49:34 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.1xbkbzel.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.1xbkbzel.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434528
+User: VisionPlus
+
+[ERROR:d084ad9e 1/6/2026 4:50:22 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.1xbkbzel.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.1xbkbzel.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434529
+User: VisionPlus
+
+[ERROR:2b511157 1/6/2026 4:50:22 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:0ea2d1bb 1/6/2026 5:01:50 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434530
+User: VisionPlus
+
+[ERROR:1904d91d 1/6/2026 5:01:55 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:d82d84ad 1/6/2026 5:02:36 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434531
+User: VisionPlus
+
+[ERROR:773c819a 1/6/2026 5:02:37 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:657a09fa 1/6/2026 5:03:08 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434532
+User: VisionPlus
+
+[ERROR:35ce91e9 1/6/2026 5:03:09 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:21823dc8 1/6/2026 5:03:44 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434533
+User: VisionPlus
+
+[ERROR:81ff416d 1/6/2026 5:03:44 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:4168c356 1/6/2026 5:04:11 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434534
+User: VisionPlus
+
+[ERROR:4c3b534d 1/6/2026 5:04:12 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:4474355c 1/6/2026 5:05:51 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434535
+User: VisionPlus
+
+[ERROR:1f8d41c4 1/6/2026 5:05:51 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: VisionPlus
+
+[ERROR:15bfd42f 1/7/2026 5:07:18 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434536
+User: 
+
+[ERROR:a089aa87 1/7/2026 5:07:19 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: 
+
+[ERROR:ee1e1154 1/6/2026 5:07:44 PM]
+Type: TypeInitializationException
+Message: The type initializer for 'CrystalDecisions.Web.CrystalReportViewer' threw an exception.
+Stack Trace:    at CrystalDecisions.Web.CrystalReportViewer..ctor()
+   at ASP.reportviewer_aspx.__BuildControlCrystalReportViewer1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 15
+   at ASP.reportviewer_aspx.__BuildControlform1() in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 13
+   at ASP.reportviewer_aspx.__BuildControlTree(reportviewer_aspx __ctrl) in e:\Noman\Hmis_sources\Standard_Hospital\GL\ReportViewer.aspx:line 1
+   at ASP.reportviewer_aspx.FrameworkInitialize() in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\Azeem\AppData\Local\Temp\Temporary ASP.NET Files\vs\a7aff3b0\9e493ab3\App_Web_reportviewer.aspx.cdcab7d2.d_s_kood.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: CrystalDecisions.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=434537
+User: 
+
+[ERROR:8dbb6e93 1/6/2026 5:07:44 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: 
+
