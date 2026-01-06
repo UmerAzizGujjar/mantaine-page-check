@@ -125,25 +125,12 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(query);
         }
 
-        //private void LoadPRNum()
-        //{
-        //    DataTable dt = new DataTable();
-        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-        //    var vendor = db.sp_LoadPRNumOnRFQ();
-        //    ddlPrNo.DataSource = vendor;
-        //    ddlPrNo.DataTextField = "PR_Num";
-        //    ddlPrNo.DataValueField = "PR_Id";
-        //    ddlPrNo.DataBind();
-        //    if (!IsPostBack)
-        //    {
-        //        ddlPrNo.Items.Insert(0, new ListItem("Please Select", "0"));
-        //    }
-        //}
+ 
         [WebMethod]
-        public static string GetPRNoByWarehouse_RFQ(string Warehouse)
+        public static string GetPRNoByWarehouse_RFQ()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var RFQ = db.sp_LoadPRNumOnRFQ(Convert.ToInt32(Warehouse));
+            var RFQ = db.sp_LoadPRNumOnRFQ();
             return (new JavaScriptSerializer()).Serialize(RFQ);
         }
         [WebMethod]
