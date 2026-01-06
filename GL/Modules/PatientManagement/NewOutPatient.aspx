@@ -4277,7 +4277,7 @@ function LoadLabResultrpt() {
                             '<td>' + (dosageQty || '') + '<input type="hidden" class="field-value" value="' + (dosageQty || '') + '"></td>' +
                             '<td>' + (otherInstruction || '') + '<input type="hidden" class="field-value" value="' + (otherInstruction || '') + '"></td>' +
                             '<td><a href="#" onclick="editMedicine(this); return false;">Edit</a> | <a href="#" onclick="deleteMedicine(this); return false;"><i class="fa fa-times"></i></a><input type="hidden" name="uurowid" value="' + uuid() + '"></td>' +
-                            '<td style="display:none;"></td>' +
+                            '<td style="display:none;"><input type="hidden" name="ItemCode" id ="ItemCode" value="' + (value.Item_Code || '') + '"> </td>' +
                             '</tr>';
                     });
 
