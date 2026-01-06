@@ -706,7 +706,7 @@
                         }
                         else {
                             $('#tblDetails tbody').append(rows);
-
+                            $('.ddlDoctor').select2();
                             $('input[name="DisAmount"]').attr('disabled', true);
                             //if (editrights == "true") {
                             //    $("#amnt" + rowIndex).attr('contenteditable', true);
@@ -718,7 +718,6 @@
                             CalculateSummarieDiscountPerWise(rowIndex);
 
                             $('#tbltestModelTable tbody').append(rowstbl);
-
                         }
                         setTimeout(function () {
                             $(arr).filter(function (i, n) {
@@ -843,6 +842,7 @@
                         var rowstbl = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + '.' + Rotation_Name + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" disabled=disabled onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td>' + globalTestRate + '</td><input type="text" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td></tr>'
                         debugger;
                         $('#tblDetails tbody').append(rows);
+                        $('.ddlDoctor').select2();
                         $('#tbltestModelTable tbody').append(rowstbl);
                         debugger;
                         $('input[name="DisAmount"]').attr('disabled', true);
