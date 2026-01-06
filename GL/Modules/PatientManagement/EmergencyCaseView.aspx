@@ -13,6 +13,7 @@
 
         function PrintEmergencyPatient(Emergency_ID) {
             debugger;
+          
             var url = '../../ReportViewer.aspx?ReportName=Emergencypatient&Title=Emergency Patient Report&Emergency_ID=' + Emergency_ID;
              window.open(url, '_blank');
          }

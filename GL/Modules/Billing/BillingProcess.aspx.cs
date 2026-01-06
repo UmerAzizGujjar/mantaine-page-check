@@ -197,6 +197,7 @@ namespace PMS
                     var itemId = (from p in db.Reg_patients
                                   join vs in db.Patients on p.pat_id equals vs.Reg_PatId
                                   where vs.Reg_PatId == Pat_id
+                                  && vs.Is_billed != true
                                   orderby vs.Created_Time descending   // 👈 sort newest first
                                   select vs.Service_id)
                                 .FirstOrDefault();
@@ -1215,7 +1216,10 @@ namespace PMS
             newBill.Opd_Id = data.Opd_id;
             newBill.Bill_Date = DateTime.Now;
             newBill.Remarks = data.Remarks;
-            newBill.Discount_Percentage = data.Discount_Percentage;
+            var opd_proc = data.opd_procedure;
+           
+
+                newBill.Discount_Percentage = data.Discount_Percentage;
             newBill.Discount_Amount = data.Discount_Amount;
             newBill.Total_Amount = data.TotalPayable;
             newBill.Net_Amount = data.Net_Amount;
@@ -1313,6 +1317,14 @@ namespace PMS
             {
                 db.Ar_Billings.InsertOnSubmit(newBill);
                 db.SubmitChanges(); // Needed to get new Bill_ID for details
+                if (opd_proc == "1")
+                {
+                    DBClass.executeNonQueryWithoutBegin("Update patients SET Is_billed ='1' WHERE patient_id=" + data.Opd_id  );
+                }
+                else
+                {
+
+                }
             }
 
             // >>>>>>>>>>>>>>>>>> ✅ SAVE BOM CONSUMPTION (ADDED SECTION) <<<<<<<<<<<<<<<<<<<<
@@ -2399,6 +2411,7 @@ namespace PMS
             public int Bill_ID { get; set; }
             public int Patient_ID { get; set; }
             public int Opd_id { get; set; }
+            public string opd_procedure { get; set; }
             public string referred_by_doctor { get; set; }
             public string PackageName { get; set; }
             public string BillDepartment { get; set; }

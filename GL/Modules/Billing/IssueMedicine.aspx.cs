@@ -69,7 +69,7 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
             var itemCodes = (from  ip in db.In_Patient_Medicines join o in db.Out_Patients on ip.Patient_ID equals o.Out_Patient_ID
                              join p in db.Patients on o.Patient_ID equals p.Patient_ID
-                             where p.Patient_ID == Pat_Id
+                             where o.Out_Patient_ID == Pat_Id
                              select ip.Item_Code).ToList();
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 
@@ -95,20 +95,21 @@ namespace PMS
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 DateTime last24Hours = DateTime.Now.AddHours(-24);
-                var OPD_NO = (from opd in db.Patients                                
-                                 where opd.Reg_PatId == pat_id
-                                    
+                var OPD_NO = (from opd in db.Patients  join
+                              ou in db.Out_Patients on opd.Patient_ID equals ou.Patient_ID
+                           
+                              where opd.Reg_PatId == pat_id                     
 
                               select new
                                  {
                                      Patient_No = "OPD-" + opd.Opd_No,
-                                     Patient_ID = opd.Patient_ID
+                                     Patient_ID = ou.Out_Patient_ID
 
                                  }).ToList();
-                var IPD_NO = (from ipd in db.In_Patients
-                                             where ipd.Patient_ID == pat_id
-                                             && (ipd.Discharge == null || ipd.Discharge == false)
 
+                var IPD_NO = (from ipd in db.In_Patients
+                              where ipd.Patient_ID == pat_id
+                                             && (ipd.Discharge == null || ipd.Discharge == false)
 
                                              select new
                                              {
@@ -116,7 +117,7 @@ namespace PMS
                                                  Patient_ID = ipd.In_Patient_ID
                                              }).ToList();
                 var Emergency_NO = (from ipd in db.Emergency_Patients
-                              where ipd.Patient_ID == pat_id
+                                    where ipd.Patient_ID == pat_id
                               && (ipd.Discharge == null || ipd.Discharge == false)
 
 
