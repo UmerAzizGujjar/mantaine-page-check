@@ -24,14 +24,14 @@
     }
 
     .main textarea{
-        width: 260px !important;
+        width: 100% !important;
         height:34px;
         margin-left:-5px;
     }
 
 
     #ctl00_MainContent_chkNo_Medicine {
-        width: 51px;
+        width: 51px !important;
         position: absolute;
         margin-top: 11px;
         font-size: 17px;
@@ -227,12 +227,10 @@ border-radius:5px !important;
         }
     }
     .btn-item {
-    background-color: #449777db !important;
     font-size: 13px;
     line-height: 1.39;
     padding: 3px 9px;
     background-image: none !important;
-    border: 5px solid #39b384db !important;
     border-radius: 5px !important;
     box-shadow: none !important;
     color: #fff !important;
@@ -246,8 +244,8 @@ border-radius:5px !important;
     width: 103px;
     margin-top: 0px;
     position: relative;
-}    .btn-tests {
-    background-color: #449777db !important;
+}    
+    .btn-tests {
     font-size: 13px;
     line-height: 1.39;
     padding: 3px 9px;
@@ -262,9 +260,8 @@ border-radius:5px !important;
     transition: all 0.15s ease 0s;
     vertical-align: middle;
     text-align: center;
-    margin: -76px;
     width: 103px;
-    margin-top: -19px;
+    margin-top: 27px;
     position: relative;
 }
       /*Modal Design */
@@ -5943,7 +5940,7 @@ border-radius:5px !important;
                         <div style="margin-top: -0px; text-align: left;" id="Div1">
                             <label>Add New Symptom </label><br />
                             <input type="text" id="txtNewSymptom" style="width: 200px !important;" />
-                            <input type="button" value="Save" id="btn_save" onclick="SymptomInsert()"  style="margin-top:4px;"/>
+                            <input type="button" value="Save" id="btn_save" onclick="SymptomInsert()" class="btn btn-primry"  style="margin-top:4px;width:30% !important"/>
                             <br />
                             <label>Symptom &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -5967,7 +5964,7 @@ border-radius:5px !important;
                             </div>
                             <div style="margin-top: -42px; margin-left: 308px;">
                                 <textarea name="txtRemarks" id="txtRemarks" style="width: 221px !important; height: 36px;"></textarea>
-                                <input type="button" id="btnAddHistory" class="btn btn-info" onclick="Add_SymtomRow()" value="Add" style="margin-top: -40px;height:35px !important"/>
+                                <input type="button" id="btnAddHistory" class="btn btn-primry" onclick="Add_SymtomRow()" value="Add" style="margin-top: -23%;height:37px !important;margin-left: 73%;width: 40% !important;"/>
                             </div>
                         </div>
                     </div>
@@ -6523,7 +6520,7 @@ border-radius:5px !important;
                    
                
 
-                    <div style="margin-left: -5px; width: 1099px; margin-top: 12px;">
+                    <div style="margin-left: -5px;margin-top: 12px;">
                         <table class="table" id="tblHistoryTabHistory" style="display: block; overflow: scroll;">
                             <thead>
                                 <tr>
@@ -7188,7 +7185,9 @@ border-radius:5px !important;
                     <div class="row"> 
                         <div class="row" style="margin-left:11px;"> <h4 style="font-weight: bold;">Template</h4></div>
                         <div class="row" style="margin-left:11px;">
-                        <select id="ddlTemplate" style="width:150px !important; margin-left:5px !important;" onchange="LoadTemplateMedicine()"></select>
+                            <div class="col-lg-2 col-md-6 col-sm-12">
+                        <select id="ddlTemplate" style="margin-left:5px !important;" onchange="LoadTemplateMedicine()"></select>
+                            </div>
                             </div>
                     </div>
 
@@ -7196,7 +7195,7 @@ border-radius:5px !important;
 
                         <tr>
                             <td>
-                                <input type="button" value="Add Medicine" id="btnAddMedicine" style="margin-left:21px !important;width:100px !important" />
+                                <input type="button" value="Add Medicine" id="btnAddMedicine" class="btn btn-primry" style="margin-left:33px !important;width:16% !important;margin-top:10px !important" />
                                  <label style="font-size:23px;margin-left:7px !important">No Medicine</label>
                                 <asp:CheckBox ID="chkNo_Medicine" runat="server"></asp:CheckBox>
 
@@ -7256,7 +7255,7 @@ border-radius:5px !important;
                                         </tbody>
                                     </table>
                                 </div>
-                                <input type="button" value="Load Medicine" id="load_previous_Med" onclick="Appendintable()" style="width:125px !important;"/>
+                                <input type="button" value="Load Medicine" id="load_previous_Med" class="btn btn-primry" onclick="Appendintable()" style="width:125px !important;margin-top:20px !important"/>
                             </td>
                         </tr>
                     </table>
@@ -7274,38 +7273,40 @@ border-radius:5px !important;
                             </div>
                                 <div class="row" >
                                    <div class="row" style="margin-left:11px;"><h4 style="font-weight: bold;">Template</h4></div>
-                                   <div class="row" style="margin-left:11px;">
-                        <select id="ddlTemplateTest" style="width:150px !important; margin-left:5px !important;" onchange="LoadtepmlateTest()"></select>
+                                   <div class="row" style="margin-left:0px;">
+                                       <div class="col-lg-2 col-md-4 col-sm-6">
+                                           <select id="ddlTemplateTest"  onchange="LoadtepmlateTest()"></select>
                                        </div>
+                                   </div>
                     </div>
                             <div class="row">
-                                <div class="col-lg-3 col-md-3 col-sm-6">
+                                <div class="col-lg-2 col-md-3 col-sm-6">
                                     <label>Department</label>
                                     <select id="ddlMainTestDepartment" class="form-control" onchange="LoadTestByDepartment()">
                                         <option value="">Select Department</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-3 col-md-3 col-sm-6" style="margin-top:25px !important">
+                                <div class="col-lg-2 col-md-3 col-sm-6" style="margin-top:25px !important">
                                     <select id="ddlTestList" class="form-control"></select>
                                     <select id="ddlRotation" style="display: none;">
                                     </select>
                                 </div>
-                                <div class="col-lg-3 col-md-3 col-sm-6">
+                                <div class="col-lg-2 col-md-3 col-sm-6">
                                     <label>Special Test </label>
                                     <asp:TextBox ID="txtSpecialTests" Class="form-control" runat="server" TextMode="MultiLine"></asp:TextBox>
                                 </div>
-                                <div class="col-lg-0 col-md-3 col-sm-6">
+                                <div class="">
                                     <select id="ddlXRayLF" style="display: none; width: 73px !important; margin-left: 101px; margin-top: -28px; height: 28px;">
                                         <option value="0"></option>
                                         <option value="L">Left</option>
                                         <option value="R">Right</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-sm-6">
-                                    <input type="button" value="Add Test" id="btnAddAllTest" onclick="AddAllTest()" style="margin-top: 24px;" />
+                                <div class="col-lg-1 col-md-3 col-sm-6">
+                                    <input type="button" value="Add Test" id="btnAddAllTest" class="btn btn-primry" onclick="AddAllTest()" style="margin-top: 24px;" />
                                 </div>
                                    <div class="col-lg-1 col-md-1 col-sm-1">
-                                        <span class="btn-tests" id="btngetalltest"><i class="fa fa-check-square"> Items</i></span>
+                                        <span class="btn btn-primry" id="btngetalltest" style="margin-top: 22px"><i class="fa fa-check-square"> Items</i></span>
                                     </div>
                                 </div>
                             <div class="row">
@@ -7314,7 +7315,7 @@ border-radius:5px !important;
                                     <asp:TextBox ID="txtAreaOfInterest" runat="server" TextMode="MultiLine"></asp:TextBox>
                                 </div>
                                 <div class="col-lg-4 col-md-3 col-sm-6">
-                                    <label style="font-size: 23px; margin-left:102px!important;margin-top:25px !important">No Lab Test</label>
+                                    <label style="font-size: 23px;margin-top:25px !important;margin-left:35px">No Lab Test</label>
                                     <asp:CheckBox class="Chkbox" ID="chkNo_Test" runat="server"></asp:CheckBox>
                                 </div>
                                 </div>
@@ -7368,7 +7369,7 @@ border-radius:5px !important;
                             </tr>
                         </table>
                     </div>
-                    <input type="button" value="Load Test" id="load_previous_test" onclick="Appendtestintable()"/>
+                    <input type="button" value="Load Test" class="btn btn-primry" id="load_previous_test" onclick="Appendtestintable()" style="width:12% !important;margin-top:13px !important"/>
                 </div>
             </div>
 
@@ -7384,7 +7385,7 @@ border-radius:5px !important;
                         <div class="row">
                         <div class="col-lg-2 col-md-3 col-sm-6">
                         <label>Doctor Name <span class="RedStar">*</span></label>
-                        <asp:DropDownList ID="ddlDoctorName" class="form-control" runat="server"  AppendDataBoundItems="true" onchange="LoadDesignation();" style="width:161px!important;"></asp:DropDownList >
+                        <asp:DropDownList ID="ddlDoctorName" class="form-control" runat="server"  AppendDataBoundItems="true" onchange="LoadDesignation();"></asp:DropDownList >
                         </div>
                           <div class="col-lg-2 col-md-3 col-sm-6">
                               <label>Designation </label>
@@ -7422,8 +7423,10 @@ border-radius:5px !important;
                                      <label>Verbal Consent <span class="RedStar">*</span></label>
                                     <asp:DropDownList ID="ddlverbal_consent"  CssClass="dropdownBackgroud" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
                             </div>
-                             <div class="col-lg-2 col-md-3 col-sm-6" style="margin-top:24px !important;margin-left:89px">
+                             <div class="col-lg-1 col-md-3 col-sm-6" style="margin-top:24px !important;">
                                  <label>Discharge<span class="RedStar">*</span></label>
+                                 </div>
+                            <div class="col-lg-1 col-md-3 col-sm-6" style="margin-top:24px !important;margin-left:-35px !important">
                                   <asp:CheckBox ID="CheckBox1" runat="server"></asp:CheckBox>
                             </div>
                             </div>
@@ -7434,7 +7437,7 @@ border-radius:5px !important;
                               
                             </div>
 
-                            <div class="col-lg-3 col-md-3 col-sm-6">
+                            <div class="col-lg-2 col-md-3 col-sm-6">
                                 <div class="row">
                                     <div class="custom-file">
 
@@ -7463,10 +7466,15 @@ border-radius:5px !important;
                                     </table>
                                 </div>
                                 <div class="row">
+                                    <div class="col-lg-8 col-md-4 col-sm-12">
                                     <asp:Label ID="Label12" runat="server" Text="Lab Result"></asp:Label>
                                     <asp:DropDownList ID="ddlLabResult" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
-                                    <input id="btnlabrpt" type="button" value="Add" onclick="InsertLabResult()" style="width: 57px; margin-left: 300px;height: 30px;margin-top: -60px;" />
+                                        </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12">
+                                        <label></label>
+                                    <input id="btnlabrpt" type="button" value="Add" onclick="InsertLabResult()" class="btn btn-primry" />
                                 </div>
+                                    </div>
                                 <div class="row">
                                     <table class="table" id="tblResultrpt" style="width: 317px;">
                                         <thead>
@@ -7485,7 +7493,7 @@ border-radius:5px !important;
                                  <div class="col-lg-2 col-md-3 col-sm-6">
                                  <div class="custom-file">
                                
-                                    <input type="button" id="downloadfile" style="width:110px;" value="Download File" onclick="downloadFile();" />
+                                    <input type="button" id="downloadfile" style="width:56% !important;" class="btn btn-primry" value="Download File" onclick="downloadFile();" />
                                    
                                 </div>
                             </div>
@@ -7590,10 +7598,10 @@ border-radius:5px !important;
                                             <input type="text" id="txtService" name="txtService" runat="server" />
                                         </td>
                                         <td>
-                                            <input type="button" id="btnAddService" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" style="top: 3px; left: 20px;width:100px !important" />
+                                            <input type="button" id="btnAddService" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" class="btn btn-primry" style="top: 3px; left: 20px;width:50% !important" />
                                         </td>  
                                         <td>
-                                           <span class="btn-item" id="btnGetAllIServices"><i class="fa fa-check-square"> Services</i></span>
+                                           <span class="btn-item btn btn-primry"  id="btnGetAllIServices"><i class="fa fa-check-square"> Services</i></span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -7638,7 +7646,7 @@ border-radius:5px !important;
                     </tbody>
                 </table>
             </div>
-<input type="button" onclick="AppendServices_Procedures()" id="Loadservice" value="Load Services" style=" width:125px !important" />
+           <input type="button" onclick="AppendServices_Procedures()" id="Loadservice" class="btn btn-primry" value="Load Services" style=" width:125px !important;margin-top:12px !important" />
 
                </div>
         </div>
