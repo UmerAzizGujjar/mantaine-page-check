@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NoorHospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="skin" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -8979,14 +8979,6 @@
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_LoadPRNumOnRFQ" Method="sp_LoadPRNumOnRFQ">
-    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_LoadPRNumOnRFQResult">
-      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_LoadPRNumOnCS" Method="sp_LoadPRNumOnCS">
     <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_LoadPRNumOnCSResult">
@@ -11128,6 +11120,13 @@
     <ElementType Name="SpApproveIPDShareDistributionResult">
       <Column Name="Message" Type="System.String" DbType="VarChar(37) NOT NULL" CanBeNull="false" />
       <Column Name="VoucherID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadPRNumOnRFQ" Method="sp_LoadPRNumOnRFQ">
+    <ElementType Name="sp_LoadPRNumOnRFQResult">
+      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

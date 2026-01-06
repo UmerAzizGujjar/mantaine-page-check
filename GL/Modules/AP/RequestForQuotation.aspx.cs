@@ -125,7 +125,19 @@ namespace PMS.AP
             return (new JavaScriptSerializer()).Serialize(query);
         }
 
- 
+        [WebMethod]
+        public static string GetWareHouseCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "WareHouse For PR"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
+
         [WebMethod]
         public static string GetPRNoByWarehouse_RFQ()
         {
@@ -180,6 +192,18 @@ namespace PMS.AP
                               m.QuotationValidty,
                               m.Status,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == m.Vendor_ID).Select(po => po.Vendor_Name),
+                          }).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(Header);
+        }
+        [WebMethod]
+        public static string GetwarehousebyPrno(int prno)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Header = (from m in db.Purchase_Requisitions
+                          where m.PR_Id == prno
+                          select new
+                          {
+                              m.Warehouse,
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
         }

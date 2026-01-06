@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "NoorHospital")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "skin")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -921,6 +921,7 @@ namespace PMS
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -4516,13 +4517,6 @@ namespace PMS
             return ((ISingleResult<spApproveStore_IssueResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadPRNumOnRFQ")]
-        public ISingleResult<sp_LoadPRNumOnRFQResult> sp_LoadPRNumOnRFQ([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> warehouse)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse);
-            return ((ISingleResult<sp_LoadPRNumOnRFQResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadPRNumOnCS")]
         public ISingleResult<sp_LoadPRNumOnCSResult> sp_LoadPRNumOnCS([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> warehouse)
         {
@@ -5104,6 +5098,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), distribution_Id, user_id);
             return ((ISingleResult<SpApproveIPDShareDistributionResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadPRNumOnRFQ")]
+        public ISingleResult<sp_LoadPRNumOnRFQResult> sp_LoadPRNumOnRFQ()
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+            return ((ISingleResult<sp_LoadPRNumOnRFQResult>)(result.ReturnValue));
         }
     }
 
@@ -177603,68 +177604,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_LoadPRNumOnRFQResult
-    {
-
-        private int _PR_Id;
-
-        private System.Nullable<int> _PR_Num;
-
-        private System.Nullable<decimal> _Qty;
-
-        public sp_LoadPRNumOnRFQResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
-        public int PR_Id
-        {
-            get
-            {
-                return this._PR_Id;
-            }
-            set
-            {
-                if ((this._PR_Id != value))
-                {
-                    this._PR_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
-        public System.Nullable<int> PR_Num
-        {
-            get
-            {
-                return this._PR_Num;
-            }
-            set
-            {
-                if ((this._PR_Num != value))
-                {
-                    this._PR_Num = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_LoadPRNumOnCSResult
     {
 
@@ -208578,6 +208517,68 @@ namespace PMS
                 if ((this._VoucherID != value))
                 {
                     this._VoucherID = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_LoadPRNumOnRFQResult
+    {
+
+        private int _PR_Id;
+
+        private System.Nullable<int> _PR_Num;
+
+        private System.Nullable<decimal> _Qty;
+
+        public sp_LoadPRNumOnRFQResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
+        public int PR_Id
+        {
+            get
+            {
+                return this._PR_Id;
+            }
+            set
+            {
+                if ((this._PR_Id != value))
+                {
+                    this._PR_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
+        public System.Nullable<int> PR_Num
+        {
+            get
+            {
+                return this._PR_Num;
+            }
+            set
+            {
+                if ((this._PR_Num != value))
+                {
+                    this._PR_Num = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
                 }
             }
         }
