@@ -6050,21 +6050,21 @@ border-radius:5px !important;
                         <table style="width: 240px !important;">
                             <tr>
                                 <td>
-                                    <input type="button" value="Eye" name="btnEye" onclick="ShowEyeModel()" /></td>
+                                    <input type="button" class="btn btn-primry" value="Eye" name="btnEye" onclick="ShowEyeModel()" /></td>
                                 <td>
-                                    <input type="button" value="Ent" name="btnEnt" onclick="ShowEntModel()" /></td>
+                                    <input type="button" class="btn btn-primry" value="Ent" name="btnEnt" onclick="ShowEntModel()" /></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="button" value="Psychiatry" name="btnPsychiatry" onclick="ShowPsychiatryModel()" /></td>
+                                    <input type="button" class="btn btn-primry" value="Psychiatry" name="btnPsychiatry" onclick="ShowPsychiatryModel()" /></td>
                                 <td>
-                                    <input type="button" value="Derma" name="btnDerma" onclick="ShowDermaModel()" /></td>
+                                    <input type="button" class="btn btn-primry" value="Derma" name="btnDerma" onclick="ShowDermaModel()" /></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="button" value="Ortho" name="btnOrtho" onclick="ShowOrthoModel()" /></td>
+                                    <input type="button" class="btn btn-primry" value="Ortho" name="btnOrtho" onclick="ShowOrthoModel()" /></td>
                                 <td>
-                                    <input type="button" value="Peads" name="btnPeads" onclick="ShowPeadsModel()" /></td>
+                                    <input type="button" class="btn btn-primry" value="Peads" name="btnPeads" onclick="ShowPeadsModel()" /></td>
 
                             </tr>
                         </table>
@@ -6606,7 +6606,7 @@ border-radius:5px !important;
                                         <tbody>
                                         </tbody>
                                     </table>
-                                    <input type="button" id="LoadSymp" value="Load Syptoms" style="width:115px !important;" onclick="AppendSymtompsHistory()" />
+                                    <input type="button" id="LoadSymp" value="Load Syptoms" class="btn btn-primry" style="width:33% !important;" onclick="AppendSymtompsHistory()" />
                                 </div>
                             </td>
                             <td></td>
