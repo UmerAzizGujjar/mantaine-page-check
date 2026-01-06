@@ -985,12 +985,12 @@ namespace PMS
                 if (Request.QueryString["MrNo"] != null)
                 {
 
-                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "Patients/rptPatientCard_Back.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@MR_No", Request.QueryString["MrNo"]);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+
                 }
             }
             else if (reportName == "OPD_Patient_Print")
@@ -1134,10 +1134,13 @@ namespace PMS
             {
                 if (Request.QueryString["appointmentId"] != null)
                 {
+                    var appoitnment = Request.QueryString["appointmentId"];
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "Patients/rptAppointment_Patient_Print.rpt";
                     rd.Load(reportPath);
-                    rd.SetParameterValue("@appointment_Id", Request.QueryString["appointmentId"]);
+                    rd.SetParameterValue("@appointment_Id", appoitnment);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     //rd.SetParameterValue("Title", reportTitle);
                 }
             }

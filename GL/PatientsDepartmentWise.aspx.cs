@@ -1541,7 +1541,7 @@ namespace PMS
                 //}           // latest insert 
                 else if (this.PageTitle == "Lab_Test_Wise_Summary")
                 {
-                    string x = "Lab Test Detail";
+                    string x = "Lab Test Wise Summary";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     dpROw.Visible = true;
