@@ -138,99 +138,111 @@ namespace PMS
             return data;
         }
 
-        //[WebMethod]
-        //public static string Getbatch_grn(int med_id)
-        //{
-        //    string data = string.Empty;
 
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var grnResult = (from dv in db.INV_Items
-        //                         join ds in db.GRN_Details
-        //                         on dv.Item_ID equals ds.Item_Id
-        //                         where ds.Item_Id == med_id
-        //                         select new
-        //                         {
-        //                             BatchNum = ds.BatchNum
-        //                         }).ToList();
+        public class BatchStock
+        {
+            public string BatchNum { get; set; }
+            //public string Source { get; set; }
+        }
 
-        //        var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
-        //                                     where inv.Item_Id == Convert.ToString(med_id)
-        //                                      && inv.Status == "Approved"
-        //                                     orderby inv.Creation_Time descending
-        //                                     select new
-        //                                     {
-        //                                         BatchNum = inv.Batch_No
-        //                                     }).ToList();
-        //        var combinedResult = new
-        //        {
-        //            GRN_Details = grnResult,
-        //            Stock_Adjustment_Details = stockAdjustmentResult
-        //        };
-        //        data = new JavaScriptSerializer().Serialize(combinedResult);
-        //    }
-        //    return data;
-        //}
         [WebMethod]
         public static string Getbatch_grn(int med_id)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+                HashSet<string> batchSet = new HashSet<string>();
+
+                var warehouse = (from sys in db.sys_Parms where sys.Name == "Pharmacy WareHouse" select sys.Code).FirstOrDefault();
+
                 var grnBatches = (from ds in db.GRN_Details
                                   where ds.Item_Id == med_id
                                   select ds.BatchNum).ToList();
 
+                foreach (var batch in grnBatches)
+                {
+                    int stock = Convert.ToInt32(
+                        db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
+                    );
+
+                    if (stock > 0)
+                        batchSet.Add(batch);
+                }
+
+                // ---------- Stock Adjustment Batches ----------
                 var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
                                        where inv.Item_Id == med_id.ToString()
-                                          && inv.Status == "Approved"
+                                       && inv.Status == "Approved"
                                        select inv.Batch_No).ToList();
 
-                var uniqueBatches = grnBatches
-                                    .Concat(stockAdjBatches)
-                                    .Where(x => !string.IsNullOrEmpty(x))
-                                    .Distinct()
-                                    .OrderBy(x => x)
-                                    .ToList();
-
-                var result = new
+                foreach (var batch in stockAdjBatches)
                 {
-                    BatchNos = uniqueBatches
-                };
+                    int stock = Convert.ToInt32(
+                        db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
+                    );
+
+                    if (stock > 0)
+                        batchSet.Add(batch);
+                }
+
+                // ---------- Final Result ----------
+                var result = batchSet.Select(b => new BatchStock
+                {
+                    BatchNum = b
+                }).ToList();
 
                 return new JavaScriptSerializer().Serialize(result);
             }
         }
 
 
+
         [WebMethod]
         public static string GetBatchNumbers(int itemId)
         {
-            string data = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var grnResult = (from dv in db.INV_Items
-                                 join ds in db.GRN_Details
-                                 on dv.Item_ID equals ds.Item_Id
-                                 where ds.Item_Id == itemId
-                                 select new
-                                 {
-                                     BatchNum = ds.BatchNum
-                                 }).ToList();
-                var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
-                                             where inv.Item_Id == Convert.ToString(itemId)
-                                            && inv.Status == "Approved"
-                                             select new
-                                             {
-                                                 BatchNum = inv.Batch_No
-                                             }).ToList();
-                var combinedResult = new
+                HashSet<string> batchSet = new HashSet<string>();
+
+                var warehouse = (from sys in db.sys_Parms where sys.Name == "Pharmacy WareHouse" select sys.Code).FirstOrDefault();
+
+                var grnBatches = (from ds in db.GRN_Details
+                                  where ds.Item_Id == itemId
+                                  select ds.BatchNum).ToList();
+
+                foreach (var batch in grnBatches)
                 {
-                    GRN_Details = grnResult,
-                    Stock_Adjustment_Details = stockAdjustmentResult
-                };
-                data = new JavaScriptSerializer().Serialize(combinedResult);
+                    int stock = Convert.ToInt32(
+                        db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
+                    );
+
+                    if (stock > 0)
+                        batchSet.Add(batch);
+                }
+
+                // ---------- Stock Adjustment Batches ----------
+                var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
+                                       where inv.Item_Id == itemId.ToString()
+                                       && inv.Status == "Approved"
+                                       select inv.Batch_No).ToList();
+
+                foreach (var batch in stockAdjBatches)
+                {
+                    int stock = Convert.ToInt32(
+                        db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
+                    );
+
+                    if (stock > 0)
+                        batchSet.Add(batch);
+                }
+
+                // ---------- Final Result ----------
+                var result = batchSet.Select(b => new BatchStock
+                {
+                    BatchNum = b
+                }).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
             }
-            return data;
         }
        
         [WebMethod]
@@ -323,11 +335,11 @@ namespace PMS
                 return "0";
             }
         }
-        public class BatchStock
-        {
-            public string BatchNum { get; set; }
-            public string Source { get; set; }
-        }
+        //public class BatchStock
+        //{
+        //    public string BatchNum { get; set; }
+           
+        //}
         [WebMethod]
         public static string GetBatchNumbersforReturn(int itemId)
         {
@@ -610,6 +622,18 @@ namespace PMS
 
             var PharmacyDetail = (from prms in db.sys_Parms
                                   where prms.Name == "Pharmacy User"
+                                  select prms.Code
+                ).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(PharmacyDetail);
+        }
+        [WebMethod]
+        public static string GetBalanceAmountCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var PharmacyDetail = (from prms in db.sys_Parms
+                                  where prms.Name == "Amount Recevied For Pharmcay"
                                   select prms.Code
                 ).FirstOrDefault();
 
