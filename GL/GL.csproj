@@ -648,6 +648,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Receipts.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Refund.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\registeruser.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\SalesDashboard.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\studentReceipt.css" />
@@ -4087,6 +4088,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Receipts.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Refund.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\registeruser.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\SalesDashboard.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\studentReceipt.css" />
@@ -7643,6 +7645,7 @@
     <Content Include="wwwroot\khurshid\css\CustomCss\Receipts.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Refund.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\registeruser.css" />
+    <Content Include="wwwroot\khurshid\css\CustomCss\SalesDashboard.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Student.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\studentReceipt.css" />
@@ -11074,6 +11077,7 @@
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\Receipts.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\Refund.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\registeruser.css" />
+    <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\SalesDashboard.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\studentReceipt.css" />
@@ -14506,6 +14510,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\Product.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Receipts.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Refund.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\SalesDashboard.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Student.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\studentReceipt.css" />
@@ -17671,6 +17676,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\NewEMR.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\NewOutPatient.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Policy.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\SalesDashboard.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\SubjDefinintion.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\swalalert.css" />
     <Content Include="wwwroot\StandardTheme\css\MainDashboard.min.css" />
@@ -17750,6 +17756,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Receipts.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Refund.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\registeruser.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\SalesDashboard.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\stockadjustment.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Student.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\studentReceipt.css" />

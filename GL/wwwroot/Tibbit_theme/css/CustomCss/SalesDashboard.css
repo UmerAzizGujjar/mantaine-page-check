@@ -1,0 +1,158 @@
+﻿.apexcharts-data-labels text {
+    font-weight: bold !important;
+    font-size: 10px !important;
+}
+
+.apexcharts-xaxis text {
+    font-size: 9px !important;
+}
+
+.apexcharts-yaxis text {
+    font-size: 9px !important;
+}
+
+.container {
+    width: 100% !important;
+}
+
+h3 {
+    color: dodgerblue;
+}
+
+#Box1, #Box2, #Box3, #Box4, #Box5 {
+    height: 125px;
+    border-radius: 30px !important;
+}
+
+#Box1 h3, #Box2 h3, #Box3 h3, #Box4 h3, #Box5 h3 {
+    color: #eee;
+}
+
+.l-bg-orange-dark {
+    background: linear-gradient(to right, #8e0b4d, #9f10abf2) !important;
+    color: #fff;
+}
+
+/* Green replaced with yellow theme */
+.l-bg-green-dark {
+    background: linear-gradient(to right, #EFA63E, #f5c16f) !important;
+    color: #fff;
+}
+
+.l-bg-blue-dark {
+    background: linear-gradient(to right, #710d2b, #a2070f) !important;
+    color: #fff;
+}
+
+#Paitent_Count_Row {
+    height: 80px;
+    margin-top: 20px;
+}
+
+.styling {
+    text-align: center;
+    font-size: 25px;
+}
+
+#ctl00_sidebar, .page-header {
+    display: none !important;
+}
+
+.card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Updated card-header green to yellow */
+.card-header {
+    background: linear-gradient(90deg, #EFA63E, #f5c16f);
+    color: #fff;
+    font-weight: 600;
+    font-size: 2.1rem;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 12px 18px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.table-borderless th,
+.table-borderless td {
+    border: none !important;
+    padding: 8px 12px;
+}
+
+.table-borderless th {
+    font-weight: bold;
+    color: #555;
+}
+
+.table-borderless td {
+    color: #333;
+}
+
+/* Spinner yellow theme */
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #EFA63E;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.card-body.text-center {
+    height: 103px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-prev-year-color {
+    color: #EFA63E; 
+}
+
+.chart-curr-year-color {
+    color: #f5c16f; 
+}
+
+h6 {
+    margin-left: 20px;
+}
+
+.chart-bar-color {
+    color: #EFA63E;
+}
+
+.card2 {
+    height: 354px !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-heading {
+    text-align: left;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}

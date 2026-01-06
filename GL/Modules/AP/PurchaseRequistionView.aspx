@@ -212,7 +212,21 @@
                     { "data": "Priority", "orderable": false },
                     { "data": "Department", "orderable": false },
                     { "data": "TotalQty", className: "text-right", "orderable": false },
+                    { "data": "Remarks", "orderable": false },
                     { "data": "CreatedBY", "orderable": false },
+                    { "data": "UpdatedBY", "orderable": false },
+                    {
+                        "data": "Update_Date",
+                        "render": function (data, type, full) {
+                            var date = full.Update_Date;
+                            if (!date) { 
+                                return '';
+                            }
+                            date = moment(date).format('DD-MMM-YYYY');
+                            return date;
+                        },
+                        "orderable": true
+                    },
                     { "data": "Status", "orderable": false },
                     {
                         "render": function (data, type, full) {
@@ -416,7 +430,10 @@
                     <th>Pirority</th>
                     <th>Department</th>
                     <th>TotalQty</th>
+                    <th>Remarks</th>
                     <th>CreatedBY</th>                 
+                    <th>UpdatedBY</th>                 
+                    <th>UpdatedDate</th>                 
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
