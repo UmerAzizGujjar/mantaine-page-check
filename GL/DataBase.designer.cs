@@ -489,9 +489,6 @@ namespace PMS
         partial void InsertAP_Vendor_Company(AP_Vendor_Company instance);
         partial void UpdateAP_Vendor_Company(AP_Vendor_Company instance);
         partial void DeleteAP_Vendor_Company(AP_Vendor_Company instance);
-        partial void InsertDoctor_Template_Master(Doctor_Template_Master instance);
-        partial void UpdateDoctor_Template_Master(Doctor_Template_Master instance);
-        partial void DeleteDoctor_Template_Master(Doctor_Template_Master instance);
         partial void InsertDoctor_Template_Medicine(Doctor_Template_Medicine instance);
         partial void UpdateDoctor_Template_Medicine(Doctor_Template_Medicine instance);
         partial void DeleteDoctor_Template_Medicine(Doctor_Template_Medicine instance);
@@ -915,6 +912,9 @@ namespace PMS
         partial void InsertPatient(Patient instance);
         partial void UpdatePatient(Patient instance);
         partial void DeletePatient(Patient instance);
+        partial void InsertDoctor_Template_Master(Doctor_Template_Master instance);
+        partial void UpdateDoctor_Template_Master(Doctor_Template_Master instance);
+        partial void DeleteDoctor_Template_Master(Doctor_Template_Master instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -2201,14 +2201,6 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<Doctor_Template_Master> Doctor_Template_Masters
-        {
-            get
-            {
-                return this.GetTable<Doctor_Template_Master>();
-            }
-        }
-
         public System.Data.Linq.Table<Doctor_Template_Medicine> Doctor_Template_Medicines
         {
             get
@@ -3334,6 +3326,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Patient>();
+            }
+        }
+
+        public System.Data.Linq.Table<Doctor_Template_Master> Doctor_Template_Masters
+        {
+            get
+            {
+                return this.GetTable<Doctor_Template_Master>();
             }
         }
 
@@ -55515,236 +55515,6 @@ namespace PMS
                     this._Company_Name = value;
                     this.SendPropertyChanged("Company_Name");
                     this.OnCompany_NameChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Doctor_Template_Master")]
-    public partial class Doctor_Template_Master : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Template_Id;
-
-        private System.Nullable<int> _Doctor_Id;
-
-        private string _Template_Name;
-
-        private System.Nullable<System.Guid> _Created_By;
-
-        private System.Nullable<System.DateTime> _Created_Time;
-
-        private System.Nullable<System.Guid> _Updated_by;
-
-        private System.Nullable<System.DateTime> _Updated_Time;
-
-        private System.Nullable<bool> _isActive;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnTemplate_IdChanging(int value);
-        partial void OnTemplate_IdChanged();
-        partial void OnDoctor_IdChanging(System.Nullable<int> value);
-        partial void OnDoctor_IdChanged();
-        partial void OnTemplate_NameChanging(string value);
-        partial void OnTemplate_NameChanged();
-        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnCreated_ByChanged();
-        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnCreated_TimeChanged();
-        partial void OnUpdated_byChanging(System.Nullable<System.Guid> value);
-        partial void OnUpdated_byChanged();
-        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnUpdated_TimeChanged();
-        partial void OnisActiveChanging(System.Nullable<bool> value);
-        partial void OnisActiveChanged();
-        #endregion
-
-        public Doctor_Template_Master()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Template_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Template_Id
-        {
-            get
-            {
-                return this._Template_Id;
-            }
-            set
-            {
-                if ((this._Template_Id != value))
-                {
-                    this.OnTemplate_IdChanging(value);
-                    this.SendPropertyChanging();
-                    this._Template_Id = value;
-                    this.SendPropertyChanged("Template_Id");
-                    this.OnTemplate_IdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Id", DbType = "Int")]
-        public System.Nullable<int> Doctor_Id
-        {
-            get
-            {
-                return this._Doctor_Id;
-            }
-            set
-            {
-                if ((this._Doctor_Id != value))
-                {
-                    this.OnDoctor_IdChanging(value);
-                    this.SendPropertyChanging();
-                    this._Doctor_Id = value;
-                    this.SendPropertyChanged("Doctor_Id");
-                    this.OnDoctor_IdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Template_Name", DbType = "NVarChar(MAX)")]
-        public string Template_Name
-        {
-            get
-            {
-                return this._Template_Name;
-            }
-            set
-            {
-                if ((this._Template_Name != value))
-                {
-                    this.OnTemplate_NameChanging(value);
-                    this.SendPropertyChanging();
-                    this._Template_Name = value;
-                    this.SendPropertyChanged("Template_Name");
-                    this.OnTemplate_NameChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Created_By
-        {
-            get
-            {
-                return this._Created_By;
-            }
-            set
-            {
-                if ((this._Created_By != value))
-                {
-                    this.OnCreated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_By = value;
-                    this.SendPropertyChanged("Created_By");
-                    this.OnCreated_ByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Created_Time
-        {
-            get
-            {
-                return this._Created_Time;
-            }
-            set
-            {
-                if ((this._Created_Time != value))
-                {
-                    this.OnCreated_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_Time = value;
-                    this.SendPropertyChanged("Created_Time");
-                    this.OnCreated_TimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_by", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Updated_by
-        {
-            get
-            {
-                return this._Updated_by;
-            }
-            set
-            {
-                if ((this._Updated_by != value))
-                {
-                    this.OnUpdated_byChanging(value);
-                    this.SendPropertyChanging();
-                    this._Updated_by = value;
-                    this.SendPropertyChanged("Updated_by");
-                    this.OnUpdated_byChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Updated_Time
-        {
-            get
-            {
-                return this._Updated_Time;
-            }
-            set
-            {
-                if ((this._Updated_Time != value))
-                {
-                    this.OnUpdated_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Updated_Time = value;
-                    this.SendPropertyChanged("Updated_Time");
-                    this.OnUpdated_TimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isActive", DbType = "Bit")]
-        public System.Nullable<bool> isActive
-        {
-            get
-            {
-                return this._isActive;
-            }
-            set
-            {
-                if ((this._isActive != value))
-                {
-                    this.OnisActiveChanging(value);
-                    this.SendPropertyChanging();
-                    this._isActive = value;
-                    this.SendPropertyChanged("isActive");
-                    this.OnisActiveChanged();
                 }
             }
         }
@@ -159780,6 +159550,260 @@ namespace PMS
                     this._Is_billed = value;
                     this.SendPropertyChanged("Is_billed");
                     this.OnIs_billedChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Doctor_Template_Master")]
+    public partial class Doctor_Template_Master : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Template_Id;
+
+        private System.Nullable<int> _Doctor_Id;
+
+        private string _Template_Name;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_by;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        private System.Nullable<bool> _isActive;
+
+        private System.Nullable<bool> _isCancel;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnTemplate_IdChanging(int value);
+        partial void OnTemplate_IdChanged();
+        partial void OnDoctor_IdChanging(System.Nullable<int> value);
+        partial void OnDoctor_IdChanged();
+        partial void OnTemplate_NameChanging(string value);
+        partial void OnTemplate_NameChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_byChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_byChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        partial void OnisActiveChanging(System.Nullable<bool> value);
+        partial void OnisActiveChanged();
+        partial void OnisCancelChanging(System.Nullable<bool> value);
+        partial void OnisCancelChanged();
+        #endregion
+
+        public Doctor_Template_Master()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Template_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Template_Id
+        {
+            get
+            {
+                return this._Template_Id;
+            }
+            set
+            {
+                if ((this._Template_Id != value))
+                {
+                    this.OnTemplate_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Template_Id = value;
+                    this.SendPropertyChanged("Template_Id");
+                    this.OnTemplate_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Id", DbType = "Int")]
+        public System.Nullable<int> Doctor_Id
+        {
+            get
+            {
+                return this._Doctor_Id;
+            }
+            set
+            {
+                if ((this._Doctor_Id != value))
+                {
+                    this.OnDoctor_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Doctor_Id = value;
+                    this.SendPropertyChanged("Doctor_Id");
+                    this.OnDoctor_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Template_Name", DbType = "NVarChar(MAX)")]
+        public string Template_Name
+        {
+            get
+            {
+                return this._Template_Name;
+            }
+            set
+            {
+                if ((this._Template_Name != value))
+                {
+                    this.OnTemplate_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Template_Name = value;
+                    this.SendPropertyChanged("Template_Name");
+                    this.OnTemplate_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_by", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_by
+        {
+            get
+            {
+                return this._Updated_by;
+            }
+            set
+            {
+                if ((this._Updated_by != value))
+                {
+                    this.OnUpdated_byChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_by = value;
+                    this.SendPropertyChanged("Updated_by");
+                    this.OnUpdated_byChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isActive", DbType = "Bit")]
+        public System.Nullable<bool> isActive
+        {
+            get
+            {
+                return this._isActive;
+            }
+            set
+            {
+                if ((this._isActive != value))
+                {
+                    this.OnisActiveChanging(value);
+                    this.SendPropertyChanging();
+                    this._isActive = value;
+                    this.SendPropertyChanged("isActive");
+                    this.OnisActiveChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isCancel", DbType = "Bit")]
+        public System.Nullable<bool> isCancel
+        {
+            get
+            {
+                return this._isCancel;
+            }
+            set
+            {
+                if ((this._isCancel != value))
+                {
+                    this.OnisCancelChanging(value);
+                    this.SendPropertyChanging();
+                    this._isCancel = value;
+                    this.SendPropertyChanged("isCancel");
+                    this.OnisCancelChanged();
                 }
             }
         }
