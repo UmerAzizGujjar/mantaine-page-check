@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Text;
 using System.Web;
+using System.Web.Script.Serialization;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.Services;
-using System.Web.Script.Serialization;
-using System.Text;
-using System.Data;
 using Telerik.Web;
 
 namespace PMS
@@ -1243,6 +1244,28 @@ namespace PMS
             var patient_no = DBClass.getField("select Patient_No from Reg_patient where pat_id=" + data.Patient_ID);
             var ipdid = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID=" + data.Patient_ID + " order by Created_Time desc");
 
+            if (data.hdn_docid != 0)
+            {
+                newBill.Doctor_ID = data.hdn_docid;
+
+                DateTime today = DateTime.Today;
+                int maxToken = db.Ar_Billings
+                    .Where(b =>
+                        b.Doctor_ID == data.hdn_docid &&
+                        b.Creation_Date.HasValue &&
+                        b.Creation_Date.Value.Year == today.Year &&
+                        b.Creation_Date.Value.Month == today.Month &&
+                        b.Creation_Date.Value.Day == today.Day)
+                    .Max(b => (int?)b.Doc_token) ?? 0;
+
+                newBill.Doc_token = maxToken + 1;
+            }
+            else
+            {
+                newBill.Doc_token = null; // or = 0 if column is non-nullable int
+            }
+
+
             if (ipdid != "There is no row at position 0.")
             {
                 newBill.In_Patient_ID = Convert.ToInt32(ipdid);
@@ -2436,6 +2459,7 @@ namespace PMS
             public string ChargePolicy { get; set; }
             public string Cash_In_Hand_Account { get; set; }
             public decimal Bank_Cash { get; set; }
+            public int? hdn_docid { get; set; }
             public string Main_Department { get; set; }
             //public string Remarks { get; set; }
             public List<BillingProcessDetails> Details { get; set; }

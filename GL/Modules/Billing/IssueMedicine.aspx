@@ -10,6 +10,7 @@
             if (!$('#chkbatch').prop("checked")) {
                 $('#chkbatch').prop("checked", true);
             }
+            BalanceAmountCondition();
             $('#chkbatch').on('change', function () {
                 var btch = $('#chkbatch').prop("checked");
                 if (btch == false) {
@@ -30,6 +31,7 @@
                 $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
                 //SearchPop();
                 GetPharmacyUser();
+               
                 $('#txtuserCode').focus();
             }
             else if (event.altKey && event.code === 'KeyR') {
@@ -358,6 +360,7 @@
                         optionInv += '<option value="' + value.Item_ID + '" >' + value.Description + '</option>';
                     });
                     $('#ddlSaleReturnItems').html(optionInv);
+                    $('#ddlSaleReturnItems').select2();
                 });
             }
             $('#SaleReturnModal').on('hide.bs.modal', function () {
@@ -933,9 +936,9 @@
 
                         PageMethods.SaveSaleReturnData(JSON.stringify(AllItemDetail), UserId, function (res) {
                             var btnSave = $('#SSearchReturnPop').val();
-                            if (btnSave == 'Save & Print' || btnSave == "Save & Print") {
-                                window.open('ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
-                            }
+                          /*  if (btnSave == 'Save & Print' || btnSave == "Save & Print") {*/
+                                window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
+                            //}
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
@@ -1001,78 +1004,20 @@
                         addedItemIDs.push(value.Item_ID);
                     });
 
-                    // Optional: Log to console for debugging
-                    console.log("Loaded items:", items);
                 },
                 error: function (xhr, status, error) {
                     console.error("AJAX Error:", error);
                 }
             });
         }
-        //debugger;
-        //function Print_Prescription() {
-        //    debugger;
-        //    var PatNo = $('#ddlPatient_No option:selected').text();
-        //    var parts = PatNo.split('-');
-        //    var number = parts[1];
-        //    var opdNo = number;
-
-        //    var url = 'IssueMedicine.aspx/GetOutPatientIDByOPDNo';
-
-        //    $.ajax({
-        //        url: url,
-        //        type: 'POST',
-        //        dataType: 'json',
-        //        contentType: 'application/json; charset=utf-8',
-        //        data: JSON.stringify({ opdNo: opdNo }),
-
-        //        success: function (response) {
-        //            // response.d is the standard wrapper for ASP.NET WebMethods
-        //            var outPatientID = response.d;
-
-        //            if (outPatientID && outPatientID !== "0" && outPatientID !== "null") {
-        //                var reportUrl = 'ReportViewer.aspx?ReportName=OutPatient&Title=Out Patient Report&outPatientID=' + outPatientID;
-        //                window.open(reportUrl, '_blank');
-        //            } else {
-        //                alert('Out Patient ID not found');
-        //            }
-        //        },
-
-        //        error: function (xhr, status, error) {
-        //            console.error('Error getting Out Patient ID:', error);
-        //            alert('Error: Could not retrieve Out Patient ID. Status: ' + status);
-        //        }
-        //    });
-        //}
+        
         function OnHoldBill() {
             var CheckVisting = $('#chkHold:checked').val();
             if (CheckVisting == "on") {
                 window.open('IssueMedicine.aspx');
             }
         }
-        //function LoadPriscription() {
-        //    debugger;
-        //    PageMethods.loadPrescrpition(opdId, function (data) {
-        //        var options = '<option value="0">Please Select</option>';
-        //        $.each(JSON.parse(data), function (key, value) {
-        //            debugger;
-        //            options += '<option value="' + value.Out_Patient_ID + '">' + value.Opd_No + '</option>';
-        //        });
-        //        $('#Load_OPD_Prescritiop').html(options);
-        //        $('#Load_OPD_Prescritiop').select2();
-        //        debugger;
-        //        $('#Load_OPD_Prescritiop').change(function () {
-        //            debugger;
-        //            var selectedValue = $(this).val();
-        //            if (selectedValue != '0') {
-        //                Print_Prescription(selectedValue)
-        //            }
-        //        });
-        //    },
-        //        function (error) {
-        //            alert(error.get_message());
-        //        });
-        //}
+      
         var counts = 0;
         var NegQty = false;
         function CulculateAmonutWithQty(anchor) {
@@ -1190,20 +1135,25 @@
             }
             $('#txtNetPayable').val(Math.round(NetAmount));
             $('#txtBalances').val(Math.round(NetAmount));
-            var AmtReceived = $('#txtAmountReceived').val();
+            if (blnceCondition == 'true') {
+                var AmtReceived = $('#txtAmountReceived').val();
 
-            if ($('#txtTotalPayable').val() != '') {
-                if (AmtReceived != '') {
-                    debugger;
-                    var balance = parseFloat(NetAmount - AmtReceived);
+                if ($('#txtTotalPayable').val() != '') {
+                    if (AmtReceived != '') {
+                        debugger;
+                        var balance = parseFloat(NetAmount - AmtReceived);
 
-                    $('#txtBalances').val(Math.round(parseFloat(balance)));
+                        $('#txtBalances').val(Math.round(parseFloat(balance)));
+                    }
+                    else
+                        $('#txtBalances').val(Math.round(parseFloat(NetAmount)));
                 }
-                else
+                else {
                     $('#txtBalances').val(Math.round(parseFloat(NetAmount)));
+                }
             }
             else {
-                $('#txtBalances').val(Math.round(parseFloat(NetAmount)));
+                $('#txtAmountReceived').val(Math.round(NetAmount));
             }
 
         }
@@ -1327,8 +1277,13 @@
             debugger;
             $('#txtTotalPayable').val(TotalAmount.toFixed());
             $('#txtDisAmt').val(TotalDiscountAmount.toFixed(2));
-            var ReceivedAmount = $('#txtAmountReceived').val();
-            $('#txtBalances').val(parseFloat(TotalNetAmount.toFixed(2)) - parseFloat(ReceivedAmount));
+            if (blnceCondition == 'true') {
+                var ReceivedAmount = $('#txtAmountReceived').val();
+                $('#txtBalances').val(parseFloat(TotalNetAmount.toFixed(2)) - parseFloat(ReceivedAmount));
+            }
+            else {
+                $('#txtAmountReceived').val(parseFloat(TotalNetAmount.toFixed(2)));
+            }
         }
         function CalculateSummariesMasterDiscount(AmtWise) {
             debugger
@@ -1371,12 +1326,16 @@
             }
             var totamourcvd = $('#txtAmountReceived').val();
             var finalbalance = parseFloat(TotalAmount) - parseFloat(txtLineDisc) - parseFloat(txtDisAmt).toFixed(2) - parseFloat(flatdisc);
-            $('#txtBalances').val((finalbalance).toFixed());
+            if (blnceCondition == 'true') {
+                $('#txtBalances').val((finalbalance).toFixed());
+            }
+            else {
+                $('#txtAmountReceived').val((finalbalance).toFixed());
+            }
         }
 
         function Print_Prescription() {
             var id = $('#ddlPatient_No').val();
-            console.log('id =' + id)
             var PatNo = $('#ddlPatient_No option:selected').text();
             var parts = PatNo.split('-');
             var prefix = parts[0];
@@ -1417,7 +1376,10 @@
                 var Qty = $($(value).find('td input[name=txtQty]')[0]).val().trim();
                 if (rowIndex == parseInt(key)) {
                     debugger;
+                    var Amountsss = $($(value).find('td input[name=txtSalerate]')[0]).val();
+                    console.log(Amountsss)
                     Amount = $($(value).find('td input[name=txtSalerate]')[0]).val().trim();
+                    //Amount = ($(value).find('input[name="txtSalerate"]').val() === "" || $(value).find('input[name="txtSalerate"]').val() === "undefined" || $(value).find('input[name="txtSalerate"]').val() < 1) ? $(value).find('input[name="txtSalerate"]').val() : $(value).find('input[name="txtSalerate"]').val();
                     DisPer = $(value).find('input[name="DisPer"]').val();
                     if (DisPer > 100 || DisPer > "100") {
                         NegQty = false;
@@ -1459,14 +1421,20 @@
             $('#txtLineDisc').val(TotalDiscountAmount.toFixed(2));
             var discfinalAmnt = $('#txtLineDisc').val() || 0;
             //$('#txtAmountReceived').val(parseFloat(TotalAmount.toFixed()) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc));
-            $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
+            console.log(blnceCondition)
+            if (blnceCondition == 'true') {
+                $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
+            }
+            else {
+                $('#txtAmountReceived').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
+            }
         }
         function getOPDandIPDNO(pat_id) {
             PageMethods.GetOPDandIPDNO(pat_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                // Process GRN_Details                $.each(parsedData.OPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.IPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.Emergency_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                $('#ddlPatient_No').html(options);                $('#ddlPatient_No').select2();
             })
         }
         function getbatchfrom_grn() {            debugger;            var Inv_batch = $('#chkbatch').prop("checked");            if (Inv_batch == false) {                $('#batchno').hide();
-                $('#batchno').prop('disabled', true);                AddnonBatchItems();            }            else {                var med_id = $('#medName').find('option:selected').val();                PageMethods.GetinvBatch(med_id, function (dataa) {                    debugger;                    var parsedDataa = JSON.parse(dataa);                    console.log(parsedDataa)                    if (parsedDataa == true) {                        debugger                        PageMethods.Getbatch_grn(med_id, function (data) {                            var parsedData = JSON.parse(data);                            var options = '<option value="0" >Please Select</option>';                            debugger;                            $.each(parsedData.BatchNos, function (key, value) {                                options += '<option value="' + value + '" >' + value + '</option>';                            });                            //$.each(parsedData.Stock_Adjustment_Details, function (key, value) {                            //    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                            //});                            $('#batchno').html(options);                            $('#batchno').select2();                            var isbatch = $('#chkbatch').prop("checked");                            debugger;
+                $('#batchno').prop('disabled', true);                AddnonBatchItems();            }            else {                var med_id = $('#medName').find('option:selected').val();                PageMethods.GetinvBatch(med_id, function (dataa) {                    debugger;                    var parsedDataa = JSON.parse(dataa);                    if (parsedDataa == true) {                        debugger                        PageMethods.Getbatch_grn(med_id, function (data) {                            debugger;                            var parsedData = JSON.parse(data);                            console.log(parsedData)                            var options = '<option value="0" >Please Select</option>';                            debugger;                            $.each(parsedData, function (key, value) {                                console.log(value)                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                            });                            $('#batchno').html(options);                            $('#batchno').select2();                            var isbatch = $('#chkbatch').prop("checked");                            debugger;
                             if (isbatch == true) {
                                 $('#batchno').show();
                                 $('#batchno').prop('disabled', false);
@@ -1492,7 +1460,7 @@
             debugger;
             var itemId = $('#medName').find('option:selected').val();
             var Batch = $('#batchno').find('option:selected').val();
-            //console.log("Batch no :" + Batch)
+          
             var rowIndex = parseInt($('#tblDetails tbody tr').length);
             let rows;
             var expdate = '';
@@ -1612,13 +1580,19 @@
                 flatdisc = 0;
             }
             var finlblce = parseFloat(ttlpayable) - parseFloat(ttlDisc) - parseFloat(tllDisc) - parseFloat(flatdisc);
-            //$('#txtAmountReceived').val(finlblce.toFixed());
-            if (finlblce > -1) {
-                finlblce = Math.abs(finlblce);
-                $('#txtBalances').val(finlblce.toFixed());
+
+            
+            if (blnceCondition == 'true') {
+                if (finlblce > -1) {
+                    finlblce = Math.abs(finlblce);
+                    $('#txtBalances').val(finlblce.toFixed());
+                }
+                else {
+                    $('#txtBalances').val(ttlpayable.toFixed());
+                }
             }
             else {
-                $('#txtBalances').val(ttlpayable.toFixed());
+                $('#txtAmountReceived').val(finlblce.toFixed());
             }
         }
         function SaveDataWithoutUser() {
@@ -2022,6 +1996,32 @@
                 }
             });
         }
+        var blnceCondition;
+        function BalanceAmountCondition() {
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/GetBalanceAmountCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    debugger;
+                    var data = JSON.parse(msg.d);
+                    if (data == '01') {
+                        blnceCondition = 'true'
+                    }
+                    else {
+                        blnceCondition = 'false'
+                        $('#divBalance').hide();
+                        $('#txtAmountReceived').attr("disabled", true);
+
+
+                    }
+
+                },
+           
+            });
+        }
         //function getIPDID(pat_id) {
         //    debugger;
 
@@ -2065,9 +2065,6 @@
                     var result = JSON.parse(response.d);
                     var discountType = result.DiscountType;
                     var typeName = result.TypeName;
-
-                    console.log("DiscountType: " + discountType);
-                    console.log("TypeName: " + typeName);
                     if (discountType === "10" && typeName === "Sehat Sahulat Card") {
                         $("#txtTransType").val('IPD Sehat Patient');
                         $("#hdndiscountType").val(discountType);
@@ -2313,7 +2310,7 @@
 
                             '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
 
-                            '<td style="text-align: right;" ><input type="hidden" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" >' + SaleRate + '</td>' +
+                            '<td style="text-align: right;" ><input type="text" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
 
                             '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
 
@@ -2339,13 +2336,7 @@
                             var parsedData = JSON.parse(data);
                             var options = '<option value="0" >Please Select</option>';
 
-                            // Process GRN_Details
-                            $.each(parsedData.GRN_Details, function (key, value) {
-                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
-                            });
-
-                            // Process Stock_Adjustment_Details
-                            $.each(parsedData.Stock_Adjustment_Details, function (key, value) {
+                            $.each(parsedData, function (key, value) {
                                 options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
                             });
                             $('#ddlbatch' + (rowIndex + 1)).html(options);
@@ -2403,17 +2394,15 @@
                         alert("Minimum Stock Alert");
                     }
                     date = moment(date).format('D-MMM-YYYY');
-                    console.log("CGSrate value received:", CGSrate);
-
                     debugger;
+                    console.log(rate)
                     $('#txtStock' + counter).val(stock);
                     $('#txtSalerate' + counter).val(rate);
-                    $(row).find('td:eq(8)').text(rate);
+                    //$(row).find('td:eq(8)').text(rate);
                     $(row).find('td:eq(11)').text(rate);
                     $('#exp_date' + counter).val(date);
                     $('#BatchNo' + counter).val(batchNumber);
                     $('#txtCGSRate' + counter).val(CGSrate);
-                    console.log("txtCGSRate updated to:", $('#txtCGSRate' + counter).val());
                 },
                 error: function (xhr, status, error) {
                     console.log("Error fetching stock: " + error);
@@ -2614,7 +2603,7 @@
 
                 </div>
                 <!-- Amount Received -->
-                <div class="row mb-2 align-items-center  left-right-margin" >
+                <div class="row mb-2 align-items-center  left-right-margin" id="divBalance">
 
                     <div class="col-lg-6 d-flex align-items-center">
                         <label class="ms-3">Balance</label>

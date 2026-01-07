@@ -2107,7 +2107,7 @@
             </div>
 
             <div class="col-lg-2 col-md-3 col-sm-6">
-                <label>Helper</label>
+                <label>Technician</label>
                 <select class="form-control" id="ddl_helper">
                     <option></option>
                 </select>

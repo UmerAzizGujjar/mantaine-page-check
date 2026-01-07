@@ -593,9 +593,18 @@ namespace PMS.AP
                 ltd.Bonus_Qty = !string.IsNullOrEmpty(POitem.BonusQty) ? Convert.ToDecimal(POitem.BonusQty): 0;
                 ltd.Rate = Convert.ToDecimal(POitem.Rate);
                 ltd.Amount = Convert.ToDecimal(POitem.Amount);
-                if (POitem.Fed_Percentage != "")
+                //if (POitem.Fed_Percentage != "")
+                //{
+                //    ltd.Fed_Percentage = Convert.ToDecimal(POitem.Fed_Percentage);
+                //}
+                if (!string.IsNullOrEmpty(POitem.Fed_Percentage) &&
+               decimal.TryParse(POitem.Fed_Percentage, out decimal fedPerc))
                 {
-                    ltd.Fed_Percentage = Convert.ToDecimal(POitem.Fed_Percentage);
+                    ltd.Fed_Percentage = fedPerc; 
+                }
+                else
+                {
+                    ltd.Fed_Percentage = null; 
                 }
                 if (POitem.DateTime != "")
                 {

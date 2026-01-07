@@ -135,9 +135,6 @@
                 <asp:DropDownList ID="ddlWarden" runat="server" AppendDataBoundItems="true" Width="202px">
                 </asp:DropDownList>
             </td>
-            <td>
-                <asp:RequiredFieldValidator ID="rfvWarden" runat="server" ControlToValidate="ddlWarden" Display="Dynamic" InitialValue="0" Text="*" ErrorMessage="Select Warden Name"></asp:RequiredFieldValidator>
-            </td>
         </tr>
         
         <tr>

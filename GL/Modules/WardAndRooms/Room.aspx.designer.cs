@@ -258,15 +258,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlWarden;
 
         /// <summary>
-        /// rfvWarden control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvWarden;
-
-        /// <summary>
         /// btnSave control.
         /// </summary>
         /// <remarks>

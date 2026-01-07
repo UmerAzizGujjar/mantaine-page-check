@@ -1,75 +1,147 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoomView.aspx.cs" Inherits="PMS.RoomView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-        .btn-primary {
-            width: 120px !important;
-            border-radius:5px !important;
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            LoadRoomTable();
+        });
+
+        function LoadRoomTable() {
+            $('#tblRoomList').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": [
+                    {
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            window.location = 'Room.aspx';
+                        }
+                    },
+                    'copy', 'excel', 'pdf'
+                ],
+                "filter": true,
+                "ajax": function (data, callback, settings) {
+                    $.ajax({
+                        type: "POST",
+                        url: "RoomView.aspx/ViewRoomList",
+                        data: JSON.stringify({
+                            draw: data.draw,
+                            start: data.start,
+                            length: data.length,
+                            sortColumn: data.columns[data.order[0].column].name,
+                            sortColumnDirection: data.order[0].dir,
+                            searchValue: data.search.value
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            callback({
+                                draw: response.d.draw,
+                                recordsTotal: response.d.recordsTotal,
+                                recordsFiltered: response.d.recordsFiltered,
+                                data: response.d.data
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                },
+                "columns": [
+                    { "data": "Room_ID", "visible": false },
+                    { "data": "Room_No", "name": "Room_No" },
+                    { "data": "Name", "name": "Name" },
+                    { "data": "Building_Type", "name": "Building_Type" },
+                    { "data": "Room_Type", "name": "Room_Type" },
+                    { "data": "Floor_No", "name": "Floor_No" },
+                    { "data": "Location", "name": "Location" },
+                    { "data": "Warden", "name": "Warden" },
+                    { "data": "Charges_Per_Day", "name": "Charges_Per_Day" },
+                    {
+                        "render": function (data, type, full) {
+                            var editBtn = '<a class="editListBtn" style="border-radius: 4px; padding: 5px 8px; background-color:#007bff; color:white; text-decoration:none;" ' +
+                                'href="Room.aspx?ID=' + full.Room_ID + '" title="Edit"><i class="fa fa-pencil"></i></a>';
+
+
+                            var delBtn = '<a class="delListBtn" style="border-radius: 4px; margin-left: 4px; padding: 5px 8px; background-color:#dc3545; color:white; text-decoration:none;" ' +
+                                'href="#" onclick="deleteRoom(' + full.Room_ID + ')" title="Delete"><i class="fa fa-trash"></i></a>';
+                            return editBtn + delBtn;
+                        }, "orderable": false
+                    }
+                ],
+                "dom": 'lBfrtip',
+                "initComplete": function (settings, json) {
+                    var lengthContainer = document.querySelector('#tblRoomList_length');
+                    var lengthDropdown = document.querySelector('#tblRoomList_length select');
+                    var label = document.querySelector('#tblRoomList_length label');
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    } else {
+                        console.log("Length dropdown, label, or container not found");
+                    }
+                }
+                
+            });
         }
-    </style>
+
+        function deleteRoom(id) {
+            if (confirm('Are you sure you want to delete this room?')) {
+                $.ajax({
+                    type: "POST",
+                    url: "RoomView.aspx/DeleteRoom",
+                    data: JSON.stringify({ RoomID: id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        alert('Room deleted successfully.');
+                        $('#tblRoomList').DataTable().ajax.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error deleting room.');
+                        console.log(xhr.responseText);
+                    }
+                });
+            }
+        }
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="table-container">
+        <table id="tblRoomList" class="display table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="display:none;">Room_ID</th>
+                    <th>Room No.</th>
+                    <th>Name</th>
+                    <th>Building Type</th>
+                    <th>Room Type</th>
+                    <th>Floor No</th>
+                    <th>Location</th>
+                    <th>Warden</th>
+                    <th>Charges/Day</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 
-
-    <table style="width:100%;">
-        <tr>
-            <td>
-                <asp:Button Text="Add New" ID="Button1" runat="server"  CssClass="btn btn-primary" PostBackUrl="~/Modules/WardAndRooms/Room.aspx" CausesValidation="false" />
-            <br />
-                <br />
-            </td>
-        </tr>
-
-         <tr>
-            <td>
-                <asp:UpdatePanel runat="server" ID="upList" UpdateMode="Conditional">
-                    <ContentTemplate>
-                        <ig:WebHierarchicalDataGrid ID="whdgList" AutoGenerateColumns="false" runat="server" Height="100%"
-                            Width="100%" DataSourceID="whdsList"  DataKeyFields="Room_ID" OnItemCommand="whdgList_ItemCommand" OnRowIslandsPopulating="whdgList_RowIslandsPopulating">
-                            <GroupingSettings EnableColumnGrouping="True">
-                            </GroupingSettings>
-                            <Behaviors>
-                                <ig:ColumnMoving Enabled="true"></ig:ColumnMoving>
-                                <ig:Filtering Enabled="true"></ig:Filtering>
-                                <ig:Paging EnableInheritance="True" PagerMode="NumericFirstLast" PageSize="20">
-                                </ig:Paging>
-                                <ig:Sorting Enabled="true" SortingMode="Single"></ig:Sorting>
-                            </Behaviors>
-                            <Columns>
-                                <ig:TemplateDataField Key="Edit" Width="80px">
-                                    <ItemTemplate>
-                                        <asp:HyperLink ToolTip="Edit" ID="LinkButton3" runat="server" NavigateUrl='<%# Eval("Room_ID","~/Room.aspx?ID={0}") %>' Text="Edit" />
-                                       <asp:LinkButton Text="Delete" ToolTip="Delete" ID="lbtnDelete" CommandName="Remove" CommandArgument='<%# Eval("Room_ID") %>' runat="server"
-                                            OnClientClick="javascript:return confirm('Are you sure, you want to delete this record?');" />
-                                        
-                                        
-                                    </ItemTemplate>
-                                </ig:TemplateDataField>
-
-                                <ig:BoundDataField Key="Room_ID" DataFieldName="Room_ID" Header-Text="Room ID" Width="120px"></ig:BoundDataField>
-                                <ig:BoundDataField Key="Room_No" DataFieldName="Room_No" Header-Text="Room No"></ig:BoundDataField>
-                                <ig:BoundDataField Key="Name" DataFieldName="Name" Header-Text="Name"></ig:BoundDataField>
-                                <ig:BoundDataField Key="Building_Type" DataFieldName="Building_Type" Header-Text="Building Type"></ig:BoundDataField>
-                                <ig:BoundDataField Key="Room_Type" DataFieldName="Room_Type" Header-Text="Room Type"></ig:BoundDataField>
-                                <ig:BoundDataField Key="Floor_No" DataFieldName="Floor_No" Header-Text="Floor No"></ig:BoundDataField>
-                                <ig:BoundDataField Key="Location" DataFieldName="Location" Header-Text="Location"></ig:BoundDataField>
-                                <ig:BoundDataField Key="Warden" DataFieldName="Warden" Header-Text="Warden"></ig:BoundDataField>
-
-                            </Columns>
-                        </ig:WebHierarchicalDataGrid>
-                        <ig:WebHierarchicalDataSource ID="whdsList" runat="server">
-                            <DataViews>
-                                <ig:DataView DataSourceID="sqlList" DataMember="DefaultView" ID="dvList" />
-                            </DataViews>
-                        </ig:WebHierarchicalDataSource>
-                        <asp:SqlDataSource ID="sqlList" runat="server"></asp:SqlDataSource>
-                       
-                    </ContentTemplate>
-                </asp:UpdatePanel>
-
-            </td>
-        </tr>
-
-       
-    </table>
+    
 
 </asp:Content>

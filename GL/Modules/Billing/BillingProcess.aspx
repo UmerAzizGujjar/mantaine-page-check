@@ -706,7 +706,7 @@
                         }
                         else {
                             $('#tblDetails tbody').append(rows);
-
+                            $('.ddlDoctor').select2();
                             $('input[name="DisAmount"]').attr('disabled', true);
                             //if (editrights == "true") {
                             //    $("#amnt" + rowIndex).attr('contenteditable', true);
@@ -718,7 +718,6 @@
                             CalculateSummarieDiscountPerWise(rowIndex);
 
                             $('#tbltestModelTable tbody').append(rowstbl);
-
                         }
                         setTimeout(function () {
                             $(arr).filter(function (i, n) {
@@ -843,6 +842,7 @@
                         var rowstbl = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + '.' + Rotation_Name + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" disabled=disabled onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td>' + globalTestRate + '</td><input type="text" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td></tr>'
                         debugger;
                         $('#tblDetails tbody').append(rows);
+                        $('.ddlDoctor').select2();
                         $('#tbltestModelTable tbody').append(rowstbl);
                         debugger;
                         $('input[name="DisAmount"]').attr('disabled', true);
@@ -1407,6 +1407,7 @@
                         debugger;
                         var Patient_ID = $('#txtMRNo').val();
                         var Opd_id = $('#hdnOpd_id').val();
+                        var hdn_docid = $("#hdn_docid").val();
                         var opd_procedure = $('#hdn_opd_procedure').val();
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
@@ -1599,7 +1600,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory,hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -1720,6 +1721,9 @@
             debugger;
             function GetDocAgreementValuess(rows) {
                 debugger;
+                var doc_1 = $("#ddldoctor1").val();
+                $("#hdn_docid").val(doc_1);
+
                 var InPatient_Type = $("#hdn_InPatienttype").val();
                 var Patient_Type = $("#hdn_PatienttypeId").val();
                 var Aggreement_Type = '02'
@@ -5733,6 +5737,7 @@
          <input type="hidden" name="hdn_PatienttypeId" value="0" id="hdn_PatienttypeId" />
          <input type="hidden" name="hdn_InPatienttype" value="0" id="hdn_InPatienttype" />
          <input type="hidden" name="hdn_opd_procedure" value="0" id="hdn_opd_procedure" />
+         <input type="hidden" name="hdn_docid" value="0" id="hdn_docid" />
        <div class="row">
            <div class="col-md-2 text-end">
             <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" style="border-radius: 28px; width: 100%;" />

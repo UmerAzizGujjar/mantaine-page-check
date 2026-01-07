@@ -5,193 +5,7 @@
 
     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="../../wwwroot/Tibbit_theme/js/apexchart.js" type="text/javascript"></script>
-    <style type="text/css">
-        .apexcharts-data-labels text {
-            font-weight: bold !important;
-            font-size: 10px !important;
-        }
-
-        .apexcharts-xaxis text {
-            font-size: 9px !important;
-        }
-
-        .apexcharts-yaxis text {
-            font-size: 9px !important;
-        }
-
-
-        .container {
-            width: 100% !important
-        }
-
-        h3 {
-            color: dodgerblue;
-        }
-
-
-
-
-
-        #Box1 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-        #Box2 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-        #Box3 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-        #Box4 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-        #Box5 {
-            height: 125px;
-            border-radius: 30px !important
-        }
-
-            #Box1 h3, #Box2 h3, #Box3 h3, #Box4 h3, #Box5 h3 {
-                color: #eee;
-            }
-
-        .l-bg-orange-dark {
-            background: linear-gradient(to right, #8e0b4d, #9f10abf2) !important;
-            color: #fff;
-        }
-
-        .l-bg-green-dark {
-            background: linear-gradient(to right, #888, #555) !important;
-            color: #fff;
-        }
-
-        .l-bg-blue-dark {
-            background: linear-gradient(to right, #710d2b,#a2070f) !important;
-            color: #fff;
-        }
-
-        #Paitent_Count_Row {
-            height: 80px;
-            margin-top: 20px;
-        }
-
-        .styling {
-            text-align: center;
-            font-size: 25px;
-        }
-
-         #ctl00_sidebar, .page-header {
-          display: none !important
-      }
-
-
-        .card {
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            background: #fff;
-            margin-bottom: 20px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-            .card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            }
-
-        .card-header {
-            background: linear-gradient(90deg, #4bc0c0, #308665db );
-            color: #fff;
-            font-weight: 600;
-            font-size: 2.1rem;
-            border-top-left-radius: 12px;
-            border-top-right-radius: 12px;
-            padding: 12px 18px;
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .table-borderless th,
-        .table-borderless td {
-            border: none !important;
-            padding: 8px 12px;
-        }
-
-        .table-borderless th {
-            font-weight: bold;
-            color: #555;
-        }
-
-        .table-borderless td {
-            color: #333;
-        }
-
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #308665;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .card-body.text-center {
-            height: 103px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        h6 {
-            margin-left: 20px;
-        }
-
-        .card2 {
-            height: 50px !important;
-        }
-
-        .card2 {
-            height: 354px !important;
-            display: flex;
-            flex-direction: column;
-        }
-
-            
-
-        .chart-heading {
-            text-align: left;
-            margin-bottom: 10px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #308665;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
-    </style>
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/SalesDashboard.css" rel="stylesheet" />
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -387,6 +201,8 @@
                         amounts.push(item.TotalNetAmount);
                     });
 
+                    var barColor = getComputedStyle(document.querySelector('.chart-bar-color')).color;
+
                     var options = {
                         chart: {
                             type: 'bar',
@@ -413,7 +229,7 @@
                         dataLabels: {
                             enabled: false
                         },
-                        colors: ["#308665"],
+                        colors: [barColor], 
                     };
 
                     var chart = new ApexCharts(document.querySelector("#barChart"), options);
@@ -424,6 +240,7 @@
                 }
             });
         }
+
 
         function loadYearlySalesComparison() {
             $.ajax({
@@ -444,6 +261,12 @@
                         prevYear.push(item.PrevYearAmount);
                         currYear.push(item.CurrentYearAmount);
                     });
+
+                    var prevYearColorElem = document.querySelector('.chart-prev-year-color');
+                    var currYearColorElem = document.querySelector('.chart-curr-year-color');
+
+                    var prevYearColor = prevYearColorElem ? getComputedStyle(prevYearColorElem).color : "#EFA63E";
+                    var currYearColor = currYearColorElem ? getComputedStyle(currYearColorElem).color : "#f5c16f";
 
                     var options = {
                         chart: {
@@ -477,7 +300,7 @@
                         dataLabels: {
                             enabled: false
                         },
-                        colors: ["#308665", "#4bc0c0"],
+                        colors: [prevYearColor, currYearColor], 
                         legend: {
                             position: 'top'
                         },
@@ -495,6 +318,7 @@
                 }
             });
         }
+
 
         function loadPharmacyStockSummary() {
             $.ajax({
@@ -548,6 +372,9 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+<div class="chart-bar-color" style="display:none;"></div>
+<div class="chart-prev-year-color" style="display:none;"></div>
+<div class="chart-curr-year-color" style="display:none;"></div>
     <div id="loader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center;">
         <div class="spinner"></div>
     </div>
