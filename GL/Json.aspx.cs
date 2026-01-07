@@ -856,19 +856,43 @@ namespace PMS
                 else if (Request.QueryString["Table"] == "PatientsByMr")
                 {
                     string sqlQuery;
+
                     if (Request.QueryString["q"] != null)
-                        sqlQuery = "Select  top 1 Patient_ID,Patient_No,Full_Name from Patients  Where Patient_No = '" + Request.QueryString["q"].ToString() + "' order by Created_Time desc";
+                    {
+                        sqlQuery = @"SELECT TOP 1 
+                            Patient_ID,
+                            mr_no_sequence,
+                            Full_Name
+                     FROM Patients
+                     WHERE mr_no_sequence = '" + Request.QueryString["q"].ToString() + @"'
+                     ORDER BY Created_Time DESC";
+                    }
                     else
-                        sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No)Patient_ID,Patient_No,Full_Name from Patients p where isnull(IsRevisit,'0')=0  order by Created_Time desc";
+                    {
+                        sqlQuery = @"SELECT DISTINCT 
+                            Patient_ID,
+                            mr_no_sequence,
+                            Full_Name
+                     FROM Patients
+                     WHERE ISNULL(IsRevisit,'0') = '0'
+                     ORDER BY Created_Time DESC";
+                    }
+
                     string result = "";
                     DataTable dt = DBClass.getDataTable(sqlQuery);
+
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + " - " + dr["Full_Name"].ToString() + @"""}";
+                        result += @"{""id"":""" + dr["Patient_ID"].ToString() +
+                                  @""",""name"": """ +
+                                  dr["mr_no_sequence"].ToString() + " - " +
+                                  dr["Full_Name"].ToString() + @"""}";
                     }
+
                     Response.Write("[" + result + "]");
                 }
+
                 else if (Request.QueryString["Table"] == "Emergency_Patients")
                 {
                     string sqlQuery;

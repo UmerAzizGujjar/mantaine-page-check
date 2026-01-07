@@ -550,11 +550,21 @@
                         var url = 'ReportViewer.aspx?ReportName=DepartmentWiseProcedureTimeLine&ReportTitle=Department Wise Procedure Time Line from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
-                    if (rptTitle == "Patient_Trans_Detail") {
+                 <%--   else if (rptTitle == "Patient_Trans_Detail") {
                         debugger;
-                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=Patient_Transaction_Detail&ReportTitle=Patient Transaction Detail&MRNo=' + $('#ctl00_MainContent_txtMR_No').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf;
+                        //  var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        var url = 'ReportViewer.aspx?ReportName=Patient_Transaction_Detail&ReportTitle=Patient Transaction Detail&MRNo=' + patid + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime);// + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
+                    }--%>
+                    else if (rptTitle == "Patient_Trans_Detail") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Patient_Transaction_Detail&ReportTitle=Patient Transaction Detail From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MRNo=' + patid;
+                        window.open(url, '_blank');
                     }
                     else if (rptTitle == "Patient_Trans_Detail_Type") {
                         debugger;
@@ -1149,7 +1159,8 @@
                     }
                     else if (rptTitle == "MER") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=MER&ReportTitle=Medicine Expiry Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=MER&ReportTitle=Medicine Expiry Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
 
