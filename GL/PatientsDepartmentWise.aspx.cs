@@ -1360,12 +1360,31 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = false;
                     lblMultiSelect.Visible = false;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
-                    Time_Row.Visible = false;
+                    Time_Row.Visible = true;  // could be problematic
                     DateDiv.Visible = true;
+                    trSearch1.Visible = true;
+                    
                     op_FilterClinic.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                    trSearch1.Visible = true;
+                    dpROw.Visible = true;
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+
                 }
                 #endregion
                 #region General Patient Modules
@@ -1541,7 +1560,7 @@ namespace PMS
                 //}           // latest insert 
                 else if (this.PageTitle == "Lab_Test_Wise_Summary")
                 {
-                    string x = "Lab Test Detail";
+                    string x = "Lab Test Wise Summary";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     dpROw.Visible = true;
@@ -2417,6 +2436,29 @@ namespace PMS
                     SetDepartent();
                     dpROw.Visible = false;
 
+                }
+                if (this.PageTitle == "Patient_Trans_Detail")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+                    MRDiv.Visible = true;
+                    lblMRNo.Visible = true;
+                    txtMRNo.Visible = true; 
                 }
                 if (this.PageTitle == "PharmacyStockDetail")
                 {
@@ -4906,27 +4948,29 @@ namespace PMS
                     ddlTestName.DataBind();
                     SetDepartent();
                 }
-                else if (PageTitle == "Patient_Trans_Detail")
-                {
-                    string x = "Patient Trans Detail";
-                    Master.Label2.Text = x;
-                    Master.GetMenuName();
-                    //tblParameters.Visible = false;
-                    lblMRNo.Visible = true;
-                    txtMRNo.Visible = true;
+                //else if (PageTitle == "Patient_Trans_Detail")
+                //{
+                //    string x = "Patient Trans Detail";
+                //    Master.Label2.Text = x;
+                //    Master.GetMenuName();
+                //    //tblParameters.Visible = false;
+                //    MRDiv.Visible = true;
+                //    lblMRNo.Visible = true;
+                //    txtMRNo.Visible = true;
+                //    DateDiv.Visible = true;
+                //    Time_Row.Visible = true;
+                //    lblMainDepartment.Visible = false;
+                //    ddlDepartments.Visible = false;
+                //    lblPatientType.Visible = false;
+                //    lblMultiSelect.Visible = false;
+                //    ddlPatientType.Visible = false;
+                //    optRw.Visible = false;
+                //    trDoctor.Visible = false;
+                //    tr_Summary.Visible = false;
 
-                    lblMainDepartment.Visible = false;
-                    ddlDepartments.Visible = false;
-                    lblPatientType.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    ddlPatientType.Visible = false;
-                    optRw.Visible = false;
-                    trDoctor.Visible = false;
-                    tr_Summary.Visible = false;
-
-                    lblMainDepartment.Visible = false;
-                    dpROw.Visible = false;
-                }
+                //    lblMainDepartment.Visible = false;
+                //    dpROw.Visible = false;
+                //}
                 if (PageTitle == "Departmentwise_Cash_Summary")
                 {
                     string x = "Department Cash Summary";

@@ -448,7 +448,7 @@
         function PrintPatientBackCard() {
             $('#ctl00_MainContent_chckPatientCard').attr('disabled', true);
             Patient_ID =  '<%= Request.QueryString["OPDID"]%>';
-            var url = "ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;
+            var url = "/ReportViewer.aspx?ReportName=PrintPatientBackCard&ReportTitle=Patient Registration Card&MrNo=" + Patient_ID;
             window.open(url);
         }
 

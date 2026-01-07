@@ -14,6 +14,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
+using static Telerik.Web.UI.OrgChartStyles;
 
 namespace PMS
 {
@@ -985,12 +986,12 @@ namespace PMS
                 if (Request.QueryString["MrNo"] != null)
                 {
 
-                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "Patients/rptPatientCard_Back.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@MR_No", Request.QueryString["MrNo"]);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+
                 }
             }
             else if (reportName == "OPD_Patient_Print")
@@ -1134,10 +1135,13 @@ namespace PMS
             {
                 if (Request.QueryString["appointmentId"] != null)
                 {
+                    var appoitnment = Request.QueryString["appointmentId"];
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "Patients/rptAppointment_Patient_Print.rpt";
                     rd.Load(reportPath);
-                    rd.SetParameterValue("@appointment_Id", Request.QueryString["appointmentId"]);
+                    rd.SetParameterValue("@appointment_Id", appoitnment);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     //rd.SetParameterValue("Title", reportTitle);
                 }
             }
@@ -1630,7 +1634,12 @@ namespace PMS
             }
             else if (reportName == "MER")
             {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string ItemID = Request.QueryString["ItemID"].ToString();
+                string vendorID = Request.QueryString["VendorId"].ToString();
+
                 string rptFileName = "Pharmacy/rptMedicineExpiry.rpt";
+
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
                 reportPath += rptFileName;
@@ -1640,7 +1649,11 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@startDate", StartDateTime);
                 rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("@itemId", ItemID);
+                rd.SetParameterValue("@Vendor", vendorID);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
+      
             #endregion
             #region Transaction Details
             else if (reportName == "Lab_Test_Investigation")
@@ -4019,22 +4032,15 @@ namespace PMS
                 string title = Request.QueryString["ReportTitle"].ToString();
                 string MrNo = Request.QueryString["MRNo"].ToString();
 
-                string stDate = Request.QueryString["StartDate"].ToString();
-                string stTime = Request.QueryString["StartTime"].ToString();
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
 
-                string endDate = Request.QueryString["EndDate"].ToString();
-                string endTime = Request.QueryString["EndTime"].ToString();
-
-
-                //string parameterStDate = string.Empty;
-                //string parameterEndDate = string.Empty;
-
-                //this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
-                //this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
 
 
-                rd.SetParameterValue("@StDate", stDate);
-                rd.SetParameterValue("@endDate", endDate);
+                rd.SetParameterValue("@StDate", sqlStartDateTime);
+                rd.SetParameterValue("@endDate", sqlEndDateTime);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", title);
                 rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
@@ -4945,31 +4951,24 @@ namespace PMS
             }
             else if (reportName == "Patient_Transaction_Detail")
             {
-                reportPath += "rptPatient_Trans_Detail.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                reportPath += "Patients/rptPatient_Trans_Detail.rpt";
                 rd.Load(reportPath);
                 string title = Request.QueryString["ReportTitle"].ToString();
                 string MrNo = Request.QueryString["MRNo"].ToString();
 
-                string stDate = Request.QueryString["StartDate"].ToString();
-                string stTime = Request.QueryString["StartTime"].ToString();
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
 
-                string endDate = Request.QueryString["EndDate"].ToString();
-                string endTime = Request.QueryString["EndTime"].ToString();
-
-
-                string parameterStDate = string.Empty;
-                string parameterEndDate = string.Empty;
-
-                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
-                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
-
-
-                rd.SetParameterValue("@StDate", parameterStDate);
-                rd.SetParameterValue("@endDate", parameterEndDate);
-                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@StDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
                 rd.SetParameterValue("Title", title);
                 rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
                 rd.SetParameterValue("@Patient_No", MrNo);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+
             }
             else if (reportName == "TestRateList")
             {
@@ -6937,7 +6936,7 @@ namespace PMS
             connectionInfo.Password = Password;
             connectionInfo.UserID = UserID;
             rd.Database.Tables[0].ApplyLogOnInfo(logOnInfo);
-            if (reportName == "BloodBankCashCollection" || reportName == "Lab_Test_Investigation" || reportName == "TotalPatientRegsreport" || reportName == "DeptWisePatientsCardDetails" || reportName == "DoctorWisePatients" || reportName == "AllCashReport" || reportName == "DeptWisePatients" || reportName == "PatientsTypesDetails" || reportName == "rptPatientInvestigationBilling" || reportName == "rptInPatientDetail" || reportName == "AllDoctorShareDetail" || reportName == "GOP_Details" || reportName == "GOP_Summary" || reportName == "BedAllocationReport" || reportName == "DepartmentwiseCashSummary" || reportName == "AdmissionDetail" || reportName == "Discharge Detail" || reportName == "DepartmentConversion" || reportName == "Procedure_Detail" || reportName == "Services_List" || reportName == "InsuranceCompanies" || reportName == "MainTestDepartments" || reportName == "GroupMainTestDepartments" || reportName == "SehatSahulatWise" || reportName == "SehatSahulatWiseExpensive" || reportName == "Patient_Transaction_Detail_Type" || reportName == "Patient_Transaction_Detail_SehatSahulatCard" || reportName == "OutPatientsINP" || reportName == "DeptWisePatients" || reportName == "PackageDetailReport" || reportName == "ProcedureDetail" || reportName == "PrivateAdmitionDetail" || reportName == "OPDPrivateDetail" || reportName == "AdvanceDetail" || reportName == "Patient_Transaction_Detail" || reportName == "DailyRevenue" || reportName == "OutSourceTestDetail" || reportName == "ConsolidateMedicalSubsidy" || reportName == "PrivateProcedureDetail" || reportName == "TestResultStatus" || reportName == "LabTestDetailCollection" || reportName == "LabTestWiseSummary" || reportName == "Procedure_Service_List" || reportName == "ChargePolicyWiseSummary" || reportName == "LabCashReceivingCollection" || reportName == "BloodIssuance" || reportName == "WholeBloodStockLedger" || reportName == "ComponentBloodStockLedger" || reportName == "CBloodBankStockLedger" || reportName == "LabResultPending" || reportName == "BloodBankLabTest_Details" || reportName == "Blood_Bank_Cash_Collection_Details" || reportName == "NonCashBloodBankRevenue" || reportName == "ComponentBloodBankStockLedger" || reportName == "BloodBankStockLedger" || reportName == "BloodResultPending" || reportName == "OPDTimeLine" || reportName == "IPDTimeLine" || reportName == "DischargeTimeLine" || reportName == "WardAllocationTimeLine" || reportName == "ProcedureTimeLine" || reportName == "ProcedureTimeLineDetail" || reportName == "BedOccupancy" || reportName == "AverageLengthOfStay" || reportName == "DepartmentWiseProcedureTimeLine" || reportName == "TestWiseMonthly" || reportName == "TestWiseMonthlyLabTestDepartment" || reportName == "Discharge Time Line Detail")
+            if (reportName == "BloodBankCashCollection" || reportName == "Lab_Test_Investigation" || reportName == "TotalPatientRegsreport" || reportName == "DeptWisePatientsCardDetails" || reportName == "DoctorWisePatients" || reportName == "MER" || reportName == "AllCashReport" || reportName == "DeptWisePatients" || reportName == "PatientsTypesDetails" || reportName == "rptPatientInvestigationBilling" || reportName == "rptInPatientDetail" || reportName == "AllDoctorShareDetail" || reportName == "GOP_Details" || reportName == "GOP_Summary" || reportName == "BedAllocationReport" || reportName == "DepartmentwiseCashSummary" || reportName == "AdmissionDetail" || reportName == "Discharge Detail" || reportName == "DepartmentConversion" || reportName == "Procedure_Detail" || reportName == "Services_List" || reportName == "InsuranceCompanies" || reportName == "MainTestDepartments" || reportName == "GroupMainTestDepartments" || reportName == "SehatSahulatWise" || reportName == "SehatSahulatWiseExpensive" || reportName == "Patient_Transaction_Detail_Type" || reportName == "Patient_Transaction_Detail_SehatSahulatCard" || reportName == "OutPatientsINP" || reportName == "DeptWisePatients" || reportName == "PackageDetailReport" || reportName == "ProcedureDetail" || reportName == "PrivateAdmitionDetail" || reportName == "OPDPrivateDetail" || reportName == "AdvanceDetail" || reportName == "DailyRevenue" || reportName == "OutSourceTestDetail" || reportName == "ConsolidateMedicalSubsidy" || reportName == "PrivateProcedureDetail" || reportName == "TestResultStatus" || reportName == "LabTestDetailCollection" || reportName == "LabTestWiseSummary" || reportName == "Procedure_Service_List" || reportName == "ChargePolicyWiseSummary" || reportName == "LabCashReceivingCollection" || reportName == "BloodIssuance" || reportName == "WholeBloodStockLedger" || reportName == "ComponentBloodStockLedger" || reportName == "CBloodBankStockLedger" || reportName == "LabResultPending" || reportName == "BloodBankLabTest_Details" || reportName == "Blood_Bank_Cash_Collection_Details" || reportName == "NonCashBloodBankRevenue" || reportName == "ComponentBloodBankStockLedger" || reportName == "BloodBankStockLedger" || reportName == "BloodResultPending" || reportName == "OPDTimeLine" || reportName == "IPDTimeLine" || reportName == "DischargeTimeLine" || reportName == "WardAllocationTimeLine" || reportName == "ProcedureTimeLine" || reportName == "ProcedureTimeLineDetail" || reportName == "BedOccupancy" || reportName == "AverageLengthOfStay" || reportName == "DepartmentWiseProcedureTimeLine" || reportName == "TestWiseMonthly" || reportName == "TestWiseMonthlyLabTestDepartment" || reportName == "Discharge Time Line Detail")
             {
                 string Export_To_Excel = Request.QueryString["ExportPDF"].ToString();
                 //rd.ExportToHttpResponse(ExportFormatType.Excel, Response, true, "ExportedReport");
