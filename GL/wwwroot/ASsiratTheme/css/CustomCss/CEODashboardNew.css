@@ -6,8 +6,8 @@
 #topTestsChartsContainer .card-header {
     border-radius: 10px 10px 0 0 !important;
     padding: 10px;
-    background-color: #308665db !important;
-    font-weight: bold !important
+    background-color: #308665 !important;
+    font-weight: bold !important;
 }
 
 #topTestsChartsContainer .card-body {
@@ -28,11 +28,11 @@
 }
 
 #ctl00_sidebar, .page-header {
-    display: none !important
+    display: none !important;
 }
 
 .container {
-    width: 100% !important
+    width: 100% !important;
 }
 
 h3 {
@@ -44,32 +44,12 @@ input {
 }
 
     input[type="button"] {
-        margin-top: 27px !important
+        margin-top: 27px !important;
     }
 
-#Box1 {
+#Box1, #Box2, #Box3, #Box4, #Box5 {
     height: 125px;
-    border-radius: 30px !important
-}
-
-#Box2 {
-    height: 125px;
-    border-radius: 30px !important
-}
-
-#Box3 {
-    height: 125px;
-    border-radius: 30px !important
-}
-
-#Box4 {
-    height: 125px;
-    border-radius: 30px !important
-}
-
-#Box5 {
-    height: 125px;
-    border-radius: 30px !important
+    border-radius: 30px !important;
 }
 
     #Box1 h3, #Box2 h3, #Box3 h3, #Box4 h3, #Box5 h3 {
@@ -82,12 +62,12 @@ input {
 }
 
 .l-bg-green-dark {
-    background: linear-gradient(to right, #888, #555) !important;
+    background: linear-gradient(to right, #308665, #4fae8d) !important;
     color: #fff;
 }
 
 .l-bg-blue-dark {
-    background: linear-gradient(to right, #710d2b,#a2070f) !important;
+    background: linear-gradient(to right, #710d2b, #a2070f) !important;
     color: #fff;
 }
 
@@ -98,22 +78,119 @@ input {
 
 .styling {
     text-align: center;
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .border-right {
-    border-left: 1px solid #0033ff;
+    border-left: 1px solid #308665;
 }
 
 .border {
-    border-bottom: 1px solid #0b5398;
+    border-bottom: 1px solid #308665;
 }
 
 .headercolor {
-    background: #308665db !important;
+    background: #308665 !important;
     width: fit-content;
     padding: 2px 10px;
     color: white;
     border-radius: 6px;
-    margin-bottom: 20px
+    margin-bottom: 20px;
+}
+
+
+.circle-loader {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient( from 0deg, #308665 0deg, #6fc3a8 120deg, rgba(48, 134, 101, 0.15) 360deg );
+    animation: rotate 1.4s linear infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 0 25px rgba(48, 134, 101, 0.4);
+}
+
+.inner-dot {
+    width: 40px;
+    height: 40px;
+    background-color: #308665;
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(48, 134, 101, 0.6);
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 15px rgba(48, 134, 101, 0.4);
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+        box-shadow: 0 0 30px rgba(48, 134, 101, 0.8);
+    }
+}
+
+
+.card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+.card-header {
+    background: linear-gradient(90deg, #308665, #4fae8d);
+    color: #fff;
+    font-weight: 600;
+    font-size: 2.1rem;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 12px 18px;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.card-body {
+    background-color: #f2fbf7;
+}
+
+
+.opdtablemargin {
+    margin-left: 6px !important;
+}
+
+.emergencychart {
+    margin-left: 6px !important;
+}
+
+.IPDtable,
+.emergencytable,
+.OPDtable {
+    min-height: 460px !important;
+}
+
+.OPDtable {
+    margin-top: 10px !important;
 }

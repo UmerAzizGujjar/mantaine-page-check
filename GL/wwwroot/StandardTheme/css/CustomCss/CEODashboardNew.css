@@ -6,8 +6,8 @@
 #topTestsChartsContainer .card-header {
     border-radius: 10px 10px 0 0 !important;
     padding: 10px;
-    background-color: #438eb9 !important;
-    font-weight: bold !important
+    background-color: #357ebd !important;
+    font-weight: bold !important;
 }
 
 #topTestsChartsContainer .card-body {
@@ -28,11 +28,11 @@
 }
 
 #ctl00_sidebar, .page-header {
-    display: none !important
+    display: none !important;
 }
 
 .container {
-    width: 100% !important
+    width: 100% !important;
 }
 
 h3 {
@@ -44,37 +44,22 @@ input {
 }
 
     input[type="button"] {
-        margin-top: 27px !important
+        margin-top: 27px !important;
     }
 
-#Box1 {
+#Box1, #Box2, #Box3, #Box4, #Box5 {
     height: 125px;
-    border-radius: 30px !important
+    border-radius: 30px !important;
 }
 
-#Box2 {
-    height: 125px;
-    border-radius: 30px !important
-}
-
-#Box3 {
-    height: 125px;
-    border-radius: 30px !important
-}
-
-#Box4 {
-    height: 125px;
-    border-radius: 30px !important
-}
-
-#Box5 {
-    height: 125px;
-    border-radius: 30px !important
-}
-
-    #Box1 h3, #Box2 h3, #Box3 h3, #Box4 h3, #Box5 h3 {
+    #Box1 h3,
+    #Box2 h3,
+    #Box3 h3,
+    #Box4 h3,
+    #Box5 h3 {
         color: #eee;
     }
+
 
 .l-bg-orange-dark {
     background: linear-gradient(to right, #8e0b4d, #9f10abf2) !important;
@@ -82,12 +67,12 @@ input {
 }
 
 .l-bg-green-dark {
-    background: linear-gradient(to right, #888, #555) !important;
+    background: linear-gradient(to right, #357ebd, #6fa8dc) !important;
     color: #fff;
 }
 
 .l-bg-blue-dark {
-    background: linear-gradient(to right, #710d2b,#a2070f) !important;
+    background: linear-gradient(to right, #1c4e80, #357ebd) !important;
     color: #fff;
 }
 
@@ -98,48 +83,49 @@ input {
 
 .styling {
     text-align: center;
-    font-size: 25px;
+    font-size: 20px;
 }
 
+
 .border-right {
-    border-left: 1px solid #0033ff;
+    border-left: 1px solid #357ebd;
 }
 
 .border {
-    border-bottom: 1px solid #0b5398;
+    border-bottom: 1px solid #357ebd;
 }
 
+
 .headercolor {
-    background: #438eb9 !important;
+    background: #357ebd !important;
     width: fit-content;
     padding: 2px 10px;
     color: white;
     border-radius: 6px;
-    margin-bottom: 20px
+    margin-bottom: 20px;
 }
-
 
 
 .circle-loader {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background: conic-gradient( from 0deg, #438eb9 0deg, #8dc6e8 120deg, rgba(67, 142, 185, 0.1) 360deg );
+    background: conic-gradient( from 0deg, #357ebd 0deg, #6fa8dc 120deg, rgba(53, 126, 189, 0.15) 360deg );
     animation: rotate 1.4s linear infinite;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    box-shadow: 0 0 25px rgba(67, 142, 185, 0.3) !important;
+    box-shadow: 0 0 25px rgba(53, 126, 189, 0.4);
 }
 
 .inner-dot {
     width: 40px;
     height: 40px;
-    background-color: #438eb9 !important;
+    background-color: #357ebd;
     border-radius: 50%;
     animation: pulse 1.5s ease-in-out infinite;
-    box-shadow: 0 0 20px rgba(67, 142, 185, 0.5) !important;
+    box-shadow: 0 0 20px rgba(53, 126, 189, 0.6);
 }
 
 @keyframes rotate {
@@ -156,17 +142,15 @@ input {
     0%, 100% {
         transform: scale(1);
         opacity: 1;
-        box-shadow: 0 0 15px rgba(67, 142, 185, 0.4);
+        box-shadow: 0 0 15px rgba(53, 126, 189, 0.4);
     }
 
     50% {
         transform: scale(1.2);
         opacity: 0.7;
-        box-shadow: 0 0 30px rgba(67, 142, 185, 0.8);
+        box-shadow: 0 0 30px rgba(53, 126, 189, 0.8);
     }
 }
-
-
 
 .card {
     border-radius: 12px;
@@ -183,7 +167,7 @@ input {
     }
 
 .card-header {
-    background: linear-gradient(90deg, #c11718, #EFA63E, #d98b1a);
+    background: linear-gradient(90deg, #357ebd, #6fa8dc);
     color: #fff;
     font-weight: 600;
     font-size: 2.1rem;
@@ -195,10 +179,8 @@ input {
 }
 
 .card-body {
-    background-color: #fff8f0;
+    background-color: #f2f7fc;
 }
-
-
 
 
 .opdtablemargin {
@@ -209,15 +191,12 @@ input {
     margin-left: 6px !important;
 }
 
-.IPDtable {
-    min-height: 460px !important
-}
-
-.emergencytable {
-    min-height: 460px !important
+.IPDtable,
+.emergencytable,
+.OPDtable {
+    min-height: 460px !important;
 }
 
 .OPDtable {
-    min-height: 460px !important;
     margin-top: 10px !important;
 }
