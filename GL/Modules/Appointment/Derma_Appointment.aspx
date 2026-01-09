@@ -1632,42 +1632,42 @@
             var Room_Start_Time = $("#txt_roomStTime").val();
             var Room_End_Time = $("#txt_roomendTime").val();
 
-            if (!(Doc_Start_Time === Helper_Start_Time &&
-                Helper_Start_Time === Machine_Start_Time &&
-                Machine_Start_Time === Room_Start_Time)) {
+            //if (!(Doc_Start_Time === Helper_Start_Time &&
+            //    Helper_Start_Time === Machine_Start_Time &&
+            //    Machine_Start_Time === Room_Start_Time)) {
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Doctor, Helper, Machine and Room START TIME must be the same.',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-            if (!(Doc_End_Time === Hepler_End_Time &&
-                Hepler_End_Time === Machine_End_Time &&
-                Machine_End_Time === Room_End_Time)) {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Doctor, Helper, Machine and Room START TIME must be the same.',
+            //        showConfirmButton: false,
+            //        timer: 2500,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
+            //if (!(Doc_End_Time === Hepler_End_Time &&
+            //    Hepler_End_Time === Machine_End_Time &&
+            //    Machine_End_Time === Room_End_Time)) {
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Doctor, Helper, Machine and Room END TIME must be the same.',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Doctor, Helper, Machine and Room END TIME must be the same.',
+            //        showConfirmButton: false,
+            //        timer: 2500,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
             var aptid = '<%= Request.QueryString["aID"]%>';
             debugger;
                     var editmode_ID = '<%= Request.QueryString["aID"]%>';
@@ -1686,7 +1686,7 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Appointment Saved!',
-                            text: 'A WhatsApp confirmation has been sent automatically.',
+                            text: 'Data has been saved Successfully',
                             confirmButtonText: 'OK'
                         }).then(() => {
                             window.location = "Derma_Appointment.aspx";
