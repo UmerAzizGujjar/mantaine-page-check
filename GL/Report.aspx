@@ -359,6 +359,13 @@
             </div>
         </div>
          &nbsp;&nbsp;
+        <div class="row" id="Vendordiv" runat="server" visible="false">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <asp:Label ID="lblVendor" runat="server" Text="Select Vendor" CssClass="form-label"></asp:Label>
+                <asp:DropDownList ID="VendorList" runat="server" AppendDataBoundItems="true" CssClass="form-control"></asp:DropDownList>
+            </div>
+        </div>
+         &nbsp;&nbsp;
         <div class="row" id="comparisonDateDiv" runat="server" visible="false">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="Comparison_DateFrom" runat="server" Text="Comparison Date From " CssClass="form-label"></asp:Label>

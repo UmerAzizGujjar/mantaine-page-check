@@ -576,7 +576,7 @@ namespace PMS
 
                 db.Ar_Billing_Details.InsertAllOnSubmit(ListOfDetails);
             }
-            newBill.Over_and_Above = Total_CGSS;
+            newBill.Total_CGS = Total_CGSS;
             db.SubmitChanges();
             ApprovePhramcy(newBill.Bill_ID.ToString());
             return newBill.Bill_ID.ToString();
