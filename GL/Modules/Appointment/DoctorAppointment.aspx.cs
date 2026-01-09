@@ -47,7 +47,7 @@ namespace PMS
                 'OPD' AS Source
             FROM Appointment_Forms a
             WHERE a.Consultant_ID = @doc_id
-              AND a.created_time >= DATEADD(HOUR, -24, GETDATE())
+              
 
             UNION ALL
 
@@ -69,7 +69,7 @@ namespace PMS
             FROM Derma_Appointment d
             INNER JOIN Reg_patient r ON r.pat_id = d.Patient_Id
             WHERE d.Doctor_Id = @doc_id
-              AND d.Created_Date >= DATEADD(HOUR, -24, GETDATE())
+             
             ORDER BY created_time DESC";
             }
             else
