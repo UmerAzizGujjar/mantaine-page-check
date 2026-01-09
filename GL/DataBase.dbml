@@ -4703,32 +4703,6 @@
       <Column Name="Day_Check" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Derma_Appointment" Member="Derma_Appointments">
-    <Type Name="Derma_Appointment">
-      <Column Name="Derma_Appointment_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Appointment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Procedure_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Helper_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Machine_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Room_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Appointment_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Doctor_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Doctor_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Helper_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Helper_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Machine_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Machine_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Room_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Room_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Laboratory_Test" Member="Laboratory_Tests">
     <Type Name="Laboratory_Test">
       <Column Name="Lab_Test_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7159,6 +7133,33 @@
       <Column Name="Block_category" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="end_day" Type="System.DateTime" DbType="Date" CanBeNull="true" />
       <Column Name="st_day" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="cancelAppointment" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Derma_Appointment" Member="Derma_Appointments">
+    <Type Name="Derma_Appointment">
+      <Column Name="Derma_Appointment_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Appointment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Procedure_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Helper_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Machine_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Room_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Appointment_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Doctor_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Doctor_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Helper_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Helper_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Machine_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Machine_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Room_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Room_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="cancelAppointment" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>

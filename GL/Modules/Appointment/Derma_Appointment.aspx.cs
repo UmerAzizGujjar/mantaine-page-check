@@ -97,7 +97,7 @@ namespace PMS
                                      App_Date = a.Appointment_Date,
                                      Time =a.Doctor_Start_Time,
                                      a.Status,
-                                     //a.cancelAppointment,
+                                     a.cancelAppointment,
                                      created_time= a.Created_Date,
                                      emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Doctor_Id) select data.Emp_Name).FirstOrDefault(),
                                  }).ToList().OrderByDescending(x => x.created_time);
@@ -130,7 +130,7 @@ namespace PMS
                                      App_Date = a.Appointment_Date,
                                      Time = a.Doctor_Start_Time,
                                      a.Status,
-                                     //a.cancelAppointment,
+                                     a.cancelAppointment,
                                      created_time = a.Created_Date,
                                      emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Doctor_Id) select data.Emp_Name).FirstOrDefault(),
                                  }).ToList().OrderByDescending(x => x.created_time);
