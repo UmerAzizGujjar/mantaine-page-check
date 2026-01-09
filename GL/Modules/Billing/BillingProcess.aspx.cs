@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -1736,23 +1737,44 @@ namespace PMS
             var Bill_Detail_List = db.Ar_Billing_Details
                 .Where(abd => abd.Bill_ID == newBill.Bill_ID && abd.ParentTrans_Type == "Test")
                 .ToList();
-
-            var Bill_Detail_Lists = db.Ar_Billing_Details
-                .Where(abd => abd.Bill_ID == newBill.Bill_ID && abd.ParentTrans_Type == "Test Group Category")
-                .ToList();
-
-            foreach (var billDetail in Bill_Detail_Lists)
+            using (DataBaseDataContext dbContext = new DataBaseDataContext())
             {
-                db.ExecuteCommand(@"
-    UPDATE Lab_Test_Detail 
-    SET BillDetailID = {0} 
-    WHERE Actual_Patient_ID = {1} 
-      AND Test_ID = {2} 
-      AND Catagory_ID = {3}",
-                    billDetail.Bill_Details_ID,
-                    newBill.Patient_ID,
-                    billDetail.Item_ID,
-                    billDetail.Category_ID);
+                var Bill_Detail_Lists = dbContext.Ar_Billing_Details
+                    .Where(abd => abd.Bill_ID == newBill.Bill_ID && abd.ParentTrans_Type == "Test Group Category")
+                    .ToList();
+
+                foreach (var billDetail in Bill_Detail_Lists)
+                {
+                    // Parse the IDs
+                    int? testId = null;
+                    int? categoryId = null;
+
+                    if (billDetail.Item_ID != null && int.TryParse(billDetail.Item_ID.ToString(), out int parsedTestId))
+                        testId = parsedTestId;
+
+                    if (billDetail.Category_ID != null && int.TryParse(billDetail.Category_ID.ToString(), out int parsedCategoryId))
+                        categoryId = parsedCategoryId;
+
+                    // Build the query - FIXED: Declare sql only once
+                    string sqls = $@"
+                        UPDATE Lab_Test_Detail 
+                        SET BillDetailID = {billDetail.Bill_Details_ID} 
+                        WHERE Actual_Patient_ID = {(newBill.Patient_ID.HasValue ? newBill.Patient_ID.Value.ToString() : "NULL")}";
+
+                    // Add Test_ID condition
+                    if (testId.HasValue)
+                        sqls += $" AND Test_ID = {testId.Value}";
+                    else
+                        sqls += " AND Test_ID IS NULL";
+
+                    // Add Category_ID condition
+                    if (categoryId.HasValue)
+                        sqls += $" AND Catagory_ID = {categoryId.Value}";
+                    else
+                        sqls += " AND Catagory_ID IS NULL";
+
+                    dbContext.ExecuteCommand(sqls);
+                }
             }
 
             foreach (var billDetail in Bill_Detail_List)
