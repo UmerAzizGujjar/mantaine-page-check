@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "?IITH_Live")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH_Live")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
