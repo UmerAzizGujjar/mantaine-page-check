@@ -153,6 +153,10 @@
             });
         }
 
+        function editOpen(appointmentId) {
+            window.location.href = 'Derma_Appointment.aspx?APPID=' + appointmentId;
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
