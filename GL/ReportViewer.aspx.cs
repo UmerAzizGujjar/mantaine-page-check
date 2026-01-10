@@ -1823,13 +1823,21 @@ namespace PMS
             else if (reportName == "Operator_Wise_Billing_Report")
             {
 
+
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
                 string rptFileName = "TransactionalDetails/rptOperatorWise_Bill_Report.rpt";
                 string CheckSummary = Request.QueryString["Summary"].ToString();
+                string CheckDetailSummary = Request.QueryString["AllPatientsRecords"].ToString();
+
                 if (CheckSummary == "true")
                 {
                     rptFileName = "TransactionalDetails/rptOperatorWise_Bill_Report_Summary.rpt";
+                    reportTitle = "Operator Wise Billing Summary From " + Request.QueryString["sDate"].ToString() + "to" + Request.QueryString["eDate"].ToString();
+                }
+                if (CheckDetailSummary == "true")
+                {
+                    rptFileName = "TransactionalDetails/rptOperatorWise_Bill_Report_Summary_Detailed.rpt";
                     reportTitle = "Operator Wise Billing Summary From " + Request.QueryString["sDate"].ToString() + "to" + Request.QueryString["eDate"].ToString();
                 }
                 reportPath += rptFileName;
