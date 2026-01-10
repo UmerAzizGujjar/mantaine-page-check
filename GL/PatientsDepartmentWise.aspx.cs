@@ -4304,6 +4304,13 @@ namespace PMS
                     ddlPatientType.Visible = true;
                     lblMultiSelect.Visible = false;
                     GetLabTests();
+                    tr_AllPatientRecord.Visible = true;
+                    Label lblAllPatientRecord = tr_AllPatientRecord.FindControl("lblAllPatientRecord") as Label;
+                    if (lblAllPatientRecord != null)
+                    {
+                        lblAllPatientRecord.Text = "Detailed Summary";
+                    }
+
                 }
 
 
@@ -5661,6 +5668,9 @@ namespace PMS
                     string x = "Doctor Receipts";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    dpROw.Visible = true;
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Main Category");
                     ddlDepartments.DataSource = valusets;

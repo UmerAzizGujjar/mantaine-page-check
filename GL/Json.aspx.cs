@@ -853,29 +853,68 @@ namespace PMS
                     Response.Write("[" + result + "]");
                 }
 
+                //else if (Request.QueryString["Table"] == "PatientsByMr")
+                //{
+                //    string sqlQuery;
+
+                //    if (Request.QueryString["q"] != null)
+                //    {
+                //        sqlQuery = @"SELECT TOP 1 
+                //            Patient_ID,
+                //            mr_no_sequence,
+                //            Full_Name
+                //     FROM Patients
+                //     WHERE mr_no_sequence = '" + Request.QueryString["q"].ToString() + @"'
+                //     ORDER BY Created_Time DESC";
+                //    }
+                //    else
+                //    {
+                //        sqlQuery = @"SELECT DISTINCT 
+                //            Patient_ID,
+                //            mr_no_sequence,
+                //            Full_Name
+                //     FROM Patients
+                //     WHERE ISNULL(IsRevisit,'0') = '0'
+                //     ORDER BY Created_Time DESC";
+                //    }
+
+                //    string result = "";
+                //    DataTable dt = DBClass.getDataTable(sqlQuery);
+
+                //    foreach (DataRow dr in dt.Rows)
+                //    {
+                //        result += (result == "") ? "" : ",";
+                //        result += @"{""id"":""" + dr["Patient_ID"].ToString() +
+                //                  @""",""name"": """ +
+                //                  dr["mr_no_sequence"].ToString() + " - " +
+                //                  dr["Full_Name"].ToString() + @"""}";
+                //    }
+
+                //    Response.Write("[" + result + "]");
+                //}
                 else if (Request.QueryString["Table"] == "PatientsByMr")
                 {
                     string sqlQuery;
 
                     if (Request.QueryString["q"] != null)
                     {
-                        sqlQuery = @"SELECT TOP 1 
-                            Patient_ID,
-                            mr_no_sequence,
-                            Full_Name
-                     FROM Patients
-                     WHERE mr_no_sequence = '" + Request.QueryString["q"].ToString() + @"'
-                     ORDER BY Created_Time DESC";
+                        sqlQuery = @"SELECT TOP 1
+                        rp.Patient_No,
+                        rp.mr_no_sequence,
+                        rp.Full_Name
+                     FROM reg_patient rp
+                     WHERE rp.mr_no_sequence = '" + Request.QueryString["q"].ToString() + @"'
+                     ORDER BY rp.Created_Time DESC";
                     }
                     else
                     {
-                        sqlQuery = @"SELECT DISTINCT 
-                            Patient_ID,
-                            mr_no_sequence,
-                            Full_Name
-                     FROM Patients
-                     WHERE ISNULL(IsRevisit,'0') = '0'
-                     ORDER BY Created_Time DESC";
+                        sqlQuery = @"SELECT DISTINCT
+                        rp.Patient_No,
+                        rp.mr_no_sequence,
+                        rp.Full_Name
+                     FROM reg_patient rp
+                     WHERE ISNULL(rp.IsRevisit,'0') = '0'
+                     ORDER BY rp.Created_Time DESC";
                     }
 
                     string result = "";
@@ -884,7 +923,7 @@ namespace PMS
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Patient_ID"].ToString() +
+                        result += @"{""id"":""" + dr["Patient_No"].ToString() +
                                   @""",""name"": """ +
                                   dr["mr_no_sequence"].ToString() + " - " +
                                   dr["Full_Name"].ToString() + @"""}";
@@ -892,6 +931,7 @@ namespace PMS
 
                     Response.Write("[" + result + "]");
                 }
+
 
                 else if (Request.QueryString["Table"] == "Emergency_Patients")
                 {
