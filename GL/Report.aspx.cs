@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static PMS.Vendor;
 
 namespace PMS
 {
@@ -48,8 +50,61 @@ namespace PMS
                         levelChekBox.Visible = true;
                         HideZerroBalance.Visible = true;
                         break;
-                    case "COA":
+                    case "VL":
+                        phMultiLedger.Visible = false;
+                        txtStart_Date.Visible = true;
                         DateDiv.Visible = true;
+                        stDate.Visible = true;
+                        txtEnd_Date.Visible = true;
+                        enDate.Visible = true;
+                        AccountInfoDiv.Visible = false;
+                        levelChekBox.Visible = false;
+                        CostCenterDiv.Visible = false;
+                        chbAllAccounts.Visible = false;
+                        lblSpecificAccount.Visible = false;
+                        txtSpecificAccount.Visible = false;
+                        lblCostCenter.Visible = false;
+                        ddlCostCenter.Visible = false;
+                        chbAllAccounts.Checked = false;
+                        Vendordiv.Visible = true;
+                        string connStr = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
+                        using (SqlConnection conn = new SqlConnection(connStr))
+                        {
+                            string query = "SELECT Vendor_ID, Vendor_Name FROM AP_Vendors";
+                            SqlCommand cmd = new SqlCommand(query, conn);
+                            conn.Open();
+                            SqlDataReader reader = cmd.ExecuteReader();
+                            VendorList.DataSource = reader;
+                            VendorList.DataTextField = "Vendor_Name";
+                            VendorList.DataValueField = "Vendor_ID";
+                            VendorList.DataBind();
+                            conn.Close();
+                        }
+
+                        VendorList.Items.Insert(0, new ListItem("All", "0"));
+                        break;
+
+                    case "VB":
+                        phMultiLedger.Visible = false;
+                        txtStart_Date.Visible = true;
+                        DateDiv.Visible = true;
+                        stDate.Visible = true;
+                        txtEnd_Date.Visible = false;
+                        enDate.Visible = false;
+                        AccountInfoDiv.Visible = false;
+                        levelChekBox.Visible = false;
+                        CostCenterDiv.Visible = false;
+                        chbAllAccounts.Visible = false;
+                        lblSpecificAccount.Visible = false;
+                        txtSpecificAccount.Visible = false;
+                        lblCostCenter.Visible = false;
+                        ddlCostCenter.Visible = false;
+                        chbAllAccounts.Checked = false;
+                        Vendordiv.Visible = false;
+
+                        break;
+                    case "COA":
+                        DateDiv.Visible = false;
                         AccountInfoDiv.Visible = false;
                         AccountDiv.Visible = false;
                         levelChekBox.Visible = true;
@@ -112,21 +167,21 @@ namespace PMS
                         if (ViewState["dtAccounts"] == null)
                             CreateDataTable();
                         break;
-                    case "VB":
-                        phMultiLedger.Visible = false;
-                        DateDiv.Visible = true;
-                        AccountInfoDiv.Visible = false;
-                        AccountDiv.Visible = false;
-                        levelChekBox.Visible = false;
-                        plhAllAcounts.Visible = false;
-                        chbAllAccounts.Visible = false;
-                        plhAllAcounts.Visible = false;
-                        lblSpecificAccount.Visible = false;
-                        txtSpecificAccount.Visible = false;
-                        lblCostCenter.Visible = false;
-                        ddlCostCenter.Visible = false;
-                        chbAllAccounts.Checked = false;
-                        break;
+                    //case "VB":
+                    //    phMultiLedger.Visible = false;
+                    //    DateDiv.Visible = true;
+                    //    AccountInfoDiv.Visible = false;
+                    //    AccountDiv.Visible = false;
+                    //    levelChekBox.Visible = false;
+                    //    plhAllAcounts.Visible = false;
+                    //    chbAllAccounts.Visible = false;
+                    //    plhAllAcounts.Visible = false;
+                    //    lblSpecificAccount.Visible = false;
+                    //    txtSpecificAccount.Visible = false;
+                    //    lblCostCenter.Visible = false;
+                    //    ddlCostCenter.Visible = false;
+                    //    chbAllAccounts.Checked = false;
+                    //    break;
                     case "BSA":
                         AccountInfoDiv.Visible = true;
                         AccountDiv.Visible = false;
@@ -533,12 +588,22 @@ namespace PMS
                             query = "ReportName=MultiLedger&ReportTitle=Account Ledger From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
                             break;
                         }
+                    case "VL":
+                        string selectedVendorId = VendorList.SelectedValue;
+                      //  var ExcelOT = chkExportPDF.Checked;
+                        query = "ReportName=Vendor_Ledger&ReportTitle=Vendor Ledger Report From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Vendor_Id=" + selectedVendorId ;
+                        break;
+
+                    case "VB":
+                      //  var ExcelOT = chkExportPDF.Checked;
+                        query = "ReportName=Vendor_Balance&ReportTitle=Vendor Balance Report From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text ;
+                        break;
                     case "TC":
                         query = "ReportName=TrailComparison&ReportTitle=Trail Comparison From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
                         break;
-                    case "VB":
-                        query = "ReportName=Vendor_Balance&ReportTitle=Vendor Balance Report From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text;
-                        break;
+                    //case "VB":
+                    //    query = "ReportName=Vendor_Balance&ReportTitle=Vendor Balance Report From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text;
+                    //    break;
                     case "BSD":
                         StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
                         EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");

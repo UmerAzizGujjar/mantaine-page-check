@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬SkinStudio" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -4703,32 +4703,6 @@
       <Column Name="Day_Check" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Derma_Appointment" Member="Derma_Appointments">
-    <Type Name="Derma_Appointment">
-      <Column Name="Derma_Appointment_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Appointment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Procedure_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Helper_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Machine_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Room_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Appointment_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Doctor_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Doctor_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Helper_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Helper_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Machine_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Machine_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Room_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Room_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Laboratory_Test" Member="Laboratory_Tests">
     <Type Name="Laboratory_Test">
       <Column Name="Lab_Test_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -4865,63 +4839,6 @@
       <Column Name="Deleted_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
       <Column Name="WithHoldTax_Check" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Po_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.HR_Employees" Member="HR_Employees">
-    <Type Name="HR_Employee">
-      <Column Name="Emp_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Emp_No" Type="System.String" DbType="VarChar(6) NOT NULL" CanBeNull="false" />
-      <Column Name="Emp_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Father_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="DOB" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Department" Type="System.String" DbType="VarChar(3)" CanBeNull="true" />
-      <Column Name="Designation" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="Address" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Home_Phone" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Mobile" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="NTN_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="DOJ" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Resign_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Gross_Pay" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="IsDoctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Doctor_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Sub_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Hospital_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="IS_Visting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Panel_Rate" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Consultant_Charges" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="IS_Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Govt_Hospital" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Patient_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Timings_In" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Timings_Out" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="Patient_Time" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Room_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Floor_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Extension_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="TodayStatus" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_Building" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Off_Days_Names" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="cnic" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="chckpriority" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="priority_fee" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="userid" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Dependent" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="is_Employee" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Policy_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Doc_qualification" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="st_day" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="end_day" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Block_category" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.inv_bom" Member="inv_boms">
@@ -7151,13 +7068,99 @@
       <Column Name="Share_Type" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="checked_by" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="IsAssign_Doctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Status" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Pharma_trans_Type" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="CGS_Procedure_BOM" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Bill_Department" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Bill_Category" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="Doc_token" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_CGS" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
+    </Type>
+  </Table>
+  <Table Name="dbo.HR_Employees" Member="HR_Employees">
+    <Type Name="HR_Employee">
+      <Column Name="Emp_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Emp_No" Type="System.String" DbType="VarChar(6) NOT NULL" CanBeNull="false" />
+      <Column Name="Emp_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Father_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="DOB" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(3)" CanBeNull="true" />
+      <Column Name="Designation" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Home_Phone" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Mobile" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NTN_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="DOJ" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Resign_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Gross_Pay" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="IsDoctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Doctor_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Sub_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Hospital_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="IS_Visting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Panel_Rate" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Consultant_Charges" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="IS_Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Govt_Hospital" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Patient_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Timings_In" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Timings_Out" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Patient_Time" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Room_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Floor_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Extension_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="TodayStatus" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_Building" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Off_Days_Names" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="cnic" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="chckpriority" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="priority_fee" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="userid" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Dependent" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="is_Employee" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Policy_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Doc_qualification" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Block_category" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="end_day" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="st_day" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="cancelAppointment" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Derma_Appointment" Member="Derma_Appointments">
+    <Type Name="Derma_Appointment">
+      <Column Name="Derma_Appointment_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Appointment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Procedure_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Helper_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Machine_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Room_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Appointment_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Doctor_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Doctor_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Helper_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Helper_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Machine_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Machine_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Room_Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Room_End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="cancelAppointment" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -11128,6 +11131,37 @@
       <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_loadAppointment_Derma" Method="sp_loadAppointment_Derma">
+    <Parameter Name="appID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_loadAppointment_DermaResult">
+      <Column Name="Appointment_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Age" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Consultant_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="doctor_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Patient_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Appointment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="app_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Doctor_Start_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Doctor_End_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Helper_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Helper_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Helper_Start_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Helper_End_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Machine_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Machine_Name" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Machine_Start_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Machine_End_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Room_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Room_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Room_Start_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Room_End_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Reg_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

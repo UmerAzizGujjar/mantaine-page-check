@@ -12,13 +12,13 @@
             $('#ddlGlAccount').select2();
             var id = '<% =Request.QueryString["ID"] %>';
             if (id != "") {
-                debugger;
                 $('#btnSave').val('Update');
                 LoadPanelData(id);
+                $('#tblItemDescriptionDetail').html('<tr><td colspan="3">Loading services...</td></tr>');
                 ajaxCall("panelagreement.aspx/loadData", JSON.stringify({ "panelID": id }), getResponseData);
             }
             $('#btnNew').on('click', function () {
-                debugger;
+                
                 window.location.href = "panelagreement.aspx";
             });
             $('#btnList').on('click', function () {
@@ -26,7 +26,7 @@
                 window.location.href = "PanelView.aspx";
             })
             $('#btnSave').on('click', function () {
-                debugger;
+               
                 var id = '<% =Request.QueryString["ID"] %>';
                 if (id != "") {
 
@@ -42,7 +42,7 @@
                 var contact_no = $("#txtContactNo").val();
                 var address = $("#txtAddress").val();
                 var discount = $("#txtDiscount").val();
-                debugger;
+             
                 var cmp_nameV = $("#txtCompanyName");
                 var panelrate = $("#txtpanelrate").val();
                 var no_of_empV = $("#txtEmpNo");
@@ -95,7 +95,7 @@
                 if (!$("#txtCompanyName").hasClass('ErrorAlert') && !$("#txtEmail").hasClass('ErrorAlert') && !$("#txtAddress").hasClass('ErrorAlert') && !$("#txtContactNo").hasClass('ErrorAlert') && !$("#txtDiscount").hasClass('ErrorAlert') && !$("#txtEmpNo").hasClass('ErrorAlert')) {
 
 
-                    debugger;
+                
                     var servicesList = new Array();
                     var list = document.getElementById('tblItemDescription');
                     for (var i = 1; i < list.rows.length; i++) {
@@ -169,7 +169,7 @@
         }
 
         function ajaxCall(url, data, getResposeParam) {
-            debugger;
+       
             var call = '';
             $.ajax({
                 type: "POST",
@@ -178,7 +178,7 @@
                 data: data,
                 async: true,
                 success: function (resp) {
-                    debugger;
+           
                     //call = resp.d;
                     getResposeParam(resp.d);
                 },
@@ -192,38 +192,38 @@
             $.ajax({
                 type: "POST",
                 url: "panelagreement.aspx/LoadPanelData",
-                data: JSON.stringify({
-                    "id": id
-                }),
+                data: JSON.stringify({ "id": id }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     var parsed_Data = JSON.parse(response.d);
-
-                    $("#txtCompanyName").val(parsed_Data.Company_Name);
-                    $("#txtEmpNo").val(parsed_Data.No_Of_Employees);
-                    $("#txtEmail").val(parsed_Data.Email);
-                   
-                    $("#txtContactNo").val(parsed_Data.Contact_No);
-                    $("#txtAddress").val(parsed_Data.Address);
-                    $("#txtDiscount").val(parsed_Data.Discount);
-                    $("#txtpanelrate").val(parsed_Data.Panel_Rate);
-                    $('#ddlGlAccount').val(parsed_Data.gl_account).trigger('change');
-                }, error: function () { }
+                    if (parsed_Data) {
+                        $("#txtCompanyName").val(parsed_Data.Company_Name || '');
+                        $("#txtEmpNo").val(parsed_Data.No_Of_Employees || '');
+                        $("#txtEmail").val(parsed_Data.Email || '');
+                        $("#txtContactNo").val(parsed_Data.Contact_No || '');
+                        $("#txtAddress").val(parsed_Data.Address || '');
+                        $("#txtDiscount").val(parsed_Data.Discount || '');
+                        $("#txtpanelrate").val(parsed_Data.Panel_Rate || '');
+                        $('#ddlGlAccount').val(parsed_Data.gl_account || '0').trigger('change');
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load master panel data");
+                }
             });
         }
 
         function loadItemList() {
-            debugger;
+      
             var optionsitem = '';
             $('#ddltble_Services').select2();
 
             PageMethods.loadItemtList(function (resp) {
-                debugger;
+       
                 optionsitem = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(resp), function (key, value) {
-                    debugger;
+      
                     optionsitem += '<option value="' + value.Item_ID + '" >' + value.name + '</option>';
                 });
 
@@ -256,7 +256,7 @@
             $('#tblItemDescriptionDetail').append(rows);
         }
         function Addrow() {
-            debugger;
+
 
             var rows = '';
             var ItemId = $('#ddltble_Services').val();
@@ -279,7 +279,7 @@
             }
         }
         function AddTestRow() {
-            debugger;
+
             var maindpt = $('#ddlMainTestDepartment').val();
             var testGroupCatVal = $("#ddlTestList option:selected").attr('groupCat');
 
@@ -298,20 +298,30 @@
         }
 
         function getResponseData(x) {
-            debugger;
-            var d = JSON.parse(x);
-            for (var i = 0; i < d.length; i++) {
-                var maindpt = d[i].ItemID;
-                var itemDescription = d[i].Description;
-                var Rate = d[i].Rate;
-                var panelID = d[i].PanelID;
-                var getTestID = d[i].TestID;
-                var testGroupCatVal = d[i].GroupCategory;
-                appendRowHtml(maindpt, itemDescription, Rate, testGroupCatVal, getTestID,);
+            try {
+                var d = JSON.parse(x);
+                var allRows = '';
+                for (var i = 0; i < d.length; i++) {
+                    var item = d[i];
+                    allRows +=
+                        '<tr>' +
+                        '<td style="display:none"><input type="hidden" name="tbltxt_ServicesId" value="' + (item.ItemID || '') + '"/></td>' +
+                        '<td><input type="text" name="tbltxt_ServicesName" value="' + (item.Description || '') + '" readonly/></td>' +
+                        '<td><input type="text" name="tbltxt_Rate" value="' + (item.Rate || '') + '"/></td>' +
+                        '<td style="display:none"><input type="text" value="' + (item.GroupCategory || '') + '"/></td>' +
+                        '<td style="display:none"><input type="text" value="' + (item.TestID || '') + '"/></td>' +
+                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">' +
+                        '<i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;"></i>' +
+                        '</a></td>' +
+                        '</tr>';
+                }
+                $('#tblItemDescriptionDetail').html(allRows);
+            } catch (e) {
+                console.error("Error loading service rows:", e);
             }
         }
         function ExcludeFromPayment(anchor) {
-            debugger;
+  
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 console.clear();
@@ -331,7 +341,7 @@
             });
         }
         function FillMainTestDepartment() {
-            debugger;
+      
             var options = '<option value="0" >Select Main Department</option>';
             PageMethods.FillTestMainDepartment(function (Tests) {
                 $.each(JSON.parse(Tests), function (key, value) {
@@ -341,7 +351,7 @@
             });
         }
         function LoadTestByDepartment() {
-            debugger;
+
 
             var maindpt = $('#ddlMainTestDepartment').val();
             if (maindpt == "0") {
@@ -377,7 +387,7 @@
             }
         }
         function FillTestsByCategory(CategoryID) {
-            debugger;
+
             var options = '<option value="0" >Please Select</option>';
             if (CategoryID == '002') {
                 $("#btnultrasound").removeClass("btn-info").addClass("btn-danger");
@@ -418,7 +428,7 @@
                 });
             }
             PageMethods.FillTestsByCategory(CategoryID, function (Tests) {
-                debugger;
+ 
                 var options = '<option value="0" >Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
                     options += '<option  testID="' + value.Test_ID + '" groupCat="' + value.Group_Category + '">' + value.Test_Name + '</option>';
@@ -428,7 +438,7 @@
             });
         }
         function onSelection() {
-            debugger;
+       
 
         }
     </script>

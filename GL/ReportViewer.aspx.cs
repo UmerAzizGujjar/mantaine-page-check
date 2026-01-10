@@ -1383,7 +1383,7 @@ namespace PMS
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("ReportTitle", RptTitle);
                     rd.SetParameterValue("@sDateTime", Start_Date);
-                rd.SetParameterValue("CompanyLogo", logoPath);
+                //rd.SetParameterValue("CompanyLogo", logoPath);
                 }
             }
             else if (reportName == "VendorLedger")
@@ -1424,8 +1424,8 @@ namespace PMS
                 rd.SetParameterValue("ReportTitle", reportTitle);
                 rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
                 rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
-                rd.SetParameterValue("CompanyLogo", logoPath);
-                rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+               // rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@vendor_Id", (Request.QueryString["Vendor_Id"]).ToString());
             }
             else if (reportName == "Vendor_Wise_Payment_Summary")
             {

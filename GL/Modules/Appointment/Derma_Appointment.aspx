@@ -43,7 +43,7 @@
             LoadDetailDoctor();
             LoadMachine();
             LoadHelper();
-            LoadRooms();
+            LoadRooms();    
             $('#ddl_colstnt').on('change', function () {
                 ConfigureAvailableDates();
                 GetAppNoByDoctor();
@@ -64,10 +64,10 @@
 
             $('#ddl_procedures').on('change', function () {
                 LoadProcedureTime();
-                //ConfigureAvailableDates();
-            });
+              //ConfigureAvailableDates();
+          });
             GetServices();
-            //LoadDetailDoctor();
+          //LoadDetailDoctor();
 
             $('#ddl_colstnt').select2();
             $('#ddl_helper').select2();
@@ -1150,59 +1150,70 @@
         }
 
 
-
+        debugger;
         function loadapptEdit(App_id) {
-
+            if (!App_id) return;
             PageMethods.loadAppData_edit(App_id, function (resp) {
-
-                if (App_id != "") {
-                    $('#btnSave').val('Update');
-                }
                 var data = JSON.parse(resp);
-                var patientTitle = data.Patient_Name.split("_");
-                var agePrefix = data.Age.split(" ");
-                debugger;
-                $('#ddl_colstnt').html(
-                    $('<option>', {
-                        value: data.Consultant_ID,
-                        text: data.doctor_name
-                    })
-                ).attr('disabled', false);
-                //  $('#ddl_colstnt').val(data.Consultant_ID).change();
-                $('#txt_ID').val(data.Appointment_ID);
-                $('#txt_pt_name').val(data.Patient_Name);
 
-                $('#txt_phone_no').val(data.Phone);
-                $('#txt_age').val(data.Age);
-                $('#txtRemarks').val(data.Remarks);
-                $('#txt_apt_no').val(data.Appointment_No);
-                $('#hdfreg_ini_id').val(data.Reg_id);
-                $('#txt_time').val(data.Time);
-                $('#txt_time').val(data.Time);
+                $('#btnSave').val('Update');
+                $('#txt_pt_name').val(data.Patient_Name || '');
+                $('#txt_phone_no').val(data.Phone || '');
+                $('#txt_age').val(data.Age || '');
+                $('#txtRemarks').val(data.Remarks || '');
+                $('#txt_apt_no').val(data.Appointment_No || '');
+                $('#hdfreg_ini_id').val(data.Reg_id || '');
+                $('#txt_ID').val(data.Appointment_ID || '');
 
-                $('#txt_date').attr('readonly', false);
-                var date = $.datepicker.formatDate('M/D/Y', new Date(parseInt(data.app_date.substring(6, 19))));
-                date = moment(data.app_date).format('LL');
-                $('#txt_date').val(date);
+                $('#ddl_colstnt')
+                    .html($('<option>', { value: data.Consultant_ID, text: data.doctor_name || '—' }))
+                    .val(data.Consultant_ID)
+                    .prop('disabled', false)
+                    .trigger('change');
+
+                $('#ddl_helper')
+                    .html($('<option>', { value: data.Helper_Id, text: data.Helper_Name || '—' }))
+                    .val(data.Helper_Id)
+                    .trigger('change');
+
+                $('#ddlMachine')
+                    .html($('<option>', { value: data.Machine_Id, text: data.Machine_Name || '—' }))
+                    .val(data.Machine_Id)
+                    .trigger('change');
+
+                $('#ddlRoom')
+                    .html($('<option>', { value: data.Room_Id, text: data.Room_Name || '—' }))
+                    .val(data.Room_Id)
+                    .trigger('change');
+
+                try {
+                    var formattedDate = moment(data.app_date).format('LL');
+                    $('#txt_date').val(formattedDate);
+                } catch (e) {
+                    console.warn('Invalid date:', data.app_date);
+                }
                 $('#txt_date').attr('readonly', true);
-                // $('#ddlsubdepartment').val(data.Sub_Department).trigger('change');
-                $('#ddlsubdepartment').html(
-                    $('<option>', {
-                        value: data.Sub_Department,
-                        text: data.Department_name
-                    })
-                ).attr('disabled', false);
-                setTimeout(function () {
-                    // $('#ddlsubdepartment').val(data.Sub_Department).change();
-                    $('#ddlServices').val(data.Item_Id).change();
-                }, 1500);
 
-            },
+                function extractTime(timeStr) {
+                    if (!timeStr) return '';
+                    var match = ('' + timeStr).match(/^(\d{1,2}:\d{2})/);
+                    return match ? match[1] : '';
+                }
 
-                function (error) {
-                    alert(error.get_message());
-                });
-            $('#ClosePatientsSearchModel').click();
+                $('#txt_stdoctime').val(extractTime(data.Doctor_Start_Time));
+                $('#txt_enddoctime').val(extractTime(data.Doctor_End_Time));
+                $('#txt_sthelpertime').val(extractTime(data.Helper_Start_Time));
+                $('#txt_endhelpertime').val(extractTime(data.Helper_End_Time));
+                $('#txt_stmachinetime').val(extractTime(data.Machine_Start_Time));
+                $('#txt_endmachinetime').val(extractTime(data.Machine_End_Time));
+                $('#txt_roomStTime').val(extractTime(data.Room_Start_Time));
+                $('#txt_roomendTime').val(extractTime(data.Room_End_Time));
+
+                $('#ClosePatientsSearchModel').click();
+
+            }, function (error) {
+                alert('Error loading appointment: ' + error.get_message());
+            });
         }
 
 
@@ -1632,42 +1643,42 @@
             var Room_Start_Time = $("#txt_roomStTime").val();
             var Room_End_Time = $("#txt_roomendTime").val();
 
-            if (!(Doc_Start_Time === Helper_Start_Time &&
-                Helper_Start_Time === Machine_Start_Time &&
-                Machine_Start_Time === Room_Start_Time)) {
+            //if (!(Doc_Start_Time === Helper_Start_Time &&
+            //    Helper_Start_Time === Machine_Start_Time &&
+            //    Machine_Start_Time === Room_Start_Time)) {
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Doctor, Helper, Machine and Room START TIME must be the same.',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-            if (!(Doc_End_Time === Hepler_End_Time &&
-                Hepler_End_Time === Machine_End_Time &&
-                Machine_End_Time === Room_End_Time)) {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Doctor, Helper, Machine and Room START TIME must be the same.',
+            //        showConfirmButton: false,
+            //        timer: 2500,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
+            //if (!(Doc_End_Time === Hepler_End_Time &&
+            //    Hepler_End_Time === Machine_End_Time &&
+            //    Machine_End_Time === Room_End_Time)) {
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Doctor, Helper, Machine and Room END TIME must be the same.',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Doctor, Helper, Machine and Room END TIME must be the same.',
+            //        showConfirmButton: false,
+            //        timer: 2500,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
             var aptid = '<%= Request.QueryString["aID"]%>';
             debugger;
                     var editmode_ID = '<%= Request.QueryString["aID"]%>';
@@ -1686,7 +1697,7 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Appointment Saved!',
-                            text: 'A WhatsApp confirmation has been sent automatically.',
+                            text: 'Data has been saved Successfully',
                             confirmButtonText: 'OK'
                         }).then(() => {
                             window.location = "Derma_Appointment.aspx";

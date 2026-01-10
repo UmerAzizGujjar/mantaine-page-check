@@ -420,6 +420,7 @@ namespace PMS
             public decimal flatdisc { get; set; }
             public decimal DiscPercent { get; set; }
             public decimal AmntReceived { get; set; }
+            public decimal Total_CGS { get; set; }
             public decimal BalanceAmount { get; set; }
             public decimal linediscount { get; set; }
             public string invNumber { get; set; }
@@ -455,6 +456,7 @@ namespace PMS
                                   && p.IsPharmacy == true
                                   && p.Creation_Date.Value.Month == DateTime.Now.Month
                                   && p.Creation_Date.Value.Day == DateTime.Now.Day).Count() + 1;
+           decimal Total_CGSS = 0;
             Ar_Billing newBill;
             if (data.Bill_ID == 0)
             {
@@ -490,6 +492,7 @@ namespace PMS
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
             newBill.IsPharmacy = true;
+            
             newBill.Pharma_trans_Type = data.TransType;
             var Inpat = "";
             if (data.Patient_ID != "")
@@ -568,12 +571,12 @@ namespace PMS
                 var TotalRemainStock = dtls.Stock - dtls.Qty;
                 newBillDetails.CGS = dtls.CGSAmount;
                 var getttlStock = DBClass.getField("update INV_Items set Total_Qty= '" + TotalRemainStock + "' where Item_ID =" + dtls.Itemid);
-
+                Total_CGSS += dtls.CGSAmount;
                 ListOfDetails.Add(newBillDetails);
 
                 db.Ar_Billing_Details.InsertAllOnSubmit(ListOfDetails);
             }
-
+            newBill.Total_CGS = Total_CGSS;
             db.SubmitChanges();
             ApprovePhramcy(newBill.Bill_ID.ToString());
             return newBill.Bill_ID.ToString();

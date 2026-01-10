@@ -82,23 +82,24 @@ namespace PMS
                 {
                     DateTime last24Hours = DateTime.Now.AddHours(-24);
 
-                    var query = (from a in db.Appointment_Forms
-                                 where a.App_Date >= last24Hours && a.App_Date <= DateTime.Now
+                    var query = (from a in db.Derma_Appointments
+                                 join b in db.Reg_patients on a.Patient_Id equals b.pat_id
+                                 where a.Appointment_Date >= last24Hours && a.Appointment_Date <= DateTime.Now
                                  select new
                                  {
-                                     a.Appointment_ID,
-                                     a.Patient_Name,
-                                     a.Phone,
-                                     a.Age,
-                                     a.Consultant_ID,
+                                     Appointment_ID= a.Derma_Appointment_Id,
+                                     Patient_Name =b.Full_Name,
+                                     Phone =b.Mobile1,
+                                     Age =b.Age_years,
+                                     Consultant_ID = a.Doctor_Id,
                                      a.Appointment_No,
-                                     a.Appointment_Code,
-                                     a.App_Date,
-                                     a.Time,
+                                     //a.Appointment_Code,
+                                     App_Date = a.Appointment_Date,
+                                     Time =a.Doctor_Start_Time,
                                      a.Status,
                                      a.cancelAppointment,
-                                     a.created_time,
-                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Consultant_ID) select data.Emp_Name).FirstOrDefault(),
+                                     created_time= a.Created_Date,
+                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Doctor_Id) select data.Emp_Name).FirstOrDefault(),
                                  }).ToList().OrderByDescending(x => x.created_time);
 
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
@@ -113,23 +114,26 @@ namespace PMS
                 dTimeenDate = Convert.ToDateTime(endDate);
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var query = (from a in db.Appointment_Forms
-                                 where a.App_Date.Value.Date >= dTimestDate && a.App_Date.Value.Date <= dTimeenDate
+                    var query = (from a in db.Derma_Appointments
+                                 join b in db.Reg_patients on a.Patient_Id equals b.pat_id
+                                 where a.Appointment_Date.Value.Date >= dTimestDate && a.Appointment_Date.Value.Date <= dTimeenDate
 
                                  select new
                                  {
-                                     a.Appointment_ID,
-                                     a.Patient_Name,
-                                     a.Phone,
-                                     a.Age,
-                                     a.Consultant_ID,
+                                     Appointment_ID = a.Derma_Appointment_Id,
+                                     Patient_Name = b.Full_Name,
+                                     Phone = b.Mobile1,
+                                     Age = b.Age_years,
+                                     Consultant_ID = a.Doctor_Id,
                                      a.Appointment_No,
-                                     a.Appointment_Code,
-                                     a.App_Date,
-                                     a.Time,
+                                     //a.Appointment_Code,
+                                     App_Date = a.Appointment_Date,
+                                     Time = a.Doctor_Start_Time,
                                      a.Status,
-                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Consultant_ID) select data.Emp_Name).FirstOrDefault(),
-                                 }).ToList().OrderByDescending(x => x.App_Date);
+                                     a.cancelAppointment,
+                                     created_time = a.Created_Date,
+                                     emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Doctor_Id) select data.Emp_Name).FirstOrDefault(),
+                                 }).ToList().OrderByDescending(x => x.created_time);
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
             }
@@ -618,7 +622,7 @@ on DM.Rouster_id equals DD.Rouster_id
         public static string loadAppData(int appID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.sp_loadAppointment(appID).FirstOrDefault();
+            var Details = db.sp_loadAppointment_Derma(appID).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
@@ -627,7 +631,7 @@ on DM.Rouster_id equals DD.Rouster_id
         public static string loadAppData_edit(int App_id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.sp_loadAppointment(App_id).FirstOrDefault();
+            var Details = db.sp_loadAppointment_Derma(App_id).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Details);
         }
         [WebMethod]
@@ -790,6 +794,45 @@ on DM.Rouster_id equals DD.Rouster_id
 
             }
 
+        }
+
+        [WebMethod]
+        public static object LoadDermaAppointment(int appId)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var app = (from da in db.Derma_Appointments
+                           where da.Derma_Appointment_Id == appId
+                           select new
+                           {
+                               da.Derma_Appointment_Id,
+                               da.Appointment_No,
+                               da.Patient_Id,
+                               da.Procedure_Id,
+                               da.Doctor_Id,
+                               da.Helper_Id,
+                               da.Machine_Id,
+                               da.Room_Id,
+                               da.Appointment_Date,
+                               da.Doctor_Start_Time,
+                               da.Doctor_End_Time,
+                               da.Helper_Start_Time,
+                               da.Helper_End_Time,
+                               da.Machine_Start_Time,
+                               da.Machine_End_Time,
+                               da.Room_Start_Time,
+                               da.Room_End_Time,
+                               da.Status,
+                               PatientData = (from p in db.Reg_patients
+                                              where p.pat_id == da.Patient_Id
+                                              select new { p.Full_Name, p.Mobile1, p.Age_years }).FirstOrDefault(),
+                               DoctorName = (from d in db.HR_Employees
+                                             where d.Emp_ID == Convert.ToInt32(da.Doctor_Id)
+                                             select d.Emp_Name).FirstOrDefault()
+                           }).FirstOrDefault();
+
+                return app;
+            }
         }
 
         // For save Data With button
