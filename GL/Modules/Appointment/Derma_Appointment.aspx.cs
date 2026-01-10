@@ -622,7 +622,7 @@ on DM.Rouster_id equals DD.Rouster_id
         public static string loadAppData(int appID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.sp_loadAppointment(appID).FirstOrDefault();
+            var Details = db.sp_loadAppointment_Derma(appID).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
@@ -631,7 +631,7 @@ on DM.Rouster_id equals DD.Rouster_id
         public static string loadAppData_edit(int App_id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.sp_loadAppointment(App_id).FirstOrDefault();
+            var Details = db.sp_loadAppointment_Derma(App_id).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Details);
         }
         [WebMethod]
@@ -794,6 +794,45 @@ on DM.Rouster_id equals DD.Rouster_id
 
             }
 
+        }
+
+        [WebMethod]
+        public static object LoadDermaAppointment(int appId)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var app = (from da in db.Derma_Appointments
+                           where da.Derma_Appointment_Id == appId
+                           select new
+                           {
+                               da.Derma_Appointment_Id,
+                               da.Appointment_No,
+                               da.Patient_Id,
+                               da.Procedure_Id,
+                               da.Doctor_Id,
+                               da.Helper_Id,
+                               da.Machine_Id,
+                               da.Room_Id,
+                               da.Appointment_Date,
+                               da.Doctor_Start_Time,
+                               da.Doctor_End_Time,
+                               da.Helper_Start_Time,
+                               da.Helper_End_Time,
+                               da.Machine_Start_Time,
+                               da.Machine_End_Time,
+                               da.Room_Start_Time,
+                               da.Room_End_Time,
+                               da.Status,
+                               PatientData = (from p in db.Reg_patients
+                                              where p.pat_id == da.Patient_Id
+                                              select new { p.Full_Name, p.Mobile1, p.Age_years }).FirstOrDefault(),
+                               DoctorName = (from d in db.HR_Employees
+                                             where d.Emp_ID == Convert.ToInt32(da.Doctor_Id)
+                                             select d.Emp_Name).FirstOrDefault()
+                           }).FirstOrDefault();
+
+                return app;
+            }
         }
 
         // For save Data With button

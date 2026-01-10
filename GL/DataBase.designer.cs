@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬IITH_Live")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬SkinStudio")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -5104,6 +5104,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
             return ((ISingleResult<sp_LoadPRNumOnRFQResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_loadAppointment_Derma")]
+        public ISingleResult<sp_loadAppointment_DermaResult> sp_loadAppointment_Derma([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> appID)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), appID);
+            return ((ISingleResult<sp_loadAppointment_DermaResult>)(result.ReturnValue));
         }
     }
 
@@ -208674,6 +208681,482 @@ namespace PMS
                 if ((this._Qty != value))
                 {
                     this._Qty = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_loadAppointment_DermaResult
+    {
+
+        private int _Appointment_ID;
+
+        private string _Age;
+
+        private string _Consultant_ID;
+
+        private string _doctor_name;
+
+        private string _Patient_Name;
+
+        private string _Phone;
+
+        private System.Nullable<int> _Appointment_No;
+
+        private System.Nullable<System.DateTime> _app_date;
+
+        private string _Doctor_Start_Time;
+
+        private string _Doctor_End_Time;
+
+        private string _Helper_Id;
+
+        private string _Helper_Name;
+
+        private string _Helper_Start_Time;
+
+        private string _Helper_End_Time;
+
+        private string _Machine_Id;
+
+        private string _Machine_Name;
+
+        private string _Machine_Start_Time;
+
+        private string _Machine_End_Time;
+
+        private string _Room_Id;
+
+        private string _Room_Name;
+
+        private string _Room_Start_Time;
+
+        private string _Room_End_Time;
+
+        private string _Item_Id;
+
+        private string _Item_Name;
+
+        private System.Nullable<int> _Reg_id;
+
+        private string _Status;
+
+        public sp_loadAppointment_DermaResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Appointment_ID", DbType = "Int NOT NULL")]
+        public int Appointment_ID
+        {
+            get
+            {
+                return this._Appointment_ID;
+            }
+            set
+            {
+                if ((this._Appointment_ID != value))
+                {
+                    this._Appointment_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Age", DbType = "VarChar(50)")]
+        public string Age
+        {
+            get
+            {
+                return this._Age;
+            }
+            set
+            {
+                if ((this._Age != value))
+                {
+                    this._Age = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Consultant_ID", DbType = "VarChar(50)")]
+        public string Consultant_ID
+        {
+            get
+            {
+                return this._Consultant_ID;
+            }
+            set
+            {
+                if ((this._Consultant_ID != value))
+                {
+                    this._Consultant_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doctor_name", DbType = "VarChar(50)")]
+        public string doctor_name
+        {
+            get
+            {
+                return this._doctor_name;
+            }
+            set
+            {
+                if ((this._doctor_name != value))
+                {
+                    this._doctor_name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Name", DbType = "VarChar(100)")]
+        public string Patient_Name
+        {
+            get
+            {
+                return this._Patient_Name;
+            }
+            set
+            {
+                if ((this._Patient_Name != value))
+                {
+                    this._Patient_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Phone", DbType = "VarChar(50)")]
+        public string Phone
+        {
+            get
+            {
+                return this._Phone;
+            }
+            set
+            {
+                if ((this._Phone != value))
+                {
+                    this._Phone = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Appointment_No", DbType = "Int")]
+        public System.Nullable<int> Appointment_No
+        {
+            get
+            {
+                return this._Appointment_No;
+            }
+            set
+            {
+                if ((this._Appointment_No != value))
+                {
+                    this._Appointment_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_app_date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> app_date
+        {
+            get
+            {
+                return this._app_date;
+            }
+            set
+            {
+                if ((this._app_date != value))
+                {
+                    this._app_date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Start_Time", DbType = "VarChar(8)")]
+        public string Doctor_Start_Time
+        {
+            get
+            {
+                return this._Doctor_Start_Time;
+            }
+            set
+            {
+                if ((this._Doctor_Start_Time != value))
+                {
+                    this._Doctor_Start_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_End_Time", DbType = "VarChar(8)")]
+        public string Doctor_End_Time
+        {
+            get
+            {
+                return this._Doctor_End_Time;
+            }
+            set
+            {
+                if ((this._Doctor_End_Time != value))
+                {
+                    this._Doctor_End_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Helper_Id", DbType = "VarChar(50)")]
+        public string Helper_Id
+        {
+            get
+            {
+                return this._Helper_Id;
+            }
+            set
+            {
+                if ((this._Helper_Id != value))
+                {
+                    this._Helper_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Helper_Name", DbType = "VarChar(50)")]
+        public string Helper_Name
+        {
+            get
+            {
+                return this._Helper_Name;
+            }
+            set
+            {
+                if ((this._Helper_Name != value))
+                {
+                    this._Helper_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Helper_Start_Time", DbType = "VarChar(8)")]
+        public string Helper_Start_Time
+        {
+            get
+            {
+                return this._Helper_Start_Time;
+            }
+            set
+            {
+                if ((this._Helper_Start_Time != value))
+                {
+                    this._Helper_Start_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Helper_End_Time", DbType = "VarChar(8)")]
+        public string Helper_End_Time
+        {
+            get
+            {
+                return this._Helper_End_Time;
+            }
+            set
+            {
+                if ((this._Helper_End_Time != value))
+                {
+                    this._Helper_End_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Machine_Id", DbType = "VarChar(50)")]
+        public string Machine_Id
+        {
+            get
+            {
+                return this._Machine_Id;
+            }
+            set
+            {
+                if ((this._Machine_Id != value))
+                {
+                    this._Machine_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Machine_Name", DbType = "VarChar(150)")]
+        public string Machine_Name
+        {
+            get
+            {
+                return this._Machine_Name;
+            }
+            set
+            {
+                if ((this._Machine_Name != value))
+                {
+                    this._Machine_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Machine_Start_Time", DbType = "VarChar(8)")]
+        public string Machine_Start_Time
+        {
+            get
+            {
+                return this._Machine_Start_Time;
+            }
+            set
+            {
+                if ((this._Machine_Start_Time != value))
+                {
+                    this._Machine_Start_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Machine_End_Time", DbType = "VarChar(8)")]
+        public string Machine_End_Time
+        {
+            get
+            {
+                return this._Machine_End_Time;
+            }
+            set
+            {
+                if ((this._Machine_End_Time != value))
+                {
+                    this._Machine_End_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Room_Id", DbType = "VarChar(50)")]
+        public string Room_Id
+        {
+            get
+            {
+                return this._Room_Id;
+            }
+            set
+            {
+                if ((this._Room_Id != value))
+                {
+                    this._Room_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Room_Name", DbType = "VarChar(50)")]
+        public string Room_Name
+        {
+            get
+            {
+                return this._Room_Name;
+            }
+            set
+            {
+                if ((this._Room_Name != value))
+                {
+                    this._Room_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Room_Start_Time", DbType = "VarChar(8)")]
+        public string Room_Start_Time
+        {
+            get
+            {
+                return this._Room_Start_Time;
+            }
+            set
+            {
+                if ((this._Room_Start_Time != value))
+                {
+                    this._Room_Start_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Room_End_Time", DbType = "VarChar(8)")]
+        public string Room_End_Time
+        {
+            get
+            {
+                return this._Room_End_Time;
+            }
+            set
+            {
+                if ((this._Room_End_Time != value))
+                {
+                    this._Room_End_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Id", DbType = "VarChar(50)")]
+        public string Item_Id
+        {
+            get
+            {
+                return this._Item_Id;
+            }
+            set
+            {
+                if ((this._Item_Id != value))
+                {
+                    this._Item_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(200)")]
+        public string Item_Name
+        {
+            get
+            {
+                return this._Item_Name;
+            }
+            set
+            {
+                if ((this._Item_Name != value))
+                {
+                    this._Item_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reg_id", DbType = "Int")]
+        public System.Nullable<int> Reg_id
+        {
+            get
+            {
+                return this._Reg_id;
+            }
+            set
+            {
+                if ((this._Reg_id != value))
+                {
+                    this._Reg_id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "VarChar(100)")]
+        public string Status
+        {
+            get
+            {
+                return this._Status;
+            }
+            set
+            {
+                if ((this._Status != value))
+                {
+                    this._Status = value;
                 }
             }
         }

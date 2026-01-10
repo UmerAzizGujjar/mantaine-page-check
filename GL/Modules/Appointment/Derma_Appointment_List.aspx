@@ -153,8 +153,8 @@
             });
         }
 
-        function editOpen(appointmentId) {
-            window.location.href = 'Derma_Appointment.aspx?APPID=' + appointmentId;
+        function editOpen(id) {
+            window.open("Derma_Appointment.aspx?APPID=" + id + "");
         }
 
     </script>
