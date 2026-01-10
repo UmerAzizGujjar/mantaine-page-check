@@ -9,6 +9,8 @@
 
 namespace PMS
 {
+
+
     public partial class Report
     {
 
@@ -470,6 +472,33 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEnd_Date;
+
+        /// <summary>
+        /// Vendordiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Vendordiv;
+
+        /// <summary>
+        /// lblVendor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblVendor;
+
+        /// <summary>
+        /// VendorList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList VendorList;
 
         /// <summary>
         /// comparisonDateDiv control.
