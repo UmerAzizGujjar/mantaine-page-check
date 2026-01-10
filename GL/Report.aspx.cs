@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -87,9 +88,12 @@ namespace PMS
                         AccountDiv.Visible = false;
                         break;
                     case "DA":
+                        DateDiv.Visible = true;
                         AccountInfoDiv.Visible = false;
                         AccountDiv.Visible = false;
                         plhAllAcounts.Visible = false;
+                        txtStart_Date.Visible = true;
+                        stDate.Visible = true;
                         break;
                     case "ML":
                         phMultiLedger.Visible = true;
@@ -485,7 +489,7 @@ namespace PMS
                     //case "DailyActivity":
                     //    query = "ReportName=DailyActivity&ReportTitle=Day Activity " + Convert.ToDateTime(txtStart_Date.Text).ToString("MM-dd-yyyy") + "&ActivityDate=" + txtStart_Date.Text + "&ExportPDF=" + Excel
                     //    break;
-                    case "DailyActivity":
+                    case "DA":
                         // Use the SAME raw date string that works in other reports (e.g., AccountBalance)
                         string rawActivityDate = txtStart_Date.Text.Trim();
 

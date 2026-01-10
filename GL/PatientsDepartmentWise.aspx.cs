@@ -5661,6 +5661,9 @@ namespace PMS
                     string x = "Doctor Receipts";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    dpROw.Visible = true;
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Main Category");
                     ddlDepartments.DataSource = valusets;
