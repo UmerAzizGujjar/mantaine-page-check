@@ -559,8 +559,8 @@ namespace PMS
                 newBillDetails.ParentTrans_Type = "Medicine";
                 newBillDetails.Item_ID = dtls.Itemid;                
                 newBillDetails.Item_Name = dtls.ItemName;
-                var Item_Id = (from aac in db.INV_Items where (aac.Description == dtls.ItemName) select aac.Item_ID).FirstOrDefault();
-                newBillDetails.Item_ID = Item_Id;
+                //var Item_Id = (from aac in db.INV_Items where (aac.Description == dtls.ItemName) select aac.Item_ID).FirstOrDefault();
+                //newBillDetails.Item_ID = Item_Id;
                 newBillDetails.Amount = dtls.Amount;
                 newBillDetails.Item_Type = "Medicine";
                 newBillDetails.Discount_Percentage = dtls.DiscPer;

@@ -885,7 +885,7 @@
         <elementListCompartment Id="8c36c02a-4ad6-4ace-a1c0-a1ac910d7966" absoluteBounds="5.265, 12.335, 1.9700000000000002, 3.7108154296875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.25 : 13.16875); (5.20833333333333 : 13.16875 : JumpStart); (5.04166666666667 : 13.16875 : JumpEnd); (3.25 : 13.16875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.25 : 13.16875); (3.25 : 13.16875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/DataBaseDataContext/Stock_Transfer/Stock_Transfer_Stock_Transfer_Item" />
       <nodes>
         <classShapeMoniker Id="7764d5b3-e630-476f-8c5a-895ea8432740" />
@@ -1503,7 +1503,7 @@
         <classShapeMoniker Id="fc151a2f-f742-44ec-b47e-5bb5c32e3909" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.17480769230769 : 4.075); (2.17480769230769 : 4.1475); (2.34628205128205 : 4.1475 : JumpStart); (2.51294871794871 : 4.1475 : JumpEnd); (2.6725 : 4.1475); (2.6725 : 6.10419740494792); (2.71416666666667 : 6.10419740494792 : JumpStart); (2.88083333333333 : 6.10419740494792 : JumpEnd); (3.22666666666667 : 6.10419740494792 : JumpStart); (3.39333333333333 : 6.10419740494792 : JumpEnd); (3.875 : 6.10419740494792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(2.17480769230769 : 4.075); (2.17480769230769 : 4.1475); (2.6725 : 4.1475); (2.6725 : 6.10419740494792); (3.875 : 6.10419740494792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/DataBaseDataContext/aspnet_Application/aspnet_Application_aspnet_Role" />
       <nodes>
         <classShapeMoniker Id="59e65987-e576-4b67-b0c2-f95d5990dd1c" />
@@ -1791,7 +1791,7 @@
         <classShapeMoniker Id="fc151a2f-f742-44ec-b47e-5bb5c32e3909" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.82146153846154 : 4.075); (2.82146153846154 : 4.21); (2.7975 : 4.21); (2.7975 : 50.6475); (3.4225 : 50.6475); (3.4225 : 84.1475); (27.7025 : 84.1475); (27.7025 : 77.2725); (53.65625 : 77.2725); (53.65625 : 99.4430249023438); (53.75 : 99.4430249023438)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(2.82146153846154 : 4.075); (2.82146153846154 : 4.21); (2.7975 : 4.21); (2.7975 : 50.6475); (3.4225 : 50.6475); (3.4225 : 84.1475); (27.7025 : 84.1475); (27.7025 : 77.2725); (29.9016666666667 : 77.2725 : JumpStart); (30.0683333333333 : 77.2725 : JumpEnd); (53.65625 : 77.2725); (53.65625 : 99.4430249023438); (53.75 : 99.4430249023438)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/DataBaseDataContext/aspnet_Application/aspnet_Application_aspnet_User" />
       <nodes>
         <classShapeMoniker Id="59e65987-e576-4b67-b0c2-f95d5990dd1c" />
@@ -1931,10 +1931,10 @@
         <elementListCompartment Id="54419d83-78fe-4d19-a3c7-7b74351ef5c4" absoluteBounds="14.39, 59.585, 1.9700000000000002, 13.133585611979166" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="2c567ae4-2ff6-412b-aa1f-c8316b19cc7f" absoluteBounds="54.375, 49.75, 2, 11.193666992187502">
+    <classShape Id="2c567ae4-2ff6-412b-aa1f-c8316b19cc7f" absoluteBounds="54.375, 49.75, 2, 11.001365559895838">
       <DataClassMoniker Name="/DataBaseDataContext/HR_Employee" />
       <nestedChildShapes>
-        <elementListCompartment Id="82b4157d-eaa9-4623-b9bb-3fff4b954af1" absoluteBounds="54.39, 50.21, 1.9700000000000002, 10.6336669921875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="82b4157d-eaa9-4623-b9bb-3fff4b954af1" absoluteBounds="54.39, 50.21, 1.9700000000000002, 10.441365559895832" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <associationConnector edgePoints="[(16.375 : 61.0296134440104); (17.125 : 61.0296134440104)]" fixedFrom="NotFixed" fixedTo="NotFixed">
