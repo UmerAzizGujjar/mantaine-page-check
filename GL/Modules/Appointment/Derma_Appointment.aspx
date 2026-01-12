@@ -223,18 +223,14 @@
                 //});
             }
 
-            if (ids !== "") {
-                var appID = '<%= Request.QueryString["aID"]%>';
+            var ids = '<%= Request.QueryString["aID"]%>';
+            var App_id = '<%= Request.QueryString["APPID"]%>';
 
-                loadappt(appID);
-
-
-
-
-
-            }
-            else {
-                GetAppNo();
+            if (ids !== "" || App_id !== "") {
+                if (ids !== "") loadappt(ids);
+                if (App_id !== "") loadapptEdit(App_id);
+            } else {
+                GetAppNo(); 
             }
 
             var date = '<%= DateTime.Now%>';
@@ -2206,13 +2202,13 @@
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Machine</label>
-                                <select class="form-control" id="ddlMachine">
+                <select class="form-control" id="ddlMachine">
                     <option></option>
                 </select>
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Room</label>
-                                <select class="form-control" id="ddlRoom">
+                <select class="form-control" id="ddlRoom">
                     <option></option>
                 </select>
             </div>
@@ -2245,25 +2241,27 @@
                 <input type="time" id="txt_roomendTime" />
             </div>
         </div>
-        <div class="row row_2" style="margin-top: 1%">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-yellow" id="btnSave" value="Save" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'Derma_Appointment_list.aspx'" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Derma_Appointment.aspx'" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
+        <div class="row">
+            <div class="col-lg-9 col-md-10 col-sm-12">
+                <div class="row row_2" style="margin-top: 1%">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" id="btnSave" value="Save" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'Derma_Appointment_list.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Derma_Appointment.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
+                    </div>
+                </div>
             </div>
         </div>
-
-
 
 
     </div>

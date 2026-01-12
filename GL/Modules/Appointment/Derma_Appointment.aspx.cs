@@ -848,12 +848,26 @@ on DM.Rouster_id equals DD.Rouster_id
 
 
             if (btnsave == "Update")
-            // if (editmode_ID != "")
             {
-                var Items = (from t in db.Derma_Appointments
-                             where t.Derma_Appointment_Id == Convert.ToInt32(record.txt_ID)
-                             select t).FirstOrDefault();
+                int appIdToUpdate = -1;
+                if (!string.IsNullOrEmpty(editmode_ID) && int.TryParse(editmode_ID, out int idFromUrl) && idFromUrl > 0)
+                {
+                    appIdToUpdate = idFromUrl;
+                }
+                else if (!string.IsNullOrEmpty(record.txt_ID) && int.TryParse(record.txt_ID, out int idFromForm) && idFromForm > 0)
+                {
+                    appIdToUpdate = idFromForm;
+                }
+                if (appIdToUpdate <= 0)
+                {
+                    throw new ArgumentException("Cannot update: Invalid or missing appointment ID.");
+                }
+                var Items = db.Derma_Appointments.FirstOrDefault(t => t.Derma_Appointment_Id == appIdToUpdate);
 
+                if (Items == null)
+                {
+                    throw new InvalidOperationException($"Appointment with ID {appIdToUpdate} was not found in the database.");
+                }
                 Items.Patient_Id = record.reg_id;
                 Items.Status = "Booked";
                 Items.Doctor_Id = record.ddl_colstnt;
@@ -874,9 +888,10 @@ on DM.Rouster_id equals DD.Rouster_id
 
                 Items.Updated_By = AppConfig.UserID;
                 Items.Updated_Date = DateTime.Now;
-                db.SubmitChanges();
-                AppID = Items.Derma_Appointment_Id.ToString();
 
+                db.SubmitChanges();
+
+                AppID = Items.Derma_Appointment_Id.ToString();
             }
             else
             {
