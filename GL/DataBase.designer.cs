@@ -158120,8 +158120,6 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _st_day;
 
-        private System.Nullable<bool> _cancelAppointment;
-
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -158232,8 +158230,6 @@ namespace PMS
         partial void Onend_dayChanged();
         partial void Onst_dayChanging(System.Nullable<System.DateTime> value);
         partial void Onst_dayChanged();
-        partial void OncancelAppointmentChanging(System.Nullable<bool> value);
-        partial void OncancelAppointmentChanged();
         #endregion
 
         public HR_Employee()
@@ -159297,26 +159293,6 @@ namespace PMS
                     this._st_day = value;
                     this.SendPropertyChanged("st_day");
                     this.Onst_dayChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_cancelAppointment", DbType = "Bit")]
-        public System.Nullable<bool> cancelAppointment
-        {
-            get
-            {
-                return this._cancelAppointment;
-            }
-            set
-            {
-                if ((this._cancelAppointment != value))
-                {
-                    this.OncancelAppointmentChanging(value);
-                    this.SendPropertyChanging();
-                    this._cancelAppointment = value;
-                    this.SendPropertyChanged("cancelAppointment");
-                    this.OncancelAppointmentChanged();
                 }
             }
         }
