@@ -68,7 +68,7 @@ namespace PMS
                             using (SqlCommand cmd = new SqlCommand("INSERT INTO dbo.Gl_Accounts (Account_Code, Account_Serial, Account_Name, Levels, Active, Cash, Bank, Book_ID, Created_By, Created_Time) " +
                                                                    "VALUES (@Account_Code, @Account_Serial, @Account_Name, @Levels, @Active, @Cash, @Bank, @Book_ID, @Created_By, @Created_Time)", con))
                             {
-                                cmd.Parameters.AddWithValue("@Account_Code", row["Account_Code"]);
+                                cmd.Parameters.AddWithValue("@Account_Code", row["Account_Code"]?.ToString().Trim());
                                 cmd.Parameters.AddWithValue("@Account_Serial", row["Account_Serial"]);
                                 cmd.Parameters.AddWithValue("@Account_Name", row["Account_Name"]);
                                 cmd.Parameters.AddWithValue("@Levels", Convert.ToInt32(row["Levels"]));
