@@ -4305,11 +4305,11 @@ namespace PMS
                     lblMultiSelect.Visible = false;
                     GetLabTests();
                     tr_AllPatientRecord.Visible = true;
-                    Label lblAllPatientRecord = tr_AllPatientRecord.FindControl("lblAllPatientRecord") as Label;
-                    if (lblAllPatientRecord != null)
-                    {
-                        lblAllPatientRecord.Text = "Detailed Summary";
-                    }
+                    //Label lblAllPatientRecord = tr_AllPatientRecord.FindControl("lblAllPatientRecord") as Label;
+                    //if (lblAllPatientRecord != null)
+                    //{
+                    //    lblAllPatientRecord.Text = "Detailed Summary";
+                    //}
 
                 }
 

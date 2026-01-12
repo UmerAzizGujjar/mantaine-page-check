@@ -1629,7 +1629,8 @@
             <div class="col-lg-3 col-md-4 col-sm-12" id="tr_AllPatientRecord" runat="server" visible="false">
                 <div class="form-check" style="display: inline-flex; width: 26px;">
                     <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkAllPatientRecord" name="chkAllPatientRecord" />
-                    <label class="form-check-label" id="lblAllPatientRecord" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">All Patients Records</label>
+     <%--<label class="form-check-label" id="lblAllPatientRecord" runat="server" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">All Patients Records</label>--%>
+     <asp:Label ID="lblAllPatientRecord" Text="All Patients Records" runat="server"></asp:Label>                
                 </div>
             </div>
         </div>
