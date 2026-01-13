@@ -104,7 +104,7 @@
             $('#btnSaveMessage').off('click').on('click', safeSaveAttempt);
             debugger;
             $("#txtSearch").keypress(function (event) {
-
+                debugger;
                 var SearchString = $('#txtSearch').val();
                 if (event.which == 13) {
                     {
@@ -120,7 +120,6 @@
                         FillPatientsList();
                     }
                 }
-
             });
             $("#txtSearch").keyup(function (event) {
 
@@ -245,19 +244,19 @@
                     $("#PatientsSearchModel").modal('hide');
                 }
                 FillPatientsList();
-                $('#srchpat').text("Search By Phone No");
+                //$('#srchpat').text("Search By Phone No");
 
-                jQuery(function ($) {
-                    MaskedInput({
-                        elm: document.getElementById('txtSearch'),
-                        format: '+92__________',
-                        separator: '-'
-                    });
-                    var phoneInput = document.getElementById('txtSearch');
-                    var cursorPosition = 3;
-                    phoneInput.setSelectionRange(cursorPosition, cursorPosition);
+                //jQuery(function ($) {
+                //    MaskedInput({
+                //        elm: document.getElementById('txtSearch'),
+                //        format: '+92__________',
+                //        separator: '-'
+                //    });
+                //    var phoneInput = document.getElementById('txtSearch');
+                //    var cursorPosition = 3;
+                //    phoneInput.setSelectionRange(cursorPosition, cursorPosition);
 
-                });
+                //});
             }
 
             if (ids !== "") {
@@ -493,18 +492,18 @@
             }
             else {
                 Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Please Enter Complete Mobile Number First',
-        showConfirmButton: false,
-        timer: 2000,
-        customClass: {
-            popup: 'swal-big-popup',
-            title: 'swal-big-title',
-            htmlContainer: 'swal-big-text'
-        }
-        });
-               
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Complete Mobile Number First',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
 

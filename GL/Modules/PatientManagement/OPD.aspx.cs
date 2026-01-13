@@ -1114,6 +1114,7 @@ namespace PMS.Modules.PatientManagement
                         pat.isCancel = false;
                         pat.AppointmentType = data.hdnAppointmentType;
                         pat.Status = "Created";
+                        pat.Is_billed = false;
 
                         if (!string.IsNullOrEmpty(data.appid))
                         {
