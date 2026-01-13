@@ -87,13 +87,13 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Image imglogo;
 
         /// <summary>
-        /// lblCompanyName control.
+        /// lblCompanyNameCenter control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCompanyName;
+        protected global::System.Web.UI.WebControls.Label lblCompanyNameCenter;
 
         /// <summary>
         /// notification control.
@@ -444,6 +444,6 @@ namespace PMS
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        
+        protected global::PMS.wwwroot.Tibbit_theme.header_footer.Footer Footer;
     }
 }

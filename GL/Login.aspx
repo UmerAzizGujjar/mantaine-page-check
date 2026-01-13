@@ -8,6 +8,27 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/login.css" rel="stylesheet" />
     <script src="wwwroot/Tibbit_theme/js/swalalert.js"></script>
     <link href="wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    
+    <style type="text/css">
+        /* Hide upper elements to reduce space */
+        .failureNotification {
+            display: none !important;
+        }
+        
+        .login {
+            margin-top: -10px !important;
+        }
+        
+        .header_login {
+            margin-top: 0px !important;
+            margin-bottom: 5px !important;
+        }
+        
+        .login hr {
+            margin-top: 5px !important;
+            margin-bottom: 10px !important;
+        }
+    </style>
    
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
@@ -29,6 +50,13 @@
                     
                         <div class="accountInfo" style="">
                             <fieldset class="login">
+                                <div style="text-align: center; margin-bottom: 10px;">
+                                    <asp:Image ID="imgCompanyLogo" runat="server" 
+                                        ImageUrl="~/wwwroot/Tibbit_theme/images/HMIS_Icons/logo.png" 
+                                        AlternateText="Company Logo" 
+                                        Visible="false"
+                                        Style="max-width: 250px; height: auto;" />
+                                </div>
                                 <h2 class="header_login">Login</h2>
                                 <span style="margin-left: -23%;font-size: 14px;font-weight:bold;">Enter Your username and Password to sign in!</span>
                                 <hr />
@@ -78,7 +106,7 @@
                                 <div>
                                   <a>
                                     <asp:LinkButton ID="forgetPassword" runat="server" OnClick="forgetPassword_Click" Style="color: black !important; font-size: 12px;" CssClass="forgot-password-link">
-                                        <br />
+                                     
                                         <i class="ace-icon fa fa-arrow-left"></i>
                                         <span style="font-weight:bold;margin-left:70%">Forgot Password ?</span>
                                         
@@ -121,19 +149,19 @@
 
                 <span id="otpError" runat="server" style="color: red; font-size: 12px;"></span>   
                
-                <br />
+             
                 <asp:Button ID="btncancel" Style="border-radius: 5px; border: none; width: 60px; background-color: #484B4D; height: 25px; color: white;" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
                 <asp:Button ID="btnverify" Style="border-radius: 5px; border: none; width: 60px; background-color: #438eb9 ; height: 25px; color: white;" runat="server" Text="Next" OnClick="btnverify_Click" />
             </asp:Panel>
             <asp:Panel ID="forgot_pass_Panel" runat="server">           
                <div id="forgot_pass_viv">
                    <p style="font-size:20px;color:red">Forgot Password</p>
-                   <br />
+                
                             <label  for="lblphone" >Phone Number:</label>
                              <asp:TextBox style="margin-left:15px;width:65% !important" ID="txtPhone" runat="server"  />
                         </div>
                 <span id="Span1" runat="server" style="color: red; font-size: 12px;"></span>
-                <br />
+             
                 <asp:Button ID="Button1" Style="margin-left:110px;width:125px" Cssclass="btn-gray" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
                 <asp:Button ID="Button2" Style="width:125px" Cssclass="btn-primry" runat="server" Text="Request OTP" OnClick="btnrequestOTP" />
             </asp:Panel>
@@ -159,7 +187,7 @@
 
                   <span id="otpChangePassError" runat="server" style="color: red; font-size: 12px;"></span>
                 
-                 <br />
+              
                  <asp:Button ID="Button3" Cssclass="btn-gray" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
                  <asp:Button ID="Button4" cssclass="btn-primry" runat="server" Text="Next" OnClick="btnverify_Click_changePass" />
              </asp:Panel>
@@ -177,6 +205,7 @@
             </asp:Panel>
         </ContentTemplate>
     </asp:UpdatePanel>
+
 <script type="text/javascript">
     // Move to next field when input length reaches max
     function moveToNext(current, nextFieldID) {

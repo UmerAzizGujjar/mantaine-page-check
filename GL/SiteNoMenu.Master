@@ -51,7 +51,7 @@
             
             .wrapper {
                 width: 80%;
-                top: 14%;
+                top: 5%;
                 right: 68%;
 
             }
@@ -115,7 +115,6 @@
             max-width: 460px;
             padding: 0px 20px 20px 20px;
             text-align: center;
-            backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(4px);
             position: absolute;
             right: 10%;
@@ -203,7 +202,7 @@
             justify-content: center;
             min-height: 96vh;
             width: 100%;
-            background: url(../../wwwroot/Tibbit_theme/images/TibbIT_icons/LoginBackground.jpg) no-repeat;
+            background: url(../../wwwroot/Tibbit_theme/images/HMIS_Icons/LoginBackground.jpg) no-repeat;
             background-position: center;
             background-size: cover;
         }
@@ -225,7 +224,7 @@
 
             <div>
                 <asp:Image
-                    ID="Image2" CssClass="Image1" runat="server"  Height="123px" ImageUrl="~/wwwroot/Tibbit_theme/images/TibbIT_icons/logo.png" Style="margin-left: -20px;width:185px !important;display:none" />
+                    ID="Image2" CssClass="Image1" runat="server"  Height="123px" ImageUrl="~/wwwroot/Tibbit_theme/images/HMIS_Icons/logo.png" Style="margin-left: -20px;width:185px !important;display:none" />
                 <div class="page">
 
                     <h4 id="id-company-text" style="color: #484B4D; font-size: 18px; margin-left: 3%; margin-top: -1px; font-weight: bold;display:none">@Health Tech Platform</h4>
@@ -242,17 +241,23 @@
 
         <div class="center" style="color: black;text-align: left; ">
            
-            <span style="font-weight: 500;">Application Developed By </span><span style="font-weight: 700;">Vision Plus:</span>
+            <strong>Website:</strong>
+            <a href="http://www.visionplus.com.pk" target="_blank" style="color: black;text-decoration: none;">www.visionplus.com.pk</a>
            <br />
-            <strong>Email:</strong> <a href="info@visionplus.com.pk" style="color: black; font-weight: 500;">info@visionplus.com.pk</a>
+            <strong>Email:</strong> <a href="mailto:info@visionplus.com.pk" style="color: black; font-weight: 500;">info@visionplus.com.pk</a>
             <br />
-            <strong>Contact:</strong> <span style="font-weight: 500;"> 042-35947952</span>
+            <strong>For Support:</strong> <span style="font-weight: 500;"> 042-35136381</span>
         </div>
     </div>
 
-
-
-
+   <div style="position: fixed; bottom: 20px; left: 18.33%; text-align: left; z-index: 10000;">
+    <span style="color: #000000; font-size: 13px; font-weight: 500;">
+        Application Developed by 
+        <a href="http://www.visionplus.com.pk" target="_blank" style="color: #000000; text-decoration: none; font-weight: bold;">
+            VisionPlus Technologies (Pvt) LTD.
+        </a>
+    </span>
+</div>
 
     <script type="text/javascript">
         //$(window).load(function () {
