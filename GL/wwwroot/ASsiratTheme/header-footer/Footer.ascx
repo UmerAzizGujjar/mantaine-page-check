@@ -1,11 +1,12 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Footer.ascx.cs" Inherits="PMS.wwwroot.ASsiratTheme.header_footer.Footer" %>
 <div class="center" id="StandardFooter" runat="server">
     <div>
-        <a href="#" style="padding-right: 225px; color: black !important; font-weight: bold">Our 24/7 support:</a>
-        <span style="font-weight: bold;">Email:</span>
-        <a href="#" id="email" runat="server" style="padding-right: 300px; color: black !important; font-weight: bold"></a>
-        Contact:
-    <a href="#" id="mbl_no" runat="server" style="color: black !important; font-weight: bold"></a>
+        <span style="font-weight: bold; color: black !important;">Website:</span>
+        <a href="http://www.visionplus.com.pk" target="_blank" style="padding-right: 225px; color: white !important; font-weight: bold">www.visionplus.com.pk</a>
+        <span style="font-weight: bold; color: black !important;">Email:</span>
+        <a href="mailto:info@visionplus.com.pk" style="padding-right: 300px; color: white !important; font-weight: bold">info@visionplus.com.pk</a>
+        <span style="font-weight: bold; color: black !important;">For Support:</span>
+        <span style="color: white !important; font-weight: bold">042-35136381</span>
     </div>
 </div>
 

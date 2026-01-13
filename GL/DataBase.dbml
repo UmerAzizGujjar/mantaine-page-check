@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬SkinStudio" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬⁬IITH_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -10411,26 +10411,6 @@
       <Column Name="Total_Time_Spent" Type="System.String" DbType="VarChar(27) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spMedicinesDetails" Method="spMedicinesDetails">
-    <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="hdndiscountType" Type="System.String" DbType="NVarChar(150)" />
-    <Parameter Name="Batch" Parameter="batch" Type="System.String" DbType="NVarChar(150)" />
-    <ElementType Name="spMedicinesDetailsResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Mini_stock" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="BatchNum" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="ExpiryDate" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-      <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
-      <Column Name="Discount_Block" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spMedicinesDetailsfromopd" Method="spMedicinesDetailsfromopd">
     <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
     <ElementType Name="spMedicinesDetailsfromopdResult">
@@ -11161,6 +11141,27 @@
       <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="Reg_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spMedicinesDetails" Method="spMedicinesDetails">
+    <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="hdndiscountType" Type="System.String" DbType="NVarChar(150)" />
+    <Parameter Name="Batch" Parameter="batch" Type="System.String" DbType="NVarChar(150)" />
+    <Parameter Name="warehouse" Type="System.String" DbType="NVarChar(150)" />
+    <ElementType Name="spMedicinesDetailsResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Mini_stock" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="BatchNum" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="ExpiryDate" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="Discount_Block" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
