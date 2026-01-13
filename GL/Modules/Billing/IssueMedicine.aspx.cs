@@ -43,6 +43,46 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(itemCodes); 
 
         }
+
+        [WebMethod(EnableSession = true)]
+        public static List<object> GetUserWarehouses()
+        {
+            if (HttpContext.Current.Session["UserId"] == null)
+            {
+                return new List<object>();
+            }
+
+            string userId = HttpContext.Current.Session["UserId"].ToString();
+
+            Guid userGuid;
+            if (!Guid.TryParse(userId, out userGuid))
+            {
+                return new List<object>();
+            }
+
+            using (var db = new DataBaseDataContext())
+            {
+                var list = (from wu in db.WareHouse_Wise_Users
+                            join wud in db.WareHouse_Wise_User_Details
+                                on wu.WareHouse_wise_User_Id equals wud.WareHouse_wise_User_Id
+                            join dv in db.DataValues
+                                on wud.WareHouse equals dv.DataValue_Name
+                            where wu.User_Id == userGuid
+                                  && dv.ValueSet_ID == 8
+                            select new
+                            {
+                                Value = dv.DataValue_Name,  
+                                Text = dv.DataValue_Description 
+                            }).ToList();
+
+                return list.Cast<object>().ToList();
+            }
+        }
+
+
+
+
+
         [WebMethod]
         public static string GetItemCodesIPD(int Pat_Id)
         {
@@ -559,8 +599,8 @@ namespace PMS
                 newBillDetails.ParentTrans_Type = "Medicine";
                 newBillDetails.Item_ID = dtls.Itemid;                
                 newBillDetails.Item_Name = dtls.ItemName;
-                var Item_Id = (from aac in db.INV_Items where (aac.Description == dtls.ItemName) select aac.Item_ID).FirstOrDefault();
-                newBillDetails.Item_ID = Item_Id;
+                //var Item_Id = (from aac in db.INV_Items where (aac.Description == dtls.ItemName) select aac.Item_ID).FirstOrDefault();
+                //newBillDetails.Item_ID = Item_Id;
                 newBillDetails.Amount = dtls.Amount;
                 newBillDetails.Item_Type = "Medicine";
                 newBillDetails.Discount_Percentage = dtls.DiscPer;

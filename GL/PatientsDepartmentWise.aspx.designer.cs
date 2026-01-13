@@ -924,24 +924,6 @@ namespace PMS
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkAllPatientRecord;
 
         /// <summary>
-        /// tr_ZeroRecord control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tr_ZeroRecord;
-
-        /// <summary>
-        /// chkZeroRecord control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkZeroRecord;
-
-        /// <summary>
         /// btnPreview control.
         /// </summary>
         /// <remarks>

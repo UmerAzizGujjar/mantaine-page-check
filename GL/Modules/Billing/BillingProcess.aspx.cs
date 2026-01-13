@@ -199,7 +199,7 @@ namespace PMS
                     var itemId = (from p in db.Reg_patients
                                   join vs in db.Patients on p.pat_id equals vs.Reg_PatId
                                   where vs.Reg_PatId == Pat_id
-                                  && vs.Is_billed != true
+                                  && vs.Is_billed == false
                                   orderby vs.Created_Time descending   // 👈 sort newest first
                                   select vs.Service_id)
                                 .FirstOrDefault();

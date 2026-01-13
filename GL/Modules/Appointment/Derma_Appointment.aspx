@@ -8,38 +8,40 @@
         $(document).ready(function () {
             debugger;
             var txt_apt_no = $('#txt_apt_no').val();
-         
-                var dropdowns = [
-              
-                    { id: '#ddl_Province', method: 'GetProvince' },
-                    { id: '#txtcity', method: 'GetCity' },
-                    { id: '#ddlCountry', method: 'GetCountry' },
-                    { id: '#ddlArea', method: 'GetArea' },
-                    { id: '#ddl_Gender', method: 'GetGender' },
-                    { id: '#ddl_status', method: 'GetMartailStatus' },
-                    { id: '#ddlPatient_Type', method: 'PatientType' },
-                  
-                ];
 
-                dropdowns.forEach(item => {
-                    debugger;
-                    const $element = $(item.id);
-                    $element.select2();
-                    $element.on('select2:open', function () {
-                        fillDropdown($element, item.method);
-                    });
+            var dropdowns = [
 
-                    if (item.id === '#ddlPatient_Type') {
-                        $element.prop('disabled', false);
-                        $element.off('select2:select').on('select2:select', function () {
-                            loaddata();
-                            $(this).prop('disabled', true);
-                        });
-                    }
-            
+                { id: '#ddl_Province', method: 'GetProvince' },
+                { id: '#txtcity', method: 'GetCity' },
+                { id: '#ddlCountry', method: 'GetCountry' },
+                { id: '#ddlArea', method: 'GetArea' },
+                { id: '#ddl_Gender', method: 'GetGender' },
+                { id: '#ddl_status', method: 'GetMartailStatus' },
+                { id: '#ddlPatient_Type', method: 'PatientType' },
 
+            ];
+
+            dropdowns.forEach(item => {
+                debugger;
+                const $element = $(item.id);
+                $element.select2();
+                $element.on('select2:open', function () {
+                    fillDropdown($element, item.method);
                 });
+
+                if (item.id === '#ddlPatient_Type') {
+                    $element.prop('disabled', false);
+                    $element.off('select2:select').on('select2:select', function () {
+                        loaddata();
+                        $(this).prop('disabled', true);
+                    });
+                }
+
+
+            });
+
             
+
             LoadDetailDoctor();
             LoadMachine();
             LoadHelper();
@@ -73,7 +75,7 @@
             $('#ddl_helper').select2();
             $('#ddlRoom').select2();
             $('#ddlMachine').select2();
-   
+
             let isSaving = false;
 
             function safeSaveAttempt() {
@@ -88,7 +90,6 @@
 
             }
 
-            // Attach both buttons to the same safe handler
             $('#btnSave').off('click').on('click', safeSaveAttempt);
             $('#btnSaveMessage').off('click').on('click', safeSaveAttempt);
             debugger;
@@ -126,126 +127,122 @@
 
             debugger;
             var App_id = '<%= Request.QueryString["APPID"]%>';
-             if (App_id != "") {
+            if (App_id != "") {
 
-                 loadapptEdit(App_id);
+                loadapptEdit(App_id);
 
-             }
-             if (App_id == "") {
-                 filldepartment();
-                 $('#ddlsubdepartment').on('change', function () {
-                     debugger;
-                     var dep = $('#ddlsubdepartment').val();
-                     //  LoadDetailDoctor(dep)
-                     setTimeout(function () {
-                         $('#ddlServices').focus();
-                     }, 5);
-
-
-
-                 });
-             }
-             $('#ctl00_MainContent_ddlPrefixDrp').on('select', function () {
-                 debugger;
-
-
-                 setTimeout(function () {
-                     $('#txt_pt_name').focus();
-                 }, 5);
+            }
+            if (App_id == "") {
+                filldepartment();
+                $('#ddlsubdepartment').on('change', function () {
+                    debugger;
+                    var dep = $('#ddlsubdepartment').val();
+                    //  LoadDetailDoctor(dep)
+                    setTimeout(function () {
+                        $('#ddlServices').focus();
+                    }, 5);
 
 
 
-             });
-
-             $('#ddlServices').on('change', function () {
-                 debugger;
-
-
-                 setTimeout(function () {
-                     $('#txtRemarks').focus();
-                 }, 5);
+                });
+            }
+            $('#ctl00_MainContent_ddlPrefixDrp').on('select', function () {
+                debugger;
 
 
-
-             });
-             MaskedInput({
-                 elm: document.getElementById('txt_phone_no'),
-                 format: '___________',
-                 separator: '-'
-
-             });
-
-
-             LoadPage();
-             getpage();
+                setTimeout(function () {
+                    $('#txt_pt_name').focus();
+                }, 5);
 
 
 
+            });
+
+            $('#ddlServices').on('change', function () {
+                debugger;
 
 
-             $('#chk_Doc').select2();
-
-             $('#txt_pt_name').attr('disabled', true);
-             $('#txt_phone_no').attr('disabled', true);
-             $('#txt_age').attr('disabled', true);
+                setTimeout(function () {
+                    $('#txtRemarks').focus();
+                }, 5);
 
 
-             debugger;
-             var ids = '<%= Request.QueryString["aID"]%>';
-             var reg_pat = '<%= Request.QueryString["ID"]%>';
-             debugger;
 
-             if (ids == '' || ids == "") {
-                 debugger;
+            });
+            MaskedInput({
+                elm: document.getElementById('txt_phone_no'),
+                format: '___________',
+                separator: '-'
 
-
-                 $("#PatientsSearchModel").modal('show');
+            });
 
 
-                 var App_ids = '<%= Request.QueryString["APPID"]%>';
-                 if (App_ids != "") {
-                     $("#PatientsSearchModel").modal('hide');
-                 }
-                 FillPatientsList();
-                 //$('#srchpat').text("Search By Phone No");
-
-                 //jQuery(function ($) {
-                 //    MaskedInput({
-                 //        elm: document.getElementById('txtSearch'),
-                 //        format: '+92__________',
-                 //        separator: '-'
-                 //    });
-                 //    var phoneInput = document.getElementById('txtSearch');
-                 //    var cursorPosition = 3;
-                 //    phoneInput.setSelectionRange(cursorPosition, cursorPosition);
-
-                 //});
-             }
-
-             if (ids !== "") {
-                 var appID = '<%= Request.QueryString["aID"]%>';
-
-                 loadappt(appID);
+            LoadPage();
+            getpage();
 
 
 
 
 
-             }
-             else {
-                 GetAppNo();
-             }
+            $('#chk_Doc').select2();
 
-             var date = '<%= DateTime.Now%>';
-             $("#txt_date").datepicker({
-                 dateFormat: 'MM d,yy',
-                 minDate: 0
-             }).attr('readonly', 'readonly');
+            $('#txt_pt_name').attr('disabled', true);
+            $('#txt_phone_no').attr('disabled', true);
+            $('#txt_age').attr('disabled', true);
 
-             date = moment(date).format('LL');
-             $("#txt_date").val(date);
 
-             var date = '<%= DateTime.Now%>';
+            debugger;
+            var ids = '<%= Request.QueryString["aID"]%>';
+            var reg_pat = '<%= Request.QueryString["ID"]%>';
+            debugger;
+
+            if (ids == '' || ids == "") {
+                debugger;
+
+
+                $("#PatientsSearchModel").modal('show');
+
+
+                var App_ids = '<%= Request.QueryString["APPID"]%>';
+                if (App_ids != "") {
+                    $("#PatientsSearchModel").modal('hide');
+                }
+                FillPatientsList();
+                //$('#srchpat').text("Search By Phone No");
+
+                //jQuery(function ($) {
+                //    MaskedInput({
+                //        elm: document.getElementById('txtSearch'),
+                //        format: '+92__________',
+                //        separator: '-'
+                //    });
+                //    var phoneInput = document.getElementById('txtSearch');
+                //    var cursorPosition = 3;
+                //    phoneInput.setSelectionRange(cursorPosition, cursorPosition);
+
+                //});
+            }
+
+            var ids = '<%= Request.QueryString["aID"]%>';
+            var App_id = '<%= Request.QueryString["APPID"]%>';
+
+            if (ids !== "" || App_id !== "") {
+                if (ids !== "") loadappt(ids);
+                if (App_id !== "") loadapptEdit(App_id);
+            } else {
+                GetAppNo(); 
+            }
+
+            var date = '<%= DateTime.Now%>';
+            $("#txt_date").datepicker({
+                dateFormat: 'MM d,yy',
+                minDate: 0
+            }).attr('readonly', 'readonly');
+
+            date = moment(date).format('LL');
+            $("#txt_date").val(date);
+
+            var date = '<%= DateTime.Now%>';
              $("#txt_dateto").datepicker({ dateFormat: 'mm/dd/yy', changeMonth: true, changeYear: true, yearRange: "-50:+50" }).attr('readonly', 'readonly');
              date = moment(date).format('L');
              $("#txt_dateto").val(date);
@@ -290,7 +287,44 @@
                  load_Initial_Pat_Data(reg_pat);
                  $('#ddl_colstnt').attr('disabled', false);
                  $('#ddlsubdepartment').attr('disabled', false);
-             }
+            }
+
+
+            (function populateCalendarControls() {
+                var $month = $('#calMonthSelect');
+                var $year = $('#calYearSelect');
+                var months = moment.months();
+
+                $month.empty();
+                months.forEach(function (m, i) {
+                    $month.append('<option value="' + i + '">' + m + '</option>');
+                });
+
+                var currentYear = moment().year();
+                $year.empty();
+                for (var y = currentYear - 5; y <= currentYear + 5; y++) {
+                    $year.append('<option value="' + y + '">' + y + '</option>');
+                }
+
+                $month.val(moment().month());
+                $year.val(currentYear);
+            })();
+
+            debugger;
+            $('#calGoBtn').on('click', function (e) {
+                e.preventDefault();
+                var month = parseInt($('#calMonthSelect').val(), 10);
+                var year = parseInt($('#calYearSelect').val(), 10);
+                loadCalendarForMonth(year, month);
+            });
+
+            $('#calTodayBtn').on('click', function (e) {
+                e.preventDefault();
+                var now = moment();
+                $('#calMonthSelect').val(now.month());
+                $('#calYearSelect').val(now.year());
+                loadCalendarForMonth(now.year(), now.month());
+            });
          });
 
         function fillDropdown($dropdown, methodName) {
@@ -334,6 +368,7 @@
                 }
             });
         }
+
 
 
         function appointmentPatient_Print() {
@@ -1075,134 +1110,162 @@
             }
         }
 
+        function loadappt(App_id) {
+            if (!App_id) return;
 
-        debugger;
-        function loadappt(appID) {
-            debugger;
-            PageMethods.loadAppData(appID, function (resp) {
-                debugger;
-                if (appID != "") {
-                    $('#btnSave').val('Update');
-                }
+            PageMethods.loadAppData(App_id, function (resp) {
                 var data = JSON.parse(resp);
-                var patientTitle = data.Patient_Name.split("_");
-                var agePrefix = data.Age.split(" ");
 
-                if (patientTitle.length > 1) {
-
-                    $("#ctl00_MainContent_ddlPrefixDrp option:contains(" + patientTitle[0] + ")").attr("selected", true);
-                }
-                debugger;
-
-                $('#ddl_colstnt')
-                    .empty()
-                    .append($('<option>', {
-                        value: data.Consultant_ID,
-                        text: data.doctor_name
-                    }))
-                    .val(data.Consultant_ID)
-                    .trigger('change')
-                    .select2();
-
-                $('#txt_ID').val(data.Appointment_ID);
-                $('#txt_pt_name').val(patientTitle[patientTitle.length - 1]);
-                $("#ctl00_MainContent_ddlPrefixDrp")
-                $('#txt_phone_no').val(data.Phone);
-                $('#ctl00_MainContent_ddlPrefixAge').val(agePrefix[0]).change();
-                $('#txt_age').val(agePrefix[1]);
-                $('#txtRemarks').val(data.Remarks);
-                $('#txt_age').val(data.Age);
+                $('#btnSave').val('Update');
+                $('#txt_pt_name').val(data.Patient_Name || '');
+                $('#txt_phone_no').val(data.Phone || '');
+                $('#txt_age').val(data.Age || '');
+                $('#txtRemarks').val(data.Remarks || '');
                 $('#txt_apt_no').val(data.Appointment_No);
-                $('#hdfreg_ini_id').val(data.Reg_id);
+                $('#hdfreg_ini_id').val(data.Reg_id || '');
+                $('#txt_ID').val(data.Appointment_ID || '');
 
-                $('#txt_time').val(data.Time);
+                setTimeout(() => {
+                    $('#ddl_procedures').val(data.Item_Id);
+                    $('#ddl_colstnt').val(data.Consultant_ID).prop('disabled', false);
+                    $('#ddl_helper').val(data.Helper_Id);
+                    $('#ddlMachine').val(data.Machine_Id);
+                    $('#ddlRoom').val(data.Room_Id);
 
-                $("#txt_date").datepicker({
-                    dateFormat: 'MM d,yy',
-                    minDate: 0
-                }).attr('readonly', 'readonly');
+                    $('#ddl_procedures, #ddl_colstnt, #ddl_helper, #ddlMachine, #ddlRoom').each(function () {
+                        if ($(this).hasClass('select2-hidden-accessible')) {
+                            $(this).trigger('change.select2');
+                        }
+                    });
+                }, 2000);
 
-                date = moment(date).format('LL');
-                $("#txt_date").val(date);
+                try {
+                    var formattedDate = moment(data.app_date).format('LL');
+                    $('#txt_date').val(formattedDate);
+                } catch (e) {
+                    console.warn('Invalid date:', data.app_date);
+                }
+                $('#txt_date').attr('readonly', true);
 
-                $('#ddlsubdepartment')
-                    .empty()
-                    .append($('<option>', {
-                        value: data.Sub_Department,
-                        text: data.Department_name
-                    }))
-                    .val(data.Sub_Department)
-                    .prop('disabled', false)
-                    .trigger('change')
-                    .select2();
+                $('#txt_stdoctime').val(extractTime(data.Doctor_Start_Time));
+                $('#txt_enddoctime').val(extractTime(data.Doctor_End_Time));
+                $('#txt_sthelpertime').val(extractTime(data.Helper_Start_Time));
+                $('#txt_endhelpertime').val(extractTime(data.Helper_End_Time));
+                $('#txt_stmachinetime').val(extractTime(data.Machine_Start_Time));
+                $('#txt_endmachinetime').val(extractTime(data.Machine_End_Time));
+                $('#txt_roomStTime').val(extractTime(data.Room_Start_Time));
+                $('#txt_roomendTime').val(extractTime(data.Room_End_Time));
 
-                // $('#ddlsubdepartment').val(data.Sub_Department).trigger('change');
+                $('#ClosePatientsSearchModel').click();
+            }, function (error) {
+                alert('Error loading appointment: ' + error.get_message());
+            });
+        }
+        debugger;
 
-                $('#ddlServices').val(data.Item_Id).change();
+        function extractTime(timeStr) {
+            if (!timeStr) return '';
 
+            var clean = ('' + timeStr).trim();
 
+            if (/^\d{1,2}:\d{2}$/.test(clean)) {
+                var parts = clean.split(':');
+                var h = parseInt(parts[0], 10);
+                var m = parts[1];
+                if (h >= 0 && h <= 23 && m >= 0 && m <= 59) {
+                    return h.toString().padStart(2, '0') + ':' + m;
+                }
+            }
 
-            },
+            var match = clean.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+            if (match) {
+                var hours = parseInt(match[1], 10);
+                var minutes = match[2];
+                var period = (match[3] || '').toUpperCase();
+                if (!period) {
+                    if (hours <= 23) {
+                        return hours.toString().padStart(2, '0') + ':' + minutes;
+                    }
+                }
 
-                function (error) {
-                    alert(error.get_message());
-                });
+                if (period === 'PM' && hours < 12) hours += 12;
+                if (period === 'AM' && hours === 12) hours = 0;
+
+                if (hours >= 0 && hours <= 23) {
+                    return hours.toString().padStart(2, '0') + ':' + minutes;
+                }
+            }
+
+            var fallback = clean.match(/(\d{1,2}):(\d{2})/);
+            if (fallback) {
+                var h = parseInt(fallback[1], 10);
+                var m = fallback[2];
+                if (h <= 23 && m <= 59) {
+                    return h.toString().padStart(2, '0') + ':' + m;
+                }
+            }
+
+            console.warn('Unrecognized time format:', timeStr);
+            return '';
         }
 
-
-
+        debugger;
         function loadapptEdit(App_id) {
-
+            debugger;
+            if (!App_id) return;
             PageMethods.loadAppData_edit(App_id, function (resp) {
-
-                if (App_id != "") {
-                    $('#btnSave').val('Update');
-                }
-                var data = JSON.parse(resp);
-                var patientTitle = data.Patient_Name.split("_");
-                var agePrefix = data.Age.split(" ");
                 debugger;
-                $('#ddl_colstnt').html(
-                    $('<option>', {
-                        value: data.Consultant_ID,
-                        text: data.doctor_name
-                    })
-                ).attr('disabled', false);
-                //  $('#ddl_colstnt').val(data.Consultant_ID).change();
-                $('#txt_ID').val(data.Appointment_ID);
-                $('#txt_pt_name').val(data.Patient_Name);
+                var data = JSON.parse(resp);
 
-                $('#txt_phone_no').val(data.Phone);
-                $('#txt_age').val(data.Age);
-                $('#txtRemarks').val(data.Remarks);
+                $('#btnSave').val('Update');
+                $('#txt_pt_name').val(data.Patient_Name || '');
+                $('#txt_phone_no').val(data.Phone || '');
+                $('#txt_age').val(data.Age || '');
+                $('#txtRemarks').val(data.Remarks || '');
                 $('#txt_apt_no').val(data.Appointment_No);
-                $('#hdfreg_ini_id').val(data.Reg_id);
-                $('#txt_time').val(data.Time);
-                $('#txt_time').val(data.Time);
+                // Consultant (already working)).val(data.Appointment_No || '');
+                $('#hdfreg_ini_id').val(data.Reg_id || '');
+                $('#txt_ID').val(data.Appointment_ID || '');
 
-                $('#txt_date').attr('readonly', false);
-                var date = $.datepicker.formatDate('M/D/Y', new Date(parseInt(data.app_date.substring(6, 19))));
-                date = moment(data.app_date).format('LL');
-                $('#txt_date').val(date);
+                
+                setTimeout(() => {
+                    $('#ddl_procedures').val(data.Item_Id);
+                    $('#ddl_colstnt').val(data.Consultant_ID).prop('disabled', false);
+                    $('#ddl_helper').val(data.Helper_Id);
+                    $('#ddlMachine').val(data.Machine_Id);
+                    $('#ddlRoom').val(data.Room_Id);
+
+                    $('#ddl_procedures, #ddl_colstnt, #ddl_helper, #ddlMachine, #ddlRoom').each(function () {
+                        if ($(this).hasClass('select2-hidden-accessible')) {
+                            $(this).trigger('change.select2');
+                        }
+                    });
+                }, 2000);
+
+                try {
+                    var formattedDate = moment(data.app_date).format('LL');
+                    $('#txt_date').val(formattedDate);
+                } catch (e) {
+                    console.warn('Invalid date:', data.app_date);
+                }
                 $('#txt_date').attr('readonly', true);
-                // $('#ddlsubdepartment').val(data.Sub_Department).trigger('change');
-                $('#ddlsubdepartment').html(
-                    $('<option>', {
-                        value: data.Sub_Department,
-                        text: data.Department_name
-                    })
-                ).attr('disabled', false);
-                setTimeout(function () {
-                    // $('#ddlsubdepartment').val(data.Sub_Department).change();
-                    $('#ddlServices').val(data.Item_Id).change();
-                }, 1500);
 
-            },
+                
 
-                function (error) {
-                    alert(error.get_message());
-                });
-            $('#ClosePatientsSearchModel').click();
+                $('#txt_stdoctime').val(extractTime(data.Doctor_Start_Time));
+                $('#txt_enddoctime').val(extractTime(data.Doctor_End_Time));
+                $('#txt_sthelpertime').val(extractTime(data.Helper_Start_Time));
+                $('#txt_endhelpertime').val(extractTime(data.Helper_End_Time));
+                $('#txt_stmachinetime').val(extractTime(data.Machine_Start_Time));
+                $('#txt_endmachinetime').val(extractTime(data.Machine_End_Time));
+                $('#txt_roomStTime').val(extractTime(data.Room_Start_Time));
+                $('#txt_roomendTime').val(extractTime(data.Room_End_Time));
+
+                $('#ClosePatientsSearchModel').click();
+
+            }, function (error) {
+                alert('Error loading appointment: ' + error.get_message());
+            });
         }
 
 
@@ -1297,8 +1360,7 @@
                         options += '<option value="' + value.Item_ID + '" >' + value.Description + '</option>';
                     }
                 });
-                $('#ddl_procedures').html(options);
-                $('#ddl_procedures').select2();
+                $('#ddl_procedures').html(options).select2();
 
 
             });
@@ -1449,8 +1511,8 @@
                         options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                     }
                 });
-                $('#ddl_colstnt').html(options);
-                $('#chk_Doc').html(options);
+                $('#ddl_colstnt').html(options).select2();
+                $('#chk_Doc').html(options).select2();
             });
         }
 
@@ -1463,7 +1525,7 @@
                         options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                     }
                 });
-                $('#ddlRoom').html(options);
+                $('#ddlRoom').html(options).select2();
             });
         }
 
@@ -1476,7 +1538,7 @@
                         options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                     }
                 });
-                $('#ddlMachine').html(options);
+                $('#ddlMachine').html(options).select2();
             });
         }
 
@@ -1489,7 +1551,7 @@
                         options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                     }
                 });
-                $('#ddl_helper').html(options);
+                $('#ddl_helper').html(options).select2();
             });
         }
 
@@ -1542,30 +1604,24 @@
         function ddldocchange() {
             debugger;
 
-
-
             var DocChk = $('#chk_Doc').find('option:selected').text();
 
             if (DocChk == "Select Doctor") {
                 acc = true;
                 LoadPage();
-            }
-            else {
+            } else {
                 var tbl = document.getElementById('table_res');
                 if (DocChk.trim() != '') {
-
                     for (var i = 1; i < tbl.rows.length; i++) {
                         if (tbl.rows[i].cells[3].innerText != DocChk) {
                             var row = tbl.rows[i];
                             row.style.display = 'none';
-                        }
-                        else {
+                        } else {
                             var row = tbl.rows[i];
                             row.style.display = '';
                         }
                     }
-                }
-                else {
+                } else {
                     for (var i = 1; i < tbl.rows.length; i++) {
                         var row = tbl.rows[i];
                         row.style.display = '';
@@ -1573,6 +1629,29 @@
                 }
             }
 
+            if ($('.wrap.calendar').is(':visible')) {
+                var currentMonthIndex, currentYear;
+
+                if ($('#calMonthSelect').length && $('#calYearSelect').length) {
+                    currentMonthIndex = parseInt($('#calMonthSelect').val(), 10);
+                    currentYear = parseInt($('#calYearSelect').val(), 10);
+                }
+                else {
+                    var headerText = $('#calendarHeader').text().trim();
+                    if (headerText && !headerText.includes('Loading')) {
+                        var parts = headerText.split(' ');
+                        var monthName = parts[0];
+                        currentYear = parseInt(parts[1], 10);
+                        currentMonthIndex = moment().month(monthName).format('M') - 1; 
+                    } else {
+                        var now = moment();
+                        currentYear = now.year();
+                        currentMonthIndex = now.month();
+                    }
+                }
+
+                loadCalendarForMonth(currentYear, currentMonthIndex, DocChk === "Select Doctor" ? null : DocChk);
+            }
         }
         function CalculateDateOfBirth() {
             debugger;
@@ -1672,26 +1751,26 @@
             debugger;
                     var editmode_ID = '<%= Request.QueryString["aID"]%>';
 
-                    $('#btnSave').attr('disabled', true);
-                    var AllItemDetail = {
-                        'txt_ID': txt_ID,'ddl_colstnt': ddl_colstnt, 'ddl_helper': ddl_helper, 'ddlMachine': ddlMachine, 'ddlRoom': ddlRoom,
-                        'txt_apt_no': txt_apt_no, 'txt_date': txt_date,'reg_id': reg_id
-                        ,'Doc_Start_Time': Doc_Start_Time, 'Doc_End_Time': Doc_End_Time
-                        , 'Helper_Start_Time': Helper_Start_Time, 'Hepler_End_Time': Hepler_End_Time
-                        ,'Machine_Start_Time': Machine_Start_Time, 'Machine_End_Time': Machine_End_Time
-                        ,'Room_Start_Time': Room_Start_Time, 'Room_End_Time': Room_End_Time, 'item_id': item_id
-                    };
+            $('#btnSave').attr('disabled', true);
+            var AllItemDetail = {
+                'txt_ID': txt_ID, 'ddl_colstnt': ddl_colstnt, 'ddl_helper': ddl_helper, 'ddlMachine': ddlMachine, 'ddlRoom': ddlRoom,
+                'txt_apt_no': txt_apt_no, 'txt_date': txt_date, 'reg_id': reg_id
+                , 'Doc_Start_Time': Doc_Start_Time, 'Doc_End_Time': Doc_End_Time
+                , 'Helper_Start_Time': Helper_Start_Time, 'Hepler_End_Time': Hepler_End_Time
+                , 'Machine_Start_Time': Machine_Start_Time, 'Machine_End_Time': Machine_End_Time
+                , 'Room_Start_Time': Room_Start_Time, 'Room_End_Time': Room_End_Time, 'item_id': item_id
+            };
 
-                    PageMethods.SaveAppointment(btnsave, JSON.stringify(AllItemDetail), editmode_ID, function (res) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Appointment Saved!',
-                            text: 'Data has been saved Successfully',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location = "Derma_Appointment.aspx";
-                        });
-                    });
+            PageMethods.SaveAppointment(btnsave, JSON.stringify(AllItemDetail), editmode_ID, function (res) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Appointment Saved!',
+                    text: 'Data has been saved Successfully',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location = "Derma_Appointment.aspx";
+                });
+            });
         }
         debugger;
         function convertTo24Hour(time) {
@@ -1962,7 +2041,6 @@
                     });
 
                     $day.on('mouseleave', function (ev) {
-                        // Don't stop tracking immediately - let onPointerMove handle it
                         setTimeout(function () {
                             var x = ev.clientX, y = ev.clientY;
                             if (!pointInElem(x, y, $day) && !pointInElem(x, y, $tooltip)) {
@@ -1995,24 +2073,40 @@
             }
         }
 
-        function loadCalendarForMonth(year, month) {
+        function loadCalendarForMonth(year, month, doctorName = null) {
             var start = moment([year, month, 1]).startOf('day').format('YYYY-MM-DD');
             var end = moment([year, month, 1]).endOf('month').format('YYYY-MM-DD');
+
             $('#calendarHeader').text('Loading appointments...');
+
             if (typeof PageMethods !== 'undefined' && PageMethods.getlist) {
                 PageMethods.getlist(start, end, function (data) {
                     var parsed = [];
-                    if (!data || (Array.isArray(data) && data.length === 0)) parsed = [];
-                    else {
-                        try { parsed = (typeof data === 'string') ? JSON.parse(data) : data; } catch (e) { parsed = data || []; }
+                    if (!data || (Array.isArray(data) && data.length === 0)) {
+                        parsed = [];
+                    } else {
+                        try {
+                            parsed = (typeof data === 'string') ? JSON.parse(data) : data;
+                        } catch (e) {
+                            parsed = data || [];
+                        }
                     }
+
+                    if (doctorName && doctorName !== "Select Doctor") {
+                        parsed = parsed.filter(function (appt) {
+                            return appt.emp_name === doctorName;
+                        });
+                    }
+
                     var mapped = mapAppointmentsByDate(parsed);
                     buildCalendar(year, month, mapped);
                 });
             } else {
-                console.warn('PageMethods.getlist not found. Using mock data.');
+                console.warn('PageMethods.getlist not found.');
                 var mock = generateMockDataForMonth(year, month);
-                setTimeout(function () { buildCalendar(year, month, mapAppointmentsByDate(mock)); }, 180);
+                setTimeout(function () {
+                    buildCalendar(year, month, mapAppointmentsByDate(mock));
+                }, 180);
             }
         }
 
@@ -2026,32 +2120,26 @@
         });
 
         $(function () { var now = moment(); loadCalendarForMonth(now.year(), now.month()); });
-        // toggle between calendar and list view
         $(function () {
             var $btn = $('#btntoggle');
-            var $calendar = $('.calendar');            // your calendar container (wrap with id="calendar")
-            var $listContainer = $('.table-container'); // your list container (table/list)
+            var $calendar = $('.calendar');
+            var $listContainer = $('.table-container');
 
-            // optional: initialize state (show list, hide calendar)
-            // $calendar.hide();
-            // $listContainer.show();
-            // $btn.val('Show Calendar');
+
 
             $btn.off('click').on('click', function (e) {
                 e.preventDefault();
 
-                // if calendar currently visible, hide it and show list
                 if ($calendar.is(':visible')) {
                     $calendar.slideUp(250, function () {
                         $listContainer.slideDown(250);
                     });
-                    $btn.val('Show Calendar'); // button should now cause calendar to show
+                    $btn.val('Show Calendar'); 
                 } else {
-                    // calendar is hidden -> show it and hide list
                     $listContainer.slideUp(250, function () {
                         $calendar.slideDown(250);
                     });
-                    $btn.val('Show List'); // button should now cause list to show
+                    $btn.val('Show List'); 
                 }
             });
         });
@@ -2114,13 +2202,13 @@
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Machine</label>
-                                <select class="form-control" id="ddlMachine">
+                <select class="form-control" id="ddlMachine">
                     <option></option>
                 </select>
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Room</label>
-                                <select class="form-control" id="ddlRoom">
+                <select class="form-control" id="ddlRoom">
                     <option></option>
                 </select>
             </div>
@@ -2153,36 +2241,31 @@
                 <input type="time" id="txt_roomendTime" />
             </div>
         </div>
-        <div class="row row_2" style="margin-top: 1%">
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-yellow" id="btnSave" value="Save" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'AppointmentView.aspx'" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Derma_Appointment.aspx'" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
+        <div class="row">
+            <div class="col-lg-9 col-md-10 col-sm-12">
+                <div class="row row_2" style="margin-top: 1%">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn-primry" id="btnSaveMessage" value="Save & Send Msg" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" id="btnSave" value="Save" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn-gray" value="View" id="btnBack" onclick="window.location = 'Derma_Appointment_list.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="window.location = 'Derma_Appointment.aspx'" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <input type="button" class="btn btn-yellow" value="Print" id="btnPrint" onclick="appointmentPatient_Print()" />
+                    </div>
+                </div>
             </div>
         </div>
-
-
 
 
     </div>
-    <div class="row ">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <label>Doctor</label>
-            <select id="chk_Doc" onchange="ddldocchange()">
-            </select>
-        </div>
-
-
+    <div class="row ">       
         <div class="col-lg-2 col-md-3 col-sm-4">
             <label>From</label>
             <input type="text" id="txt_datefrom" />
@@ -2190,8 +2273,16 @@
         <div class="col-lg-2 col-md-3 col-sm-4">
             <label style="margin-left: 15px!important">To</label>
             <input type="text" id="txt_dateto" />
+        </div>       
+        <div class="col-lg-1 col-md-2 col-sm-3">
+            <label></label>
+            <input type="button" id="btnSearch" class="btn btn-primry" value="Search" />
         </div>
-
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label>Doctor</label>
+            <select id="chk_Doc" onchange="ddldocchange()">
+            </select>
+        </div>
         <div class="col-lg-2 col-md-3 col-sm-4 mg">
             <label></label>
             <select id="chk_status" onchange="testddlchange()">
@@ -2202,29 +2293,26 @@
         </div>
         <div class="col-lg-1 col-md-2 col-sm-3">
             <label></label>
-            <input type="button" id="btnSearch" class="btn btn-primry" value="Search" />
-        </div>
-        <div class="col-lg-1 col-md-2 col-sm-3">
-            <label></label>
             <input type="button" id="btntoggle" class="btn btn-primry" onclick="toggleCalendar" value="Calendar View" />
         </div>
 
 
     </div>
-    <div class="wrap calendar" style="display: none">
-        <div class="panel">
-            <%-- <div class="controls" aria-hidden="false">
-        <label for="monthSelect">Month</label>
-        <select id="monthSelect" aria-label="Month"></select>
-
-        <label for="yearSelect">Year</label>
-        <select id="yearSelect" aria-label="Year"></select>
-
-        <button id="goBtn">Show</button>
-        <button id="todayBtn" title="Jump to current month" class="muted-btn">Today</button>
-      </div>--%>
-
-            <div id="calendarHeader" aria-live="polite"></div>
+   <div class="wrap calendar" style="display: none">
+  <div class="panel">
+    <div class="controls" style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
+        <div class="col-lg-2 col-md-6 cl-sm-12">
+            <label for="calMonthSelect">Month:</label>
+            <select id="calMonthSelect"></select>
+        </div>
+        <div class="col-lg-2 col-md-6 cl-sm-12">
+            <label for="calYearSelect">Year:</label>
+            <select id="calYearSelect"></select>
+        </div>
+      <button id="calGoBtn" class="btn btn-primry" style="padding: 4px 10px;">Show</button>
+      <button id="calTodayBtn" class="btn btn-gray" style="padding: 4px 10px;">Today</button>
+    </div>
+    <div id="calendarHeader" aria-live="polite"></div>
 
             <div id="calendar" class="calendar" role="grid" aria-label="Appointment calendar">
                 <div class="cal-header">Sun</div>

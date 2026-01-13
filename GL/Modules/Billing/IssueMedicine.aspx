@@ -6,7 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function () {          
             if (!$('#chkbatch').prop("checked")) {
                 $('#chkbatch').prop("checked", true);
             }
@@ -22,6 +22,7 @@
                 loadmed();
             });
             loadmed();
+            LoadWarehouses();
         });
         window.addEventListener('keydown', function (event) {
             if (event.altKey && event.code === 'KeyS') {
@@ -2421,6 +2422,31 @@
             $('#txtpass').text('');
 
         }
+
+        function LoadWarehouses() {
+            $('#ddlWarehouse').empty();
+            $('#ddlWarehouse').append('<option value="0">Please Select</option>');
+
+            PageMethods.GetUserWarehouses(
+                function (response) {
+
+                    $.each(response, function (index, item) {
+                        $('#ddlWarehouse').append(
+                            '<option value="' + item.Value + '">' +
+                            item.Text +
+                            '</option>'
+                        );
+                    });
+                    $('#ddlWarehouse').select2();
+
+                },
+                function (error) {
+                    console.log(error);
+                }
+            );
+        }
+
+     
     </script>
 </asp:Content>
 
@@ -2497,7 +2523,7 @@
 
             <!-- OPD Prescription & Batch -->
             <div class="row mb-3">
-                <div class="col-lg-4 col-md-7 col-sm-6">
+                <div class="col-lg-3 col-md-7 col-sm-6">
                     <label id="lblmedName">Medicine:</label>
                     <label class="small">(Alt+Q)</label>
                     <select id="medName" class="form-control" tabindex="6" onchange="getbatchfrom_grn()">
@@ -2507,6 +2533,12 @@
                 <div class="col-lg-2 col-md-4 col-sm-6" >
                     <label class="batchdiv">Batch No:</label>
                     <select id="batchno" class="form-control batchdiv" tabindex="7" onchange="AddMedicineDetail()"></select>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label>WareHouse</label>
+                    <select id="ddlWarehouse" class="form-select">
+                        <option value="0">Please Select</option>
+                    </select>
                 </div>
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%;">
                     <label id="lblbatch">Batch</label>

@@ -161,6 +161,7 @@
         }
 
 
+
         $(document).ready(function () {
 
             debugger;
@@ -206,6 +207,12 @@
                     $(':checkbox,:radio').attr('checked', '');
                 });
             });
+            $(document).ready(function () {
+                var ReportTitle = '<%= Request.QueryString["rptTitle"]%>';
+                if (ReportTitle === "Operator_Wise_Billing_Report") {
+                    $('#lblAllPatientRecord').text("Detailed Summary");
+                }
+            });
 
             //$('#btnPreview').click(function () {
             $('#<%= btnPreview.ClientID %>').click(function () {
@@ -232,9 +239,9 @@
                 else {
                     var rptTitle = '<%= Request.QueryString["rptTitle"]%>'
                     if (rptTitle == "Doctotr_Receipts") {
-                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=DoctorWisePatients&ReportTitle=Doctor Wise Patient from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked;
+                   //     var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                       // var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=DoctorWisePatients&ReportTitle=Doctor Wise Patient from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val();// + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked;
                         window.open(url, '_blanks');
                     }
 
@@ -265,11 +272,11 @@
                         var url = 'ReportViewer.aspx?ReportName=StockBalance&ReportTitle=Item Wise Stock Balance Report ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&itemCode=' + ((typeof ($("#txtItemCode").val()) != 'undefined' && $("#txtItemCode").val().toString() != "") ? $("#txtItemCode").val().toString().split('-')[0] : '');
                         window.open(url, '_blanks');
                     }
-                    else if (rptTitle == "STM") {
-                        debugger;
-                        var url = 'ReportViewer.aspx?ReportName=StockBalance&ReportTitle=Item Wise Stock Balance Report ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&itemCode=' + ((typeof ($("#txtItemCode").val()) != 'undefined' && $("#txtItemCode").val().toString() != "") ? $("#txtItemCode").val().toString().split('-')[0] : '');
-                        window.open(url, '_blanks');
-                    }
+                    //else if (rptTitle == "STM") {
+                    //    debugger;
+                    //    var url = 'ReportViewer.aspx?ReportName=StockBalance&ReportTitle=Item Wise Stock Balance Report ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ItemCategory=' + $('#ctl00_MainContent_ddlItemCategory').val() + '&itemCode=' + ((typeof ($("#txtItemCode").val()) != 'undefined' && $("#txtItemCode").val().toString() != "") ? $("#txtItemCode").val().toString().split('-')[0] : '');
+                    //    window.open(url, '_blanks');
+                    //}
                     else if (rptTitle == "IWPOS") {
                         debugger;
                         var oprator = ((typeof ($("#ctl00_MainContent_ddlMedicalSubsidy").val()) != 'undefined') ? $("#ctl00_MainContent_ddlMedicalSubsidy").val() : "0");
@@ -603,8 +610,9 @@
                     }
                     else if (rptTitle == "Operator_Wise_Billing_Report") {
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=Operator_Wise_Billing_Report&ReportTitle=Operator Wise Billing Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0"); //+ '&Summary=' + summary ;
-                        window.open(url, '_blanks');
+                        var DetailedSummary = document.getElementById('<%= chkAllPatientRecord.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Operator_Wise_Billing_Report&ReportTitle=Operator Wise Billing Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&AllPatientsRecords=' + DetailedSummary; //+ '&Summary=' + summary ;
+                        window.open(url, '_blank');
                     }
                     else if (rptTitle == "Blood_Bank_Lab_Test_Details") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
@@ -1659,7 +1667,8 @@
             <div class="col-lg-3 col-md-4 col-sm-12" id="tr_AllPatientRecord" runat="server" visible="false">
                 <div class="form-check" style="display: inline-flex; width: 26px;">
                     <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkAllPatientRecord" name="chkAllPatientRecord" />
-                    <label class="form-check-label" id="lblAllPatientRecord" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">All Patients Records</label>
+     <%--<label class="form-check-label" id="lblAllPatientRecord" runat="server" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">All Patients Records</label>--%>
+     <asp:Label ID="lblAllPatientRecord" Text="All Patients Records" runat="server"></asp:Label>                
                 </div>
             </div>
         </div>

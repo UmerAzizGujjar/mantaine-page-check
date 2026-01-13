@@ -493,6 +493,22 @@ on DM.Rouster_id equals DD.Rouster_id
         }
 
         [WebMethod]
+        public static string GetAllDoctors()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var emps = (from emp in db.HR_Employees
+                            where emp.IsDoctor == true
+                            select new
+                            {
+                                DataValue_Name = emp.Emp_ID.ToString(),
+                                DataValue_Description = emp.Emp_Name
+                            }).ToList();
+                return new JavaScriptSerializer().Serialize(emps);
+            }
+        }
+
+        [WebMethod]
         public static string GetDoctors(string dep)
         {
             DataBaseDataContext db = new DataBaseDataContext();

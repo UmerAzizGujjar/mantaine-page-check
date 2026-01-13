@@ -104,7 +104,7 @@
             $('#btnSaveMessage').off('click').on('click', safeSaveAttempt);
             debugger;
             $("#txtSearch").keypress(function (event) {
-
+                debugger;
                 var SearchString = $('#txtSearch').val();
                 if (event.which == 13) {
                     {
@@ -120,7 +120,6 @@
                         FillPatientsList();
                     }
                 }
-
             });
             $("#txtSearch").keyup(function (event) {
 
@@ -245,19 +244,19 @@
                     $("#PatientsSearchModel").modal('hide');
                 }
                 FillPatientsList();
-                $('#srchpat').text("Search By Phone No");
+                //$('#srchpat').text("Search By Phone No");
 
-                jQuery(function ($) {
-                    MaskedInput({
-                        elm: document.getElementById('txtSearch'),
-                        format: '+92__________',
-                        separator: '-'
-                    });
-                    var phoneInput = document.getElementById('txtSearch');
-                    var cursorPosition = 3;
-                    phoneInput.setSelectionRange(cursorPosition, cursorPosition);
+                //jQuery(function ($) {
+                //    MaskedInput({
+                //        elm: document.getElementById('txtSearch'),
+                //        format: '+92__________',
+                //        separator: '-'
+                //    });
+                //    var phoneInput = document.getElementById('txtSearch');
+                //    var cursorPosition = 3;
+                //    phoneInput.setSelectionRange(cursorPosition, cursorPosition);
 
-                });
+                //});
             }
 
             if (ids !== "") {
@@ -329,6 +328,52 @@
                 $('#ddl_colstnt').attr('disabled', false);
                 $('#ddlsubdepartment').attr('disabled', false);
             }
+
+            PageMethods.GetAllDoctors(function (data) {
+                var options = '<option value="">Select Doctor</option>';
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                });
+                $('#chk_Doc').html(options).select2();
+            }, function (err) {
+                console.error("Failed to load doctors for filter:", err);
+            });
+
+            (function populateCalendarControls() {
+                var $month = $('#calMonthSelect');
+                var $year = $('#calYearSelect');
+                var months = moment.months();
+
+                $month.empty();
+                months.forEach(function (m, i) {
+                    $month.append('<option value="' + i + '">' + m + '</option>');
+                });
+
+                var currentYear = moment().year();
+                $year.empty();
+                for (var y = currentYear - 5; y <= currentYear + 5; y++) {
+                    $year.append('<option value="' + y + '">' + y + '</option>');
+                }
+
+                $month.val(moment().month());
+                $year.val(currentYear);
+            })();
+
+            debugger;
+            $('#calGoBtn').on('click', function (e) {
+                e.preventDefault();
+                var month = parseInt($('#calMonthSelect').val(), 10);
+                var year = parseInt($('#calYearSelect').val(), 10);
+                loadCalendarForMonth(year, month);
+            });
+
+            $('#calTodayBtn').on('click', function (e) {
+                e.preventDefault();
+                var now = moment();
+                $('#calMonthSelect').val(now.month());
+                $('#calYearSelect').val(now.year());
+                loadCalendarForMonth(now.year(), now.month());
+            });
         });
 
         function fillDropdown($dropdown, methodName) {
@@ -447,18 +492,18 @@
             }
             else {
                 Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Please Enter Complete Mobile Number First',
-        showConfirmButton: false,
-        timer: 2000,
-        customClass: {
-            popup: 'swal-big-popup',
-            title: 'swal-big-title',
-            htmlContainer: 'swal-big-text'
-        }
-        });
-               
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Complete Mobile Number First',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
                 return;
             }
 
@@ -1402,41 +1447,58 @@
             });
         }
 
-        function ddldocchange() {
-            debugger;
+         function ddldocchange() {
+             debugger;
 
+             var DocChk = $('#chk_Doc').find('option:selected').text();
 
+             if (DocChk == "Select Doctor") {
+                 acc = true;
+                 LoadPage();
+             } else {
+                 var tbl = document.getElementById('table_res');
+                 if (DocChk.trim() != '') {
+                     for (var i = 1; i < tbl.rows.length; i++) {
+                         if (tbl.rows[i].cells[3].innerText != DocChk) {
+                             var row = tbl.rows[i];
+                             row.style.display = 'none';
+                         } else {
+                             var row = tbl.rows[i];
+                             row.style.display = '';
+                         }
+                     }
+                 } else {
+                     for (var i = 1; i < tbl.rows.length; i++) {
+                         var row = tbl.rows[i];
+                         row.style.display = '';
+                     }
+                 }
+             }
 
-            var DocChk = $('#chk_Doc').find('option:selected').text();
+             if ($('.wrap.calendar').is(':visible')) {
+                 var currentMonthIndex, currentYear;
 
-            if (DocChk == "Select Doctor") {
-                acc = true;
-                LoadPage();
-            }
-            else {
-                var tbl = document.getElementById('table_res');
-                if (DocChk.trim() != '') {
+                 if ($('#calMonthSelect').length && $('#calYearSelect').length) {
+                     currentMonthIndex = parseInt($('#calMonthSelect').val(), 10);
+                     currentYear = parseInt($('#calYearSelect').val(), 10);
+                 }
+                 else {
+                     var headerText = $('#calendarHeader').text().trim();
+                     if (headerText && !headerText.includes('Loading')) {
+                         var parts = headerText.split(' ');
+                         var monthName = parts[0];
+                         currentYear = parseInt(parts[1], 10);
+                         currentMonthIndex = moment().month(monthName).format('M') - 1;
+                     } else {
+                         var now = moment();
+                         currentYear = now.year();
+                         currentMonthIndex = now.month();
+                     }
+                 }
 
-                    for (var i = 1; i < tbl.rows.length; i++) {
-                        if (tbl.rows[i].cells[3].innerText != DocChk) {
-                            var row = tbl.rows[i];
-                            row.style.display = 'none';
-                        }
-                        else {
-                            var row = tbl.rows[i];
-                            row.style.display = '';
-                        }
-                    }
-                }
-                else {
-                    for (var i = 1; i < tbl.rows.length; i++) {
-                        var row = tbl.rows[i];
-                        row.style.display = '';
-                    }
-                }
-            }
-
-        }
+                 loadCalendarForMonth(currentYear, currentMonthIndex, DocChk === "Select Doctor" ? null : DocChk);
+             }
+         }
         function CalculateDateOfBirth() {
             debugger;
             var now = moment();
@@ -1949,25 +2011,40 @@
                  $('#calendar').append($day);
              }
          }
-
-         function loadCalendarForMonth(year, month) {
+         function loadCalendarForMonth(year, month, doctorName = null) {
              var start = moment([year, month, 1]).startOf('day').format('YYYY-MM-DD');
              var end = moment([year, month, 1]).endOf('month').format('YYYY-MM-DD');
+
              $('#calendarHeader').text('Loading appointments...');
+
              if (typeof PageMethods !== 'undefined' && PageMethods.getlist) {
                  PageMethods.getlist(start, end, function (data) {
                      var parsed = [];
-                     if (!data || (Array.isArray(data) && data.length === 0)) parsed = [];
-                     else {
-                         try { parsed = (typeof data === 'string') ? JSON.parse(data) : data; } catch (e) { parsed = data || []; }
+                     if (!data || (Array.isArray(data) && data.length === 0)) {
+                         parsed = [];
+                     } else {
+                         try {
+                             parsed = (typeof data === 'string') ? JSON.parse(data) : data;
+                         } catch (e) {
+                             parsed = data || [];
+                         }
                      }
+
+                     if (doctorName && doctorName !== "Select Doctor") {
+                         parsed = parsed.filter(function (appt) {
+                             return appt.emp_name === doctorName;
+                         });
+                     }
+
                      var mapped = mapAppointmentsByDate(parsed);
                      buildCalendar(year, month, mapped);
                  });
              } else {
-                 console.warn('PageMethods.getlist not found. Using mock data.');
+                 console.warn('PageMethods.getlist not found.');
                  var mock = generateMockDataForMonth(year, month);
-                 setTimeout(function () { buildCalendar(year, month, mapAppointmentsByDate(mock)); }, 180);
+                 setTimeout(function () {
+                     buildCalendar(year, month, mapAppointmentsByDate(mock));
+                 }, 180);
              }
          }
 
@@ -1981,32 +2058,26 @@
          });
 
          $(function () { var now = moment(); loadCalendarForMonth(now.year(), now.month()); });
-         // toggle between calendar and list view
          $(function () {
              var $btn = $('#btntoggle');
-             var $calendar = $('.calendar');            // your calendar container (wrap with id="calendar")
-             var $listContainer = $('.table-container'); // your list container (table/list)
+             var $calendar = $('.calendar');
+             var $listContainer = $('.table-container');
 
-             // optional: initialize state (show list, hide calendar)
-             // $calendar.hide();
-             // $listContainer.show();
-             // $btn.val('Show Calendar');
+
 
              $btn.off('click').on('click', function (e) {
                  e.preventDefault();
 
-                 // if calendar currently visible, hide it and show list
                  if ($calendar.is(':visible')) {
                      $calendar.slideUp(250, function () {
                          $listContainer.slideDown(250);
                      });
-                     $btn.val('Show Calendar'); // button should now cause calendar to show
+                     $btn.val('Show Calendar');
                  } else {
-                     // calendar is hidden -> show it and hide list
                      $listContainer.slideUp(250, function () {
                          $calendar.slideDown(250);
                      });
-                     $btn.val('Show List'); // button should now cause list to show
+                     $btn.val('Show List');
                  }
              });
          });
@@ -2045,12 +2116,12 @@
                 </div>
             </div>
             <div class="row">
-                 <div class="col-lg-3 col-md-3 col-sm-6">
-     <label style="">Department</label>
-     <select style="border-radius: 5px; height: 29px;" class="form-control ddldoc" id="ddlsubdepartment" >
-         <option></option>
-     </select>
- </div> 
+                <div class="col-lg-3 col-md-3 col-sm-6">
+                    <label style="">Department</label>
+                    <select style="border-radius: 5px; height: 29px;" class="form-control ddldoc" id="ddlsubdepartment">
+                        <option></option>
+                    </select>
+                </div>
                 <div class="col-lg-3 col-md-3 col-sm-6">
                     <label>Consultant</label>
                     <select class="ddldoc form-control" id="ddl_colstnt" >
@@ -2103,14 +2174,7 @@
 
 
     </div>
-    <div class="row ">
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <label>Doctor</label>
-            <select id="chk_Doc" onchange="ddldocchange()">
-            </select>
-        </div>
-
-
+    <div class="row ">    
         <div class="col-lg-2 col-md-3 col-sm-4">
             <label>From</label>
             <input type="text" id="txt_datefrom" />
@@ -2119,7 +2183,15 @@
             <label style="margin-left: 15px!important">To</label>
             <input type="text" id="txt_dateto" />
         </div>
-      
+        <div class="col-lg-1 col-md-2 col-sm-3">
+            <label></label>
+            <input type="button" id="btnSearch" class="btn btn-primry" value="Search" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label>Doctor</label>
+            <select id="chk_Doc" onchange="ddldocchange()">
+            </select>
+        </div>
         <div class="col-lg-2 col-md-3 col-sm-4 mg">
             <label></label>
             <select id="chk_status" onchange="testddlchange()">
@@ -2128,10 +2200,7 @@
                 <option>Booked</option>
             </select>
         </div>
-          <div class="col-lg-1 col-md-2 col-sm-3">
-            <label></label>
-            <input type="button" id="btnSearch" class="btn btn-primry" value="Search" />
-        </div>
+          
           <div class="col-lg-1 col-md-2 col-sm-3">
     <label></label>
     <input type="button" id="btntoggle" class="btn btn-primry" onclick="toggleCalendar"  value="Calendar View" />
@@ -2141,30 +2210,31 @@
     </div>
    <div class="wrap calendar" style="display:none" >
     <div class="panel">
-     <%-- <div class="controls" aria-hidden="false">
-        <label for="monthSelect">Month</label>
-        <select id="monthSelect" aria-label="Month"></select>
-
-        <label for="yearSelect">Year</label>
-        <select id="yearSelect" aria-label="Year"></select>
-
-        <button id="goBtn">Show</button>
-        <button id="todayBtn" title="Jump to current month" class="muted-btn">Today</button>
-      </div>--%>
-
-      <div id="calendarHeader" aria-live="polite"></div>
-
-      <div id="calendar" class="calendar" role="grid" aria-label="Appointment calendar">
-        <div class="cal-header">Sun</div>
-        <div class="cal-header">Mon</div>
-        <div class="cal-header">Tue</div>
-        <div class="cal-header">Wed</div>
-        <div class="cal-header">Thu</div>
-        <div class="cal-header">Fri</div>
-        <div class="cal-header">Sat</div>
-        <!-- day cells will be injected here -->
+  <div class="controls" style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
+      <div class="col-lg-2 col-md-6 cl-sm-12">
+          <label for="calMonthSelect">Month:</label>
+          <select id="calMonthSelect"></select>
       </div>
-    </div>
+      <div class="col-lg-2 col-md-6 cl-sm-12">
+          <label for="calYearSelect">Year:</label>
+          <select id="calYearSelect"></select>
+      </div>
+    <button id="calGoBtn" class="btn btn-primry" style="padding: 4px 10px;">Show</button>
+    <button id="calTodayBtn" class="btn btn-gray" style="padding: 4px 10px;">Today</button>
+  </div>
+  <div id="calendarHeader" aria-live="polite"></div>
+
+          <div id="calendar" class="calendar" role="grid" aria-label="Appointment calendar">
+              <div class="cal-header">Sun</div>
+              <div class="cal-header">Mon</div>
+              <div class="cal-header">Tue</div>
+              <div class="cal-header">Wed</div>
+              <div class="cal-header">Thu</div>
+              <div class="cal-header">Fri</div>
+              <div class="cal-header">Sat</div>
+              <!-- day cells will be injected here -->
+          </div>
+      </div>
   </div>
     <div class="row table-container list">
 

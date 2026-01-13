@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬IITH_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬SkinStudio" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7133,7 +7133,6 @@
       <Column Name="Block_category" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="end_day" Type="System.DateTime" DbType="Date" CanBeNull="true" />
       <Column Name="st_day" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="cancelAppointment" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Derma_Appointment" Member="Derma_Appointments">
@@ -11131,6 +11130,37 @@
       <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_loadAppointment_Derma" Method="sp_loadAppointment_Derma">
+    <Parameter Name="appID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_loadAppointment_DermaResult">
+      <Column Name="Appointment_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Age" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Consultant_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="doctor_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Patient_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Appointment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="app_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Doctor_Start_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Doctor_End_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Helper_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Helper_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Helper_Start_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Helper_End_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Machine_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Machine_Name" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Machine_Start_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Machine_End_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Room_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Room_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Room_Start_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Room_End_Time" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Reg_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
