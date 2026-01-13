@@ -1673,9 +1673,9 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-lg-3 col-md-4 col-sm-12" id="tr_ZeroRecord" runat="server" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="trZeroRecord" runat="server" visible="false">
                 <div class="form-check" style="display: inline-flex; width: 26px;">
-                    <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkZeroRecord" name="chkAllPatientRecord" />
+                    <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkZeroRecord" name="chkZeroRecord" />
                     <label class="form-check-label" id="lblZeroRecord" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">Hide Zero Balance</label>
                 </div>
             </div>

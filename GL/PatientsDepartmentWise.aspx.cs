@@ -2412,7 +2412,7 @@ namespace PMS
                     AllowPatientRecord = false;
                     dpROw.Visible = false;
                     Time_Row.Visible = false;
-                    tr_ZeroRecord.Visible = true;
+                    trZeroRecord.Visible = true;
                 }
                 else if (PageTitle == "SIH")
                 {
