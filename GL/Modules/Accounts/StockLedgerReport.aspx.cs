@@ -15,6 +15,8 @@ namespace PMS
         {
             if (!Page.IsPostBack)
             {
+                
+                string pageTitle = Request.QueryString["rptTitle"];
                 if (Request.QueryString["Type"] != null)
                 {
                     if (Request.QueryString["Type"] == "ITL")
@@ -61,7 +63,21 @@ namespace PMS
                     }
                 }
                 rowInventory_Org.Visible = true;
+                if (pageTitle == "BL")
+                {
+                    rowItem.Visible = false;
+                    rowWareHouse.Visible = false;
+                    rowInventory_Org.Visible = false;
+                }
+                if (pageTitle == "SSIW")
+                {
+
+                    rowWareHouse.Visible = false;
+                    rowInventory_Org.Visible = false;
+                }
             }
+
+     
         }
 
         private void fillDropDownFromDatavalues(int valuesetID, DropDownList ddlObject)

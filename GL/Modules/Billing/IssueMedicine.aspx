@@ -1669,12 +1669,12 @@
                     hasInvalidStock = true;
                     return false;
                 }
-                if (Qty <= 0) {
+                if (parseFloat(Qty) <= 0) {
                     alert('Quantity must be greater than zero.');
                     hasInvalidStock = true;
                     return false;
                 }
-                if (Stock < Qty) {
+                if (parseFloat(Stock) <= parseFloat(Qty)) {
                     alert('Quantity must be less than or equal to stock.');
                     hasInvalidStock = true;
                     return false;
@@ -1832,12 +1832,12 @@
                             hasInvalidStock = true;
                             return false;
                         }
-                        if (Qty <= 0) {
+                        if (parseFloat(Qty) <= 0) {
                             alert('Quantity must be greater than zero.');
                             hasInvalidStock = true;
                             return false;
                         }
-                        if (Stock < Qty) {
+                        if (parseFloat(Stock) <= parseFloat(Qty)) {
                             alert('Quantity must be less than or equal to stock.');
 
                             hasInvalidStock = true;

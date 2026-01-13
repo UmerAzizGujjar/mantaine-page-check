@@ -135,19 +135,19 @@ namespace PMS
                         accountDiv.Visible = false;
                         DateDiv.Visible = false;
                         break;
-                    case "Ledger":
-                        vendorDiv.Visible = true;
-                        vendorTypeDiv.Visible = false;
-                        lblVendor.Text = "Department";
-                        System.Data.DataTable dtDept = DBClass.getDataTable("Select DataValue_Name,DataValue_Description FROM dbo.DataValues p JOIN dbo.ValueSet v ON p.ValueSet_ID = v.ValueSet_ID WHERE v.ValueSet_Description = 'Department'");
-                        ddlVendorType.DataSource = dtDept;
-                        ddlVendorType.DataTextField = "DataValue_Description";
-                        ddlVendorType.DataValueField = "DataValue_Name";
-                        ddlVendorType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
-                        ddlVendorType.AppendDataBoundItems = true;
-                        ddlVendorType.DataBind();
-                        stockDiv.Visible = false;
-                        break;
+                    //case "Ledger":
+                    //    vendorDiv.Visible = true;
+                    //    vendorTypeDiv.Visible = false;
+                    //    lblVendor.Text = "Department";
+                    //    System.Data.DataTable dtDept = DBClass.getDataTable("Select DataValue_Name,DataValue_Description FROM dbo.DataValues p JOIN dbo.ValueSet v ON p.ValueSet_ID = v.ValueSet_ID WHERE v.ValueSet_Description = 'Department'");
+                    //    ddlVendorType.DataSource = dtDept;
+                    //    ddlVendorType.DataTextField = "DataValue_Description";
+                    //    ddlVendorType.DataValueField = "DataValue_Name";
+                    //    ddlVendorType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    //    ddlVendorType.AppendDataBoundItems = true;
+                    //    ddlVendorType.DataBind();
+                    //    stockDiv.Visible = false;
+                    //    break;
                     case "GL":
                         accountDiv.Visible = true;
                         vendorTypeDiv.Visible = false;
@@ -156,10 +156,17 @@ namespace PMS
                         break;
 
                     default:
-                        accountDiv.Visible = true;
-                        stockDiv.Visible = false;
+                        vendorDiv.Visible = true;
                         vendorTypeDiv.Visible = false;
-                        vendorDiv.Visible = false;
+                        lblVendor.Text = "Department";
+                        System.Data.DataTable dtDept = DBClass.getDataTable("Select DataValue_Name,DataValue_Description FROM dbo.DataValues p JOIN dbo.ValueSet v ON p.ValueSet_ID = v.ValueSet_ID WHERE v.ValueSet_Description = 'Department'");
+                        ddlVendor.DataSource = dtDept;
+                        ddlVendor.DataTextField = "DataValue_Description";
+                        ddlVendor.DataValueField = "DataValue_Name";
+                        ddlVendor.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                        ddlVendor.AppendDataBoundItems = true;
+                        ddlVendor.DataBind();
+                        stockDiv.Visible = false;
                         break;
                 }
             }
@@ -202,14 +209,14 @@ namespace PMS
                 case "SIHBW":
                     query = "ReportName=PharmacyStockBatchWise&ReportTitle=Stock In Hand  From" + "&Stock=" + ddlStock.SelectedValue + "";   //  excluded + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text 
                     break;
-                case "Ledger":
-                    query = "ReportName=Ledger1&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue;
-                    break;
+                //case "Ledger":
+                //    query = "ReportName=Ledger1&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue;
+                //    break;
                 case "GL":
                     query = "ReportName=GeneralLedger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
                     break;
                 default:
-                    query = "ReportName=Ledger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
+                    query = "ReportName=Ledger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue;
                     break;
             }
             string path = @"../../ReportViewer.aspx?" + query;
