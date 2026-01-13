@@ -39,6 +39,7 @@
                  var reportVersion = urlParams.get('ReportVersion'); // "2" or null
 
                  var type = '<%= Request.QueryString["Type"] %>';
+                 var type = '<% =Request.QueryString["rptTitle"] %>'
 
                  if (type == null || type == '') {
                      var startDate = $('#txtsDate').val();
@@ -66,6 +67,7 @@
                  }
                  else
                  {
+                     debugger;
                      if (type == 'ITL')
                      {
                          var invOrg = $('#ctl00_MainContent_ddlInventoryOrg').val();
@@ -75,6 +77,34 @@
                          var procedure = $('#ctl00_MainContent_ddlProcedureType').val();
 
                          var url = '../../ReportViewer.aspx?ReportName=ItemList&ReportTitle=Item List&Inventory_Org=' + invOrg + '&Item_Group=' + group + '&Item_Type=' + type + '&Item_Category=' + category + '&Procedure_Type=' + procedure + '';
+                         window.open(url);
+                     }
+                     else if (type == 'ISLR') {
+                         StartDate = $('#txtsDate').val();
+                         EndDate = $('#txteDate').val();
+                         var startItemCode = $('#ddlStartItemCode').val();
+                         var endItemCode = $('#ddlEndItemCode').val();
+                         var ddlWare = $('#ddlWareHouse').val();
+                         var ddlinvOrg = $('#ctl00_MainContent_ddlInventoryOrg').val();
+                         var depid = $('#ddldepartment').val();
+
+                         var url = '../../ReportViewer.aspx?ReportName=Inventory_StockLedger_Report&ReportTitle=ItemWiseStockLedgerList&StartDate=' + StartDate + '&EndDate=' + EndDate + '&StartItemCode=' + startItemCode + '&EndItemCode=' + endItemCode + '&WareHouse=' + ddlWare + '&Inventory_Org=' + ddlinvOrg + '&Departemnt=' + depid + '';
+                         window.open(url);
+                     }
+                     else if (type == 'SSIW') {
+                         StartDate = $('#txtsDate').val();
+                         EndDate = $('#txteDate').val();
+                         var startItemCode = $('#ddlStartItemCode').val();
+                         var endItemCode = $('#ddlEndItemCode').val();
+                         var url = '../../ReportViewer.aspx?ReportName=SaleSumaryItemWise&ReportTitle=Sale Sumary Item Wise&StartDate=' + StartDate + '&EndDate=' + EndDate + '&StartItemCode=' + startItemCode + '&EndItemCode=' + endItemCode + '';
+                         window.open(url);
+                     }
+                     else if (type == 'BL') {
+                         StartDate = $('#txtsDate').val();
+                         EndDate = $('#txteDate').val();
+
+
+                         var url = '../../ReportViewer.aspx?ReportName=Bill_Ledger_Report&ReportTitle=Bill Ledger Report From ' + StartDate + ' to ' + EndDate + '&StartDate=' + StartDate + '&EndDate=' + EndDate;
                          window.open(url);
                      }
                  }
