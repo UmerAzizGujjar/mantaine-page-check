@@ -2186,6 +2186,45 @@ namespace PMS
                     ddloprators.Items.Add(new ListItem() { Text = "In Active", Value = "0" });
                     ddloprators.DataBind();
                 }
+                else if (this.PageTitle == "VendorWiseLedger")
+                {
+                    tr_Summary.Visible = false;
+                    DateDiv.Visible = true;
+                    sttDate.Visible = true;
+                    txtStart_Date.Visible = true;
+                    endDate.Visible = true;
+                    txtEnd_Date.Visible = true;
+                    Time_Row.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    lblPatientType.Text = "Items";
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in db.INV_Items
+                                       where
+                                       sl.Active == true
+                                       && sl.Hospital_Services == false
+                                       && sl.Services == false
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlPatientType.DataSource = serviceList;
+
+                    ddlPatientType.DataValueField = "Item_ID";
+                    ddlPatientType.DataTextField = "Description";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+                }
                 else if (this.PageTitle == "BER")
                 {
                     string x = "Batch Expiry Report";

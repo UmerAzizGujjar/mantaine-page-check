@@ -1675,7 +1675,7 @@
                     hasInvalidStock = true;
                     return false;
                 }
-                if (parseFloat(Stock) <= parseFloat(Qty)) {
+                if (parseFloat(Stock) < parseFloat(Qty)) {
                     alert('Quantity must be less than or equal to stock.');
                     hasInvalidStock = true;
                     return false;
@@ -1838,7 +1838,7 @@
                             hasInvalidStock = true;
                             return false;
                         }
-                        if (parseFloat(Stock) <= parseFloat(Qty)) {
+                        if (parseFloat(Stock) < parseFloat(Qty)) {
                             alert('Quantity must be less than or equal to stock.');
 
                             hasInvalidStock = true;

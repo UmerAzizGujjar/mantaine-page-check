@@ -39932,3 +39932,1107 @@ Source: System.Web
 URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
 User: 
 
+[ERROR:0506ba78 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/
+User: visionplus
+
+[ERROR:77b961f3 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:e5dab2db 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:d7219e1b 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:67ef787c 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:fd00999f 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:64dd1ce8 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:d17394f9 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:aa75e664 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:6a8dad2e 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:836a7c50 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:b8f761a1 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:2e10e919 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:719a7d80 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:19bf7f61 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:49389c7e 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:3047c637 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:e01ea7cf 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:f469f047 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:8497174a 1/13/2026 3:52:04 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:cdcca311 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:f504c9f0 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:185a2d50 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:f92e354c 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:cf218975 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:2da72a52 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:9afe4a0e 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:dde97a60 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:cb85271c 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:cb0a082b 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:c29b4b13 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:15cdfb4a 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:611a0fc0 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:d092bcf4 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:4503cc96 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:67bcce45 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:61db3998 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:481ba308 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:902eb412 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:d22ea71d 1/13/2026 3:52:05 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:9ec54171 1/13/2026 3:52:10 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:baac7d29 1/13/2026 3:52:10 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:80bb138d 1/13/2026 3:52:10 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:11ad58af 1/13/2026 3:52:10 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:6fa9552b 1/13/2026 3:52:10 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:d89bae3e 1/13/2026 3:52:10 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:925d325e 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:65456257 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:bb4bff65 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:adfa0e3d 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:43d2ab12 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:bbf1633e 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:fa8ecf47 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:d517889c 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:e1150151 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:7ac40c11 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:76970b84 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:db34c4cc 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:86be3258 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:a61a559e 1/13/2026 3:52:11 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:2ca4ed13 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:549af1d4 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:d8479313 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:a09f54cb 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:4b025be6 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:1c31d471 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:b41578ca 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:a0a482ea 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:20b2dd51 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:891a0416 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:3a49d803 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:f60463c3 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:8b49cf8a 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:757a5fd5 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:203d35cd 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:652601cc 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:6aa196ee 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:5d61f2ee 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:d4c764ea 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:1715ffde 1/13/2026 3:52:41 PM]
+Type: ConfigurationErrorsException
+Message: The configuration section cannot contain a CDATA or text element. (E:\Wajahat\LatestSources\HMIS_GitSource\Standard_Hospital\GL\web.config line 24)
+Stack Trace:    at System.Web.Security.Roles.Initialize()
+   at System.Web.Security.RoleManagerModule.OnEnter(Object source, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/CustomError.aspx
+User: visionplus
+
+[ERROR:387ffb2b 1/13/2026 3:54:40 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/.well-known/appspecific/com.chrome.devtools.json
+User: visionplus
+
+[ERROR:c9d8e272 1/13/2026 3:54:42 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Scripts/toastr.js.map
+User: visionplus
+
+[ERROR:2a0b9fbf 1/13/2026 5:32:44 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: visionplus
+
+[ERROR:71cbd1ea 1/13/2026 5:35:23 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: visionplus
+
+[ERROR:d169c3cd 1/13/2026 5:36:08 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: visionplus
+
+[ERROR:4e17a12c 1/13/2026 5:37:05 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: visionplus
+
+[ERROR:2923e8b3 1/13/2026 5:45:14 PM]
+Type: HttpUnhandledException
+Message: Exception of type 'System.Web.HttpUnhandledException' was thrown.
+Stack Trace:    at System.Web.UI.Page.HandleError(Exception e)
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+   at System.Web.UI.Page.ProcessRequest()
+   at System.Web.UI.Page.ProcessRequest(HttpContext context)
+   at ASP.reportviewer_aspx.ProcessRequest(HttpContext context) in c:\Users\VP\AppData\Local\Temp\Temporary ASP.NET Files\vs\ff4fdb7e\49fce616\App_Web_izfpztit.0.cs:line 0
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/ReportViewer.aspx?ReportName=VendorWiseLedger&ReportTitle=Vendor Ledger From  undefined to undefined&sDate=undefined&eDate=undefined&Vendor=0&ExportPDF=undefined
+User: visionplus
+
+[ERROR:9a5ad0ff 1/13/2026 5:45:14 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: visionplus
+
+[ERROR:3f0e8f35 1/13/2026 5:47:09 PM]
+Type: HttpException
+Message: The file '/Modules/Others/NotFound.aspx' does not exist.
+Stack Trace:    at System.Web.UI.Util.CheckVirtualFileExists(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   at System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   at System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   at System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   at System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web
+URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/favicon.ico
+User: visionplus
+

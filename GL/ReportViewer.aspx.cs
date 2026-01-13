@@ -3430,6 +3430,17 @@ namespace PMS
                     }
                 }
             }
+            else if (reportName == "VendorWiseLedger")
+            {
+                string rptFileName = "Purchase/rptNewVendorLedger.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+            }
             else if (reportName == "Bill_Ledger_Report")
             {
                 string stDate = Request.QueryString["StartDate"].ToString();
