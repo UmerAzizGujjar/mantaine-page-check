@@ -882,7 +882,7 @@
                       
                         window.open(url, '_blank');
                     }
-                    else if (rptTitle == "Consultant_Day_Wise_report") {
+                    else if (rptTitle == "Counsltant_Day_Wise_report") {
 
                         var startDate = $('#ctl00_MainContent_txtStart_Date').val();
                         var startTime = $('#ctl00_MainContent_txtSTime').val();
@@ -892,7 +892,7 @@
                         var startDateTime = startDate + ' ' + startTime;
                         var endDateTime = endDate + ' ' + endTime;
 
-                        var url = 'ReportViewer.aspx?ReportName=Consultant_Day_Wise_report' +
+                        var url = 'ReportViewer.aspx?ReportName=Counsltant_Day_Wise_report' +
                             '&ReportTitle=Consultant Wise Report from ' + startDateTime + ' to ' + endDateTime +
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
                             '&EndDateTime=' + encodeURIComponent(endDateTime) +

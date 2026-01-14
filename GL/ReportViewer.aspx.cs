@@ -2614,7 +2614,7 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Operator", operatorID);
             }
-            else if (reportName == "DoctorShare_Report")
+            else if (reportName == "AllDoctorShareDetail")
             {
                 //  var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string operatorID = "0";
