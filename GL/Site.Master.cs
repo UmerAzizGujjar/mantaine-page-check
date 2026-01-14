@@ -23,8 +23,8 @@ namespace PMS
 
         public void LoadMenus()
         {
-            string UserName = Session["UserName"].ToString().Trim();            
-            lblCompanyName.Text = AppConfig.Company_Name;
+            string UserName = Session["UserName"].ToString().Trim();
+            lblCompanyNameCenter.Text = AppConfig.Company_Name;
             IHome.Title = AppConfig.Company_Name;
             LoginName.Text = AppConfig.UserName.ToUpper().Trim();
             HeadLoginStatus.LoginText = "Log Out";
@@ -84,7 +84,7 @@ namespace PMS
 
             string PageName = GetMenuName();
             Page.Title = AppConfig.Company_Name + " - " + PageName;
-            lblCompanyName.Text = AppConfig.Company_Name;
+            lblCompanyNameCenter.Text = AppConfig.Company_Name;
             IHome.Title = AppConfig.Company_Name;
         }
 

@@ -104,7 +104,9 @@ namespace PMS
 
                         break;
                     case "COA":
-                        DateDiv.Visible = false;
+                        DateDiv.Visible = true;
+                        stDate.Visible = false;
+                        txtStart_Date.Visible = false;
                         AccountInfoDiv.Visible = false;
                         AccountDiv.Visible = false;
                         levelChekBox.Visible = true;

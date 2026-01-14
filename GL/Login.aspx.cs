@@ -29,6 +29,7 @@ namespace PMS
                 VerifyPanel.Visible = false;
                 forgot_pass_Panel.Visible = false;
                 Panel_changePasword.Visible = false;
+                UpdateLogoVisibility();
             }
         }
 
@@ -47,12 +48,33 @@ namespace PMS
                 {
                     ddlCompany.SelectedValue = dtbCompanies.Rows[0]["Company_ID"].ToString();
                 }
+                ddlCompany.Attributes.Add("onchange", "javascript:__doPostBack('" + ddlCompany.UniqueID + "','')");
+            }
+        }
+
+        private void UpdateLogoVisibility()
+        {
+            DropDownList ddlCompany = (DropDownList)UserLogin.FindControl("ddlCompany");
+            System.Web.UI.WebControls.Image imgLogo = (System.Web.UI.WebControls.Image)UserLogin.FindControl("imgCompanyLogo");
+            
+            if (ddlCompany != null && imgLogo != null)
+            {
+                string selectedCompany = ddlCompany.SelectedItem?.Text ?? "";
+                imgLogo.Visible = (selectedCompany == "National Hospital & Medical Centre");
             }
         }
 
         protected void LoginUser_Authenticate(object sender, AuthenticateEventArgs e)
         {
             // Not used — logic handled in LoginButton_Click
+        }
+
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            if (loginportion.Visible)
+            {
+                UpdateLogoVisibility();
+            }
         }
 
         protected void LoginButton_Click(object sender, EventArgs e)

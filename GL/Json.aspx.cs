@@ -910,6 +910,7 @@ namespace PMS
                     {
                         sqlQuery = @"SELECT DISTINCT
                         rp.Patient_No,
+                        rp.Pat_Id,
                         rp.mr_no_sequence,
                         rp.Full_Name
                      FROM reg_patient rp
@@ -923,7 +924,7 @@ namespace PMS
                     foreach (DataRow dr in dt.Rows)
                     {
                         result += (result == "") ? "" : ",";
-                        result += @"{""id"":""" + dr["Patient_No"].ToString() +
+                        result += @"{""id"":""" + dr["Pat_Id"].ToString() +
                                   @""",""name"": """ +
                                   dr["mr_no_sequence"].ToString() + " - " +
                                   dr["Full_Name"].ToString() + @"""}";

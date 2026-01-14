@@ -74,7 +74,7 @@
         var patid;
         function loadMRNo() {
 
-            $("#ctl00_MainContent_txtMRNo").tokenInput("../../json.aspx?Table=PatientsByMr",
+            $("#ctl00_MainContent_txtMRNo").tokenInput("json.aspx?Table=PatientsByMr",
 
                 {
 
@@ -257,6 +257,14 @@
                         var Component = $("#ctl00_MainContent_ddlMainDepartment").val();
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=ComponentBloodBankStockLedger&ReportTitle=  ' + $("#ctl00_MainContent_ddlMainDepartment option:selected ").text() + '    summary Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&Component=' + Component + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blanks');
+                    }
+                    else if (rptTitle == "SAR") {
+                        debugger;
+                       // var exporttopdf = $('#chkExportPDF')[0].checked;
+                        var sDate = ($("#ctl00_MainContent_txtStart_Date").val());
+                        var eDate = ($("#ctl00_MainContent_txtEnd_Date").val());
+                        var url = 'ReportViewer.aspx?ReportName=StockAdjustment&ReportTitle= ' + rptTitle + '&startDate=' + sDate + '&endDate=' + eDate ;
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == "STM") {
@@ -1356,6 +1364,10 @@
                         var url = 'ReportViewer.aspx?ReportName=Vendor_Wise_Payment_Summary&ReportTitle=Vendor Wise Payment Summary From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
                         window.open(url, '_blanks');
                     }
+                     if (rptTitle == "VendorWiseLedger") {
+                        var url = 'ReportViewer.aspx?ReportName=VendorWiseLedger&ReportTitle=Vendor Ledger From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() ;
+                        window.open(url, '_blanks');
+                    }
                     if (rptTitle == "VPDR") {
 
                         var url = 'ReportViewer.aspx?ReportName=VPDR&ReportTitle=Vendor Profile Detail Report ' + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&Status=' + $('#ctl00_MainContent_ddloprators').val();
@@ -1391,6 +1403,25 @@
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=GOP_Summary&ReportTitle=OPD Patient Summary From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blanks');
+                    }
+                    else if (rptTitle == "PARLR") {
+                        debugger;
+                        var Items = ($("#ctl00_MainContent_ddlMainDepartment").val() !== undefined) ? $("#ctl00_MainContent_ddlMainDepartment").val() : "0";
+                        var hideZeroBalance = document.getElementById('<%= chkZeroRecord.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=PARLR&ReportTitle=Par and Reorder Level Report' + '&AccountCategory=' + $('#ctl00_MainContent_ddlTestName').val() + '&Items=' + Items + '&wareh=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&HideZeroBalance=' + hideZeroBalance;
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "SIH") {
+                        var stock = $("#ctl00_MainContent_ddlStock").val();
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=SIH&ReportTitle=Stock In Hand ' + '&stock=' + stock ;
+                        window.open(url, '_blanks');
+                    }
+                    else if (rptTitle == "Stock_Consumption_Details") {
+                        debugger;
+                        var stock = $("#ctl00_MainContent_ddlStock").val();    
+                        var url = 'ReportViewer.aspx?ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&stock=' + stock;
+                        window.open(url, '_blank');
                     }
                     else if (rptTitle == 'TotalPatientRegsreport') {
                         debugger;
@@ -1557,6 +1588,17 @@
                 <asp:TextBox runat="server" ID="txtItemCode" Visible="false"></asp:TextBox>
             </div>
         </div>
+        <div class="row mb-3" runat="server" id="rowStock" visible="false">
+
+            <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
+                <asp:Label runat="server" ID="lblStock" Text="Stock"></asp:Label>
+                    <asp:DropDownList ID="ddlStock" runat="server">
+                        <asp:ListItem Value="All" Text="All"></asp:ListItem>
+                        <asp:ListItem Value="0" Text="Zero"></asp:ListItem>
+                        <asp:ListItem Value="1" Text="Greater Than Zero"></asp:ListItem>
+                    </asp:DropDownList>
+            </div>
+        </div>
         <div class="row mb-3" runat="server" id="compDiv" visible="false">
             <div class="col-lg-3 col-md-4 col-sm-12" runat="server">
                 <asp:Label runat="server" ID="lblCompanies" Text="Companies"></asp:Label>
@@ -1631,6 +1673,14 @@
                     <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkAllPatientRecord" name="chkAllPatientRecord" />
      <%--<label class="form-check-label" id="lblAllPatientRecord" runat="server" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">All Patients Records</label>--%>
      <asp:Label ID="lblAllPatientRecord" Text="All Patients Records" runat="server"></asp:Label>                
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="trZeroRecord" runat="server" visible="false">
+                <div class="form-check" style="display: inline-flex; width: 26px;">
+                    <input runat="server" class="form-check-input" type="checkbox" value="Summary" id="chkZeroRecord" name="chkZeroRecord" />
+                    <label class="form-check-label" id="lblZeroRecord" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">Hide Zero Balance</label>
                 </div>
             </div>
         </div>

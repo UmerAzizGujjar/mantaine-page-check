@@ -903,15 +903,19 @@
             <div class="loginDisplay">
                 <div id="navbar" style="height: 60px !important" class="navbar navbar-default navbar-collapse h-navbar ace-save-state">
                     <div class="navbar-container ace-save-state row" id="navbar-container">
-                        <!-- Left Side Logo + Company -->
-                        <div class="col-lg-9 col-md-4  col-sm-3">
-                            <a href="~/Modules/Dashboards/ShortCuts.aspx" runat="server" id="IHome" title="Haroon Estates">
-                                <asp:Image ID="imglogo" runat="server" Style="margin: 0px; margin-left: -10px; border-radius: 0px; height: 66px !important; margin-top: -5px !important; width: 108px;" ImageUrl="~/wwwroot/Tibbit_theme\images\TibbIT_icons/logo.png" />
-                                <asp:Label ID="lblCompanyName" runat="server" Text="" Style="margin-left: 20px; display: none; font-weight: bold"></asp:Label>
-                            </a>
-
-                        </div>
-                        <div class="col-lg-1 col-md-4  col-sm-1">
+                           <div class="col-lg-3 col-md-4 col-sm-3">
+        <a href="~/Modules/Dashboards/ShortCuts.aspx" runat="server" id="IHome" title="Haroon Estates">
+            <asp:Image ID="imglogo" runat="server" Style="margin: 0px; margin-left: -10px; border-radius: 0px; height: 66px !important; margin-top: -5px !important; width: 108px;" ImageUrl="~/wwwroot/Tibbit_theme\images\TibbIT_icons/logo.png" />
+        </a>
+    </div>
+    
+    <!-- Middle Company Name -->
+    <div class="col-lg-6 col-md-4 col-sm-6" style="display: flex; align-items: center; justify-content: center; height: 60px;">
+        <asp:Label ID="lblCompanyNameCenter" runat="server" Text="" 
+            Style="color: white !important; font-weight: bold; font-size: 20px; text-align: center; margin: 0;"></asp:Label>
+    </div>
+    
+    <div class="col-lg-1 col-md-2 col-sm-1">
                             <!-- Bell Icon and Notification Dropdown (moved here) -->
                             <div id="notification" class="notification" runat="server">
                                 <div class="navbar-buttons navbar-header" role="navigation">

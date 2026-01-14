@@ -327,13 +327,13 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string MedicineDetail(int itemId, string hdndiscountType, string Batch)
+        public static string MedicineDetail(int itemId, string hdndiscountType, string Batch,string warehouse)
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId, hdndiscountType, Batch).ToList();
+                var query = db.spMedicinesDetails(itemId, hdndiscountType, Batch, warehouse).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -436,13 +436,13 @@ namespace PMS
             return new JavaScriptSerializer().Serialize(combinedResult);
         }
         [WebMethod]
-        public static string GetStockByBatch(int itemId, string hdndiscountType, string batchNumber)
+        public static string GetStockByBatch(int itemId, string hdndiscountType, string batchNumber,string warehouse)
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId, hdndiscountType, batchNumber).ToList();
+                var query = db.spMedicinesDetails(itemId, hdndiscountType, batchNumber, warehouse).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -452,6 +452,7 @@ namespace PMS
             public int Bill_ID { get; set; }
             public string Patient_ID { get; set; }
             public string CustomerName { get; set; }
+            public string warehouse { get; set; }
             public string TransType { get; set; }
             public string ReferBy { get; set; }
             public string Dept { get; set; }
@@ -527,8 +528,8 @@ namespace PMS
             newBill.line_disc = data.linediscount;
             newBill.pharmacy_Department = data.Dept;
             newBill.Patient_ID = patId;
-            var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
-            newBill.Ware_House =Convert.ToString(PharmacyCodes);
+            //var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
+            newBill.Ware_House = data.warehouse;
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
             newBill.IsPharmacy = true;

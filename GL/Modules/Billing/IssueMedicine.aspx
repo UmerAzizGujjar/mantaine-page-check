@@ -1461,6 +1461,7 @@
             debugger;
             var itemId = $('#medName').find('option:selected').val();
             var Batch = $('#batchno').find('option:selected').val();
+            var warehouse = $('#ddlWarehouse').find('option:selected').val();
           
             var rowIndex = parseInt($('#tblDetails tbody tr').length);
             let rows;
@@ -1500,7 +1501,8 @@
                 data: JSON.stringify({
                     "itemId": itemId,
                     "hdndiscountType": hdndiscountType,
-                    "Batch": Batch
+                    "Batch": Batch,
+                    "warehouse": warehouse
                 }),
                 dataType: 'JSON',
                 contentType: "application/json; charset=utf-8",
@@ -1616,6 +1618,7 @@
                 Patient_ID = "";
             }
             var CustomerName = $('#CustomerName').val();
+            var warehouse = $("#ddlWarehouse").val();
             var TransType = $("#txtTransType").val();
             var ReferBy = $('#ddlDoctor').val();
             var Dept = $('#ddlDepartment').val();
@@ -1631,6 +1634,23 @@
             if (BalanceAmount == "") {
                 BalanceAmount = 0;
             }
+            if (warehouse == "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Warehouse',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                $('#SaveVal').attr('disabled', false);
+                return;
+            }
+            
             var linediscount = $('#txtLineDisc').val();
             var Rbtn = $('input[name="rbtn"]:checked').val();
             var patId = out_Patient_Id;
@@ -1670,12 +1690,12 @@
                     hasInvalidStock = true;
                     return false;
                 }
-                if (Qty <= 0) {
+                if (parseFloat(Qty) <= 0) {
                     alert('Quantity must be greater than zero.');
                     hasInvalidStock = true;
                     return false;
                 }
-                if (Stock < Qty) {
+                if (parseFloat(Stock) < parseFloat(Qty)) {
                     alert('Quantity must be less than or equal to stock.');
                     hasInvalidStock = true;
                     return false;
@@ -1694,6 +1714,7 @@
                 "Bill_ID": Bill_ID,
                 "Patient_ID": Patient_ID,
                 "CustomerName": CustomerName,
+                "warehouse": warehouse,
                 "TransType": TransType,
                 "ReferBy": ReferBy,
                 "Dept": Dept,
@@ -1777,6 +1798,7 @@
                         Patient_ID = "";
                     }
                     var CustomerName = $('#CustomerName').val();
+                    var warehouse = $("#ddlWarehouse").val();
                     var TransType = $("#txtTransType").val();
                     var ReferBy = $('#ddlDoctor').val();
                     var Dept = $('#ddlDepartment').val();
@@ -1833,12 +1855,12 @@
                             hasInvalidStock = true;
                             return false;
                         }
-                        if (Qty <= 0) {
+                        if (parseFloat(Qty) <= 0) {
                             alert('Quantity must be greater than zero.');
                             hasInvalidStock = true;
                             return false;
                         }
-                        if (Stock < Qty) {
+                        if (parseFloat(Stock) < parseFloat(Qty)) {
                             alert('Quantity must be less than or equal to stock.');
 
                             hasInvalidStock = true;
@@ -1858,6 +1880,7 @@
                         "Bill_ID": Bill_ID,
                         "Patient_ID": Patient_ID,
                         "CustomerName": CustomerName,
+                        "warehouse": warehouse,
                         "TransType": TransType,
                         "ReferBy": ReferBy,
                         "Dept": Dept,
@@ -2361,6 +2384,7 @@
             var row = $(anchors).closest('tr');
             var rowIndex = row.index();
             var hdndiscountType = $('#hdndiscountType').val();
+            var warehouse = $('#ddlWarehouse').find('option:selected').val();
             debugger;
             var selectId = $(anchors).attr('id');
             var idParts = selectId.split('ddlbatch');
@@ -2377,7 +2401,9 @@
                 data: JSON.stringify({
                     "itemId": itemId,
                     "hdndiscountType": hdndiscountType,
-                    "batchNumber": batchNumber
+                    "batchNumber": batchNumber,
+                    "warehouse": warehouse
+
                 }),
                 dataType: 'JSON',
                 contentType: "application/json; charset=utf-8",
@@ -2424,29 +2450,48 @@
         }
 
         function LoadWarehouses() {
-            $('#ddlWarehouse').empty();
-            $('#ddlWarehouse').append('<option value="0">Please Select</option>');
+            var $dropdown = $('#ddlWarehouse');
+            $dropdown.empty();
 
             PageMethods.GetUserWarehouses(
                 function (response) {
+                    if (response && Array.isArray(response)) {
+                        if (response.length === 1) {
+                            // Only one warehouse: skip "Please Select" and auto-select it
+                            var item = response[0];
+                            $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
+                            $("#ddlWarehouse").attr("disabled", true);
+                        } else {
+                            // Multiple or zero warehouses: show "Please Select"
+                            $dropdown.append('<option value="0">Please Select</option>');
+                            $.each(response, function (index, item) {
+                                $dropdown.append(
+                                    '<option value="' + item.Value + '">' +
+                                    item.Text +
+                                    '</option>'
+                                );
+                            });
+                        }
+                    } else {
+                        // Handle case where response is not an array or is null
+                        $dropdown.append('<option value="0">Please Select</option>');
+                    }
 
-                    $.each(response, function (index, item) {
-                        $('#ddlWarehouse').append(
-                            '<option value="' + item.Value + '">' +
-                            item.Text +
-                            '</option>'
-                        );
-                    });
-                    $('#ddlWarehouse').select2();
-
+                    // Reinitialize Select2 after populating
+                    $dropdown.select2();
                 },
                 function (error) {
-                    console.log(error);
+                    console.log('Error loading warehouses:', error);
+                    // On error, default to "Please Select"
+                    $dropdown.append('<option value="0">Please Select</option>');
+                    $dropdown.select2();
                 }
             );
         }
 
-     
+        function DisableWareHouse() {
+            $("#ddlWarehouse").prop('disabled', true); // Use .prop() for boolean attributes like disabled
+        }
     </script>
 </asp:Content>
 
@@ -2530,16 +2575,19 @@
                         <option></option>
                     </select>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6" >
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label>WareHouse</label>
+                    <select id="ddlWarehouse" class="form-select" onchange="DisableWareHouse()">
+                        <option value="0">Please Select</option>
+                        <!-- other options -->
+                    </select>
+                </div>
+
+                                <div class="col-lg-2 col-md-4 col-sm-6" >
                     <label class="batchdiv">Batch No:</label>
                     <select id="batchno" class="form-control batchdiv" tabindex="7" onchange="AddMedicineDetail()"></select>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label>WareHouse</label>
-                    <select id="ddlWarehouse" class="form-select">
-                        <option value="0">Please Select</option>
-                    </select>
-                </div>
+               
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%;">
                     <label id="lblbatch">Batch</label>
                 </div>
