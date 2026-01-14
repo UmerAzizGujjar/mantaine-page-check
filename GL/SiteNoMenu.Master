@@ -202,7 +202,7 @@
             justify-content: center;
             min-height: 96vh;
             width: 100%;
-            background: url(../../wwwroot/Tibbit_theme/images/HMIS_Icons/LoginBackground.jpg) no-repeat;
+            background: url(../../wwwroot/Tibbit_theme/images/TibbIT_icons/LoginBackground.jpg) no-repeat;
             background-position: center;
             background-size: cover;
         }
