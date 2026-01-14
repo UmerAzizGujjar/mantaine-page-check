@@ -1,7 +1,11 @@
 .forcolor {
     background-color: #308665db  !important;
 }
-.col-lg-3, .col-md-6, .col-sm-12 {
+/*.col-lg-3, .col-md-6, .col-sm-12 {
+    height: 70px !important
+}*/
+
+.fields {
     height: 70px !important
 }
 .mleft {
@@ -93,7 +97,7 @@
     margin-top: 15px !important;
 }
 .mtop{
-    margin-top:20px;
+    margin-top:70px;
 }
 .d-flex {
     display: flex;
