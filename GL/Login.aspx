@@ -54,7 +54,7 @@
                                     <asp:Image ID="imgCompanyLogo" runat="server" 
                                         ImageUrl="~/wwwroot/Tibbit_theme/images/HMIS_Icons/logo.png" 
                                         AlternateText="Company Logo" 
-                                        Visible="false"
+                                        Visible="true"
                                         Style="max-width: 250px; height: auto;" />
                                 </div>
                                 <h2 class="header_login">Login</h2>
