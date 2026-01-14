@@ -43,6 +43,7 @@
             
 
             LoadDetailDoctor();
+            LoadProcedureFilter();
             LoadMachine();
             LoadHelper();
             LoadRooms();
@@ -75,6 +76,7 @@
             $('#ddl_helper').select2();
             $('#ddlRoom').select2();
             $('#ddlMachine').select2();
+            $('#chk_Procedure').select2();
 
             let isSaving = false;
 
@@ -1019,13 +1021,24 @@
                             var time = moment(data[i].Time).format('h:mm a');
                             var cancel = data[i].cancelAppointment;
                             var status = data[i].Status;
+                            var helperStart = data[i].Helper_Start_Time
+                                ? moment(data[i].Helper_Start_Time).format('h:mm A')
+                                : '';
+
+                            var helperEnd = data[i].Helper_End_Time
+                                ? moment(data[i].Helper_End_Time).format('h:mm A')
+                                : '';
+
+                            var technicianTime = (helperStart && helperEnd)
+                                ? helperStart + ' - ' + helperEnd
+                                : 'N/A';
 
                             if (cancel) {
                                 status = 'Cancelled';
                             }
 
                             rows += '<tr>' +
-                                '<td>' + (i + 1) + '</td>' + '<td>' + data[i].Appointment_No + '</td>' + '<td>' + toTitleCase(data[i].Patient_Name.replace("_", " ")) + '</td>' + '<td>' + data[i].emp_name + '</td>' + '<td>' + data[i].Phone + '</td>' + '<td>' + App_Date + '</td>' + '<td>' + time + '</td>' + '<td name="statusCell">' + status + '</td>' + '<td style="display:none;" name="cancelAppointment">' + data[i].cancelAppointment + '</td>' + '<td style="width: 250px;">' + '<a href="#" onclick="Edit(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px; margin-left: 9px;">Change Schedule</a>' +
+                                '<td>' + (i + 1) + '</td>' + '<td>' + data[i].Appointment_No + '</td>' + '<td>' + toTitleCase(data[i].Patient_Name.replace("_", " ")) + '</td>' + '<td>' + data[i].emp_name + '</td>' + '<td>' + (data[i].Technician_Name || 'N/A') + '<td>' + technicianTime + '</td>' + '<td>' + (data[i].Procedure_Name || 'N/A') + '</td>' + '<td>' + data[i].Phone + '</td>' + '<td>' + App_Date + '</td>' + '<td name="statusCell">' + status + '</td>' + '<td style="display:none;" name="cancelAppointment">' + data[i].cancelAppointment + '</td>' + '<td style="width: 250px;">' + '<a href="#" onclick="Edit(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px; margin-left: 9px;">Change Schedule</a>' +
                                 '<a href="#" onclick="CancelAppointment(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #ea0000; color: white; padding: 4px 11px; margin-left: 9px;">Cancel</a>' +
                                 '</td>' +
                                 '</tr>';
@@ -2144,7 +2157,38 @@
             });
         });
 
+        function LoadProcedureFilter() {
+            var options = '<option value="">All Procedures</option>';
+            PageMethods.GetServices(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.Item_ID + '">' + value.Description + '</option>';
+                });
+                $('#chk_Procedure').html(options);
+            });
+        }
 
+        function filterByProcedure() {
+            var procId = $('#chk_Procedure').val();
+            var $rows = $('#table_res tbody tr');
+
+            if (!procId) {
+                $rows.show();
+                return;
+            }
+
+            $rows.each(function () {
+                var rowProcId = $(this).find('td:eq(6)').text().trim(); 
+                var rowProcName = $(this).find('td:eq(6)').text().trim();
+                var selectedProcName = $('#chk_Procedure option:selected').text();
+
+                if (selectedProcName === "All Procedures" || rowProcName === selectedProcName) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+    
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -2284,6 +2328,12 @@
             </select>
         </div>
         <div class="col-lg-2 col-md-3 col-sm-4 mg">
+            <label>Procedure</label>
+            <select id="chk_Procedure" onchange="filterByProcedure()">
+                <option value="">All Procedures</option>
+            </select>
+        </div>
+        <div class="col-lg-1 col-md-3 col-sm-4 mg">
             <label></label>
             <select id="chk_status" onchange="testddlchange()">
                 <option>All</option>
@@ -2335,9 +2385,11 @@
                 <th>APPT NO</th>
                 <th>PATIENT NAME</th>
                 <th>DOCTOR NAME</th>
+                <th>Technician Name</th>
+                <th>Technician Time</th>
+                <th>PROCEDURE</th>
                 <th>PHONE NUMBER</th>
                 <th>DATE</th>
-                <th>TIME</th>
                 <th>STATUS</th>
                 <th style="text-align: center;">ACTIONS</th>
 
