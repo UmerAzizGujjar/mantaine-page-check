@@ -74,7 +74,7 @@
         var patid;
         function loadMRNo() {
 
-            $("#ctl00_MainContent_txtMRNo").tokenInput("../../json.aspx?Table=PatientsByMr",
+            $("#ctl00_MainContent_txtMRNo").tokenInput("json.aspx?Table=PatientsByMr",
 
                 {
 
