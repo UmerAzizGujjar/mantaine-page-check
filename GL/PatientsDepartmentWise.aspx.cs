@@ -407,32 +407,32 @@ namespace PMS
                     lblMultiSelect.Visible = false;
 
                 }
-                //else if (this.PageTitle == "Counsltant_Day_Wise_report")
-                //{
-                //    string x = "Consultant Day Wise Report";
-                //    Master.Label2.Text = x;
-                //    Master.GetMenuName();
-                //    tr1MedicalSubsidy.Visible = false;
-                //    dpROw.Visible = false;
-                //    tr_Summary.Visible = false;      // changed
-                //    lblMultiSelect.Visible = false;
-                //    DateDiv.Visible = true;
-                //    Time_Row.Visible = true;
-                //    op_PanelCompany.Visible = false;
-                //    optRw.Visible = false;
+                else if (this.PageTitle == "Counsltant_Day_Wise_report")
+                {
+                    string x = "Consultant Day Wise Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    tr_Summary.Visible = false;      // changed
+                    lblMultiSelect.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
 
 
-                //    trDoctor.Visible = true;
+                    trDoctor.Visible = true;
 
-                //    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
-                //    ddlDoctor.DataSource = dt;
-                //    ddlDoctor.DataValueField = "Emp_ID";
-                //    ddlDoctor.DataTextField = "Emp_Name";
-                //    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
-                //    ddlDoctor.DataBind();
-                //    lblMultiSelect.Visible = false;
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    lblMultiSelect.Visible = false;
 
-                //}
+                }
                 else if (this.PageTitle == "Department_Wise_Statistics")
                 {
                     string x = "Department Wise Statistics";
@@ -1150,6 +1150,7 @@ namespace PMS
                     ddlReportType.Visible = false;
                     lbservieType.Visible = false;
                 }
+
                 //Pharmacy Cash Report Summary
                 //if (PageTitle == "PCRS")
                 //{

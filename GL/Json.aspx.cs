@@ -900,6 +900,7 @@ namespace PMS
                     {
                         sqlQuery = @"SELECT TOP 1
                         rp.Patient_No,
+                        rp.Pat_Id,
                         rp.mr_no_sequence,
                         rp.Full_Name
                      FROM reg_patient rp
