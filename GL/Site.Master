@@ -912,7 +912,7 @@
     <!-- Middle Company Name -->
     <div class="col-lg-6 col-md-4 col-sm-6" style="display: flex; align-items: center; justify-content: center; height: 60px;">
         <asp:Label ID="lblCompanyNameCenter" runat="server" Text="" 
-            Style="color: white !important; font-weight: bold; font-size: 20px; text-align: center; margin: 0;"></asp:Label>
+Style="color: white !important; font-weight: bold; font-size: 20px; text-align: center; margin: 0;"></asp:Label>
     </div>
     
     <div class="col-lg-1 col-md-2 col-sm-1">
