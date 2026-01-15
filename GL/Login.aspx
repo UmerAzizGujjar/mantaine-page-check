@@ -52,7 +52,7 @@
                             <fieldset class="login">
                                 <div style="text-align: center; margin-bottom: 10px;">
                                     <asp:Image ID="imgCompanyLogo" runat="server" 
-                                        ImageUrl="~/wwwroot/Tibbit_theme/images/HMIS_Icons/logo.png" 
+                                        ImageUrl="~/wwwroot/Tibbit_theme/images/TibbIT_icons/logo.png" 
                                         AlternateText="Company Logo" 
                                         Visible="true"
                                         Style="max-width: 250px; height: auto;" />

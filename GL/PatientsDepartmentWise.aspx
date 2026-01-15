@@ -1307,13 +1307,6 @@
                         window.open(url, '_blank');
                     }
 
-                    else if (rptTitle == "Patients_Cards") {
-                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=DeptWisePatientsCardDetails&ReportTitle=Department And Patient Type Wise Patients Card Details from' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&DepartmentID=' + $('#ctl00_MainContent_ddlDepartments').val() + '&PatientType=' + $('#ctl00_MainContent_ddlPatientType').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&ExportPDF=' + exporttopdf + '&Summary=' + summary + '&AllPatientsRecords=' + $('#AllPatientsRecords')[0].checked + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
-                        window.open(url, '_blanks');
-                    }
-
                     else if (rptTitle == "Patients_Investigation") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;

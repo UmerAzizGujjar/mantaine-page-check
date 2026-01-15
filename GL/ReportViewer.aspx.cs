@@ -550,7 +550,7 @@ namespace PMS
                 rd.SetParameterValue("@stDate", parameterStDate);
                 rd.SetParameterValue("@endDate", parameterEndDate);
                 rd.SetParameterValue("@Operator", Request.QueryString["Operator"]);
-                //rd.SetParameterValue("@PatientType", Request.QueryString["Patient_Type"]);
+                rd.SetParameterValue("@PatientType", Request.QueryString["Patient_Type"]);
             }
 
             else if (reportName == "OPDDetailReport")
@@ -2628,7 +2628,7 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Operator", operatorID);
             }
-            else if (reportName == "AllDoctorShareDetail")   
+            else if (reportName == "DoctorShare_Report")
             {
                 //  var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string operatorID = "0";
