@@ -2379,7 +2379,7 @@
     <div class="row table-container list">
 
         <table class="table" id="table_res" style="margin-left: 11px !important">
-
+            <thead>
             <tr id="row_sample">
                 <th>S No.</th>
                 <th>APPT NO</th>
@@ -2395,7 +2395,7 @@
 
 
             </tr>
-
+                </thead>
             <tbody id="t_body">
             </tbody>
 
