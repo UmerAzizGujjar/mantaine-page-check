@@ -1432,6 +1432,7 @@
                         var BillDepartment = $('#BillDepartment').val();
                         var BillCategory = $('#BillCategory').val();
                         var bomTotalValue = $('#bomTotalValue').val();
+                        var selectedBranchId = $('#ddlUserBranch').val();
                         if (bomTotalValue == undefined || bomTotalValue == null || bomTotalValue == "") {
                             bomTotalValue=0.00
                         }
@@ -1600,7 +1601,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory,hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -5702,6 +5703,9 @@
                 }
 
                 AllowReceipeRights();
+                loadUserBranch();
+                $('#ddlUserBranch').select2();
+                
             });  // document.ready ends
 
             var editrights;
@@ -5734,6 +5738,31 @@
 
 
             }
+
+            function loadUserBranch() {
+                PageMethods.GetUserBranch(function (result) {
+                    if (!result || result === "null") {
+                        $('#ddlUserBranch').empty().append('<option value="">No Branch Assigned</option>').prop('disabled', true);
+                        return;
+                    }
+
+                    var branches = JSON.parse(result);
+                    $('#ddlUserBranch').empty();
+                    branches.forEach(function (branch) {
+                        $('#ddlUserBranch').append(
+                            '<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>'
+                        );
+                    });
+                    if (branches.length === 1) {
+                        $('#ddlUserBranch').val(branches[0].branch_ID).prop('disabled', true);
+                    } else {
+                        $('#ddlUserBranch').prepend('<option value="">Select Branch</option>')
+                            .val('')
+                            .prop('disabled', false);
+                    }
+                });
+            }
+
         </script>
         <asp:HiddenField runat="server" ID="hdfPatient_ID" ClientIDMode="Static" />
          <asp:HiddenField runat="server" ID="hndopdid" ClientIDMode="Static" />
@@ -5938,7 +5967,7 @@
     </div>
     
         <div class="row">
-              <div class="col-lg-3 col-md-3">
+              <div class="col-lg-2 col-md-3">
             <label for="txtRemarks">Remarks:</label>
                   <input type="text" id="txtRemarks" />
         </div>
@@ -5960,6 +5989,12 @@
                     <label>Package Name</label>
                     <input id="PackageName" type="text" readonly="readonly" />
                 </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label for="ddlUserBranch">Branch</label>
+                <select id="ddlUserBranch" class="form-control">
+                    <option value="">Loading...</option>
+                </select>
+            </div>
 
         
         </div>

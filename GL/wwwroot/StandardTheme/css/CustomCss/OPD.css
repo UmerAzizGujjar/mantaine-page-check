@@ -94,9 +94,14 @@
 #SearchModel_App {
     margin-top: 15px !important;
 }
-.mtop{
-    margin-top:70px;
+.mtop {
+    margin-top: 20px;
 }
+
+.mtop2 {
+    margin-top: 11% !important;
+}
+
 .d-flex {
     display: flex;
     align-items: center;
