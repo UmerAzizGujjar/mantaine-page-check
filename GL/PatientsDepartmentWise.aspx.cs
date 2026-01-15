@@ -81,14 +81,13 @@ namespace PMS
                     ddlDepartments.DataValueField = "DataValue_Name";
                     ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
                     ddlDepartments.DataBind();
-                    lblPatientType.Visible = false;
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     lblMainDepartment.Visible = false;
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
                     tr_Export.Visible = false;
-                    dpROw.Visible = false;
+                    dpROw.Visible = true;
                     tr_Summary.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
