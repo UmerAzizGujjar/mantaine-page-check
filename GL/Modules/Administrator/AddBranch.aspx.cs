@@ -19,42 +19,34 @@ namespace PMS.Modules.Administrator
             
         }
         [WebMethod]
-        public static string SaveCompany(CompanyInfo companyData)
+        public static string SaveBranch(CompanyInfo companyData)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             if(companyData.urlID != "")
             {
-                var company = (from dt in db.sys_Companies
-                               where dt.Company_ID.ToString() ==  companyData.urlID
+                var company = (from dt in db.Branches
+                               where dt.branch_ID.ToString() ==  companyData.urlID
                                select dt).FirstOrDefault();
-                company.Company_Name = companyData.companyName;
-                company.Company_Address = companyData.address;
-                company.Company_Email = companyData.companyEmail;
-                company.Company_Phone1 = companyData.phone1;
-                company.Company_Phone2 = companyData.phone2;
-                company.Company_SalesTax_No = companyData.salesTax;
-                company.Company_NTN_No = companyData.ntn;
-                company.Company_Fiscal_Year = companyData.fiscalYear;
-                company.CompanyCode = companyData.companyCode;
+                company.branch_Name = companyData.companyName;
+                company.branch_Address = companyData.address;
+                company.branch_Email = companyData.companyEmail;
+                company.branch_Phone1 = companyData.phone1;
+               
                 db.SubmitChanges();
             }
             else
             {
-                sys_Company newCompany = new sys_Company();
+                Branch newCompany = new Branch();
                 if (companyData != null)
                 {
-                    newCompany.Company_Name = companyData.companyName;
-                    newCompany.Company_Address = companyData.address;
-                    newCompany.Company_Email = companyData.companyEmail;
-                    newCompany.Company_Phone1 = companyData.phone1;
-                    newCompany.Company_Phone2 = companyData.phone2;
-                    newCompany.Company_SalesTax_No = companyData.salesTax;
-                    newCompany.Company_NTN_No = companyData.ntn;
-                    newCompany.Company_Fiscal_Year = companyData.fiscalYear;
-                    newCompany.CompanyCode = companyData.companyCode;
+                    newCompany.branch_Name = companyData.companyName;
+                    newCompany.branch_Address = companyData.address;
+                    newCompany.branch_Email = companyData.companyEmail;
+                    newCompany.branch_Phone1 = companyData.phone1;
+                   
 
                 }
-                db.sys_Companies.InsertOnSubmit(newCompany);
+                db.Branches.InsertOnSubmit(newCompany);
                 db.SubmitChanges();
             }
                 
@@ -66,20 +58,20 @@ namespace PMS.Modules.Administrator
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.sys_Companies.FirstOrDefault(p => p.Company_ID == ID);
+                var query = db.Branches.FirstOrDefault(p => p.branch_ID == ID);
 
                 if (query != null)
                 {
-                    string fileName = Path.GetFileName(query.ImageURL);
+                    //string fileName = Path.GetFileName(query.ImageURL);
 
-                    string imagePath = HttpContext.Current.Server.MapPath("~/wwwroot/CompanyImages/" + fileName);
+                    //string imagePath = HttpContext.Current.Server.MapPath("~/wwwroot/CompanyImages/" + fileName);
 
-                    db.sys_Companies.DeleteOnSubmit(query);
+                    db.Branches.DeleteOnSubmit(query);
                     db.SubmitChanges();
-                    if (File.Exists(imagePath))
-                    {
-                        File.Delete(imagePath);
-                    }
+                    //if (File.Exists(imagePath))
+                    //{
+                    //    File.Delete(imagePath);
+                    //}
 
                     return "1";
                 }
@@ -92,25 +84,20 @@ namespace PMS.Modules.Administrator
 
 
         [WebMethod]
-        public static string GetCompanyDetail(int ID)
+        public static string GetBranchDetail(int ID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
-            var query = (from p in db.sys_Companies
-                         where p.Company_ID == ID
+            var query = (from p in db.Branches
+                         where p.branch_ID == ID
                          select new
                          {
 
-                             companyName = p.Company_Name,
-                             companyEmail = p.Company_Email,
-                             phone1 = p.Company_Phone1,
-                             phone2 = p.Company_Phone2,
-                             salesTax = p.Company_SalesTax_No,
-                             ntn = p.Company_NTN_No,
-                             fiscalYear = p.Company_Fiscal_Year,
-                             companyCode = p.CompanyCode,
-                             address = p.Company_Address,
-                             imageURL = p.ImageURL,
+                             companyName = p.branch_Name,
+                             companyEmail = p.branch_Email,
+                             phone1 = p.branch_Phone1,
+                             address = p.branch_Address,
+                      
                              
 
 
@@ -130,20 +117,20 @@ namespace PMS.Modules.Administrator
                     DateTime searchDate;
                     bool isDateSearch = DateTime.TryParse(searchValue, out searchDate);
 
-                    var Total_companies = _dbContext.sys_Companies.Count();
-                    var comp = (from p in _dbContext.sys_Companies
-                                  where (
-                                      p.Company_Name.ToString().Contains(searchValue) ||
-                                      p.Company_Email.Contains(searchValue) ||
-                                      p.CompanyCode.Contains(searchValue)
+                    var Total_companies = _dbContext.Branches.Count();
+                    var comp = (from p in _dbContext.Branches
+                                where (
+                                      p.branch_Name.ToString().Contains(searchValue) ||
+                                      p.branch_Email.Contains(searchValue) ||
+                                      p.branch_Phone1.Contains(searchValue)
                                   )
                                   select new
                                   {
                                       
-                                      p.Company_ID,
-                                      p.Company_Name,
-                                      p.Company_Email,
-                                      p.CompanyCode
+                                      p.branch_ID,
+                                      p.branch_Name,
+                                      p.branch_Email,
+                                      p.branch_Phone1
                                   });
 
 
@@ -153,16 +140,16 @@ namespace PMS.Modules.Administrator
                     switch (sortColumn)
                     {
                         case "comp_ID":
-                            comp = sortColumnDirection == "asc" ? comp.OrderBy(a => a.Company_ID) : comp.OrderByDescending(a => a.Company_ID);
+                            comp = sortColumnDirection == "asc" ? comp.OrderBy(a => a.branch_ID) : comp.OrderByDescending(a => a.branch_ID);
                             break;
                         case "CompName":
-                            comp = sortColumnDirection == "asc" ? comp.OrderBy(a => a.Company_Name) : comp.OrderByDescending(a => a.Company_Name);
+                            comp = sortColumnDirection == "asc" ? comp.OrderBy(a => a.branch_Name) : comp.OrderByDescending(a => a.branch_Name);
                             break;
                         case "CompEmail":
-                            comp = sortColumnDirection == "asc" ? comp.OrderBy(a => a.Company_Email) : comp.OrderByDescending(a => a.Company_Email);
+                            comp = sortColumnDirection == "asc" ? comp.OrderBy(a => a.branch_Email) : comp.OrderByDescending(a => a.branch_Email);
                             break;
                         case "CompCode":
-                            comp = sortColumnDirection == "asc" ? comp.OrderBy(a => a.CompanyCode) : comp.OrderByDescending(a => a.CompanyCode);
+                            comp = sortColumnDirection == "asc" ? comp.OrderBy(a => a.branch_Phone1) : comp.OrderByDescending(a => a.branch_Phone1);
                             break;
                         
                     }
@@ -188,11 +175,7 @@ namespace PMS.Modules.Administrator
             public string companyName { get; set; }
             public string companyEmail { get; set; }
             public string phone1 { get; set; }
-            public string phone2 { get; set; }
-            public string salesTax { get; set; }
-            public string ntn { get; set; }
-            public string fiscalYear { get; set; }
-            public string companyCode { get; set; }
+
             public string address { get; set; }
             
         }
