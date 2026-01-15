@@ -179,15 +179,21 @@ namespace PMS
                                              join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
                                              where pr.PR_Id == Convert.ToInt32(pr_id.Text)
                                              select (decimal?)prd.EstimateCost).Sum() ?? 0m;
+                        var Budget = (from s in db.sys_Parms
+                                      where s.Name == "Budget Working"
+                                      select s.Code).FirstOrDefault();
 
-                        //if (TotalPRAmount > remainingAmount)
-                        //{
-                        //    string alertMessage = $"Total PR Amount: ({TotalPRAmount}) exceeds the Remaining Amount: ({remainingAmount}).";
-                        //    ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('{alertMessage}');", true);
-                        //    return;
-                        //}
+                        if (Budget != null)
+                        {
+                            if (TotalPRAmount > remainingAmount)
+                            {
+                                string alertMessage = $"Total PR Amount: ({TotalPRAmount}) exceeds the Remaining Amount: ({remainingAmount}).";
+                                ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('{alertMessage}');", true);
+                                return;
+                            }
+                        }
 
-                        var IsFinalApprovals = (from SASD in db.Sys_Approval_Stage_Details
+                            var IsFinalApprovals = (from SASD in db.Sys_Approval_Stage_Details
                                                 join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
                                                 join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
                                                 join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
