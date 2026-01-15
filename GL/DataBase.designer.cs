@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬⁬IITH_Live")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬pakred_uat")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -915,6 +915,15 @@ namespace PMS
         partial void InsertDerma_Appointment(Derma_Appointment instance);
         partial void UpdateDerma_Appointment(Derma_Appointment instance);
         partial void DeleteDerma_Appointment(Derma_Appointment instance);
+        partial void InsertBranch(Branch instance);
+        partial void UpdateBranch(Branch instance);
+        partial void DeleteBranch(Branch instance);
+        partial void InsertBranch_Wise_User(Branch_Wise_User instance);
+        partial void UpdateBranch_Wise_User(Branch_Wise_User instance);
+        partial void DeleteBranch_Wise_User(Branch_Wise_User instance);
+        partial void InsertBranch_Wise_User_Detail(Branch_Wise_User_Detail instance);
+        partial void UpdateBranch_Wise_User_Detail(Branch_Wise_User_Detail instance);
+        partial void DeleteBranch_Wise_User_Detail(Branch_Wise_User_Detail instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -3334,6 +3343,30 @@ namespace PMS
             get
             {
                 return this.GetTable<Derma_Appointment>();
+            }
+        }
+
+        public System.Data.Linq.Table<Branch> Branches
+        {
+            get
+            {
+                return this.GetTable<Branch>();
+            }
+        }
+
+        public System.Data.Linq.Table<Branch_Wise_User> Branch_Wise_Users
+        {
+            get
+            {
+                return this.GetTable<Branch_Wise_User>();
+            }
+        }
+
+        public System.Data.Linq.Table<Branch_Wise_User_Detail> Branch_Wise_User_Details
+        {
+            get
+            {
+                return this.GetTable<Branch_Wise_User_Detail>();
             }
         }
 
@@ -159883,6 +159916,768 @@ namespace PMS
                     this._cancelAppointment = value;
                     this.SendPropertyChanged("cancelAppointment");
                     this.OncancelAppointmentChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Branch")]
+    public partial class Branch : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _branch_ID;
+
+        private string _branch_Name;
+
+        private string _branch_Address;
+
+        private string _branch_Email;
+
+        private string _branch_Phone1;
+
+        private string _branch_Phone2;
+
+        private string _branch_Fax;
+
+        private string _branch_UserField1;
+
+        private string _branch_UserField2;
+
+        private string _Branch_UserField3;
+
+        private System.Nullable<int> _Book_ID;
+
+        private System.Data.Linq.Binary _Branch_Image;
+
+        private string _Branch_SalesTax_No;
+
+        private string _Branch_NTN_No;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void Onbranch_IDChanging(int value);
+        partial void Onbranch_IDChanged();
+        partial void Onbranch_NameChanging(string value);
+        partial void Onbranch_NameChanged();
+        partial void Onbranch_AddressChanging(string value);
+        partial void Onbranch_AddressChanged();
+        partial void Onbranch_EmailChanging(string value);
+        partial void Onbranch_EmailChanged();
+        partial void Onbranch_Phone1Changing(string value);
+        partial void Onbranch_Phone1Changed();
+        partial void Onbranch_Phone2Changing(string value);
+        partial void Onbranch_Phone2Changed();
+        partial void Onbranch_FaxChanging(string value);
+        partial void Onbranch_FaxChanged();
+        partial void Onbranch_UserField1Changing(string value);
+        partial void Onbranch_UserField1Changed();
+        partial void Onbranch_UserField2Changing(string value);
+        partial void Onbranch_UserField2Changed();
+        partial void OnBranch_UserField3Changing(string value);
+        partial void OnBranch_UserField3Changed();
+        partial void OnBook_IDChanging(System.Nullable<int> value);
+        partial void OnBook_IDChanged();
+        partial void OnBranch_ImageChanging(System.Data.Linq.Binary value);
+        partial void OnBranch_ImageChanged();
+        partial void OnBranch_SalesTax_NoChanging(string value);
+        partial void OnBranch_SalesTax_NoChanged();
+        partial void OnBranch_NTN_NoChanging(string value);
+        partial void OnBranch_NTN_NoChanged();
+        #endregion
+
+        public Branch()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_branch_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int branch_ID
+        {
+            get
+            {
+                return this._branch_ID;
+            }
+            set
+            {
+                if ((this._branch_ID != value))
+                {
+                    this.Onbranch_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._branch_ID = value;
+                    this.SendPropertyChanged("branch_ID");
+                    this.Onbranch_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_branch_Name", DbType = "VarChar(100)")]
+        public string branch_Name
+        {
+            get
+            {
+                return this._branch_Name;
+            }
+            set
+            {
+                if ((this._branch_Name != value))
+                {
+                    this.Onbranch_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._branch_Name = value;
+                    this.SendPropertyChanged("branch_Name");
+                    this.Onbranch_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_branch_Address", DbType = "VarChar(250)")]
+        public string branch_Address
+        {
+            get
+            {
+                return this._branch_Address;
+            }
+            set
+            {
+                if ((this._branch_Address != value))
+                {
+                    this.Onbranch_AddressChanging(value);
+                    this.SendPropertyChanging();
+                    this._branch_Address = value;
+                    this.SendPropertyChanged("branch_Address");
+                    this.Onbranch_AddressChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_branch_Email", DbType = "VarChar(50)")]
+        public string branch_Email
+        {
+            get
+            {
+                return this._branch_Email;
+            }
+            set
+            {
+                if ((this._branch_Email != value))
+                {
+                    this.Onbranch_EmailChanging(value);
+                    this.SendPropertyChanging();
+                    this._branch_Email = value;
+                    this.SendPropertyChanged("branch_Email");
+                    this.Onbranch_EmailChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_branch_Phone1", DbType = "VarChar(50)")]
+        public string branch_Phone1
+        {
+            get
+            {
+                return this._branch_Phone1;
+            }
+            set
+            {
+                if ((this._branch_Phone1 != value))
+                {
+                    this.Onbranch_Phone1Changing(value);
+                    this.SendPropertyChanging();
+                    this._branch_Phone1 = value;
+                    this.SendPropertyChanged("branch_Phone1");
+                    this.Onbranch_Phone1Changed();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_branch_Phone2", DbType = "VarChar(50)")]
+        public string branch_Phone2
+        {
+            get
+            {
+                return this._branch_Phone2;
+            }
+            set
+            {
+                if ((this._branch_Phone2 != value))
+                {
+                    this.Onbranch_Phone2Changing(value);
+                    this.SendPropertyChanging();
+                    this._branch_Phone2 = value;
+                    this.SendPropertyChanged("branch_Phone2");
+                    this.Onbranch_Phone2Changed();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_branch_Fax", DbType = "VarChar(50)")]
+        public string branch_Fax
+        {
+            get
+            {
+                return this._branch_Fax;
+            }
+            set
+            {
+                if ((this._branch_Fax != value))
+                {
+                    this.Onbranch_FaxChanging(value);
+                    this.SendPropertyChanging();
+                    this._branch_Fax = value;
+                    this.SendPropertyChanged("branch_Fax");
+                    this.Onbranch_FaxChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_branch_UserField1", DbType = "VarChar(50)")]
+        public string branch_UserField1
+        {
+            get
+            {
+                return this._branch_UserField1;
+            }
+            set
+            {
+                if ((this._branch_UserField1 != value))
+                {
+                    this.Onbranch_UserField1Changing(value);
+                    this.SendPropertyChanging();
+                    this._branch_UserField1 = value;
+                    this.SendPropertyChanged("branch_UserField1");
+                    this.Onbranch_UserField1Changed();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_branch_UserField2", DbType = "VarChar(50)")]
+        public string branch_UserField2
+        {
+            get
+            {
+                return this._branch_UserField2;
+            }
+            set
+            {
+                if ((this._branch_UserField2 != value))
+                {
+                    this.Onbranch_UserField2Changing(value);
+                    this.SendPropertyChanging();
+                    this._branch_UserField2 = value;
+                    this.SendPropertyChanged("branch_UserField2");
+                    this.Onbranch_UserField2Changed();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_UserField3", DbType = "VarChar(50)")]
+        public string Branch_UserField3
+        {
+            get
+            {
+                return this._Branch_UserField3;
+            }
+            set
+            {
+                if ((this._Branch_UserField3 != value))
+                {
+                    this.OnBranch_UserField3Changing(value);
+                    this.SendPropertyChanging();
+                    this._Branch_UserField3 = value;
+                    this.SendPropertyChanged("Branch_UserField3");
+                    this.OnBranch_UserField3Changed();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
+        public System.Nullable<int> Book_ID
+        {
+            get
+            {
+                return this._Book_ID;
+            }
+            set
+            {
+                if ((this._Book_ID != value))
+                {
+                    this.OnBook_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Book_ID = value;
+                    this.SendPropertyChanged("Book_ID");
+                    this.OnBook_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Image", DbType = "Image", UpdateCheck = UpdateCheck.Never)]
+        public System.Data.Linq.Binary Branch_Image
+        {
+            get
+            {
+                return this._Branch_Image;
+            }
+            set
+            {
+                if ((this._Branch_Image != value))
+                {
+                    this.OnBranch_ImageChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Image = value;
+                    this.SendPropertyChanged("Branch_Image");
+                    this.OnBranch_ImageChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_SalesTax_No", DbType = "VarChar(50)")]
+        public string Branch_SalesTax_No
+        {
+            get
+            {
+                return this._Branch_SalesTax_No;
+            }
+            set
+            {
+                if ((this._Branch_SalesTax_No != value))
+                {
+                    this.OnBranch_SalesTax_NoChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_SalesTax_No = value;
+                    this.SendPropertyChanged("Branch_SalesTax_No");
+                    this.OnBranch_SalesTax_NoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_NTN_No", DbType = "VarChar(50)")]
+        public string Branch_NTN_No
+        {
+            get
+            {
+                return this._Branch_NTN_No;
+            }
+            set
+            {
+                if ((this._Branch_NTN_No != value))
+                {
+                    this.OnBranch_NTN_NoChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_NTN_No = value;
+                    this.SendPropertyChanged("Branch_NTN_No");
+                    this.OnBranch_NTN_NoChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Branch_Wise_User")]
+    public partial class Branch_Wise_User : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Branch_wise_User_Id;
+
+        private System.Nullable<System.Guid> _User_Id;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        private System.Nullable<bool> _is_cancel;
+
+        private System.Nullable<System.Guid> _cancel_by;
+
+        private System.Nullable<System.DateTime> _cancel_date;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnBranch_wise_User_IdChanging(int value);
+        partial void OnBranch_wise_User_IdChanged();
+        partial void OnUser_IdChanging(System.Nullable<System.Guid> value);
+        partial void OnUser_IdChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        partial void Onis_cancelChanging(System.Nullable<bool> value);
+        partial void Onis_cancelChanged();
+        partial void Oncancel_byChanging(System.Nullable<System.Guid> value);
+        partial void Oncancel_byChanged();
+        partial void Oncancel_dateChanging(System.Nullable<System.DateTime> value);
+        partial void Oncancel_dateChanged();
+        #endregion
+
+        public Branch_Wise_User()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_wise_User_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Branch_wise_User_Id
+        {
+            get
+            {
+                return this._Branch_wise_User_Id;
+            }
+            set
+            {
+                if ((this._Branch_wise_User_Id != value))
+                {
+                    this.OnBranch_wise_User_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_wise_User_Id = value;
+                    this.SendPropertyChanged("Branch_wise_User_Id");
+                    this.OnBranch_wise_User_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_User_Id", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> User_Id
+        {
+            get
+            {
+                return this._User_Id;
+            }
+            set
+            {
+                if ((this._User_Id != value))
+                {
+                    this.OnUser_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._User_Id = value;
+                    this.SendPropertyChanged("User_Id");
+                    this.OnUser_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_is_cancel", DbType = "Bit")]
+        public System.Nullable<bool> is_cancel
+        {
+            get
+            {
+                return this._is_cancel;
+            }
+            set
+            {
+                if ((this._is_cancel != value))
+                {
+                    this.Onis_cancelChanging(value);
+                    this.SendPropertyChanging();
+                    this._is_cancel = value;
+                    this.SendPropertyChanged("is_cancel");
+                    this.Onis_cancelChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_cancel_by", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> cancel_by
+        {
+            get
+            {
+                return this._cancel_by;
+            }
+            set
+            {
+                if ((this._cancel_by != value))
+                {
+                    this.Oncancel_byChanging(value);
+                    this.SendPropertyChanging();
+                    this._cancel_by = value;
+                    this.SendPropertyChanged("cancel_by");
+                    this.Oncancel_byChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_cancel_date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> cancel_date
+        {
+            get
+            {
+                return this._cancel_date;
+            }
+            set
+            {
+                if ((this._cancel_date != value))
+                {
+                    this.Oncancel_dateChanging(value);
+                    this.SendPropertyChanging();
+                    this._cancel_date = value;
+                    this.SendPropertyChanged("cancel_date");
+                    this.Oncancel_dateChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Branch_Wise_User_Detail")]
+    public partial class Branch_Wise_User_Detail : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Branch_wise_Detail_Id;
+
+        private System.Nullable<int> _Branch_wise_User_Id;
+
+        private string _Brancg;
+
+        private System.Nullable<System.Guid> _User_Id;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnBranch_wise_Detail_IdChanging(int value);
+        partial void OnBranch_wise_Detail_IdChanged();
+        partial void OnBranch_wise_User_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_wise_User_IdChanged();
+        partial void OnBrancgChanging(string value);
+        partial void OnBrancgChanged();
+        partial void OnUser_IdChanging(System.Nullable<System.Guid> value);
+        partial void OnUser_IdChanged();
+        #endregion
+
+        public Branch_Wise_User_Detail()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_wise_Detail_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Branch_wise_Detail_Id
+        {
+            get
+            {
+                return this._Branch_wise_Detail_Id;
+            }
+            set
+            {
+                if ((this._Branch_wise_Detail_Id != value))
+                {
+                    this.OnBranch_wise_Detail_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_wise_Detail_Id = value;
+                    this.SendPropertyChanged("Branch_wise_Detail_Id");
+                    this.OnBranch_wise_Detail_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_wise_User_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_wise_User_Id
+        {
+            get
+            {
+                return this._Branch_wise_User_Id;
+            }
+            set
+            {
+                if ((this._Branch_wise_User_Id != value))
+                {
+                    this.OnBranch_wise_User_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_wise_User_Id = value;
+                    this.SendPropertyChanged("Branch_wise_User_Id");
+                    this.OnBranch_wise_User_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Brancg", DbType = "VarChar(100)")]
+        public string Brancg
+        {
+            get
+            {
+                return this._Brancg;
+            }
+            set
+            {
+                if ((this._Brancg != value))
+                {
+                    this.OnBrancgChanging(value);
+                    this.SendPropertyChanging();
+                    this._Brancg = value;
+                    this.SendPropertyChanged("Brancg");
+                    this.OnBrancgChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_User_Id", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> User_Id
+        {
+            get
+            {
+                return this._User_Id;
+            }
+            set
+            {
+                if ((this._User_Id != value))
+                {
+                    this.OnUser_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._User_Id = value;
+                    this.SendPropertyChanged("User_Id");
+                    this.OnUser_IdChanged();
                 }
             }
         }

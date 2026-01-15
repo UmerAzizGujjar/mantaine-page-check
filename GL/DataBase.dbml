@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬⁬IITH_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬pakred_uat" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7160,6 +7160,45 @@
       <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Updated_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="cancelAppointment" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Branch" Member="Branches">
+    <Type Name="Branch">
+      <Column Name="branch_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="branch_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="branch_Address" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="branch_Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="branch_Phone1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="branch_Phone2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="branch_Fax" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="branch_UserField1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="branch_UserField2" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Branch_UserField3" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Branch_Image" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="Branch_SalesTax_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Branch_NTN_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Branch_Wise_User" Member="Branch_Wise_Users">
+    <Type Name="Branch_Wise_User">
+      <Column Name="Branch_wise_User_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="User_Id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="is_cancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="cancel_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="cancel_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Branch_Wise_User_Detail" Member="Branch_Wise_User_Details">
+    <Type Name="Branch_Wise_User_Detail">
+      <Column Name="Branch_wise_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Branch_wise_User_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Brancg" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="User_Id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

@@ -1040,11 +1040,11 @@
 
 
 
-        <div class="col-lg-9 col-md-9 col-sm-12" style="width: 73%; margin-left: 13px;">
+        <div class="col-lg-9 col-md-9 col-sm-12 fields" style="width: 73%; margin-left: 13px;">
             <!-- Quick Actions row: four equal, high-contrast cards -->
             <div class="row">
                 <!-- Card 1 -->
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields">
                     <div class="quick-actions" id="card-register" role="button" tabindex="0"
                         onclick="addfunc()"
                         onkeypress="if(event.key==='Enter'){ addfunc(); }"
@@ -1060,7 +1060,7 @@
                 </div>
 
                 <!-- Card 2 -->
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields">
                     <div id="card-search-appointment" role="button" tabindex="0" onclick="SearchPop_App()" onkeypress="if(event.key==='Enter'){ SearchPop_App(); }"
                         class="d-flex flex-column justify-content-center align-items-start quick-actions">
                         <div class="d-flex align-items-center">
@@ -1074,7 +1074,7 @@
                 </div>
 
                 <!-- Card 3 -->
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields">
                     <div id="btnsearchpatlist" role="button" tabindex="0" onclick="/* add search patient function here, e.g. openPatientSearch() */" onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }"
                         class="d-flex flex-column justify-content-center align-items-start quick-actions">
                         <div class="d-flex align-items-center">
@@ -1088,7 +1088,7 @@
                 </div>
 
                 <!-- Card 4 -->
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="EmerRefferedBy">
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields" id="EmerRefferedBy">
                     <div id="btnsearchEmergencylist" role="button" tabindex="0" onclick="/* add emergency refer function here, e.g. referToEmergency() */" onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
                         class="d-flex flex-column justify-content-center align-items-start quick-actions">
                         <div class="d-flex align-items-center">
@@ -1100,7 +1100,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 mb-3" id="RefferdBy">
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields" id="RefferdBy">
                     <div id="btnsearchReferlist" role="button" tabindex="0" onclick="openReferPatientModal()" onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
                         class="d-flex flex-column justify-content-center align-items-start quick-actions" style="cursor: pointer;">
                         <div class="d-flex align-items-center">
@@ -1118,7 +1118,7 @@
 
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-4">
+        <div class="col-lg-3 col-md-3 col-sm-4 fields">
             <div class="card3">
                 <span style="font-size: 15px;">Total OPD</span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat" class="blink" runat="server"></span>
@@ -1136,7 +1136,7 @@
     </div>
 
     <div class="row mtop">
-        <div class="col-lg-9 col-md-8 sm-12">
+        <div class="col-lg-9 col-md-8 sm-12 fields">
             <div class="card">
                 <div class="row show g-3">
 
@@ -1148,58 +1148,58 @@
                         <input type="text" id="txtPatientNo" value="New" readonly="readonly" />
                         <input type="hidden" id="hdnPatientID" runat="server" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Patient_name">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Patient_name">
                         <label>Name *</label>
                         <input type="text" id="txt_patname" value="" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Last_name">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Last_name">
                         <label>Last Name *</label>
                         <input type="text" id="txt_F_Name" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_OPD_No">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_OPD_No">
                         <label>OpdNo *</label>
                         <input type="text" id="txt_opd_no" value="New" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Mode_Reg">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Mode_Reg">
                         <label>Mode Of Presentation</label>
                         <select id="ddlMode_Of_Registration" readonly="readonly"></select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Mobile">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Mobile">
                         <label>Mobile *</label>
                         <input type="text" id="txtmobile" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_CNIC">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_CNIC">
                         <label>CNIC *</label>
                         <input type="text" id="txtnic" value="" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Category">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Category">
                         <label>Patient Category</label>
                         <select id="ddlPatient_Type" disabled>
                             <option value="0">Select Category</option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Martial_Status">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Martial_Status">
                         <label>Martial Status</label>
                         <select id="ddlmartialstatus" disabled>
                             <option value="0">Select Status</option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_age">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_age">
                         <label>Age</label>
                         <input type="text" id="txtage" readonly="readonly" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Gender">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Gender">
                         <label>Gender</label>
                         <select id="ddlGender" disabled>
                             <option value="0">Select Gender</option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Fee">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Fee">
                         <label>Fee</label>
                         <input type="text" id="txtfees" readonly="readonly" class="form-control" />
                         <input type="text" id="txtactualfee" style="display: none;" class="form-control" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" id="field_Services">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Services">
                         <label>Services</label>
                         <select id="ddlServices">
                             <option value="0">Select Service</option>
