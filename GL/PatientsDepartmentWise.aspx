@@ -1364,6 +1364,11 @@
                         var url = 'ReportViewer.aspx?ReportName=Vendor_Wise_Payment_Summary&ReportTitle=Vendor Wise Payment Summary From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
                         window.open(url, '_blanks');
                     }
+                    if (rptTitle == "Bonus_Medicine_Detail_Report") {
+
+                        var url = 'ReportViewer.aspx?ReportName=Bonus_Medicine_Detail_Report&ReportTitle=Bonus Medicine Detail From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        window.open(url, '_blanks');
+                    }
                      if (rptTitle == "VendorWiseLedger") {
                         var url = 'ReportViewer.aspx?ReportName=VendorWiseLedger&ReportTitle=Vendor Ledger From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() ;
                         window.open(url, '_blanks');

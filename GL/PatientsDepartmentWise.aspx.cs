@@ -2141,6 +2141,46 @@ namespace PMS
                     ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
                     ddlDepartments.DataBind();
                 }
+                else if (this.PageTitle == "Bonus_Medicine_Detail_Report")
+                {
+                    string x = "Bonus Medicine Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    object valusets;
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    lblPatientType.Text = "Items";
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in db.INV_Items
+                                       where
+                                       sl.Active == true
+                                       && sl.Hospital_Services == false
+                                       && sl.Services == false
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlPatientType.DataSource = serviceList;
+
+                    ddlPatientType.DataValueField = "Item_ID";
+                    ddlPatientType.DataTextField = "Description";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+                }
                 else if (this.PageTitle == "VPDR")
                 {
                     tr_Summary.Visible = false;
