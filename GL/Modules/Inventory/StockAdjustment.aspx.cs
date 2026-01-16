@@ -200,6 +200,18 @@ namespace PMS
             }
         }
         [WebMethod]
+        public static string GetWareHouseCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "WareHouse For Stockadjustment"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
+        [WebMethod]
         public static bool UserUnApproveEntryRights()
         {
             using (DataBaseDataContext db = new DataBaseDataContext())

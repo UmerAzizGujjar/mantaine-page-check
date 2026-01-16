@@ -771,6 +771,7 @@
                                     $('#txtfees').val(afterdiscountfee.toFixed(2));
                                     $('#txtactualfee').val(res.fee);
                                     $('#txtdiscount').val(res.discount_percentage);
+                                    $('#txtdiscount').attr('disabled', true);
                                     $('#hdnhospShare').val(res.Hospital_Share);
                                     $('#hdnDocshare').val(res.Doctor_Share);
                                 }
@@ -1309,7 +1310,7 @@
                     </div>
 
                     <div class="col-lg-5 col-md-4 col-sm-6 d-flex align-items-center mtop" id="Field_freeCheck">
-                        <label for="chckfreecheck" class="ml-2 wdth">Free Check</label>
+                        <label for="chckfreecheck" class="ml-2 wdth">Is Revisit</label>
                         <input type="checkbox" id="chckfreecheck" class="custom-checkbox " />
                     </div>
                 </div>

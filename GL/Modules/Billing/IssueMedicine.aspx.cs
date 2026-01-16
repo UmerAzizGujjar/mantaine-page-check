@@ -902,7 +902,8 @@ namespace PMS
             saleReturn.TotalDisc_Amount = record.TotalDisAmt;
             saleReturn.Disc_Adjustment = record.AdjustmentAmt;
             saleReturn.Net_Amount = record.Total;
-            saleReturn.Ware_House = "008";
+            //saleReturn.Ware_House = "008";
+            saleReturn.Ware_House = record.warehouse;
             saleReturn.Total_Amount = record.TotalPayable;
             saleReturn.Company_ID = AppConfig.Company_ID;
             saleReturn.Created_Date = DateTime.Now;
@@ -939,6 +940,7 @@ namespace PMS
         {
             public string BillId { get; set; }
             public string InvNo { get; set; }
+            public string warehouse { get; set; }
             public decimal TotalPayable { get; set; }
             public decimal TotalLineDisc { get; set; }
             public decimal DisPer { get; set; }
