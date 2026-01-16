@@ -265,6 +265,7 @@ function SavePatient() {
     var Blood_Group = $('#ddl_bloodGroup').val();
     var State = $('#ddlstate').val();
     var Country = $('#ddlCountry :selected').val();
+    var cardfee = $('#txtCardFee').val();
     var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
 
     if (PatientName === "") {
@@ -319,6 +320,7 @@ function SavePatient() {
         "Blood_Group": Blood_Group,
         "State": State,
         "Country": Country,
+        "cardfee": cardfee,
         "AntiForgeryToken": AntiForgeryToken,
 
     });
@@ -417,6 +419,7 @@ function Get_Pat_Info(reg_id) {
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#txt_cnic').val(data.CNIC_Masked);
             $('#txtAge_yearss').val(data.DOB);
+            $('#txtCardFee').val(data.Card_fee);
             //dob
          
             if (data.MaritalStatus_text)

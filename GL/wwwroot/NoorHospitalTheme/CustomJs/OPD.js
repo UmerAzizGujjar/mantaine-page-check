@@ -79,7 +79,8 @@ $(document).ready(function () {
         { id: '#ddlServices', method: 'GetServices' },
         { id: '#ddlDepartment', method: 'GetDepartment' },
         { id: '#ddldoctor', method: 'GetDoctor' },
-        { id: '#ddlpanel', method: 'GetPanel' }
+        { id: '#ddlpanel', method: 'GetPanel' },
+        { id: '#ddlcashier', method: 'GetCasher' }
 
     ];
 
@@ -109,7 +110,7 @@ $(document).ready(function () {
             // Since modal uses native select, bind to 'change', not 'select2:select'
             const changeHandler = function () {
                 loaddata();
-                $(this).prop('disabled', true);
+                //$(this).prop('disabled', true);
             };
             if (!isInsideModal) {
                 $element.off('select2:select').on('select2:select', changeHandler);
@@ -1004,7 +1005,6 @@ function SavePatient() {
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
 
-
     if (discount < 100.0 && Fees == 0.0) {
 
         Swal.fire({
@@ -1037,6 +1037,7 @@ function SavePatient() {
         });
         return;
     }
+
 
     // ✅ CORRECT: Get VALUE of hidden field
     var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
@@ -1221,10 +1222,9 @@ function SavePatient() {
                     htmlContainer: 'swal-big-text'
                 }
             });
-            var url1 = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
-            var url2 = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + patientID;
-            window.open(url1, '_blank');
-            window.open(url2, '_blank');
+            var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
+            //var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + patientID;
+            window.open(url, '_blank');
             window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {
@@ -1657,17 +1657,14 @@ function OPD_Print(OPD_ID) {
     }
 
     var locationInfo = window.location;
-    var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
-    var url1 = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+    var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
 
     if (locationInfo.hostname !== "localhost") {
         var urlInfo = window.location.href.split('/');
         var ip = urlInfo[2];
         var foldername = urlInfo[3];
-        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
-        url1 = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
     }
 
     window.open(url, '_blank');
-    window.open(url1, '_blank');
 }

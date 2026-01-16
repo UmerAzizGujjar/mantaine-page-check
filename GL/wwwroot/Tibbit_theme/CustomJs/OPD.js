@@ -79,7 +79,8 @@ $(document).ready(function () {
         { id: '#ddlServices', method: 'GetServices' },
         { id: '#ddlDepartment', method: 'GetDepartment' },
         { id: '#ddldoctor', method: 'GetDoctor' },
-        { id: '#ddlpanel', method: 'GetPanel' }
+        { id: '#ddlpanel', method: 'GetPanel' },
+        { id: '#ddlcashier', method: 'GetCasher' }
 
     ];
 

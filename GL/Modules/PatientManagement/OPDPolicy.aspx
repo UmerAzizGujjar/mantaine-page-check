@@ -942,6 +942,13 @@
                                         <div class="field-desc">Reffered Patient Emergency</div>
                                     </div>
                                 </div>
+                                <div class="right-item" onclick="toggleRight(this)">
+                                    <input type="checkbox" id="cashier" name="rights[]" value="cashier" />
+                                    <div>
+                                        <label for="cashier">cashier</label>
+                                        <div class="field-desc">Cashier</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
