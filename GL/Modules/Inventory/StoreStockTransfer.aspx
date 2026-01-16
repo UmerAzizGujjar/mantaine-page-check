@@ -1053,14 +1053,12 @@
         <thead>
             <tr>
                 <th class='dn'>Sr#</th>
-                <th style="text-align: center; padding-left: 0px; padding-right: 0px;">
-                   Item Code
-                </th>
-                <th style="text-align: center; padding-left: 0px; padding-right: 0px;">Batch No</th>
-                <th style="text-align: center;">Description</th>
-                <th style="text-align: center;">Stock</th>
-                <th style="text-align: center;">Quantity</th>
-                <th class="actionClm" style="text-align: center">Action</th>
+                <th>Item Code</th>
+                <th>Batch No</th>
+                <th>Description</th>
+                <th>Stock</th>
+                <th>Quantity</th>
+                <th class="actionClm">Action</th>
             </tr>
         </thead>
         <tbody id="stocktablebody"></tbody>
