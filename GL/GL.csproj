@@ -229,6 +229,8 @@
     <Content Include="Modules\Administrator\Shift_Assign_Policy.aspx" />
     <Content Include="Modules\Administrator\Shift__Policy_View.aspx" />
     <Content Include="Modules\Administrator\SurveyForm.aspx" />
+    <Content Include="Modules\Administrator\User_BranchWise.aspx" />
+    <Content Include="Modules\Administrator\User_BranchWiseList.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
     <Content Include="Modules\Billing\BillApproval.aspx" />
@@ -25888,6 +25890,20 @@
     </Compile>
     <Compile Include="Modules\Administrator\SurveyForm.aspx.designer.cs">
       <DependentUpon>SurveyForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\User_BranchWise.aspx.cs">
+      <DependentUpon>User_BranchWise.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\User_BranchWise.aspx.designer.cs">
+      <DependentUpon>User_BranchWise.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\User_BranchWiseList.aspx.cs">
+      <DependentUpon>User_BranchWiseList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\User_BranchWiseList.aspx.designer.cs">
+      <DependentUpon>User_BranchWiseList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Appointment\Derma_Appointment.aspx.cs">
       <DependentUpon>Derma_Appointment.aspx</DependentUpon>

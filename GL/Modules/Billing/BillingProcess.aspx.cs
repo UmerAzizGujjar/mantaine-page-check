@@ -1221,7 +1221,7 @@ namespace PMS
             var opd_proc = data.opd_procedure;
            
 
-                newBill.Discount_Percentage = data.Discount_Percentage;
+            newBill.Discount_Percentage = data.Discount_Percentage;
             newBill.Discount_Amount = data.Discount_Amount;
             newBill.Total_Amount = data.TotalPayable;
             newBill.Net_Amount = data.Net_Amount;
@@ -1240,6 +1240,18 @@ namespace PMS
             newBill.Bill_Department = data.BillDepartment;
             newBill.Bill_Category = data.BillCategory;
             newBill.CGS_Procedure_BOM = Convert.ToDecimal(data.bomTotalValue);
+
+            int? userBranchId = null;
+            var branchValue = (from bwd in db.Branch_Wise_User_Details
+                               where bwd.User_Id == AppConfig.UserID
+                               select bwd.Brancg).FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(branchValue) && int.TryParse(branchValue, out int bid))
+            {
+                userBranchId = bid;
+            }
+
+            newBill.Branch_Id = userBranchId;
 
             // Handle In-Patient logic
             var patient_no = DBClass.getField("select Patient_No from Reg_patient where pat_id=" + data.Patient_ID);
@@ -2455,6 +2467,7 @@ namespace PMS
         {
             public int Bill_ID { get; set; }
             public int Patient_ID { get; set; }
+            public string SelectedBranchId { get; set; }
             public int Opd_id { get; set; }
             public string opd_procedure { get; set; }
             public string referred_by_doctor { get; set; }
@@ -4715,6 +4728,39 @@ namespace PMS
                 }
             }
             return noList.ToString();
+        }
+
+        [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
         }
     }
 }
