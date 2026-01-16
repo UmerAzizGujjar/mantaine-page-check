@@ -2200,11 +2200,11 @@
                 <option>Booked</option>
             </select>
         </div>
-          
-          <div class="col-lg-1 col-md-2 col-sm-3">
-    <label></label>
-    <input type="button" id="btntoggle" class="btn btn-primry" onclick="toggleCalendar"  value="Calendar View" />
-</div>
+
+        <div class="col-lg-2 col-md-2 col-sm-3">
+            <label></label>
+            <input type="button" id="btntoggle" class="btn btn-primry" onclick="toggleCalendar" value="Calendar View" />
+        </div>
 
 
     </div>

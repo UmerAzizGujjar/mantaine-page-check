@@ -265,7 +265,6 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Doctor</label>
@@ -280,20 +279,19 @@
                 <label class="col-form-label ms-3">To</label>
                 <input type="text" id="txt_dateto" class="form-control ms-3" />
             </div>
-            <div class="col-lg-2 col-md-3 col-sm-6">
+            <div class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>
-                <input type="button" id="btnSearch" class="btn btn-success" value="Search" />
+                <input type="button" id="btnSearch" class="btn btn-primry" value="Search" />
             </div>
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <label>Shift Appointment</label>
                 <input type="text" id="txt_shiftdate" class="form-control" />
             </div>
-            <div class="col-lg-2 col-md-3 col-sm-6">
+            <div class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>
-                <input type="button" id="btnshiftApt" class="btn btn-success" value="Shift" />
+                <input type="button" id="btnshiftApt" class="btn btn-primry" value="Shift" />
             </div>
         </div>
-    </div>
 
     <br />
        <div class="table-container">

@@ -94,8 +94,13 @@
     margin-top: 15px !important;
 }
 .mtop{
-    margin-top:70px;
+    margin-top:20px;
 }
+
+.mtop2 {
+    margin-top: 9% !important;
+}
+
 .d-flex {
     display: flex;
     align-items: center;

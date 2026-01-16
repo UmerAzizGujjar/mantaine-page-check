@@ -23,6 +23,7 @@
             });
             loadmed();
             LoadWarehouses();
+            LoadWarehousesforSaleReturn();
         });
         window.addEventListener('keydown', function (event) {
             if (event.altKey && event.code === 'KeyS') {
@@ -864,6 +865,7 @@
                 if (userC == userCode && userP == UserPass) {
                     if (validateSaleReturn()) {
                         var BillId = $('#ddlInvoiceNumber').val() || 0;
+                        var warehouse = $("#ddl_Warehouse").val();
                         var InvNo = $('#ddlInvoiceNumber option:selected').text() || '';
                         var TotalPayable = $('#txtSaleReturnTotalPayable').val() || 0;
                         var TotalLineDisc = $('#txtSaleReturnLineDisc').val() || 0;
@@ -926,6 +928,7 @@
                         var AllItemDetail = {
                             'BillId': BillId,
                             'InvNo': InvNo,
+                            'warehouse': warehouse,
                             'TotalPayable': TotalPayable,
                             'TotalLineDisc': TotalLineDisc,
                             'DisPer': DisPer,
@@ -2489,6 +2492,47 @@
             );
         }
 
+
+        function LoadWarehousesforSaleReturn() {
+            var $dropdown = $('#ddl_Warehouse');
+            $dropdown.empty();
+
+            PageMethods.GetUserWarehouses(
+                function (response) {
+                    if (response && Array.isArray(response)) {
+                        if (response.length === 1) {
+                            // Only one warehouse: skip "Please Select" and auto-select it
+                            var item = response[0];
+                            $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
+                            $("#ddl_Warehouse").attr("disabled", true);
+                        } else {
+                            // Multiple or zero warehouses: show "Please Select"
+                            $dropdown.append('<option value="0">Please Select</option>');
+                            $.each(response, function (index, item) {
+                                $dropdown.append(
+                                    '<option value="' + item.Value + '">' +
+                                    item.Text +
+                                    '</option>'
+                                );
+                            });
+                        }
+                    } else {
+                        // Handle case where response is not an array or is null
+                        $dropdown.append('<option value="0">Please Select</option>');
+                    }
+
+                    // Reinitialize Select2 after populating
+                    $dropdown.select2();
+                },
+                function (error) {
+                    console.log('Error loading warehouses:', error);
+                    // On error, default to "Please Select"
+                    $dropdown.append('<option value="0">Please Select</option>');
+                    $dropdown.select2();
+                }
+            );
+        }
+
         function DisableWareHouse() {
             $("#ddlWarehouse").prop('disabled', true); // Use .prop() for boolean attributes like disabled
         }
@@ -2806,10 +2850,17 @@
                             <select id="ddlInvoiceNumber" style="width: 180px !important;" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
                         </div>
 
-                        <div class="form-group col-lg-4 col-md-5 col-sm-3">
+                        <div class="form-group col-lg-2 col-md-5 col-sm-3">
                             <label for="ddlSaleReturnItems">Items</label>
                             <select id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" style="width: 380px !important;" class="form-control select2"></select>
                         </div>
+                          <div class="col-lg-2 col-md-4 col-sm-6">
+                              <label>WareHouse</label>
+                              <select id="ddl_Warehouse" class="form-select" onchange="DisableWareHouse()">
+                                  <option value="0">Please Select</option>
+                                  <!-- other options -->
+                              </select>
+                          </div>
                         <div class="form-group col-lg-1 col-md-2 col-sm-0"></div>
                         <div class="form-group col-lg-5 col-md-3 col-sm-6">
                                 <table style="width: auto !important">

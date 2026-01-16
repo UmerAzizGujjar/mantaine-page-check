@@ -5,6 +5,7 @@
     <link href="../../wwwroot/Tibbit_theme/css/RegPat.css" rel="stylesheet" />
    
       <script type="text/javascript">
+          loadCardfee();
           $(document).ready(function () {
               var reg_id = '<%= Request.QueryString["Reg_id"] %>'
          if (reg_id != "") {
@@ -62,6 +63,25 @@
                   url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + reg_id;
               }
               window.open(url, '_blank');
+          }
+          function loadCardfee() {
+              $.ajax({
+                  type: "POST",
+                  url: "RegisterPatient.aspx/GetCardFee",
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  success: function (response) {
+                      if (response.d !== null && !isNaN(response.d)) {
+                          $('#txtCardFee').val(response.d);
+                          $('#txtCardFee').attr('disabled', true);
+                      } else {
+                          console.error("Invalid fee received:", response.d);
+                      }
+                  },
+                  error: function (xhr, status, error) {
+                      console.error("Error loading card fee:", error);
+                  }
+              });
           }
       </script>
 </asp:Content>
@@ -181,10 +201,15 @@
                 <option value="0">Select Area</option>
             </select>
         </div>
-        <div class="col-lg-6 col-md-8 col-sm-10">
+        <div class="col-lg-4 col-md-6 col-sm-8">
             <label for="txt_Address">Address<span style="color: red;">*</span></label>
             <input type="text" tabindex="17" id="txt_Address" class="form-control" />
             <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="lblfee">Fee<span style="color: red;">*</span></label>
+            <input type="text" tabindex="17" id="txtCardFee" class="form-control" />
+         
         </div>
     </div>
     </div>

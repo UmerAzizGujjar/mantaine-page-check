@@ -104,7 +104,11 @@
 }
 
 .mtop {
-    margin-top: 70px;
+    margin-top: 20px;
+}
+
+.mtop2 {
+    margin-top: 11% !important;
 }
 
 .d-flex {

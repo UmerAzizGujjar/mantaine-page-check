@@ -78,6 +78,27 @@ namespace PMS.Modules.PatientManagement
             var Details = db.sp_ApprovePatientCardFee(Convert.ToInt32(Pat_Id), UserId);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
+        [WebMethod]
+        public static string GetCardFee()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var fee = (from tbl in db.sys_Parms
+                               where tbl.Name == "OPD Fee"
+                               select tbl.Code) 
+                              .FirstOrDefault();
+
+                    return fee ?? "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                return "0";
+            }
+        }
         public class SafePatientData
         {
             public string Name { get; set; }
@@ -224,7 +245,7 @@ namespace PMS.Modules.PatientManagement
             string Full_Name, string RelationType, string Relation, string Gender,
             string Mobile, string Date_Of_Birth, string CNIC, string Address,
             string PatientID, string martail_status, string Age, string city, string area,
-            string city_val, string area_val, string Blood_Group, string State, string Country, string AntiForgeryToken)
+            string city_val, string area_val, string Blood_Group, string State, string Country,string cardfee, string AntiForgeryToken)
         {
             if (!DateTime.TryParseExact(Date_Of_Birth, "dd/MM/yyyy",
              CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDOB))
@@ -247,26 +268,7 @@ namespace PMS.Modules.PatientManagement
 
             var errors = new List<string>();
 
-            //if (!ValidationHelper.IsValidName(Full_Name))
-            //    errors.Add("Full name is required and must contain only letters.");
-            //if (!ValidationHelper.IsValidName(Relation))
-            //    errors.Add("Relation name is required and must contain only letters.");
-            //if (!ValidationHelper.IsValidMobile(Mobile))
-            //    errors.Add("Mobile must be in format +923001234567 (13 digits starting with +92).");
-            //if (!ValidationHelper.IsValidAge(Age))
-            //    errors.Add("Age must be a number between 0 and 150.");
-            //if (!ValidationHelper.IsValidDate(Date_Of_Birth))
-            //    errors.Add("Date of Birth must be in dd/MM/yyyy format.");
-            //if (!ValidationHelper.IsValidAddress(Address))
-            //    errors.Add("Address is required and must not exceed 500 characters.");
-            //if (!string.IsNullOrWhiteSpace(CNIC) && !ValidationHelper.IsValidCNIC(CNIC))
-            //    errors.Add("CNIC must be in format 12345-1234567-1.");
-            //if (Gender == "0" || string.IsNullOrWhiteSpace(Gender))
-            //    errors.Add("Please select a valid Gender.");
-            //if (martail_status == "0")
-            //    errors.Add("Please select Marital Status.");
-            //if (Blood_Group == "0")
-            //    errors.Add("Please select Blood Group.");
+     
 
             if (errors.Any())
                 return "ERROR: " + string.Join("; ", errors);
@@ -320,7 +322,7 @@ namespace PMS.Modules.PatientManagement
                     pat.State = State;
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
-
+                    pat.Card_fee = Convert.ToDecimal(cardfee);
                     pat.DOB = parsedDOB;
                     DateTime dob = pat.DOB.Value.Date;
                     DateTime today = DateTime.Today;
@@ -397,6 +399,7 @@ namespace PMS.Modules.PatientManagement
                                       rg.Country,
                                       rg.State,
                                       rg.val_city,
+                                      rg.Card_fee,
                                       rg.val_area,
                                       rg.pat_id,
                                       rg.DOB  // Keep as raw DateTime? or string? depends on DB schema

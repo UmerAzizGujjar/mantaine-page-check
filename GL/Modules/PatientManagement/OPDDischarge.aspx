@@ -185,7 +185,7 @@
     </div>
 
     <div class="row" style="overflow: scroll; height: 600px;">
-        <table class="table" id="tblOpdDischarge">
+        <table class="table table-bordered" id="tblOpdDischarge">
             <thead>
                 <tr>
                     <th>
