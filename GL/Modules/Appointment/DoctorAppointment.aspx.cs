@@ -164,7 +164,7 @@ namespace PMS
                 var doctor = (from emp in db.HR_Employees
 
                               where emp.Resign_Date == null && emp.IsDoctor == true
-                              //&& emp.userid == Convert.ToString(AppConfig.UserID)
+                              && emp.userid == Convert.ToString(AppConfig.UserID)
                               select new { emp.Emp_ID, emp.Emp_Name }).ToList();
                 return (new JavaScriptSerializer()).Serialize(doctor);
             }

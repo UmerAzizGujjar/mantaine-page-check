@@ -65,7 +65,23 @@
               window.open(url, '_blank');
           }
           function loadCardfee() {
-
+              $.ajax({
+                  type: "POST",
+                  url: "RegisterPatient.aspx/GetCardFee",
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  success: function (response) {
+                      if (response.d !== null && !isNaN(response.d)) {
+                          $('#txtCardFee').val(response.d);
+                          $('#txtCardFee').attr('disabled', true);
+                      } else {
+                          console.error("Invalid fee received:", response.d);
+                      }
+                  },
+                  error: function (xhr, status, error) {
+                      console.error("Error loading card fee:", error);
+                  }
+              });
           }
       </script>
 </asp:Content>

@@ -79,7 +79,8 @@ $(document).ready(function () {
         { id: '#ddlServices', method: 'GetServices' },
         { id: '#ddlDepartment', method: 'GetDepartment' },
         { id: '#ddldoctor', method: 'GetDoctor' },
-        { id: '#ddlpanel', method: 'GetPanel' }
+        { id: '#ddlpanel', method: 'GetPanel' },
+        { id: '#ddlcashier', method: 'GetCasher' }
 
     ];
 
@@ -109,7 +110,7 @@ $(document).ready(function () {
             // Since modal uses native select, bind to 'change', not 'select2:select'
             const changeHandler = function () {
                 loaddata();
-               // $(this).prop('disabled', true);
+                //$(this).prop('disabled', true);
             };
             if (!isInsideModal) {
                 $element.off('select2:select').on('select2:select', changeHandler);
@@ -1004,7 +1005,6 @@ function SavePatient() {
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
 
-
     if (discount < 100.0 && Fees == 0.0) {
 
         Swal.fire({
@@ -1022,7 +1022,6 @@ function SavePatient() {
         return;
     }
 
-
     if (Department == "101" && FilterClinic == "0") {
         Swal.fire({
             icon: 'error',
@@ -1038,6 +1037,7 @@ function SavePatient() {
         });
         return;
     }
+
 
     // ✅ CORRECT: Get VALUE of hidden field
     var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
