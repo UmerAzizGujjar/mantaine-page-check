@@ -189,6 +189,7 @@
             $('#ctl00_MainContent_ddlwareHouse').select2();
             $('#ctl00_MainContent_ddlMainDepartment').select2();
             $('#ctl00_MainContent_ddlStock').select2();
+            $('#ctl00_MainContent_ddlMovementType').select2();
             $('#ctl00_MainContent_ddlItemCategory').select2();
             $('#ctl00_MainContent_ddloprators').select2();
             $('#ctl00_MainContent_ddlTestName').select2();
@@ -1106,6 +1107,13 @@
                         var url = 'ReportViewer.aspx?ReportName=TimeAndMotion&ReportTitle=Time and Motion Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() ;
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "Fast_Slow_Non_Moving_Stock") {
+                        debugger;
+  var movementType = $("#ctl00_MainContent_ddlMovementType").val();
+var Item = $("#ctl00_MainContent_ddlMainDepartment").val();
+                        var url = 'ReportViewer.aspx?ReportName=FastSlow_Non_Moving_Stock&ReportTitle=Stock Movement Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&ItemID=' + Item + '&MovementType=' + movementType;
+                        window.open(url, '_blank');
+                    }
                     else if (rptTitle == "PharmacyStockDetail") {
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=PharmacyStockDetail&ReportTitle=Pharmacy Stock in Hand Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
@@ -1328,7 +1336,7 @@
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == 'Hospital_Cash_Report') {
-                        var url = 'ReportViewer.aspx?ReportName=HospitalCashReport&ReportTitle=Hospital Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0" + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                        var url = 'ReportViewer.aspx?ReportName=HospitalCashReport&ReportTitle=Hospital Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '' + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
                         window.open(url, '_blank');
                     }
 
@@ -1449,7 +1457,19 @@
                 <asp:ListItem Text="Select Patient" Value="0" />
             </asp:DropDownList>
         </div>
+                <%--newly inserted div for Movement_type--%>
+<div class="col-lg-3 col-md-4 col-sm-12" runat="server" id="trMovementType" visible="false">
+  <div class="form-group">
+        <asp:Label runat="server" ID="lblMovementType" Text="Movement Type" AssociatedControlID="ddlMovementType"></asp:Label>
+        <asp:DropDownList runat="server" ID="ddlMovementType" AppendDataBoundItems="true" CssClass="form-control">
+            <asp:ListItem Text="All" Value="0"></asp:ListItem>
+            <asp:ListItem Text="Fast-Moving" Value="FastMoving"></asp:ListItem>
+            <asp:ListItem Text="Slow-Moving" Value="SlowMoving"></asp:ListItem>
+            <asp:ListItem Text="Non-Moving" Value="NonMoving"></asp:ListItem>
+        </asp:DropDownList>
+    </div>
 
+</div>
         <div class="row mb-3">
             <div class="col-lg-3 col-md-4 col-sm-12" id="MainDeptDiv" visible="false" runat="server">
                 <asp:Label runat="server" ID="lblMainDepartment" Text="Main Department"></asp:Label>
@@ -1697,3 +1717,4 @@
 
 
 </asp:Content>
+

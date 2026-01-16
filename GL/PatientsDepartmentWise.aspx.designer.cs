@@ -69,6 +69,33 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlPatient;
 
         /// <summary>
+        /// trMovementType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl trMovementType;
+
+        /// <summary>
+        /// lblMovementType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMovementType;
+
+        /// <summary>
+        /// ddlMovementType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlMovementType;
+
+        /// <summary>
         /// MainDeptDiv control.
         /// </summary>
         /// <remarks>

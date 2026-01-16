@@ -3061,6 +3061,28 @@ namespace PMS
                 rd.SetParameterValue("@StartDate", StartDateTime);
                 rd.SetParameterValue("@EndDate", EndDateTime);
             }
+            else if (reportName == "FastSlow_Non_Moving_Stock")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "Pharmacy/rptFastSlowNonMovingStock.rpt";
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string ItemID = Request.QueryString["ItemID"].ToString();
+                string Movement_Type = Request.QueryString["MovementType"].ToString();
+
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("@Item_ID", ItemID);
+                rd.SetParameterValue("@Movement_Type", Movement_Type);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "PCR")
             {
                 string rptFileName = "AccountAndFinance/rptPharmacyCashReport.rpt";
@@ -6782,14 +6804,16 @@ namespace PMS
             {
                 try
                 {
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     string DeptID = Request.QueryString["Main_Department"].ToString();
                     string DeptNew = Request.QueryString["Patient_Type"].ToString();
-                    reportPath += "rptGroupTestMain_Department.rpt";
+                    reportPath += "LabRadiology/rptGroupTestMain_Department.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@Main_Department", DeptID);
                     rd.SetParameterValue("@Patient_Type", DeptNew);
                     rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                 }
                 catch (Exception ex)
                 {
@@ -6856,14 +6880,16 @@ namespace PMS
             {
                 try
                 {
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     string DeptID = Request.QueryString["Main_Department"].ToString();
                     string DeptNew = Request.QueryString["Patient_Type"].ToString();
-                    reportPath += "rptTestMain_Department.rpt";
+                    reportPath += "LabRadiology/rptTestMain_Department.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@Main_Department", DeptID);
                     rd.SetParameterValue("@Patient_Type", DeptNew);
                     rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                 }
                 catch (Exception ex)
                 {

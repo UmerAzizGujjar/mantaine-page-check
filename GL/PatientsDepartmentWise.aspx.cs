@@ -323,6 +323,7 @@ namespace PMS
                     ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddloprators.DataBind();
                 }
+
                 if (PageTitle == "PCRS")
                 {
 
@@ -2634,6 +2635,46 @@ namespace PMS
                     dpROw.Visible = false;
 
                 }
+                if (this.PageTitle == "Fast_Slow_Non_Moving_Stock")
+                {
+                    string x = "Fast Slow Moving Stock Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    dpROw.Visible = false;
+
+                    MainDeptDiv.Visible = true;
+                    ddlMainDepartment.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Text = "Item Name";
+                    object valusets;
+                    DataBaseDataContext dbd = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in dbd.INV_Items
+                               where d.IsPharmacyItem == true
+                               select new { d.Item_Code, d.Description };
+                    ddlMainDepartment.DataSource = valusets;
+                    ddlMainDepartment.Items.Clear();
+                    ddlMainDepartment.DataTextField = "Description";
+                    ddlMainDepartment.DataValueField = "Item_Code";
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+                    trMovementType.Visible = true;
+
+                }
                 if (this.PageTitle == "Patient_Trans_Detail")
                 {
 
@@ -3789,6 +3830,7 @@ namespace PMS
                     dpROw.Visible = false;
                     AllowPatientRecord = false;
                 }
+
                 else if (this.PageTitle == "CBloodBankStockLedger")
                 {
 
@@ -3824,6 +3866,7 @@ namespace PMS
                 {
                     object valusets;
                     lblMainDepartment.Visible = false;
+                    tr_Export.Visible = true;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -3864,6 +3907,7 @@ namespace PMS
                 {
                     object valusets;
                     lblMainDepartment.Visible = false;
+                    tr_Export.Visible = true;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
