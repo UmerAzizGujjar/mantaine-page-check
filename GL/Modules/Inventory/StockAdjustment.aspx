@@ -9,19 +9,36 @@
         $(document).ready(function () {
 
             
-
+            GetWareHouseCondition();
 
             $('#ctl00_MainContent_txtItem_Code').tokenInput(function () {
-                var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
+                debugger;
 
-               
-                if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
+                if (warehouseCond == '01') {
+                    var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
+                    debugger;
+                    if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Select Warehouse',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        //return false;
+                        return "";
+                    }
 
-                    return ""; 
+                    return "../../json.aspx?Table=INV_ItemsforStockAdjWareHouse&WarehouseID=" + encodeURIComponent(warehouseVal);
                 }
-
-           
-                return "../../json.aspx?Table=INV_ItemsforStockAdjWareHouse&WarehouseID=" + encodeURIComponent(warehouseVal);
+                else {
+                    return "../../json.aspx?Table=INV_ItemsforStockAdj"
+                }
             }, {
                 tokenLimit: 1,
                 hintText: "Select a warehouse first...",
@@ -71,41 +88,64 @@
             if (hiddenbatch == "1") $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
         }
         
-        function loadtokenInputsDefaultPRNo() {
-            debugger;
-            var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
+        //function loadtokenInputsDefaultPRNo() {
+        //    debugger;
+        //    var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
 
-            if (warehouseVal === "0" || warehouseVal === null) {
-                return;
-            }
+        //    if (warehouseVal === "0" || warehouseVal === null) {
+        //        return;
+        //    }
 
-            try {
-                $('#ctl00_MainContent_txtItem_Code').tokenInput("clear");
-                $('#ctl00_MainContent_txtItem_Code').tokenInput("destroy");
-            } catch (e) { }
+        //    try {
+        //        $('#ctl00_MainContent_txtItem_Code').tokenInput("clear");
+        //        $('#ctl00_MainContent_txtItem_Code').tokenInput("destroy");
+        //    } catch (e) { }
 
-            $('#ctl00_MainContent_txtItem_Code').tokenInput("../../json.aspx?Table=INV_ItemsforStockAdjWareHouse&WarehouseID=" + encodeURIComponent(warehouseVal), {
-                tokenLimit: 1,
-                onAdd: function (item) {
+        //    $('#ctl00_MainContent_txtItem_Code').tokenInput("../../json.aspx?Table=INV_ItemsforStockAdjWareHouse&WarehouseID=" + encodeURIComponent(warehouseVal), {
+        //        tokenLimit: 1,
+        //        onAdd: function (item) {
+        //            debugger;
+        //            calculatecurrentstock(item.id);
+
+        //            if (item.Type === "True") {
+        //                $('#ctl00_MainContent_hdbatch').val(1);
+        //                $('#ctl00_MainContent_hdDate').val(1);
+        //                $('#ctl00_MainContent_hdallowblank').val(1);
+
+        //                $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
+        //                $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
+
+        //                $('#ctl00_MainContent_hdbatch').val(1);
+        //                $('#ctl00_MainContent_hdDate').val(1);
+        //                $('#ctl00_MainContent_hdallowblank').val(0);
+        //            }
+        //        }
+        //    });
+        //}
+        var warehouseCond;
+        function GetWareHouseCondition() {
+
+            $.ajax({
+                type: "POST",
+                url: "StockAdjustment.aspx/GetWareHouseCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
                     debugger;
-                    calculatecurrentstock(item.id);
-
-                    if (item.Type === "True") {
-                        $('#ctl00_MainContent_hdbatch').val(1);
-                        $('#ctl00_MainContent_hdDate').val(1);
-                        $('#ctl00_MainContent_hdallowblank').val(1);
-
-                        $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
-                        $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
-
-                        $('#ctl00_MainContent_hdbatch').val(1);
-                        $('#ctl00_MainContent_hdDate').val(1);
-                        $('#ctl00_MainContent_hdallowblank').val(0);
+                    warehouseCond = JSON.parse(response.d);
+                    if (warehouseCond == '01') {
+                        $('#divWarehouse').show();
                     }
+                    else {
+                        $('#divWarehouse').hide();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
                 }
             });
         }
-
         function loadtokenInputsForPRNo(elementId, data) {
             if (elementId == "#ctl00_MainContent_txtItem_Code") {
                 $(elementId).tokenInput("../../json.aspx?Table=INV_ItemsforStockAdj&q=",
@@ -180,7 +220,7 @@
                 calculatecurrentstock(Item_ID);
             }
             else {
-                loadtokenInputsDefaultPRNo();
+                //loadtokenInputsDefaultPRNo();
             }
             $('.token-input-list').css('width', '368px');
         });
@@ -429,7 +469,7 @@
                 <asp:Label Text="Amount" runat="server" ID="lblAmount" />
                 <asp:TextBox runat="server" ID="txtAmount" ReadOnly="True" />
             </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
+            <div class="col-lg-2 col-md-3 col-sm-4" id="divWarehouse">
                 <asp:Label ID="Label3" runat="server" Text="WareHouse"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddl_Ware_House" AppendDataBoundItems="true" onchange="calculatecurrentstock()">
                 </asp:DropDownList>

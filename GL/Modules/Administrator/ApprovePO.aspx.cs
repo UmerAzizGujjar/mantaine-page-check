@@ -195,7 +195,7 @@ namespace PMS
                                         where s.Name == "Budget Working"
                                       select s.Code).FirstOrDefault();
 
-                        if (Budget != null)
+                        if (Budget == "01")
                         {
                             if (poAmount > remainingAmount)
                             {
