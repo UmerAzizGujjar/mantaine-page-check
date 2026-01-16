@@ -47,6 +47,17 @@ $(document).ready(function () {
         }, 0);
     });
 
+    $('#txt_mobile, #txt_cnic').on('click', function (e) {
+        e.preventDefault();
+        this.setSelectionRange(0, 0);
+    });
+
+    $('#txt_mobile').on('click', function (e) {
+        e.preventDefault();
+        this.setSelectionRange(3, 3);
+    });
+
+
     var dropdowns = [
         { id: '#ddl_Gender', method: 'GetGender' },
         { id: '#ddlCountry', method: 'GetCountry' },
@@ -160,26 +171,6 @@ function fillDropdown($dropdown, methodName) {
 }
 
 
-function Approve(pat_id) {
-    PageMethods.approvepatient(pat_id, function (Tests) {
-        debugger
-        var message = JSON.parse(Tests);
-        if (message[0].Message != null || message[0].Message != "") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: message[0].Message,
-                showConfirmButton: false,
-                timer: 2000,
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            });
-            location.reload();
-        }
-    });
 
 function clearPatient() {
 
@@ -220,31 +211,33 @@ function fillmrno() {
 
 function CalculateDateOfBirth() {
     var ageValue = $('#txt_dob').val();
-
-
     var unit = $('#PrefixAge').val();
+
+    if (!ageValue || isNaN(ageValue) || parseInt(ageValue) <= 0) {
+        $('#txtAge_yearss').val('');
+        return;
+    }
+
     var now = moment();
+    var momentUnit = unit === "Year" ? "years" :
+        unit === "Month" ? "months" :
+            unit === "Day" ? "days" : "years";
 
+    var dob = now.clone().subtract(parseInt(ageValue, 10), momentUnit);
+    var finalDate = dob.format("DD/MM/YYYY");
 
-    var momentUnit = unit.toLowerCase() + 's';
+    var $input = $('#txtAge_yearss');
 
-
-    if (ageValue && !isNaN(ageValue)) {
-        var calculatedDate = now.subtract(ageValue, momentUnit);
-        var finalDate = calculatedDate.format("DD/MM/YYYY");
-
-
-        var $datepicker = $('#txtAge_yearss');
-        $datepicker.datepicker({
+    if (!$input.hasClass('hasDatepicker')) {
+        $input.datepicker({
             changeMonth: true,
             changeYear: true,
             yearRange: "-100:+0",
             dateFormat: "dd/mm/yy"
         });
-
-
-        $datepicker.datepicker('setDate', finalDate);
     }
+
+    $input.datepicker('setDate', dob.toDate());
 }
 
 
@@ -272,6 +265,7 @@ function SavePatient() {
     var Blood_Group = $('#ddl_bloodGroup').val();
     var State = $('#ddlstate').val();
     var Country = $('#ddlCountry :selected').val();
+    var cardfee = $('#txtCardFee').val();
     var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
 
     if (PatientName === "") {
@@ -326,6 +320,7 @@ function SavePatient() {
         "Blood_Group": Blood_Group,
         "State": State,
         "Country": Country,
+        "cardfee": cardfee,
         "AntiForgeryToken": AntiForgeryToken,
 
     });
@@ -342,7 +337,7 @@ function SavePatient() {
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
             }
-
+            debugger;
             var ini_patientID = data.d;
             toasterMessage(false, "Success", "Data Saved Successfully");
             Approve(ini_patientID)
@@ -353,6 +348,27 @@ function SavePatient() {
         error: function (xhr, status, error) {
             toasterMessage(true, "Request Failed", "An unexpected error occurred.");
             $('#SavePatient_Data').attr('disabled', false);
+        }
+    });
+}
+function Approve(pat_id) {
+    PageMethods.approvepatient(pat_id, function (Tests) {
+        debugger
+        var message = JSON.parse(Tests);
+        if (message[0].Message != null || message[0].Message != "") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: message[0].Message,
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+            location.reload();
         }
     });
 }
@@ -402,6 +418,9 @@ function Get_Pat_Info(reg_id) {
             $('#txt_Address').val(data.Address);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#txt_cnic').val(data.CNIC_Masked);
+            $('#txtAge_yearss').val(data.DOB);
+            $('#txtCardFee').val(data.Card_fee);
+            //dob
 
             if (data.MaritalStatus_text)
                 $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
@@ -419,7 +438,7 @@ function Get_Pat_Info(reg_id) {
                 $('#txtcity').html($('<option>', { value: '', text: data.City_text }).prop('selected', true));
 
             $('#SavePatient_Data').val('Update');
-            $('#btnPrint').prop('disabled', false);
+            $('#btnPrint').show();
         },
         error: function (response) {
             alert("Error loading patient data.");

@@ -78,6 +78,27 @@ namespace PMS.Modules.PatientManagement
             var Details = db.sp_ApprovePatientCardFee(Convert.ToInt32(Pat_Id), UserId);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
+        [WebMethod]
+        public static string GetCardFee()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var fee = (from tbl in db.sys_Parms
+                               where tbl.Name == "OPD Fee"
+                               select tbl.Code) 
+                              .FirstOrDefault();
+
+                    return fee ?? "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                return "0";
+            }
+        }
         public class SafePatientData
         {
             public string Name { get; set; }
@@ -224,7 +245,7 @@ namespace PMS.Modules.PatientManagement
             string Full_Name, string RelationType, string Relation, string Gender,
             string Mobile, string Date_Of_Birth, string CNIC, string Address,
             string PatientID, string martail_status, string Age, string city, string area,
-            string city_val, string area_val, string Blood_Group, string State, string Country, string AntiForgeryToken)
+            string city_val, string area_val, string Blood_Group, string State, string Country,string cardfee, string AntiForgeryToken)
         {
             if (!DateTime.TryParseExact(Date_Of_Birth, "dd/MM/yyyy",
              CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDOB))
@@ -301,7 +322,7 @@ namespace PMS.Modules.PatientManagement
                     pat.State = State;
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
-
+                    pat.Card_fee = Convert.ToDecimal(cardfee);
                     pat.DOB = parsedDOB;
                     DateTime dob = pat.DOB.Value.Date;
                     DateTime today = DateTime.Today;
@@ -378,6 +399,7 @@ namespace PMS.Modules.PatientManagement
                                       rg.Country,
                                       rg.State,
                                       rg.val_city,
+                                      rg.Card_fee,
                                       rg.val_area,
                                       rg.pat_id,
                                       rg.DOB  // Keep as raw DateTime? or string? depends on DB schema

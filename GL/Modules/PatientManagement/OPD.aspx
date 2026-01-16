@@ -48,14 +48,14 @@
                 Get_Pat_Info(reg_id);
 
                 $('#ddlPatient_Type').attr('disabled', false);
-                $('#ddlcashier').attr('disabled', true);
+                //$('#ddlcashier').attr('disabled', true);
             }
 
             if (apt_Id != "" && apdAdd == "true") {
                 Get_Pat_Info_Apt(reg_id, apt_Id);
 
                 $('#ddlPatient_Type').attr('disabled', false);
-                $('#ddlcashier').attr('disabled', true);
+                //$('#ddlcashier').attr('disabled', true);
             }
             debugger;
             if (Reffered_id != "" && added == "true") {
@@ -65,7 +65,7 @@
                 Get_Pat_Info(Reffered_id);
 
                 $('#ddlPatient_Type').attr('disabled', false);
-                $('#ddlcashier').attr('disabled', true);
+                //$('#ddlcashier').attr('disabled', true);
             }
 
 
@@ -85,6 +85,7 @@
                 $('#btnPrintCardBack').hide()
             }
         }
+        var selectedClinic = null; // Add this near your other globals
         var permissions = {};
         var fieldPermissionMapping = {
             "field_mr_no": "mr_no",
@@ -108,6 +109,7 @@
             "field_Clinic": "FilterClinic",
             "RefferdBy": "RefferedBy",
             "EmerRefferedBy": "EmerRefferedBy",
+            "cashier": "cashier",
         };
 
         function loadPermissions(callback) {
@@ -201,6 +203,7 @@
             else if (Category == "01") {
                 $('#fees').show();
                 $('#department').show();
+                $('#ddlFilterClnic').attr('disabled',false);
                 showIfAllowed('field_Clinic', true);
                 $('#doctor').hide();
                 $('#pnlcompany').hide();
@@ -1207,10 +1210,16 @@
                         </select>
                     </div>
 
-                    <div class="col-lg-12 col-md-12 col-sm-12" id="field_Address">
+                    <div class="col-lg-10 col-md-12 col-sm-12" id="field_Address">
                         <label>Address</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
                     </div>
+                       <div class="col-lg-2 col-md-8 col-sm-8" id="cashier" >
+                       <label>Cashier</label>
+                       <select id="ddlcashier" class="form-control">
+                            <option value="0">Select Cashier</option>
+                       </select>
+                   </div>
 
                 </div>
 
@@ -1234,7 +1243,7 @@
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="field_Clinic">
                     <label>Filter Clinic</label>
-                    <select id="ddlFilterClnic" class="form-control">
+                    <select id="ddlFilterClnic" class="form-control" disabled="disabled">
                         <option value="0">Select Clinic</option>
                     </select>
                 </div>
@@ -1292,10 +1301,7 @@
                         <option value="0">Select</option>
                     </select>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" style="display: none">
-                    <label>Cashier</label>
-                    <select id="ddlcashier" class="form-control"></select>
-                </div>
+             
                 <div class="col-lg-12 col-md-12 col-sm-12" id="Field-CIH">
                     <label>Cash In Hand</label>
                     <select id="ddlCashInHand">
