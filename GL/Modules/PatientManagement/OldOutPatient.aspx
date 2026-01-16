@@ -2947,7 +2947,7 @@ border-radius:5px !important;
             return options;
         }
         function fillclininc() {
-            var options;
+            var options = '<option value="0" >Please Select</option>';
             PageMethods.GetfilterClinic(function (data) {
                 debugger;
                 $.each(JSON.parse(data), function (key, value) {
@@ -3068,15 +3068,15 @@ border-radius:5px !important;
         function fillPendingPatientsList() {
             debugger;
             $(".se-pre-con").fadeIn("slow");
-            $($('#tabs').find('ul').find('li')[1]).css("pointer-events", "none");
-            $($('#tabs').find('ul').find('li')[2]).css("pointer-events", "none");
-            $($('#tabs').find('ul').find('li')[3]).css("pointer-events", "none");
-            $($('#tabs').find('ul').find('li')[4]).css("pointer-events", "none");
-            $($('#tabs').find('ul').find('li')[5]).css("pointer-events", "none");
-            $($('#tabs').find('ul').find('li')[6]).css("pointer-events", "none");
-            $($('#tabs').find('ul').find('li')[7]).css("pointer-events", "none");
-            $($('#tabs').find('ul').find('li')[8]).css("pointer-events", "none");
-            $($('#tabs').find('ul').find('li')[9]).css("pointer-events", "auto");
+            //$($('#tabs').find('ul').find('li')[1]).css("pointer-events", "none");
+            //$($('#tabs').find('ul').find('li')[2]).css("pointer-events", "none");
+            //$($('#tabs').find('ul').find('li')[3]).css("pointer-events", "none");
+            //$($('#tabs').find('ul').find('li')[4]).css("pointer-events", "none");
+            //$($('#tabs').find('ul').find('li')[5]).css("pointer-events", "none");
+            //$($('#tabs').find('ul').find('li')[6]).css("pointer-events", "none");
+            //$($('#tabs').find('ul').find('li')[7]).css("pointer-events", "none");
+            //$($('#tabs').find('ul').find('li')[8]).css("pointer-events", "none");
+            //$($('#tabs').find('ul').find('li')[9]).css("pointer-events", "auto");
             var filterclininc = $('#ctl00_MainContent_ddlFilterClininc').val();
             var doc_name = $('#ctl00_MainContent_ddldocname').val();
             if (doc_name == null) {
@@ -3221,10 +3221,10 @@ border-radius:5px !important;
 
             var abc = $('#hdfPatient_ID').val();
 
-
+            debugger;
             if ($('#hdfPatient_ID').val() == '(New)') {
                 //localStorage.PatID != 'undefined' ||
-                if (localStorage.PatID != "0") {
+                if (localStorage.PatID != "0" || localStorage.PatID != undefined) {
                     $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
                     var tokenData = httpGet("../../json.aspx?Table=Out_Patients&Record=Edit&q=" + localStorage.PatID);
                     var parsedData = JSON.parse(tokenData);
