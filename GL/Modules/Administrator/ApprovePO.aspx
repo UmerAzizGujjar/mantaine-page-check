@@ -192,7 +192,8 @@
                     </div>
                 </HeaderTemplate>
                 <ItemTemplate>
-                    <asp:HyperLink ToolTip="Edit" ID="LinkButton3" runat="server" NavigateUrl='<%# "./AP/PurchaseOrder.aspx?PO_ID="+ Eval("PO_ID")%>' Text="Preview" Target="_blank" Style="display: block; width: 100%; text-align: center;" />
+                    <asp:HyperLink ToolTip="Edit" ID="LinkButton3" runat="server" NavigateUrl='<%# ResolveUrl("~/Modules/AP/PurchaseOrder.aspx?PO_ID=" + Eval("PO_ID").ToString()) %>'
+                        Text="Preview" Target="_blank" Style="display: block; width: 100%; text-align: center;" />
                 </ItemTemplate>
                 <HeaderStyle CssClass="header-center-align" />
             </asp:TemplateField>

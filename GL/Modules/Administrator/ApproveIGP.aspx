@@ -10,11 +10,14 @@
             CheckUserRights();
 
 
-        });
-        function editOpen(id) {
-            window.open("/Modules/AP/InversionGatePass?PO_ID=" + id, "_blank");
+  });
 
-        }
+      var __appRoot = '<%= ResolveUrl("~/") %>';
+
+    function editOpen(id) {
+        window.open(__appRoot + 'Modules/Inventory/InversionGatePass.aspx?IGP_Id=' + id, '_blank');
+    };
+
         function CheckUserRights() {
             $.ajax({
                 type: "POST",

@@ -12,9 +12,10 @@
 
 
     });
+    var __appRoot = '<%= ResolveUrl("~/") %>';
     function editOpen(id) {
-        window.open("/Modules/Inventory/AdvancePayment.aspx?Adv_ID=" + id, "_blank");
-
+        var url = __appRoot + 'Modules/Inventory/AdvancePayment.aspx?Adv_ID=' + id;
+        window.open(url, '_blank');
     }
     function CheckUserRights() {
         $.ajax({

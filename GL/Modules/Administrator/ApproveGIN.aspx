@@ -12,9 +12,10 @@
 
 
     });
+    var __appRoot = '<%= ResolveUrl("~/") %>';
     function editOpen(id) {
-        window.open("/Modules/AP/GoodsIssuanceNote.aspx.aspx?SI_ID=" + id, "_blank");
-
+        var url = __appRoot + 'Modules/Inventory/GoodsIssuanceNote.aspx?SI_ID=' + id;
+        window.open(url, '_blank');
     }
     function CheckUserRights() {
         $.ajax({

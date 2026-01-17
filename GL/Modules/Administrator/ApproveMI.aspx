@@ -12,9 +12,10 @@
 
 
     });
+    var __appRoot = '<%= ResolveUrl("~/") %>';
     function editOpen(id) {
-        window.open("/Modules/Inventory/AddManualInvoice.aspx?Inv_ID=" + id, "_blank");
-
+        var url = __appRoot + 'Modules/Inventory/AddManualInvoice.aspx?Inv_ID=' + id;
+        window.open(url, '_blank');
     }
     function CheckUserRights() {
         $.ajax({

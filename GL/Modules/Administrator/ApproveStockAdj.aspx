@@ -12,9 +12,10 @@
 
 
      });
+     var __appRoot = '<%= ResolveUrl("~/") %>';
      function editOpen(id) {
-         window.open("/Modules/AP/StockAdjustment.aspx?ID=" + id, "_blank");
-
+         var url = __appRoot + 'Modules/Inventory/StockAdjustment.aspx?ID=' + id;
+         window.open(url, '_blank');
      }
      function CheckUserRights() {
          $.ajax({

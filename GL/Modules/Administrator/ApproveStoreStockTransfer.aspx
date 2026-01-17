@@ -11,9 +11,10 @@
 
 
     });
+    var __appRoot = '<%= ResolveUrl("~/") %>';
     function editOpen(id) {
-        window.open("/Modules/AP/StoreStockTransfer.aspx?stID=" + id, "_blank");
-
+        var url = __appRoot + 'Modules/Inventory/StoreStockTransfer.aspx?stID=' + id;
+        window.open(url, '_blank');
     }
     function CheckUserRights() {
         $.ajax({

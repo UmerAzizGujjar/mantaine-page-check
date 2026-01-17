@@ -883,7 +883,7 @@
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/ApprovePayment.aspx";
         }
-        function RedirectToadvance() {
+        function RedirectToAdvance() {
             debugger;
             window.history.replaceState({}, document.title, "/");
             window.location.href = "/Modules/Administrator/Approveadvance.aspx";

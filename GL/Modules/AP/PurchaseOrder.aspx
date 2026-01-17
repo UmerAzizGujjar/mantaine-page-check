@@ -18,6 +18,10 @@
             border-bottom-color: #ffc107 !important;
         }
 
+        #ui-datepicker-div{
+        z-index: 1000 !important;
+        }
+
     </style>
 
     <script type="text/javascript">

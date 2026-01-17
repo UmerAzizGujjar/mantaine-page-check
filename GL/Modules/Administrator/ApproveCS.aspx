@@ -10,9 +10,10 @@
         LoadPage(); 
         CheckUserRights();
     });
-    function editOpen(id) {
-        window.open("/Modules/AP/ComparativeStatementVendor.aspx?CS_ID=" + id, "_blank");
 
+    var appRoot = '<%= ResolveUrl("~/") %>';
+    function editOpen(id) {
+        window.open(appRoot + 'Modules/AP/ComparativeStatementVendor.aspx?CM_ID=' + id, '_blank');
     }
     function CheckUserRights() {
         $.ajax({

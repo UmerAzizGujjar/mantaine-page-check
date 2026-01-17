@@ -637,6 +637,8 @@
                     console.log("WareHoueeee " + warehouse)
                     var iteration = 0;
                     var datetime = '';
+                    var currentDate = new Date();
+                    var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
                     $.each(item.PurchaseOrderDetails, function (key, value) {
                         if (value.Unit == null)
                             value.Unit = "";
@@ -677,7 +679,7 @@
 
                             '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="' + (value.Bonus_Qty != null ? parseFloat(value.Bonus_Qty).toFixed(2) : '0') + '" id="BounusQty' + rowlength + '" name="BounusQty" autocomplete="off" class="bonusQtyField" data-toggle="tooltip" data-placement="top" title="Enter Bounus quantity in Loose" ></input></td>' +
 
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + rowlength + '" value="" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + rowlength + '" value="' + formattedDate + '"/></td>' +
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + rowlength + '" value="" readonly="readonly"/></td>' +
                             '<td style="display:none"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0" id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
