@@ -786,6 +786,12 @@
             var sampleID = $("#hdSample_ID").val();
             window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + sampleID);
         }
+        function PrintBarcode() {
+            debugger;
+            var sampleID = $("#hdSample_ID").val();
+            window.open('../../ReportViewer.aspx?ReportName=LabBarcode&ReportTitle=Lab Barcode Report&Sample_ID=' + sampleID);
+
+        }
 
         function loadRangeType() {
 
