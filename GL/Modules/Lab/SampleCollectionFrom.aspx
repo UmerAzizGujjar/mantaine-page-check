@@ -636,18 +636,18 @@
                         var length = CheckedTest.length;
                         debugger;
                         if (parse[0].Branch_Id != Branch) {
-                             Swal.fire({
-                                       icon: 'error',
-                                       title: 'Error!',
-                                       text: 'This Test Not Belongs to this Branch.',
-                                       showConfirmButton: false,
-                                       timer: 2000,
-                                       customClass: {
-                                           popup: 'swal-big-popup',
-                                           title: 'swal-big-title',
-                                           htmlContainer: 'swal-big-text'
-                                       }
-                                    );
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'This Test Not Belongs to this Branch.',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
                            return;
                        }
                         if (parse.length != 0) {

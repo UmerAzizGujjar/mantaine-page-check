@@ -1969,13 +1969,13 @@ namespace PMS.Modules.PatientManagement
                 {
                     if (cardissue == true)
                     {
-                        DBClass.exectueQuery("update Patients set Card_Receipt_Amount = " + totalRec + " where Patient_ID =" + PatID, tranObj, con);
+                       // DBClass.exectueQuery("update Patients set Card_Receipt_Amount = " + totalRec + " where Patient_ID =" + PatID, tranObj, con);
                         DBClass.exectueQuery("UPDATE Patients SET cardReprint = " + rep + " where Patient_ID =" + PatID, tranObj, con);
                         tranObj.Commit();
                     }
                     else
                     {
-                        DBClass.exectueQuery("update Patients set Card_Receipt_Amount = " + sysParm + " where Patient_ID =" + PatID, tranObj, con);
+                        //DBClass.exectueQuery("update Patients set Card_Receipt_Amount = " + sysParm + " where Patient_ID =" + PatID, tranObj, con);
                         DBClass.exectueQuery("UPDATE Patients SET Card_Issued = 1 where Patient_ID =" + PatID, tranObj, con);
                         DBClass.exectueQuery("UPDATE Patients SET cardReprint = 1 where Patient_ID =" + PatID, tranObj, con);
                         tranObj.Commit();

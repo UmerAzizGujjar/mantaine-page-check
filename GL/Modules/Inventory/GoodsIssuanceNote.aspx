@@ -8,6 +8,7 @@
         $(document).ready(function () { 
             $('#ddlMIR').select2();
             UserRights();
+            GetWareHouseCondition();
             LoadDepartments();
             LoadOrganizations();
 
@@ -61,7 +62,31 @@
                  var MIR_id = $("#ddlMIR").val();
                  LoadMIRDetail(MIR_id);
              });
+            var warehouseCond;
+            function GetWareHouseCondition() {
 
+                $.ajax({
+                    type: "POST",
+                    url: "GoodsIssuanceNote.aspx/GetWareHouseCondition",
+                    data: JSON.stringify({}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        warehouseCond = JSON.parse(response.d);
+                        if (warehouseCond == '01') {
+                            //$('#warehouse').show();
+                        }
+                        else {
+                            // $('#warehouse').hide();
+                            getMIR();
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching items", error);
+                    }
+                });
+            }
              $('#btnSave').on('click', function () {
                  debugger;
                  var checkstock = false;

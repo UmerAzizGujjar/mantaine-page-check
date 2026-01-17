@@ -4535,20 +4535,6 @@ namespace PMS
             return ((ISingleResult<spApproveStore_IssueResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadPRNumOnCS")]
-        public ISingleResult<sp_LoadPRNumOnCSResult> sp_LoadPRNumOnCS([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> warehouse)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse);
-            return ((ISingleResult<sp_LoadPRNumOnCSResult>)(result.ReturnValue));
-        }
-
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetMIR")]
-        public ISingleResult<sp_GetMIRResult> sp_GetMIR([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> warehouse)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse);
-            return ((ISingleResult<sp_GetMIRResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAllitemsDetails")]
         public ISingleResult<spGetAllitemsDetailsResult> spGetAllitemsDetails([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(100)")] string searchText, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowPharmacy, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowGeneralItem, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> warehouse)
         {
@@ -4636,13 +4622,6 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
             return ((ISingleResult<sp_LoadPRNumResult>)(result.ReturnValue));
-        }
-
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadPRNumByWarehouse")]
-        public ISingleResult<sp_LoadPRNumByWarehouseResult> sp_LoadPRNumByWarehouse([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Warehouse", DbType = "Int")] System.Nullable<int> warehouse)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse);
-            return ((ISingleResult<sp_LoadPRNumByWarehouseResult>)(result.ReturnValue));
         }
 
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_AreaWisePatientCount")]
@@ -5144,6 +5123,27 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), bill_Id, list);
             return ((ISingleResult<sp_GetTestDetailBillResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadPRNumOnCS")]
+        public ISingleResult<sp_LoadPRNumOnCSResult> sp_LoadPRNumOnCS([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(500)")] string warehouse)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse);
+            return ((ISingleResult<sp_LoadPRNumOnCSResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetMIR")]
+        public ISingleResult<sp_GetMIRResult> sp_GetMIR([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(500)")] string warehouse)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse);
+            return ((ISingleResult<sp_GetMIRResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_LoadPRNumByWarehouse")]
+        public ISingleResult<sp_LoadPRNumByWarehouseResult> sp_LoadPRNumByWarehouse([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Warehouse", DbType = "VarChar(500)")] string warehouse)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), warehouse);
+            return ((ISingleResult<sp_LoadPRNumByWarehouseResult>)(result.ReturnValue));
         }
     }
 
@@ -178311,130 +178311,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_LoadPRNumOnCSResult
-    {
-
-        private int _PR_Id;
-
-        private System.Nullable<int> _PR_Num;
-
-        private System.Nullable<decimal> _Qty;
-
-        public sp_LoadPRNumOnCSResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
-        public int PR_Id
-        {
-            get
-            {
-                return this._PR_Id;
-            }
-            set
-            {
-                if ((this._PR_Id != value))
-                {
-                    this._PR_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
-        public System.Nullable<int> PR_Num
-        {
-            get
-            {
-                return this._PR_Num;
-            }
-            set
-            {
-                if ((this._PR_Num != value))
-                {
-                    this._PR_Num = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetMIRResult
-    {
-
-        private long _MIR;
-
-        private System.Nullable<long> _MIR_No;
-
-        private System.Nullable<decimal> _Qty;
-
-        public sp_GetMIRResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR", DbType = "BigInt NOT NULL")]
-        public long MIR
-        {
-            get
-            {
-                return this._MIR;
-            }
-            set
-            {
-                if ((this._MIR != value))
-                {
-                    this._MIR = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR_No", DbType = "BigInt")]
-        public System.Nullable<long> MIR_No
-        {
-            get
-            {
-                return this._MIR_No;
-            }
-            set
-            {
-                if ((this._MIR_No != value))
-                {
-                    this._MIR_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-    }
-
     public partial class spGetAllitemsDetailsResult
     {
 
@@ -180011,68 +179887,6 @@ namespace PMS
         private System.Nullable<decimal> _Qty;
 
         public sp_LoadPRNumResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
-        public int PR_Id
-        {
-            get
-            {
-                return this._PR_Id;
-            }
-            set
-            {
-                if ((this._PR_Id != value))
-                {
-                    this._PR_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
-        public System.Nullable<int> PR_Num
-        {
-            get
-            {
-                return this._PR_Num;
-            }
-            set
-            {
-                if ((this._PR_Num != value))
-                {
-                    this._PR_Num = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_LoadPRNumByWarehouseResult
-    {
-
-        private int _PR_Id;
-
-        private System.Nullable<int> _PR_Num;
-
-        private System.Nullable<decimal> _Qty;
-
-        public sp_LoadPRNumByWarehouseResult()
         {
         }
 
@@ -209994,6 +209808,192 @@ namespace PMS
                 if ((this._Branch_Id != value))
                 {
                     this._Branch_Id = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_LoadPRNumOnCSResult
+    {
+
+        private int _PR_Id;
+
+        private System.Nullable<int> _PR_Num;
+
+        private System.Nullable<decimal> _Qty;
+
+        public sp_LoadPRNumOnCSResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
+        public int PR_Id
+        {
+            get
+            {
+                return this._PR_Id;
+            }
+            set
+            {
+                if ((this._PR_Id != value))
+                {
+                    this._PR_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
+        public System.Nullable<int> PR_Num
+        {
+            get
+            {
+                return this._PR_Num;
+            }
+            set
+            {
+                if ((this._PR_Num != value))
+                {
+                    this._PR_Num = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetMIRResult
+    {
+
+        private long _MIR;
+
+        private System.Nullable<long> _MIR_No;
+
+        private System.Nullable<decimal> _Qty;
+
+        public sp_GetMIRResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR", DbType = "BigInt NOT NULL")]
+        public long MIR
+        {
+            get
+            {
+                return this._MIR;
+            }
+            set
+            {
+                if ((this._MIR != value))
+                {
+                    this._MIR = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR_No", DbType = "BigInt")]
+        public System.Nullable<long> MIR_No
+        {
+            get
+            {
+                return this._MIR_No;
+            }
+            set
+            {
+                if ((this._MIR_No != value))
+                {
+                    this._MIR_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_LoadPRNumByWarehouseResult
+    {
+
+        private int _PR_Id;
+
+        private System.Nullable<int> _PR_Num;
+
+        private System.Nullable<decimal> _Qty;
+
+        public sp_LoadPRNumByWarehouseResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Id", DbType = "Int NOT NULL")]
+        public int PR_Id
+        {
+            get
+            {
+                return this._PR_Id;
+            }
+            set
+            {
+                if ((this._PR_Id != value))
+                {
+                    this._PR_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
+        public System.Nullable<int> PR_Num
+        {
+            get
+            {
+                return this._PR_Num;
+            }
+            set
+            {
+                if ((this._PR_Num != value))
+                {
+                    this._PR_Num = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
                 }
             }
         }

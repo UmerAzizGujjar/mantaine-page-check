@@ -26,7 +26,7 @@
 
         //SAVE DATA
         function submitData() {
-
+            debugger;
             let isEmptyFound = false;
             let allData = [];
             let categoryNamesIPD = new Set();
@@ -54,7 +54,7 @@
             let rowsPHARMACY = $('#tablePHARMACY .data-row');
 
             // Check if any rows exist
-            if (rowsOPD.length === 0 && rowsDiagnostic.length === 0 && rowsDiagnosticShare.length === 0 && rowsEMERGENCY.length === 0 && rowsSERVICE.length === 0 && rowsPHARMACY.length === 0) {
+            if (rowsOPD.length === 0 && rowsIPD.length === 0 && rowsOPDShare.length === 0 && rowsReg.length === 0 && rowsSpecialService.length === 0 && rowsProcedure.length === 0  && rowsDiagnostic.length === 0 && rowsDiagnosticShare.length === 0 && rowsEMERGENCY.length === 0 && rowsSERVICE.length === 0 && rowsPHARMACY.length === 0) {
                 isEmptyFound = true;
             }
 
@@ -137,7 +137,7 @@
                     revenue: row.find('.revenueReg').val()
                 };
                 // Check if any value is empty
-                if (rowDataReg.categoryname == 0  || rowDataReg.cashinhand == 0 || rowDataReg.revenue == 0) {
+                if ( rowDataReg.cashinhand == 0 || rowDataReg.revenue == 0) {
                     isEmptyFound = true;
                 }
                 // Check for duplicate categoryname

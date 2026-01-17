@@ -358,7 +358,7 @@ namespace PMS.AP
         public static string GetPRNoByWarehouse(string Warehouse)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var POList = db.sp_LoadPRNumByWarehouse(Convert.ToInt32(Warehouse));
+            var POList = db.sp_LoadPRNumByWarehouse(Warehouse);
             return (new JavaScriptSerializer()).Serialize(POList);
         }
         [WebMethod]

@@ -5,6 +5,7 @@ $(document).ready(function () {
     $('.show').show();
     $('#divcard').hide();
     $('#divapprove').hide();
+    $('#divvoucher').hide();
     $('#btn-opdprint').hide();
     /*  $('#divvoucher').hide();*/
     $("#tabs").on('click', 'li', function () {
@@ -1493,6 +1494,7 @@ function loadPatientDetail(OPDID) {
             debugger;
             if (stat != "Approved") {
                 $('#divapprove').show();
+                $('#divvoucher').hide();
             }
             //if (data.Patient_Type != "01") {
             //    $('#field_Clinic').hide();

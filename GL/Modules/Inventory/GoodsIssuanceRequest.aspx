@@ -10,15 +10,21 @@
         $(document).ready(function () {
         
             $('#txtItem').tokenInput(function () {
-                var warehouseVal = $('#ddlwarehouse').val();
-                debugger;
-                if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
 
-                    return "";
+                if (warehouseCond == '01') {
+                    var warehouseVal = $('#ddlwarehouse').val();
+                    debugger;
+                    if (!warehouseVal || warehouseVal === "0" || warehouseVal === "") {
+
+                        return "";
+                    }
+                    return "../../json.aspx?Table=INV_ItemsForMIRByWarehouse&WarehouseID=" + encodeURIComponent(warehouseVal);
+                }
+                else {
+                    return "../../json.aspx?Table=INV_ItemsForMIR"
                 }
 
-
-                return "../../json.aspx?Table=INV_ItemsForMIR&WarehouseID=" + encodeURIComponent(warehouseVal);
+                
             }, {
                 tokenLimit: 1,
                 hintText: "Select a warehouse first...",
@@ -39,6 +45,7 @@
                 $("#ddlwarehouse").attr('disabled', true);
             });
             UserRights();
+            GetWareHouseCondition();
             FillDepartments();
             FillWarehouses();
             $('#ddldept').select2();
@@ -71,7 +78,30 @@
                 }
             }, 1000);
         });
+        var warehouseCond;
+        function GetWareHouseCondition() {
 
+            $.ajax({
+                type: "POST",
+                url: "GoodsIssuanceRequest.aspx/GetWareHouseCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    warehouseCond = JSON.parse(response.d);
+                    if (warehouseCond == '01') {
+                        //$('#warehouse').show();
+                    }
+                    else {
+                       // $('#warehouse').hide();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
         function UserRights() {
             debugger;
             $.ajax({
@@ -620,7 +650,7 @@
                 <input type="text" class="form-control" id="txtItem"  name="txtItem" placeholder="item" />
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <div id="warehouse" class="col-lg-3 col-md-6 col-sm-12">
                 <label id="Lblwarehouse">Ware House <span style="color: red">*</span></label>
                 <select id="ddlwarehouse">
                     <option value="0">Please Select</option>
