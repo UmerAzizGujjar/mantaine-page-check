@@ -943,6 +943,7 @@ namespace PMS
             public string Approved_By { get; set; }
             public string Approved_Time { get; set; }
             public string TestDepartment { get; set; }
+            public string Branch_Id { get; set; }
         }
         [WebMethod]
         public static string FillTestDepartment()
@@ -1024,7 +1025,8 @@ namespace PMS
                             ltd.Approved_Time,
                             Approved_By = (from asp in db.aspnet_Users
                                            where asp.UserId == ltd.Approved_By
-                                           select asp.UserName).FirstOrDefault()
+                                           select asp.UserName).FirstOrDefault(),
+                            ar.Branch_Id
 
                         }).ToList();
 
@@ -1085,6 +1087,7 @@ namespace PMS
                 test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
+                test.Branch_Id = item.Branch_Id?.ToString() ?? "";
                 if (item.Test_Main_Department == null)
                 {
                     test.Test_Main_Department = "";
@@ -1119,7 +1122,8 @@ namespace PMS
         CAST(MAX(CAST(ISNULL(ld.Is_Result, 0) AS INT)) AS BIT) AS Is_Result,
         MIN(ltm.Patient_ID) AS Patient_ID,
         MIN(bd.Test_Main_Department) AS Test_Main_Department,
-        dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
+        dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department,
+        ar.Branch_Id
         FROM Lab_Test_Detail ld
         JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
         JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
@@ -1131,7 +1135,7 @@ namespace PMS
     WHERE ISNULL(bd.Is_Group_Category, 0) = 1 
      
       AND ar.Bill_ID = " + Bill_ID + @"
-    GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department,CONVERT(varchar(16), ld.Created_Time, 120)
+    GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,ar.Branch_Id,lt.Group_Department,CONVERT(varchar(16), ld.Created_Time, 120)
 ");
 
             foreach (DataRow item in GroupTest.Rows)
@@ -1155,7 +1159,8 @@ namespace PMS
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
-                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
+                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString(),
+                    Branch_Id = item[17] == DBNull.Value ? "" : item[17].ToString()
                 };
 
                 TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
@@ -1164,7 +1169,38 @@ namespace PMS
             }
             return (new JavaScriptSerializer()).Serialize(AlltestListRefined);
         }
+        [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
 
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
 
         [WebMethod]
         public static string GetLabDetail(string Patient_ID, int LabTestID)
@@ -1224,7 +1260,8 @@ namespace PMS
                             ltd.Approved_Time,
                             Approved_By = (from asp in db.aspnet_Users
                                            where asp.UserId == ltd.Approved_By
-                                           select asp.UserName).FirstOrDefault()
+                                           select asp.UserName).FirstOrDefault(),
+                            Branch_Id =(from ar in db.Ar_Billings where ar.Bill_ID == bd.Bill_ID select ar.Branch_Id).FirstOrDefault(),
                         } ).ToList();
 
             List<Test> AlltestList = new List<Test>();
@@ -1293,6 +1330,7 @@ namespace PMS
                 test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
+                test.Branch_Id = item.Branch_Id?.ToString() ?? "";
                 AlltestList.Add(test);
             }
 
@@ -1318,7 +1356,8 @@ namespace PMS
     CAST((CAST(ISNULL(ld.isApproved, 0) AS INT)) AS BIT) AS IsApproved,
     (ltm.Patient_ID) AS patient_id,
     (ISNULL(bd.Test_Main_Department, '')) AS Test_Main_Department,
-    dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
+    dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department,
+    (Select top 1 Branch_Id from ar_billings where Bill_id = bd.Bill_Id) AS Branch_Id
     FROM Lab_Test_Detail ld
     JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
     JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
@@ -1353,7 +1392,8 @@ namespace PMS
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),                  
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
-                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
+                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString(),
+                    Branch_Id = item[17] == DBNull.Value ? "" : item[17].ToString()
 
 
                 };

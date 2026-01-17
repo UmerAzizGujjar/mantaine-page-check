@@ -11,6 +11,7 @@
             debugger;
 
             loadRangeType();
+            loadUserBranch();
             FillOutSource();
             FillSampleStatus();
             GetacknowlagmentCondition();
@@ -184,41 +185,63 @@
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (response) {
+       
+                   success: function (response) {
+                       var Branch = $('#ddlUserBranch').val();
+                       var parse = JSON.parse(response.d);
+                       debugger;
+                   
+                       if (parse.length === 0) {
+                           $("#listModel").show();
+                           return;
+                       }
+                   
+                       // Check branch from first record
+                       if (parse[0].Branch_Id != Branch) {
+                             Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'This Test Not Belongs to this Branch.',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                           return;
+                       }
+                   
+                       var rows = "";
+                       var PatientDep = "";
+                   
+                       for (var i = 0; i < parse.length; i++) {
+                           rows += '<tr>'
+                               + '<td style="width:32px;"></td>'
+                               + '<td style="display:none;">' + parse[i].Item_ID + '</td>'
+                               + '<td style="display:none;">' + parse[i].Bill_Details_ID + '</td>'
+                               + '<td>' + parse[i].Item_Name + '</td>'
+                               + '<td>' + PatientDep + '</td>'
+                               + '<td>' + parse[i].Gener + '</td>'
+                               + '<td>' + parse[i].Qty + '</td>'
+                               + '<td>'
+                               + '<input type="checkbox" class="' + parse[i].Item_Name + '" '
+                               + 'value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PatientDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '" '
+                               + 'style="margin-top:-20px;" onclick="checkBoxClicked(this)" />'
+                               + '</td>'
+                               + '</tr>';
+                       }
+                   
+                       $('#tblDetailModelTable tbody').empty();
+                       $('#tblDetailModelTable tbody').append(rows);
+                   },
 
-                    var parse = JSON.parse(response.d)
-                    debugger;
-                    var length = CheckedTest.length;
-
-                    if (parse.length != 0) {
-                        var rows = "";
-                        var PateintDep = "";
-                        for (var i = 0; i < parse.length; i++) {
-
-                            rows += '<tr><td style="width:32px;"></td><td style="display:none;">' + parse[i].Item_ID + '</td><td style="display:none;">' + parse[i].Bill_Details_ID + '</td><td>' + parse[i].Item_Name + '</td><td>' + PateintDep + '</td><td>' + parse[i].Gener + '</td><td>' + parse[i].Qty + '</td><td><input type="checkbox" class="' + parse[i].Item_Name + '" value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PateintDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '"style="margin-top:-20px;" onclick="checkBoxClicked(this)" /></td></tr>';
-
-
-                        }
-
-                        debugger
-                        $('#tblDetailModelTable tbody tr').remove();
-                        $('#tblDetailModelTable tbody').append(rows);
-
-
-                        debugger;
-
-                    }
-                    else {
-                        $("#listModel").show();
-
-                    }
-                },
                 failure: function (response) {
                     debugger;
                     alert("error!");
                 }
             });
-
         }
         function getquerystring() {
             var queryString = new Array();
@@ -609,8 +632,24 @@
                     success: function (response) {
                         var parse = JSON.parse(response.d)
                         debugger;
+                        var Branch = $('#ddlUserBranch').val();
                         var length = CheckedTest.length;
                         debugger;
+                        if (parse[0].Branch_Id != Branch) {
+                             Swal.fire({
+                                       icon: 'error',
+                                       title: 'Error!',
+                                       text: 'This Test Not Belongs to this Branch.',
+                                       showConfirmButton: false,
+                                       timer: 2000,
+                                       customClass: {
+                                           popup: 'swal-big-popup',
+                                           title: 'swal-big-title',
+                                           htmlContainer: 'swal-big-text'
+                                       }
+                                    );
+                           return;
+                       }
                         if (parse.length != 0) {
                             var rows = "";
                             for (var i = 0; i < parse.length; i++) {
@@ -694,8 +733,32 @@
             });
             return SelectedTestArray;
         }
+
+             function loadUserBranch() {
+                PageMethods.GetUserBranch(function (result) {
+                    if (!result || result === "null") {
+                        $('#ddlUserBranch').empty().append('<option value="">No Branch Assigned</option>').prop('disabled', true);
+                        return;
+                    }
+
+                    var branches = JSON.parse(result);
+                    $('#ddlUserBranch').empty();
+                    branches.forEach(function (branch) {
+                        $('#ddlUserBranch').append(
+                            '<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>'
+                        );
+                    });
+                    if (branches.length === 1) {
+                        $('#ddlUserBranch').val(branches[0].branch_ID).prop('disabled', true);
+                    } else {
+                        $('#ddlUserBranch').prepend('<option value="">Select Branch</option>')
+                            .val('')
+                            .prop('disabled', false);
+                    }
+                });
+            }
         function loadtokenInputsDefaultPRNo() {
-            debugger;
+      
             $('#txtMR_No').tokenInput("../../json.aspx?Table=Patients",
                 {
                     tokenLimit: 1,
@@ -1287,16 +1350,16 @@
 
 
         <div class="row">
-            <div class="col-lg-2 col-md-3 col-sm-4">
+            <div class="col-lg-1 col-md-3 col-sm-4">
                 <label>Sample ID</label>
                 <input type="text" id="txtSample_ID" readonly="readonly" />
             </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
+            <div class="col-lg-1 col-md-3 col-sm-4">
                 <label for="SampleNo">Sample No:  </label>
                 <input type="text" id="txtSample_No" class="form-control" readonly="readonly" />
             </div>
             
-            <div class="col-lg-2 col-md-3 col-sm-4">
+            <div class="col-lg-1 col-md-3 col-sm-4">
                 <label id="sampleCode" style="display: inline-block;">Sample Code</label>
                 <input type="text" disabled="disabled" id="txtSampleCode" class="form-control" />
             </div>
@@ -1312,6 +1375,12 @@
             <div class="col-lg-2 col-md-3 col-sm-4">
             <label id="" style="display: inline-block;">Sample Status</label>
                 <select id="ddlSample_Status"></select>
+            </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                <label for="ddlUserBranch">Branch</label>
+                <select id="ddlUserBranch" class="form-control">
+                    <option value="">Loading...</option>
+                </select>
             </div>
         </div>
     </form>
