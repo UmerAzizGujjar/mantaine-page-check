@@ -41,7 +41,7 @@ namespace PMS.Account
             //var qry = from p in db.aspnet_Roles
             //          select p;
             DataTable dtRoles = new DataTable();
-            dtRoles = DBClass.getDataTable("SELECT [RoleId] ,[LoweredRoleName] as RoleName FROM [aspnet_Roles] order by LoweredRoleName ");
+            dtRoles = DBClass.getDataTable("SELECT [RoleId] ,[LoweredRoleName] as RoleName FROM [aspnet_Roles] where isnull(iscancel,0)=0 order by LoweredRoleName ");
             // string[] roles = System.Web.Security.Roles.GetAllRoles();
             // cbRolesList.DataSource = roles;
             cbRolesList.DataSource = dtRoles;

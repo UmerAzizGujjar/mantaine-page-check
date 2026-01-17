@@ -29,12 +29,22 @@ namespace PMS.Inventory
                 }
             }
         }
-
+        [WebMethod]
+        public static string GetWareHouseCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "WareHouse For PO"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
         [WebMethod]
         public static String getMIR(string warehouse)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());         
-            var result = db.sp_GetMIR(Convert.ToInt32(warehouse));
+            var result = db.sp_GetMIR(warehouse);
             return (new JavaScriptSerializer()).Serialize(result);
         }
 

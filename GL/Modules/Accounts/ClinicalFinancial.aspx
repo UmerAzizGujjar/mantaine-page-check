@@ -26,7 +26,7 @@
 
         //SAVE DATA
         function submitData() {
-
+            debugger;
             let isEmptyFound = false;
             let allData = [];
             let categoryNamesIPD = new Set();
@@ -54,7 +54,7 @@
             let rowsPHARMACY = $('#tablePHARMACY .data-row');
 
             // Check if any rows exist
-            if (rowsOPD.length === 0 && rowsDiagnostic.length === 0 && rowsDiagnosticShare.length === 0 && rowsEMERGENCY.length === 0 && rowsSERVICE.length === 0 && rowsPHARMACY.length === 0) {
+            if (rowsOPD.length === 0 && rowsIPD.length === 0 && rowsOPDShare.length === 0 && rowsReg.length === 0 && rowsSpecialService.length === 0 && rowsProcedure.length === 0  && rowsDiagnostic.length === 0 && rowsDiagnosticShare.length === 0 && rowsEMERGENCY.length === 0 && rowsSERVICE.length === 0 && rowsPHARMACY.length === 0) {
                 isEmptyFound = true;
             }
 
@@ -137,7 +137,7 @@
                     revenue: row.find('.revenueReg').val()
                 };
                 // Check if any value is empty
-                if (rowDataReg.categoryname == 0  || rowDataReg.cashinhand == 0 || rowDataReg.revenue == 0) {
+                if ( rowDataReg.cashinhand == 0 || rowDataReg.revenue == 0) {
                     isEmptyFound = true;
                 }
                 // Check for duplicate categoryname
@@ -1089,17 +1089,17 @@
         </select>
     </td>
     <td>
-        <select class="cashinhandPHARMACY select2select" style="background-color: white;" disabled>
+        <select class="cashinhandPHARMACY select2select" style="background-color: white;" >
             ${setSelected(optionsVen, item.cashinhand)}
         </select>
     </td>
     <td>
-        <select class="discountPHARMACY select2select" style="background-color: white;" disabled>
+        <select class="discountPHARMACY select2select" style="background-color: white;" >
             ${setSelected(optionsVen, item.discount)}
         </select>
     </td>
     <td>
-        <select class="revenuePHARMACY select2select" style="background-color: white;" disabled>
+        <select class="revenuePHARMACY select2select" style="background-color: white;">
             ${setSelected(optionsVen, item.revenue)}
         </select>
     </td>
@@ -1604,8 +1604,11 @@
                             <option value="001" selected>Medicene</option>
                         </select>
                     </td>
+         
                     <td>
-                        <input type = "hidden" class="cashinhandPHARMACY" value = "005">
+                        <select class="cashinhandPHARMACY select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
                     </td>
                     <td>
                         <select class="discountPHARMACY select2select" style="background-color: white;">

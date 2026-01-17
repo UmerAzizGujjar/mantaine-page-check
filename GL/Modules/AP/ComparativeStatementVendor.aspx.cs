@@ -719,7 +719,17 @@ namespace PMS.AP
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
-
+         [WebMethod]
+        public static string GetWareHouseCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "WareHouse For PO"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
         [WebMethod]
         public static string GetPaymentTerms()
         {
@@ -742,7 +752,7 @@ namespace PMS.AP
         public static string GetPRNoByWarehouse_CS(string Warehouse)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var RFQ = db.sp_LoadPRNumOnCS(Convert.ToInt32(Warehouse));
+            var RFQ = db.sp_LoadPRNumOnCS(Warehouse);
             return (new JavaScriptSerializer()).Serialize(RFQ);
         }
         [WebMethod]

@@ -1632,7 +1632,7 @@
                                     <th>Patient Name</th>
                                     <th>Father Name</th>
                                     <th>CNIC</th>
-                                    <th>Contact No</th>
+                                    <th>Doctor</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

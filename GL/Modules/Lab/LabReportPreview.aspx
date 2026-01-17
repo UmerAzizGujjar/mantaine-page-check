@@ -306,6 +306,7 @@
 
             $("#ddlrptColumns").val(4);
             AllowLabRights();
+            loadUserBranch();
             LoadSharingPolicy();
             //UltraSoundTestDetail();
             PageMethods.CheckRadiologylistRights(function (response) {
@@ -1155,6 +1156,22 @@
                 var Test = JSON.parse(res);
                 var rows = '';
                 var preview = '';
+                var Branch = $('#ddlUserBranch').val();
+                if (Test[0].Branch_Id != Branch) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'This Test Not Belongs to this Branch.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return ""
+                }
                 $.each(Test, function (key, value) {
                     debugger;
 
@@ -1376,6 +1393,22 @@
                 var Test = JSON.parse(res);
                 var rows = '';
                 var preview = '';
+                var Branch = $('#ddlUserBranch').val();
+                if (Test[0].Branch_Id != Branch) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'This Test Not Belongs to this Branch.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return ""
+                }
                 $.each(Test, function (key, value) {
                     debugger;
                     $("#<%= txtLab_Test_ID.ClientID %>").val(value.LabID);
@@ -2321,6 +2354,29 @@
 
 
         }
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddlUserBranch').empty().append('<option value="">No Branch Assigned</option>').prop('disabled', true);
+                    return;
+                }
+
+                var branches = JSON.parse(result);
+                $('#ddlUserBranch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddlUserBranch').append(
+                        '<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>'
+                    );
+                });
+                if (branches.length === 1) {
+                    $('#ddlUserBranch').val(branches[0].branch_ID).prop('disabled', true);
+                } else {
+                    $('#ddlUserBranch').prepend('<option value="">Select Branch</option>')
+                        .val('')
+                        .prop('disabled', false);
+                }
+            });
+        }
         function OnSuccess(data) {
             debugger;
             if (data.d != '') {
@@ -2580,6 +2636,13 @@
      <option></option>
  </select>
            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label for="ddlUserBranch">Branch</label>
+                <select id="ddlUserBranch" class="form-control">
+                    <option value="">Loading...</option>
+                </select>
+            </div>
+
         </div>
         <div class="row">
             <div class="table-responsive-lg table-responsive-md">

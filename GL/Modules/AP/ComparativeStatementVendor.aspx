@@ -53,7 +53,9 @@
 
         $(document).ready(function () {
             UserRights();
+            
             FillWarehouse();
+            GetWareHouseCondition();
             setTimeout(function () {
                 $('#ddlWarehouse').select2();
             }, 2500);
@@ -157,7 +159,32 @@
                 }
             });
         }
+        var warehouseCond;
+        function GetWareHouseCondition() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "ComparativeStatementVendor.aspx/GetWareHouseCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    warehouseCond = JSON.parse(response.d);
+                    if (warehouseCond == '01') {
+                        $('#warehouserow').show();
+                    }
+                    else {
+                        $('#warehouserow').hide();
+                        getprNoBy_WareHouseCS()
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
 
+        }
 
         function ddlPrNoChanged() {
             debugger
@@ -1575,15 +1602,16 @@
             });
             }
         }
-        function getprNoBy_WareHouseCS(item) {
+        function getprNoBy_WareHouseCS() {
             debugger;
             var optionsRFQ = '';
-            var Warehouse;
-            Warehouse = item.value;
+            var Warehouse = $("#ddlWarehouse").val();
+           // Warehouse = item.value;
             if (typeof Warehouse == "undefined" || Warehouse == "") {
-                VendorId = item;
+                Warehouse = '0';
             }
             PageMethods.GetPRNoByWarehouse_CS(Warehouse, function (res) {
+                debugger;
                 var item = JSON.parse(res);
                 optionsRFQ = '<option value="0">Please Select</option>';
                 $.each(item, function (key, value) {
@@ -1711,12 +1739,12 @@
                                    </asp:DropDownList>
                                </div>
                            </div>  
-                    <div class="row">
+                    <div class="row" id="warehouserow">
                         <div class="col-lg-4 col-md-4 col-sm-6">
                             <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-6 mt-1">
-                            <select id="ddlWarehouse" onchange="getprNoBy_WareHouseCS(this)" style="width:100% !important">
+                            <select id="ddlWarehouse" onchange="getprNoBy_WareHouseCS()" style="width:100% !important">
                                 <option value="0">Please Select</option>
                             </select>
                         </div>

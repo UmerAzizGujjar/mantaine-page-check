@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬pakred_uat" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬As_SiraatStandard_1" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7276,18 +7276,6 @@
       <Column Name="Specimen" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetTestDetail" Method="sp_GetTestDetail">
-    <Parameter Name="MrNo" Parameter="mrNo" Type="System.Int32" DbType="Int" />
-    <Parameter Name="list" Type="System.String" DbType="VarChar(MAX)" />
-    <ElementType Name="sp_GetTestDetailResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Gener" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
-      <Column Name="Bill_Details_ID1" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spGetDoorPatientsList" Method="spGetDoorPatientsList">
     <Parameter Name="doorType" Type="System.String" DbType="VarChar(10)" />
     <ElementType Name="spGetDoorPatientsListResult">
@@ -7450,17 +7438,6 @@
       <Column Name="Room_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Room_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Room_Type" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_GetTestDetailBill" Method="sp_GetTestDetailBill">
-    <Parameter Name="Bill_Id" Parameter="bill_Id" Type="System.Int32" DbType="Int" />
-    <Parameter Name="list" Type="System.String" DbType="VarChar(MAX)" />
-    <ElementType Name="sp_GetTestDetailBillResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Gener" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_GetPenidngSample_List" Method="sp_GetPenidngSample_List">
@@ -9023,22 +9000,6 @@
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_LoadPRNumOnCS" Method="sp_LoadPRNumOnCS">
-    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_LoadPRNumOnCSResult">
-      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_GetMIR" Method="sp_GetMIR">
-    <Parameter Name="warehouse" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetMIRResult">
-      <Column Name="MIR" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="MIR_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
     <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
     <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
@@ -9191,14 +9152,6 @@
   </Function>
   <Function Name="dbo.sp_LoadPRNum" Method="sp_LoadPRNum">
     <ElementType Name="sp_LoadPRNumResult">
-      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_LoadPRNumByWarehouse" Method="sp_LoadPRNumByWarehouse">
-    <Parameter Name="Warehouse" Parameter="warehouse" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_LoadPRNumByWarehouseResult">
       <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
@@ -11203,6 +11156,54 @@
       <Column Name="Sale_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
       <Column Name="Discount_Block" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetTestDetail" Method="sp_GetTestDetail">
+    <Parameter Name="MrNo" Parameter="mrNo" Type="System.Int32" DbType="Int" />
+    <Parameter Name="list" Type="System.String" DbType="VarChar(MAX)" />
+    <ElementType Name="sp_GetTestDetailResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Gener" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Branch_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetTestDetailBill" Method="sp_GetTestDetailBill">
+    <Parameter Name="Bill_Id" Parameter="bill_Id" Type="System.Int32" DbType="Int" />
+    <Parameter Name="list" Type="System.String" DbType="VarChar(MAX)" />
+    <ElementType Name="sp_GetTestDetailBillResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Gener" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Branch_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadPRNumOnCS" Method="sp_LoadPRNumOnCS">
+    <Parameter Name="warehouse" Type="System.String" DbType="VarChar(500)" />
+    <ElementType Name="sp_LoadPRNumOnCSResult">
+      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetMIR" Method="sp_GetMIR">
+    <Parameter Name="warehouse" Type="System.String" DbType="VarChar(500)" />
+    <ElementType Name="sp_GetMIRResult">
+      <Column Name="MIR" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="MIR_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadPRNumByWarehouse" Method="sp_LoadPRNumByWarehouse">
+    <Parameter Name="Warehouse" Parameter="warehouse" Type="System.String" DbType="VarChar(500)" />
+    <ElementType Name="sp_LoadPRNumByWarehouseResult">
+      <Column Name="PR_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

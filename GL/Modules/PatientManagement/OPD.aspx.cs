@@ -337,7 +337,7 @@ namespace PMS.Modules.PatientManagement
                 ISNULL(rg.mr_no_sequence, '') AS Patient_No,
                 ISNULL(rg.Full_Name, '') AS Full_Name,
                 ISNULL(p.NIC, '') AS NIC,
-                rg.Mobile1 AS ContactNo,
+                [dbo].[GetDoctorName](op.reffer_doc) AS ContactNo,
                 ISNULL(rg.Father_Name, '') AS Father_Name,
                 ISNULL(op.Out_Patient_ID, '') AS OPDID 
             FROM reg_patient rg 
@@ -356,7 +356,7 @@ namespace PMS.Modules.PatientManagement
                 ISNULL(rg.mr_no_sequence, '') AS Patient_No,
                 ISNULL(rg.Full_Name, '') AS Full_Name,
                 ISNULL(p.NIC, '') AS NIC,
-                rg.Mobile1 AS ContactNo,
+               [dbo].[GetDoctorName](op.reffer_doc) AS ContactNo,
                 ISNULL(rg.Father_Name, '') AS Father_Name,
                 ISNULL(op.Out_Patient_ID, '') AS OPDID 
             FROM reg_patient rg 
@@ -1969,13 +1969,13 @@ namespace PMS.Modules.PatientManagement
                 {
                     if (cardissue == true)
                     {
-                        DBClass.exectueQuery("update Patients set Card_Receipt_Amount = " + totalRec + " where Patient_ID =" + PatID, tranObj, con);
+                       // DBClass.exectueQuery("update Patients set Card_Receipt_Amount = " + totalRec + " where Patient_ID =" + PatID, tranObj, con);
                         DBClass.exectueQuery("UPDATE Patients SET cardReprint = " + rep + " where Patient_ID =" + PatID, tranObj, con);
                         tranObj.Commit();
                     }
                     else
                     {
-                        DBClass.exectueQuery("update Patients set Card_Receipt_Amount = " + sysParm + " where Patient_ID =" + PatID, tranObj, con);
+                        //DBClass.exectueQuery("update Patients set Card_Receipt_Amount = " + sysParm + " where Patient_ID =" + PatID, tranObj, con);
                         DBClass.exectueQuery("UPDATE Patients SET Card_Issued = 1 where Patient_ID =" + PatID, tranObj, con);
                         DBClass.exectueQuery("UPDATE Patients SET cardReprint = 1 where Patient_ID =" + PatID, tranObj, con);
                         tranObj.Commit();
