@@ -138,7 +138,7 @@
                         $('#divWarehouse').show();
                     }
                     else {
-                        $('#divWarehouse').hide();
+                        //$('#divWarehouse').hide();
                     }
                 },
                 error: function (error) {
