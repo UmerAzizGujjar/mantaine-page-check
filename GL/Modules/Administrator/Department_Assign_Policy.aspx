@@ -222,6 +222,7 @@
         }
 
         function collectPolicies() {
+            debugger;
             let data = [];
             $("#policyTable tbody tr").each(function () {
                 let dept = $(this).find('[name="Department"] option:selected');
@@ -233,8 +234,8 @@
                     Policy_ID: policy.val(),
                     Policy_Name: policy.text(),
                     Fees: $(this).find('[name="Fees"]').val(),
-                    Discount_Percentage: $(this).find('[name="Discount_Percentage"]').val(),
-                    Discount_Amount: $(this).find('[name="Discount_Amount"]').val(),
+                    Discount_Percentage: Number($(this).find('[name="Discount_Percentage"]').val() || 0),
+                    Discount_Amount: Number($(this).find('[name="Discount_Amount"]').val() || 0),
                     Hospital_Share: $(this).find('[name="Hospital_Share"]').val(),
                     Doctor_Share: $(this).find('[name="Doctor_Share"]').val(),
                     Expiry_Date: $(this).find('[name="Expiry_Date"]').val(),
@@ -245,6 +246,7 @@
         }
 
         function savePolicies() {
+            debugger;
             let data = collectPolicies();
             if (data.length === 0) {
                 Swal.fire({
