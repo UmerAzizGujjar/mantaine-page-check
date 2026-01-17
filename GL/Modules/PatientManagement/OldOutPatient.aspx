@@ -1,296 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OldOutPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.OldOutPatient" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-   <style type="text/css">
-    .lili a {
-        z-index: 1 !important;
-        display: block !important;
-    }
-
-    .loader {
-        position: fixed;
-        left: 0px;
-        top: 250px;
-        width: 100%;
-        height: 100%;
-        z-index: 9999;
-    }
-
-    #ctl00_MainContent_chkNo_Test {
-        width: 51px;
-        position: absolute;
-        margin-top: 29px;
-        font-size: 17px;
-        height: 20px;
-    }
-
-    .main textarea{
-        width: 100% !important;
-        height:34px;
-        margin-left:-5px;
-    }
-
-
-    #ctl00_MainContent_chkNo_Medicine {
-        width: 51px !important;
-        position: absolute;
-        margin-top: 11px;
-        font-size: 17px;
-        height: 20px;
-    }
-
-    .textComment {
-        margin-left: 20px;
-        padding-left: 20px;
-    }
-
-    #ctl00_MainContent_Label13 {
-        width: 20px;
-    }
-
-    .RedStar {
-        color: red;
-    }
-
-    .widthtbl {
-        width: 400px;
-    }
-
-    .dreProct {
-        width: 200px;
-    }
-
-    .widthtbl tr td {
-        padding: 2px;
-    }
-
-    #btnSave:focus {
-        background-color: green !important;
-    }
-
-    div.token-input-dropdown {
-        overflow: auto;
-        max-height: 150px;
-    }
-
-    @media (min-width: 768px) {
-        .modal-dialog {
-            width: 1060px;
-            margin: 30px auto;
-        }
-    }
-
-    #tblCheckboxex tr td {
-        width: 200px !important;
-    }
-
-    #ptTimeSelectCntr {
-        z-index: 9999 !important;
-    }
-
-    #tblHistory tr td {
-        width: 200px;
-    }
-
-    gf .table {
-        margin: 1em 0;
-        width: 100%;
-        overflow: hidden;
-        background: #FFF;
-        color: #024457;
-        border: 1px solid #167F92;
-    }
-
-    .table tr {
-        border: 1px solid #D9E4E6;
-    }
-
-        .table tr:nth-child(even) {
-            background-color: #EAF3F3;
-        }
-
-    .table th {
-        display: none;
-        border: 1px solid #FFF;
-        background-color: #438eb9;
-        color: #FFF;
-        padding: 1em;
-    }
-
-    .table thead th {
-        display: table-cell;
-        text-align: center;
-    }
-
-    @media (min-width: 480px) {
-        .table th:nth-child(2) span {
-            display: block;
-        }
-
-        .table th:nth-child(2):after {
-            display: none;
-        }
-    }
-
-    .table td {
-        display: block;
-        word-wrap: break-word;
-        max-width: 7em;
-    }
-
-        .table td:first-child {
-            display: table-cell;
-            text-align: center;
-          
-        }
-
-    @media (min-width: 480px) {
-        .table td {
-            border: 1px solid #D9E4E6;
-        }
-    }
-
-    .table th, .table td {
-        text-align: center;
-        margin: .5em 1em;
-    }
-
-    @media (min-width: 480px) {
-        .table th, .table td {
-            display: table-cell;
-            padding: 1em;
-        }
-    }
-
-    #vitalparams tr td {
-        padding-left: 5px;
-    }
-   input[type="text"]{
-       border-radius:5px !important;
-   }
-   select {
-border-radius:5px !important;
-   }
-    .Chkbox {
-        width: 39px !important;
-        font-size: 9px !important;
-        height: 25px !important;
-        position: absolute !important;
-        margin-top: 4px !important;
-    }
-
-    .preloader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 9999;
-        overflow: hidden;
-        background: #fff;
-    }
-
-        .preloader:before {
-            content: "";
-            position: fixed;
-            top: calc(50% - 30px);
-            left: calc(50% - 30px);
-            border: 6px solid #f2f2f2;
-            border-top: 6px solid #2eca6a;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            -webkit-animation: animate-preloader 1s linear infinite;
-            animation: animate-preloader 1s linear infinite;
-        }
-
-    @-webkit-keyframes animate-preloader {
-        0% {
-            -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-        }
-
-        100% {
-            -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-        }
-    }
-
-    @keyframes animate-preloader {
-        0% {
-            -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-        }
-
-        100% {
-            -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-        }
-    }
-    .btn-item {
-    font-size: 13px;
-    line-height: 1.39;
-    padding: 3px 9px;
-    background-image: none !important;
-    border-radius: 5px !important;
-    box-shadow: none !important;
-    color: #fff !important;
-    cursor: pointer;
-    display: inline-block;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !important;
-    transition: all 0.15s ease 0s;
-    vertical-align: middle;
-    text-align: center;
-    margin: 0;
-    width: 103px;
-    margin-top: 0px;
-    position: relative;
-}    
-    .btn-tests {
-    font-size: 13px;
-    line-height: 1.39;
-    padding: 3px 9px;
-    background-image: none !important;
-    border: 5px solid #39b384db !important;
-    border-radius: 5px !important;
-    box-shadow: none !important;
-    color: #fff !important;
-    cursor: pointer;
-    display: inline-block;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !important;
-    transition: all 0.15s ease 0s;
-    vertical-align: middle;
-    text-align: center;
-    width: 103px;
-    margin-top: 27px;
-    position: relative;
-}
-      /*Modal Design */
-        .modal-body {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .modal-header {
-            background-color: #449777db;
-            color: white;
-        }
-        .table thead th {
-            background-color: #f8f9fa;
-        }
-        .search-input {
-            margin-bottom: 15px;
-        }
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, .05);
-        }
-        .modal-header .close {
-            margin-top: -31px !important;
-        }
-        .custom-modal-width {
-        width: 800px !important;
-    }
-</style>
-
-
+<link href="../../wwwroot/Tibbit_theme/css/CustomCss/OldOutPatients.css" rel="stylesheet" />
     <script type="text/javascript">
         window.addEventListener('load', function () {
             $(".se-pre-con").fadeOut("slow");
@@ -3018,7 +2728,7 @@ border-radius:5px !important;
             });
             //$("#elem").css("width", "100px !important");
             if (checksymtomadded === false) {
-                $("#btnAddHistory").removeClass("btn-info").addClass("btn-danger");
+                $("#btnAddHistory").removeClass("btn-info").addClass("btn btn-primry");
                 var rowID = uuid();
 
                 var symp = $('#txtSymtom').val();
@@ -5692,11 +5402,11 @@ border-radius:5px !important;
             <!-- Modal content-->
             <div class="modal-content" style="width: 824px; margin-left: 133px;">
                 <div class="modal-header">
-                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" style="width: auto;margin-top:-12px !important" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Add Medicine</h4>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body medicine">
                     <fieldset>
                         <legend>Medication Details</legend>
                         <table id="tblMedicines" class="add-test">
@@ -5765,7 +5475,7 @@ border-radius:5px !important;
                                     </select>
                                 </td>
                                 <td>
-                                      <select style="margin-left: 100px"  id="ddlOther_Instruction" onchange="DisableSpecialInstructions()" name="OtherInstruction">
+                                      <select style="margin-left: 70px"  id="ddlOther_Instruction" onchange="DisableSpecialInstructions()" name="OtherInstruction">
                                         <option>Please Select</option>
                                     </select>
                                 </td>
@@ -5787,7 +5497,7 @@ border-radius:5px !important;
                             <tr>
                                 <td></td>
                                 <td>
-                                    <input type="button" id="btnSaveMedicine" name="btnSaveMedicine" value="Save" tabindex="7" />
+                                    <input type="button" id="btnSaveMedicine" class="btn btn-primry" name="btnSaveMedicine" value="Save" tabindex="7" />
                                 </td>
                                
                               
@@ -5797,7 +5507,7 @@ border-radius:5px !important;
 
 
 
-                                    <input type="button" id="Add_Unlisted_Medicine"  value="Add Unlisted Medicine" style="width: 177px; margin-left: 110px; background-color:#ab0138 !important;" onclick="NewMedicine()" />
+                                    <input type="button" id="Add_Unlisted_Medicine" class="btn btn-primry" value="Add Unlisted Medicine" style="width: 70% !important; margin-left: 110px;" onclick="NewMedicine()" />
                                         </td>
                                 <td></td>
                             </tr>
@@ -5806,7 +5516,7 @@ border-radius:5px !important;
                     <input type="hidden" name="uurowid" value="">
                 </div>
                 <div class="modal-footer">
-                    <input type="button" value="Done" data-dismiss="modal" />
+                    <input type="button" value="Done" style="width:14% !important" class="btn btn-primry" data-dismiss="modal" />
 
 
                 </div>
@@ -5940,7 +5650,7 @@ border-radius:5px !important;
                         <div style="margin-top: -0px; text-align: left;" id="Div1">
                             <label>Add New Symptom </label><br />
                             <input type="text" id="txtNewSymptom" style="width: 200px !important;" />
-                            <input type="button" value="Save" id="btn_save" onclick="SymptomInsert()" class="btn btn-primry"  style="margin-top:4px;width:30% !important"/>
+                            <input type="button" value="Save" id="btn_save" onclick="SymptomInsert()" class="btn btn-primry"  style="width:19% !important"/>
                             <br />
                             <label>Symptom &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -5969,7 +5679,7 @@ border-radius:5px !important;
                         </div>
                     </div>
 
-                    <div id="dvtblSymtomps" style="margin-left: 680px; margin-top: -150px; height: 184px; overflow: scroll;">
+                    <div id="dvtblSymtomps" style="margin-left: 680px; margin-top: -150px; height: 184px; overflow: scroll;width:30% !important">
 
                         <table class="table" style="width: 493px; height: 30px; overflow: scroll; margin-left: 7px;" id="tblSymtoms">
                             <thead>
@@ -5987,7 +5697,7 @@ border-radius:5px !important;
 
                     </div>
                      <div style="margin-left: 680px;">
-                        <table style="width:400px;margin-bottom: 20px;">
+                        <table>
                             <tr>
                                 <td class="auto-style1">
                                 <h3>Refered To </h3>
@@ -6028,9 +5738,9 @@ border-radius:5px !important;
                             </tr>
                           
                             </table>
-                         <div style="overflow: scroll; height: 138px; width: 374px;" class="auto-style1">
+                         <div style="overflow: scroll; height: 138px; width: 46%;" class="auto-style1">
 
-                                    <table class="table" id="tblDept" style="overflow: scroll;width:355px;">
+                                    <table class="table" id="tblDept" style="overflow: scroll;">
                                         <thead>
                                      
                                             <tr>
@@ -6047,7 +5757,7 @@ border-radius:5px !important;
                     </div>
                     <div style="margin-top: -1px; margin-left: 804px; width: 240px !important; height: 500px;">
                         <h3>Special Examination</h3>
-                        <table style="width: 240px !important;">
+                        <table style="width:100% !important; border-collapse: separate; border-spacing: 5px;" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td>
                                     <input type="button" class="btn btn-primry" value="Eye" name="btnEye" onclick="ShowEyeModel()" /></td>
@@ -6065,7 +5775,6 @@ border-radius:5px !important;
                                     <input type="button" class="btn btn-primry" value="Ortho" name="btnOrtho" onclick="ShowOrthoModel()" /></td>
                                 <td>
                                     <input type="button" class="btn btn-primry" value="Peads" name="btnPeads" onclick="ShowPeadsModel()" /></td>
-
                             </tr>
                         </table>
                     </div>
@@ -6272,7 +5981,7 @@ border-radius:5px !important;
                                            <asp:TextBox ID="txtInputBox1" runat="server" TextMode="MultiLine" Style="height: 27px; width: 312px" TabIndex="11"></asp:TextBox>   </td>
                                         </tr>
                                      </table>
-                                <table style="width:400px;" id="tblPeExam">
+                                <table  id="tblPeExam">
                                      <tr>
                                         <td>
 
@@ -7118,7 +6827,7 @@ border-radius:5px !important;
                 </div>
             </div>
             <div id="Tab-4">
-                <h1>Patients Waiting List Department Wise : </h1>
+                <h1>Patients Waiting List : </h1>
 
 
                 <div id="Div2" style="width: 70%">
@@ -7185,7 +6894,7 @@ border-radius:5px !important;
                     <div class="row"> 
                         <div class="row" style="margin-left:11px;"> <h4 style="font-weight: bold;">Template</h4></div>
                         <div class="row" style="margin-left:11px;">
-                            <div class="col-lg-2 col-md-6 col-sm-12">
+                            <div class="col-lg-3 col-md-6 col-sm-12">
                         <select id="ddlTemplate" style="margin-left:5px !important;" onchange="LoadTemplateMedicine()"></select>
                             </div>
                             </div>
@@ -7255,7 +6964,7 @@ border-radius:5px !important;
                                         </tbody>
                                     </table>
                                 </div>
-                                <input type="button" value="Load Medicine" id="load_previous_Med" class="btn btn-primry" onclick="Appendintable()" style="width:125px !important;margin-top:20px !important"/>
+                                <input type="button" value="Load Medicine" id="load_previous_Med" class="btn btn-primry" onclick="Appendintable()" style="width:17% !important;margin-top:20px !important"/>
                             </td>
                         </tr>
                     </table>
@@ -7302,13 +7011,20 @@ border-radius:5px !important;
                                         <option value="R">Right</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-1 col-md-3 col-sm-6">
-                                    <input type="button" value="Add Test" id="btnAddAllTest" class="btn btn-primry" onclick="AddAllTest()" style="margin-top: 24px;" />
-                                </div>
-                                   <div class="col-lg-1 col-md-1 col-sm-1">
-                                        <span class="btn btn-primry" id="btngetalltest" style="margin-top: 22px"><i class="fa fa-check-square"> Items</i></span>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="row g-2">
+                                        <div class="col-lg-4 col-md-6 col-sm-6">
+                                            <label></label>
+                                            <input type="button" value="Add Test" id="btnAddAllTest" class="btn btn-primry" onclick="AddAllTest()" />
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 col-sm-6">
+                                            <label></label>
+                                            <button type="button" id="btngetalltest" style="margin-top:0px !important;width:100% !important" class="btn btn-primry"> <i class="fa fa-check-square"></i>Items
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+                                    </div>
                             <div class="row">
                                 <div class="col-lg-2 col-md-3 col-sm-6">
                                     <label>Area Of Interest</label>
@@ -7433,67 +7149,81 @@ border-radius:5px !important;
                         <div class="row">
                             <div class="col-lg-7 col-md-3 col-sm-6">
                                   <label>Refferal</label>
-                                <asp:TextBox ID="Final_Rec" Class="form-control" runat="server" TextMode="MultiLine" Style="width: 633px !important;  height: 250px!important;" ></asp:TextBox>
+                                <asp:TextBox ID="Final_Rec" Class="form-control" runat="server" TextMode="MultiLine" Style="height: 250px!important;" ></asp:TextBox>
                               
                             </div>
 
-                            <div class="col-lg-2 col-md-3 col-sm-6">
-                                <div class="row">
-                                    <div class="custom-file">
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
 
-                                        <input type="file" id="fileupload" />
-                                        <label id="image-holder"></label>
-
-                                    </div>
-                                </div>
                                 <div class="row">
-                          
-                                        <label>Proto <span class="RedStar">*</span></label>
-                                        <asp:DropDownList ID="ddlProto" CssClass="dropdownBackgroud" runat="server" onchange="AddProto();" AppendDataBoundItems="true"></asp:DropDownList>
-                                  
-
-                                </div>
-                                <div class="row">
-                                    <table class="table" style="width: 350px; height: auto; overflow: scroll;" id="tblProto">
-                                        <thead>
-                                            <tr>
-                                                <th style="text-align: left;">Protos</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-8 col-md-4 col-sm-12">
-                                    <asp:Label ID="Label12" runat="server" Text="Lab Result"></asp:Label>
-                                    <asp:DropDownList ID="ddlLabResult" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+                                    <div class="col-lg-9">
+                                        <div class="custom-file w-100">
+                                            <input type="file" id="fileupload" class="form-control" />
+                                            <label id="image-holder" class="d-block mt-1"></label>
                                         </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-12">
-                                        <label></label>
-                                    <input id="btnlabrpt" type="button" value="Add" onclick="InsertLabResult()" class="btn btn-primry" />
-                                </div>
                                     </div>
-                                <div class="row">
-                                    <table class="table" id="tblResultrpt" style="width: 317px;">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 80px;">Test Name </th>
-                                                <th>Test Result </th>
-                                                <th>Test Date </th>
-                                                <th style="width: 53px;">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <label>Proto <span class="RedStar">*</span></label>
+                                        <asp:DropDownList ID="ddlProto" CssClass="form-control dropdownBackgroud" runat="server" onchange="AddProto();" AppendDataBoundItems="true">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-sm" id="tblProto">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Protos</th>
+                                                        <th style="width: 80px;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2 align-items-end">
+                                    <div class="col-md-8 col-sm-12">
+                                        <label>Lab Result</label>
+                                        <asp:DropDownList ID="ddlLabResult" runat="server" CssClass="form-control" AppendDataBoundItems="true">
+                                        </asp:DropDownList>
+                                    </div>
+
+                                    <div class="col-md-4 col-sm-12 mt-sm-2">
+                                        <label></label>
+                                        <input id="btnlabrpt" type="button" value="Add" onclick="InsertLabResult()" class="btn btn-primry w-100" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-sm" id="tblResultrpt">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Test Name</th>
+                                                        <th>Test Result</th>
+                                                        <th>Test Date</th>
+                                                        <th style="width: 60px;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
+
                                  <div class="col-lg-2 col-md-3 col-sm-6">
                                  <div class="custom-file">
                                
-                                    <input type="button" id="downloadfile" style="width:56% !important;" class="btn btn-primry" value="Download File" onclick="downloadFile();" />
+                                    <input type="button" id="downloadfile" style="width:74% !important;" class="btn btn-primry" value="Download File" onclick="downloadFile();" />
                                    
                                 </div>
                             </div>
@@ -7598,7 +7328,7 @@ border-radius:5px !important;
                                             <input type="text" id="txtService" name="txtService" runat="server" />
                                         </td>
                                         <td>
-                                            <input type="button" id="btnAddService" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" class="btn btn-primry" style="top: 3px; left: 20px;width:50% !important" />
+                                            <input type="button" id="btnAddService" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" class="btn btn-primry" style="top: 3px; left: 20px;width:73% !important" />
                                         </td>  
                                         <td>
                                            <span class="btn-item btn btn-primry"  id="btnGetAllIServices"><i class="fa fa-check-square"> Services</i></span>
@@ -7646,12 +7376,12 @@ border-radius:5px !important;
                     </tbody>
                 </table>
             </div>
-           <input type="button" onclick="AppendServices_Procedures()" id="Loadservice" class="btn btn-primry" value="Load Services" style=" width:125px !important;margin-top:12px !important" />
+           <input type="button" onclick="AppendServices_Procedures()" id="Loadservice" class="btn btn-primry" value="Load Services" style=" width:10% !important;margin-top:12px !important" />
 
                </div>
         </div>
 
-        <div style="padding-left: 40px; padding-top: 20px; margin-left: 45px;">
+        <div style="padding-top: 20px;">
             <table>
                 <tr>
 
@@ -7672,11 +7402,11 @@ border-radius:5px !important;
                         &nbsp;
                         <input type="button" value="New" name="btnName" style="width:140px !important" class="btn btn-primry" onclick="NewWindow()" />
                        <%-- <input type="button" value="OPD Form" name="name" onclick="PrintInpatientReceipt();" style="width: 100px;" />--%>
-                        <input type="button" value="Prescription" name="name" class="btn btn-primry" onclick="PrintoutPatient();" style="width: 140px !important;" />
+                        <input type="button" value="Prescription" name="name" class="btn btn-primry" onclick="PrintoutPatient();" style="width: 140px !important;margin-left:15px !important" />
                          &nbsp;
-                        <input type="button" id="Reffar_print" value="Reffaral Print" class="btn btn-primry" onclick="Reffared_printView();" style=" width: 140px !important;"/>                              
+                        <input type="button" id="Reffar_print" value="Reffaral Print" class="btn btn-primry" onclick="Reffared_printView();" style=" width: 140px !important;margin-left:15px !important"/>                              
                          &nbsp;                                        
-                         <input type="button" id="btnBackList" value="List View" class="btn-yellow" style=" width: 140px !important;" onclick="BackToList()" />
+                         <input type="button" id="btnBackList" value="List View" class="btn btn-yellow" style=" width: 140px !important;margin-left:10px" onclick="BackToList()" />
                     </td>
                 </tr>
                 <tr>
@@ -8108,7 +7838,7 @@ border-radius:5px !important;
             <!-- Modal content-->
             <div class="modal-content" style="width: 1217px;">
                 <div class="modal-header">
-                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" style="width: auto;margin-top:-12px !important" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">ENT</h4>
                 </div>
                 <div class="modal-body">
@@ -8187,7 +7917,7 @@ border-radius:5px !important;
                                                 <asp:CheckBox runat="server" type="checkbox" ID="mchkRightPos" />
                                                 <asp:TextBox CssClass="textComment" runat="server" placeholder="+ve Right Ear Comments" type="text" ID="ComRightPos" />
                                             </td>
-                                            <td>+ve  
+                                            <td class="pading">+ve  
                                             </td>
 
                                             <td>
@@ -8203,7 +7933,7 @@ border-radius:5px !important;
                                                 <asp:CheckBox runat="server" type="checkbox" ID="mchkRightNeg" />
                                                 <asp:TextBox CssClass="textComment" runat="server" placeholder="-ve Right Ear Comments" type="text" ID="ComRightNeg" />
                                             </td>
-                                            <td>-ve  
+                                            <td class="pading">-ve  
                                             </td>
 
                                             <td>
@@ -8218,7 +7948,7 @@ border-radius:5px !important;
                                                 <asp:CheckBox runat="server" type="checkbox" ID="mchkRightF" />
                                                 <asp:TextBox CssClass="textComment" runat="server" placeholder="False Right Ear Comments" type="text" ID="ComRightF" />
                                             </td>
-                                            <td>False
+                                            <td class="pading">False
                                             </td>
                                             <td>
                                                 <asp:CheckBox CssClass="textComment" runat="server" type="checkbox" ID="mchkLeftF" />
@@ -8233,7 +7963,7 @@ border-radius:5px !important;
                                                 <asp:TextBox CssClass="textComment" runat="server" placeholder="-ve Left Ear Comments" type="text" ID="ComRightFNeg" />
                                             </td>
 
-                                            <td>-ve  
+                                            <td class="pading">-ve  
                                             </td>
 
                                             <td>
@@ -8255,7 +7985,7 @@ border-radius:5px !important;
                                                 <asp:CheckBox runat="server" type="checkbox" ID="mchkcentral" />
                                                 <asp:TextBox CssClass="textComment" runat="server" placeholder="Central Left Ear Comments" type="text" ID="ComCentral" />
                                             </td>
-                                            <td>Lateralized  
+                                            <td class="pading">Lateralized  
                                             </td>
 
                                             <td>
@@ -8276,7 +8006,7 @@ border-radius:5px !important;
                                                 <asp:CheckBox runat="server" type="checkbox" ID="mchkPTA" />
                                                 <asp:TextBox CssClass="textComment" runat="server" placeholder="PTA Left Ear Comments" type="text" ID="ComPTA" />
                                             </td>
-                                            <td>Tympanometry  
+                                            <td class="pading">Tympanometry  
                                             </td>
                                             <td>
                                                 <asp:CheckBox CssClass="textComment" runat="server" type="checkbox" ID="mchkTympanometry" />
@@ -8329,18 +8059,18 @@ border-radius:5px !important;
                 </div>
 
                 <div class="modal-footer">
-                    <input type="button" id="Button1" name="saveENT" value="Save" data-dismiss="modal" />
+                    <input type="button" id="Button1" name="saveENT" value="Save" class="btn btn-primry" style="width:13% !important" data-dismiss="modal" />
                 </div>
             </div>
 
         </div>
     </div>
-    <div id="PsychiatryModel" class="modal fade" role="dialog" style="width: 1080px; overflow-y: overaly; margin-left: 95px;">
+    <div id="PsychiatryModel" class="modal fade" role="dialog" style=" overflow-y: overaly;">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="width: 1060px;">
                 <div class="modal-header">
-                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" style="width: auto;margin-top:-12px !important" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Psychiatry</h4>
                 </div>
                 <div class="modal-body">
@@ -9442,7 +9172,7 @@ border-radius:5px !important;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="Button4" name="saveENT" value="Save" data-dismiss="modal" />
+                    <input type="button" id="Button4" name="saveENT" class="btn btn-primry" style="width:12% !important" value="Save" data-dismiss="modal" />
                 </div>
             </div>
         </div>
@@ -9458,7 +9188,7 @@ border-radius:5px !important;
             <!-- Modal content-->
             <div class="modal-content" style="width: 729px;">
                 <div class="modal-header">
-                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" style="width: auto;margin-top:-12px !important" class="close" data-dismiss="modal">&times;</button>
                     <h2 class="modal-title">Eye</h2>
                 </div>
                 <div class="modal-body">
@@ -9619,7 +9349,7 @@ border-radius:5px !important;
 
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="Button3" name="saveENT" value="Save" data-dismiss="modal" />
+                    <input type="button" id="Button3" name="saveENT" value="Save" class="btn btn-primry" style="width:20% !important" data-dismiss="modal" />
                 </div>
             </div>
 
@@ -9633,7 +9363,7 @@ border-radius:5px !important;
             <!-- Modal content-->
             <div class="modal-content" style="width: 1293px;">
                 <div class="modal-header">
-                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" style="width: auto;margin-top:-12px !important" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Derma</h4>
                 </div>
                 <div class="modal-body">
@@ -9802,7 +9532,7 @@ border-radius:5px !important;
                 </div>
 
                 <div class="modal-footer">
-                    <input type="button" id="Button2" name="saveENT" value="Save" data-dismiss="modal" />
+                    <input type="button" id="Button2" name="saveENT" class="btn btn-primry" style="width:12% !important" value="Save" data-dismiss="modal" />
                 </div>
             </div>
 
@@ -9816,7 +9546,7 @@ border-radius:5px !important;
             <!-- Modal content-->
             <div class="modal-content" style="width: 1082px; margin-left: -73px;">
                 <div class="modal-header">
-                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" style="width: auto;margin-top:-12px !important" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Ortho</h4>
                 </div>
                 <div class="modal-body">
@@ -10049,7 +9779,7 @@ border-radius:5px !important;
                             <tr>
 
                                 <td>
-                                    <input type="button" id="btnAddOrtho" name="btnAddOrtho" value="Add" onclick="insertOrtho()" /></td>
+                                    <input type="button" id="btnAddOrtho" class="btn btn-primry" name="btnAddOrtho" value="Add" onclick="insertOrtho()" /></td>
                             </tr>
                         </tbody>
                     </table>
@@ -10080,7 +9810,7 @@ border-radius:5px !important;
                 </div>
 
                 <div class="modal-footer">
-                    <input type="button" id="Button5" name="saveENT" value="Save" data-dismiss="modal" />
+                    <input type="button" id="Button5" name="saveENT" class="btn btn-primry" style="width:12% !important" value="Save" data-dismiss="modal" />
                 </div>
             </div>
 
@@ -10093,7 +9823,7 @@ border-radius:5px !important;
             <!-- Modal content-->
             <div class="modal-content" style="width: 1060px;">
                 <div class="modal-header">
-                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" style="width: auto;margin-top:-12px !important" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Peads</h4>
                 </div>
                 <div class="modal-body">
@@ -10513,7 +10243,7 @@ border-radius:5px !important;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="Button6" name="saveENT" value="Save" data-dismiss="modal" />
+                    <input type="button" id="Button6" name="saveENT" class="btn btn-primry" style="width:12% !important" value="Save" data-dismiss="modal" />
                 </div>
 
 
@@ -10719,7 +10449,7 @@ border-radius:5px !important;
                 </table>
             </div>
             <div class="modal-footer">
-                <input type="button" value="Close" data-dismiss="modal" class="form-control"/>
+                <input type="button"  value="Close" data-dismiss="modal" style="width:15% !important" class="btn btn-primry"/>
             </div>
         </div>
     </div>
