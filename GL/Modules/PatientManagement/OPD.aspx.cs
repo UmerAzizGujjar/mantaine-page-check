@@ -337,7 +337,7 @@ namespace PMS.Modules.PatientManagement
                 ISNULL(rg.mr_no_sequence, '') AS Patient_No,
                 ISNULL(rg.Full_Name, '') AS Full_Name,
                 ISNULL(p.NIC, '') AS NIC,
-                rg.Mobile1 AS ContactNo,
+                [dbo].[GetDoctorName](op.reffer_doc) AS ContactNo,
                 ISNULL(rg.Father_Name, '') AS Father_Name,
                 ISNULL(op.Out_Patient_ID, '') AS OPDID 
             FROM reg_patient rg 
@@ -356,7 +356,7 @@ namespace PMS.Modules.PatientManagement
                 ISNULL(rg.mr_no_sequence, '') AS Patient_No,
                 ISNULL(rg.Full_Name, '') AS Full_Name,
                 ISNULL(p.NIC, '') AS NIC,
-                rg.Mobile1 AS ContactNo,
+               [dbo].[GetDoctorName](op.reffer_doc) AS ContactNo,
                 ISNULL(rg.Father_Name, '') AS Father_Name,
                 ISNULL(op.Out_Patient_ID, '') AS OPDID 
             FROM reg_patient rg 
