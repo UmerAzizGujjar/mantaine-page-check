@@ -2595,7 +2595,7 @@ namespace PMS.Modules.PatientManagement
                                      orderby d.Item_ID descending
                                      select new
                                      {
-                                         d.Item_Code,
+                                         d.Item_ID,
                                          Description = d.Description
                                      }).Take(20).ToList();
 
@@ -2613,7 +2613,7 @@ namespace PMS.Modules.PatientManagement
                           orderby d.Item_ID descending
                           select new
                           {
-                              d.Item_Code,
+                              d.Item_ID,
                               Description = d.Description,
                           }).ToList().Take(20);
 

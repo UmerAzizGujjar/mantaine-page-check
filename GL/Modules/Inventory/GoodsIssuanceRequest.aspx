@@ -423,6 +423,7 @@
                 details.itemId = $(this).find('td:eq(8)').text();
                 detailAry.push(details);
             });
+            debugger;
             var getuploadlist = $('input[name=fileuploadlist]').get();
             append_data = new FormData();
             for (var i = 0; i < getuploadlist.length; i++) {
@@ -453,15 +454,15 @@
                         else {
                             append_data.append('ID', arr);
                         }
-                        var options = {};
-                        options.url = "../UploadPurchaseRequsitionDetail.ashx";
-                        options.type = "POST";
-                        options.data = append_data;
-                        options.contentType = false;
-                        options.processData = false;
-                        options.success = function (result) { alert(result) };
-                        options.error = function (err) { };
-                        $.ajax(options);
+                        //var options = {};
+                        //options.url = "../../upload/UploadPurchaseRequsitionDetail.ashx";
+                        //options.type = "POST";
+                        //options.data = append_data;
+                        //options.contentType = false;
+                        //options.processData = false;
+                        //options.success = function (result) { alert(result) };
+                        //options.error = function (err) { };
+                        //$.ajax(options);
                         if (btnValue == "Save") {
                             Swal.fire({
                                 icon: 'success',
@@ -593,7 +594,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../../UploadMaterialIssue.ashx',
+                    url: '../../upload/UploadMaterialIssue.ashx',
                     data: data,
                     success: function (status) {
                     },

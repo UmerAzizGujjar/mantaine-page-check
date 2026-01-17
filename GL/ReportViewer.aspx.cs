@@ -4132,12 +4132,20 @@ namespace PMS
             #endregion
             else if (reportName == "LabBarcode")
             {
-                reportPath += "rptLabBarcode.rpt";
+                reportPath += "LabRadiology/rptLabBarcode.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@Sample_ID", int.Parse(Request.QueryString["Sample_ID"]));
             }
-
+            else if (reportName == "LabBarcodeSlip")
+            {
+                reportPath += "LabRadiology/rptLabSlipBarcode.rpt";
+                var sampleid = Request.QueryString["Sample_ID"].ToString();
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("@Sample_ID", sampleid);
+                //rd.SetParameterValue("@Sample_ID", int.Parse(Request.QueryString["Sample_ID"]));
+            }
             else if (reportName == "Budget_Voucher")
             {
                 if (Request.QueryString["Budget_ID"] != null)
