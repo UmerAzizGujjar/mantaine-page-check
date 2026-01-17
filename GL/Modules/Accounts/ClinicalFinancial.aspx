@@ -1089,17 +1089,17 @@
         </select>
     </td>
     <td>
-        <select class="cashinhandPHARMACY select2select" style="background-color: white;" disabled>
+        <select class="cashinhandPHARMACY select2select" style="background-color: white;" >
             ${setSelected(optionsVen, item.cashinhand)}
         </select>
     </td>
     <td>
-        <select class="discountPHARMACY select2select" style="background-color: white;" disabled>
+        <select class="discountPHARMACY select2select" style="background-color: white;" >
             ${setSelected(optionsVen, item.discount)}
         </select>
     </td>
     <td>
-        <select class="revenuePHARMACY select2select" style="background-color: white;" disabled>
+        <select class="revenuePHARMACY select2select" style="background-color: white;">
             ${setSelected(optionsVen, item.revenue)}
         </select>
     </td>
@@ -1604,8 +1604,11 @@
                             <option value="001" selected>Medicene</option>
                         </select>
                     </td>
+         
                     <td>
-                        <input type = "hidden" class="cashinhandPHARMACY" value = "005">
+                        <select class="cashinhandPHARMACY select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
                     </td>
                     <td>
                         <select class="discountPHARMACY select2select" style="background-color: white;">
