@@ -855,6 +855,11 @@
             window.open('../../ReportViewer.aspx?ReportName=LabBarcode&ReportTitle=Lab Barcode Report&Sample_ID=' + sampleID);
 
         }
+            function PrintOrder() {
+        debugger;
+        var sampleID = $("#hdSample_ID").val();
+        window.open('../../ReportViewer.aspx?ReportName=LabBarcodeSlip&ReportTitle=Department Of Pathology&Sample_ID=' + sampleID);
+    }
 
         function loadRangeType() {
 
@@ -1441,6 +1446,9 @@
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input id="btnPrintBarcode" class="btn btn-primry" type="button" value="Barcode" onclick="PrintBarcode()" />
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <input id="btnPrintOrder" class="btn btn-primry" type="button" value="Print Order" onclick="PrintOrder()" />
                 </div>
                         <div class="col-lg-2 col-md-3 col-sm-4" >
                         <input id="btnPrint" class="btn btn-primry" type="button" value="Print" onclick="Print()"/>
