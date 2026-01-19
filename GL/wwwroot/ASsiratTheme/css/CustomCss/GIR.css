@@ -2,3 +2,21 @@
     overflow: auto;
     max-height: 150px;
 }
+
+
+
+.textarea, input[type="text"] {
+    border-radius: 5px !important;
+    color: #060606 !important;
+    font-weight: bold !important;
+    background-color: #fff;
+    box-shadow: none;
+    border: 1px solid #d5d5d5;
+    padding: 5px 4px 6px;
+    font-size: 14px;
+    font-family: inherit;
+    -webkit-box-shadow: none !important;
+    box-shadow: none;
+    -webkit-transition-duration: .1s;
+    transition-duration: .1s;
+}

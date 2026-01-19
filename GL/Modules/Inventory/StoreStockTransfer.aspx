@@ -1,7 +1,12 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StoreStockTransfer.aspx.cs" Inherits="PMS.Inventory.StoreStockTransfer" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style type="text/css">
+        .textarea, input[type="text"] {
+            box-shadow: none !important;
+        }
 
+    </style>
 
 
     <script type="text/javascript">

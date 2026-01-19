@@ -181,3 +181,9 @@ input[type="text"] {
     margin-top: 23px;
     position: relative;
 }
+
+
+
+.textarea, input[type="text"] {
+    box-shadow: none !important;
+}
