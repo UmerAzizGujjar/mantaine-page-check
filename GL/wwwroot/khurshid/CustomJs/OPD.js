@@ -939,6 +939,7 @@ function SavePatient() {
                     htmlContainer: 'swal-big-text'
                 }
             });
+            Approve(ini_patientID)
             get_pat_initial_info(ini_patientID);
         },
         error: function (xhr, status, error) {
@@ -957,7 +958,31 @@ function SavePatient() {
             });
         }
     });
-} function SaveData() {
+}
+
+function Approve(pat_id) {
+    PageMethods.approvepatient(pat_id, function (Tests) {
+        debugger
+        var message = JSON.parse(Tests);
+        if (message[0].Message != null || message[0].Message != "") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: message[0].Message,
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
+            location.reload();
+        }
+    });
+}
+
+function SaveData() {
     debugger;
 
     var regid = $('#hdn_regid').val();

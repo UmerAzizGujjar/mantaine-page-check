@@ -342,7 +342,7 @@
                 $('#emp_id').hide();
             }
         }
-        function Approve() {
+        function ApproveOPD() {
             var pat_id = '<% =Request.QueryString["OPDID"] %>';
             var Pat_Category = $('#ddlPatient_Type').val();
 
@@ -1357,7 +1357,7 @@
                     <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove">
-                    <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="Approve()" />
+                    <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="ApproveOPD()" />
                 </div>
             </div>
         </div>
