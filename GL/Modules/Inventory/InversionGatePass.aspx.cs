@@ -250,6 +250,15 @@ namespace PMS.Inventory
                               m.InvOrgId,
                               m.Inspec_Status,
                               Vendor_Name = db.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(m.Vendor)).Select(po => po.Vendor_Name),
+                              PO_ID = (from d in db.Igp_Details
+                                       where d.Igp_Id == IGP_ID
+                                       join poi in db.AP_Purchase_Order_Items on d.PO_Item_ID equals poi.PO_Item_ID
+                                       select poi.PO_ID).FirstOrDefault(),
+                              PO_No = (from d in db.Igp_Details
+                                       where d.Igp_Id == IGP_ID
+                                       join poi in db.AP_Purchase_Order_Items on d.PO_Item_ID equals poi.PO_Item_ID
+                                       join po in db.AP_Purchase_Orders on poi.PO_ID equals po.PO_ID
+                                       select po.PO_No).FirstOrDefault(),
                           }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(Header);
         }
