@@ -78,6 +78,7 @@
         }
 
 
+
         debugger;
         function LoadIGPData(IGP_ID) {
             debugger;
@@ -93,6 +94,10 @@
                 setTimeout(function () {
                     $('#ddlInv_Org').val(data.InvOrgId).trigger('change');
                 }, 1000);
+
+                //setTimeout(function () {
+                //    $('#ddlPONo').val(data.PO_ID).trigger('change');
+                //}, 1000);
                 debugger;
                 $('#DriverName').val(data.DriverName);
                 $('#txtVehiclenum').val(data.VehicleNum);
@@ -139,7 +144,10 @@
                     $('#SaveButtonToBeHidden').show();
                 }
                 $('#ddlVendor').attr("disabled", 'disabled');
-                getPONumByVendor(data.Vendor);
+                /*getPONumByVendor(data.Vendor);*/
+                getPONumByVendor(data.Vendor, function () {
+                    $('#ddlPONo').val(data.PO_ID).trigger('change');                   
+                });
                 LoadIGPDetail(IGP_ID);
             },
                 function (error) {
@@ -168,7 +176,7 @@
                 selectedOptions = data;
                 $.each(data, function (key, value) {
                     debugger;
-                    $('#ddlPONo').val(value.PO_ID);
+                   // $('#ddlPONo').val(value.PO_ID);
                     if (data[key].Delivery_Date != null) {
                         datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Delivery_Date.substring(6, 19))));
                     }
@@ -604,22 +612,39 @@
             });
         }
         debugger;
-        function getPONumByVendor(item) {
-            debugger;
+        //function getPONumByVendor(item) {
+        //    debugger;
+        //    var optionsPO = '';
+        //    var VendorId;
+        //    VendorId = item.value;
+        //    if (typeof VendorId == "undefined" || VendorId == "") {
+        //        VendorId = item;
+        //    }
+        //    PageMethods.GetPONoByVendor(VendorId, function (res) {
+        //        var item = JSON.parse(res);
+        //        optionsPO = '<option value="0">Please Select</option>';
+        //        $.each(item, function (key, value) {
+        //            optionsPO += '<option value="' + value.PO_ID + '" >' + value.PO_No + '</option>';
+        //        });
+        //        $("#ddlPONo option").remove();
+        //        $('#ddlPONo').html(optionsPO);
+        //    });
+        //}
+        function getPONumByVendor(item, callback) {
             var optionsPO = '';
-            var VendorId;
-            VendorId = item.value;
-            if (typeof VendorId == "undefined" || VendorId == "") {
-                VendorId = item;
-            }
+            var VendorId = (typeof item === "object" && item.value) ? item.value : item;
+
             PageMethods.GetPONoByVendor(VendorId, function (res) {
                 var item = JSON.parse(res);
                 optionsPO = '<option value="0">Please Select</option>';
                 $.each(item, function (key, value) {
-                    optionsPO += '<option value="' + value.PO_ID + '" >' + value.PO_No + '</option>';
+                    optionsPO += '<option value="' + value.PO_ID + '">' + value.PO_No + '</option>';
                 });
-                $("#ddlPONo option").remove();
                 $('#ddlPONo').html(optionsPO);
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
             });
         }
         function PerformPOSearch() {
