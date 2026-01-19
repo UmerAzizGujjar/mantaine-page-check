@@ -32,6 +32,14 @@ namespace PMS
             ddlpro_dis.DataBind();
         }
         [WebMethod]
+        public static string ApproveRegpatient(string Pat_Id)
+        {
+            var UserId = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_ApprovePatientCardFee(Convert.ToInt32(Pat_Id), UserId);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        [WebMethod]
         public static string fillSahreTypes()
         {
             string data = string.Empty;
