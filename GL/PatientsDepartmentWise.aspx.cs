@@ -1386,6 +1386,25 @@ namespace PMS
                     ddlDepartments.DataBind();
 
 
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
                 }
                 #endregion
                 #region General Patient Modules
@@ -2767,6 +2786,25 @@ namespace PMS
                     SetDepartent();
                     dpROw.Visible = false;
 
+                    // ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
                 }
                 else if (PageTitle == "StudentAttendanceList")
                 {
@@ -3538,6 +3576,25 @@ namespace PMS
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
 
+                    // ADDING NEW WAREHOSUE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
 
                 }
                 if (this.PageTitle == "Sale_Report_Summary")
@@ -3585,6 +3642,23 @@ namespace PMS
                     lbShift.Visible = false;
 
 
+                    // ADDING NEW  WAREHOUSE
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
                 }
                 if (this.PageTitle == "Pharmacy_Profit_and_Loss_Report")
                 {
@@ -3605,6 +3679,27 @@ namespace PMS
                     Time_Row.Visible = true;
                     SetDepartent();
                     dpROw.Visible = false;
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
                 }
                 if (this.PageTitle == "Head_Wise_Discount_Report")
                 {
@@ -5116,6 +5211,24 @@ namespace PMS
                         ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                         ddloprators.DataBind();
                     }
+                    // ADDING NEW WAREHOUSE
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
                 }
                 //else if (PageTitle == "Pharmacy_Profit_and_Loss_Report")
                 //{

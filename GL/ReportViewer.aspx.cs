@@ -1128,6 +1128,7 @@ namespace PMS
                     rd.SetParameterValue("@StartDate", stDate);
                     rd.SetParameterValue("@endDate", newEnddate);
                     rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
                 }
             }
 
@@ -1636,12 +1637,14 @@ namespace PMS
                 rd.SetParameterValue("@FromDate", StartDateTime);
                 rd.SetParameterValue("@ToDate", EndDateTime);
                 rd.SetParameterValue("@Item_ID", ItemID);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@UserId", Request.QueryString["Operator"]);
                 rd.SetParameterValue("@FromDate", StartDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
@@ -1665,7 +1668,8 @@ namespace PMS
                 rd.SetParameterValue("@endDate", EndDateTime);
                 rd.SetParameterValue("@itemId", ItemID);
                 rd.SetParameterValue("@Vendor", vendorID);
-                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("CompanyLogo", logoPath); 
             }
       
             #endregion
@@ -2304,6 +2308,7 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
 
 
             }
@@ -2318,7 +2323,7 @@ namespace PMS
 
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
-
+                var WAREHOUSE = Request.QueryString["WareHouse"];
                 string Operator = Request.QueryString["Operator"].ToString();
                 rd.SetParameterValue("@UserId", Operator);
                 rd.SetParameterValue("@FromDate", StartDateTime);
@@ -2327,11 +2332,13 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
+                rd.SetParameterValue("@Warehouse", WAREHOUSE);
+
 
                 rd.SetParameterValue("@FromDate", StartDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
-
+                rd.SetParameterValue("@Warehouse", WAREHOUSE, rd.Subreports[0].Name.ToString());
 
             }
             else if (reportName == "Pharmacy_Customer_Report")
@@ -2351,7 +2358,7 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("CompanyLogo", logoPath);
-
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
 
             }
             else if (reportName == "Physiotherapy_Cash_Collection")

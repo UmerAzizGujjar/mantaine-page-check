@@ -313,7 +313,7 @@
                         var eDate = new Date($("#ctl00_MainContent_txtEnd_Date").val());
                         var sSDate = sDate.getDay();
                         var eEDate = eDate.getDay();
-                        var url = 'ReportViewer.aspx?ReportName=PharmacySaleReport&ReportTitle=Pharmacy Sale Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + ' ' + eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&Summary=' + summary;
+                        var url = 'ReportViewer.aspx?ReportName=PharmacySaleReport&ReportTitle=Pharmacy Sale Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '  ' + sSDate + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + ' ' + eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&Summary=' + summary;
                         window.open(url, '_blank');
 
                     }
@@ -664,12 +664,12 @@
                     //}
                     else if (rptTitle == "Sale_Return_Report") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=Sale_Return_Report&ReportTitle=Sale Return Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        var url = 'ReportViewer.aspx?ReportName=Sale_Return_Report&ReportTitle=Sale Return Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Sale_Report_Summary") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=Sale_Report_Summary&ReportTitle=Sale Report Summary From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        var url = 'ReportViewer.aspx?ReportName=Sale_Report_Summary&ReportTitle=Sale Report Summary From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
 
@@ -723,7 +723,7 @@
                     else if (rptTitle == 'Pharmacy_Profit_and_Loss_Report') {
                         debugger;
                     //    window.location.href = 'ReportViewer.aspx?ReportName=Pharmacy_Profit_and_Loss_Report&ReportTitle=Pharmacy Profit and Loss from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
-                        var url = 'ReportViewer.aspx?ReportName=Pharmacy_Profit_and_Loss_Report&ReportTitle=Pharmacy Profit and Loss from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
+                        var url = 'ReportViewer.aspx?ReportName=Pharmacy_Profit_and_Loss_Report&ReportTitle=Pharmacy Profit and Loss from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blanks');
                     }
 
@@ -1121,7 +1121,7 @@ var Item = $("#ctl00_MainContent_ddlMainDepartment").val();
                     }
                     else if (rptTitle == "Pharmacy_Customer_Report") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=Pharmacy_Customer_Report&ReportTitle=Customer Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
+                        var url = 'ReportViewer.aspx?ReportName=Pharmacy_Customer_Report&ReportTitle=Customer Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val(); 
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Physiotherapy_Cash_Collection") {
@@ -1184,7 +1184,7 @@ var Item = $("#ctl00_MainContent_ddlMainDepartment").val();
                     else if (rptTitle == "MER") {
                         debugger;
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=MER&ReportTitle=Medicine Expiry Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val() + '&ExportPDF=' + exporttopdf;
+                        var url = 'ReportViewer.aspx?ReportName=MER&ReportTitle=Medicine Expiry Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
 
