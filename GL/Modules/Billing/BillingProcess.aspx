@@ -1037,6 +1037,22 @@
                     $('#divRotation').hide();
                     category = "007";
                 }
+                else if (maindpt == "008") {
+                    GetCardioTests();
+                    $('#divRotation').hide();
+                    category = "008";
+                }
+            }
+            function GetCardioTests() {
+                var options = '<option value="0" >Please Select</option>';
+                PageMethods.GetCardioTests(function (Tests) {
+                    $.each(JSON.parse(Tests), function (key, value) {
+                        options += '<option value="' + value.SerialNo + '" >' + value.TestName + '</option>';
+                    });
+                    $('#ddlTestList').html(options);
+                    $('#ddlTestList').select2();
+                    localStorage.TestForCategoryWiseSelections = options;
+                });
             }
             function FillLabTests() {
                 var options = '<option value="0" >Please Select</option>';

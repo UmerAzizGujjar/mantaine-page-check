@@ -51,7 +51,46 @@ namespace PMS
             }
             return data;
         }
+        [WebMethod]
+        public static string GetCardioTests()
+        {
 
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var tests = from t in db.Lab_Tests
+                        where t.Main_Department == "008" && t.Active == true
+                        select new { t.Test_ID, Test_Name = t.Test_Name, t.Group_Category };
+            List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
+            int counter = 1;
+            foreach (var test in tests)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = test.Test_ID.ToString();
+                obj.TestName = test.Test_Name.ToString() + (test.Group_Category != string.Empty ? " | " + DBClass.getField("select Datavalue_Description from Datavalues where Datavalue_Name = '" + test.Group_Category + "' and Valueset_ID = 70") : string.Empty);
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = false;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            var GroupCategories = from dv in db.DataValues
+                                  join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                  where vs.ValueSet_Name == "Test Groups" && dv.Division == "008"
+                                  select new { dv.DataValue_Name, dv.DataValue_Description };
+
+            foreach (var category in GroupCategories)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = category.DataValue_Name.ToString();
+                obj.TestName = category.DataValue_Description.ToString();
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = true;
+                obj.CategoryID = category.DataValue_Name;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            return (new JavaScriptSerializer()).Serialize(listOfTest);
+        }
         [WebMethod]
         public static string CheckEditRights()
         {
