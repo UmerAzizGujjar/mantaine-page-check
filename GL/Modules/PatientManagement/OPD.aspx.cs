@@ -134,7 +134,7 @@ namespace PMS.Modules.PatientManagement
             }
         }
         [WebMethod]
-        public static string approvepatient(string Pat_Id)
+        public static string ApproveRegpatient(string Pat_Id)
         {
             var UserId = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
