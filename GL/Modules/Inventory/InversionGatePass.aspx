@@ -146,9 +146,12 @@
                 $('#ddlVendor').attr("disabled", 'disabled');
                 /*getPONumByVendor(data.Vendor);*/
                 getPONumByVendor(data.Vendor, function () {
-                    $('#ddlPONo').val(data.PO_ID).trigger('change');                   
+                    setTimeout(function () {
+                        $('#ddlPONo').val(data.PO_ID).trigger('change.select2');
+                    }, 1500);
+                    LoadIGPDetail(IGP_ID);
                 });
-                LoadIGPDetail(IGP_ID);
+                
             },
                 function (error) {
                     alert(error.get_message());
@@ -631,22 +634,25 @@
         //    });
         //}
         function getPONumByVendor(item, callback) {
-            var optionsPO = '';
             var VendorId = (typeof item === "object" && item.value) ? item.value : item;
 
             PageMethods.GetPONoByVendor(VendorId, function (res) {
-                var item = JSON.parse(res);
-                optionsPO = '<option value="0">Please Select</option>';
-                $.each(item, function (key, value) {
+                var list = JSON.parse(res);
+                var optionsPO = '<option value="0">Please Select</option>';
+
+                $.each(list, function (key, value) {
                     optionsPO += '<option value="' + value.PO_ID + '">' + value.PO_No + '</option>';
                 });
-                $('#ddlPONo').html(optionsPO);
+
+                $('#ddlPONo').empty().html(optionsPO);
+                $('#ddlPONo').select2();
 
                 if (typeof callback === 'function') {
                     callback();
                 }
             });
         }
+
         function PerformPOSearch() {
             $('#ddlVendor').prop('disabled', true);
             var POId = $('#ddlPONo').val();
