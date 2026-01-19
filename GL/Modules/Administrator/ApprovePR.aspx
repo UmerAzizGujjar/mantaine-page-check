@@ -105,7 +105,8 @@
                     Actions
                 </HeaderTemplate>
                 <ItemTemplate>
-                    <asp:HyperLink ToolTip="Edit" ID="LinkButton3" runat="server" NavigateUrl='<%# "/Modules/AP/PurchaseRequistion.aspx?ID="+ Eval("PR_Id")%>' Text="Preview" Target="_blank" Style="display: block; width: 100%; text-align: center;" />
+                    <asp:HyperLink ToolTip="Edit" ID="LinkButton3" runat="server" NavigateUrl='<%# ResolveUrl("~/Modules/AP/PurchaseRequistion.aspx?ID=" + Eval("PR_Id").ToString()) %>'
+                        Text="Preview" Target="_blank" Style="display: block; width: 100%; text-align: center;" />
                 </ItemTemplate>
                 <HeaderStyle CssClass="header-center-align" />
             </asp:TemplateField>
