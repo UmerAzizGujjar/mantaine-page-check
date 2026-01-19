@@ -1350,7 +1350,7 @@
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
                     <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print('<%= Request.QueryString["OPDID"] %>')" />
                 </div>
-                <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint" style="display: none;">
+                <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint" style="display: none; position: absolute;">
                     <input type="hidden" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-6" id="divvoucher">
