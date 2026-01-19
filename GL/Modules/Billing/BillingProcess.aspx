@@ -5186,8 +5186,9 @@
                     }
                 });
             }
+
             function ApproveRegPatients(pat_id) {
-                PageMethods.approvepatient(pat_id, function (Tests) {
+                PageMethods.ApproveRegpatient(pat_id, function (Tests) {
                     debugger
                     var message = JSON.parse(Tests);
                     if (message[0].Message != null || message[0].Message != "") {
@@ -5203,7 +5204,7 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-                        location.reload();
+                        
                     }
                 });
             }
