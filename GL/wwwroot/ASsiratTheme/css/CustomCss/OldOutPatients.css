@@ -308,19 +308,9 @@ ui-state-hover, .ui-widget-content
     color: #fff !important;
 }
 
-.textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
-    border-radius: 5px !important;
-    color: #060606 !important;
-    font-weight: bold !important;
-    background-color: #fff;
-    border: 1px solid #d5d5d5;
-    padding: 5px 4px 6px;
-    font-size: 14px;
-    font-family: inherit;
-    -webkit-box-shadow: none !important;
-    box-shadow: none;
-    -webkit-transition-duration: .1s;
-    transition-duration: .1s;
+.textarea, input[type="text"] {
+    box-shadow: none !important;
+
 }
 
 h2 {

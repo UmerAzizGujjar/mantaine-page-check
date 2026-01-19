@@ -614,6 +614,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\DonorReceiving.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\GIR.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Advance.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Appointment.css" />

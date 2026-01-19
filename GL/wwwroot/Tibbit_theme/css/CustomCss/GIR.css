@@ -2,3 +2,9 @@
     overflow: auto;
     max-height: 150px;
 }
+
+
+
+.textarea, input[type="text"] {
+    box-shadow: none !important;
+}

@@ -7,14 +7,17 @@
         var selectedOptions = '';
         $(document).ready(function () { 
             $('#ddlMIR').select2();
-            UserRights();
-            GetWareHouseCondition();
+               
             LoadDepartments();
             LoadOrganizations();
-
+            GetWareHouseCondition();
+            UserRights();  
             $('#ddlInventoryOrg').change(function () {
-
-                $("#ddlInventoryOrg").attr('disabled', true);
+                if (warehouseCond == "01") {
+                    getMIR();
+                    $("#ddlInventoryOrg").attr('disabled', true);
+                }
+                
             });
             var SI_ID = '<%= Request.QueryString["SI_ID"]%>';
              if (SI_ID != "") {
@@ -457,8 +460,9 @@
                 departmentid = parsed_Date[0].Department;
                 warehouseid = parsed_Date[0].InventoryOrganization;
                 $('#ddlDepartment').val(parsed_Date[0].DepartmentId).trigger('change');
+                $('#ddlDepartment').attr('disabled', true);
                 $('#ddlInventoryOrg').val(parsed_Date[0].InventoryOrganizationId).trigger('change');
-
+                $("#ddlInventoryOrg").attr('disabled', true);
                 $('#tblMIRItemstModelTable tbody tr').remove();
                 var rows = "";
                 for (var i = 0; i < parsed_Date.length; i++) {
@@ -733,7 +737,7 @@
             </div>
             <div class="col-lg-2 col-md-6 col-sm-12">
                 <label class="">Warehouse</label>
-                <select id="ddlInventoryOrg" onchange="getMIR();" class="form-control">
+                <select id="ddlInventoryOrg"  class="form-control">
                 </select>
             </div>
         

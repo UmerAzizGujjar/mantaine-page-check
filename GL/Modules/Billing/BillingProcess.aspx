@@ -5177,12 +5177,33 @@
                         alert('Your Record Save and Load Successfully');
                         $('#PatientModel').modal('hide');
 
-
+                        ApproveRegPatients(Reg_Patient_ID)
                         AddPatientDetail(Reg_Patient_ID);
 
                     },
                     error: function (response) {
                         alert("Error");
+                    }
+                });
+            }
+            function ApproveRegPatients(pat_id) {
+                PageMethods.approvepatient(pat_id, function (Tests) {
+                    debugger
+                    var message = JSON.parse(Tests);
+                    if (message[0].Message != null || message[0].Message != "") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: message[0].Message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        location.reload();
                     }
                 });
             }

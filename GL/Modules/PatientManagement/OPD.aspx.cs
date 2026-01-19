@@ -133,7 +133,14 @@ namespace PMS.Modules.PatientManagement
                 return new Dictionary<string, bool>();
             }
         }
-
+        [WebMethod]
+        public static string ApproveRegpatient(string Pat_Id)
+        {
+            var UserId = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Details = db.sp_ApprovePatientCardFee(Convert.ToInt32(Pat_Id), UserId);
+            return (new JavaScriptSerializer()).Serialize(Details);
+        }
         [WebMethod]
         public static string approvepatient(string pat_id, string Pat_Category)
         {
@@ -144,16 +151,16 @@ namespace PMS.Modules.PatientManagement
             {
                 object Details;
 
-                if (company_name == "As-Siraat Serving Humanity")
-                {
-                    // Call client-specific SP
-                    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
-                }
-                else
-                {
+                //if (company_name == "As-Siraat Serving Humanity")
+                //{
+                //    // Call client-specific SP
+                //    Details = db.SpApprove_OPD_AsSiraat(Convert.ToInt32(pat_id), Pat_Category, user_id);
+                //}
+                //else
+                //{
                     // Default for other clients (e.g., Noor Hospital, KDC Lab, etc.)
                     Details = db.SpApprove_OPD(Convert.ToInt32(pat_id), Pat_Category, user_id);
-                }
+               // }
 
                 return new JavaScriptSerializer().Serialize(Details);
             }
