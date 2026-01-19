@@ -691,7 +691,7 @@
                     $('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
                     $('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
                     $('#ddlInv_Org').val(warehouse).trigger('change');
-                    $('#ddlInv_Org').attr('disabled', true);
+                    //$('#ddlInv_Org').attr('disabled', true);
                     
                 });
             }

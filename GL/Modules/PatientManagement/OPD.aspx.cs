@@ -1177,7 +1177,7 @@ namespace PMS.Modules.PatientManagement
                     if (data.FreeCheck == true)
                     {
                         pat.Receipt_Amount = 0;
-                        pat.discount_amt = data.Actual_Fees;
+                        pat.discount_amt = 100;
                     }
                     else
                     {
