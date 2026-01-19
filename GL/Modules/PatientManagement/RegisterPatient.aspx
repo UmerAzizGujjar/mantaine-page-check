@@ -39,16 +39,21 @@
           function PrintVoucher() {
               debugger;
               var id = '<%= Request.QueryString["Reg_id"] %>';
-                      var locationInfo = window.location;
-              var url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=CardFee';
-                      if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
-                          var urlInfo = window.location.href.split('/');
-                          var ip = urlInfo[2];
-                          var foldername = urlInfo[3];
-                          url = 'http://' + ip + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=CardFee';
-                      }
-                      window.open(url, '_blank');
-                  }
+              var locationInfo = window.location;
+              var url;
+
+              if (locationInfo.hostname === 'localhost') {
+                  url = '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=CardFee';
+              } else {
+                  var urlInfo = window.location.href.split('/');
+                  var ip = urlInfo[2]; 
+                  var foldername = urlInfo[3]; 
+                  var appPath = foldername ? '/' + foldername : '';
+                  url = 'http://' + ip + appPath + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD%20Voucher&TransID=' + id + '&TransType=CardFee';
+              }
+
+              window.open(url, '_blank');
+          }
           //Print
           debugger
           function PrintReceipt() {
