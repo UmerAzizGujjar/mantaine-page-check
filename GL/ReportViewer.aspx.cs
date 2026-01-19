@@ -498,33 +498,33 @@ namespace PMS
             //    rd.SetParameterValue("@startDate", parameterStDate);
             //    rd.SetParameterValue("@endDate", parameterEndDate);
             //}
-            else if (reportName == "Counsltant_Day_Wise_report")
-            {
+            //else if (reportName == "Counsltant_Day_Wise_report")
+            //{
 
 
-                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
-                reportPath += "Patients/rptCounsltant_Day_Wise_report.rpt";
-                rd.Load(reportPath);
-                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                rd.SetParameterValue("Title", reportTitle);
-                rd.SetParameterValue("CompanyLogo", logoPath);
+            //    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+            //    reportPath += "Patients/rptCounsltant_Day_Wise_report.rpt";
+            //    rd.Load(reportPath);
+            //    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //    rd.SetParameterValue("Title", reportTitle);
+            //    rd.SetParameterValue("CompanyLogo", logoPath);
 
-                string stDate = Request.QueryString["StartDate"].ToString();
-                string stTime = Request.QueryString["StartTime"].ToString();
+            //    string stDate = Request.QueryString["StartDate"].ToString();
+            //    string stTime = Request.QueryString["StartTime"].ToString();
 
-                string endDate = Request.QueryString["EndDate"].ToString();
-                string endTime = Request.QueryString["EndTime"].ToString();
-                string Doctor = Request.QueryString["Doctor"].ToString();
+            //    string endDate = Request.QueryString["EndDate"].ToString();
+            //    string endTime = Request.QueryString["EndTime"].ToString();
+            //    string Doctor = Request.QueryString["Doctor"].ToString();
 
-                string parameterStDate = string.Empty;
-                string parameterEndDate = string.Empty;
+            //    string parameterStDate = string.Empty;
+            //    string parameterEndDate = string.Empty;
 
-                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
-                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
-                rd.SetParameterValue("@docid", Doctor);
-                rd.SetParameterValue("@startDate", parameterStDate);
-                rd.SetParameterValue("@endDate", parameterEndDate);
-            }
+            //    this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+            //    this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+            //    rd.SetParameterValue("@docid", Doctor);
+            //    rd.SetParameterValue("@startDate", parameterStDate);
+            //    rd.SetParameterValue("@endDate", parameterEndDate);
+            //}
             else if (reportName == "HospitalCashReport")
             {
 
@@ -704,7 +704,7 @@ namespace PMS
                 rd.SetParameterValue("@endDate", sqlEndDateTime);
                 rd.SetParameterValue("@DoctorID", doctorID);
             }
-            else if (reportName == "Consultant_Day_Wise_report")
+            else if (reportName == "Counsltant_Day_Wise_report")
             {
                 string rptFileName = "TransactionalDetails/rptConsltant_Day_Wise_report.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
