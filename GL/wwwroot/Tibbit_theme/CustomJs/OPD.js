@@ -940,8 +940,9 @@ function SavePatient() {
                     htmlContainer: 'swal-big-text'
                 }
             });
-
+            Approve(ini_patientID)
             get_pat_initial_info(ini_patientID);
+            
         },
         error: function (xhr, status, error) {
             console.error("Error: ", error);
