@@ -68,6 +68,8 @@
                     $('#AllowRadiologylist').prop('checked', data.AllowRadiologylist);
                     $('#AllowReferIPD').prop('checked', data.AllowReferIPD);
                     $('#AllowRecipe').prop('checked', data.Allow_Recipe);
+                    $('#AllowActiveItems').prop('checked', data.AllowActiveItems);
+                    $('#AllowSaleReturn').prop('checked', data.AllowSaleReturn);
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                 },
                 error: function (xhr, status, error) {
@@ -116,6 +118,8 @@
             var AllowemergencyDiscount = $('#AllowemergencyDiscount').prop('checked');
             var AllowReferIPD = $('#AllowReferIPD').prop('checked');
             var AllowRecipe = $('#AllowRecipe').prop('checked');
+            var AllowActiveItems = $('#AllowActiveItems').prop('checked');
+            var AllowSaleReturn = $('#AllowSaleReturn').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var EmpCode = $('#EmpCode').val();
             var hasMinLength = Password.length >= 6;
@@ -236,6 +240,8 @@
                 "AllowemergencyDiscount": AllowemergencyDiscount,
                 "AllowReferIPD": AllowReferIPD,
                 "AllowRecipe": AllowRecipe,
+                "AllowActiveItems": AllowActiveItems,
+                "AllowSaleReturn": AllowSaleReturn,
                 "AllowRateEdit": AllowRateEdit
 
             };
@@ -462,6 +468,9 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowRateEdit" name="AllowRateEdit" />
                                                     </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowActiveItems" name="AllowActiveitem" />
+                                                    </div>
                                                 </div>
 
                                                 <div class="col-md-3">
@@ -513,6 +522,9 @@
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowRateEdit">Edit Rate</label>
                                                     </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowActiveItems">Allow Active Items</label>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-2"></div>
                                                 <div class="col-md-1">
@@ -563,8 +575,12 @@
                                                         <input type="checkbox" class="form-check-input" id="AllowRecipe" name="AllowRecipe" />
                                                     </div>
                                                    <div class="form-check">
+                                                         <input type="checkbox" class="form-check-input" id="AllowSaleReturn" name="AllowSaleReturn" style="" />
+                                                     </div>
+                                                   <div class="form-check">
                                                          <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
                                                      </div>
+
 
                                                 </div>
                                                 <div class="col-md-3">
@@ -614,9 +630,13 @@
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowRecipe">Allow Receipe</label>
                                                     </div>
+                                                     <div class="form-check">
+                                                         <label class="form-check-label" for="AllowSaleReturn">Allow Sale Return</label>
+                                                     </div>
                                                   <div class="form-check">
                                                      <label class="form-check-label" for="EmpCode">Employee Code</label>
                                                  </div>
+                                                 
 
 
 

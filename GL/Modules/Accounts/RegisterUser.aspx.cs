@@ -83,6 +83,8 @@ namespace PMS.Modules.Accounts
                              Emergency_adm_dis = p.Emergency_adm_dis,
                              Allow_emer_disc = p.Allow_emer_disc,
                              Allow_Recipe = p.Allow_Recipe,
+                             AllowSaleReturn = p.AllowSaleReturn,
+                             AllowActiveItems = p.AllowActiveItems,
                              AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
                              AllowReferIPD = p.Refer_IPD,   
@@ -168,6 +170,8 @@ namespace PMS.Modules.Accounts
                     user.Allow_emer_disc = data.AllowemergencyDiscount;
                     user.Refer_IPD = data.AllowReferIPD;
                     user.Allow_Recipe = data.AllowRecipe;
+                    user.AllowSaleReturn = data.AllowSaleReturn;
+                    user.AllowActiveItems = data.AllowActiveItems;
                     user.AllowRateEdit = data.AllowRateEdit;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
@@ -239,6 +243,8 @@ namespace PMS.Modules.Accounts
                 newuser.Allow_emer_disc = data.AllowemergencyDiscount;
                 newuser.Refer_IPD = data.AllowReferIPD;
                 newuser.Allow_Recipe = data.AllowRecipe;
+                newuser.AllowSaleReturn = data.AllowSaleReturn;
+                newuser.AllowActiveItems = data.AllowActiveItems;
                 newuser.AllowRateEdit = data.AllowRateEdit;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
                 db.aspnet_Users.InsertOnSubmit(newuser);
@@ -344,6 +350,8 @@ namespace PMS.Modules.Accounts
             public bool AllowRadiologylist { get; set; }
             public bool AllowReferIPD { get; set; }
             public bool AllowRecipe { get; set; }
+            public bool AllowActiveItems { get; set; }
+            public bool AllowSaleReturn { get; set; }
             public bool AllowRateEdit { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }
