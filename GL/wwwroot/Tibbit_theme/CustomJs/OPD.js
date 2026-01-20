@@ -80,8 +80,7 @@ $(document).ready(function () {
         { id: '#ddlServices', method: 'GetServices' },
         { id: '#ddlDepartment', method: 'GetDepartment' },
         { id: '#ddldoctor', method: 'GetDoctor' },
-        { id: '#ddlpanel', method: 'GetPanel' },
-        { id: '#ddlcashier', method: 'GetCasher' }
+        { id: '#ddlpanel', method: 'GetPanel' }
 
     ];
 
@@ -184,6 +183,7 @@ $(document).ready(function () {
     FillModePresentation();
     get_totalpatient();
     FillUserAccount();
+    FillCashier();
 
 });
 function fillDropdown($dropdown, methodName) {
@@ -669,6 +669,35 @@ function FillUserAccount() {
 
     return options;
 }
+
+function FillCashier() {
+
+    $.ajax({
+        url: 'OPD.aspx/GetCasher',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (response) {
+
+            var data = response.d ? JSON.parse(response.d) : response;
+            var options = '';
+
+            if (data.length > 0) {
+                $.each(data, function (i, value) {
+                    options += '<option value="' + value.Cashier_ID + '" selected>'
+                        + value.Cashier_Name +
+                        '</option>';
+                });
+
+                $('#ddlcashier').html(options).prop('disabled', true);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching cashier:', error);
+        }
+    });
+}
+
 
 
 var originalFee;

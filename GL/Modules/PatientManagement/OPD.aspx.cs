@@ -308,21 +308,19 @@ namespace PMS.Modules.PatientManagement
         [WebMethod]
         public static string GetCasher()
         {
-            string data = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-
-
-                var result = (from gl in db.aspnet_Users
-                              where gl.UserId == AppConfig.UserID
+                var result = (from u in db.aspnet_Users
+                              where u.UserId == AppConfig.UserID
+                              && u.cashier != null
                               select new
                               {
-                                  DataValue_Name = gl.cashier,
-                                  DataValue_Description = db.GetDataValueName("Casher", gl.cashier),
+                                  Cashier_ID = u.cashier,
+                                  Cashier_Name = db.GetDataValueName("Casher", u.cashier)
                               }).ToList();
-                data = new JavaScriptSerializer().Serialize(result);
+
+                return new JavaScriptSerializer().Serialize(result);
             }
-            return data;
         }
 
         [WebMethod]
