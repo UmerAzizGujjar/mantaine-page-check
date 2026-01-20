@@ -143,8 +143,9 @@ namespace PMS
                               join u in _dbContext.aspnet_Users on b.Created_By equals u.UserId
                               where (b.Total_Amount != null || b.Discount_Amount != null)
                                       && (b.isCancel == null || b.isCancel == false)
+                                      && (b.IsPharmacy == null || b.IsPharmacy == false)
                               && (
-                                    (b.Bill_No.ToString().Contains(searchValue) || p.Full_Name.Contains(searchValue) || p.mr_no_sequence.Contains(searchValue) || u.UserName.Contains(searchValue)))
+                                    (b.Bill_No.ToString().Contains(searchValue) || p.Full_Name.Contains(searchValue) || p.mr_no_sequence.Contains(searchValue) || u.UserName.Contains(searchValue))) orderby b.Bill_ID descending
                               select new
                               {
                                   Bill_No = b.Bill_No,

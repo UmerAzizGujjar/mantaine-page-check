@@ -2693,8 +2693,9 @@ namespace PMS
                                d.ParentTrans_Type,
                                d.Qty,
                                d.Remarks,
-                               d.Doctor_Share,
-                               d.Hospital_Share,
+                               Doctor_Share = d.Doctor_Share ?? 0,
+                               //d.Hospital_Share,
+                               Hospital_Share = d.Hospital_Share ?? 0,
                                d.Doctor_id,
                                d.RecommendedByDoctor,
                                m.Referred_By
