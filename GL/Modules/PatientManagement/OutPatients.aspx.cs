@@ -1047,8 +1047,8 @@ namespace PMS
                                      where tbl.Patient_ID == data.Patient_ID
                                      select tbl).FirstOrDefault();
 
-                            P.Patient_Main_Category = data.Reffer_To;
-                            db.SubmitChanges();
+                           // P.Patient_Main_Category = data.Reffer_To;
+                          //  db.SubmitChanges();
 
                             var D = (from tbl in db.Previous_Dpts
                                      where tbl.Patient_ID == data.Patient_ID && tbl.Perivious_Dpt_Name == data.Reffer_To
@@ -2061,6 +2061,7 @@ namespace PMS
                                           where d.Emp_ID == Convert.ToInt32(p.Doctor_ID)
                                           select d.Emp_Name).FirstOrDefault(),
                             Department = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
+                            FilterClinic = db.GetDataValueName("Filter Clinic", p.filter_clinic),
                             Gender = db.GetDataValueName("Gender", p.Gender),
                             p.Created_Time,
                             u.UserName,
