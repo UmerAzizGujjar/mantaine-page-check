@@ -1448,10 +1448,10 @@
                     var checkActive = data.d;
 
                     if (checkActive == "true") {
-                        $('#btnSaleReturn').attr('disabled', false)
+                        $('#SSearchReturnPop').attr('disabled', false)
                     }
                     else {
-                        $('#btnSaleReturn').attr('disabled', true)
+                        $('#SSearchReturnPop').attr('disabled', true)
                     }
 
                 },

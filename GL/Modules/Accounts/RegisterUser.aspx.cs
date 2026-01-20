@@ -83,13 +83,36 @@ namespace PMS.Modules.Accounts
                              Emergency_adm_dis = p.Emergency_adm_dis,
                              Allow_emer_disc = p.Allow_emer_disc,
                              Allow_Recipe = p.Allow_Recipe,
+                             AllowSaleReturn = p.AllowSaleReturn,
+                             AllowActiveItems = p.AllowActiveItems,
                              AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
-                             AllowReferIPD = p.Refer_IPD,   
+                             AllowReferIPD = p.Refer_IPD, 
+                             casher = p.cashier,
                              EmpCode=p.Emp_Code
                          }).FirstOrDefault();
             string data = string.Empty;
             data = new JavaScriptSerializer().Serialize(users);
+            return data;
+        }
+        [WebMethod]
+        public static string GetCasher()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Casher"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
             return data;
         }
         [WebMethod]
@@ -168,6 +191,9 @@ namespace PMS.Modules.Accounts
                     user.Allow_emer_disc = data.AllowemergencyDiscount;
                     user.Refer_IPD = data.AllowReferIPD;
                     user.Allow_Recipe = data.AllowRecipe;
+                    user.AllowSaleReturn = data.AllowSaleReturn;
+                    user.AllowActiveItems = data.AllowActiveItems;
+                    user.cashier = data.ddlcasher;
                     user.AllowRateEdit = data.AllowRateEdit;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
@@ -239,6 +265,9 @@ namespace PMS.Modules.Accounts
                 newuser.Allow_emer_disc = data.AllowemergencyDiscount;
                 newuser.Refer_IPD = data.AllowReferIPD;
                 newuser.Allow_Recipe = data.AllowRecipe;
+                newuser.AllowSaleReturn = data.AllowSaleReturn;
+                newuser.AllowActiveItems = data.AllowActiveItems;
+                newuser.cashier = data.ddlcasher;
                 newuser.AllowRateEdit = data.AllowRateEdit;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
                 db.aspnet_Users.InsertOnSubmit(newuser);
@@ -314,6 +343,7 @@ namespace PMS.Modules.Accounts
             public string ConfirmPassword { get; set; }
             public string Mobile { get; set; }          // Added
             public string Accounts { get; set; }          // Added
+            public string ddlcasher { get; set; }          // Added
             public string EmpCode { get; set; }         // Added
 
             public bool AllowPatientEdit { get; set; }
@@ -344,6 +374,8 @@ namespace PMS.Modules.Accounts
             public bool AllowRadiologylist { get; set; }
             public bool AllowReferIPD { get; set; }
             public bool AllowRecipe { get; set; }
+            public bool AllowActiveItems { get; set; }
+            public bool AllowSaleReturn { get; set; }
             public bool AllowRateEdit { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }
