@@ -982,7 +982,6 @@ function Approve(pat_id) {
                     htmlContainer: 'swal-big-text'
                 }
             });
-            location.reload();
         }
     });
 }

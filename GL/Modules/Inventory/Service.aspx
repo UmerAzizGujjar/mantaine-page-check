@@ -7,6 +7,7 @@
             FillDepartments();
             GetDepartments();
             FillAccountCategory();
+            ActiveCheckRights();
             $("#lblProcedure_Time").hide();
             $("#Procedure_Time").hide();
             if (id != "") {
@@ -41,6 +42,32 @@
                     }
                 });
                 $('#ddldepartment').html(optionsDepth);
+            });
+        }
+        function ActiveCheckRights() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "Service.aspx/CheckActiveAllow",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    var checkActive = data.d;
+
+                    if (checkActive == "true") {
+                        $('#Active').attr('disabled', false)
+                    }
+                    else {
+                        $('#Active').attr('disabled', true)
+                    }
+
+                },
+                failure: function () {
+                    alert(bi);
+                }
             });
         }
         function FillDepartments() {

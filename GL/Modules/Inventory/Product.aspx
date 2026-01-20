@@ -32,6 +32,7 @@
                 });
             });
             GetDiscountItem();
+            ActiveCheckRights();
             if (id != "") {
                 LoadItemInventory(id);
 
@@ -65,7 +66,32 @@
             window.location = "ProductsView.aspx";
         }
 
+        function ActiveCheckRights() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "Product.aspx/CheckActiveAllow",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    var checkActive = data.d;
 
+                    if (checkActive == "true") {
+                        $('#Active').attr('disabled', false)
+                    }
+                    else {
+                        $('#Active').attr('disabled', true)
+                    }
+
+                },
+                failure: function () {
+                    alert(bi);
+                }
+            });
+        }
         function fillDropdown($dropdown, methodName) {
             if ($dropdown.data('filled')) return;
 

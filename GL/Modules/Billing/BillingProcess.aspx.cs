@@ -1084,6 +1084,25 @@ namespace PMS
             return data;
         }
         [WebMethod]
+        public static string GetUserAccount()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+              
+                    var result = (from gl in db.aspnet_Users
+                                  where gl.UserId == AppConfig.UserID
+                                  select new
+                                  {
+                                      gl.cashier,
+                                      Cashier_text = db.GetDataValueName("Casher", gl.cashier),
+                                  }).ToList();
+                    data = new JavaScriptSerializer().Serialize(result);
+                
+            }
+            return data;
+        }
+        [WebMethod]
         public static string GetCasher()
         {
             string data = string.Empty;

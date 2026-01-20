@@ -2597,6 +2597,8 @@
                     var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
                     var retdate = moment(TrnsDate).format('LLLL');
                     var status = '';
+                    var FilterClinic = value.FilterClinic ?? '';
+                    var DoctorName = value.DoctorName ?? '';
                     if (value.Checked == null) {
                         status = 'Un Checked';
                     }
@@ -2604,7 +2606,7 @@
                             var rowColorStyle = (status = 'Checked') ? 'style="background-color: #aeffae;"' : '';
                     }
 
-                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=select(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
+                    rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '<td>' + FilterClinic + '</td> ' + '<td>' + DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=select(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
                 });
                 debugger;
                 $('#tblPendingPatients tbody').html(rows);
@@ -6432,6 +6434,7 @@
                                     <th>Patient Name</th>
                                     <th>Age</th>
                                     <th>Department</th>
+                                    <th>Filter Clinic</th>
                                     <th>Doctor</th>
                                     <th style="width: 173px;">Created Time</th>
                                     <th>Operator Name</th>
