@@ -2597,7 +2597,7 @@
                     var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
                     var retdate = moment(TrnsDate).format('LLLL');
                     var status = '';
-                    var FilterClinic = value.FilterClinic ?? '';
+                    var FilterClinic = (value.FilterClinic === null || value.FilterClinic === '' || value.FilterClinic === 'Please Select') ? '' : value.FilterClinic;
                     var DoctorName = value.DoctorName ?? '';
                     if (value.Checked == null) {
                         status = 'Un Checked';
