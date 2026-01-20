@@ -29,6 +29,16 @@ namespace PMS
             return result;
         }
         [WebMethod]
+        public static string CheckSaleReturnAllow()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.AllowSaleReturn).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+        [WebMethod]
         public static string GetWardAndBed(int Pat_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();

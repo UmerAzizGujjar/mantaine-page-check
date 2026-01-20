@@ -5399,14 +5399,27 @@
 
 
             function fillCasher() {
-                var options = '<option value="0">Please Select</option>';
-                PageMethods.GetCasher(function (data) {
-                    $.each(JSON.parse(data), function (key, value) {
-                        options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
-                    });
-                    $('#ddlcasher').html(options);
-                    $('#ddlcasher').select2();
+                var options;
+
+                $.ajax({
+                    url: 'BillingProcess.aspx/GetUserAccount',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (response) {
+                        var data = response.d ? JSON.parse(response.d) : response;
+                        $.each(data, function (key, value) {
+                            options += '<option value="' + value.cashier + '">' + value.Cashier_text + '</option>';
+                        });
+                        $('#ddlcasher').html(options);
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching area data:', error);
+                    }
                 });
+
                 return options;
             }
             function fillgender() {

@@ -24,7 +24,16 @@ namespace PMS.Inventory
             public string DataValue_Description;
             public string Type;
         }
-       
+        [WebMethod]
+        public static string CheckActiveAllow()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.AllowActiveItems).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
         [WebMethod]
         public static string GetUnitSize()
         {
