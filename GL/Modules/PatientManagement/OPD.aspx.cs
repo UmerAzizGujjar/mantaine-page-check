@@ -27,7 +27,66 @@ namespace PMS.Modules.PatientManagement
                 Session["AntiForgeryToken"] = token;
                 hfAntiForgery.Value = token; 
             }
+
+            
+                
+            
         }
+
+        [WebMethod]
+        public static string GetUserAccount()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var userAccount = (from u in db.aspnet_Users
+                                   where u.UserId == AppConfig.UserID
+                                   select u.Gl_Account).FirstOrDefault();
+                if (userAccount != null)
+                {
+                    var result = (from gl in db.GL_Accounts
+                                  where gl.Account_ID == Convert.ToInt32(userAccount)
+                                  select new
+                                  {
+                                      gl.Account_ID,
+                                      gl.Account_Name
+                                  }).ToList();
+                    data = new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetVisitDays(int regPatId)
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var visits = (from p in db.Patients
+                              where p.Reg_PatId == regPatId
+                              orderby p.Patient_ID descending
+                              select p.Created_Time)
+                             .Take(2)
+                             .ToList();
+
+                int recent = 0;
+                if (visits.Count > 0 && visits[0].HasValue)
+                    recent = (DateTime.Now.Date - visits[0].Value.Date).Days;
+
+                int previous = 0;
+                if (visits.Count > 1 && visits[1].HasValue)
+                    previous = (DateTime.Now.Date - visits[1].Value.Date).Days;
+
+                var result = new
+                {
+                    recentVisitDays = recent,
+                    previousVisitDays = previous
+                };
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
 
         private static string SanitizeInput(string input)
         {
@@ -252,14 +311,14 @@ namespace PMS.Modules.PatientManagement
             string data = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var result = (from dv in db.DataValues
-                              join ds in db.ValueSets
-                              on dv.ValueSet_ID equals ds.ValueSet_ID
-                              where ds.ValueSet_Name == "Casher"
+
+
+                var result = (from gl in db.aspnet_Users
+                              where gl.UserId == AppConfig.UserID
                               select new
                               {
-                                  dv.DataValue_Name,
-                                  dv.DataValue_Description
+                                  DataValue_Name = gl.cashier,
+                                  DataValue_Description = db.GetDataValueName("Casher", gl.cashier),
                               }).ToList();
                 data = new JavaScriptSerializer().Serialize(result);
             }
@@ -483,30 +542,7 @@ namespace PMS.Modules.PatientManagement
             return data;
         }
 
-        [WebMethod]
-        public static string GetUserAccount()
-        {
-            string data = string.Empty;
-            using (DataBaseDataContext db = new DataBaseDataContext())
-            {
-                var userAccount = (from u in db.aspnet_Users
-                                   where u.UserId == AppConfig.UserID
-                                   select u.Gl_Account).FirstOrDefault();
-                if (userAccount != null)
-                {
-                    var result = (from gl in db.GL_Accounts
-                                  where gl.Account_ID == Convert.ToInt32(userAccount)
-                                  select new
-                                  {
-                                      gl.Account_ID,
-                                      gl.Account_Name
-                                  }).ToList();
-                    data = new JavaScriptSerializer().Serialize(result);
-                }
-            }
-            return data;
-        }
-
+       
         [WebMethod]
         public static string Getpanel()
         {

@@ -1373,6 +1373,37 @@ function get_totalpatient() {
     return options;
 
 }
+
+function getVisitDays(regPatId) {
+    if (!regPatId || regPatId <= 0) return;
+
+    $.ajax({
+        url: 'OPD.aspx/GetVisitDays',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ regPatId: regPatId }),
+        dataType: 'json',
+        success: function (response) {
+            var data = response.d ? JSON.parse(response.d) : response;
+
+            function displayValue(value, elementId) {
+                if (value == null || value === undefined || value < 0) {
+                    $(elementId).text('');
+                } else {
+                    $(elementId).text(value);
+                }
+            }
+
+            displayValue(data.recentVisitDays, '#<%= Span2.ClientID %>');
+            displayValue(data.previousVisitDays, '#<%= Span6.ClientID %>');
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching visit days:', error);
+            $('#<%= Span2.ClientID %>').text('');
+            $('#<%= Span6.ClientID %>').text('');
+        }
+    });
+}
 function getpanelRate() {
     var panelid = $('#ddlpanel').val();
     $.ajax({
