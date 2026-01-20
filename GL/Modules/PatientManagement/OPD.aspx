@@ -81,10 +81,16 @@
                 dataType: "json",
                 success: function (response) {
                     debugger;
+                    debugger;
                     cardvalidation = JSON.parse(response.d);
                     if (cardvalidation == '01') {
                         var reg_id = '<%= Request.QueryString["ID"] %>'
-                        checkcardfee(reg_id);
+                        var reffered_id = '<%= Request.QueryString["Reffered_id"] %>'
+
+                        if (reffered_id == "") {
+                            checkcardfee(reg_id);
+                        }
+                        
                     }
 
                 },

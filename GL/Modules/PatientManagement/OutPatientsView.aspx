@@ -92,7 +92,7 @@
                         "data": "Created_Time",
                         "render": function (data, type, full) {
                             debugger;
-                            var date = full.Date;
+                            var date = full.Created_Time;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
                         }, "width": "10%"
