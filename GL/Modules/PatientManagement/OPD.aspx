@@ -1700,7 +1700,8 @@
                             <thead>
                                 <tr>
                                     <th style="display: none;">Patient ID</th>
-                                    <th>Appointment No</th>
+                                    <th>App No</th>
+                                    <th>App Date</th>
                                     <th>Patient Name</th>
                                     <th>Doctor Name</th>
                                     <th>Age</th>

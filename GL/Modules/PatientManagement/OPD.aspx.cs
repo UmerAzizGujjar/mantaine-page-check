@@ -1859,6 +1859,7 @@ namespace PMS.Modules.PatientManagement
         SELECT 
             CAST(a.Appointment_ID AS VARCHAR) AS Appointment_ID,
             ISNULL(CAST(a.Appointment_No AS VARCHAR), '') AS Appointment_No,
+            CONVERT(VARCHAR(11), a.App_Date, 106) AS App_Date,
             ISNULL(a.Patient_Name, '') AS Patient_Name,
             ISNULL(a.Consultant_ID, '') AS Consultant_ID,
             ISNULL(a.Age, '') AS Age,
@@ -1877,6 +1878,7 @@ namespace PMS.Modules.PatientManagement
         SELECT 
             CAST(d.Derma_Appointment_Id AS VARCHAR) AS Appointment_ID,
             ISNULL(CAST(d.Appointment_No AS VARCHAR), '') AS Appointment_No,
+            CONVERT(VARCHAR(11), d.Appointment_Date, 106) AS App_Date,
             ISNULL(r.Full_Name, '') AS Patient_Name,
             ISNULL(d.Doctor_Id, '') AS Consultant_ID,
             ISNULL(CAST(r.Age_years AS VARCHAR), '') AS Age,
@@ -1905,10 +1907,9 @@ namespace PMS.Modules.PatientManagement
             )";
             }
 
-            // ✅ Final query: wrap UNION, apply WHERE, ORDER BY SortOrderID
             string finalQuery = $@"
-        SELECT 
-            Appointment_ID, Appointment_No, Patient_Name, Consultant_ID, 
+        SELECT TOP 100
+            Appointment_ID, Appointment_No,App_Date, Patient_Name, Consultant_ID, 
             Age, Phone, Emp_name, pat_id
         FROM (
             {unionQuery}
@@ -1927,6 +1928,7 @@ namespace PMS.Modules.PatientManagement
                     {
                         Appointment_ID = dr["Appointment_ID"]?.ToString() ?? "",
                         Appointment_No = HttpUtility.HtmlEncode(dr["Appointment_No"]?.ToString() ?? ""),
+                        App_Date = HttpUtility.HtmlEncode(dr["App_Date"]?.ToString() ?? ""),
                         Patient_Name = HttpUtility.HtmlEncode(dr["Patient_Name"]?.ToString() ?? ""),
                         Consultant_ID = dr["Consultant_ID"]?.ToString() ?? "",
                         Age = HttpUtility.HtmlEncode(dr["Age"]?.ToString() ?? ""),
@@ -2087,6 +2089,7 @@ namespace PMS.Modules.PatientManagement
             public string Patient_Name;
             public string Appointment_Code;
             public string Appointment_ID;
+            public string App_Date;
             public string Age;
             public string Phone;
             public string Appointment_No;

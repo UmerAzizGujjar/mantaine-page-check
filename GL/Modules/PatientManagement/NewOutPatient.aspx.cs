@@ -590,8 +590,8 @@ namespace PMS.Modules.PatientManagement
                         var P = db.Patients.FirstOrDefault(tbl => tbl.Patient_ID == data.Patient_ID);
                         if (P != null)
                         {
-                            P.Patient_Main_Category = data.Reffer_To;
-                            db.SubmitChanges();
+                           // P.Patient_Main_Category = data.Reffer_To;
+                           // db.SubmitChanges();
 
                             var D = db.Previous_Dpts.FirstOrDefault(tbl =>
                                 tbl.Patient_ID == data.Patient_ID &&
@@ -1649,6 +1649,7 @@ namespace PMS.Modules.PatientManagement
                                           where d.Emp_ID == Convert.ToInt32(p.Doctor_ID)
                                           select d.Emp_Name).FirstOrDefault(),
                             Department = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
+                            FilterClinic = db.GetDataValueName("Filter Clinic", p.filter_clinic),
                             Gender = db.GetDataValueName("Gender", p.Gender),
                             p.Created_Time,
                             u.UserName,
