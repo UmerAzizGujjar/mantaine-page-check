@@ -37,6 +37,28 @@ namespace PMS.Modules.PatientManagement
             return Regex.Replace(input.Trim(), @"<[^>]*>", "", RegexOptions.IgnoreCase);
         }
 
+        [WebMethod]
+        public static string GetCardFee()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var fee = (from tbl in db.sys_Parms
+                               where tbl.Name == "OPD Fee"
+                               select tbl.Code)
+                              .FirstOrDefault();
+
+                    return fee ?? "0";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return "0";
+            }
+        }
+
         public static class ValidationHelper
         {
             public static bool IsValidMobile(string mobile)
@@ -904,7 +926,7 @@ namespace PMS.Modules.PatientManagement
             string Mobile, string Date_Of_Birth, string CNIC, string Address,
             string PatientID, string martail_status, string Age,
            string stno, string city, string area,
-            string city_val, string area_val, string Province, string Country)
+            string city_val, string area_val, string Province, string Country, string cardfee)
         {
             Full_Name = SanitizeInput(Full_Name);
             Relation = SanitizeInput(Relation);
@@ -968,6 +990,7 @@ namespace PMS.Modules.PatientManagement
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
                 pat.Country = Country;
+                pat.Card_fee = Convert.ToDecimal(cardfee);
                 pat.Province = Province;
 
                 var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);

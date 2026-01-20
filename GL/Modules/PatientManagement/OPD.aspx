@@ -8,7 +8,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-
+            loadCardfee();
 
             loadPermissions(function () {
                 for (var fieldId in fieldPermissionMapping) {
@@ -1078,6 +1078,25 @@
             });
         }
 
+        function loadCardfee() {
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/GetCardFee",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d !== null && !isNaN(response.d)) {
+                        $('#txtCardFee').val(response.d);
+                        $('#txtCardFee').attr('disabled', true);
+                    } else {
+                        console.error("Invalid fee received:", response.d);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading card fee:", error);
+                }
+            });
+        }
 
         //function checkDoctorBlockStatus(Doc, selectedPatientType, callback) {
         //    $.ajax({
@@ -1629,6 +1648,10 @@
                         <div class="col-lg-5 col-md-4 col-sm-6">
                             <label for="txt_house">Address</label>
                             <input type="text" id="txt_house" class="form-control" />
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6" style="display:none">
+                            <label for="lblfee">Fee<span style="color: red;">*</span></label>
+                            <input type="text" tabindex="17" id="txtCardFee" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row" style="display: none;">

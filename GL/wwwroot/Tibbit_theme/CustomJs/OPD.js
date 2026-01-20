@@ -880,6 +880,7 @@ function SavePatient() {
     var martail_status = $('#ddl_status').val();
     var Country = $('#ddlCountry :selected').val();
     var Province = $('#ddl_Province :selected').val();
+    var cardfee = $('#txtCardFee').val();
 
     if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || city_val == "0")) {
         Swal.fire({
@@ -917,6 +918,7 @@ function SavePatient() {
         Age: Age,
         "Country": Country,
         "Province": Province,
+        "cardfee": cardfee,
     };
 
 

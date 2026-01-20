@@ -523,16 +523,26 @@ function FillList() {
 }
 
 
+function FillList() {
+    debugger;
+    $('#tblResult tbody').empty();
+    debugger;
+    var SearchString = '';
+
+    PageMethods.SearchAppointment(SearchString, OnFilter, OnFail);
+}
+
+
 function OnFilter(data) {
 
     ClearResults();
 
     for (var i = 0; i < data.length; i++) {
-        AddResult_Appointment(data[i].Appointment_ID, data[i].Appointment_No, data[i].Patient_Name, data[i].Emp_name, data[i].Age, data[i].Phone, data[i].pat_id);
+        AddResult_Appointment(data[i].Appointment_ID, data[i].Appointment_No, data[i].App_Date, data[i].Patient_Name, data[i].Emp_name, data[i].Age, data[i].Phone, data[i].pat_id);
     }
 }
 var reg_id;
-function AddResult_Appointment(Appointment_ID, Appointment_No, Patient_Name, Emp_name, Age, Phone, pat_id) {
+function AddResult_Appointment(Appointment_ID, Appointment_No, App_Date, Patient_Name, Emp_name, Age, Phone, pat_id) {
     debugger;
     reg_id = pat_id;
     $('#hdnAptId').val(Appointment_ID);
@@ -547,6 +557,8 @@ function AddResult_Appointment(Appointment_ID, Appointment_No, Patient_Name, Emp
 
     cell = row.insertCell(-1);
     cell.innerHTML = '<span class="HRcontent">' + Appointment_No + '</span>';
+    cell = row.insertCell(-1);
+    cell.innerHTML = '<span class="HRcontent">' + App_Date + '</span>';
     cell = row.insertCell(-1);
     cell.innerHTML = '<span class="HRcontent">' + Patient_Name + '</span>';
     cell = row.insertCell(-1);
@@ -877,6 +889,7 @@ function SavePatient() {
     var martail_status = $('#ddl_status').val();
     var Country = $('#ddlCountry :selected').val();
     var Province = $('#ddl_Province :selected').val();
+    var cardfee = $('#txtCardFee').val();
 
     if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || city_val == "0")) {
         Swal.fire({
@@ -914,6 +927,7 @@ function SavePatient() {
         Age: Age,
         "Country": Country,
         "Province": Province,
+        "cardfee": cardfee,
     };
 
 
