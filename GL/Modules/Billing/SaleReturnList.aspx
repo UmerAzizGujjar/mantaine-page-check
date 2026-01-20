@@ -13,7 +13,7 @@
         function PrintInvoice(key) {
             debugger;
             //var BillId = $('#BillId' + key).val();
-            window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + key);
+            window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=PharmacySlip&Return_ID=' + key);
 
         }
 

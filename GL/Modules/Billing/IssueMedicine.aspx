@@ -11,6 +11,7 @@
                 $('#chkbatch').prop("checked", true);
             }
             BalanceAmountCondition();
+            CheckSaleReturnAllow();
             $('#chkbatch').on('change', function () {
                 var btch = $('#chkbatch').prop("checked");
                 if (btch == false) {
@@ -1432,6 +1433,32 @@
             else {
                 $('#txtAmountReceived').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
             }
+        }
+        function CheckSaleReturnAllow() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/CheckSaleReturnAllow",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    var checkActive = data.d;
+
+                    if (checkActive == "true") {
+                        $('#btnSaleReturn').attr('disabled', false)
+                    }
+                    else {
+                        $('#btnSaleReturn').attr('disabled', true)
+                    }
+
+                },
+                failure: function () {
+                    alert(bi);
+                }
+            });
         }
         function getOPDandIPDNO(pat_id) {
             PageMethods.GetOPDandIPDNO(pat_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                // Process GRN_Details                $.each(parsedData.OPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.IPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.Emergency_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                $('#ddlPatient_No').html(options);                $('#ddlPatient_No').select2();
