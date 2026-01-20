@@ -16,7 +16,7 @@
                 }
             });
             DisableCardPrint();
-          
+            
             var reg_id = '<%= Request.QueryString["ID"] %>'
             var apt_Id = '<%= Request.QueryString["apt_id"] %>'
             var added = '<%= Request.QueryString["isAdd"] %>'
