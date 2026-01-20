@@ -8,6 +8,7 @@
         $(document).ready(function () {
             var UserID = '<%= Request.QueryString["UserID"] %>';
             fillCashInHand();
+            fillCasher();
             if (UserID != "") {
                 populate_data(UserID);
             }
@@ -24,6 +25,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    debugger;
                     var data = JSON.parse(response.d);
                     $('#saveBtn').val('Update User');
                     // Disable password fields
@@ -36,6 +38,9 @@
                     $('#EmpCode').val(data.EmpCode);
                     setTimeout(function () {
                         $('#ddlCashInHand').val(data.Accounts).trigger('change');
+                    }, 200);
+                    setTimeout(function () {
+                        $('#ddlcasher').val(data.casher).trigger('change');
                     }, 200);
                     // Checkboxes
                     $('#AllowPatientEdit').prop('checked', data.AllowPatientEdit);
@@ -122,6 +127,7 @@
             var AllowSaleReturn = $('#AllowSaleReturn').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var EmpCode = $('#EmpCode').val();
+            var ddlcasher = $('#ddlcasher').val();
             var hasMinLength = Password.length >= 6;
             var hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(Password);
             if (UserName == "" || Email == "") {
@@ -242,7 +248,8 @@
                 "AllowRecipe": AllowRecipe,
                 "AllowActiveItems": AllowActiveItems,
                 "AllowSaleReturn": AllowSaleReturn,
-                "AllowRateEdit": AllowRateEdit
+                "AllowRateEdit": AllowRateEdit,
+                "ddlcasher": ddlcasher
 
             };
 
@@ -304,7 +311,17 @@
             }
 
         }
-
+        function fillCasher() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetCasher(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddlcasher').html(options);
+                $('#ddlcasher').select2();
+            });
+            return options;
+        }
         function fillCashInHand() {
             var options = '<option value="0">Please Select</option>';
             $.ajax({
@@ -582,6 +599,7 @@
                                                      </div>
 
 
+
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-check">
@@ -643,6 +661,14 @@
                                                 </div>
 
                                                 <div class="col-md-2"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" for="ddlcasher">Casher</label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <select id="ddlcasher"></select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
