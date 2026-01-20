@@ -362,6 +362,7 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
     });
 }
 function Get_Pat_Info(reg_id) {
+   
     $.ajax({
         type: "POST",
         url: "OPD.aspx/GetBasicInfo",
@@ -396,8 +397,8 @@ function Get_Pat_Info(reg_id) {
                     text: data.Gender_text
                 })
             );
-
-
+            checkcardvalidation();
+           
 
 
         },
@@ -407,7 +408,6 @@ function Get_Pat_Info(reg_id) {
         }
     });
 }
-
 
 function addfunc() {
     debugger;
@@ -1098,6 +1098,7 @@ function SaveData() {
         });
         return;
     }
+   
     if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!Department || Department === "0")) {
         Swal.fire({
             icon: 'error',

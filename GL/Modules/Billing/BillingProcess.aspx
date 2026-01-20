@@ -1286,6 +1286,7 @@
             function LoadBillDetails(Bill_ID) {
                 debugger;
                 PageMethods.LoadBillDetails(Bill_ID, function (resp) {
+                    denbugger;
                     var data = (JSON.parse(resp));
                     var rows = '';
                     var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
@@ -5193,7 +5194,7 @@
                         alert('Your Record Save and Load Successfully');
                         $('#PatientModel').modal('hide');
 
-                        ApproveRegPatients(Reg_Patient_ID)
+                        //ApproveRegPatients(Reg_Patient_ID)
                         AddPatientDetail(Reg_Patient_ID);
 
                     },

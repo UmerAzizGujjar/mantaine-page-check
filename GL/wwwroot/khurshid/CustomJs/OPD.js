@@ -397,7 +397,7 @@ function Get_Pat_Info(reg_id) {
             );
 
 
-
+            checkcardvalidation();
 
         },
         error: function (response) {

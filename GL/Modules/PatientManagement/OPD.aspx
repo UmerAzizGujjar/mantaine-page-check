@@ -46,7 +46,7 @@
             }
             if (reg_id != "" && added == "true") {
                 Get_Pat_Info(reg_id);
-
+             
                 $('#ddlPatient_Type').attr('disabled', false);
                 //$('#ddlcashier').attr('disabled', true);
             }
@@ -70,6 +70,152 @@
 
 
         });
+        var cardvalidation;
+        function checkcardvalidation() {
+
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/Getcardvalidation",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    cardvalidation = JSON.parse(response.d);
+                    if (cardvalidation == '01') {
+                        var reg_id = '<%= Request.QueryString["ID"] %>'
+                        checkcardfee(reg_id);
+                    }
+
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
+        function checkcardfee(reg_id) {
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/CheckCardFee",
+                data: JSON.stringify({ reg_id: reg_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+
+                    if (!data.hasCardFee) {
+                        Swal.fire({
+                            title: 'No Card Fee Found',
+                            text: 'This patient has no card fee. Would you like to charge one?',
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, Charge Fee',
+                            cancelButtonText: 'Cancel',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                chargeCardFee(reg_id);
+                            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                // User clicked "Cancel" → disable the Save button
+                                $('#btnsave').prop('disabled', true);
+                                // Optional: show a small message
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Action Required',
+                                    text: 'Card fee must be charged for first time register.',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    } else {
+                        // Card fee exists → enable save button (optional safety)
+                        $('#btnsave').prop('disabled', false);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Card Fee Exists',
+                            text: 'Card fee is already charged for this patient.',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: xhr.responseText || 'Failed to check card fee.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                }
+            });
+        }
+
+        // Example placeholder for charging logic
+        function chargeCardFee(reg_id) {
+          
+            Approveviasysparams(reg_id);
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/ChargeCardFee", // ← Replace with your actual page name
+                data: JSON.stringify({ reg_id: reg_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = response.d;
+
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        
+                       
+                    } 
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Network Error!',
+                        text: 'Failed to connect to server.',
+                        timer: 2500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+         
+           
+        }
+        function Approveviasysparams(pat_id) {
+            PageMethods.ApproveRegpatient(pat_id, function (Tests) {
+                debugger
+                var message = JSON.parse(Tests);
+                if (message[0].Message != null || message[0].Message != "") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: message[0].Message,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                  
+                }
+            });
+        }
         function DisableCardPrint() {
             var chkStatus = document.getElementById('<%=chckcardissue.ClientID%>');
             if (chkStatus.checked) {

@@ -1,16 +1,17 @@
-﻿using System;
+﻿using PMS.Modules.Dashboards;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Text.RegularExpressions;
-using PMS.Modules.Dashboards;
+using Telerik.Web;
 using static PMS.WebForm9;
 
 namespace PMS.Modules.PatientManagement
@@ -972,11 +973,87 @@ namespace PMS.Modules.PatientManagement
                 var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
                 string companyCode = company?.CompanyCode ?? "HOSP";
                 pat.mr_no_sequence = $"{companyCode}-{PatientNumber}";
+                pat.Card_fee = Convert.ToDecimal(
+                         (from tbl in db.sys_Parms
+                          where tbl.Name == "OPD Fee"
+                          select tbl.Code).FirstOrDefault());
 
                 db.Reg_patients.InsertOnSubmit(pat);
                 db.SubmitChanges();
             }
             return pat?.pat_id.ToString() ?? "0";
+        }
+        [WebMethod]
+        public static string Getcardvalidation()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Card Fee"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
+        public static string ChargeCardFee(int reg_id)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var patient = db.Reg_patients.FirstOrDefault(p => p.pat_id == reg_id);
+
+                    if (patient != null)
+                    {
+                        patient.Card_fee = 100;
+                        db.SubmitChanges(); // LINQ-to-SQL uses SubmitChanges()
+                        return new JavaScriptSerializer().Serialize(new { success = true });
+                    }
+                    else
+                    {
+                        return new JavaScriptSerializer().Serialize(new { success = false, msg = "Patient not found." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { success = false, msg = ex.Message });
+            }
+        }
+        [WebMethod]
+        public static string checkcardfee(int reg_id)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var cardFee = (from data in db.Reg_patients
+                                   where data.pat_id == reg_id
+                                   select data.Card_fee).FirstOrDefault();
+
+                    // Handle null or zero
+                    bool hasCardFee = cardFee.HasValue && cardFee.Value > 0;
+
+                    var result = new
+                    {
+                        hasCardFee = hasCardFee,
+                        cardFee = cardFee ?? 0, // return 0 if null
+                        message = !hasCardFee ? "Patient has no card fee." : "Card fee already charged."
+                    };
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorResult = new
+                {
+                    hasCardFee = false,
+                    cardFee = 0,
+                    message = "Error: " + ex.Message
+                };
+                return new JavaScriptSerializer().Serialize(errorResult);
+            }
         }
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
