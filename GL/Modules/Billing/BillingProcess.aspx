@@ -4683,7 +4683,8 @@
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
                     $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
-
+                    $('#ddlReffered_By').val(ReplaceNullWith_Space(data.d.refferedoc)).trigger('change');
+                    $('#ddlReffered_By').attr('disabled', true);
                     $('#txtadmitdate').val(data.d.Admission_Date);
                     $('#txtdischargedate').val(data.d.Discharge_On);
                     $('#wardtype').val(data.d.Ward_Name);
