@@ -10,11 +10,11 @@
         $(document).ready(function () {
             loadCardfee();
 
-            var urlParams = new URLSearchParams(window.location.search);
-            var patId = urlParams.get('ID');
-            if (patId) {
-                getVisitDays(parseInt(patId));
-            }
+            //var urlParams = new URLSearchParams(window.location.search);
+            //var patId = urlParams.get('ID');
+            //if (patId) {
+            //    getVisitDays(parseInt(patId));
+            //}
 
             loadPermissions(function () {
                 for (var fieldId in fieldPermissionMapping) {

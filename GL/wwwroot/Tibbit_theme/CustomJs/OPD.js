@@ -1403,6 +1403,8 @@ function get_totalpatient() {
 
 }
 
+
+
 function getVisitDays(regPatId) {
     if (!regPatId || regPatId <= 0) return;
 
