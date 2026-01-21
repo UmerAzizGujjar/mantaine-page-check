@@ -303,10 +303,9 @@
 
 
         $(document).ready(function () {
-
-            $("#ddlrptColumns").val(4);
-            AllowLabRights();
             loadUserBranch();
+            $("#ddlrptColumns").val(4);
+            AllowLabRights();  
             LoadSharingPolicy();
             //UltraSoundTestDetail();
             PageMethods.CheckRadiologylistRights(function (response) {
