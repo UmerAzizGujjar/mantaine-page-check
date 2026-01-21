@@ -354,7 +354,7 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
                 }
             });
 
-
+            checkcardvalidation();
         },
         error: function (response) {
             alert("Error: " + response.responseText);
