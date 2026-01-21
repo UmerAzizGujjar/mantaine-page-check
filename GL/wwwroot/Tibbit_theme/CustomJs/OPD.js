@@ -1415,26 +1415,29 @@ function getVisitDays(regPatId) {
         data: JSON.stringify({ regPatId: regPatId }),
         dataType: 'json',
         success: function (response) {
+
             var data = response.d ? JSON.parse(response.d) : response;
 
-            function displayValue(value, elementId) {
-                if (value == null || value === undefined || value < 0) {
-                    $(elementId).text('');
-                } else {
-                    $(elementId).text(value);
-                }
+            if (data.recentVisitDays !== null && data.recentVisitDays !== undefined) {
+                $('#Span2').text(data.recentVisitDays);
+            } else {
+                $('#Span2').text('');
             }
 
-            displayValue(data.recentVisitDays, '#<%= Span2.ClientID %>');
-            displayValue(data.previousVisitDays, '#<%= Span6.ClientID %>');
+            if (data.previousVisitDays !== null && data.previousVisitDays !== undefined) {
+                $('#Span6').text(data.previousVisitDays);
+            } else {
+                $('#Span6').text('');
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error fetching visit days:', error);
-            $('#<%= Span2.ClientID %>').text('');
-            $('#<%= Span6.ClientID %>').text('');
+            $('#Span2').text('');
+            $('#Span6').text('');
         }
     });
 }
+
 function getpanelRate() {
     var panelid = $('#ddlpanel').val();
     $.ajax({
