@@ -27,11 +27,22 @@ namespace PMS
                 using (var _dbContext = new DataBaseDataContext())
                 {
                     string userId = HttpContext.Current.Session["UserId"].ToString();
+                    var userDepartments = _dbContext.Department_Wise_User_Details
+                     .Where(dept => dept.User_Id == AppConfig.UserID)
+                     .Select(dept => dept.Department)
+                     .ToList();
+
+                    var userWarehouses = _dbContext.WareHouse_Wise_User_Details
+                                           .Where(ware => ware.User_Id == AppConfig.UserID)
+                                           .Select(ware => ware.WareHouse)
+                                           .ToList();
 
                     var Total_StoreIssues = _dbContext.Store_Issues.Count();
                     var StoreIssues = from SI in _dbContext.Store_Issues
-                               where
-                                    ((SI.Store_Issue_No.ToString().Contains(searchValue) || _dbContext.GetDataValueName("Department", SI.Department_Id).Contains(searchValue) || _dbContext.GetDataValueName("Ware House", SI.Organization_Id).Contains(searchValue) || SI.Status.Contains(searchValue) || _dbContext.aspnet_Users.Where(x => x.UserId == (from gmm in _dbContext.MaterialIssueRequests where gmm.MaterialRequest_Id == (from gm in _dbContext.Store_Issue_Details where gm.Store_Issue_Id ==  SI.Store_Issue_Id select gm.MIR_Id).FirstOrDefault() select gmm.Created_By).FirstOrDefault()).Select(x => x.UserName).FirstOrDefault().Contains(searchValue) || _dbContext.aspnet_Users.Where(x => x.UserId == SI.Created_by).Select(x => x.UserName).FirstOrDefault().Contains(searchValue)))
+                                      where userDepartments.Contains(SI.Department_Id)
+                                     && userWarehouses.Contains(SI.Organization_Id) &&
+
+                                      ((SI.Store_Issue_No.ToString().Contains(searchValue) || _dbContext.GetDataValueName("Department", SI.Department_Id).Contains(searchValue) || _dbContext.GetDataValueName("Ware House", SI.Organization_Id).Contains(searchValue) || SI.Status.Contains(searchValue) || _dbContext.aspnet_Users.Where(x => x.UserId == (from gmm in _dbContext.MaterialIssueRequests where gmm.MaterialRequest_Id == (from gm in _dbContext.Store_Issue_Details where gm.Store_Issue_Id ==  SI.Store_Issue_Id select gm.MIR_Id).FirstOrDefault() select gmm.Created_By).FirstOrDefault()).Select(x => x.UserName).FirstOrDefault().Contains(searchValue) || _dbContext.aspnet_Users.Where(x => x.UserId == SI.Created_by).Select(x => x.UserName).FirstOrDefault().Contains(searchValue)))
                                select new
                                {
                                    Store_Issue_Id = SI.Store_Issue_Id,
