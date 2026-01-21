@@ -1465,7 +1465,20 @@
             })
         }
         function getbatchfrom_grn() {            debugger;            var Inv_batch = $('#chkbatch').prop("checked");            if (Inv_batch == false) {                $('#batchno').hide();
-                $('#batchno').prop('disabled', true);                AddnonBatchItems();            }            else {                var med_id = $('#medName').find('option:selected').val();                PageMethods.GetinvBatch(med_id, function (dataa) {                    debugger;                    var parsedDataa = JSON.parse(dataa);                    if (parsedDataa == true) {                        debugger                        PageMethods.Getbatch_grn(med_id, function (data) {                            debugger;                            var parsedData = JSON.parse(data);                            console.log(parsedData)                            var options = '<option value="0" >Please Select</option>';                            debugger;                            $.each(parsedData, function (key, value) {                                console.log(value)                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                            });                            $('#batchno').html(options);                            $('#batchno').select2();                            var isbatch = $('#chkbatch').prop("checked");                            debugger;
+                $('#batchno').prop('disabled', true);                AddnonBatchItems();            }            else {                var med_id = $('#medName').find('option:selected').val();                PageMethods.GetinvBatch(med_id, function (dataa) {                    debugger;                    var parsedDataa = JSON.parse(dataa);                    if (parsedDataa == true) {                        debugger                        var warehouse = $("#ddlWarehouse").val()                        if (warehouse == "0") {                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Please Select Warehouse First.',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+                            return;                        }                        PageMethods.Getbatch_grn(med_id, warehouse, function (data) {                            debugger;                                                      var parsedData = JSON.parse(data);                            console.log(parsedData)                            var options = '<option value="0" >Please Select</option>';                            debugger;                            $.each(parsedData, function (key, value) {                                console.log(value)                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                            });                            $('#batchno').html(options);                            $('#batchno').select2();                            var isbatch = $('#chkbatch').prop("checked");                            debugger;
                             if (isbatch == true) {
                                 $('#batchno').show();
                                 $('#batchno').prop('disabled', false);
@@ -2203,86 +2216,103 @@
         var itemIds;
         function getitem_code() {
             debugger;
-            $('#ddlPatient_No').select2('close');
-            var pat_Id = $('#ddlPatient_No').val();
-            var PatNo = $('#ddlPatient_No option:selected').text();
-            var parts = PatNo.split('-');
-            var prefix = parts[0];
-            var number = parts[1];
-
-
-            var Pat_Id = pat_Id
-            itemIds = [];
-            if (prefix == 'OPD') {
-                $.ajax({
-                    type: "post",
-                    url: "IssueMedicine.aspx/GetItemCodesOPD",
-                    data: JSON.stringify({
-                        "Pat_Id": Pat_Id,
-                    }),
-                    dataType: 'JSON',
-                    contentType: "application/json; charset=utf-8",
-                    async: false,
-                    success: function (msg) {
-                        debugger;
-                        var data = JSON.parse(msg.d);
-                        debugger;
-                        $.each(data, function (key, value) {
-                            debugger;
-                            itemIds.push(value);
-                        });
+            var warehouse = $("#ddlWarehouse").val()
+            if (warehouse == "0") {                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Warehouse First.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
                     }
                 });
-            }
-            if (prefix == 'IPD') {
-                $.ajax({
-                    type: "post",
-                    url: "IssueMedicine.aspx/GetItemCodesIPD",
-                    data: JSON.stringify({
-                        "Pat_Id": Pat_Id,
-                    }),
-                    dataType: 'JSON',
-                    contentType: "application/json; charset=utf-8",
-                    async: false,
-                    success: function (msg) {
-                        debugger;
-                        var data = JSON.parse(msg.d);
-                        getWardAndBed(pat_Id)
-                        debugger;
-                        $.each(data, function (key, value) {
+                $('#ddlPatient_No').val('0');
+                return;            }
+            else {
+                $('#ddlPatient_No').select2('close');
+                var pat_Id = $('#ddlPatient_No').val();
+                var PatNo = $('#ddlPatient_No option:selected').text();
+                var parts = PatNo.split('-');
+                var prefix = parts[0];
+                var number = parts[1];
+
+
+                var Pat_Id = pat_Id
+                itemIds = [];
+                if (prefix == 'OPD') {
+                    $.ajax({
+                        type: "post",
+                        url: "IssueMedicine.aspx/GetItemCodesOPD",
+                        data: JSON.stringify({
+                            "Pat_Id": Pat_Id,
+                        }),
+                        dataType: 'JSON',
+                        contentType: "application/json; charset=utf-8",
+                        async: false,
+                        success: function (msg) {
                             debugger;
-                            itemIds.push(value);
-
-                        });
-                    }
-                });
-
-            }
-            if (prefix == 'EMR') {
-                $.ajax({
-                    type: "post",
-                    url: "IssueMedicine.aspx/GetItemCodesEMR",
-                    data: JSON.stringify({
-                        "Pat_Id": Pat_Id,
-                    }),
-                    dataType: 'JSON',
-                    contentType: "application/json; charset=utf-8",
-                    async: false,
-                    success: function (msg) {
-                        debugger;
-                        var data = JSON.parse(msg.d);
-                        // getWardAndBed(pat_Id)
-                        debugger;
-                        $.each(data, function (key, value) {
+                            var data = JSON.parse(msg.d);
                             debugger;
-                            itemIds.push(value);
+                            $.each(data, function (key, value) {
+                                debugger;
+                                itemIds.push(value);
+                            });
+                        }
+                    });
+                }
+                if (prefix == 'IPD') {
+                    $.ajax({
+                        type: "post",
+                        url: "IssueMedicine.aspx/GetItemCodesIPD",
+                        data: JSON.stringify({
+                            "Pat_Id": Pat_Id,
+                        }),
+                        dataType: 'JSON',
+                        contentType: "application/json; charset=utf-8",
+                        async: false,
+                        success: function (msg) {
+                            debugger;
+                            var data = JSON.parse(msg.d);
+                            getWardAndBed(pat_Id)
+                            debugger;
+                            $.each(data, function (key, value) {
+                                debugger;
+                                itemIds.push(value);
 
-                        });
-                    }
-                });
+                            });
+                        }
+                    });
 
+                }
+                if (prefix == 'EMR') {
+                    $.ajax({
+                        type: "post",
+                        url: "IssueMedicine.aspx/GetItemCodesEMR",
+                        data: JSON.stringify({
+                            "Pat_Id": Pat_Id,
+                        }),
+                        dataType: 'JSON',
+                        contentType: "application/json; charset=utf-8",
+                        async: false,
+                        success: function (msg) {
+                            debugger;
+                            var data = JSON.parse(msg.d);
+                            // getWardAndBed(pat_Id)
+                            debugger;
+                            $.each(data, function (key, value) {
+                                debugger;
+                                itemIds.push(value);
+
+                            });
+                        }
+                    });
+
+                }
+                AddMedicineDetailFormOPD(itemIds)
             }
-            AddMedicineDetailFormOPD(itemIds)
         }
         function getWardAndBed(pat_Id) {
             $.ajax({
@@ -2306,8 +2336,6 @@
                 }
             });
         }
-
-        debugger;
         debugger;
         function AddMedicineDetailFormOPD(itemIds) {
             debugger;
@@ -2346,7 +2374,7 @@
                         var date = data[0].ExpiryDate
                         var discountBlock = data[0].Discount_Block;
                         var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
-
+                        var warehouse = $("#ddlWarehouse").val()
                         var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
                         date = moment(date).format('D-MMM-YYYY');
                         debugger;
@@ -2385,7 +2413,7 @@
                             
                         $('#tblDetails tbody').append(rows);
                     
-                        PageMethods.GetBatchNumbers(itemId, function (data) {
+                        PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
                             debugger;
                             var parsedData = JSON.parse(data);
                             var options = '<option value="0" >Please Select</option>';
@@ -2559,9 +2587,17 @@
                 }
             );
         }
-
+        debugger;
         function DisableWareHouse() {
-            $("#ddlWarehouse").prop('disabled', true); // Use .prop() for boolean attributes like disabled
+            debugger;
+
+            var mro = $("#txtMRNo").val();
+
+            if (!mro) {   // handles "", null, undefined
+                getbatchfrom_grn();
+            }
+
+            $("#ddlWarehouse").prop('disabled', true);
         }
     </script>
 </asp:Content>

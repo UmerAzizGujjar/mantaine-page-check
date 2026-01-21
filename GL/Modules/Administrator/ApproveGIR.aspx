@@ -119,7 +119,7 @@
                 <HeaderTemplate>Actions</HeaderTemplate>
                 <ItemTemplate>
                     <asp:HyperLink ID="LinkButton3" runat="server" 
-                        NavigateUrl='<%# ResolveUrl("~/Inventory/GoodsIssuanceRequest.aspx?ID=" + Eval("MaterialRequest_Id").ToString()) %>'
+                        NavigateUrl='<%# ResolveUrl("~/Modules/Inventory/GoodsIssuanceRequest.aspx?ID=" + Eval("MaterialRequest_Id").ToString()) %>'
                         Text="Preview" Target="_blank" 
                         Style="display: block; width: 100%; text-align: center;" />
                 </ItemTemplate>

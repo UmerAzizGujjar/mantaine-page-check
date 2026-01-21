@@ -9,6 +9,7 @@ using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static Telerik.Web.UI.OrgChartStyles;
 namespace PMS
 {
     public partial class IssueMedicine : System.Web.UI.Page
@@ -196,16 +197,17 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string Getbatch_grn(int med_id)
+        public static string Getbatch_grn(int med_id,string warehouse)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 HashSet<string> batchSet = new HashSet<string>();
 
-                var warehouse = (from sys in db.sys_Parms where sys.Name == "Pharmacy WareHouse" select sys.Code).FirstOrDefault();
+                //var warehouse = (from sys in db.sys_Parms where sys.Name == "Pharmacy WareHouse" select sys.Code).FirstOrDefault();
 
                 var grnBatches = (from ds in db.GRN_Details
-                                  where ds.Item_Id == med_id
+                                  join grn in db.GRN_Masters on ds.GRNId equals grn.GRN_ID
+                                  where ds.Item_Id == med_id && grn.InvOrgId == warehouse
                                   select ds.BatchNum).ToList();
 
                 foreach (var batch in grnBatches)
@@ -220,7 +222,7 @@ namespace PMS
 
                 // ---------- Stock Adjustment Batches ----------
                 var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
-                                       where inv.Item_Id == med_id.ToString()
+                                       where inv.Item_Id == med_id.ToString() && inv.Ware_House == warehouse
                                        && inv.Status == "Approved"
                                        select inv.Batch_No).ToList();
 
@@ -247,16 +249,17 @@ namespace PMS
 
 
         [WebMethod]
-        public static string GetBatchNumbers(int itemId)
+        public static string GetBatchNumbers(int itemId,string warehouse)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 HashSet<string> batchSet = new HashSet<string>();
 
-                var warehouse = (from sys in db.sys_Parms where sys.Name == "Pharmacy WareHouse" select sys.Code).FirstOrDefault();
+                //var warehouse = (from sys in db.sys_Parms where sys.Name == "Pharmacy WareHouse" select sys.Code).FirstOrDefault();
 
-                var grnBatches = (from ds in db.GRN_Details
-                                  where ds.Item_Id == itemId
+                var grnBatches = (from ds in db.GRN_Details 
+                                  join grn in db.GRN_Masters on ds.GRNId equals grn.GRN_ID
+                                  where ds.Item_Id == itemId && grn.InvOrgId == warehouse
                                   select ds.BatchNum).ToList();
 
                 foreach (var batch in grnBatches)
@@ -271,7 +274,7 @@ namespace PMS
 
                 // ---------- Stock Adjustment Batches ----------
                 var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
-                                       where inv.Item_Id == itemId.ToString()
+                                       where inv.Item_Id == itemId.ToString() && inv.Ware_House == warehouse
                                        && inv.Status == "Approved"
                                        select inv.Batch_No).ToList();
 
