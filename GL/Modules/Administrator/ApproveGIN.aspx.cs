@@ -210,24 +210,35 @@ namespace PMS
                     var Total_Data = db.Store_Issues.Count();
 
 
-                    var formattedQuery = from a in db.Store_Issues
-                              where a.Status == "Created" || a.Status == "Pending" && a.IsDeleted == false
-                              && (a.Store_Issue_No.ToString().Contains(searchValue) || a.Status.ToString().Contains(searchValue) )
-                                orderby a.Store_Issue_Id ascending
-                              select new
-                              {
-                                  SIID = a.Store_Issue_Id,
-                                  SINO = a.Store_Issue_No,
-                                  STATUS = a.Status,
-                                  CREATOR  = db.aspnet_Users.Where(x => x.UserId == (a.Created_by ?? Guid.Empty)).Select(x => x.UserName).FirstOrDefault(),
-                                  APPROVEBY = string.Join(", ", (from SAL in db.Sys_Approval_Logs
-                                                                  join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
-                                                                  from usr in userGroup.DefaultIfEmpty()
-                                                                  where a.Store_Issue_Id == SAL.Entry_ID && SAL.Form_ID == 6
-                                                                  select usr.UserName ?? "").Distinct())
-                              };
+                    var userDepartmentIds = db.Department_Wise_User_Details
+                 .Where(dept => dept.User_Id == AppConfig.UserID)
+                .Select(dept => dept.Department) // assuming 'Department' here is the Department_Id (int or Guid)
+                 .ToList();
 
-                   
+                    // Apply filtering including user's departments
+                    var formattedQuery = from a in db.Store_Issues
+                                         where (a.Status == "Created" || a.Status == "Pending")
+                                               && a.IsDeleted == false
+                                              && userDepartmentIds.Contains(a.Department_Id)
+                                               && (a.Store_Issue_No.ToString().Contains(searchValue)
+                                                   || a.Status.ToString().Contains(searchValue))
+                                         orderby a.Store_Issue_Id ascending
+                                         select new
+                                         {
+                                             SIID = a.Store_Issue_Id,
+                                             SINO = a.Store_Issue_No,
+                                             STATUS = a.Status,
+                                             CREATOR = db.aspnet_Users
+                                                       .Where(x => x.UserId == (a.Created_by ?? Guid.Empty))
+                                                       .Select(x => x.UserName)
+                                                       .FirstOrDefault(),
+                                             APPROVEBY = string.Join(", ", (from SAL in db.Sys_Approval_Logs
+                                                                            join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
+                                                                            from usr in userGroup.DefaultIfEmpty()
+                                                                            where a.Store_Issue_Id == SAL.Entry_ID && SAL.Form_ID == 6
+                                                                            select usr.UserName ?? "").Distinct()),
+                                             Department = db.GetDataValueName("Department", a.Department_Id),
+                                         };
 
                     var FilteredCount = formattedQuery.Count();
                     // Sorting

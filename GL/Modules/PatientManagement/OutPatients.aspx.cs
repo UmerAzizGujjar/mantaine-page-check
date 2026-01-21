@@ -56,6 +56,102 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(data));
         }
         [WebMethod]
+        public static string GetCardioTests()
+        {
+
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var tests = from t in db.Lab_Tests
+                        where t.Main_Department == "008" && t.Active == true
+                        select new { t.Test_ID, Test_Name = t.Test_Name, t.Group_Category };
+            List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
+            int counter = 1;
+            foreach (var test in tests)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = test.Test_ID.ToString();
+                obj.TestName = test.Test_Name.ToString() + (test.Group_Category != string.Empty ? " | " + DBClass.getField("select Datavalue_Description from Datavalues where Datavalue_Name = '" + test.Group_Category + "' and Valueset_ID = 70") : string.Empty);
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = false;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            var GroupCategories = from dv in db.DataValues
+                                  join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                  where vs.ValueSet_Name == "Test Groups" && dv.Division == "008"
+                                  select new { dv.DataValue_Name, dv.DataValue_Description };
+
+            foreach (var category in GroupCategories)
+            {
+                TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
+                obj.TestID = category.DataValue_Name.ToString();
+                obj.TestName = category.DataValue_Description.ToString();
+                obj.SerialNo = counter.ToString();
+                obj.IsGroupCategory = true;
+                obj.CategoryID = category.DataValue_Name;
+                listOfTest.Add(obj);
+                counter++;
+            }
+
+            return (new JavaScriptSerializer()).Serialize(listOfTest);
+        }
+        [WebMethod]
+        public static string GetCardioDDLDetails(string SerialNo, string maindpt)
+        {
+            string groupCategory = string.Empty;
+            string testName = SerialNo;
+
+            string[] testFullName = SerialNo.Split('|');
+            if (testFullName.Length > 1)
+            {
+                testName = testFullName[0];
+                groupCategory = DBClass.getField("select Datavalue_Name from Datavalues where valueset_ID = 70 and Datavalue_Description = '" + testFullName[1].Trim() + "'").ToString();
+            }
+
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var test = (from t in db.Lab_Tests
+                        where t.Main_Department == maindpt && t.Test_Name == testName && t.Group_Category == groupCategory
+                        select new
+                        {
+                            t.Test_ID,
+                            t.Rate, /*= DBClass.getField(""),t.Test_Name*/
+                            Test_Name = SerialNo,
+                            t.Group_Category,
+                            t.Main_Department,
+                            TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(),
+                            GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString(),
+
+
+                        }).ToList();
+            var count = test.Count;
+
+            if (count != 0)
+            {
+
+                return (new JavaScriptSerializer()).Serialize(test);
+
+            }
+            else
+            {
+                var GroupCategories = (from dv in db.DataValues
+                                       join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                       where vs.ValueSet_Name == "Test Groups" && dv.DataValue_Description == SerialNo
+                                       select new
+                                       {
+                                           Test_ID = 0,
+                                           Group_Category = dv.DataValue_Name,
+                                           Test_Name = dv.DataValue_Description,
+                                           TestMainDepartmentName = "Cardiology",
+                                           Main_Department = "008",
+                                           Rate = dv.Segment1,
+
+
+                                       }).ToList();
+                return (new JavaScriptSerializer()).Serialize(GroupCategories);
+
+            }
+        }
+        [WebMethod]
         public static string loadtemplate(string item_id)
         {
             DataBaseDataContext db = new DataBaseDataContext();

@@ -75,6 +75,15 @@
                     { "data": "MRNO", "name": "MRNO", "width": "8%", "orderable": true }, 
                     { "data": "Full_Name", "width": "15%", "orderable": false },
                     { "data": "Age_years", "name": "Age_years", "width": "8%", "orderable": true }, 
+                    {
+                        "data": "Created_time", "name": "Created_time",
+                        "render": function (data, type, full) {
+                            debugger;
+                            var date = full.Created_time;
+                            date = moment(date).format('DD-MMM-YYYY');
+                            return date;
+                        }, "width": "9%"
+                    },
                     { "data": "NIC", "width": "15%", "orderable": false }, 
                     { "data": "Mobile1", "width": "10%", "orderable": false }, 
                     { "data": "Permanent_Address", "width": "30%", "orderable": false }, 
@@ -131,6 +140,7 @@
                         <th>MR No.</th>
                         <th>Name</th>
                         <th>Age</th>
+                        <th>Created Date</th>
                         <th>CNIC</th>
                         <th>Phone Number</th>
                         <th>Address</th>

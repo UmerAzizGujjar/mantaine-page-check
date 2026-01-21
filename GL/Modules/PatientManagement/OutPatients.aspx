@@ -3047,13 +3047,53 @@
                     $('#ddlXRayLF').hide();
                     $('#divRotation').hide();
                 }
+                else if (maindpt == "008") {
+                    AddCardioTest(maindpt);
+
+                }
             }
             else {
 
             }
 
         }
+        function AddCardioTest(maindpt) {
+            debugger;
+            var test = $('#ddlTestList').find('option:selected').text();
 
+
+            PageMethods.GetCardioDDLDetails(test, maindpt, function (res) {
+
+                $.each(JSON.parse(res), function (key, value) {
+                    debugger;
+                    var Result = 'Pending';
+                    var test = $('#ddlLabTest').val();
+                    var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
+             var dateValue = '<%= DateTime.Now%>';
+             var TestMainDepartmentName;
+             var row;
+             var test_array;
+
+             if (value.Test_ID != 0) {
+
+                 row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory value="0"><input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + '</td>   <td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td> <td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+
+                 test_array = $('.tests-table').find('input[name=testID][value="' + value.Test_ID + '"]');
+             }
+             else {
+                 row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td> <td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+                 test_array = $('.tests-table').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
+             }
+
+             $('.tests-table').append(row);
+             //}
+         });
+         $("#ctl00_MainContent_txtSpecialTests").val("");
+         $("#ctl00_MainContent_txtAreaOfInterest").val("");
+
+     }, function (err) { });
+
+         }
 
         function LoadTestByDepartment() {
             debugger;
@@ -3091,6 +3131,7 @@
                 $('#ddlXRayLF').hide();
 
             }
+            
             else if (maindpt == "005") {
                 $('#ddl_xray_rotation').hide();
                 FillProcedure("005");
@@ -3109,6 +3150,26 @@
                 $('#divRotation').hide();
                 $('#ddlXRayLF').hide();
             }
+            else if (maindpt == "008") {
+                GetCardioTests();
+                $('#divRotation').hide();
+                $('#ddlXRayLF').hide();
+
+            }
+        }
+
+
+
+        function GetCardioTests() {
+            var options = '<option value="0" >Please Select</option>';
+            PageMethods.GetCardioTests(function (Tests) {
+                $.each(JSON.parse(Tests), function (key, value) {
+                    options += '<option value="' + value.SerialNo + '" >' + value.TestName + '</option>';
+                });
+                $('#ddlTestList').html(options);
+                $('#ddlTestList').select2();
+                localStorage.TestForCategoryWiseSelections = options;
+            });
         }
         function EditResultOPD(anchor) {
 

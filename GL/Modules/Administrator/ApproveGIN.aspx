@@ -205,6 +205,7 @@
                 },
                 { "data": "SIID", "visible": false, "width": "0%", "orderable": false },
                 { "data": "SINO", "name": "mr_no_sequence", "width": "8%", "orderable": true },
+                { "data": "Department", "width": "13%", "orderable": false },
                 { "data": "CREATOR", "width": "13%", "orderable": false },
                 { "data": "STATUS", "width": "10%", "orderable": false },
                 { "data": "APPROVEBY", "width": "10%", "orderable": false },
@@ -250,6 +251,7 @@
                  <th><span style="display:inline-block;width:30px;"><input id="checkAll" type="checkbox"/></span></th>
                  <th style="display: none;">GIN ID</th>
                  <th>Store Issue No.</th>
+                 <th>Department</th>
                   <th>Creator</th>
                   <th>Status</th>
                  <th>Approve By</th>
