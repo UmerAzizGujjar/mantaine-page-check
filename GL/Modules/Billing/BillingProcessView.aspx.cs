@@ -139,51 +139,47 @@ namespace PMS
 
                     var Total_Billing = _dbContext.Ar_Billings.Count();
                     var Billing = from b in _dbContext.Ar_Billings
-                              join p in _dbContext.Reg_patients on b.Patient_ID equals p.pat_id
-                              join u in _dbContext.aspnet_Users on b.Created_By equals u.UserId
-                              where (b.Total_Amount != null || b.Discount_Amount != null)
-                                      && (b.isCancel == null || b.isCancel == false)
-                                      && (b.IsPharmacy == null || b.IsPharmacy == false)
-                              && (
-                                    (b.Bill_No.ToString().Contains(searchValue) || p.Full_Name.Contains(searchValue) || p.mr_no_sequence.Contains(searchValue) || u.UserName.Contains(searchValue))) orderby b.Bill_ID descending
-                              select new
-                              {
-                                  Bill_No = b.Bill_No,
-                                  Bill_Date = b.Creation_Date,
-                                  Remarks = b.Remarks,
-                                  Total_Amount = b.Total_Amount,
-                                  Discount_Percentage = b.Discount_Percentage,
-                                  Discount_Amount = b.Discount_Amount,
-                                  Net_Amount = b.Net_Amount,
-                                  Received_Amount = b.Received_Amount,
-                                  Balance_Amount = b.Balance_Amount,
-                                  MrNo = p.mr_no_sequence,
-                                  Full_Name = p.Full_Name,
-                                  Bill_ID = b.Bill_ID,
-                                  Operator = u.UserName
-                              };
+                                  join p in _dbContext.Reg_patients on b.Patient_ID equals p.pat_id
+                                  join u in _dbContext.aspnet_Users on b.Created_By equals u.UserId
+                                  where (b.Total_Amount != null || b.Discount_Amount != null)
+                                        && (b.isCancel == null || b.isCancel == false)
+                                        && (b.IsPharmacy == null || b.IsPharmacy == false)
+                                        && (b.Bill_No.ToString().Contains(searchValue)
+                                            || p.Full_Name.Contains(searchValue)
+                                            || p.mr_no_sequence.Contains(searchValue)
+                                            || u.UserName.Contains(searchValue))
+                                  select new
+                                  {
+                                      Bill_No = b.Bill_No,
+                                      Bill_Date = b.Creation_Date,
+                                      Remarks = b.Remarks,
+                                      Total_Amount = b.Total_Amount,
+                                      Discount_Percentage = b.Discount_Percentage,
+                                      Discount_Amount = b.Discount_Amount,
+                                      Net_Amount = b.Net_Amount,
+                                      Received_Amount = b.Received_Amount,
+                                      Balance_Amount = b.Balance_Amount,
+                                      MrNo = p.mr_no_sequence,
+                                      Full_Name = p.Full_Name,
+                                      Bill_ID = b.Bill_ID,
+                                      Operator = u.UserName
+                                  };
 
                     var FilteredCount = Billing.Count();
-                    switch (sortColumn)
-                    {
-                        case "Bill_No":
-                            Billing = sortColumnDirection == "asc" ? Billing.OrderBy(a => a.Bill_No) : Billing.OrderByDescending(a => a.Bill_No);
-                            break;
-                        case "Bill_Date":
-                            Billing = sortColumnDirection == "asc" ? Billing.OrderBy(b => b.Bill_Date) : Billing.OrderByDescending(a => a.Bill_Date);
-                            break;
-                        case "MrNo":
-                            Billing = sortColumnDirection == "asc" ? Billing.OrderBy(a => a.MrNo) : Billing.OrderByDescending(a => a.MrNo);
-                            break;
-                        default:
-                            Billing = Billing.OrderByDescending(a => a.Bill_No); 
-                            break;
-                    }
+                    Billing = Billing.OrderByDescending(a => a.Bill_ID);
 
                     var patientList = Billing.Skip(start).Take(length).ToList();
 
-                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Billing, data = patientList };
+                    var jsonData = new
+                    {
+                        draw = draw,
+                        recordsFiltered = FilteredCount,
+                        recordsTotal = Total_Billing,
+                        data = patientList
+                    };
+
                     return jsonData;
+
                 }
             }
             catch (Exception ex)

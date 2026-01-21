@@ -1696,3 +1696,37 @@ function OPD_Print(OPD_ID) {
 
     window.open(url, '_blank');
 }
+
+
+function getVisitDays(regPatId) {
+    if (!regPatId || regPatId <= 0) return;
+
+    $.ajax({
+        url: 'OPD.aspx/GetVisitDays',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ regPatId: regPatId }),
+        dataType: 'json',
+        success: function (response) {
+
+            var data = response.d ? JSON.parse(response.d) : response;
+
+            if (data.recentVisitDays !== null && data.recentVisitDays !== undefined) {
+                $('#Span2').text(data.recentVisitDays);
+            } else {
+                $('#Span2').text('');
+            }
+
+            if (data.previousVisitDays !== null && data.previousVisitDays !== undefined) {
+                $('#Span6').text(data.previousVisitDays);
+            } else {
+                $('#Span6').text('');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching visit days:', error);
+            $('#Span2').text('');
+            $('#Span6').text('');
+        }
+    });
+}

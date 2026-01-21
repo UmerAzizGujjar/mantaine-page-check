@@ -10,11 +10,11 @@
         $(document).ready(function () {
             loadCardfee();
 
-            //var urlParams = new URLSearchParams(window.location.search);
-            //var patId = urlParams.get('ID');
-            //if (patId) {
-            //    getVisitDays(parseInt(patId));
-            //}
+            var urlParams = new URLSearchParams(window.location.search);
+            var patId = urlParams.get('ID');
+            if (patId) {
+                getVisitDays(parseInt(patId));
+            }
 
             loadPermissions(function () {
                 for (var fieldId in fieldPermissionMapping) {
@@ -1305,13 +1305,16 @@
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat" class="blink" runat="server"></span>
 
 
-
                 <span style="font-size: 15px;">Recent Visit</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span2" class="blink" runat="server"></span>
-
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span2"  class="blink" runat="server" clientidmode="Static"></span>
 
                 <span style="font-size: 15px;">Previous Visit </span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span6" class="blink" runat="server"></span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;"
+                    id="Span6"
+                    class="blink"
+                    runat="server"
+                    clientidmode="Static"></span>
+
             </div>
         </div>
     </div>

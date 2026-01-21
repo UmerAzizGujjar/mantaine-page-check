@@ -367,8 +367,7 @@ function Approve(pat_id) {
                     title: 'swal-big-title',
                     htmlContainer: 'swal-big-text'
                 }
-            });
-            location.reload();
+            });           
         }
     });
 }

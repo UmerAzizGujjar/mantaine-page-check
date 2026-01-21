@@ -69,23 +69,29 @@ namespace PMS.Modules.PatientManagement
                              .Take(2)
                              .ToList();
 
-                int recent = 0;
-                if (visits.Count > 0 && visits[0].HasValue)
-                    recent = (DateTime.Now.Date - visits[0].Value.Date).Days;
-
-                int previous = 0;
-                if (visits.Count > 1 && visits[1].HasValue)
-                    previous = (DateTime.Now.Date - visits[1].Value.Date).Days;
-
                 var result = new
                 {
-                    recentVisitDays = recent,
-                    previousVisitDays = previous
+                    recentVisitDays = visits.Count > 0 && visits[0].HasValue
+                        ? (DateTime.Now.Date - visits[0].Value.Date).Days
+                        : 0,
+
+                    recentVisitDate = visits.Count > 0 && visits[0].HasValue
+                        ? visits[0].Value.ToString("dd-MMM-yyyy")
+                        : "",
+
+                    previousVisitDays = visits.Count > 1 && visits[1].HasValue
+                        ? (DateTime.Now.Date - visits[1].Value.Date).Days
+                        : 0,
+
+                    previousVisitDate = visits.Count > 1 && visits[1].HasValue
+                        ? visits[1].Value.ToString("dd-MMM-yyyy")
+                        : ""
                 };
 
                 return new JavaScriptSerializer().Serialize(result);
             }
         }
+
 
 
         private static string SanitizeInput(string input)

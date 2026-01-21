@@ -3077,6 +3077,10 @@ namespace PMS
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
+                //pt.opdid = DBClass.getField("select Out_Patient_ID from Out_Patient where Patient_ID =" + pat_id);
+                //pt.get_patientid = DBClass.getField("select Patient_ID from Patients where Reg_PatId =" + PatientID);
+                //pt.refferedoc = DBClass.getField("select Doctor_ID from Out_Patient where Patient_id=" + pt.get_patientid + " order by Created_Time desc");
+                pt.refferedoc = DBClass.getField($"SELECT TOP 1 Doctor_ID FROM Out_Patient WHERE Reg_PatId = {pat_id} ORDER BY Created_Time DESC");
                 if (pat.Created_time.HasValue)
                 {
                     pt.Entry_Date = pat.Created_time.ToString();
@@ -3514,10 +3518,12 @@ namespace PMS
             public string Ward_Name;
             public string Room_Name;
             public string Room_No;
+            public string refferedoc;
             public bool Discharge { get; set; }
             public bool isInpatient { get; set; }
             public bool Request_Discharge { get; set; }
 
+            public string get_patientid { get; set; }
             public string Previous_inpatient { get; set; }
             public string OPD_Panel_ID { get; set; }
             public string MainDepartment { get; set; }
