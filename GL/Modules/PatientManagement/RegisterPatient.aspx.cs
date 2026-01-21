@@ -119,6 +119,8 @@ namespace PMS.Modules.PatientManagement
             public string CNIC_Masked { get; set; }
             public string DOB { get; set; }
 
+            public decimal Card_fee { get; set; }
+
         }
 
         private static string MaskMobile(string mobile)
@@ -322,7 +324,17 @@ namespace PMS.Modules.PatientManagement
                     pat.State = State;
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
-                    pat.Card_fee = Convert.ToDecimal(cardfee);
+                    //pat.Card_fee = Convert.ToDecimal(cardfee);
+                    // Parse Card Fee safely
+                    decimal cardFeeValue = 0;
+                    if (!string.IsNullOrWhiteSpace(cardfee))
+                    {
+                        if (!decimal.TryParse(cardfee.Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out cardFeeValue))
+                        {
+                            return "ERROR: Invalid card fee. Please enter a valid number (e.g., 100.50).";
+                        }
+                    }
+                    pat.Card_fee = cardFeeValue;
                     pat.DOB = parsedDOB;
                     DateTime dob = pat.DOB.Value.Date;
                     DateTime today = DateTime.Today;
@@ -416,6 +428,7 @@ namespace PMS.Modules.PatientManagement
                     Relation = HttpUtility.HtmlEncode(patientRaw.Relation_prefix ?? ""),
                     Gender_text = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", patientRaw.Gender) ?? ""),
                     Age = patientRaw.Age_years,
+                    Card_fee = patientRaw.Card_fee ?? 0,
                     MaritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", patientRaw.Martial_Status) ?? ""),
                     Mr_No = HttpUtility.HtmlEncode(patientRaw.mr_no_sequence ?? ""),
                     CNIC_Masked = (patientRaw.NIC),
