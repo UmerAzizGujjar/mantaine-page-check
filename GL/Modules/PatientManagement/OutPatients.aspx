@@ -3867,7 +3867,7 @@
         }
 
         function FillFrequency() {
-            FillPharmacyItem
+           // FillPharmacyItem
             PageMethods.FillFrequencyDropDown(function (Frequency) {
                 var options = '<option value="0"> Select Frequency  </option>'
                 $.each(JSON.parse(Frequency), function (key, value) {
