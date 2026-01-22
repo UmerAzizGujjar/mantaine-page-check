@@ -1677,6 +1677,234 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
+        //[WebMethod]
+        //public static string GetBasicInfoOFReffer(int reg_id)
+        //{
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var patientRecord = db.Reg_patients.FirstOrDefault(x => x.pat_id == reg_id);
+        //        if (patientRecord == null)
+        //        {
+        //            return new JavaScriptSerializer().Serialize(null);
+        //        }
+        //        if (patientRecord.DOB.HasValue)
+        //        {
+        //            DateTime dob = patientRecord.DOB.Value;
+        //            DateTime today = DateTime.Today;
+
+        //            int years = today.Year - dob.Year;
+        //            int months = today.Month - dob.Month;
+        //            int days = today.Day - dob.Day;
+        //            if (days < 0)
+        //            {
+        //                months--;
+        //                days += DateTime.DaysInMonth(today.Year, (today.Month == 1 ? 12 : today.Month - 1));
+        //            }
+        //            if (months < 0)
+        //            {
+        //                years--;
+        //                months += 12;
+        //            }
+        //            string formattedAge = "";
+        //            if (years > 0)
+        //            {
+        //                formattedAge = $"{years}Y";
+        //                if (months > 0) formattedAge += $" {months}M";
+        //                if (days > 0) formattedAge += $" {days}D";
+        //            }
+        //            else if (months > 0)
+        //            {
+        //                formattedAge = $"{months}M";
+        //                if (days > 0) formattedAge += $" {days}D";
+        //            }
+        //            else
+        //            {
+        //                formattedAge = $"{days}D";
+        //            }
+
+        //            if (patientRecord.Age_years != formattedAge)
+        //            {
+        //                patientRecord.Age_years = formattedAge;
+        //                db.SubmitChanges();
+        //            }
+        //        }
+
+               
+        //        int numberOfDaysLatest = 0;
+        //        int numberOfDaysSecondLatest = 0;
+        //        var opd_time = (from pt in db.Patients
+        //                        where pt.Reg_PatId == reg_id
+        //                        orderby pt.Patient_ID descending
+        //                        select pt.Created_Time).FirstOrDefault();
+        //        if (opd_time != null)
+        //        {
+        //            numberOfDaysLatest = (int)(DateTime.Now.Date - opd_time.Value.Date).TotalDays;
+        //        }
+        //        var opd_time2 = (from pt in db.Patients
+        //                         where pt.Reg_PatId == reg_id
+        //                         orderby pt.Patient_ID descending
+        //                         select pt.Created_Time)
+        //                         .Skip(1)
+        //                         .FirstOrDefault();
+        //        if (opd_time2 != null)
+        //        {
+        //            numberOfDaysSecondLatest = (int)(DateTime.Now.Date - opd_time2.Value.Date).TotalDays;
+        //        }
+        //        var query = (from rg in db.Reg_patients join p in db.Patients
+        //                     on rg.pat_id equals p.Reg_PatId join
+        //                     opd in db.Out_Patients on p.Patient_ID equals opd.Patient_ID
+        //                     where rg.pat_id == reg_id orderby opd.Out_Patient_ID descending
+        //                     select new
+        //                     {
+        //                         Name = HttpUtility.HtmlEncode(rg.Full_Name),
+        //                         FatherName = HttpUtility.HtmlEncode(rg.Father_Name),
+        //                         Relation = HttpUtility.HtmlEncode(rg.Relation_prefix),
+        //                         Gender = rg.Gender,
+        //                         DOB = rg.DOB,
+        //                         Age = rg.Age_years,
+        //                         MaritalStatus = rg.Martial_Status,
+        //                         MaritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", rg.Martial_Status)),
+        //                         Gender_text = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", rg.Gender)),
+        //                         Reffer = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", rg.Gender)),
+        //                         Mr_No = HttpUtility.HtmlEncode(rg.mr_no_sequence),
+        //                         pat_no = rg.Patient_No,
+        //                         Address = HttpUtility.HtmlEncode(rg.Permanent_Address),
+        //                         Mobile = HttpUtility.HtmlEncode(rg.Mobile1),
+        //                         CNIC_Masked = MaskCNIC(rg.NIC),
+        //                         HouseNo = HttpUtility.HtmlEncode(rg.House_No),
+        //                         Area = HttpUtility.HtmlEncode(rg.area),
+        //                         StreetNo = HttpUtility.HtmlEncode(rg.stno_mno),
+        //                         City = HttpUtility.HtmlEncode(rg.city),
+        //                         ValArea = HttpUtility.HtmlEncode(rg.val_area),
+        //                         ValCity = HttpUtility.HtmlEncode(rg.val_city),
+        //                         Reg_PatientID = rg.pat_id,
+        //                         opdCount = db.Patients.Count(count => count.Reg_PatId == reg_id),
+        //                         DaysSinceLatestVisit = numberOfDaysLatest,
+        //                         DaysSinceSecondLatestVisit = numberOfDaysSecondLatest
+        //                     }).FirstOrDefault();
+        //        return new JavaScriptSerializer().Serialize(query);
+        //        string pat_type_Val = "02";
+        //        string pat_type_text = HttpUtility.HtmlEncode(db.GetDataValueName("Patient Type", pat_type_Val));
+        //    }
+        //}
+
+        [WebMethod]
+        public static string GetBasicInfoOFReffer(int reg_id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+           
+                var patient = (from rg in db.Reg_patients
+                               join p in db.Patients
+                               on rg.pat_id equals p.Reg_PatId
+                               join opd in db.Out_Patients 
+                               on p.Patient_ID equals opd.Patient_ID
+                               where rg.pat_id == reg_id
+                               orderby opd.Out_Patient_ID descending
+                               
+                               select new
+                               {
+                                   Full_Name = rg.Full_Name,
+                                   Father_Name = rg.Father_Name,
+                                   Relation_prefix = rg.Relation_prefix,
+                                   Gender = rg.Gender,
+                                   Age_years = rg.Age_years,
+                                   Martial_Status = rg.Martial_Status,
+                                   mr_no_sequence = rg.mr_no_sequence,
+                                   Patient_No = rg.Patient_No,
+                                   House_No = rg.House_No,
+                                   stno_mno = rg.stno_mno,
+                                   area = rg.area,
+                                   city = rg.city,
+                                   Permanent_Address = rg.Permanent_Address,
+                                   Mobile1 = rg.Mobile1,
+                                   NIC = rg.NIC,
+                                   val_area = rg.val_area,
+                                   val_city = rg.val_city,
+                                   pat_id = rg.pat_id,
+                                   Reffto = opd.reffer_doc,
+                                   Reffdep = opd.Reffer_To
+                               }).FirstOrDefault();
+
+                if (patient == null)
+                    return new JavaScriptSerializer().Serialize(null);
+
+                string doctorId = null;
+                string departmentid = null;
+                string DoctorName = "";
+
+                string pat_type_Val = "02";
+                string pat_type_text = HttpUtility.HtmlEncode(db.GetDataValueName("Patient Type", pat_type_Val));
+                string maritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", patient.Martial_Status));
+                string gender_text = HttpUtility.HtmlEncode(db.GetDataValueName("Gender", patient.Gender));
+                string department_Text = HttpUtility.HtmlEncode(db.GetDataValueName("Patient Main Category", patient.Reffdep));
+                 departmentid = HttpUtility.HtmlEncode( patient.Reffdep);
+                DoctorName = db.HR_Employees
+                .Where(e => e.Emp_ID == patient.Reffto)
+                .Select(e => e.Emp_Name)
+                .FirstOrDefault() ?? "";
+                DoctorName = HttpUtility.HtmlEncode(DoctorName);
+                doctorId = Convert.ToString( patient.Reffto);
+ 
+
+                
+
+         
+                int numberOfDaysLatest = 0;
+                int numberOfDaysSecondLatest = 0;
+
+                var latestVisit = db.Patients
+                                    .Where(p => p.Reg_PatId == patient.pat_id)
+                                    .OrderByDescending(p => p.Patient_ID)
+                                    .Take(2)
+                                    .ToList();
+
+                if (latestVisit.Count > 0 && latestVisit[0].Created_Time.HasValue)
+                    numberOfDaysLatest = (int)(DateTime.Now.Date - latestVisit[0].Created_Time.Value.Date).TotalDays;
+
+                if (latestVisit.Count > 1 && latestVisit[1].Created_Time.HasValue)
+                    numberOfDaysSecondLatest = (int)(DateTime.Now.Date - latestVisit[1].Created_Time.Value.Date).TotalDays;
+
+                var result = new
+                {
+                    Name = HttpUtility.HtmlEncode(patient.Full_Name),
+                    FatherName = HttpUtility.HtmlEncode(patient.Father_Name),
+                    Relation = HttpUtility.HtmlEncode(patient.Relation_prefix),
+                    Gender = patient.Gender,
+                    Gender_text = gender_text,
+                    Age = patient.Age_years,
+                    MaritalStatus = patient.Martial_Status,
+                    MaritalStatus_text = maritalStatus_text,
+                    Mr_No = HttpUtility.HtmlEncode(patient.mr_no_sequence),
+                    pat_no = patient.Patient_No,
+                    Address = HttpUtility.HtmlEncode($"H# {patient.House_No} {patient.stno_mno} {patient.area} {patient.city}"),
+                    PermanentAdrress = HttpUtility.HtmlEncode(patient.Permanent_Address),
+                    Mobile = HttpUtility.HtmlEncode(patient.Mobile1),
+                    CNIC_Masked = MaskCNIC(patient.NIC),
+                    HouseNo = HttpUtility.HtmlEncode(patient.House_No),
+                    Area = HttpUtility.HtmlEncode(patient.area),
+                    StreetNo = HttpUtility.HtmlEncode(patient.stno_mno),
+                    City = HttpUtility.HtmlEncode(patient.city),
+                    ValArea = HttpUtility.HtmlEncode(patient.val_area),
+                    ValCity = HttpUtility.HtmlEncode(patient.val_city),
+                    Reg_PatientID = patient.pat_id,
+
+                    doctorId = doctorId,
+                    DoctorName = DoctorName,
+                    departmentid = departmentid,
+                    department_Text = department_Text,
+
+                    pat_type_Val = pat_type_Val,
+                    pat_type_text = pat_type_text,
+
+                    DaysSinceLatestVisit = numberOfDaysLatest,
+                    DaysSinceSecondLatestVisit = numberOfDaysSecondLatest,
+                };
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
         [WebMethod]
         public static string GetBasicInfo_Apt(int reg_id, int apt_Id)
         {

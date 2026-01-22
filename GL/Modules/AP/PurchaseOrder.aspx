@@ -138,84 +138,78 @@
             window.open(url, '_blank');
         }
 
-        function append(anchor) {
-            debugger;
+        function append(anchor, isBulk = false) {
+            // debugger; // Removed for performance, uncomment if needed for testing
             var row = $(anchor).parents('tr')[0];
             var PR_Num = $($(row).find('td')[1]).text();
             var item_name = $($(row).find('td')[3]).text();
             var unit = $($(row).find('td')[6]).text();
             var Rate = $($(row).find('td')[8]).text();
             var pr_detail_id = $($(row).find('td')[9]).text();
-            var length = $("#tblItemDescription tr").length;
             var Qty = $($(row).find('td')[4]).text();
             var itemcode = $($(row).find('td')[5]).text();
-            if (unit == "null")
-                unit = "";
 
-            if (Rate == "null")
-                Rate = "0";
-            if (Rate == "NaN")
-                Rate = "0";
-            var length = $("#tblItemDescription tr:gt(0)").length;
-            if (length > 0) {
-                length = length + 1;
-            }
-            else {
-                length = 1;
-            }
-            var test_array = $('#tblItemDescription').find('input[name=txtItemCode][value=' + itemcode + ']');
+            if (unit == "null") unit = "";
+            if (Rate == "null" || Rate == "NaN") Rate = "0";
+
+            var length = $("#tblItemDescription tr:gt(0)").length + 1;
+
+            // Check for duplicates
+            var test_array = $('#tblItemDescription').find('input[name=txtItemCode][value="' + itemcode + '"]');
             if (test_array.length > 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'This Item already added!',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-
+                // ONLY show SweetAlert if it's NOT a bulk operation
+                if (!isBulk) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'This Item already added!',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                }
                 return false;
-            }
-            else {
+            } else {
                 $("#tblItemDescription").append('<tr>' +
-                    '<td style="padding-top:7px!important;""><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
-                    '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '"  value="' + PR_Num + '"style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + PR_Num + '</td>' +
-                    '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '"  value=""  style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/></td>' +
-                    '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '"  value="' + itemcode + '"  style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + itemcode + ' </td>' +
-                    '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '"  value="' + item_name + '"/> ' + item_name + ' </td>' +
-                    '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '"  value="' + unit + '" />' + unit + ' </td>' +
-                    '<td><input type="text"  id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + Qty + '"/></input></td>' +
-                    '<td>' + '<input type="text" id="txtBonusQty' + length + '"' + ' style="text-align:right;width:50px!important;font-size:9px;height:20px;"' + ' name="txtBonusQty" value="0"' +
-                    ' data-toggle="tooltip"' +  ' data-placement="bottom"' +  ' title="Enter Bonus quantity in Loose"' +  '/>' +
-                    '</td>' +
-                    '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '"  value="' + Rate + '" /></td>' +
-                    '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"   name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '"  value="0" /></td>' +
-                    '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()"  style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + length + '" name="txtDisAmount"  ></input></td>' +
+                    '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
+                    '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="' + PR_Num + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + PR_Num + '</td>' +
+                    '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/></td>' +
+                    '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + itemcode + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + itemcode + ' </td>' +
+                    '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + ' </td>' +
+                    '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + ' </td>' +
+                    '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + Qty + '"/></input></td>' +
+                    '<td>' + '<input type="text" id="txtBonusQty' + length + '"' + ' style="text-align:right;width:50px!important;font-size:9px;height:20px;"' + ' name="txtBonusQty" value="0"' + ' data-toggle="tooltip"' + ' data-placement="bottom"' + ' title="Enter Bonus quantity in Loose"' + '/>' + '</td>' +
+                    '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + Rate + '" /></td>' +
+                    '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +
+                    '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount"></input></td>' +
                     '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="duplicate ddlSTAX" ><option value="0">0</option></select></td>' +
-                    '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly"  id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
+                    '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
                     '<td><select id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlFurtherTax"><option value="0">0</option></select></td>' +
                     '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +
                     '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"></select></td>' +
                     '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
-                    '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;" class="duplicate"><option value="0">0</option>' + optionsList + '</select></td>' +
-                    '<td style="padding-top: 7px!important;display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;  id="txtFedAmount' + length + '" name="txtFedAmount" style="width:50px !important;"></input></td>' +
+                    '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;" class="duplicate"><option value="0">0</option>' + (typeof optionsList !== 'undefined' ? optionsList : "") + '</select></td>' +
+                    '<td style="padding-top: 7px!important;display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
                     '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
                     '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
-                    '<td><input type="text" name="txtddate" id="txtddate' + length + '" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
-                    '<td  style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;" i=""></i></a> </td></tr>');
+                    '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
+                    '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a> </td></tr>');
 
                 populateTaxddl(length);
                 populateAdvanceTaxddl(length);
                 populateFurtherTaxddl(length);
-                CulculateAmonutWithQty(length);
-                $('[data-toggle="tooltip"]').tooltip();
-                length++;
-                $('input[name="txtddate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
-                calcTotal();
+
+                // Heavy UI initializations only run if NOT bulk
+                if (!isBulk) {
+                    CulculateAmonutWithQty(length);
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $('#txtddate' + length).datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+                    calcTotal();
+                }
             }
         }
         function populateTaxddl(rowId) {
@@ -296,20 +290,42 @@
                 $("#ddlWarehouse").attr('disabled', true);
             });
             $('[id*=checkHeader]').click(function () {
-                var isTrue = $('#checkHeader').is(':checked');
+                var isTrue = $(this).is(':checked');
+                $('.chktd').prop('checked', isTrue);
+
                 if (isTrue) {
-                    debugger;
-                    $('.chktd').prop('checked', true);
-                    setTimeout(function () {
-                        $("#tblPOItemstModelTable tr:gt(0) input[type=checkbox]:checked ").each(function (key, value) {
-                            debugger;
-                            var row = $(this);
-                            append(row);
-                        });
-                    }, 1000);
-                }
-                else {
-                    $('.chktd').prop('checked', false);
+                    var $rows = $("#tblPOItemstModelTable tr:gt(0) input[type=checkbox]:checked");
+                    var index = 0;
+
+                    // Process in batches so the browser doesn't freeze
+                    function processBatch() {
+                        var batchSize = 50;
+                        var end = Math.min(index + batchSize, $rows.length);
+
+                        for (; index < end; index++) {
+                            // Pass 'true' as the second argument for isBulk
+                            append($rows[index], true);
+                        }
+
+                        if (index < $rows.length) {
+                            // Allows UI to update before next batch
+                            requestAnimationFrame(processBatch);
+                        } else {
+                            // ALL items added - now run final initializations ONCE
+                            $('.row-date-picker').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+                            $('[data-toggle="tooltip"]').tooltip();
+                            calcTotal();
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Items processed successfully.',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                    processBatch();
                 }
             });
 

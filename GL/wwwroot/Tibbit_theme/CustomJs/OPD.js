@@ -276,6 +276,89 @@ function OnFilterPatients(data) {
 function OnFailPatients(exc) {
     alert(exc.get_message());
 }
+function Get_Pat_Info_Reffer(reg_id) {
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/GetBasicInfoOFReffer",
+        data: JSON.stringify({ reg_id: reg_id}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (resp) {
+            debugger;
+            var data = JSON.parse(resp.d);
+            $('#txtPatientNo').val(data.Mr_No);
+            $('#txtpatient_no').val(data.pat_no);
+            $('#txt_patname').val(data.Name);
+            $('#txt_F_Name').val(data.FatherName);
+            $('#txtage').val(data.Age);
+            $('#txtnic').val(data.CNIC_Masked);
+            $('#txtmobile').val(data.Mobile);
+            $('#txtAdrress').val(data.PermanentAdrress);
+            $('#hdn_regid').val(data.Reg_PatientID);
+            $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
+            $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
+
+            debugger;
+
+            $('#ddlmartialstatus').html(
+                $('<option>', {
+                    value: data.MaritalStatus,
+                    text: data.MaritalStatus_text
+                })
+            );
+            $('#ddlGender').html(
+                $('<option>', {
+                    value: data.Gender,
+                    text: data.Gender_text
+                })
+            );
+            $('#ddlDepartment').html(
+                $('<option>', {
+                    value: data.departmentid,
+                    text: data.department_Text
+                })
+            );
+
+            $('#ddlPatient_Type').html(
+                $('<option>', {
+                    value: data.pat_type_Val,
+                    text: data.pat_type_text
+                })
+            ); loaddata();
+
+            var $select = $('#ddldoctor');
+
+
+            $select.empty().append(
+                $('<option>', {
+                    value: data.doctorId,
+                    text: data.DoctorName
+                })
+            );
+
+
+            var $select = $('#ddldoctor');
+
+            $select.empty().append(
+                new Option(data.DoctorName, data.doctorId, true, true) // creates selected option
+            );
+
+
+            $select.trigger({
+                type: 'select2:select',
+                params: {
+                    data: { id: data.doctorId, text: data.DoctorName }
+                }
+            });
+
+
+        },
+        error: function (response) {
+            alert("Error: " + response.responseText);
+            console.error("AJAX Error: ", response);
+        }
+    });
+}
 function Get_Pat_Info_Apt(reg_id, apt_Id) {
     $.ajax({
         type: "POST",
