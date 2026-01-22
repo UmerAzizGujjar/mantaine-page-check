@@ -14,37 +14,76 @@
       
 
        
-
-        function editOpen(id) { 
-
-            window.open("OPD.aspx?OPDID=" + id + "");
+        function editOpen(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You are about to edit patient`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, edit it!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    PageMethods.EditPatient(id, function (msg) {
+                        if (msg === "NotAllowed") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Access Denied',
+                                text: 'You do not have permission to edit this patient.'
+                            });
+                        } else if (msg === "Allowed") {
+                            window.open("OPD.aspx?OPDID=" + id, "_blank");
+                        }
+                        // No third condition — so no else needed
+                    });
+                }
+            });
         }
-
         function cancelPatient(patid, patname) {
             debugger;
             var PatID = patid;
             var PatNo = patname;
 
-            if (confirm('Are you sure want to Cancel Mr No:- ' + PatNo)) {
-                PageMethods.CancelPatient(PatID, function (msg) {
-                    if (msg == "Allowdlt") {
-                        alert('You have no right to Cancel. ')
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Are you sure want to Cancel:- ' + PatNo,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    PageMethods.CancelPatient(PatID, function (msg) {
+                        if (msg == "Allowdlt") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Permission Denied',
+                                text: 'You have no right to Cancel.'
+                            });
+                        }
+                        else if (msg == "success") {
+                            // Assuming 'row' is defined in outer scope (e.g., via closure or global)
+                            if (typeof row !== 'undefined' && row && typeof row.remove === 'function') {
+                                row.remove();
+                            }
+                            // Note: You may want to reload or redirect AFTER success
+                            window.location.href = "OPDView.aspx";
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Cancel Failed',
+                                text: 'Unable to Cancel this patient, because this patient has uncanceled Reciept and Bills'
+                            });
+                        }
+                    });
+                }
+            });
 
-                    }
-                    else if (msg == "success") {
-
-                        row.remove();
-                    }
-                    else {
-                        alert('Unable to Cancel this patient, because this patient has uncanceled Reciept and Bills ')
-                    }
-                },
-
-
-                );
-            }
-
-            window.location.href = "OPDView.aspx";
+            // ⚠️ This line runs IMMEDIATELY after showing the alert — likely NOT what you want!
+           
         }
         function LoadPage() {
             $("#tblResult").DataTable({

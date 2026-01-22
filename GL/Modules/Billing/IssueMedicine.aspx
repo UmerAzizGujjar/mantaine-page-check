@@ -1461,11 +1461,52 @@
             });
         }
         function getOPDandIPDNO(pat_id) {
-            PageMethods.GetOPDandIPDNO(pat_id, function (data) {                var parsedData = JSON.parse(data);                var options = '<option value="0" >Please Select</option>';                // Process GRN_Details                $.each(parsedData.OPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.IPD_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                // Process Stock_Adjustment_Details                $.each(parsedData.Emergency_NO, function (key, value) {                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';                });                $('#ddlPatient_No').html(options);                $('#ddlPatient_No').select2();
+            PageMethods.GetOPDandIPDNO(pat_id, function (data) {
+                var parsedData = JSON.parse(data);
+                var options = '<option value="0" >Please Select</option>';
+
+                // Process GRN_Details
+                $.each(parsedData.OPD_NO, function (key, value) {
+                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';
+                });
+
+                // Process Stock_Adjustment_Details
+                $.each(parsedData.IPD_NO, function (key, value) {
+                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';
+                });
+
+                // Process Stock_Adjustment_Details
+                $.each(parsedData.Emergency_NO, function (key, value) {
+                    options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';
+                });
+
+                $('#ddlPatient_No').html(options);
+                $('#ddlPatient_No').select2();
             })
         }
-        function getbatchfrom_grn() {            debugger;            var Inv_batch = $('#chkbatch').prop("checked");            if (Inv_batch == false) {                $('#batchno').hide();
-                $('#batchno').prop('disabled', true);                AddnonBatchItems();            }            else {                var med_id = $('#medName').find('option:selected').val();                PageMethods.GetinvBatch(med_id, function (dataa) {                    debugger;                    var parsedDataa = JSON.parse(dataa);                    if (parsedDataa == true) {                        debugger                        var warehouse = $("#ddlWarehouse").val()                        if (warehouse == "0") {                            Swal.fire({
+        function getbatchfrom_grn() {
+            debugger;
+
+            var Inv_batch = $('#chkbatch').prop("checked");
+
+            if (Inv_batch == false) {
+                $('#batchno').hide();
+                $('#batchno').prop('disabled', true);
+
+                AddnonBatchItems();
+            }
+            else {
+                var med_id = $('#medName').find('option:selected').val();
+
+                PageMethods.GetinvBatch(med_id, function (dataa) {
+                    debugger;
+                    var parsedDataa = JSON.parse(dataa);
+                    if (parsedDataa == true) {
+                        debugger
+                        var warehouse = $("#ddlWarehouse").val()
+
+                        if (warehouse == "0") {
+                            Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
                                 text: 'Please Select Warehouse First.',
@@ -1478,7 +1519,22 @@
                                 }
                             });
 
-                            return;                        }                        PageMethods.Getbatch_grn(med_id, warehouse, function (data) {                            debugger;                                                      var parsedData = JSON.parse(data);                            console.log(parsedData)                            var options = '<option value="0" >Please Select</option>';                            debugger;                            $.each(parsedData, function (key, value) {                                console.log(value)                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';                            });                            $('#batchno').html(options);                            $('#batchno').select2();                            var isbatch = $('#chkbatch').prop("checked");                            debugger;
+                            return;
+                        }
+                        PageMethods.Getbatch_grn(med_id, warehouse, function (data) {
+                            debugger;                          
+                            var parsedData = JSON.parse(data);
+                            console.log(parsedData)
+                            var options = '<option value="0" >Please Select</option>';
+                            debugger;
+                            $.each(parsedData, function (key, value) {
+                                console.log(value)
+                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
+                            });
+                            $('#batchno').html(options);
+                            $('#batchno').select2();
+                            var isbatch = $('#chkbatch').prop("checked");
+                            debugger;
                             if (isbatch == true) {
                                 $('#batchno').show();
                                 $('#batchno').prop('disabled', false);
@@ -1493,12 +1549,99 @@
                         }, function (error) {
                             alert(error.get_message());
                         });
-                    }                    else {                        AddnonBatchItems();
-                    }                });
+                    }
+                    else {
+                        AddnonBatchItems();
+                    }
+                });
+
             }
         }
-        function AddnonBatchItems() {            debugger;            var itemId = $('#medName').val();            var rowIndex = parseInt($('#tblDetails tbody tr').length);            let rows;            var expdate = '';            // Check if the item with the same batch number already exists            var itemExists = false;            $('#tblDetails tbody tr').each(function () {                var existingItemId = $(this).find('input[name="ItemID"]').val();            });            $.ajax({                type: "post",                url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",                data: JSON.stringify({                    "itemId": itemId                }),                dataType: 'JSON',                contentType: "application/json; charset=utf-8",                async: false,                success: function (msg) {                    var length = $("#tblDetails tr:gt(0)").length;                    $('#Table_1 tr:gt(0)').remove();                    var data = JSON.parse(msg.d);                    debugger;                    var Uomqty = data[0].UOM_Qty;                    if (Uomqty == null) {                        Uomqty = 0;                    } else {                        Uomqty = data[0].UOM_Qty;                    }                    var date = data[0].ExpiryDate                    date = moment(date).format('D-MMM-YYYY');                    debugger;                    rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +                        '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +                        '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +                        '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +                        '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +                        '<td><input type="number" name="txtQty" value="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +                        '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="width: 75px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 100px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +                        '<td style="text-align:Right;"></td>' +                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +                        '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
-                        '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +                        '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +                        '</tr>';                    $('#tblDetails #tblbody').append(rows);                    setTimeout(function () {                        $('#medName').select2('close');                        $('input[name="txtQty"]').focus().select();                    }, 5);                    CalculateSummarieDiscountPerWise(rowIndex);                }            });        }
+        function AddnonBatchItems() {
+            debugger;
+            var itemId = $('#medName').val();
+
+            var rowIndex = parseInt($('#tblDetails tbody tr').length);
+            let rows;
+            var expdate = '';
+
+            // Check if the item with the same batch number already exists
+            var itemExists = false;
+            $('#tblDetails tbody tr').each(function () {
+                var existingItemId = $(this).find('input[name="ItemID"]').val();
+
+            });
+
+
+
+            $.ajax({
+                type: "post",
+                url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
+                data: JSON.stringify({
+                    "itemId": itemId
+
+                }),
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (msg) {
+                    var length = $("#tblDetails tr:gt(0)").length;
+                    $('#Table_1 tr:gt(0)').remove();
+                    var data = JSON.parse(msg.d);
+                    debugger;
+                    var Uomqty = data[0].UOM_Qty;
+                    if (Uomqty == null) {
+                        Uomqty = 0;
+                    } else {
+                        Uomqty = data[0].UOM_Qty;
+                    }
+                    var date = data[0].ExpiryDate
+                    date = moment(date).format('D-MMM-YYYY');
+
+                    debugger;
+                    rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
+
+                        '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +
+
+                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
+
+                        '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
+
+                        '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
+
+                        '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
+
+                        '<td><input type="number" name="txtQty" value="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+
+                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
+
+                        '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
+
+                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="width: 75px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
+
+                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 100px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
+
+                        '<td style="text-align:Right;"></td>' +
+                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
+                        '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
+
+                        '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
+
+                        '</tr>';
+
+                    $('#tblDetails #tblbody').append(rows);
+
+                    setTimeout(function () {
+                        $('#medName').select2('close');
+                        $('input[name="txtQty"]').focus().select();
+                    }, 5);
+
+                    CalculateSummarieDiscountPerWise(rowIndex);
+                }
+            });
+        }
         debugger;
         function AddMedicineDetail() {
             debugger;
@@ -2217,7 +2360,8 @@
         function getitem_code() {
             debugger;
             var warehouse = $("#ddlWarehouse").val()
-            if (warehouse == "0") {                Swal.fire({
+            if (warehouse == "0") {
+                Swal.fire({
                     icon: 'error',
                     title: 'Error!',
                     text: 'Please Select Warehouse First.',
@@ -2230,7 +2374,8 @@
                     }
                 });
                 $('#ddlPatient_No').val('0');
-                return;            }
+                return;
+            }
             else {
                 $('#ddlPatient_No').select2('close');
                 var pat_Id = $('#ddlPatient_No').val();

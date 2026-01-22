@@ -754,33 +754,33 @@ function FillUserAccount() {
     return options;
 }
 
-function FillCashier() {
+//function FillCashier() {
 
-    $.ajax({
-        url: 'OPD.aspx/GetCasher',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
+//    $.ajax({
+//        url: 'OPD.aspx/GetCasher',
+//        type: 'POST',
+//        contentType: 'application/json; charset=utf-8',
+//        dataType: 'json',
+//        success: function (response) {
 
-            var data = response.d ? JSON.parse(response.d) : response;
-            var options = '';
+//            var data = response.d ? JSON.parse(response.d) : response;
+//            var options = '';
 
-            if (data.length > 0) {
-                $.each(data, function (i, value) {
-                    options += '<option value="' + value.Cashier_ID + '" selected>'
-                        + value.Cashier_Name +
-                        '</option>';
-                });
+//            if (data.length > 0) {
+//                $.each(data, function (i, value) {
+//                    options += '<option value="' + value.Cashier_ID + '" selected>'
+//                        + value.Cashier_Name +
+//                        '</option>';
+//                });
 
-                $('#ddlcashier').html(options).prop('disabled', true);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching cashier:', error);
-        }
-    });
-}
+//                $('#ddlcashier').html(options).prop('disabled', true);
+//            }
+//        },
+//        error: function (xhr, status, error) {
+//            console.error('Error fetching cashier:', error);
+//        }
+//    });
+//}
 
 var originalFee;
 
@@ -1769,7 +1769,7 @@ function OnFilterReferPatients(data) {
             '<td>' + pat.Mobile1 + '</td>' +
             '<td>' +
             '<a class="tooltips" style="color:#438eb9; font-size:16px; display:flex; justify-content:center;" ' +
-            'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\')">' +
+            'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\', \'' + pat.OPDID + '\')">' +
             '<i class="fa fa-plus-circle"></i>' +
             '<span class="tooltiptxt">Select</span>' +
             '</a>' +
