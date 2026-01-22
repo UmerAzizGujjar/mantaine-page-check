@@ -117,8 +117,8 @@ namespace PMS
                             t.Rate, /*= DBClass.getField(""),t.Test_Name*/
                             Test_Name = SerialNo,
                             t.Group_Category,
-                            t.Main_Department,
                             TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(),
+                            t.Main_Department,
                             GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString(),
 
 
@@ -4995,7 +4995,7 @@ on p.Reg_PatId equals rp.pat_id
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var test = (from t in db.Lab_Tests
                         where t.Main_Department == "005" && t.Test_Name == SerialNo
-                        select new { t.Test_ID, t.Test_Name, t.Group_Category, TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(), GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString() }).ToList();
+                        select new { t.Test_ID, t.Test_Name, t.Group_Category, TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(), t.Main_Department, GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString() }).ToList();
             var count = test.Count;
 
             if (count != 0)
@@ -5037,6 +5037,7 @@ on p.Reg_PatId equals rp.pat_id
                             Test_Name = test_id,
                             t.Group_Category,
                             TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(),
+                            t.Main_Department,
                             GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString(),
 
 
@@ -5094,6 +5095,7 @@ on p.Reg_PatId equals rp.pat_id
                             Test_Name = SerialNo,
                             t.Group_Category,
                             TestMainDepartmentName = db.GetDataValueName("Main Test Departments", t.Main_Department.ToString()).ToString(),
+                            t.Main_Department,
                             GroupCategoryName = db.GetDataValueName("Test Groups", t.Group_Category.ToString()).ToString(),
 
 

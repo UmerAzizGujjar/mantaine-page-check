@@ -68,7 +68,7 @@
                 debugger;
                 $("#hdn_emer_reffered").val(Reffered_id);
                 console.log(Reffered_id);
-                Get_Pat_Info(Reffered_id);
+                Get_Pat_Info_Reffer(Reffered_id);
 
                 $('#ddlPatient_Type').attr('disabled', false);
                 //$('#ddlcashier').attr('disabled', true);
