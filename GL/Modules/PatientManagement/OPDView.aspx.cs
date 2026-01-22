@@ -22,6 +22,24 @@ namespace PMS.Modules.PatientManagement
 
 
         [WebMethod]
+        public static string EditPatient(string PatID)
+        {
+            // Get permission value from DB function (returns '0' or '1' as string)
+            string allowValue = DBClass.getField(
+                $"SELECT dbo.GetRights('AllowPatientDelete', '{AppConfig.UserID}')"
+            );
+
+            // Treat null/empty as '0' (not allowed) for safety
+            if (Convert.ToBoolean(allowValue) == true)
+            {
+                return "Allowed"; 
+            }
+            else
+            {
+                return "NotAllowed";
+            }
+        }
+        [WebMethod]
         public static string CancelPatient(string Patient_ID)
         {
             DataBaseDataContext db = new DataBaseDataContext();

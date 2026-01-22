@@ -671,33 +671,33 @@ function FillUserAccount() {
     return options;
 }
 
-function FillCashier() {
+//function FillCashier() {
 
-    $.ajax({
-        url: 'OPD.aspx/GetCasher',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
+//    $.ajax({
+//        url: 'OPD.aspx/GetCasher',
+//        type: 'POST',
+//        contentType: 'application/json; charset=utf-8',
+//        dataType: 'json',
+//        success: function (response) {
 
-            var data = response.d ? JSON.parse(response.d) : response;
-            var options = '';
+//            var data = response.d ? JSON.parse(response.d) : response;
+//            var options = '';
 
-            if (data.length > 0) {
-                $.each(data, function (i, value) {
-                    options += '<option value="' + value.Cashier_ID + '" selected>'
-                        + value.Cashier_Name +
-                        '</option>';
-                });
+//            if (data.length > 0) {
+//                $.each(data, function (i, value) {
+//                    options += '<option value="' + value.Cashier_ID + '" selected>'
+//                        + value.Cashier_Name +
+//                        '</option>';
+//                });
 
-                $('#ddlcashier').html(options).prop('disabled', true);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching cashier:', error);
-        }
-    });
-}
+//                $('#ddlcashier').html(options).prop('disabled', true);
+//            }
+//        },
+//        error: function (xhr, status, error) {
+//            console.error('Error fetching cashier:', error);
+//        }
+//    });
+//}
 
 var originalFee;
 
