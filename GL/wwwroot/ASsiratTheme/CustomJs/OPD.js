@@ -1686,7 +1686,7 @@ function OnFilterReferPatients(data) {
             '<td>' + pat.Mobile1 + '</td>' +
             '<td>' +
             '<a class="tooltips" style="color:#438eb9; font-size:16px; display:flex; justify-content:center;" ' +
-            'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\')">' +
+            'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\', \'' + pat.OPDID + '\')">' +
             '<i class="fa fa-plus-circle"></i>' +
             '<span class="tooltiptxt">Select</span>' +
             '</a>' +

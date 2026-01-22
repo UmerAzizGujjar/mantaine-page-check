@@ -29,6 +29,7 @@
             var apdAdd = '<%= Request.QueryString["isAdd_apt"] %>'
             var OPDID = '<%= Request.QueryString["OPDID"] %>'
             var Reffered_id = '<%= Request.QueryString["Reffered_id"] %>'
+            var refferopd_id = '<%= Request.QueryString["opd_id"] %>'
 
 
             $("#hdn_opdId").val(OPDID);
@@ -64,8 +65,9 @@
                 //$('#ddlcashier').attr('disabled', true);
             }
             debugger;
-            if (Reffered_id != "" && added == "true") {
+            if (Reffered_id != "" && added == "true" && refferopd_id != "" ) {
                 debugger;
+              
                 $("#hdn_emer_reffered").val(Reffered_id);
                 console.log(Reffered_id);
                 Get_Pat_Info(Reffered_id);
