@@ -184,7 +184,7 @@ $(document).ready(function () {
     FillModePresentation();
     get_totalpatient();
     FillUserAccount();
-    FillCashier();
+   /* FillCashier();*/
 
 });
 function fillDropdown($dropdown, methodName) {
