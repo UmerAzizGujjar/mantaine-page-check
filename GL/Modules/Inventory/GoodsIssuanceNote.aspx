@@ -7,10 +7,11 @@
         var selectedOptions = '';
         $(document).ready(function () { 
             $('#ddlMIR').select2();
-               
-            LoadDepartments();
             LoadOrganizations();
-            GetWareHouseCondition();
+            GetWareHouseCondition();   
+            LoadDepartments();
+            
+            
             UserRights();  
             $('#ddlInventoryOrg').change(function () {
                 if (warehouseCond == "01") {
@@ -67,7 +68,7 @@
              });
             var warehouseCond;
             function GetWareHouseCondition() {
-
+                debugger;
                 $.ajax({
                     type: "POST",
                     url: "GoodsIssuanceNote.aspx/GetWareHouseCondition",
@@ -510,7 +511,11 @@
             });
         }
         function getMIR() {
+            debugger;
             var warehouse = $("#ddlInventoryOrg").val();
+            if (warehouse == null || warehouse == undefined) {
+                warehouse = '0';
+            }
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceNote.aspx/getMIR",
