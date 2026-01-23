@@ -456,7 +456,9 @@ namespace PMS.Modules.PatientManagement
             INNER JOIN patients p ON rg.pat_id = p.Reg_PatId 
             INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID 
             WHERE op.reffer_doc != 0 
-              AND ISNULL(p.isCancel, 0) != 1";
+              AND ISNULL(p.isCancel, 0) != 1
+
+            ORDER BY op.Out_Patient_ID DESC";
             }
             else
             {
@@ -483,7 +485,7 @@ namespace PMS.Modules.PatientManagement
                   OR LTRIM(RTRIM(rg.mobile1)) LIKE '%{safeSearch}%' 
                   OR LTRIM(RTRIM(rg.nic)) LIKE '%{safeSearch}%'
               )
-            ORDER BY pat_id DESC";
+            ORDER BY op.Out_Patient_ID DESC";
             }
 
             DataTable dt = DBClass.getDataTable(SearchSql);
