@@ -22,7 +22,7 @@
                 }
             });
             DisableCardPrint();
-            
+
             var reg_id = '<%= Request.QueryString["ID"] %>'
             var apt_Id = '<%= Request.QueryString["apt_id"] %>'
             var added = '<%= Request.QueryString["isAdd"] %>'
@@ -30,6 +30,7 @@
             var OPDID = '<%= Request.QueryString["OPDID"] %>'
             var Reffered_id = '<%= Request.QueryString["Reffered_id"] %>'
             var refferopd_id = '<%= Request.QueryString["opd_id"] %>'
+            var Reffered_id_opd = '<%= Request.QueryString["Reffered_id_opd"] %>'
 
 
             $("#hdn_opdId").val(OPDID);
@@ -53,7 +54,7 @@
             }
             if (reg_id != "" && added == "true") {
                 Get_Pat_Info(reg_id);
-             
+
                 $('#ddlPatient_Type').attr('disabled', false);
                 //$('#ddlcashier').attr('disabled', true);
             }
@@ -65,15 +66,18 @@
                 //$('#ddlcashier').attr('disabled', true);
             }
             debugger;
-            if (Reffered_id != "" && added == "true" && refferopd_id != "" ) {
+            if (Reffered_id != "" && added == "true") {
                 debugger;
-              
+
                 $("#hdn_emer_reffered").val(Reffered_id);
                 console.log(Reffered_id);
-                Get_Pat_Info_Reffer(Reffered_id);
+
 
                 $('#ddlPatient_Type').attr('disabled', false);
                 //$('#ddlcashier').attr('disabled', true);
+            }
+            if (refferopd_id != "" && Reffered_id_opd != "") {
+                Get_Pat_Info_Reffer(Reffered_id_opd);
             }
 
 
@@ -98,7 +102,7 @@
                         if (reffered_id == "") {
                             checkcardfee(reg_id);
                         }
-                        
+
                     }
 
                 },
@@ -125,32 +129,34 @@
                             showCancelButton: true,
                             confirmButtonText: 'Yes, Charge Fee',
                             cancelButtonText: 'Cancel',
-                            reverseButtons: true
+                            reverseButtons: true,
+                            allowOutsideClick: false, // 👈 Prevent closing on backdrop click
+                            allowEscapeKey: false     // 👈 Optional: also prevent Esc key dismissal
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 chargeCardFee(reg_id);
-                            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                                // User clicked "Cancel" → disable the Save button
+                            } else {
+                                // Any dismissal (cancel, backdrop, esc) → disable save
                                 $('#btnsave').prop('disabled', true);
-                                // Optional: show a small message
                                 Swal.fire({
                                     icon: 'info',
                                     title: 'Action Required',
                                     text: 'Card fee must be charged for first time register.',
                                     timer: 2000,
-                                    showConfirmButton: false
+                                    showConfirmButton: false,
+                                    allowOutsideClick: false
                                 });
                             }
                         });
                     } else {
-                        // Card fee exists → enable save button (optional safety)
                         $('#btnsave').prop('disabled', false);
                         Swal.fire({
                             icon: 'success',
                             title: 'Card Fee Exists',
                             text: 'Card fee is already charged for this patient.',
                             timer: 2500,
-                            showConfirmButton: false
+                            showConfirmButton: false,
+                            allowOutsideClick: false
                         });
                     }
                 },
@@ -161,6 +167,7 @@
                         text: xhr.responseText || 'Failed to check card fee.',
                         showConfirmButton: false,
                         timer: 2000,
+                        allowOutsideClick: false,
                         customClass: {
                             popup: 'swal-big-popup',
                             title: 'swal-big-title',
@@ -173,7 +180,7 @@
 
         // Example placeholder for charging logic
         function chargeCardFee(reg_id) {
-          
+
             Approveviasysparams(reg_id);
             $.ajax({
                 type: "POST",
@@ -192,9 +199,9 @@
                             timer: 2000,
                             showConfirmButton: false
                         });
-                        
-                       
-                    } 
+
+
+                    }
                 },
                 error: function (xhr, status, error) {
                     Swal.fire({
@@ -206,8 +213,8 @@
                     });
                 }
             });
-         
-           
+
+
         }
         function Approveviasysparams(pat_id) {
             PageMethods.ApproveRegpatient(pat_id, function (Tests) {
@@ -226,7 +233,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                  
+
                 }
             });
         }
@@ -335,7 +342,7 @@
         function loaddata() {
             debugger;
             var Category = $('#ddlPatient_Type').val();
-           // $('#ddlPatient_Type').attr('disabled', true);
+            // $('#ddlPatient_Type').attr('disabled', true);
             debugger;
             if (Category == "0") {
 
@@ -363,7 +370,7 @@
             else if (Category == "01") {
                 $('#fees').show();
                 $('#department').show();
-                $('#ddlFilterClnic').attr('disabled',false);
+                $('#ddlFilterClnic').attr('disabled', false);
                 showIfAllowed('field_Clinic', true);
                 $('#doctor').hide();
                 $('#pnlcompany').hide();
@@ -381,33 +388,37 @@
             else if (Category == "02") {
                 var apt_Id = '<%= Request.QueryString["apt_id"] %>'
                 var apdAdd = '<%= Request.QueryString["isAdd_apt"] %>'
-                  var OPDID = '<%= Request.QueryString["OPDID"] %>'
-                  $('#fees').show();
-                  $('#department').show();
-                  $('#doctor').show();
-                  $('#pnlcompany').hide();
-                  $('#employee').hide();
-                  $('#refference').hide();
-                  $('#field_Clinic').hide();
-                  $('#discount').show();
-                  $('#empname').hide();
-                  $('#designation').hide();
-                  $('#dependent').hide();
-                  $('#rollno').hide();
-                  $('#class').hide();
-                  $('#section').hide();
-                  $('#emp_id').hide();
+                var OPDID = '<%= Request.QueryString["OPDID"] %>'
+                var Reffered_id_opd = '<%= Request.QueryString["Reffered_id_opd"] %>';
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').show();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+                $('#field_Clinic').hide();
+                $('#discount').show();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#dependent').hide();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#emp_id').hide();
                 if (apt_Id != "" && apdAdd == "true") {
-                  
+
                 }
-                else if(OPDID != "") {
-                   
+                else if (OPDID != "") {
+
                 }
-                else{
+                else if (Reffered_id_opd != "") {
+
+                }
+                else {
                     LoadDoc();
                 }
 
-              
+
             }
             else if (Category == "03") {
                 $('#fees').show();
@@ -567,7 +578,7 @@
 
 
         }
- 
+
 
         function OPD_Form_Print() {
             debugger;
@@ -675,33 +686,33 @@
             }
         }
         function LoadDoc() {
-           $.ajax({
-                    type: "POST",
-                    url: "OPD.aspx/LoadAllDoctor",
-                    data: '{}',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        debugger;
-                        var doctor = JSON.parse(response.d);
-                        var options = '<option value=""> Please Select </option>';
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/LoadAllDoctor",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var doctor = JSON.parse(response.d);
+                    var options = '<option value=""> Please Select </option>';
 
-                        $.each(doctor, function (key, value) {
-                            options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
-                        });
+                    $.each(doctor, function (key, value) {
+                        options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                    });
 
-                        $('#ddldoctor').html(options);
-                 
+                    $('#ddldoctor').html(options);
 
 
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("Error: " + error);
-                    }
-                });
-            
+
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+
         }
-      
+
         function getGeneralFee() {
             debugger;
 
@@ -888,7 +899,7 @@
             var opdid = $('#hdn_opdId').val();
             var selectedPatientType = $('#ddlPatient_Type').val();
             var emer_reffered = $("#hdn_emer_reffered").val();
-        
+
             if (emer_reffered !== "") {
                 $('#txtfees').val("0");
                 return;
@@ -899,7 +910,7 @@
                 if (isBlocked) {
                     return;
                 }
-                
+
                 if (selectedPatientType == '11') {
                     getspecialfees(Doc);
                 } else {
@@ -1307,8 +1318,22 @@
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat" class="blink" runat="server"></span>
 
 
+                <span style="font-size: 15px;">G-31</span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg31" class="blink" runat="server"></span>
+
+                <span style="font-size: 15px;">G-30</span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg30" class="blink" runat="server"></span>
+
+
+                <span style="font-size: 15px;">G-30</span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg29" class="blink" runat="server"></span>
+
+
+
+            </div>
+            <div class="mleft" >
                 <span style="font-size: 15px;">Recent Visit</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span2"  class="blink" runat="server" clientidmode="Static"></span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span2" class="blink" runat="server" clientidmode="Static"></span>
 
                 <span style="font-size: 15px;">Previous Visit </span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;"
@@ -1316,7 +1341,6 @@
                     class="blink"
                     runat="server"
                     clientidmode="Static"></span>
-
             </div>
         </div>
     </div>
@@ -1414,7 +1438,7 @@
 
         </div>
 
-        <div class="col-lg-3 col-md-4" id="right-section">
+        <div class="col-lg-3 col-md-4 mtop" id="right-section">
             <div class="row card2">
                 <!-- Other form elements -->
                 <div class="col-lg-12 col-md-12 col-sm-12" id="department">
