@@ -1325,7 +1325,7 @@
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg30" class="blink" runat="server"></span>
 
 
-                <span style="font-size: 15px;">G-30</span>
+                <span style="font-size: 15px;">G-29</span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg29" class="blink" runat="server"></span>
 
 

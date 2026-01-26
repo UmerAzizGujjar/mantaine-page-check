@@ -560,7 +560,7 @@ namespace PMS
             newBill.Received_Amount = data.AmntReceived;
             newBill.Pharma_trans_Type = data.TransType;
             var Inpat = "";
-            1if (data.Patient_ID != "")
+            if (data.Patient_ID != "")
             {
                 var inpatientid = db.In_Patients.Where(x => x.Patient_ID == Convert.ToInt32(data.Patient_ID)).Select(x => x.In_Patient_ID).FirstOrDefault().ToString();
                 Inpat = inpatientid;

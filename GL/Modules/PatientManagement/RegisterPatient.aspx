@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegisterPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.RegisterPatient" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Toaster.css" rel="stylesheet" />
-    <script src="../../wwwroot/ASsiratTheme/CustomJs/RegPatient.js" type="text/javascript"></script>
+    <script src="../../wwwroot/Tibbit_theme/CustomJs/RegPatient.js" type="text/javascript"></script>
     <link href="../../wwwroot/Tibbit_theme/css/RegPat.css" rel="stylesheet" />
    
       <script type="text/javascript">
@@ -166,7 +166,7 @@
             </select>
         </div>
           <div class="col-lg-2 col-md-4 col-sm-6">
-      <label for="ddl_bloodGroup">Blood Group<span style="color: red;">*</span></label>
+      <label for="ddl_bloodGroup">Blood Group<span ></span></label>
       <select id="ddl_bloodGroup" tabindex="11" class="form-control">
           <option value="0">Select Blood Group</option>
       </select>
