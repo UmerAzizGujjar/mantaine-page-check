@@ -546,10 +546,21 @@ namespace PMS
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
             newBill.IsPharmacy = true;
-            
+
+            var checkingcondition = db.sys_Parms
+                .Where(a => a.Name == "Amount Recevied For Pharmcay")
+                .Select(a => a.Code)
+                .FirstOrDefault();
+
+            if (checkingcondition == "002")
+            {
+                newBill.Balance_Amount = 0;
+                newBill.Received_Amount = data.AmntReceived;
+            }
+            newBill.Received_Amount = data.AmntReceived;
             newBill.Pharma_trans_Type = data.TransType;
             var Inpat = "";
-            if (data.Patient_ID != "")
+            1if (data.Patient_ID != "")
             {
                 var inpatientid = db.In_Patients.Where(x => x.Patient_ID == Convert.ToInt32(data.Patient_ID)).Select(x => x.In_Patient_ID).FirstOrDefault().ToString();
                 Inpat = inpatientid;
