@@ -4271,7 +4271,7 @@ namespace PMS
             {
                 if (Request.QueryString["Budget_ID"] != null)
                 {
-                    reportPath += "rptBudgetVoucher.rpt";
+                    reportPath += "Accounts/rptBudgetVoucher.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     var BudgetID = Convert.ToInt32(Request.QueryString["Budget_ID"]);
