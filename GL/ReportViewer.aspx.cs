@@ -4116,10 +4116,51 @@ namespace PMS
                 {
                     reportPath += "InPatient/rpt_In_Patient_ID_DoctorNote.rpt";
                     rd.Load(reportPath);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                     rd.SetParameterValue("@In_Patient_ID", Request.QueryString["In_Patient_ID"]);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            else if (reportName == "PrintIPDVitals")
+            {
+                try
+                {
+                    reportPath += "InPatient/rpt_In_Patient_Vitals_Report.rpt";
+                    rd.Load(reportPath);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+                    rd.SetParameterValue("@In_Patient_ID", Request.QueryString["In_Patient_ID"]);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            else if (reportName == "NursingProgressNote")
+            {
+                try
+                {
+                    reportPath += "InPatient/rpt_In_Patient_ID_NursingNote.rpt";
+                    rd.Load(reportPath);
+                    string in_pat = Request.QueryString["In_Patient_ID"];
+                    int ipd = Convert.ToInt32(in_pat);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+                    rd.SetParameterValue("@In_Patient_ID", ipd);
+                    rd.SetParameterValue("@In_Patient_ID", ipd, rd.Subreports[0].Name.ToString());
                 }
                 catch (Exception ex)
                 {

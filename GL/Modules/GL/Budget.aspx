@@ -223,7 +223,7 @@
             debugger;
             var tokendata;
             try {
-                $("#txtAccountName").tokenInput("../json.aspx",
+                $("#txtAccountName").tokenInput("../../json.aspx",
                     {
                         tokenLimit: 1,
                         onAdd: function (item) {

@@ -144,13 +144,13 @@
                     $('#SaveButtonToBeHidden').show();
                 }
                 $('#ddlVendor').attr("disabled", 'disabled');
-                /*getPONumByVendor(data.Vendor);*/
-                getPONumByVendor(data.Vendor, function () {
-                    setTimeout(function () {
-                        $('#ddlPONo').val(data.PO_ID).trigger('change.select2');
-                    }, 1500);
+                getPONumByVendor(data.Vendor);
+               // getPONumByVendor(data.Vendor, function () {
+                    //setTimeout(function () {
+                    //    $('#ddlPONo').val(data.PO_ID).trigger('change.select2');
+                    //}, 1500);
                     LoadIGPDetail(IGP_ID);
-                });
+               // });
                 
             },
                 function (error) {
@@ -1045,7 +1045,7 @@
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
                     <label id="lblPO_No" class="labelIGP">Po No</label>
-                    <select class="form-control" id="ddlPONo" name="ddlPONo" onchange="PerformPOSearch()">
+                    <select class="form-control" id="ddlPONo" name="ddlPONo" onchange="PerformPOSearch()" >
                     </select>
                 </div>
                 </div>

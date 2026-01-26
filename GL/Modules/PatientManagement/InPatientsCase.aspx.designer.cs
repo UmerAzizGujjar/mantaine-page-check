@@ -717,13 +717,13 @@ namespace PMS
         protected global::System.Web.UI.WebControls.Label lblSaturation;
 
         /// <summary>
-        /// txtSaturation_Oxygen2 control.
+        /// txtSaturation control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSaturation_Oxygen2;
+        protected global::System.Web.UI.WebControls.TextBox txtSaturation;
 
         /// <summary>
         /// lblOthersReceiveNote control.
@@ -762,13 +762,13 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlVolume;
 
         /// <summary>
-        /// txtSaturation control.
+        /// txtSaturation_Oxygen2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSaturation;
+        protected global::System.Web.UI.WebControls.TextBox txtSaturation_Oxygen2;
 
         /// <summary>
         /// txtSaturation_Oxygen1 control.
