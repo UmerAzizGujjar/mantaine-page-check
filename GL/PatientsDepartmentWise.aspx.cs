@@ -3895,6 +3895,7 @@ namespace PMS
                     Time_Row.Visible = false;
                     tr_Summary.Visible = false;
                 }
+
                 else if (this.PageTitle == "ComponentBloodBankStockLedger")
                 {
                     lblMainDepartment.Visible = false;

@@ -514,12 +514,32 @@
                         var url = 'ReportViewer.aspx?ReportName=TestWiseMonthly&ReportTitle=Test Wise Monthly from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
-                    else if (rptTitle == 'IPD_Time_Line') {
+<%--                    else if (rptTitle == 'IPD_Time_Line') {
                         debugger;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=IPDTimeLine&ReportTitle=IPD Time Line from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
+                    }--%>
+                    else if (rptTitle == "IPD_Time_Line") {
+                        debugger;
+                        var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
+
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=IPDTimeLine' +
+                            '&ReportTitle=' + encodeURIComponent('IPD Time Line from ' + startDateTime + ' to ' + endDateTime) +
+                            '&Report_Type=' + encodeURIComponent(timeLine) +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime);
+
+                        window.open(url, '_blank');
                     }
                 <%--    else if (rptTitle == 'TestWiseMonthlyLabTestDepartment') {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
@@ -538,13 +558,13 @@
                     else if (rptTitle == 'RefundReport') {
                         window.location.href = 'ReportViewer.aspx?ReportName=RefundReport&ReportTitle=Refund Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '';
                     }
-                    else if (rptTitle == 'Discharge_Time_Line') {
+            <%--        else if (rptTitle == 'Discharge_Time_Line') {
                         debugger;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=DischargeTimeLine&ReportTitle=Discharge Time Line from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
-                    }
+                    }--%>
                     else if (rptTitle == 'Ward_Allocation_Time_Line') {
                         debugger;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
@@ -1055,6 +1075,26 @@
 
                         var url = 'ReportViewer.aspx?ReportName=OPD_Time_Line' +
                             '&ReportTitle=' + encodeURIComponent('OPD Time Line from ' + startDateTime + ' to ' + endDateTime) +
+                            '&Report_Type=' + encodeURIComponent(timeLine) +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime);
+
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Discharge_Time_Line") {
+                        debugger;
+                        var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
+
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=DischargeTimeLine' +
+                            '&ReportTitle=' + encodeURIComponent('Discharge Time Line from ' + startDateTime + ' to ' + endDateTime) +
                             '&Report_Type=' + encodeURIComponent(timeLine) +
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
                             '&EndDateTime=' + encodeURIComponent(endDateTime);
