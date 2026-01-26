@@ -1475,8 +1475,6 @@ function loadEmpData() {
 
 }
 function get_totalpatient() {
-    debugger;
-    var options = '<option value="0">Please Select</option>';
     $.ajax({
         url: 'OPD.aspx/GetCount',
         type: 'POST',
@@ -1484,19 +1482,19 @@ function get_totalpatient() {
         dataType: 'json',
         success: function (response) {
             debugger;
-            var data = response.d ? JSON.parse(response.d) : response;
+            // Parse the JSON string inside response.d
+            var data = JSON.parse(response.d); // ASP.NET wraps in .d
 
-            $('#ctl00_MainContent_lbltotpat').html(data);
-
-
+            // Update UI elements
+            $('#ctl00_MainContent_lbltotpat').text(data.TotalPatients);
+            $('#ctl00_MainContent_lblg31').text(data.Filter1);
+            $('#ctl00_MainContent_lblg30').text(data.Filter2);
+            $('#ctl00_MainContent_lblg29').text(data.Filter3);
         },
         error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
+            console.error('Error fetching patient counts:', error);
         }
     });
-
-    return options;
-
 }
 function getpanelRate() {
     var panelid = $('#ddlpanel').val();
@@ -1794,10 +1792,10 @@ $('#txtReferEmergencySearch').off('input').on('input', function () {
     FillReferPatientsList();
 });
 
-function AddReferPatientDetail(reg_id) {
+function AddReferPatientDetail(reg_id, OPDID) {
     try {
         var isAdd = true;
-        window.location.href = "OPD.aspx?Reffered_id=" + reg_id + "&isAdd=" + isAdd;
+        window.location.href = "OPD.aspx?Reffered_id_opd=" + reg_id + "&isAdd=" + isAdd + "&opd_id=" + OPDID;
     } catch (err) {
         alert(err.message);
     }

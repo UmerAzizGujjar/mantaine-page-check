@@ -130,6 +130,15 @@
                     });
                 },
                 "columns": [
+                    {
+                        "data": null,
+                        "width": "5%",
+                        "orderable": false,
+                        "render": function (data, type, full, meta) {
+                            // Calculate serial number based on current page
+                            return meta.settings._iDisplayStart + meta.row + 1;
+                        }
+                    },
                     { "data": "Patient_ID", "visible": false, "width": "0%", "orderable": false },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
                     { "data": "Opd_No", "name": "Opd_No", "width": "5%", "orderable": false },
@@ -143,26 +152,19 @@
                     {
                         "data": "Created_Time", "name": "Created_Time",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Created_Time;
-                            date = moment(date).format('DD-MMM-YYYY');
-                            return date;
+                            return moment(date).format('DD-MMM-YYYY');
                         }, "width": "9%"
                     },
                     {
-                        render: function (data, type, full) {
-                            debugger;
-                            var res = '<a href="#" onclick="editOpen(' + full.Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
-
-                            var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Patient_ID + '" onclick="cancelPatient( ' + full.Patient_ID + ', \'' + full.Full_Name + '\')"><i class="fa fa-trash"></i></a>';
-
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Print(' + full.Patient_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
-                            var result;
-                            result = res + Del + print;
-                            return result;
-                            
-                            
-                        }, "width": "17%", "orderable": false
+                        "render": function (data, type, full) {
+                            var res = '<a href="#" onclick="editOpen(' + full.Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                            var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Patient_ID + '" onclick="cancelPatient(' + full.Patient_ID + ', \'' + full.Full_Name + '\')"><i class="fa fa-trash"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Print(' + full.Patient_ID + ')"><i class="fa fa-print"></i></a>';
+                            return res + Del + print;
+                        },
+                        "width": "17%",
+                        "orderable": false
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -197,22 +199,23 @@
             <div class="row">
                 <div class="table-container col-lg-12 col-md-12 col-sm-10">
                     <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
-                        <thead id="ihead">
-                            <tr>
-                                <th style="display: none;">Patient ID</th>
-                                <th>MR No.</th>
-                                <th>OPD</th>
-                                <th>Name</th>
-                                <th>Category</th>
-                                <th>Department</th>
-                                <th>CNIC</th>
-                                <th>Mobile</th>
-                                <th>Age</th>
-                                <th>Doctor</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
+                  <thead id="ihead">
+                    <tr>
+                        <th style="width:2% !important;">Sr#</th>                 <!-- 1st: Sr# -->
+                        <th style="display: none;">Patient ID</th>      <!-- 2nd: Hidden -->
+                        <th style="width: 8%;">MR No.</th>
+                        <th style="width: 5%;">OPD</th>
+                        <th style="width: 13%;">Name</th>
+                        <th style="width: 10%;">Category</th>
+                        <th style="width: 10%;">Department</th>
+                        <th style="width: 10%;">CNIC</th>
+                        <th style="width: 10%;">Mobile</th>
+                        <th style="width: 5%;">Age</th>
+                        <th style="width: 10%;">Doctor</th>
+                        <th style="width: 9%;">Date</th>
+                        <th style="width: 20% !important;">Actions</th>
+                    </tr>
+                </thead>
                         <tbody id="ibody">
                         </tbody>
                     </table>

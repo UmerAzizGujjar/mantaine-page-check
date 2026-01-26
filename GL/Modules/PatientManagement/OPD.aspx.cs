@@ -913,11 +913,36 @@ namespace PMS.Modules.PatientManagement
         [WebMethod]
         public static string GetCount()
         {
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var totpatients = db.Patients.Where(p => p.Created_Time.Value.Year == DateTime.Now.Year && p.Created_Time.Value.Month == DateTime.Now.Month && p.Created_Time.Value.Day == DateTime.Now.Day).Count();
-            return (new JavaScriptSerializer()).Serialize(totpatients);
-        }
+            DataBaseDataContext db = new DataBaseDataContext();
 
+
+            int Filter1 = db.Patients
+                .Where(p => p.Created_Time.Value.Year == DateTime.Now.Year && p.Created_Time.Value.Month == DateTime.Now.Month && p.Created_Time.Value.Day == DateTime.Now.Day && p.filter_clinic == "001")
+                .Count();
+
+            int Filter2 = db.Patients
+                .Where(p => p.Created_Time.Value.Year == DateTime.Now.Year && p.Created_Time.Value.Month == DateTime.Now.Month && p.Created_Time.Value.Day == DateTime.Now.Day && p.filter_clinic == "002")
+                .Count();
+
+            int Filter3 = db.Patients
+                .Where(p => p.Created_Time.Value.Year == DateTime.Now.Year && p.Created_Time.Value.Month == DateTime.Now.Month && p.Created_Time.Value.Day == DateTime.Now.Day && p.filter_clinic == "003")
+                .Count();
+
+            int TotalPatients = db.Patients.Where(p => p.Created_Time.Value.Year == DateTime.Now.Year && p.Created_Time.Value.Month == DateTime.Now.Month && p.Created_Time.Value.Day == DateTime.Now.Day).Count();
+
+            // Create an anonymous object to store the counts
+            var counts = new
+            {
+                Filter1,
+                Filter2,
+                Filter3,
+                TotalPatients
+            };
+
+            // Serialize the counts object to JSON
+            return (new JavaScriptSerializer()).Serialize(counts);
+
+        }
         [WebMethod]
         public static string GetCountry()
         {

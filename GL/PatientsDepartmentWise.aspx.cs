@@ -3314,18 +3314,18 @@ namespace PMS
                     ddlDepartments.Visible = true;
                     ddlDepartments.Items.Clear();
 
-                    // Get Cardiology Tests (Main_Department = '004')
+                    // Get Cardiology Tests (Main_Department = '008')
                     DataTable tests = DBClass.getDataTable(@"
         SELECT Test_ID, Test_Name 
         FROM Lab_Tests 
-        WHERE Main_Department = '004' AND Active = 1
+        WHERE Main_Department = '008' AND Active = 1
     ");
 
                     // Get Group Categories (ValueSet_ID = 70, Division = '004')
                     DataTable groups = DBClass.getDataTable(@"
         SELECT DataValue_Name, DataValue_Description 
         FROM DataValues 
-        WHERE ValueSet_ID = 70 AND Division = '004'
+        WHERE ValueSet_ID = 70 AND Division = '008'
     ");
 
                     // Combine
@@ -3895,6 +3895,7 @@ namespace PMS
                     Time_Row.Visible = false;
                     tr_Summary.Visible = false;
                 }
+
                 else if (this.PageTitle == "ComponentBloodBankStockLedger")
                 {
                     lblMainDepartment.Visible = false;
@@ -6522,7 +6523,7 @@ namespace PMS
 
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var tests = from t in db.Lab_Tests
-                        where t.Main_Department == "004" && t.Active == true
+                        where t.Main_Department == "008" && t.Active == true
                         select new { t.Test_ID, Test_Name = t.Test_Name, t.Group_Category };
             List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
             int counter = 1;
