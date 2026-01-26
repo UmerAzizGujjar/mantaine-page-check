@@ -22,7 +22,7 @@
 
 
         function Edit(id) {
-            window.open("NewOutPatient.aspx?ID=" + id + "");
+            window.open("OutPatients.aspx?ID=" + id + "");
         }
 
         function deleteConfirm(anchorTag) {

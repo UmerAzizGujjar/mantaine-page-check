@@ -53,7 +53,7 @@ namespace PMS
                                             join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
                                             join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
                                             join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
-                                            where SASD.UserId == user_id && SATF.FormId == form_id && SASM.IsDeleted == false
+                                            where SASD.UserId == user_id  && SASM.IsDeleted == false
                                             select new { SASM.IsFinalApproval, SATF.FormId }).ToList();
 
                     if (IsFinalApprovals.Any(approval => approval.IsFinalApproval == true && approval.FormId == form_id))
@@ -66,7 +66,7 @@ namespace PMS
                                                           join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
                                                           join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
                                                           join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
-                                                          where tbl.UserId == user_id && SASM.IsFinalApproval == true && SATF.FormId == form_id && SASM.IsDeleted == false
+                                                          where tbl.UserId == user_id && SASM.IsFinalApproval == true &&  SASM.IsDeleted == false
                                                           select tbl).FirstOrDefault();
                         if (SASD != null)
                         {
@@ -104,7 +104,7 @@ namespace PMS
                                                           join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
                                                           join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
                                                           join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
-                                                          where tbl.UserId == user_id && SASM.IsFinalApproval == false && SATF.FormId == form_id && SASM.IsDeleted == false
+                                                          where tbl.UserId == user_id && SASM.IsFinalApproval == false  && SASM.IsDeleted == false
                                                           select tbl).FirstOrDefault();
                         if (SASD != null)
                         {
