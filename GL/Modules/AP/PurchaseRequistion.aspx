@@ -72,9 +72,7 @@
                 $('#txtRemarks').focus();
             });
             $('.token-input-list').css('width', '666px !important', 'margin-left: 1px;');
-            //var currentDate = new Date();
-            //var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
-            //$("#txtPR_Date").val(formattedDate);
+     
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#txtPR_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });

@@ -554,7 +554,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../../UploadIGP.ashx',
+                    url: '../../upload/UploadIGP.ashx',
                     data: data,
                     success: function (status) {
                     },
