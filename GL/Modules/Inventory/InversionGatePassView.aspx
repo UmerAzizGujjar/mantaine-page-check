@@ -119,7 +119,7 @@
                    var urlInfo = window.location.href.split('/');
                    var ip = urlInfo[2];
                    var foldername = urlInfo[3];
-                   url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + Igp_Id;
+                   url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + Igp_Id;
                }
                window.open(url, '_blank');
            }
