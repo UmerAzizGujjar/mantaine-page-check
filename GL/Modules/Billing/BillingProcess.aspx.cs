@@ -693,8 +693,8 @@ namespace PMS
                                    ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                    ParentTrans_Type = "Test",
                                    lbtD.Dept_ID,
-
-                                   Rate = (lbTDdef.Rate == 0) ? Convert.ToDecimal(DBClass.getField("select dbo.getTestRate('" + p.Patient_Type + "', " + lbTDdef.Test_ID + ", " + p.Patient_ID + ")")) : lbTDdef.Rate
+                                   Rate = (lbTDdef.Rate == 0) ? Convert.ToDecimal(DBClass.getField("select dbo.getTestRate('" + p.Patient_Type + "', " + lbTDdef.Test_ID + ", " + p.Patient_ID + ")")) : lbTDdef.Rate,
+                                   lbtM.Created_Time
 
                                }
 
@@ -725,7 +725,8 @@ namespace PMS
                                              Test_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
                                              ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                              ParentTrans_Type = "Test Group Category",
-                                             lbtD.Dept_ID
+                                             lbtD.Dept_ID,
+                                             lbtM.Created_Time
                                          }
                 ).ToList();
 
@@ -744,6 +745,7 @@ namespace PMS
                 RecommendedService.CategoryID = "0";
                 RecommendedService.Amount = (test.Rate == null) ? 0 : (decimal)test.Rate;
                 RecommendedService.MainDepartment = test.Dept_ID;
+                RecommendedService.Test_CreatedDate = Convert.ToDateTime(test.Created_Time);
                 listRecommendedTests.Add(RecommendedService);
             }
 
@@ -767,6 +769,7 @@ namespace PMS
                         rate = "0";
                     }
                     RecommendedService.Amount = (rate == null) ? 0 : Convert.ToDecimal(rate);
+                    RecommendedService.Test_CreatedDate = Convert.ToDateTime(group.Created_Time);
 
 
                     listRecommendedTests.Add(RecommendedService);
@@ -827,7 +830,8 @@ namespace PMS
                                    ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                    ParentTrans_Type = "Test",
                                    lbtD.Dept_ID,
-                                   Rate = (lbTDdef.Rate == 0) ? Convert.ToDecimal(DBClass.getField("select dbo.getTestRate('" + opat.Patient_Discount_Type + "', " + lbTDdef.Test_ID + ", " + p.pat_id + ")")) : lbTDdef.Rate
+                                   Rate = (lbTDdef.Rate == 0) ? Convert.ToDecimal(DBClass.getField("select dbo.getTestRate('" + opat.Patient_Discount_Type + "', " + lbTDdef.Test_ID + ", " + p.pat_id + ")")) : lbTDdef.Rate,
+                                   lbtM.Created_Time
 
 
 
@@ -861,7 +865,8 @@ namespace PMS
                                              Test_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
                                              ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                              ParentTrans_Type = "Test Group Category",
-                                             lbtD.Dept_ID
+                                             lbtD.Dept_ID,
+                                             lbtM.Created_Time
                                          }
                 ).ToList();
 
@@ -880,6 +885,7 @@ namespace PMS
                 RecommendedService.MainDepartment = test.Dept_ID;
                 RecommendedService.CategoryID = "0";
                 RecommendedService.Amount = (test.Rate == null) ? 0 : (decimal)test.Rate;
+                RecommendedService.Test_CreatedDate = Convert.ToDateTime(test.Created_Time);
                 listRecommendedTests.Add(RecommendedService);
             }
 
@@ -898,7 +904,7 @@ namespace PMS
                     RecommendedService.MainDepartment = group.Dept_ID;
                     RecommendedService.CategoryID = group.Catagory_ID;
                     RecommendedService.Amount = (group.Rate == null) ? 0 : Convert.ToDecimal(group.Rate);
-
+                    RecommendedService.Test_CreatedDate = Convert.ToDateTime(group.Created_Time);
 
                     listRecommendedTests.Add(RecommendedService);
                 }
@@ -945,7 +951,8 @@ namespace PMS
                                    ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                    ParentTrans_Type = "Test",
                                    lbtD.Dept_ID,
-                                   Rate = (lbTDdef.Rate == 0) ? Convert.ToDecimal(DBClass.getField("select dbo.getTestRate('" + opat.Patient_Discount_Type + "', " + lbTDdef.Test_ID + ", " + p.pat_id + ")")) : lbTDdef.Rate
+                                   Rate = (lbTDdef.Rate == 0) ? Convert.ToDecimal(DBClass.getField("select dbo.getTestRate('" + opat.Patient_Discount_Type + "', " + lbTDdef.Test_ID + ", " + p.pat_id + ")")) : lbTDdef.Rate,
+                                   lbtM.Created_Time
 
 
 
@@ -978,7 +985,8 @@ namespace PMS
                                              Test_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
                                              ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                              ParentTrans_Type = "Test Group Category",
-                                             lbtD.Dept_ID
+                                             lbtD.Dept_ID,
+                                             lbtM.Created_Time
                                          }
                 ).ToList();
 
@@ -997,6 +1005,7 @@ namespace PMS
                 RecommendedService.MainDepartment = test.Dept_ID;
                 RecommendedService.CategoryID = "0";
                 RecommendedService.Amount = (test.Rate == null) ? 0 : (decimal)test.Rate;
+                RecommendedService.Test_CreatedDate = Convert.ToDateTime(test.Created_Time);
                 listRecommendedTests.Add(RecommendedService);
             }
 
@@ -1015,6 +1024,7 @@ namespace PMS
                     RecommendedService.MainDepartment = group.Dept_ID;
                     RecommendedService.CategoryID = group.Catagory_ID;
                     RecommendedService.Amount = (group.Rate == null) ? 0 : Convert.ToDecimal(group.Rate);
+                    RecommendedService.Test_CreatedDate = Convert.ToDateTime(group.Created_Time);
 
 
                     listRecommendedTests.Add(RecommendedService);
@@ -1027,6 +1037,7 @@ namespace PMS
             public int ParentTrans_ID { get; set; }
             public string ParentTrans_Name { get; set; }
             public string ParentTrans_Type { get; set; }
+            public DateTime Test_CreatedDate { get; set; }
             public int ItemID { get; set; }
             public string CategoryID { get; set; }
             public string ItemName { get; set; }
@@ -1050,15 +1061,10 @@ namespace PMS
             public decimal Consumed_Blood { get; set; }
             public decimal Consumed_Item { get; set; }
             public decimal Consumed_Procedure { get; set; }
-
             public decimal Consumed_Package { get; set; }
-
-
-
         }
         public class DoctorDistributionList
         {
-
             public int Doc_ID { get; set; }
             public string Share_type { get; set; }
             public decimal Doc_Amount { get; set; }
