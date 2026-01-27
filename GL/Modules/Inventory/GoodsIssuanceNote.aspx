@@ -576,10 +576,12 @@
                     $('#ddlInventoryOrg').val(organizationId).trigger('change');
                     $('#ddlInventoryOrg').attr('disabled', 'disabled');
                 }, 2000);
+                setTimeout(function () {
+                    $('#ddlDepartment').val(result[0].Department_Id).trigger('change');
+                    $('#ddlDepartment').attr('disabled', 'disabled');
+                }, 2000);
 
 
-
-                setTimeout(function () { $('#ddlDepartment').val(result[0].Department_Id); }, 2000);
 
                 initializeMRNoDropdown(result.query.MR_No);
                 $('#ddlMRNo').val(result.query.MR_No).trigger('change');
