@@ -922,6 +922,7 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
+                                debugger;
                                 var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
 
                                 if (!res.success) {
@@ -938,6 +939,7 @@
                                         }
                                     });
                                 } else {
+                                    debugger;
                                     var fee = parseFloat(res.fee) || 0;
                                     var disper = parseFloat(res.discount_percentage) || 0;
                                     var afterdiscountfee = fee - ((fee * disper) / 100);
@@ -945,7 +947,13 @@
                                     $('#txtfees').val(afterdiscountfee.toFixed(2));
                                     $('#txtactualfee').val(res.fee);
                                     $('#txtdiscount').val(res.discount_percentage);
-                                    $('#txtdiscount').attr('disabled', true);
+                                    if (disper == 0) {
+                                        $('#txtdiscount').attr('disabled', false);
+                                    }
+                                    else {
+                                        $('#txtdiscount').attr('disabled', true);
+                                    }
+                                  
                                     $('#hdnhospShare').val(res.Hospital_Share);
                                     $('#hdnDocshare').val(res.Doctor_Share);
                                 }
