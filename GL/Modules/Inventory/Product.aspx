@@ -5,7 +5,7 @@
         var id = '<% =Request.QueryString["ID"] %>';
         $(document).ready(function () {
            
-
+            $("#Active").prop("checked", true);
             $("#lblProcedure_Time").hide();
             $("#Procedure_Time").hide();
             var dropdowns = [

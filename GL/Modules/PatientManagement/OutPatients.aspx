@@ -1665,11 +1665,11 @@
             //localStorage.clear();
             
             $('#Add_Unlisted_Medicine').attr('disabled', false);
-            $('#tblHistoryTabHistoryHeader').hide();
-            $('#tblSymptomHistory').hide();
-            $('#LoadSymp').hide();
-            $('#tblPsychiatryHistory').hide();
-            $('#tblHistoryTabHistory').hide();
+            $('#tblHistoryTabHistoryHeader').show();
+            $('#tblSymptomHistory').show();
+            $('#LoadSymp').show();
+            $('#tblPsychiatryHistory').show();
+            $('#tblHistoryTabHistory').show();
 
             $('.se-pre-con').fadeIn();
 
@@ -5929,7 +5929,7 @@
                                 <tr>
                                     <td colspan="140">
                                         <div id="tblHistoryTabHistoryHeader">
-                                            <h2>Previous History</h2>
+                                            <h2 style="color:white !important">Previous History</h2>
                                         </div>
                                     </td>
                                 </tr>
@@ -5989,7 +5989,7 @@
                                             <tr>
                                                 <td colspan="6">
                                                     <div id="Div8">
-                                                        <h2 style="color:white;">Symptom History</h2>
+                                                        <h2 style="color:white !important;">Symptom History</h2>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -6005,7 +6005,7 @@
                                         <tbody>
                                         </tbody>
                                     </table>
-                                    <input type="button" id="LoadSymp" value="Load Syptoms" style="width:115px !important;" onclick="AppendSymtompsHistory()" />
+                                    <input type="button" id="LoadSymp" value="Load Syptoms" class="btn btn-primry" style="width:115px !important;" onclick="AppendSymtompsHistory()" />
                                 </div>
                             </td>
                             <td></td>
@@ -6014,7 +6014,7 @@
                         </div>
 
                     <div id="dvPsychiatryHistory" style="margin: 0 auto; margin-top: 0px;">
-                        <table class="table" id="tblPsychiatryHistory" style="display: block;display:none; overflow: scroll;">
+                        <table class="table" id="tblPsychiatryHistory" style="display: block; overflow: scroll;">
                          
                             <thead>
                                 <tr>

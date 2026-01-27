@@ -1310,7 +1310,7 @@
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../../UploadPOFiles.ashx',
+                    url: '../../upload/UploadPOFiles.ashx',
                     data: data,
                     success: function (status) {
 
