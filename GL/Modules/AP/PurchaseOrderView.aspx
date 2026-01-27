@@ -118,7 +118,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=PurchaseOrderList&ReportTitle=Purchase Order List&POid=' + id;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=PurchaseOrderList&ReportTitle=Purchase Order List&POid=' + id;
             }
             window.open(url,'_blank');
         }

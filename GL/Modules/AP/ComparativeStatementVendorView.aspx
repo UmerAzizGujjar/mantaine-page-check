@@ -31,7 +31,7 @@
                  var urlInfo = window.location.href.split('/');
                  var ip = urlInfo[2];
                  var foldername = urlInfo[3];
-                 url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=ComparativeStatementVendor&ReportTitle=Comparative Statement Vendor Print' + '&CM_ID=' + CSVENID;
+                 url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=ComparativeStatementVendor&ReportTitle=Comparative Statement Vendor Print' + '&CM_ID=' + CSVENID;
              }
              window.open(url, '_blank');
          }

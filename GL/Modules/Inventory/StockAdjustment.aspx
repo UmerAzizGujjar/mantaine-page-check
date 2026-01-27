@@ -341,7 +341,7 @@
                  var urlInfo = window.location.href.split('/');
                  var ip = urlInfo[2];
                  var foldername = urlInfo[3];
-                 url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + id + '&TransType=Adj';
+                 url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + id + '&TransType=Adj';
              }
              window.open(url, '_blank');
          }

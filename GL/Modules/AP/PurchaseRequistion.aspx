@@ -1062,7 +1062,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=PurchaseRequsitionList&ReportTitle=Purchase Requsition&PRid=' + id;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=PurchaseRequsitionList&ReportTitle=Purchase Requsition&PRid=' + id;
             }
             window.open(url, '_blank');
         }

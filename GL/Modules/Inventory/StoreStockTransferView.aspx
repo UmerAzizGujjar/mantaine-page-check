@@ -23,7 +23,7 @@
                  var urlInfo = window.location.href.split('/');
                  var ip = urlInfo[2];
                  var foldername = urlInfo[3];
-                 url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + Stock_Transfer_ID;
+                 url = 'http://' + ip + '/' + foldername + "../../ReportViewer.aspx?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + Stock_Transfer_ID;
              }
              window.open(url, '_blank');
         }

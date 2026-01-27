@@ -174,7 +174,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + stID;
+                url = 'http://' + ip + '/' + foldername + "../../ReportViewer.aspx?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + stID;
             }
             window.open(url, '_blank');
         }

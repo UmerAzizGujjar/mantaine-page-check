@@ -616,7 +616,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SIN Voucher&TransID=' + id + '&TransType=SIN';
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=SIN Voucher&TransID=' + id + '&TransType=SIN';
             }
             window.open(url, '_blank');
         }
@@ -628,7 +628,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=StoreIssueBasePrint&ReportTitle=Store Issue Note&SI_ID=' + id;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=StoreIssueBasePrint&ReportTitle=Store Issue Note&SI_ID=' + id;
             }
             window.open(url, '_blank');
         }
