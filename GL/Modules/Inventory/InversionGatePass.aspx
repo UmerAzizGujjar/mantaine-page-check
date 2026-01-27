@@ -761,7 +761,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + id;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + id;
             }
             window.open(url, '_blank');
         }
@@ -785,7 +785,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Inspection&ReportTitle=Inward Gate Pass List&Igpid=' + id;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Inspection&ReportTitle=Inward Gate Pass List&Igpid=' + id;
             }
             window.open(url, '_blank');
         }

@@ -1759,7 +1759,7 @@ namespace PMS
                 rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
-                rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
+                //rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
             }
@@ -4405,52 +4405,52 @@ namespace PMS
                 }
             }
 
-            else if (reportName == "PharmacySaleReport")
-            {
-                string InvoiceNo = Request.QueryString["Invoice_No"].ToString();
-                if (InvoiceNo == null || InvoiceNo == "")
-                {
-                    string rptFileName = "rptSaleReport.rpt";
+            //else if (reportName == "PharmacySaleReport")
+            //{
+            //    string InvoiceNo = Request.QueryString["Invoice_No"].ToString();
+            //    if (InvoiceNo == null || InvoiceNo == "")
+            //    {
+            //        string rptFileName = "rptSaleReport.rpt";
 
-                    string StartDateTime = Request.QueryString["StartDateTime"].ToString();
-                    string EndDateTime = Request.QueryString["EndDateTime"].ToString();
-                    string CheckSummary = Request.QueryString["Summary"].ToString();
-                    if (CheckSummary == "true")
-                    {
-                        rptFileName = "rptSaleReportSummary.rpt";
-                        reportTitle = "Sale Summary Report from " + StartDateTime + " to " + EndDateTime;
-                    }
+            //        string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+            //        string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+            //        string CheckSummary = Request.QueryString["Summary"].ToString();
+            //        if (CheckSummary == "true")
+            //        {
+            //            rptFileName = "rptSaleReportSummary.rpt";
+            //            reportTitle = "Sale Summary Report from " + StartDateTime + " to " + EndDateTime;
+            //        }
 
-                    reportPath += rptFileName;
-                    rd.Load(reportPath);
-                    rd.SetParameterValue("@FromDate", StartDateTime);
-                    rd.SetParameterValue("@ToDate", EndDateTime);
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    rd.SetParameterValue("Title", reportTitle);
-                    rd.SetParameterValue("@UserId", Request.QueryString["Operator"]);
-                    if (InvoiceNo == null || InvoiceNo == "")
-                        InvoiceNo = "0";
-                    rd.SetParameterValue("@Invoice_No", InvoiceNo);
-                    rd.SetParameterValue("@FromDate", StartDateTime, rd.Subreports[0].Name.ToString());
-                    rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
-                    rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
-                    rd.SetParameterValue("@Invoice_No", InvoiceNo, rd.Subreports[0].Name.ToString());
-                    rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
+            //        reportPath += rptFileName;
+            //        rd.Load(reportPath);
+            //        rd.SetParameterValue("@FromDate", StartDateTime);
+            //        rd.SetParameterValue("@ToDate", EndDateTime);
+            //        rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //        rd.SetParameterValue("Title", reportTitle);
+            //        rd.SetParameterValue("@UserId", Request.QueryString["Operator"]);
+            //        if (InvoiceNo == null || InvoiceNo == "")
+            //            InvoiceNo = "0";
+            //        rd.SetParameterValue("@Invoice_No", InvoiceNo);
+            //        rd.SetParameterValue("@FromDate", StartDateTime, rd.Subreports[0].Name.ToString());
+            //        rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
+            //        rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
+            //        rd.SetParameterValue("@Invoice_No", InvoiceNo, rd.Subreports[0].Name.ToString());
+            //        rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
 
-                }
-                else
-                {
-                    string rptFileName = "rptPharmacySlip_New.rpt";
-                    reportPath += rptFileName;
-                    rd.Load(reportPath);
-                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
-                    rd.SetParameterValue("Address", companyAddress);
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    rd.SetParameterValue("Title", reportTitle);
-                    rd.SetParameterValue("@Invoice_No", InvoiceNo);
+            //    }
+            //    else
+            //    {
+            //        string rptFileName = "rptPharmacySlip_New.rpt";
+            //        reportPath += rptFileName;
+            //        rd.Load(reportPath);
+            //        string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+            //        rd.SetParameterValue("Address", companyAddress);
+            //        rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //        rd.SetParameterValue("Title", reportTitle);
+            //        rd.SetParameterValue("@Invoice_No", InvoiceNo);
 
-                }
-            }
+            //    }
+            //}
 
             else if (reportName == "BloodIssuance")
             {
