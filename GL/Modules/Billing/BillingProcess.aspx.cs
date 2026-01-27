@@ -1489,7 +1489,8 @@ namespace PMS
                     Doctor_id = dtls.Doctor_Id,
                     Category_ID = dtls.CategoryID,
                     Test_Main_Department = dtls.MainDepartment,
-                    Service_Date = DateTime.Now
+                    Service_Date = DateTime.Now,
+                    Issue_Date = dtls.Test_CreatedDate
                 };
 
                 // Accumulate consumed amounts
@@ -2723,7 +2724,8 @@ namespace PMS
                                Hospital_Share = d.Hospital_Share ?? 0,
                                d.Doctor_id,
                                d.RecommendedByDoctor,
-                               m.Referred_By
+                               m.Referred_By,
+                               d.Issue_Date
                            }).ToList();
 
 
@@ -2763,6 +2765,7 @@ namespace PMS
                                d.Doctor_id,
                                d.RecommendedByDoctor,
                                m.Referred_By
+                               ,d.Issue_Date
                            }).ToList();
 
 
