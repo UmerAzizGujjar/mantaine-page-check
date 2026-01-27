@@ -52,9 +52,11 @@
                 GetAppNoByDoctor();
                 LoadPage();
             });
-
+   
             $('#ddl_helper').on('change', function () {
                 GethelperAvailbilty();
+                GetAppNoByTechnition();
+                ConfigureAvailableDatesTechnition();
             });
 
             $('#ddlMachine').on('change', function () {
@@ -391,6 +393,52 @@
         }
         
 
+        function ConfigureAvailableDatesTechnition() {
+            debugger;
+            var doc_id = $('#ddl_helper').val();
+            var txt_date = $("#txt_date").val();
+            var procTimeSlot = $("#txtProcedureTime").val();
+
+            $.ajax({
+                type: "POST",
+                url: "Derma_Appointment.aspx/GetAvailableDatesAndTimes",
+                data: JSON.stringify({
+                    'doc_id': doc_id,
+                    'txt_date': txt_date,
+                    'procTimeSlot': procTimeSlot
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+
+                    // If backend returned an error
+                    if (result.error) {
+                        alert(result.error);
+                        $("#txt_stdoctime").val("");
+                        $("#txt_enddoctime").val("");
+                        return;
+                    }
+
+                    // 🔥 Assign TimeIn & TimeOut to input fields
+                    $("#txt_stdoctime").val(result.TimeIn);
+                    $("#txt_enddoctime").val(result.TimeOut);
+                    $("#txt_sthelpertime").val(result.TimeIn);
+                    $("#txt_endhelpertime").val(result.TimeOut);
+                    $("#txt_stmachinetime").val(result.TimeIn);
+                    $("#txt_endmachinetime").val(result.TimeOut);
+                    $("#txt_roomStTime").val(result.TimeIn);
+                    $("#txt_roomendTime").val(result.TimeOut);
+
+
+                },
+
+                error: function (xhr, status, error) {
+                    console.error("Error fetching available dates:", error);
+                }
+            });
+        }
         function ConfigureAvailableDates() {
             debugger;
             var doc_id = $('#ddl_colstnt').val();
@@ -1301,6 +1349,28 @@
 
         }
 
+        function GetAppNoByTechnition() {
+            debugger;
+            var doctorID = $('#ddl_helper').val();
+            var checkdate = $('#txt_date').val();
+            var aID = '<%= Request.QueryString["aID"]%>';
+            if (aID != "") {
+
+            }
+            else {
+                PageMethods.GetAppNoByDoctortechnition(doctorID, checkdate, function (resp) {
+                    debugger;
+
+                    $('#txt_apt_no').val(resp);
+                },
+                    function (error) {
+                        alert(error.get_message());
+                    });
+            }
+
+
+
+        }
         function GetAppNoByDoctor() {
             debugger;
             var doctorID = $('#ddl_colstnt').val();
@@ -1723,7 +1793,21 @@
             var Machine_End_Time = $("#txt_endmachinetime").val();
             var Room_Start_Time = $("#txt_roomStTime").val();
             var Room_End_Time = $("#txt_roomendTime").val();
-
+            if (ddl_colstnt == "0" && ddl_helper == "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Doctor Or Technition',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
             //if (!(Doc_Start_Time === Helper_Start_Time &&
             //    Helper_Start_Time === Machine_Start_Time &&
             //    Machine_Start_Time === Room_Start_Time)) {

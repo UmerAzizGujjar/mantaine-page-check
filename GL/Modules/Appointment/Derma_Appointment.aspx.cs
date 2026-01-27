@@ -165,7 +165,7 @@ namespace PMS
                     return new JavaScriptSerializer().Serialize(new { error = "Invalid date" });
 
                 var doctor = (from hr in db.HR_Employees
-                              where hr.Emp_ID == doc_id && hr.IsDoctor == true
+                              where hr.Emp_ID == doc_id && ( hr.IsDoctor == true || hr.is_Employee == true)
                               select new
                               {
                                   hr.Off_Days_Names,
@@ -616,7 +616,21 @@ on DM.Rouster_id equals DD.Rouster_id
             }
 
 
-            var getmaxno = DBClass.getField("Select isnull(MAX(cast(Appointment_No as int)),0)+1 from appointment_form where Consultant_ID =" + doctorID + "  And App_Date ='" + checkdate + "'");
+            var getmaxno = DBClass.getField("Select isnull(MAX(cast(Appointment_No as int)),0)+1 from Derma_Appointment where Doctor_Id =" + doctorID + "  And Appointment_Date ='" + checkdate + "'");
+
+            return getmaxno.ToString();
+        }
+        [WebMethod]
+        public static string GetAppNoByDoctortechnition(string doctorID, string checkdate)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            if (doctorID == null)
+            {
+                return "";
+            }
+           
+
+            var getmaxno = DBClass.getField(" Select isnull(MAX(cast(Appointment_No as int)),0)+1 from Derma_Appointment where Helper_Id = " + doctorID + "  And Appointment_Date = '" + checkdate + "'");
 
             return getmaxno.ToString();
         }
