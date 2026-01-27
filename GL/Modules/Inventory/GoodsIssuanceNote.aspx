@@ -22,9 +22,10 @@
             });
             var SI_ID = '<%= Request.QueryString["SI_ID"]%>';
              if (SI_ID != "") {
-                 LoadDetail(SI_ID);
+                
 
                  setTimeout(function () { LoadMaster(SI_ID); }, 1000);
+                 setTimeout(function () { LoadDetail(SI_ID); }, 2500);
                  $("#btnSave").val('Update');
              }
            
@@ -363,7 +364,7 @@
             });
         }
 
-
+        
         function append(anchor) {
             debugger;
             count = 0;
