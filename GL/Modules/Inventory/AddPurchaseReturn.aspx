@@ -506,7 +506,7 @@
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
 
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Purchase Return Voucher&TransID=' + id + '&TransType=PURR';
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Purchase Return Voucher&TransID=' + id + '&TransType=PURR';
             }
             window.open(url, '_blank');
         }

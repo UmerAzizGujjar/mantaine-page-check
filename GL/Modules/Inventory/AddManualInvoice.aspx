@@ -112,7 +112,7 @@
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
 
-                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=MIN Voucher&TransID=' + id + '&TransType=MIN';
+                    url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=MIN Voucher&TransID=' + id + '&TransType=MIN';
                 }
                 window.open(url, '_blank');
             }

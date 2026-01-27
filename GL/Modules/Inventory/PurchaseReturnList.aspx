@@ -12,7 +12,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'https://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=PurchaseReturnList&ReportTitle=Purchase Return List&POid=' + Purchase_Return_ID;
+                url = 'https://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=PurchaseReturnList&ReportTitle=Purchase Return List&POid=' + Purchase_Return_ID;
             }
             window.open(url, '_blank');
         }

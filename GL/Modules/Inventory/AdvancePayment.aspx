@@ -50,7 +50,7 @@
             var ip = urlInfo[2];
             var foldername = urlInfo[3];
 
-            url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Advance Payment Voucher&TransID=' + InvId + '&TransType=ADV';
+            url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Advance Payment Voucher&TransID=' + InvId + '&TransType=ADV';
         }
         window.open(url, '_blank');
     }
@@ -63,7 +63,7 @@
             var ip = urlInfo[2];
             var foldername = urlInfo[3];
 
-            url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + InvId;
+            url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + InvId;
         }
         window.open(url, '_blank');
     }
