@@ -72,9 +72,7 @@
                 $('#txtRemarks').focus();
             });
             $('.token-input-list').css('width', '666px !important', 'margin-left: 1px;');
-            //var currentDate = new Date();
-            //var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
-            //$("#txtPR_Date").val(formattedDate);
+     
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#txtPR_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
@@ -410,14 +408,14 @@
                     var find = false;
 
                     var parse = JSON.parse(response.d);
-                    var length = $("#tblbodyPackage tr").length;
+                    var length = $("#tblPackage tr").length;
                     if (length > 0) {
                         length = length + 1;
                     }
                     else {
                         length = 1;
                     }
-                    var test_array = $('#tblbodyPackage').find('input[name=txtItemID][value=' + itemID + ']');
+                    var test_array = $('#tblPackage').find('input[name=txtItemID][value=' + itemID + ']');
                     if (test_array.length > 0) {
                         Swal.fire({
                             icon: 'error',
@@ -437,7 +435,7 @@
                     else {
 
                         if (parse[0].Active == true) {
-                            $("#tblbodyPackage").append("<tr><td style='padding-top: 7px!important;'>" + length + "</td><td style='padding-top: 7px!important;padding-right: 3px!important; */'>" + parse[0].Item_Code + "</td><td style='padding-left: 8px!important;padding-top: 7px!important;'>" + parse[0].Description + "</td><td style='text-align: center;padding-top:7px !important;'>" + parse[0].Stock + "</td><td style='text-align: center;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size: 9px;width: 58px!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td><td style='text-align: center;padding-top:7px !important;'>" + parse[0].Unit + "</td><td style='text-align: center;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size: 9px;width: 58px!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td><td style='text-align: center;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size: 9px;width: 58px!important;text-align: right;margin-top: 2px;' /></td><td style='text-align: center;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size: 9px;width: 73px!important;margin-top: 2px;' autocomplete='off'/></td><td style='text-align: center;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size: 9px;width: 167px!important;margin-top: 2px;'/></td><td style='display:none'><input type='hidden' name='txtItemID' value='" + parse[0].Item_ID + "'  style='width:50px!important;text-align:right;font-size:9px;height:20px;'/>" + parse[0].Item_ID + "</td><td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;'></i></a></td><td style='display:none'>" + 0 + "</td><td style='display:none'>" + 0 + "</td><td style='display:none'>" + 0 + "</td></tr>")
+                            $("#tblPackage").append("<tr><td style='padding-top: 7px!important;'>" + length + "</td><td style='padding-top: 7px!important;padding-right: 3px!important; */'>" + parse[0].Item_Code + "</td><td style='padding-left: 8px!important;padding-top: 7px!important;'>" + parse[0].Description + "</td><td style='text-align: center;padding-top:7px !important;'>" + parse[0].Stock + "</td><td style='text-align: center;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size: 9px;width: 58px!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeQty();calcutaeEstimatedCost(this)'/></td><td style='text-align: center;padding-top:7px !important;'>" + parse[0].Unit + "</td><td style='text-align: center;'><input type='text' name='txtUnitPrice' id='txtUnitPrice" + length + "' style='font-size: 9px;width: 58px!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeEstimCost(this)'/></td><td style='text-align: center;'><input readonly type='text' name='txtEstimCost' id='txtEstimCost" + length + "' style='font-size: 9px;width: 58px!important;text-align: right;margin-top: 2px;' /></td><td style='text-align: center;'><input type='text' name='txtrdate' id='txtrdate" + length + "' style='font-size: 9px;width: 73px!important;margin-top: 2px;' autocomplete='off'/></td><td style='text-align: center;'><input type='text' name='remarks' id='remarks" + length + "' style='font-size: 9px;width: 167px!important;margin-top: 2px;'/></td><td style='display:none'><input type='hidden' name='txtItemID' value='" + parse[0].Item_ID + "'  style='width:50px!important;text-align:right;font-size:9px;height:20px;'/>" + parse[0].Item_ID + "</td><td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;'></i></a></td><td style='display:none'>" + 0 + "</td><td style='display:none'>" + 0 + "</td><td style='display:none'>" + 0 + "</td></tr>")
                             var currentDate = new Date();
                             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
                             $('#txtrdate' + length).val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });

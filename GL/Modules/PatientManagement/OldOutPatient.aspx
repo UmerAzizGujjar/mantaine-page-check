@@ -64,14 +64,10 @@
                 var doctor = JSON.parse(res);
                 var options = '<option value="0" >Please Select </option>';
                 var rowsText = '';
-
                 $.each(doctor, function (key, value) {
-
                     options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
                 });
-
                 $('#ddldoctors').html(options)
-                //$('#ddldoctors').select2();
                 $('#ddldoctors').attr('disabled', false);
             });
         }

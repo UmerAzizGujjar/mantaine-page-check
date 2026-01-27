@@ -33,10 +33,23 @@ namespace PMS
 
         }
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string doctorId = null,string deptId = null,string status = null,string appDate = null)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue,
+       string doctorId = null, string deptId = null, string status = null, string appDate = null)
         {
             try
             {
+                // 🔽 Default to latest-first if no sort is specified
+                if (string.IsNullOrWhiteSpace(sortColumn))
+                {
+                    sortColumn = "created_time"; // Must match column name expected by your stored procedure
+                    sortColumnDirection = "desc";
+                }
+                else
+                {
+                    // Normalize sort direction to 'asc' or 'desc'
+                    sortColumnDirection = sortColumnDirection?.ToLower() == "desc" ? "desc" : "asc";
+                }
+
                 using (var _dbContext = new DataBaseDataContext())
                 {
                     if (_dbContext.Connection.State != ConnectionState.Open)
@@ -48,21 +61,9 @@ namespace PMS
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = "sp_get_appointment_view";
 
-                    var searchParameter = cmd.CreateParameter();
-                    searchParameter.ParameterName = "@searchValue";
-                    searchParameter.Value = searchValue ?? (object)DBNull.Value;
-                    cmd.Parameters.Add(searchParameter);
-
-                    var sortColumnParameter = cmd.CreateParameter();
-                    sortColumnParameter.ParameterName = "@sortColumn";
-                    sortColumnParameter.Value = sortColumn ?? "Appointment_ID";
-                    cmd.Parameters.Add(sortColumnParameter);
-
-                    var sortDirectionParameter = cmd.CreateParameter();
-                    sortDirectionParameter.ParameterName = "@sortDirection";
-                    sortDirectionParameter.Value = sortColumnDirection ?? "asc"; 
-                    cmd.Parameters.Add(sortDirectionParameter);
-
+                    cmd.Parameters.Add(new SqlParameter("@searchValue", (object)searchValue ?? DBNull.Value));
+                    cmd.Parameters.Add(new SqlParameter("@sortColumn", (object)sortColumn ?? "created_time"));
+                    cmd.Parameters.Add(new SqlParameter("@sortDirection", (object)sortColumnDirection ?? "desc"));
                     cmd.Parameters.Add(new SqlParameter("@doctorId", (object)doctorId ?? DBNull.Value));
                     cmd.Parameters.Add(new SqlParameter("@deptId", (object)deptId ?? DBNull.Value));
                     cmd.Parameters.Add(new SqlParameter("@status", (object)status ?? DBNull.Value));
@@ -91,16 +92,17 @@ namespace PMS
                             });
                         }
 
-                        int Total_Records = AppointmentList.Count;
-                        int FilteredCount = AppointmentList.Count;
+                        int totalRecords = AppointmentList.Count;
+                        int filteredCount = AppointmentList.Count;
 
+                        // Apply pagination
                         var paginatedList = AppointmentList.Skip(start).Take(length).ToList();
 
                         var jsonData = new
                         {
                             draw = draw,
-                            recordsFiltered = FilteredCount,
-                            recordsTotal = Total_Records,
+                            recordsFiltered = filteredCount,
+                            recordsTotal = totalRecords,
                             data = paginatedList
                         };
 
@@ -110,10 +112,10 @@ namespace PMS
             }
             catch (Exception ex)
             {
+                // Log exception if you have logging (recommended)
                 throw new Exception("Error fetching appointment list", ex);
             }
         }
-
         [WebMethod]
         public static void DeleteRecord(int AppID)
         {

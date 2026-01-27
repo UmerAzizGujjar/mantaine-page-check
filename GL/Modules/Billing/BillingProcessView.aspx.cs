@@ -137,25 +137,26 @@ namespace PMS
                 {
                     string userId = HttpContext.Current.Session["UserId"].ToString();
 
-                    var Total_Billing = _dbContext.Ar_Billings.Count();
+                    // Build the main query (with joins and base filters)
                     var Billing = from b in _dbContext.Ar_Billings
                                   join p in _dbContext.Reg_patients on b.Patient_ID equals p.pat_id
                                   join u in _dbContext.aspnet_Users on b.Created_By equals u.UserId
                                   where (b.Total_Amount != null || b.Discount_Amount != null)
                                         && (b.isCancel == null || b.isCancel == false)
                                         && (b.IsPharmacy == null || b.IsPharmacy == false)
-                                        && (b.Bill_No.ToString().Contains(searchValue)
-                                            || p.Full_Name.Contains(searchValue)
-                                            || p.mr_no_sequence.Contains(searchValue)
-                                            || u.UserName.Contains(searchValue))
                                   select new
                                   {
                                       Bill_No = b.Bill_No,
                                       Bill_Date = b.Creation_Date,
                                       Remarks = b.Remarks,
                                       Total_Amount = b.Total_Amount,
-                                      Discount_Percentage = b.Discount_Percentage,
                                       Discount_Amount = b.Discount_Amount,
+
+                                      // Calculate Discount_Percentage safely
+                                      Discount_Percentage = b.Total_Amount.HasValue && b.Total_Amount.Value > 0
+    ? Math.Round((b.Discount_Amount ?? 0) / b.Total_Amount.Value * 100, 2, MidpointRounding.AwayFromZero)
+    : 0,
+
                                       Net_Amount = b.Net_Amount,
                                       Received_Amount = b.Received_Amount,
                                       Balance_Amount = b.Balance_Amount,
@@ -165,9 +166,28 @@ namespace PMS
                                       Operator = u.UserName
                                   };
 
+                    // Total records that match base filters (not affected by search)
+                    var Total_Billing = Billing.Count();
+
+                    // Apply search filter if searchValue is provided
+                    if (!string.IsNullOrWhiteSpace(searchValue))
+                    {
+                        searchValue = searchValue.Trim();
+                        Billing = Billing.Where(x =>
+                            x.Bill_No.ToString().Contains(searchValue) ||
+                            (x.Full_Name != null && x.Full_Name.Contains(searchValue)) ||
+                            (x.MrNo != null && x.MrNo.Contains(searchValue)) ||
+                            (x.Operator != null && x.Operator.Contains(searchValue))
+                        );
+                    }
+
+                    // Count after search filter
                     var FilteredCount = Billing.Count();
+
+                    // Apply sorting (you can extend this later for dynamic sortColumn)
                     Billing = Billing.OrderByDescending(a => a.Bill_ID);
 
+                    // Apply pagination
                     var patientList = Billing.Skip(start).Take(length).ToList();
 
                     var jsonData = new
@@ -179,13 +199,12 @@ namespace PMS
                     };
 
                     return jsonData;
-
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception("Error fetching patient list", ex);
             }
-        }       
+        }
     }
 }
