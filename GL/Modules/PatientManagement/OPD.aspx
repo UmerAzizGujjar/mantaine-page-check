@@ -277,6 +277,7 @@
             "RefferdBy": "RefferedBy",
             "EmerRefferedBy": "EmerRefferedBy",
             "cashier": "cashier",
+            "remarks": "remarks",
         };
 
         function loadPermissions(callback) {
@@ -1125,74 +1126,7 @@
             });
         }
 
-        //function checkDoctorBlockStatus(Doc, selectedPatientType, callback) {
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "OPD.aspx/GetDoctorBlockInfo",
-        //        data: JSON.stringify({ Doc: Doc }),
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        success: function (response) {
-        //            debugger;
-        //            var blockInfo = JSON.parse(response.d);
-
-        //            if (blockInfo && blockInfo.error) {
-        //                console.error("Block info error:", blockInfo.error);
-        //                callback(false);
-        //                return;
-        //            }
-
-        //            if (blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
-        //                const now = new Date();
-
-        //                const parseLocalDate = (str) => {
-        //                    const [y, m, d] = str.split('-').map(Number);
-        //                    return new Date(y, m - 1, d);
-        //                };
-
-        //                const stDate = parseLocalDate(blockInfo.st_day);
-        //                const endDate = parseLocalDate(blockInfo.end_day);
-
-        //                const [startHour, startMin] = (blockInfo.Timings_In || "00:00").split(':').map(Number);
-        //                const [endHour, endMin] = (blockInfo.Timings_Out || "23:59").split(':').map(Number);
-
-        //                stDate.setHours(startHour, startMin, 0, 0);
-        //                endDate.setHours(endHour, endMin, 0, 0);
-
-        //                const isWithinWindow = now >= stDate && now <= endDate;
-
-        //                if (isWithinWindow) {
-        //                    Swal.fire({
-        //                        icon: 'warning',
-        //                        title: 'Access Denied',
-        //                        text: 'This category is blocked by the admin.',
-        //                        timer: 2500,
-        //                        showConfirmButton: false,
-        //                        customClass: {
-        //                            popup: 'swal-big-popup',
-        //                            title: 'swal-big-title',
-        //                            htmlContainer: 'swal-big-text'
-        //                        }
-        //                    });
-
-        //                    $('#txtfees').val("0");
-        //                    $('#txtactualfee').val("0");
-        //                    $('#txtdiscount').val("");
-        //                    $('#ddldoctor').val("");
-        //                    callback(true);
-        //                    return;
-        //                }
-        //            }
-
-        //            callback(false);
-        //        },
-        //        error: function (xhr, status, error) {
-        //            console.error("Failed to fetch block info:", error);
-        //            callback(false);
-        //        }
-        //    });
-        //}
-
+       
 
 
     </script>
@@ -1212,32 +1146,7 @@
     <input type="text" id="hdn_emer_reffered" style="display: none;" />
     <input type="text" id="hdn_dep_id" style="display: none;" />
     <div class="row">
-        <%--<div class="col-lg-9 col-md-9 col-sm-12 card" style="width: 73%; margin-left: 13px;">
-            <div class="col-lg-3 col-md-4 col-sm-12" onclick="addfunc()" style="cursor: pointer;">
-                <div class="icon-text">
-                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="32" height="32">
-                    <span><a class="anchorOnOPD">Register a new patient</a></span>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-12" style="cursor: pointer" id="btnSearchApp_Patient" onclick="SearchPop_App()">
-                <div class="icon-text">
-                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/appointmenticon.png" width="32" height="32">
-                    <span><a class="anchorOnOPD">Search in appointment</a></span>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-12" style="cursor: pointer" id="btnsearchpatlist">
-                <div class="icon-text">
-                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/existingpaticon.png" alt="Search" h="32" height="32">
-                    <span><a class="anchorOnOPD">Search an existing patient</a></span>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-12" style="cursor: pointer" id="btnsearchEmergencylist">
-                <div class="icon-text">
-                    <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/existingpaticon.png" alt="Search" h="32" height="32">
-                    <span><a class="anchorOnOPD">Emergency Refer Patient</a></span>
-                </div>
-            </div>
-        </div>--%>
+      
 
 
 
@@ -1423,15 +1332,20 @@
                         </select>
                     </div>
 
-                    <div class="col-lg-10 col-md-12 col-sm-12" id="field_Address">
+                    <div class="col-lg-6 col-md-12 col-sm-12" id="field_Address">
                         <label>Address</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
                     </div>
-                       <div class="col-lg-2 col-md-8 col-sm-8" id="cashier" >
+                       <div class="col-lg-3 col-md-8 col-sm-8" id="cashier" >
                        <label>Cashier</label>
                        <select id="ddlcashier" class="form-control">
                             <option value="0">Select Cashier</option>
                        </select>
+                   </div>
+                    <div class="col-lg-1"></div>
+                       <div class="col-lg-3 col-md-8 col-sm-8" id="remarks" >
+                       <label>Remarks</label>
+                     <input type="text" id="txtremarks"  />
                    </div>
 
                 </div>
