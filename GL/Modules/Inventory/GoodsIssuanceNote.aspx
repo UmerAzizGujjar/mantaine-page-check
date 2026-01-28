@@ -22,9 +22,10 @@
             });
             var SI_ID = '<%= Request.QueryString["SI_ID"]%>';
              if (SI_ID != "") {
-                 LoadDetail(SI_ID);
+                
 
                  setTimeout(function () { LoadMaster(SI_ID); }, 1000);
+                 setTimeout(function () { LoadDetail(SI_ID); }, 2500);
                  $("#btnSave").val('Update');
              }
            
@@ -363,7 +364,7 @@
             });
         }
 
-
+        
         function append(anchor) {
             debugger;
             count = 0;
@@ -399,7 +400,7 @@
             }
             if (IsBatch == "false" || IsBatch == "False") {
               //  $('#ddlBatchNum').attr("disabled", 'disabled');
-                $('#tblStoreIssueBote').find('input[name = ddlBatchNum]').attr("disabled", 'disabled');
+                //$('#tblStoreIssueBote').find('input[name = ddlBatchNum]').attr("disabled", 'disabled');
             }
             var length = $("#tblStoreIssueBote tr:gt(0)").length;
             if (length > 0) {
@@ -436,7 +437,7 @@
                     '<td style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + item_name + '</td>' +
                     '<td style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + unit + '</td>' +
                 //'<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this)" style="width: 75px !IMPORTANT;" ></select></td>' +
-                    '<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this)" style="width: 75px !IMPORTANT;" ' + (IsBatch.toLowerCase() === 'false' ? 'disabled' : '') + ' ></select></td>' +
+                    '<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this),GetCGSRate(this)" style="width: 75px !IMPORTANT;" ></select></td>' +
                     '<td style="padding-top: 9px;text-align: center;padding-top: 2px !important;"  ><input type="text" id="txtStoreStock' + length + '" name="txtStoreStock" readonly=true value="' + Stock + '" style="height: 22px!important;width: 70px !important;" ></td>' +
                     '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px;  width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtmirQty' + length + '" name="txtmirQty" value="' + Qty + '" disabled/></td>' +
                     '<td style="paddin g-top: 2px;"><input type="text" style=" font-size: 10px; width: 64px!important;                                        height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + length + '" name="txtIssueQty" value="0" onkeyup="calculateBalanceQty(this)"/></td>' +
@@ -482,7 +483,7 @@
                         '<td style="display:none;">' + parsed_Date[i].IsBatch + '</td>' +
                         '<td style="display:none;">' + parseFloat(parsed_Date[i].Stock).toFixed(2) + '</td>' +
                         '<td style="display:none;">' + parseFloat(parsed_Date[i].Balance).toFixed(2) + '</td>' +
-                        '<td style="display:none;">' + parseFloat(parsed_Date[i].CGSRate).toFixed(2) + '</td>' +
+                       /* '<td style="display:none;">' + parseFloat(parsed_Date[i].CGSRate).toFixed(2) + '</td>' +*/
                         '<td style="display:none;">StoreStock</td>' +
                         '</tr>';
                     $('#tblMIRItemstModelTable tbody').append(rows);
@@ -490,6 +491,24 @@
                 $('#POItemsModel').modal({
                     backdrop: 'static'
                 });
+            });
+        }
+        function GetCGSRate(anchor) {
+            debugger;
+            var row = $(anchor).parents('tr')[0];
+            var Item_code = $($(row).find('input[name=txtItemCode]')).val();
+            var batchNum = $($(row).find('select[name=ddlBatchNum]')).val();
+            var invOrg = $('#ddlInventoryOrg').val();
+            PageMethods.GetCGSRate(Item_code, batchNum, invOrg, function (res) {
+                debugger
+                var parsed_stock = JSON.parse(res);
+                debugger
+                if (parsed_stock != "") {
+                    $($(row).find('input[name=txtCGSRate]')).val(parseInt(parsed_stock));
+                }
+                else {
+                    $($(row).find('input[name=txtCGSRate]')).val(0);
+                }
             });
         }
         function CheckBatch(anchor) {
@@ -553,8 +572,17 @@
                 var result = JSON.parse(res);
                 $('#txtStoreissueNo').val(result[0].Store_Issue_No);
                 $('#txtStatus').val(result[0].Status);
-                setTimeout(function () { $('#ddlInventoryOrg').val(result[0].Organization_Id); }, 2000);
-                setTimeout(function () { $('#ddlDepartment').val(result[0].Department_Id); }, 2000);
+                var organizationId = result[0].Organization_Id;
+                setTimeout(function () {
+                    $('#ddlInventoryOrg').val(organizationId).trigger('change');
+                    $('#ddlInventoryOrg').attr('disabled', 'disabled');
+                }, 2000);
+                setTimeout(function () {
+                    $('#ddlDepartment').val(result[0].Department_Id).trigger('change');
+                    $('#ddlDepartment').attr('disabled', 'disabled');
+                }, 2000);
+
+
 
                 initializeMRNoDropdown(result.query.MR_No);
                 $('#ddlMRNo').val(result.query.MR_No).trigger('change');

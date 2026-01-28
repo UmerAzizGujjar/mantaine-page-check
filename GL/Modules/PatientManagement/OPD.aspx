@@ -922,6 +922,7 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
+                                debugger;
                                 var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
 
                                 if (!res.success) {
@@ -938,6 +939,7 @@
                                         }
                                     });
                                 } else {
+                                    debugger;
                                     var fee = parseFloat(res.fee) || 0;
                                     var disper = parseFloat(res.discount_percentage) || 0;
                                     var afterdiscountfee = fee - ((fee * disper) / 100);
@@ -945,7 +947,13 @@
                                     $('#txtfees').val(afterdiscountfee.toFixed(2));
                                     $('#txtactualfee').val(res.fee);
                                     $('#txtdiscount').val(res.discount_percentage);
-                                    $('#txtdiscount').attr('disabled', true);
+                                    if (disper == 0) {
+                                        $('#txtdiscount').attr('disabled', false);
+                                    }
+                                    else {
+                                        $('#txtdiscount').attr('disabled', true);
+                                    }
+                                  
                                     $('#hdnhospShare').val(res.Hospital_Share);
                                     $('#hdnDocshare').val(res.Doctor_Share);
                                 }
@@ -1234,7 +1242,7 @@
 
 
 
-        <div class="col-lg-9 col-md-9 col-sm-12 fields" style="width: 73%; margin-left: 13px;">
+        <div class="col-lg-9 col-md-9 col-sm-12 fields" >
             <!-- Quick Actions row: four equal, high-contrast cards -->
             <div class="row">
                 <!-- Card 1 -->
@@ -1328,20 +1336,19 @@
                 <span style="font-size: 15px;">G-29</span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg29" class="blink" runat="server"></span>
 
+                <div>
+                    <span style="font-size: 15px;">Recent Visit</span>
+                    <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span2" class="blink" runat="server" clientidmode="Static"></span>
 
-
+                    <span style="font-size: 15px;">Previous Visit </span>
+                    <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;"
+                        id="Span6"
+                        class="blink"
+                        runat="server"
+                        clientidmode="Static"></span>
+                </div>
             </div>
-            <div class="mleft" >
-                <span style="font-size: 15px;">Recent Visit</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="Span2" class="blink" runat="server" clientidmode="Static"></span>
-
-                <span style="font-size: 15px;">Previous Visit </span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;"
-                    id="Span6"
-                    class="blink"
-                    runat="server"
-                    clientidmode="Static"></span>
-            </div>
+           
         </div>
     </div>
 
@@ -1535,9 +1542,9 @@
             </div>
         </div>
     </div>
-    <div class="row mtop2">
+    <div class="row">
         <div class=" col-lg-8">
-            <div class="row">
+            <div class="row mtop2">
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input type="button" class="btn-primry " id="btnsave" value="Save&Print" onclick="SaveData()" />
                 </div>

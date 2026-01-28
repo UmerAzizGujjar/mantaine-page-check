@@ -8,23 +8,24 @@
 /*.col-lg-3, .col-md-6, .col-sm-12 {
     height: 70px !important
 }*/
-.fields {
+
+/*.fields {
     height: 70px !important
-}
+}*/
 .card {
     border: 1px solid #C4C4C4;
     background-color: #f9f9f9;
     border-radius: 10px;
     padding: 15px;
     margin-top: 50px !important;
-    height: 330px !important,
+    /*height: 330px !important,*/
 }
 .quick-actions {
     background: #c11718;
     color: white;
     border-radius: 8px;
     padding: 12px;
-    height: 70px;
+   /* height: 70px;*/
     cursor: pointer;
 }
 .tooltips {
@@ -73,7 +74,7 @@
 
 .card2 {
     border: 1px solid #C4C4C4;
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
     border-radius: 10px;
     padding: 15px;
     margin-top: 50px !important;
@@ -145,3 +146,60 @@
     #scrollable-table-container .table {
         margin-bottom: 0;
     }
+
+
+
+
+
+
+
+
+
+
+
+.fields {
+    min-height: 70px;
+    height: auto;
+}
+
+.card,
+.card2,
+.card3 {
+    height: auto;
+}
+
+.quick-actions {
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+}
+
+    .quick-actions div {
+        white-space: normal;
+    }
+
+input,
+select {
+    width: 100%;
+}
+
+
+
+@media (max-width: 768px) {
+    .mtop2 {
+        margin-top: 20px !important;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+
+@media (min-width: 992px) {
+    #right-section {
+        position: sticky;
+        top: 80px;
+    }
+}

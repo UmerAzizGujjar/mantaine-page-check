@@ -1374,8 +1374,9 @@ function SaveData() {
                 }
             });
             var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
-            //var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + patientID;
+            var url1 = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + patientID;
             window.open(url, '_blank');
+            window.open(url1, '_blank');
             window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {

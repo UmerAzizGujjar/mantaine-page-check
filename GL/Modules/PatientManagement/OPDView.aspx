@@ -132,10 +132,9 @@
                 "columns": [
                     {
                         "data": null,
-                        "width": "5%",
+                        "width": "4%",
                         "orderable": false,
                         "render": function (data, type, full, meta) {
-                            // Calculate serial number based on current page
                             return meta.settings._iDisplayStart + meta.row + 1;
                         }
                     },
@@ -143,11 +142,11 @@
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
                     { "data": "Opd_No", "name": "Opd_No", "width": "5%", "orderable": false },
                     { "data": "Full_Name", "width": "13%", "orderable": false },
-                    { "data": "Patient_Type", "width": "10%", "orderable": false },
+                    { "data": "Patient_Type", "width": "6%", "orderable": false },
                     { "data": "Department", "width": "10%", "orderable": false },
-                    { "data": "NIC", "width": "10%", "orderable": false },
-                    { "data": "Mobile1", "width": "10%", "orderable": false },
-                    { "data": "Age", "name": "Age", "width": "5%" },
+                    { "data": "NIC", "width": "8%", "orderable": false },
+                    { "data": "Mobile1", "width": "8%", "orderable": false },
+                    { "data": "Age", "name": "Age", "width": "8%" },
                     { "data": "Doctor_Id", "width": "10%", "orderable": false },
                     {
                         "data": "Created_Time", "name": "Created_Time",

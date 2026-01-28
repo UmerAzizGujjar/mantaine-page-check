@@ -344,28 +344,7 @@
             });
 
             // Function to load Sale Return Invoice Number into the dropdown
-            function loadInvoiceNumbers() {
-                var optionInv = '';
-                PageMethods.AllInvoiceNumbers(function (Tests) {
-                    optionInv = '<option value="0">Please Select</option>';
-                    $.each(JSON.parse(Tests), function (key, value) {
-                        optionInv += '<option value="' + value.Bill_ID + '" >' + value.Seq_InvoiceNo + '</option>';
-                    });
-                    $('#ddlInvoiceNumber').html(optionInv);
-                });
-            }
-            // Function to load Sale Return Items into the dropdown
-            function loadSaleReturnItems() {
-                var optionInv = '';
-                PageMethods.SaleReturnItems(function (Tests) {
-                    optionInv = '<option value="0">Please Select</option>';
-                    $.each(JSON.parse(Tests), function (key, value) {
-                        optionInv += '<option value="' + value.Item_ID + '" >' + value.Description + '</option>';
-                    });
-                    $('#ddlSaleReturnItems').html(optionInv);
-                    $('#ddlSaleReturnItems').select2();
-                });
-            }
+
             $('#SaleReturnModal').on('hide.bs.modal', function () {
                 $(this).find('input[type="text"]').val('');
                 $(this).find('select').val(null).trigger('change');
@@ -374,6 +353,28 @@
 
         });
         // Function to load Sale Return Inovice Items Data
+        function loadInvoiceNumbers() {
+            var optionInv = '';
+            PageMethods.AllInvoiceNumbers(function (Tests) {
+                optionInv = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionInv += '<option value="' + value.Bill_ID + '" >' + value.Seq_InvoiceNo + '</option>';
+                });
+                $('#ddlInvoiceNumber').html(optionInv);
+            });
+        }
+        // Function to load Sale Return Items into the dropdown
+        function loadSaleReturnItems() {
+            var optionInv = '';
+            PageMethods.SaleReturnItems(function (Tests) {
+                optionInv = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionInv += '<option value="' + value.Item_ID + '" >' + value.Description + '</option>';
+                });
+                $('#ddlSaleReturnItems').html(optionInv);
+                $('#ddlSaleReturnItems').select2();
+            });
+        }
         function AddSaleReturnInvoiceMaster() {
             debugger
             var invNo = $('#ddlInvoiceNumber').val();
@@ -1810,7 +1811,7 @@
             var Dept = $('#ddlDepartment').val();
             var totalPayable = $('#txtTotalPayable').val();
             var DiscPercent = $('#txtDisPer').val();
-            var DiscAmnt = $('#txtDisAmt').val();
+            var MasterDiscount = $('#txtDisAmt').val();
             var flatdisc = $('#txtFlatDisc').val();
             if (flatdisc == "" || flatdisc == "visionplus") {
                 flatdisc = 0;
@@ -1838,6 +1839,7 @@
             }
             
             var linediscount = $('#txtLineDisc').val();
+            var DiscAmnt = $('#txttotalDisc').val();
             var Rbtn = $('input[name="rbtn"]:checked').val();
             var patId = out_Patient_Id;
             var invNumber = $("#Inv_No").val();
@@ -1906,11 +1908,12 @@
                 "Dept": Dept,
                 "totalPayable": totalPayable,
                 "DiscPercent": DiscPercent,
-                "DiscAmnt": DiscAmnt,
+                "MasterDiscount": MasterDiscount,               
                 "flatdisc": flatdisc,
                 "AmntReceived": AmntReceived,
                 "BalanceAmount": BalanceAmount,
                 "linediscount": linediscount,
+                "DiscAmnt": DiscAmnt,
                 "Save_list": Save_list,
                 "invNumber": invNumber
             };
@@ -1990,7 +1993,7 @@
                     var Dept = $('#ddlDepartment').val();
                     var totalPayable = $('#txtTotalPayable').val();
                     var DiscPercent = $('#txtDisPer').val();
-                    var DiscAmnt = $('#txtDisAmt').val();
+                    var MasterDiscount = $('#txtDisAmt').val();
                     var flatdisc = $('#txtFlatDisc').val();
                     if (flatdisc == "" || flatdisc == "visionplus") {
                         flatdisc = 0;
@@ -2001,6 +2004,7 @@
                         BalanceAmount = 0;
                     }
                     var linediscount = $('#txtLineDisc').val();
+                    var DiscAmnt = $('#txttotalDisc').val();
                     var Rbtn = $('input[name="rbtn"]:checked').val();
                     var patId = out_Patient_Id;
                     var invNumber = $("#Inv_No").val();
@@ -2072,11 +2076,12 @@
                         "Dept": Dept,
                         "totalPayable": totalPayable,
                         "DiscPercent": DiscPercent,
-                        "DiscAmnt": DiscAmnt,
+                        "MasterDiscount": MasterDiscount,
                         "flatdisc": flatdisc,
                         "AmntReceived": AmntReceived,
                         "BalanceAmount": BalanceAmount,
                         "linediscount": linediscount,
+                        "DiscAmnt": DiscAmnt,
                         "Save_list": Save_list,
                         "invNumber": invNumber
                     };
@@ -2925,8 +2930,8 @@
                 </div>
                 <div class="row mb-2 align-items-center left-right-margin">
                     <div class="col-lg-6">
-                        <label>Amount Received</label>
-                        <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()"  />
+                        <label>Total Discount</label>
+                        <input type="text" id="txttotalDisc" tabindex="20" class="form-control text-end" readonly="readonly"  />
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <label>Adjustment (Alt+A)</label>
@@ -2935,9 +2940,12 @@
 
                 </div>
                 <!-- Amount Received -->
-                <div class="row mb-2 align-items-center  left-right-margin" id="divBalance">
-
-                    <div class="col-lg-6 d-flex align-items-center">
+                <div class="row mb-2 align-items-center  left-right-margin" >
+                     <div class="col-lg-6">
+                        <label>Amount Received</label>
+                        <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()"  />
+                    </div>
+                    <div class="col-lg-6 d-flex align-items-center" id="divBalance">
                         <label class="ms-3">Balance</label>
                         <input type="text" id="txtBalances" tabindex="22" class="form-control text-end text-primary" disabled />
                     </div>
