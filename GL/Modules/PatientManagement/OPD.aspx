@@ -1342,12 +1342,10 @@
                             <option value="0">Select Cashier</option>
                        </select>
                    </div>
-                    <div class="col-lg-1"></div>
-                       <div class="col-lg-3 col-md-8 col-sm-8" id="remarks" >
-                       <label>Remarks</label>
-                     <input type="text" id="txtremarks"  />
-                   </div>
-
+                    <div class="col-lg-3 col-md-8 col-sm-8" id="remarks">
+                        <label>Remarks</label>
+                        <input type="text" id="txtremarks" />
+                    </div>
                 </div>
 
 
