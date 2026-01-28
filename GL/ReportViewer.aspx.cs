@@ -285,8 +285,8 @@ namespace PMS
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
                 string warehouse = Request.QueryString["WareHouse"].ToString();
-                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
-                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string StartDateTime = Request.QueryString["startDate"].ToString();
+                string EndDateTime = Request.QueryString["endDate"].ToString();
                 reportPath += "Pharmacy/rptPharmacyStockDetail.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;

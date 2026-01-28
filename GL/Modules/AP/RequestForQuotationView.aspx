@@ -22,12 +22,21 @@
                     for (var i = 0; i < message.length; i++) {
                         debugger;
                         var locationInfo = window.location;
+
+                        var user_name = '<% =AppConfig.Company_Name %>';
+                        if (user_name == 'As-Siraat Serving Humanity') {
+                            reportPath = '../../ReportViewer.aspx';
+                        } else {
+                            reportPath = 'ReportViewer.aspx'; // same folder
+                        }
+
+
                         var url = '/ReportViewer.aspx?ReportName=RequestForQuotationList&ReportTitle=Request For Quotation&RFQid=' + id + '&Venderid=' + message[i].VendorId;
                         if (!locationInfo.origin.includes('localhost')) {
                             var urlInfo = window.location.href.split('/');
                             var ip = urlInfo[2];
                             var foldername = urlInfo[3];
-                            url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=RequestForQuotationList&ReportTitle=Request For Quotation&RFQid=' + id + '&Venderid=' + message[i].VendorId;
+                            url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=RequestForQuotationList&ReportTitle=Request For Quotation&RFQid=' + id + '&Venderid=' + message[i].VendorId;
                         }
                         window.open(url, '_blank');
                     }

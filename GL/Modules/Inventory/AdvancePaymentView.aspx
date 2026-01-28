@@ -30,13 +30,19 @@
 
         function Print(Advance_ID) {
             var locationInfo = window.location;
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
             var url = '/ReportViewer.aspx?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + Advance_ID;
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
 
-                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + Advance_ID;
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + Advance_ID;
             }
             window.open(url, '_blank');
         }

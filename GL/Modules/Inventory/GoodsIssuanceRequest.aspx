@@ -277,12 +277,21 @@
         function PrintGoodsIssuanceRequest() {
             var id = '<% =Request.QueryString["ID"] %>';
             var locationInfo = window.location;
+
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
             var url = '/ReportViewer.aspx?ReportName=MaterialIssueRequestList&ReportTitle=Material IssueRequest List&MIRId=' + id;
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=MaterialIssueRequestList&ReportTitle=Material IssueRequest List&MIRId=' + id;
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=MaterialIssueRequestList&ReportTitle=Material IssueRequest List&MIRId=' + id;
             }
             window.open(url, '_blank');
         }

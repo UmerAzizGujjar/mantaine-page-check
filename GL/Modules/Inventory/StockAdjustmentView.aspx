@@ -19,12 +19,21 @@
             function PrintVoucher(Adjustment_Id) {
                 debugger;
                 var locationInfo = window.location;
+
+
+                var user_name = '<% =AppConfig.Company_Name %>';
+                if (user_name == 'As-Siraat Serving Humanity') {
+                    reportPath = '../../ReportViewer.aspx';
+                } else {
+                    reportPath = 'ReportViewer.aspx'; // same folder
+                }
+
                 var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + Adjustment_Id + '&TransType=Adj';
                 if (!locationInfo.origin.includes('localhost')) {
                     var urlInfo = window.location.href.split('/');
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
-                    url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + Adjustment_Id + '&TransType=Adj';
+                    url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + Adjustment_Id + '&TransType=Adj';
                 }
                 window.open(url, '_blank');
             }

@@ -388,12 +388,18 @@
         function PrintPaymentDetail() {
             var id = '<% =Request.QueryString["Inv_ID"] %>';
             var locationInfo = window.location;
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
             var url = '/ReportViewer.aspx?ReportName=PaymentBasePrint&ReportTitle=Payment Invoice &Inv_Id=' + id;
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=PaymentBasePrint&ReportTitle=Payment Invoice &Inv_Id=' + id;
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=PaymentBasePrint&ReportTitle=Payment Invoice &Inv_Id=' + id;
             }
             window.open(url, '_blank');
         }
@@ -729,14 +735,21 @@
         function PrintVoucher() {
             debugger;
             var InvId = '<% =Request.QueryString["Inv_ID"] %>';
-                var locationInfo = window.location;
+            var locationInfo = window.location;
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
                 var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
                 if (!locationInfo.origin.includes('localhost')) {
                     debugger;
                     var urlInfo = window.location.href.split('/');
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
-                    url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
+                    url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Voucher&ReportTitle=Payment Voucher&TransID=' + InvId + '&TransType=Pay';
                 }
                 window.open(url, '_blank');
             }
