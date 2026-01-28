@@ -1091,6 +1091,7 @@ namespace PMS.Modules.PatientManagement
                 db.SubmitChanges();
             }
             return pat?.pat_id.ToString() ?? "0";
+
         }
         [WebMethod]
         public static string Getcardvalidation()
