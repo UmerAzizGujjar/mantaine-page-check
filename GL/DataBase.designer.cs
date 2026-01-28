@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬AsSiraatStandard1")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬NoorHospital")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -822,9 +822,6 @@ namespace PMS
         partial void InsertAdvance_Payment(Advance_Payment instance);
         partial void UpdateAdvance_Payment(Advance_Payment instance);
         partial void DeleteAdvance_Payment(Advance_Payment instance);
-        partial void Insertinv_bom(inv_bom instance);
-        partial void Updateinv_bom(inv_bom instance);
-        partial void Deleteinv_bom(inv_bom instance);
         partial void Insertinv_bom_detail(inv_bom_detail instance);
         partial void Updateinv_bom_detail(inv_bom_detail instance);
         partial void Deleteinv_bom_detail(inv_bom_detail instance);
@@ -927,13 +924,15 @@ namespace PMS
         partial void InsertAr_Billing(Ar_Billing instance);
         partial void UpdateAr_Billing(Ar_Billing instance);
         partial void DeleteAr_Billing(Ar_Billing instance);
+        partial void Insertinv_bom(inv_bom instance);
+        partial void Updateinv_bom(inv_bom instance);
+        partial void Deleteinv_bom(inv_bom instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
-
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -3102,14 +3101,6 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<inv_bom> inv_boms
-        {
-            get
-            {
-                return this.GetTable<inv_bom>();
-            }
-        }
-
         public System.Data.Linq.Table<inv_bom_detail> inv_bom_details
         {
             get
@@ -3379,6 +3370,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Ar_Billing>();
+            }
+        }
+
+        public System.Data.Linq.Table<inv_bom> inv_boms
+        {
+            get
+            {
+                return this.GetTable<inv_bom>();
             }
         }
 
@@ -104272,404 +104271,6 @@ namespace PMS
         }
     }
 
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.inv_bom")]
-    public partial class inv_bom : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _BOMID;
-
-        private int _ProcedureID;
-
-        private string _Category;
-
-        private decimal _TotalCost;
-
-        private System.Nullable<System.Guid> _CreatedBy;
-
-        private System.Nullable<System.DateTime> _CreatedDate;
-
-        private System.Nullable<System.Guid> _UpdatedBy;
-
-        private System.Nullable<System.DateTime> _UpdatedDate;
-
-        private System.Nullable<bool> _isCancel;
-
-        private System.Nullable<System.Guid> _Cancel_By;
-
-        private System.Nullable<System.DateTime> _CancelDate;
-
-        private string _status;
-
-        private System.Nullable<int> _voucher_id;
-
-        private string _warehouse;
-
-        private System.Nullable<int> _Company_ID;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnBOMIDChanging(int value);
-        partial void OnBOMIDChanged();
-        partial void OnProcedureIDChanging(int value);
-        partial void OnProcedureIDChanged();
-        partial void OnCategoryChanging(string value);
-        partial void OnCategoryChanged();
-        partial void OnTotalCostChanging(decimal value);
-        partial void OnTotalCostChanged();
-        partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
-        partial void OnCreatedByChanged();
-        partial void OnCreatedDateChanging(System.Nullable<System.DateTime> value);
-        partial void OnCreatedDateChanged();
-        partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
-        partial void OnUpdatedByChanged();
-        partial void OnUpdatedDateChanging(System.Nullable<System.DateTime> value);
-        partial void OnUpdatedDateChanged();
-        partial void OnisCancelChanging(System.Nullable<bool> value);
-        partial void OnisCancelChanged();
-        partial void OnCancel_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnCancel_ByChanged();
-        partial void OnCancelDateChanging(System.Nullable<System.DateTime> value);
-        partial void OnCancelDateChanged();
-        partial void OnstatusChanging(string value);
-        partial void OnstatusChanged();
-        partial void Onvoucher_idChanging(System.Nullable<int> value);
-        partial void Onvoucher_idChanged();
-        partial void OnwarehouseChanging(string value);
-        partial void OnwarehouseChanged();
-        partial void OnCompany_IDChanging(System.Nullable<int> value);
-        partial void OnCompany_IDChanged();
-        #endregion
-
-        public inv_bom()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BOMID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int BOMID
-        {
-            get
-            {
-                return this._BOMID;
-            }
-            set
-            {
-                if ((this._BOMID != value))
-                {
-                    this.OnBOMIDChanging(value);
-                    this.SendPropertyChanging();
-                    this._BOMID = value;
-                    this.SendPropertyChanged("BOMID");
-                    this.OnBOMIDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ProcedureID", DbType = "Int NOT NULL")]
-        public int ProcedureID
-        {
-            get
-            {
-                return this._ProcedureID;
-            }
-            set
-            {
-                if ((this._ProcedureID != value))
-                {
-                    this.OnProcedureIDChanging(value);
-                    this.SendPropertyChanging();
-                    this._ProcedureID = value;
-                    this.SendPropertyChanged("ProcedureID");
-                    this.OnProcedureIDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Category", DbType = "NVarChar(100)")]
-        public string Category
-        {
-            get
-            {
-                return this._Category;
-            }
-            set
-            {
-                if ((this._Category != value))
-                {
-                    this.OnCategoryChanging(value);
-                    this.SendPropertyChanging();
-                    this._Category = value;
-                    this.SendPropertyChanged("Category");
-                    this.OnCategoryChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCost", DbType = "Decimal(18,2) NOT NULL")]
-        public decimal TotalCost
-        {
-            get
-            {
-                return this._TotalCost;
-            }
-            set
-            {
-                if ((this._TotalCost != value))
-                {
-                    this.OnTotalCostChanging(value);
-                    this.SendPropertyChanging();
-                    this._TotalCost = value;
-                    this.SendPropertyChanged("TotalCost");
-                    this.OnTotalCostChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> CreatedBy
-        {
-            get
-            {
-                return this._CreatedBy;
-            }
-            set
-            {
-                if ((this._CreatedBy != value))
-                {
-                    this.OnCreatedByChanging(value);
-                    this.SendPropertyChanging();
-                    this._CreatedBy = value;
-                    this.SendPropertyChanged("CreatedBy");
-                    this.OnCreatedByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedDate", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> CreatedDate
-        {
-            get
-            {
-                return this._CreatedDate;
-            }
-            set
-            {
-                if ((this._CreatedDate != value))
-                {
-                    this.OnCreatedDateChanging(value);
-                    this.SendPropertyChanging();
-                    this._CreatedDate = value;
-                    this.SendPropertyChanged("CreatedDate");
-                    this.OnCreatedDateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedBy", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> UpdatedBy
-        {
-            get
-            {
-                return this._UpdatedBy;
-            }
-            set
-            {
-                if ((this._UpdatedBy != value))
-                {
-                    this.OnUpdatedByChanging(value);
-                    this.SendPropertyChanging();
-                    this._UpdatedBy = value;
-                    this.SendPropertyChanged("UpdatedBy");
-                    this.OnUpdatedByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedDate", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> UpdatedDate
-        {
-            get
-            {
-                return this._UpdatedDate;
-            }
-            set
-            {
-                if ((this._UpdatedDate != value))
-                {
-                    this.OnUpdatedDateChanging(value);
-                    this.SendPropertyChanging();
-                    this._UpdatedDate = value;
-                    this.SendPropertyChanged("UpdatedDate");
-                    this.OnUpdatedDateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isCancel", DbType = "Bit")]
-        public System.Nullable<bool> isCancel
-        {
-            get
-            {
-                return this._isCancel;
-            }
-            set
-            {
-                if ((this._isCancel != value))
-                {
-                    this.OnisCancelChanging(value);
-                    this.SendPropertyChanging();
-                    this._isCancel = value;
-                    this.SendPropertyChanged("isCancel");
-                    this.OnisCancelChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cancel_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Cancel_By
-        {
-            get
-            {
-                return this._Cancel_By;
-            }
-            set
-            {
-                if ((this._Cancel_By != value))
-                {
-                    this.OnCancel_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Cancel_By = value;
-                    this.SendPropertyChanged("Cancel_By");
-                    this.OnCancel_ByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CancelDate", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> CancelDate
-        {
-            get
-            {
-                return this._CancelDate;
-            }
-            set
-            {
-                if ((this._CancelDate != value))
-                {
-                    this.OnCancelDateChanging(value);
-                    this.SendPropertyChanging();
-                    this._CancelDate = value;
-                    this.SendPropertyChanged("CancelDate");
-                    this.OnCancelDateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_status", DbType = "NVarChar(150)")]
-        public string status
-        {
-            get
-            {
-                return this._status;
-            }
-            set
-            {
-                if ((this._status != value))
-                {
-                    this.OnstatusChanging(value);
-                    this.SendPropertyChanging();
-                    this._status = value;
-                    this.SendPropertyChanged("status");
-                    this.OnstatusChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_voucher_id", DbType = "Int")]
-        public System.Nullable<int> voucher_id
-        {
-            get
-            {
-                return this._voucher_id;
-            }
-            set
-            {
-                if ((this._voucher_id != value))
-                {
-                    this.Onvoucher_idChanging(value);
-                    this.SendPropertyChanging();
-                    this._voucher_id = value;
-                    this.SendPropertyChanged("voucher_id");
-                    this.Onvoucher_idChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_warehouse", DbType = "NVarChar(150)")]
-        public string warehouse
-        {
-            get
-            {
-                return this._warehouse;
-            }
-            set
-            {
-                if ((this._warehouse != value))
-                {
-                    this.OnwarehouseChanging(value);
-                    this.SendPropertyChanging();
-                    this._warehouse = value;
-                    this.SendPropertyChanged("warehouse");
-                    this.OnwarehouseChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
-        public System.Nullable<int> Company_ID
-        {
-            get
-            {
-                return this._Company_ID;
-            }
-            set
-            {
-                if ((this._Company_ID != value))
-                {
-                    this.OnCompany_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Company_ID = value;
-                    this.SendPropertyChanged("Company_ID");
-                    this.OnCompany_IDChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.inv_bom_detail")]
     public partial class inv_bom_detail : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -161362,6 +160963,404 @@ namespace PMS
         {
             this.SendPropertyChanging();
             entity.Ar_Billing = null;
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.inv_bom")]
+    public partial class inv_bom : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _BOMID;
+
+        private int _ProcedureID;
+
+        private string _Category;
+
+        private decimal _TotalCost;
+
+        private System.Nullable<System.Guid> _CreatedBy;
+
+        private System.Nullable<System.DateTime> _CreatedDate;
+
+        private System.Nullable<System.Guid> _UpdatedBy;
+
+        private System.Nullable<System.DateTime> _UpdatedDate;
+
+        private System.Nullable<bool> _isCancel;
+
+        private System.Nullable<System.Guid> _Cancel_By;
+
+        private System.Nullable<System.DateTime> _CancelDate;
+
+        private string _status;
+
+        private System.Nullable<int> _voucher_id;
+
+        private string _warehouse;
+
+        private System.Nullable<int> _Company_ID;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnBOMIDChanging(int value);
+        partial void OnBOMIDChanged();
+        partial void OnProcedureIDChanging(int value);
+        partial void OnProcedureIDChanged();
+        partial void OnCategoryChanging(string value);
+        partial void OnCategoryChanged();
+        partial void OnTotalCostChanging(decimal value);
+        partial void OnTotalCostChanged();
+        partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreatedByChanged();
+        partial void OnCreatedDateChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreatedDateChanged();
+        partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdatedByChanged();
+        partial void OnUpdatedDateChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdatedDateChanged();
+        partial void OnisCancelChanging(System.Nullable<bool> value);
+        partial void OnisCancelChanged();
+        partial void OnCancel_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCancel_ByChanged();
+        partial void OnCancelDateChanging(System.Nullable<System.DateTime> value);
+        partial void OnCancelDateChanged();
+        partial void OnstatusChanging(string value);
+        partial void OnstatusChanged();
+        partial void Onvoucher_idChanging(System.Nullable<int> value);
+        partial void Onvoucher_idChanged();
+        partial void OnwarehouseChanging(string value);
+        partial void OnwarehouseChanged();
+        partial void OnCompany_IDChanging(System.Nullable<int> value);
+        partial void OnCompany_IDChanged();
+        #endregion
+
+        public inv_bom()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BOMID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int BOMID
+        {
+            get
+            {
+                return this._BOMID;
+            }
+            set
+            {
+                if ((this._BOMID != value))
+                {
+                    this.OnBOMIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._BOMID = value;
+                    this.SendPropertyChanged("BOMID");
+                    this.OnBOMIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ProcedureID", DbType = "Int NOT NULL")]
+        public int ProcedureID
+        {
+            get
+            {
+                return this._ProcedureID;
+            }
+            set
+            {
+                if ((this._ProcedureID != value))
+                {
+                    this.OnProcedureIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ProcedureID = value;
+                    this.SendPropertyChanged("ProcedureID");
+                    this.OnProcedureIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Category", DbType = "NVarChar(100)")]
+        public string Category
+        {
+            get
+            {
+                return this._Category;
+            }
+            set
+            {
+                if ((this._Category != value))
+                {
+                    this.OnCategoryChanging(value);
+                    this.SendPropertyChanging();
+                    this._Category = value;
+                    this.SendPropertyChanged("Category");
+                    this.OnCategoryChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCost", DbType = "Decimal(18,2) NOT NULL")]
+        public decimal TotalCost
+        {
+            get
+            {
+                return this._TotalCost;
+            }
+            set
+            {
+                if ((this._TotalCost != value))
+                {
+                    this.OnTotalCostChanging(value);
+                    this.SendPropertyChanging();
+                    this._TotalCost = value;
+                    this.SendPropertyChanged("TotalCost");
+                    this.OnTotalCostChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedBy", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> CreatedBy
+        {
+            get
+            {
+                return this._CreatedBy;
+            }
+            set
+            {
+                if ((this._CreatedBy != value))
+                {
+                    this.OnCreatedByChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedBy = value;
+                    this.SendPropertyChanged("CreatedBy");
+                    this.OnCreatedByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CreatedDate", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> CreatedDate
+        {
+            get
+            {
+                return this._CreatedDate;
+            }
+            set
+            {
+                if ((this._CreatedDate != value))
+                {
+                    this.OnCreatedDateChanging(value);
+                    this.SendPropertyChanging();
+                    this._CreatedDate = value;
+                    this.SendPropertyChanged("CreatedDate");
+                    this.OnCreatedDateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedBy", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> UpdatedBy
+        {
+            get
+            {
+                return this._UpdatedBy;
+            }
+            set
+            {
+                if ((this._UpdatedBy != value))
+                {
+                    this.OnUpdatedByChanging(value);
+                    this.SendPropertyChanging();
+                    this._UpdatedBy = value;
+                    this.SendPropertyChanged("UpdatedBy");
+                    this.OnUpdatedByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UpdatedDate", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> UpdatedDate
+        {
+            get
+            {
+                return this._UpdatedDate;
+            }
+            set
+            {
+                if ((this._UpdatedDate != value))
+                {
+                    this.OnUpdatedDateChanging(value);
+                    this.SendPropertyChanging();
+                    this._UpdatedDate = value;
+                    this.SendPropertyChanged("UpdatedDate");
+                    this.OnUpdatedDateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isCancel", DbType = "Bit")]
+        public System.Nullable<bool> isCancel
+        {
+            get
+            {
+                return this._isCancel;
+            }
+            set
+            {
+                if ((this._isCancel != value))
+                {
+                    this.OnisCancelChanging(value);
+                    this.SendPropertyChanging();
+                    this._isCancel = value;
+                    this.SendPropertyChanged("isCancel");
+                    this.OnisCancelChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cancel_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Cancel_By
+        {
+            get
+            {
+                return this._Cancel_By;
+            }
+            set
+            {
+                if ((this._Cancel_By != value))
+                {
+                    this.OnCancel_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cancel_By = value;
+                    this.SendPropertyChanged("Cancel_By");
+                    this.OnCancel_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CancelDate", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> CancelDate
+        {
+            get
+            {
+                return this._CancelDate;
+            }
+            set
+            {
+                if ((this._CancelDate != value))
+                {
+                    this.OnCancelDateChanging(value);
+                    this.SendPropertyChanging();
+                    this._CancelDate = value;
+                    this.SendPropertyChanged("CancelDate");
+                    this.OnCancelDateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_status", DbType = "NVarChar(150)")]
+        public string status
+        {
+            get
+            {
+                return this._status;
+            }
+            set
+            {
+                if ((this._status != value))
+                {
+                    this.OnstatusChanging(value);
+                    this.SendPropertyChanging();
+                    this._status = value;
+                    this.SendPropertyChanged("status");
+                    this.OnstatusChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_voucher_id", DbType = "Int")]
+        public System.Nullable<int> voucher_id
+        {
+            get
+            {
+                return this._voucher_id;
+            }
+            set
+            {
+                if ((this._voucher_id != value))
+                {
+                    this.Onvoucher_idChanging(value);
+                    this.SendPropertyChanging();
+                    this._voucher_id = value;
+                    this.SendPropertyChanged("voucher_id");
+                    this.Onvoucher_idChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_warehouse", DbType = "NVarChar(150)")]
+        public string warehouse
+        {
+            get
+            {
+                return this._warehouse;
+            }
+            set
+            {
+                if ((this._warehouse != value))
+                {
+                    this.OnwarehouseChanging(value);
+                    this.SendPropertyChanging();
+                    this._warehouse = value;
+                    this.SendPropertyChanged("warehouse");
+                    this.OnwarehouseChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
+        public System.Nullable<int> Company_ID
+        {
+            get
+            {
+                return this._Company_ID;
+            }
+            set
+            {
+                if ((this._Company_ID != value))
+                {
+                    this.OnCompany_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Company_ID = value;
+                    this.SendPropertyChanged("Company_ID");
+                    this.OnCompany_IDChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 
