@@ -1155,6 +1155,24 @@ function SaveData() {
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
+    var Remarks = $('#txtremarks').val() || "";
+
+    if (discount > 0 && (!Remarks || Remarks.trim() === "")) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Remarks Required',
+            text: 'Please enter remarks when discount is given.',
+            showConfirmButton: false,
+            timer: 2500,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        $('#txtremarks').focus();
+        return;
+    }
 
     if (discount < 100.0 && Fees == 0.0) {
 
@@ -1330,7 +1348,8 @@ function SaveData() {
         AntiForgeryToken: hfAntiForgery, // ✅ THIS WAS THE BUG — NOW FIXED
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
-        StudentName: StudentName
+        StudentName: StudentName,
+        Remarks: Remarks
     };
 
     // 👇 Optional: Log to verify
@@ -1559,6 +1578,7 @@ function loadPatientDetail(OPDID) {
             $('#txtdependent').val(data.Dependent).attr('disabled', true);
             $('#txtemployee').val(data.Employee_Name).attr('disabled', true);
             $('#txtreferenceno').val(data.Refference_No).attr('disabled', true);
+            $('#txtremarks').val(data.Remarks).attr('disabled', true);
 
 
 
