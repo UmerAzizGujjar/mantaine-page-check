@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬NoorHospital")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬ASsiraat_Standard")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -928,6 +928,7 @@ namespace PMS
         partial void UpdateWard_Definition(Ward_Definition instance);
         partial void DeleteWard_Definition(Ward_Definition instance);
         #endregion
+
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -4914,13 +4915,6 @@ namespace PMS
             return ((ISingleResult<spApproveGRNResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetInPatientDetail")]
-        public ISingleResult<sp_GetInPatientDetailResult> sp_GetInPatientDetail([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "InPatient_Id", DbType = "Int")] System.Nullable<int> inPatient_Id)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), inPatient_Id);
-            return ((ISingleResult<sp_GetInPatientDetailResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetPurchaseOrderChart")]
         public ISingleResult<GetPurchaseOrderChartResult> GetPurchaseOrderChart()
         {
@@ -5168,6 +5162,13 @@ namespace PMS
         public System.Nullable<decimal> GetCGSAmounts([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> itemcode, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Inventory_Org", DbType = "VarChar(100)")] string inventory_Org, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Batch", DbType = "VarChar(100)")] string batch)
         {
             return ((System.Nullable<decimal>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemcode, inventory_Org, batch).ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetInPatientDetail")]
+        public ISingleResult<sp_GetInPatientDetailResult> sp_GetInPatientDetail([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "InPatient_Id", DbType = "Int")] System.Nullable<int> inPatient_Id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), inPatient_Id);
+            return ((ISingleResult<sp_GetInPatientDetailResult>)(result.ReturnValue));
         }
     }
 
@@ -190637,7520 +190638,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_GetInPatientDetailResult
-    {
-
-        private string _Patient_Type;
-
-        private int _Patient_ID;
-
-        private string _Full_Name;
-
-        private System.Nullable<System.DateTime> _Entry_Date;
-
-        private System.Nullable<System.DateTime> _Created_Time;
-
-        private string _Mobile1;
-
-        private string _Permanent_Address;
-
-        private string _Gender;
-
-        private string _Age_years;
-
-        private string _Panel_Company;
-
-        private string _CardHolderName;
-
-        private string _InsuranceCardNo;
-
-        private string _PolicyHolderName;
-
-        private string _AdmissionType;
-
-        private string _SehatCardNo;
-
-        private string _VisitId;
-
-        private string _IdentificationMarks;
-
-        private string _Diagnosis;
-
-        private System.Nullable<System.DateTime> _DateOfDeath;
-
-        private System.Nullable<System.TimeSpan> _TimeOfDeath;
-
-        private string _PlaceOfDeath;
-
-        private string _CauseOfDeath;
-
-        private string _IssuingOfficerName;
-
-        private string _DeathCertifiedBy1;
-
-        private string _DeathCertifiedBy2;
-
-        private string _BodyHandedOverTo;
-
-        private string _FamilyPersonName;
-
-        private string _CNIC;
-
-        private string _RelationWithDeceased;
-
-        private string _CMO_Police;
-
-        private int _In_Patient_ID;
-
-        private System.Nullable<System.DateTime> _Admission_Date;
-
-        private string _Issuance_Of;
-
-        private System.Nullable<int> _Room_ID;
-
-        private System.Nullable<int> _Ward_ID;
-
-        private System.Nullable<int> _Bed_No;
-
-        private string _Department;
-
-        private string _Doctor;
-
-        private string _Health_Complaints;
-
-        private System.Nullable<System.DateTime> _Expected_Discharge_Date;
-
-        private string _Diabetes_Value;
-
-        private string _Referring_Doctor;
-
-        private string _Recommended_Diet;
-
-        private string _Provisional_Diagnosis;
-
-        private string _Pulse_Min;
-
-        private string _BP_mm_Hg;
-
-        private string _Temp_C;
-
-        private string _Respiration_Min;
-
-        private string _Height_Cm;
-
-        private string _Weight_Kg;
-
-        private string _Discharge_By;
-
-        private System.Nullable<System.DateTime> _Discharge_On;
-
-        private string _Prevention_Precaution;
-
-        private System.Nullable<System.DateTime> _Next_Visit;
-
-        private string _L_M_P;
-
-        private System.Nullable<System.DateTime> _Receiving_date;
-
-        private string _RN_Special_Instruction;
-
-        private string _RN_Patient_General_Condition;
-
-        private string _HistoryOfPeresentIllness;
-
-        private string _HistoryOfFamily;
-
-        private string _HistoryOfPastIllness;
-
-        private string _CVS;
-
-        private string _GIT;
-
-        private string _RESP;
-
-        private string _SocioEconomicHistory;
-
-        private string _CNS;
-
-        private string _GYNAE;
-
-        private string _ObstetricHistory;
-
-        private string _AllergiesHistory;
-
-        private string _ProvisionalDiagnosis;
-
-        private string _TreatmentHistory;
-
-        private string _txtRemarksHistory;
-
-        private System.Nullable<bool> _chkPallor;
-
-        private System.Nullable<bool> _chkJVP;
-
-        private System.Nullable<bool> _chkaganoris;
-
-        private System.Nullable<bool> _chkunconceed;
-
-        private System.Nullable<bool> _chkjaundice;
-
-        private System.Nullable<bool> _hydration;
-
-        private System.Nullable<bool> _edema;
-
-        private System.Nullable<bool> _chk1;
-
-        private System.Nullable<bool> _chk2;
-
-        private System.Nullable<bool> _chk3;
-
-        private System.Nullable<bool> _chk4;
-
-        private System.Nullable<bool> _chk5;
-
-        private System.Nullable<bool> _chk6;
-
-        private System.Nullable<bool> _chk7;
-
-        private System.Nullable<bool> _chk8;
-
-        private string _txtInputBox1;
-
-        private string _Reffer_No;
-
-        private string _Reffer_To;
-
-        private string _Birth_History;
-
-        private string _Drug_History;
-
-        private string _Personal_History;
-
-        private string _Local;
-
-        private string _Mucculor;
-
-        private string _ENT_Throat_IDL;
-
-        private string _ENT_Throat_Nose;
-
-        private string _ENT_Ear_Right;
-
-        private string _Ent_Ear_Left;
-
-        private System.Nullable<bool> _ENT_Rinnes_Right_PosNeg;
-
-        private System.Nullable<bool> _ENT_Rinnes_Lft_PosNeg;
-
-        private System.Nullable<bool> _ENT_Rinnes_Right_FalseNeg;
-
-        private System.Nullable<bool> _ENT_Rinnes_Lft_FalseNeg;
-
-        private System.Nullable<bool> _ENT_Webber_Central;
-
-        private System.Nullable<bool> _ENT_Webber_Lateralized;
-
-        private System.Nullable<bool> _ENT_Investigation_PTA;
-
-        private System.Nullable<bool> _ENT_Investigation_Tympanometry;
-
-        private System.Nullable<bool> _ENT_Rinnes_Right_Neg;
-
-        private System.Nullable<bool> _ENT_Rinnes_Lft_Neg;
-
-        private System.Nullable<bool> _ENT_Rinnes_Right_FNeg;
-
-        private System.Nullable<bool> _ENT_Rinnes_Lft_FNeg;
-
-        private string _Psychiatry_Informant;
-
-        private string _Psychiatry_Source_Referral;
-
-        private System.Nullable<bool> _Psychiatry_Walking;
-
-        private System.Nullable<bool> _Psychiatry_Talking;
-
-        private System.Nullable<bool> _Psychiatry_Others;
-
-        private string _Psychiatry_Menstrual;
-
-        private string _Psychiatry_Attachment_Separation;
-
-        private string _Psychiatry_Health;
-
-        private System.Nullable<bool> _Psychiatry_Neck_Holding;
-
-        private string _Psychiatry_Nail_Biting;
-
-        private string _Psychiatry_Temper_Tantrums;
-
-        private string _Psychiatry_Bed_Wetting;
-
-        private string _Psychiatry_Academics;
-
-        private string _Psychiatry_Menarche;
-
-        private string _Psychiatry_Peer_Relationship;
-
-        private string _Psychiatry_Behaviour;
-
-        private string _Psychiatry_Occupational_History;
-
-        private string _Psychiatry_Substance_Use;
-
-        private string _Psychiatry_Forensic_Use;
-
-        private string _Psychiatry_Relationship;
-
-        private string _Psychiatry_Leisure_Activities;
-
-        private string _Psychiatry_Attitude_Standards;
-
-        private string _Psychiatry_Prevalling_Mood;
-
-        private string _Psychiatry_Reaction_Stress;
-
-        private string _Psychiatry_Religious_Practices;
-
-        private string _Psychiatry_Father;
-
-        private string _Psychiatry_Mother;
-
-        private string _Psychiatry_Siblings;
-
-        private string _Psychiatry_Home_Atmosphere;
-
-        private string _Psychiatry_Familial_Illness;
-
-        private string _Psychiatry_Actual_age;
-
-        private string _Psychiatry_Race;
-
-        private string _Psychiatry_Tattoos_body_scars;
-
-        private string _Psychiatry_Body_Habitus;
-
-        private string _Psychiatry_Dress;
-
-        private string _Psychiatry_Hygiene;
-
-        private string _Psychiatry_Psychomotor_Activity;
-
-        private string _Psychiatry_Involuntary_movements;
-
-        private string _Psychiatry_Dystonia_EPS;
-
-        private string _Psychiatry_Tardive_dyskinesia;
-
-        private string _Psychiatry_Tics;
-
-        private string _Psychiatry_Tremors;
-
-        private string _Psychiatry_Attentiveness_interview;
-
-        private string _Psychiatry_Eye_Contact;
-
-        private string _Psychiatry_Level_Consciousness;
-
-        private string _Psychiatry_Rate;
-
-        private string _Psychiatry_Rhythm;
-
-        private string _Psychiatry_Volume;
-
-        private string _Psychiatry_Tone;
-
-        private string _Psychiatry_Modulation;
-
-        private string _Psychiatry_Depressed;
-
-        private string _Psychiatry_Elated;
-
-        private string _Psychiatry_Irritable;
-
-        private string _Psychiatry_Labile;
-
-        private string _Psychiatry_Incongruent;
-
-        private string _Psychiatry_Blunting_Flattening_Apathy;
-
-        private string _Psychiatry_Thinking;
-
-        private string _Psychiatry_Plans;
-
-        private string _Psychiatry_Actions;
-
-        private string _Psychiatry_Preservative;
-
-        private string _Psychiatry_LoosAssociation;
-
-        private string _Psychiatry_Tangentiaility;
-
-        private string _Psychiatry_Circumstantiality;
-
-        private string _Psychiatry_Flight_Ideas;
-
-        private string _Psychiatry_Thought_Insertion;
-
-        private string _Psychiatry_Thought_Withdrawal;
-
-        private string _Psychiatry_Thought_Broadcasting;
-
-        private string _Psychiatry_Thought_Control;
-
-        private string _Psychiatry_Dellusion;
-
-        private string _Psychiatry_Overvalued_Ideas;
-
-        private string _Psychiatry_Depresonalization;
-
-        private string _Psychiatry_Derealization;
-
-        private string _Psychiatry_Sexual_History;
-
-        private string _Psychiatry_Phobies;
-
-        private string _Psychiatry_Homocidial_Ideas;
-
-        private string _Psychiatry_Illusion;
-
-        private string _Psychiatry_Hallucination;
-
-        private string _Psychiatry_Orientation_Time;
-
-        private string _Psychiatry_Place;
-
-        private string _Psychiatry_Person;
-
-        private string _Psychiatry_Attention_Concentration;
-
-        private string _Psychiatry_Days_Week;
-
-        private string _Psychiatry_Immediate_Memory;
-
-        private string _Psychiatry_Recent_Events;
-
-        private string _Psychiatry_Adress_Recall_Two;
-
-        private string _Psychiatry_Remote_Events;
-
-        private string _Psychiatry_Adress_Recall_Five;
-
-        private string _Psychiatry_General_knowledge;
-
-        private string _Psychiatry_Arthemetic_Calculation;
-
-        private string _Psychiatry_Abstraction;
-
-        private string _Psychiatry_Insight;
-
-        private string _DermaFace;
-
-        private string _DermaNeck;
-
-        private string _DermaTrunk;
-
-        private string _DermaUpperLimb;
-
-        private string _DermaLowerLimb;
-
-        private string _DermaFlexures;
-
-        private string _DermaGenitalias;
-
-        private string _DermaHair;
-
-        private string _DermaNail;
-
-        private string _DermaMucousMembrane;
-
-        private string _DermaEyes;
-
-        private string _DermaEars;
-
-        private string _DermaNose;
-
-        private string _DermaLips;
-
-        private string _Psychiatry_HBM_Problem;
-
-        private string _Psychiatry_HBM_Caused;
-
-        private string _Psychiatry_HBM_Started;
-
-        private string _Psychiatry_HBM_Course;
-
-        private string _Psychiatry_HBM_Treatment;
-
-        private string _Psychiatry_HBM_Effects;
-
-        private string _Psychiatry_PE_Pluse;
-
-        private string _Psychiatry_PE_BP;
-
-        private string _Psychiatry_PE_Temperature;
-
-        private string _Psychiatry_PE_Weight;
-
-        private string _Psychiatry_PE_RespiratoryRate;
-
-        private string _Psychiatry_PE_Jaundice;
-
-        private string _Psychiatry_PE_Anemia;
-
-        private string _Psychiatry_PE_Cyanosis;
-
-        private string _Psychiatry_PE_Clubbing;
-
-        private string _Psychiatry_PE_JVP;
-
-        private string _Psychiatry_PE_LymphNodes;
-
-        private string _Psychiatry_PE_Edema;
-
-        private string _Psychiatry_PE_Respiratory;
-
-        private string _Psychiatry_PE_Cardiovascular;
-
-        private string _Psychiatry_PE_Gastro_Intestinal;
-
-        private string _Psychiatry_PE_Observation;
-
-        private string _Psychiatry_PE_Cranial_Nerves;
-
-        private string _Psychiatry_PE_Limb_Strength;
-
-        private string _Psychiatry_PE_Spasticity;
-
-        private string _Psychiatry_PE_Position;
-
-        private string _Psychiatry_PE_Vibration;
-
-        private string _Psychiatry_PE_Stereognosis;
-
-        private string _Psychiatry_PE_Pain;
-
-        private string _Psychiatry_PE_Biceps;
-
-        private string _Psychiatry_PE_Triceps;
-
-        private string _Psychiatry_PE_Brachioradialis;
-
-        private string _Psychiatry_PE_Quadriceps;
-
-        private string _Psychiatry_PE_Patellar;
-
-        private string _Psychiatry_PE_Achilles;
-
-        private string _Psychiatry_PE_Extensor;
-
-        private string _Psychiatry_PE_Frontal;
-
-        private string _Psychiatry_PE_Finger;
-
-        private string _Psychiatry_PE_Heel;
-
-        private string _Psychiatry_PE_Movements;
-
-        private string _Psychiatry_PE_Gait;
-
-        private System.Nullable<bool> _Psychiatry_PE_Neck_Rigidity;
-
-        private System.Nullable<bool> _Psychiatry_PE_Kerning_Sign;
-
-        private System.Nullable<bool> _Psychiatry_PE_Brudzinki_Sign;
-
-        private string _Psychiatry_For_Summary;
-
-        private string _Psychiatry_For_Diagnosis;
-
-        private string _Psychiatry_For_AxisI;
-
-        private string _Psychiatry_For_AxisII;
-
-        private string _Psychiatry_For_AxisIII;
-
-        private string _Psychiatry_For_AxisIV;
-
-        private string _Psychiatry_For_AxisV;
-
-        private string _Psychiatry_For_PredisposingFactors;
-
-        private string _Psychiatry_For_PrecipitatingFactors;
-
-        private string _Psychiatry_For_PrepetuatingFactors;
-
-        private string _Psychiatry_For_Investigation;
-
-        private string _Psychiatry_For_Medical;
-
-        private string _Psychiatry_For_Psychological;
-
-        private string _Psychiatry_Major_Issues;
-
-        private string _Psychiatry_For_Strengths;
-
-        private string _Psychiatry_For_Goals;
-
-        private string _Psychiatry_For_Strategies;
-
-        private string _Procedure_Operation;
-
-        private string _Procedure_Detail;
-
-        private string _Diagonosis;
-
-        private string _Room_Type;
-
-        private System.Nullable<bool> _Discharge;
-
-        private string _Patient_Discount_Type;
-
-        private string _Peads_weight;
-
-        private string _Peads_Length;
-
-        private string _Peads_HC;
-
-        private string _Peads_General_Appearance;
-
-        private System.Nullable<bool> _Peads_Cyanosis;
-
-        private System.Nullable<bool> _Peads_Jaundice;
-
-        private System.Nullable<bool> _Peads_Lethargy;
-
-        private System.Nullable<bool> _Peads_Rash;
-
-        private string _Peads_Others;
-
-        private System.Nullable<bool> _Peads_Caput;
-
-        private System.Nullable<bool> _Peads_Cephalhematoma;
-
-        private System.Nullable<bool> _Peads_Anterioropen;
-
-        private System.Nullable<bool> _Peads_AnteriorClose;
-
-        private System.Nullable<bool> _Peads_Dextrocardia;
-
-        private System.Nullable<bool> _Peads_Bulging;
-
-        private System.Nullable<bool> _Peads_Murmur;
-
-        private string _Peads_HeartSound;
-
-        private System.Nullable<bool> _Peads_Nasal;
-
-        private System.Nullable<bool> _Peads_Recessions;
-
-        private string _Peads_AddedSounds;
-
-        private System.Nullable<bool> _Peads_Flat;
-
-        private System.Nullable<bool> _Peads_Distended;
-
-        private System.Nullable<bool> _Peads_Scaphoid;
-
-        private System.Nullable<bool> _Peads_Liver;
-
-        private System.Nullable<bool> _Peads_Spleen;
-
-        private string _Peads_GITOthers;
-
-        private System.Nullable<bool> _Peads_Sucking;
-
-        private System.Nullable<bool> _Peads_Rooting;
-
-        private System.Nullable<bool> _Peads_Moro;
-
-        private string _Peads_CNSOthers;
-
-        private System.Nullable<bool> _Peads_FullTerm;
-
-        private System.Nullable<bool> _Peads_PreTerm;
-
-        private System.Nullable<System.DateTime> _Peads_DateOfDelivery;
-
-        private string _Peads_TimeOfDelivery;
-
-        private System.Nullable<bool> _Peads_Booked;
-
-        private System.Nullable<bool> _Peads_UnBooked;
-
-        private System.Nullable<bool> _Peads_DAIHandling;
-
-        private System.Nullable<bool> _Peads_ANTURash;
-
-        private System.Nullable<bool> _Peads_PIH;
-
-        private System.Nullable<bool> _Peads_GDM;
-
-        private System.Nullable<bool> _Peads_Vacinated;
-
-        private string _Peads_ANTOthers;
-
-        private System.Nullable<bool> _Peads_SVD;
-
-        private System.Nullable<bool> _Peads_LSCS;
-
-        private System.Nullable<bool> _Peads_Emergency;
-
-        private System.Nullable<bool> _Peads_Elective;
-
-        private string _Peads_PlaceOfDelivery;
-
-        private string _Peads_IndicationForLSCS;
-
-        private string _Peads_apgerScore1min;
-
-        private string _Peads_apgerScore5min;
-
-        private System.Nullable<bool> _Peads_Resuscitation;
-
-        private string _Peads_NatalOthers;
-
-        private System.Nullable<bool> _Peads_Moaning;
-
-        private System.Nullable<bool> _Peads_RespDistress;
-
-        private System.Nullable<bool> _Peads_PostNATALCyanosis;
-
-        private System.Nullable<bool> _Peads_Fits;
-
-        private System.Nullable<bool> _Peads_ReluctanceToFeed;
-
-        private string _Peads_PostNatalOthers;
-
-        private string _Vaccination_History;
-
-        private string _Other_History;
-
-        private System.Nullable<bool> _HMFIntact;
-
-        private System.Nullable<bool> _CranialNerves;
-
-        private string _FurtherExplanation;
-
-        private System.Nullable<bool> _SignsOfMeningism;
-
-        private System.Nullable<bool> _HeartSound;
-
-        private System.Nullable<bool> _Arrhythmias;
-
-        private System.Nullable<bool> _Murmur;
-
-        private System.Nullable<bool> _AnyOtherAddedSound;
-
-        private System.Nullable<bool> _AnyOtherFindings;
-
-        private System.Nullable<bool> _Wheeze;
-
-        private System.Nullable<bool> _Ranchi;
-
-        private System.Nullable<bool> _AnyOtherSound;
-
-        private System.Nullable<bool> _AbdomenSoft;
-
-        private System.Nullable<bool> _Tenderness;
-
-        private System.Nullable<bool> _Guarding;
-
-        private System.Nullable<bool> _BowelSound;
-
-        private System.Nullable<bool> _Distention;
-
-        private System.Nullable<bool> _FluidThrill;
-
-        private System.Nullable<bool> _ShiftingDullness;
-
-        private System.Nullable<bool> _EpigastriaDiscomfort;
-
-        private System.Nullable<bool> _RetrosternalBurning;
-
-        private System.Nullable<bool> _Jondus;
-
-        private System.Nullable<bool> _Pallor;
-
-        private System.Nullable<bool> _Dehydration;
-
-        private System.Nullable<bool> _GCSOrientation;
-
-        private System.Nullable<bool> _Conscious_Orientely;
-
-        private System.Nullable<bool> _NVB_Right;
-
-        private System.Nullable<bool> _NVB_Left;
-
-        private System.Nullable<bool> _Crepitation_Right;
-
-        private System.Nullable<bool> _Crepitation_Left;
-
-        private string _CNS_Value;
-
-        private string _CVS_Value;
-
-        private string _RESP_Value;
-
-        private string _GIT_Value;
-
-        private string _GPE_Value;
-
-        private string _Eye_Opening_Response;
-
-        private string _Motor_Response;
-
-        private string _Verbal_Response;
-
-        private string _Accumulated_Response;
-
-        private string _remarks_call_to_doctor;
-
-        private string _PU_R;
-
-        private string _PU_L;
-
-        private string _PL_L;
-
-        private string _PL_R;
-
-        private System.Nullable<bool> _SU_R;
-
-        private System.Nullable<bool> _SU_L;
-
-        private System.Nullable<bool> _SL_R;
-
-        private System.Nullable<bool> _SL_L;
-
-        private string _TruckTorso;
-
-        private string _Clinical_Summary;
-
-        private string _Doctors_Note;
-
-        private string _Provisional_Diagnosis_Examination;
-
-        private string _Sehat_Card_Holder_CNIC;
-
-        private System.Nullable<bool> _JVP_Param;
-
-        private System.Nullable<bool> _Edema_Param;
-
-        private System.Nullable<bool> _Cyanosis_Param;
-
-        private string _patient_main_department;
-
-        private string _packagae_type;
-
-        private string _packagae_name;
-
-        private string _ipd_Procedure;
-
-        private string _Procedure_Desc;
-
-        private string _Panel_Company1;
-
-        private string _InsuranceCardNo1;
-
-        private string _CardHolderName1;
-
-        private string _CompanyNAme;
-
-        private string _ApproveLimit;
-
-        private string _ApproveDays;
-
-        private string _RoomLimit;
-
-        private string _CardLimit;
-
-        private System.Nullable<decimal> _Discount;
-
-        private string _Private_Charges_instruction;
-
-        private int _Advance_Amount;
-
-        private string _Discharge_Type;
-
-        private System.Nullable<bool> _Discharge_Request;
-
-        public sp_GetInPatientDetailResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Type", DbType = "VarChar(50)")]
-        public string Patient_Type
-        {
-            get
-            {
-                return this._Patient_Type;
-            }
-            set
-            {
-                if ((this._Patient_Type != value))
-                {
-                    this._Patient_Type = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
-        public int Patient_ID
-        {
-            get
-            {
-                return this._Patient_ID;
-            }
-            set
-            {
-                if ((this._Patient_ID != value))
-                {
-                    this._Patient_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(100)")]
-        public string Full_Name
-        {
-            get
-            {
-                return this._Full_Name;
-            }
-            set
-            {
-                if ((this._Full_Name != value))
-                {
-                    this._Full_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Entry_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Entry_Date
-        {
-            get
-            {
-                return this._Entry_Date;
-            }
-            set
-            {
-                if ((this._Entry_Date != value))
-                {
-                    this._Entry_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Created_Time
-        {
-            get
-            {
-                return this._Created_Time;
-            }
-            set
-            {
-                if ((this._Created_Time != value))
-                {
-                    this._Created_Time = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mobile1", DbType = "VarChar(50)")]
-        public string Mobile1
-        {
-            get
-            {
-                return this._Mobile1;
-            }
-            set
-            {
-                if ((this._Mobile1 != value))
-                {
-                    this._Mobile1 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Permanent_Address", DbType = "NVarChar(350)")]
-        public string Permanent_Address
-        {
-            get
-            {
-                return this._Permanent_Address;
-            }
-            set
-            {
-                if ((this._Permanent_Address != value))
-                {
-                    this._Permanent_Address = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Gender", DbType = "VarChar(50)")]
-        public string Gender
-        {
-            get
-            {
-                return this._Gender;
-            }
-            set
-            {
-                if ((this._Gender != value))
-                {
-                    this._Gender = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Age_years", DbType = "VarChar(50)")]
-        public string Age_years
-        {
-            get
-            {
-                return this._Age_years;
-            }
-            set
-            {
-                if ((this._Age_years != value))
-                {
-                    this._Age_years = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Panel_Company", DbType = "VarChar(100)")]
-        public string Panel_Company
-        {
-            get
-            {
-                return this._Panel_Company;
-            }
-            set
-            {
-                if ((this._Panel_Company != value))
-                {
-                    this._Panel_Company = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CardHolderName", DbType = "NVarChar(100)")]
-        public string CardHolderName
-        {
-            get
-            {
-                return this._CardHolderName;
-            }
-            set
-            {
-                if ((this._CardHolderName != value))
-                {
-                    this._CardHolderName = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_InsuranceCardNo", DbType = "NVarChar(100)")]
-        public string InsuranceCardNo
-        {
-            get
-            {
-                return this._InsuranceCardNo;
-            }
-            set
-            {
-                if ((this._InsuranceCardNo != value))
-                {
-                    this._InsuranceCardNo = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PolicyHolderName", DbType = "NVarChar(100)")]
-        public string PolicyHolderName
-        {
-            get
-            {
-                return this._PolicyHolderName;
-            }
-            set
-            {
-                if ((this._PolicyHolderName != value))
-                {
-                    this._PolicyHolderName = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AdmissionType", DbType = "VarChar(50)")]
-        public string AdmissionType
-        {
-            get
-            {
-                return this._AdmissionType;
-            }
-            set
-            {
-                if ((this._AdmissionType != value))
-                {
-                    this._AdmissionType = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SehatCardNo", DbType = "VarChar(150)")]
-        public string SehatCardNo
-        {
-            get
-            {
-                return this._SehatCardNo;
-            }
-            set
-            {
-                if ((this._SehatCardNo != value))
-                {
-                    this._SehatCardNo = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VisitId", DbType = "VarChar(150)")]
-        public string VisitId
-        {
-            get
-            {
-                return this._VisitId;
-            }
-            set
-            {
-                if ((this._VisitId != value))
-                {
-                    this._VisitId = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IdentificationMarks", DbType = "VarChar(200)")]
-        public string IdentificationMarks
-        {
-            get
-            {
-                return this._IdentificationMarks;
-            }
-            set
-            {
-                if ((this._IdentificationMarks != value))
-                {
-                    this._IdentificationMarks = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Diagnosis", DbType = "VarChar(200)")]
-        public string Diagnosis
-        {
-            get
-            {
-                return this._Diagnosis;
-            }
-            set
-            {
-                if ((this._Diagnosis != value))
-                {
-                    this._Diagnosis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DateOfDeath", DbType = "Date")]
-        public System.Nullable<System.DateTime> DateOfDeath
-        {
-            get
-            {
-                return this._DateOfDeath;
-            }
-            set
-            {
-                if ((this._DateOfDeath != value))
-                {
-                    this._DateOfDeath = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TimeOfDeath", DbType = "Time")]
-        public System.Nullable<System.TimeSpan> TimeOfDeath
-        {
-            get
-            {
-                return this._TimeOfDeath;
-            }
-            set
-            {
-                if ((this._TimeOfDeath != value))
-                {
-                    this._TimeOfDeath = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PlaceOfDeath", DbType = "VarChar(100)")]
-        public string PlaceOfDeath
-        {
-            get
-            {
-                return this._PlaceOfDeath;
-            }
-            set
-            {
-                if ((this._PlaceOfDeath != value))
-                {
-                    this._PlaceOfDeath = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CauseOfDeath", DbType = "VarChar(100)")]
-        public string CauseOfDeath
-        {
-            get
-            {
-                return this._CauseOfDeath;
-            }
-            set
-            {
-                if ((this._CauseOfDeath != value))
-                {
-                    this._CauseOfDeath = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IssuingOfficerName", DbType = "VarChar(100)")]
-        public string IssuingOfficerName
-        {
-            get
-            {
-                return this._IssuingOfficerName;
-            }
-            set
-            {
-                if ((this._IssuingOfficerName != value))
-                {
-                    this._IssuingOfficerName = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeathCertifiedBy1", DbType = "VarChar(80)")]
-        public string DeathCertifiedBy1
-        {
-            get
-            {
-                return this._DeathCertifiedBy1;
-            }
-            set
-            {
-                if ((this._DeathCertifiedBy1 != value))
-                {
-                    this._DeathCertifiedBy1 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeathCertifiedBy2", DbType = "VarChar(80)")]
-        public string DeathCertifiedBy2
-        {
-            get
-            {
-                return this._DeathCertifiedBy2;
-            }
-            set
-            {
-                if ((this._DeathCertifiedBy2 != value))
-                {
-                    this._DeathCertifiedBy2 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BodyHandedOverTo", DbType = "VarChar(80)")]
-        public string BodyHandedOverTo
-        {
-            get
-            {
-                return this._BodyHandedOverTo;
-            }
-            set
-            {
-                if ((this._BodyHandedOverTo != value))
-                {
-                    this._BodyHandedOverTo = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FamilyPersonName", DbType = "NVarChar(80)")]
-        public string FamilyPersonName
-        {
-            get
-            {
-                return this._FamilyPersonName;
-            }
-            set
-            {
-                if ((this._FamilyPersonName != value))
-                {
-                    this._FamilyPersonName = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CNIC", DbType = "NVarChar(50)")]
-        public string CNIC
-        {
-            get
-            {
-                return this._CNIC;
-            }
-            set
-            {
-                if ((this._CNIC != value))
-                {
-                    this._CNIC = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RelationWithDeceased", DbType = "NVarChar(50)")]
-        public string RelationWithDeceased
-        {
-            get
-            {
-                return this._RelationWithDeceased;
-            }
-            set
-            {
-                if ((this._RelationWithDeceased != value))
-                {
-                    this._RelationWithDeceased = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CMO_Police", DbType = "NVarChar(70)")]
-        public string CMO_Police
-        {
-            get
-            {
-                return this._CMO_Police;
-            }
-            set
-            {
-                if ((this._CMO_Police != value))
-                {
-                    this._CMO_Police = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_In_Patient_ID", DbType = "Int NOT NULL")]
-        public int In_Patient_ID
-        {
-            get
-            {
-                return this._In_Patient_ID;
-            }
-            set
-            {
-                if ((this._In_Patient_ID != value))
-                {
-                    this._In_Patient_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Admission_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Admission_Date
-        {
-            get
-            {
-                return this._Admission_Date;
-            }
-            set
-            {
-                if ((this._Admission_Date != value))
-                {
-                    this._Admission_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Issuance_Of", DbType = "VarChar(3)")]
-        public string Issuance_Of
-        {
-            get
-            {
-                return this._Issuance_Of;
-            }
-            set
-            {
-                if ((this._Issuance_Of != value))
-                {
-                    this._Issuance_Of = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Room_ID", DbType = "Int")]
-        public System.Nullable<int> Room_ID
-        {
-            get
-            {
-                return this._Room_ID;
-            }
-            set
-            {
-                if ((this._Room_ID != value))
-                {
-                    this._Room_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_ID", DbType = "Int")]
-        public System.Nullable<int> Ward_ID
-        {
-            get
-            {
-                return this._Ward_ID;
-            }
-            set
-            {
-                if ((this._Ward_ID != value))
-                {
-                    this._Ward_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bed_No", DbType = "Int")]
-        public System.Nullable<int> Bed_No
-        {
-            get
-            {
-                return this._Bed_No;
-            }
-            set
-            {
-                if ((this._Bed_No != value))
-                {
-                    this._Bed_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(50)")]
-        public string Department
-        {
-            get
-            {
-                return this._Department;
-            }
-            set
-            {
-                if ((this._Department != value))
-                {
-                    this._Department = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor", DbType = "VarChar(5)")]
-        public string Doctor
-        {
-            get
-            {
-                return this._Doctor;
-            }
-            set
-            {
-                if ((this._Doctor != value))
-                {
-                    this._Doctor = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Health_Complaints", DbType = "VarChar(MAX)")]
-        public string Health_Complaints
-        {
-            get
-            {
-                return this._Health_Complaints;
-            }
-            set
-            {
-                if ((this._Health_Complaints != value))
-                {
-                    this._Health_Complaints = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Expected_Discharge_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Expected_Discharge_Date
-        {
-            get
-            {
-                return this._Expected_Discharge_Date;
-            }
-            set
-            {
-                if ((this._Expected_Discharge_Date != value))
-                {
-                    this._Expected_Discharge_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Diabetes_Value", DbType = "VarChar(50)")]
-        public string Diabetes_Value
-        {
-            get
-            {
-                return this._Diabetes_Value;
-            }
-            set
-            {
-                if ((this._Diabetes_Value != value))
-                {
-                    this._Diabetes_Value = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referring_Doctor", DbType = "VarChar(50)")]
-        public string Referring_Doctor
-        {
-            get
-            {
-                return this._Referring_Doctor;
-            }
-            set
-            {
-                if ((this._Referring_Doctor != value))
-                {
-                    this._Referring_Doctor = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Recommended_Diet", DbType = "VarChar(MAX)")]
-        public string Recommended_Diet
-        {
-            get
-            {
-                return this._Recommended_Diet;
-            }
-            set
-            {
-                if ((this._Recommended_Diet != value))
-                {
-                    this._Recommended_Diet = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Provisional_Diagnosis", DbType = "VarChar(MAX)")]
-        public string Provisional_Diagnosis
-        {
-            get
-            {
-                return this._Provisional_Diagnosis;
-            }
-            set
-            {
-                if ((this._Provisional_Diagnosis != value))
-                {
-                    this._Provisional_Diagnosis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Pulse_Min", DbType = "VarChar(10)")]
-        public string Pulse_Min
-        {
-            get
-            {
-                return this._Pulse_Min;
-            }
-            set
-            {
-                if ((this._Pulse_Min != value))
-                {
-                    this._Pulse_Min = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BP_mm_Hg", DbType = "VarChar(10)")]
-        public string BP_mm_Hg
-        {
-            get
-            {
-                return this._BP_mm_Hg;
-            }
-            set
-            {
-                if ((this._BP_mm_Hg != value))
-                {
-                    this._BP_mm_Hg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Temp_C", DbType = "VarChar(10)")]
-        public string Temp_C
-        {
-            get
-            {
-                return this._Temp_C;
-            }
-            set
-            {
-                if ((this._Temp_C != value))
-                {
-                    this._Temp_C = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Respiration_Min", DbType = "VarChar(10)")]
-        public string Respiration_Min
-        {
-            get
-            {
-                return this._Respiration_Min;
-            }
-            set
-            {
-                if ((this._Respiration_Min != value))
-                {
-                    this._Respiration_Min = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Height_Cm", DbType = "VarChar(10)")]
-        public string Height_Cm
-        {
-            get
-            {
-                return this._Height_Cm;
-            }
-            set
-            {
-                if ((this._Height_Cm != value))
-                {
-                    this._Height_Cm = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Weight_Kg", DbType = "VarChar(10)")]
-        public string Weight_Kg
-        {
-            get
-            {
-                return this._Weight_Kg;
-            }
-            set
-            {
-                if ((this._Weight_Kg != value))
-                {
-                    this._Weight_Kg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_By", DbType = "VarChar(50)")]
-        public string Discharge_By
-        {
-            get
-            {
-                return this._Discharge_By;
-            }
-            set
-            {
-                if ((this._Discharge_By != value))
-                {
-                    this._Discharge_By = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_On", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Discharge_On
-        {
-            get
-            {
-                return this._Discharge_On;
-            }
-            set
-            {
-                if ((this._Discharge_On != value))
-                {
-                    this._Discharge_On = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Prevention_Precaution", DbType = "VarChar(MAX)")]
-        public string Prevention_Precaution
-        {
-            get
-            {
-                return this._Prevention_Precaution;
-            }
-            set
-            {
-                if ((this._Prevention_Precaution != value))
-                {
-                    this._Prevention_Precaution = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Next_Visit", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Next_Visit
-        {
-            get
-            {
-                return this._Next_Visit;
-            }
-            set
-            {
-                if ((this._Next_Visit != value))
-                {
-                    this._Next_Visit = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_L_M_P", DbType = "VarChar(200)")]
-        public string L_M_P
-        {
-            get
-            {
-                return this._L_M_P;
-            }
-            set
-            {
-                if ((this._L_M_P != value))
-                {
-                    this._L_M_P = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receiving_date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Receiving_date
-        {
-            get
-            {
-                return this._Receiving_date;
-            }
-            set
-            {
-                if ((this._Receiving_date != value))
-                {
-                    this._Receiving_date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RN_Special_Instruction", DbType = "VarChar(200)")]
-        public string RN_Special_Instruction
-        {
-            get
-            {
-                return this._RN_Special_Instruction;
-            }
-            set
-            {
-                if ((this._RN_Special_Instruction != value))
-                {
-                    this._RN_Special_Instruction = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RN_Patient_General_Condition", DbType = "VarChar(200)")]
-        public string RN_Patient_General_Condition
-        {
-            get
-            {
-                return this._RN_Patient_General_Condition;
-            }
-            set
-            {
-                if ((this._RN_Patient_General_Condition != value))
-                {
-                    this._RN_Patient_General_Condition = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HistoryOfPeresentIllness", DbType = "VarChar(MAX)")]
-        public string HistoryOfPeresentIllness
-        {
-            get
-            {
-                return this._HistoryOfPeresentIllness;
-            }
-            set
-            {
-                if ((this._HistoryOfPeresentIllness != value))
-                {
-                    this._HistoryOfPeresentIllness = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HistoryOfFamily", DbType = "VarChar(MAX)")]
-        public string HistoryOfFamily
-        {
-            get
-            {
-                return this._HistoryOfFamily;
-            }
-            set
-            {
-                if ((this._HistoryOfFamily != value))
-                {
-                    this._HistoryOfFamily = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HistoryOfPastIllness", DbType = "VarChar(MAX)")]
-        public string HistoryOfPastIllness
-        {
-            get
-            {
-                return this._HistoryOfPastIllness;
-            }
-            set
-            {
-                if ((this._HistoryOfPastIllness != value))
-                {
-                    this._HistoryOfPastIllness = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CVS", DbType = "VarChar(500)")]
-        public string CVS
-        {
-            get
-            {
-                return this._CVS;
-            }
-            set
-            {
-                if ((this._CVS != value))
-                {
-                    this._CVS = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GIT", DbType = "VarChar(MAX)")]
-        public string GIT
-        {
-            get
-            {
-                return this._GIT;
-            }
-            set
-            {
-                if ((this._GIT != value))
-                {
-                    this._GIT = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RESP", DbType = "VarChar(MAX)")]
-        public string RESP
-        {
-            get
-            {
-                return this._RESP;
-            }
-            set
-            {
-                if ((this._RESP != value))
-                {
-                    this._RESP = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SocioEconomicHistory", DbType = "VarChar(MAX)")]
-        public string SocioEconomicHistory
-        {
-            get
-            {
-                return this._SocioEconomicHistory;
-            }
-            set
-            {
-                if ((this._SocioEconomicHistory != value))
-                {
-                    this._SocioEconomicHistory = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CNS", DbType = "VarChar(MAX)")]
-        public string CNS
-        {
-            get
-            {
-                return this._CNS;
-            }
-            set
-            {
-                if ((this._CNS != value))
-                {
-                    this._CNS = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GYNAE", DbType = "VarChar(MAX)")]
-        public string GYNAE
-        {
-            get
-            {
-                return this._GYNAE;
-            }
-            set
-            {
-                if ((this._GYNAE != value))
-                {
-                    this._GYNAE = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ObstetricHistory", DbType = "VarChar(MAX)")]
-        public string ObstetricHistory
-        {
-            get
-            {
-                return this._ObstetricHistory;
-            }
-            set
-            {
-                if ((this._ObstetricHistory != value))
-                {
-                    this._ObstetricHistory = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllergiesHistory", DbType = "VarChar(MAX)")]
-        public string AllergiesHistory
-        {
-            get
-            {
-                return this._AllergiesHistory;
-            }
-            set
-            {
-                if ((this._AllergiesHistory != value))
-                {
-                    this._AllergiesHistory = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ProvisionalDiagnosis", DbType = "VarChar(MAX)")]
-        public string ProvisionalDiagnosis
-        {
-            get
-            {
-                return this._ProvisionalDiagnosis;
-            }
-            set
-            {
-                if ((this._ProvisionalDiagnosis != value))
-                {
-                    this._ProvisionalDiagnosis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TreatmentHistory", DbType = "VarChar(MAX)")]
-        public string TreatmentHistory
-        {
-            get
-            {
-                return this._TreatmentHistory;
-            }
-            set
-            {
-                if ((this._TreatmentHistory != value))
-                {
-                    this._TreatmentHistory = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_txtRemarksHistory", DbType = "VarChar(MAX)")]
-        public string txtRemarksHistory
-        {
-            get
-            {
-                return this._txtRemarksHistory;
-            }
-            set
-            {
-                if ((this._txtRemarksHistory != value))
-                {
-                    this._txtRemarksHistory = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkPallor", DbType = "Bit")]
-        public System.Nullable<bool> chkPallor
-        {
-            get
-            {
-                return this._chkPallor;
-            }
-            set
-            {
-                if ((this._chkPallor != value))
-                {
-                    this._chkPallor = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkJVP", DbType = "Bit")]
-        public System.Nullable<bool> chkJVP
-        {
-            get
-            {
-                return this._chkJVP;
-            }
-            set
-            {
-                if ((this._chkJVP != value))
-                {
-                    this._chkJVP = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkaganoris", DbType = "Bit")]
-        public System.Nullable<bool> chkaganoris
-        {
-            get
-            {
-                return this._chkaganoris;
-            }
-            set
-            {
-                if ((this._chkaganoris != value))
-                {
-                    this._chkaganoris = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkunconceed", DbType = "Bit")]
-        public System.Nullable<bool> chkunconceed
-        {
-            get
-            {
-                return this._chkunconceed;
-            }
-            set
-            {
-                if ((this._chkunconceed != value))
-                {
-                    this._chkunconceed = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkjaundice", DbType = "Bit")]
-        public System.Nullable<bool> chkjaundice
-        {
-            get
-            {
-                return this._chkjaundice;
-            }
-            set
-            {
-                if ((this._chkjaundice != value))
-                {
-                    this._chkjaundice = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_hydration", DbType = "Bit")]
-        public System.Nullable<bool> hydration
-        {
-            get
-            {
-                return this._hydration;
-            }
-            set
-            {
-                if ((this._hydration != value))
-                {
-                    this._hydration = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_edema", DbType = "Bit")]
-        public System.Nullable<bool> edema
-        {
-            get
-            {
-                return this._edema;
-            }
-            set
-            {
-                if ((this._edema != value))
-                {
-                    this._edema = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk1", DbType = "Bit")]
-        public System.Nullable<bool> chk1
-        {
-            get
-            {
-                return this._chk1;
-            }
-            set
-            {
-                if ((this._chk1 != value))
-                {
-                    this._chk1 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk2", DbType = "Bit")]
-        public System.Nullable<bool> chk2
-        {
-            get
-            {
-                return this._chk2;
-            }
-            set
-            {
-                if ((this._chk2 != value))
-                {
-                    this._chk2 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk3", DbType = "Bit")]
-        public System.Nullable<bool> chk3
-        {
-            get
-            {
-                return this._chk3;
-            }
-            set
-            {
-                if ((this._chk3 != value))
-                {
-                    this._chk3 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk4", DbType = "Bit")]
-        public System.Nullable<bool> chk4
-        {
-            get
-            {
-                return this._chk4;
-            }
-            set
-            {
-                if ((this._chk4 != value))
-                {
-                    this._chk4 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk5", DbType = "Bit")]
-        public System.Nullable<bool> chk5
-        {
-            get
-            {
-                return this._chk5;
-            }
-            set
-            {
-                if ((this._chk5 != value))
-                {
-                    this._chk5 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk6", DbType = "Bit")]
-        public System.Nullable<bool> chk6
-        {
-            get
-            {
-                return this._chk6;
-            }
-            set
-            {
-                if ((this._chk6 != value))
-                {
-                    this._chk6 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk7", DbType = "Bit")]
-        public System.Nullable<bool> chk7
-        {
-            get
-            {
-                return this._chk7;
-            }
-            set
-            {
-                if ((this._chk7 != value))
-                {
-                    this._chk7 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk8", DbType = "Bit")]
-        public System.Nullable<bool> chk8
-        {
-            get
-            {
-                return this._chk8;
-            }
-            set
-            {
-                if ((this._chk8 != value))
-                {
-                    this._chk8 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_txtInputBox1", DbType = "VarChar(500)")]
-        public string txtInputBox1
-        {
-            get
-            {
-                return this._txtInputBox1;
-            }
-            set
-            {
-                if ((this._txtInputBox1 != value))
-                {
-                    this._txtInputBox1 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reffer_No", DbType = "VarChar(50)")]
-        public string Reffer_No
-        {
-            get
-            {
-                return this._Reffer_No;
-            }
-            set
-            {
-                if ((this._Reffer_No != value))
-                {
-                    this._Reffer_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reffer_To", DbType = "VarChar(50)")]
-        public string Reffer_To
-        {
-            get
-            {
-                return this._Reffer_To;
-            }
-            set
-            {
-                if ((this._Reffer_To != value))
-                {
-                    this._Reffer_To = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Birth_History", DbType = "VarChar(MAX)")]
-        public string Birth_History
-        {
-            get
-            {
-                return this._Birth_History;
-            }
-            set
-            {
-                if ((this._Birth_History != value))
-                {
-                    this._Birth_History = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Drug_History", DbType = "VarChar(MAX)")]
-        public string Drug_History
-        {
-            get
-            {
-                return this._Drug_History;
-            }
-            set
-            {
-                if ((this._Drug_History != value))
-                {
-                    this._Drug_History = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Personal_History", DbType = "VarChar(MAX)")]
-        public string Personal_History
-        {
-            get
-            {
-                return this._Personal_History;
-            }
-            set
-            {
-                if ((this._Personal_History != value))
-                {
-                    this._Personal_History = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Local", DbType = "VarChar(50)")]
-        public string Local
-        {
-            get
-            {
-                return this._Local;
-            }
-            set
-            {
-                if ((this._Local != value))
-                {
-                    this._Local = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mucculor", DbType = "VarChar(50)")]
-        public string Mucculor
-        {
-            get
-            {
-                return this._Mucculor;
-            }
-            set
-            {
-                if ((this._Mucculor != value))
-                {
-                    this._Mucculor = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Throat_IDL", DbType = "VarChar(200)")]
-        public string ENT_Throat_IDL
-        {
-            get
-            {
-                return this._ENT_Throat_IDL;
-            }
-            set
-            {
-                if ((this._ENT_Throat_IDL != value))
-                {
-                    this._ENT_Throat_IDL = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Throat_Nose", DbType = "VarChar(200)")]
-        public string ENT_Throat_Nose
-        {
-            get
-            {
-                return this._ENT_Throat_Nose;
-            }
-            set
-            {
-                if ((this._ENT_Throat_Nose != value))
-                {
-                    this._ENT_Throat_Nose = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Ear_Right", DbType = "VarChar(200)")]
-        public string ENT_Ear_Right
-        {
-            get
-            {
-                return this._ENT_Ear_Right;
-            }
-            set
-            {
-                if ((this._ENT_Ear_Right != value))
-                {
-                    this._ENT_Ear_Right = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ent_Ear_Left", DbType = "VarChar(200)")]
-        public string Ent_Ear_Left
-        {
-            get
-            {
-                return this._Ent_Ear_Left;
-            }
-            set
-            {
-                if ((this._Ent_Ear_Left != value))
-                {
-                    this._Ent_Ear_Left = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Right_PosNeg", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Rinnes_Right_PosNeg
-        {
-            get
-            {
-                return this._ENT_Rinnes_Right_PosNeg;
-            }
-            set
-            {
-                if ((this._ENT_Rinnes_Right_PosNeg != value))
-                {
-                    this._ENT_Rinnes_Right_PosNeg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Lft_PosNeg", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Rinnes_Lft_PosNeg
-        {
-            get
-            {
-                return this._ENT_Rinnes_Lft_PosNeg;
-            }
-            set
-            {
-                if ((this._ENT_Rinnes_Lft_PosNeg != value))
-                {
-                    this._ENT_Rinnes_Lft_PosNeg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Right_FalseNeg", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Rinnes_Right_FalseNeg
-        {
-            get
-            {
-                return this._ENT_Rinnes_Right_FalseNeg;
-            }
-            set
-            {
-                if ((this._ENT_Rinnes_Right_FalseNeg != value))
-                {
-                    this._ENT_Rinnes_Right_FalseNeg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Lft_FalseNeg", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Rinnes_Lft_FalseNeg
-        {
-            get
-            {
-                return this._ENT_Rinnes_Lft_FalseNeg;
-            }
-            set
-            {
-                if ((this._ENT_Rinnes_Lft_FalseNeg != value))
-                {
-                    this._ENT_Rinnes_Lft_FalseNeg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Webber_Central", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Webber_Central
-        {
-            get
-            {
-                return this._ENT_Webber_Central;
-            }
-            set
-            {
-                if ((this._ENT_Webber_Central != value))
-                {
-                    this._ENT_Webber_Central = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Webber_Lateralized", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Webber_Lateralized
-        {
-            get
-            {
-                return this._ENT_Webber_Lateralized;
-            }
-            set
-            {
-                if ((this._ENT_Webber_Lateralized != value))
-                {
-                    this._ENT_Webber_Lateralized = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Investigation_PTA", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Investigation_PTA
-        {
-            get
-            {
-                return this._ENT_Investigation_PTA;
-            }
-            set
-            {
-                if ((this._ENT_Investigation_PTA != value))
-                {
-                    this._ENT_Investigation_PTA = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Investigation_Tympanometry", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Investigation_Tympanometry
-        {
-            get
-            {
-                return this._ENT_Investigation_Tympanometry;
-            }
-            set
-            {
-                if ((this._ENT_Investigation_Tympanometry != value))
-                {
-                    this._ENT_Investigation_Tympanometry = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Right_Neg", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Rinnes_Right_Neg
-        {
-            get
-            {
-                return this._ENT_Rinnes_Right_Neg;
-            }
-            set
-            {
-                if ((this._ENT_Rinnes_Right_Neg != value))
-                {
-                    this._ENT_Rinnes_Right_Neg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Lft_Neg", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Rinnes_Lft_Neg
-        {
-            get
-            {
-                return this._ENT_Rinnes_Lft_Neg;
-            }
-            set
-            {
-                if ((this._ENT_Rinnes_Lft_Neg != value))
-                {
-                    this._ENT_Rinnes_Lft_Neg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Right_FNeg", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Rinnes_Right_FNeg
-        {
-            get
-            {
-                return this._ENT_Rinnes_Right_FNeg;
-            }
-            set
-            {
-                if ((this._ENT_Rinnes_Right_FNeg != value))
-                {
-                    this._ENT_Rinnes_Right_FNeg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Lft_FNeg", DbType = "Bit")]
-        public System.Nullable<bool> ENT_Rinnes_Lft_FNeg
-        {
-            get
-            {
-                return this._ENT_Rinnes_Lft_FNeg;
-            }
-            set
-            {
-                if ((this._ENT_Rinnes_Lft_FNeg != value))
-                {
-                    this._ENT_Rinnes_Lft_FNeg = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Informant", DbType = "VarChar(200)")]
-        public string Psychiatry_Informant
-        {
-            get
-            {
-                return this._Psychiatry_Informant;
-            }
-            set
-            {
-                if ((this._Psychiatry_Informant != value))
-                {
-                    this._Psychiatry_Informant = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Source_Referral", DbType = "VarChar(200)")]
-        public string Psychiatry_Source_Referral
-        {
-            get
-            {
-                return this._Psychiatry_Source_Referral;
-            }
-            set
-            {
-                if ((this._Psychiatry_Source_Referral != value))
-                {
-                    this._Psychiatry_Source_Referral = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Walking", DbType = "Bit")]
-        public System.Nullable<bool> Psychiatry_Walking
-        {
-            get
-            {
-                return this._Psychiatry_Walking;
-            }
-            set
-            {
-                if ((this._Psychiatry_Walking != value))
-                {
-                    this._Psychiatry_Walking = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Talking", DbType = "Bit")]
-        public System.Nullable<bool> Psychiatry_Talking
-        {
-            get
-            {
-                return this._Psychiatry_Talking;
-            }
-            set
-            {
-                if ((this._Psychiatry_Talking != value))
-                {
-                    this._Psychiatry_Talking = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Others", DbType = "Bit")]
-        public System.Nullable<bool> Psychiatry_Others
-        {
-            get
-            {
-                return this._Psychiatry_Others;
-            }
-            set
-            {
-                if ((this._Psychiatry_Others != value))
-                {
-                    this._Psychiatry_Others = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Menstrual", DbType = "VarChar(200)")]
-        public string Psychiatry_Menstrual
-        {
-            get
-            {
-                return this._Psychiatry_Menstrual;
-            }
-            set
-            {
-                if ((this._Psychiatry_Menstrual != value))
-                {
-                    this._Psychiatry_Menstrual = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Attachment_Separation", DbType = "VarChar(200)")]
-        public string Psychiatry_Attachment_Separation
-        {
-            get
-            {
-                return this._Psychiatry_Attachment_Separation;
-            }
-            set
-            {
-                if ((this._Psychiatry_Attachment_Separation != value))
-                {
-                    this._Psychiatry_Attachment_Separation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Health", DbType = "VarChar(200)")]
-        public string Psychiatry_Health
-        {
-            get
-            {
-                return this._Psychiatry_Health;
-            }
-            set
-            {
-                if ((this._Psychiatry_Health != value))
-                {
-                    this._Psychiatry_Health = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Neck_Holding", DbType = "Bit")]
-        public System.Nullable<bool> Psychiatry_Neck_Holding
-        {
-            get
-            {
-                return this._Psychiatry_Neck_Holding;
-            }
-            set
-            {
-                if ((this._Psychiatry_Neck_Holding != value))
-                {
-                    this._Psychiatry_Neck_Holding = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Nail_Biting", DbType = "VarChar(200)")]
-        public string Psychiatry_Nail_Biting
-        {
-            get
-            {
-                return this._Psychiatry_Nail_Biting;
-            }
-            set
-            {
-                if ((this._Psychiatry_Nail_Biting != value))
-                {
-                    this._Psychiatry_Nail_Biting = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Temper_Tantrums", DbType = "VarChar(200)")]
-        public string Psychiatry_Temper_Tantrums
-        {
-            get
-            {
-                return this._Psychiatry_Temper_Tantrums;
-            }
-            set
-            {
-                if ((this._Psychiatry_Temper_Tantrums != value))
-                {
-                    this._Psychiatry_Temper_Tantrums = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Bed_Wetting", DbType = "VarChar(200)")]
-        public string Psychiatry_Bed_Wetting
-        {
-            get
-            {
-                return this._Psychiatry_Bed_Wetting;
-            }
-            set
-            {
-                if ((this._Psychiatry_Bed_Wetting != value))
-                {
-                    this._Psychiatry_Bed_Wetting = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Academics", DbType = "VarChar(200)")]
-        public string Psychiatry_Academics
-        {
-            get
-            {
-                return this._Psychiatry_Academics;
-            }
-            set
-            {
-                if ((this._Psychiatry_Academics != value))
-                {
-                    this._Psychiatry_Academics = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Menarche", DbType = "VarChar(200)")]
-        public string Psychiatry_Menarche
-        {
-            get
-            {
-                return this._Psychiatry_Menarche;
-            }
-            set
-            {
-                if ((this._Psychiatry_Menarche != value))
-                {
-                    this._Psychiatry_Menarche = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Peer_Relationship", DbType = "VarChar(200)")]
-        public string Psychiatry_Peer_Relationship
-        {
-            get
-            {
-                return this._Psychiatry_Peer_Relationship;
-            }
-            set
-            {
-                if ((this._Psychiatry_Peer_Relationship != value))
-                {
-                    this._Psychiatry_Peer_Relationship = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Behaviour", DbType = "VarChar(200)")]
-        public string Psychiatry_Behaviour
-        {
-            get
-            {
-                return this._Psychiatry_Behaviour;
-            }
-            set
-            {
-                if ((this._Psychiatry_Behaviour != value))
-                {
-                    this._Psychiatry_Behaviour = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Occupational_History", DbType = "VarChar(200)")]
-        public string Psychiatry_Occupational_History
-        {
-            get
-            {
-                return this._Psychiatry_Occupational_History;
-            }
-            set
-            {
-                if ((this._Psychiatry_Occupational_History != value))
-                {
-                    this._Psychiatry_Occupational_History = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Substance_Use", DbType = "VarChar(200)")]
-        public string Psychiatry_Substance_Use
-        {
-            get
-            {
-                return this._Psychiatry_Substance_Use;
-            }
-            set
-            {
-                if ((this._Psychiatry_Substance_Use != value))
-                {
-                    this._Psychiatry_Substance_Use = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Forensic_Use", DbType = "VarChar(200)")]
-        public string Psychiatry_Forensic_Use
-        {
-            get
-            {
-                return this._Psychiatry_Forensic_Use;
-            }
-            set
-            {
-                if ((this._Psychiatry_Forensic_Use != value))
-                {
-                    this._Psychiatry_Forensic_Use = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Relationship", DbType = "VarChar(200)")]
-        public string Psychiatry_Relationship
-        {
-            get
-            {
-                return this._Psychiatry_Relationship;
-            }
-            set
-            {
-                if ((this._Psychiatry_Relationship != value))
-                {
-                    this._Psychiatry_Relationship = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Leisure_Activities", DbType = "VarChar(200)")]
-        public string Psychiatry_Leisure_Activities
-        {
-            get
-            {
-                return this._Psychiatry_Leisure_Activities;
-            }
-            set
-            {
-                if ((this._Psychiatry_Leisure_Activities != value))
-                {
-                    this._Psychiatry_Leisure_Activities = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Attitude_Standards", DbType = "VarChar(200)")]
-        public string Psychiatry_Attitude_Standards
-        {
-            get
-            {
-                return this._Psychiatry_Attitude_Standards;
-            }
-            set
-            {
-                if ((this._Psychiatry_Attitude_Standards != value))
-                {
-                    this._Psychiatry_Attitude_Standards = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Prevalling_Mood", DbType = "VarChar(200)")]
-        public string Psychiatry_Prevalling_Mood
-        {
-            get
-            {
-                return this._Psychiatry_Prevalling_Mood;
-            }
-            set
-            {
-                if ((this._Psychiatry_Prevalling_Mood != value))
-                {
-                    this._Psychiatry_Prevalling_Mood = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Reaction_Stress", DbType = "VarChar(200)")]
-        public string Psychiatry_Reaction_Stress
-        {
-            get
-            {
-                return this._Psychiatry_Reaction_Stress;
-            }
-            set
-            {
-                if ((this._Psychiatry_Reaction_Stress != value))
-                {
-                    this._Psychiatry_Reaction_Stress = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Religious_Practices", DbType = "VarChar(200)")]
-        public string Psychiatry_Religious_Practices
-        {
-            get
-            {
-                return this._Psychiatry_Religious_Practices;
-            }
-            set
-            {
-                if ((this._Psychiatry_Religious_Practices != value))
-                {
-                    this._Psychiatry_Religious_Practices = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Father", DbType = "VarChar(200)")]
-        public string Psychiatry_Father
-        {
-            get
-            {
-                return this._Psychiatry_Father;
-            }
-            set
-            {
-                if ((this._Psychiatry_Father != value))
-                {
-                    this._Psychiatry_Father = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Mother", DbType = "VarChar(200)")]
-        public string Psychiatry_Mother
-        {
-            get
-            {
-                return this._Psychiatry_Mother;
-            }
-            set
-            {
-                if ((this._Psychiatry_Mother != value))
-                {
-                    this._Psychiatry_Mother = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Siblings", DbType = "VarChar(200)")]
-        public string Psychiatry_Siblings
-        {
-            get
-            {
-                return this._Psychiatry_Siblings;
-            }
-            set
-            {
-                if ((this._Psychiatry_Siblings != value))
-                {
-                    this._Psychiatry_Siblings = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Home_Atmosphere", DbType = "VarChar(200)")]
-        public string Psychiatry_Home_Atmosphere
-        {
-            get
-            {
-                return this._Psychiatry_Home_Atmosphere;
-            }
-            set
-            {
-                if ((this._Psychiatry_Home_Atmosphere != value))
-                {
-                    this._Psychiatry_Home_Atmosphere = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Familial_Illness", DbType = "VarChar(200)")]
-        public string Psychiatry_Familial_Illness
-        {
-            get
-            {
-                return this._Psychiatry_Familial_Illness;
-            }
-            set
-            {
-                if ((this._Psychiatry_Familial_Illness != value))
-                {
-                    this._Psychiatry_Familial_Illness = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Actual_age", DbType = "VarChar(200)")]
-        public string Psychiatry_Actual_age
-        {
-            get
-            {
-                return this._Psychiatry_Actual_age;
-            }
-            set
-            {
-                if ((this._Psychiatry_Actual_age != value))
-                {
-                    this._Psychiatry_Actual_age = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Race", DbType = "VarChar(200)")]
-        public string Psychiatry_Race
-        {
-            get
-            {
-                return this._Psychiatry_Race;
-            }
-            set
-            {
-                if ((this._Psychiatry_Race != value))
-                {
-                    this._Psychiatry_Race = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tattoos_body_scars", DbType = "VarChar(200)")]
-        public string Psychiatry_Tattoos_body_scars
-        {
-            get
-            {
-                return this._Psychiatry_Tattoos_body_scars;
-            }
-            set
-            {
-                if ((this._Psychiatry_Tattoos_body_scars != value))
-                {
-                    this._Psychiatry_Tattoos_body_scars = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Body_Habitus", DbType = "VarChar(200)")]
-        public string Psychiatry_Body_Habitus
-        {
-            get
-            {
-                return this._Psychiatry_Body_Habitus;
-            }
-            set
-            {
-                if ((this._Psychiatry_Body_Habitus != value))
-                {
-                    this._Psychiatry_Body_Habitus = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Dress", DbType = "VarChar(200)")]
-        public string Psychiatry_Dress
-        {
-            get
-            {
-                return this._Psychiatry_Dress;
-            }
-            set
-            {
-                if ((this._Psychiatry_Dress != value))
-                {
-                    this._Psychiatry_Dress = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Hygiene", DbType = "VarChar(200)")]
-        public string Psychiatry_Hygiene
-        {
-            get
-            {
-                return this._Psychiatry_Hygiene;
-            }
-            set
-            {
-                if ((this._Psychiatry_Hygiene != value))
-                {
-                    this._Psychiatry_Hygiene = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Psychomotor_Activity", DbType = "VarChar(200)")]
-        public string Psychiatry_Psychomotor_Activity
-        {
-            get
-            {
-                return this._Psychiatry_Psychomotor_Activity;
-            }
-            set
-            {
-                if ((this._Psychiatry_Psychomotor_Activity != value))
-                {
-                    this._Psychiatry_Psychomotor_Activity = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Involuntary_movements", DbType = "VarChar(200)")]
-        public string Psychiatry_Involuntary_movements
-        {
-            get
-            {
-                return this._Psychiatry_Involuntary_movements;
-            }
-            set
-            {
-                if ((this._Psychiatry_Involuntary_movements != value))
-                {
-                    this._Psychiatry_Involuntary_movements = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Dystonia_EPS", DbType = "VarChar(200)")]
-        public string Psychiatry_Dystonia_EPS
-        {
-            get
-            {
-                return this._Psychiatry_Dystonia_EPS;
-            }
-            set
-            {
-                if ((this._Psychiatry_Dystonia_EPS != value))
-                {
-                    this._Psychiatry_Dystonia_EPS = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tardive_dyskinesia", DbType = "VarChar(200)")]
-        public string Psychiatry_Tardive_dyskinesia
-        {
-            get
-            {
-                return this._Psychiatry_Tardive_dyskinesia;
-            }
-            set
-            {
-                if ((this._Psychiatry_Tardive_dyskinesia != value))
-                {
-                    this._Psychiatry_Tardive_dyskinesia = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tics", DbType = "VarChar(200)")]
-        public string Psychiatry_Tics
-        {
-            get
-            {
-                return this._Psychiatry_Tics;
-            }
-            set
-            {
-                if ((this._Psychiatry_Tics != value))
-                {
-                    this._Psychiatry_Tics = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tremors", DbType = "VarChar(200)")]
-        public string Psychiatry_Tremors
-        {
-            get
-            {
-                return this._Psychiatry_Tremors;
-            }
-            set
-            {
-                if ((this._Psychiatry_Tremors != value))
-                {
-                    this._Psychiatry_Tremors = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Attentiveness_interview", DbType = "VarChar(200)")]
-        public string Psychiatry_Attentiveness_interview
-        {
-            get
-            {
-                return this._Psychiatry_Attentiveness_interview;
-            }
-            set
-            {
-                if ((this._Psychiatry_Attentiveness_interview != value))
-                {
-                    this._Psychiatry_Attentiveness_interview = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Eye_Contact", DbType = "VarChar(200)")]
-        public string Psychiatry_Eye_Contact
-        {
-            get
-            {
-                return this._Psychiatry_Eye_Contact;
-            }
-            set
-            {
-                if ((this._Psychiatry_Eye_Contact != value))
-                {
-                    this._Psychiatry_Eye_Contact = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Level_Consciousness", DbType = "VarChar(200)")]
-        public string Psychiatry_Level_Consciousness
-        {
-            get
-            {
-                return this._Psychiatry_Level_Consciousness;
-            }
-            set
-            {
-                if ((this._Psychiatry_Level_Consciousness != value))
-                {
-                    this._Psychiatry_Level_Consciousness = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Rate", DbType = "VarChar(200)")]
-        public string Psychiatry_Rate
-        {
-            get
-            {
-                return this._Psychiatry_Rate;
-            }
-            set
-            {
-                if ((this._Psychiatry_Rate != value))
-                {
-                    this._Psychiatry_Rate = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Rhythm", DbType = "VarChar(200)")]
-        public string Psychiatry_Rhythm
-        {
-            get
-            {
-                return this._Psychiatry_Rhythm;
-            }
-            set
-            {
-                if ((this._Psychiatry_Rhythm != value))
-                {
-                    this._Psychiatry_Rhythm = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Volume", DbType = "VarChar(200)")]
-        public string Psychiatry_Volume
-        {
-            get
-            {
-                return this._Psychiatry_Volume;
-            }
-            set
-            {
-                if ((this._Psychiatry_Volume != value))
-                {
-                    this._Psychiatry_Volume = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tone", DbType = "VarChar(200)")]
-        public string Psychiatry_Tone
-        {
-            get
-            {
-                return this._Psychiatry_Tone;
-            }
-            set
-            {
-                if ((this._Psychiatry_Tone != value))
-                {
-                    this._Psychiatry_Tone = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Modulation", DbType = "VarChar(200)")]
-        public string Psychiatry_Modulation
-        {
-            get
-            {
-                return this._Psychiatry_Modulation;
-            }
-            set
-            {
-                if ((this._Psychiatry_Modulation != value))
-                {
-                    this._Psychiatry_Modulation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Depressed", DbType = "VarChar(200)")]
-        public string Psychiatry_Depressed
-        {
-            get
-            {
-                return this._Psychiatry_Depressed;
-            }
-            set
-            {
-                if ((this._Psychiatry_Depressed != value))
-                {
-                    this._Psychiatry_Depressed = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Elated", DbType = "VarChar(200)")]
-        public string Psychiatry_Elated
-        {
-            get
-            {
-                return this._Psychiatry_Elated;
-            }
-            set
-            {
-                if ((this._Psychiatry_Elated != value))
-                {
-                    this._Psychiatry_Elated = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Irritable", DbType = "VarChar(200)")]
-        public string Psychiatry_Irritable
-        {
-            get
-            {
-                return this._Psychiatry_Irritable;
-            }
-            set
-            {
-                if ((this._Psychiatry_Irritable != value))
-                {
-                    this._Psychiatry_Irritable = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Labile", DbType = "VarChar(200)")]
-        public string Psychiatry_Labile
-        {
-            get
-            {
-                return this._Psychiatry_Labile;
-            }
-            set
-            {
-                if ((this._Psychiatry_Labile != value))
-                {
-                    this._Psychiatry_Labile = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Incongruent", DbType = "VarChar(200)")]
-        public string Psychiatry_Incongruent
-        {
-            get
-            {
-                return this._Psychiatry_Incongruent;
-            }
-            set
-            {
-                if ((this._Psychiatry_Incongruent != value))
-                {
-                    this._Psychiatry_Incongruent = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Blunting_Flattening_Apathy", DbType = "VarChar(200)")]
-        public string Psychiatry_Blunting_Flattening_Apathy
-        {
-            get
-            {
-                return this._Psychiatry_Blunting_Flattening_Apathy;
-            }
-            set
-            {
-                if ((this._Psychiatry_Blunting_Flattening_Apathy != value))
-                {
-                    this._Psychiatry_Blunting_Flattening_Apathy = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thinking", DbType = "VarChar(200)")]
-        public string Psychiatry_Thinking
-        {
-            get
-            {
-                return this._Psychiatry_Thinking;
-            }
-            set
-            {
-                if ((this._Psychiatry_Thinking != value))
-                {
-                    this._Psychiatry_Thinking = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Plans", DbType = "VarChar(200)")]
-        public string Psychiatry_Plans
-        {
-            get
-            {
-                return this._Psychiatry_Plans;
-            }
-            set
-            {
-                if ((this._Psychiatry_Plans != value))
-                {
-                    this._Psychiatry_Plans = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Actions", DbType = "VarChar(200)")]
-        public string Psychiatry_Actions
-        {
-            get
-            {
-                return this._Psychiatry_Actions;
-            }
-            set
-            {
-                if ((this._Psychiatry_Actions != value))
-                {
-                    this._Psychiatry_Actions = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Preservative", DbType = "VarChar(200)")]
-        public string Psychiatry_Preservative
-        {
-            get
-            {
-                return this._Psychiatry_Preservative;
-            }
-            set
-            {
-                if ((this._Psychiatry_Preservative != value))
-                {
-                    this._Psychiatry_Preservative = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_LoosAssociation", DbType = "VarChar(200)")]
-        public string Psychiatry_LoosAssociation
-        {
-            get
-            {
-                return this._Psychiatry_LoosAssociation;
-            }
-            set
-            {
-                if ((this._Psychiatry_LoosAssociation != value))
-                {
-                    this._Psychiatry_LoosAssociation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tangentiaility", DbType = "VarChar(200)")]
-        public string Psychiatry_Tangentiaility
-        {
-            get
-            {
-                return this._Psychiatry_Tangentiaility;
-            }
-            set
-            {
-                if ((this._Psychiatry_Tangentiaility != value))
-                {
-                    this._Psychiatry_Tangentiaility = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Circumstantiality", DbType = "VarChar(200)")]
-        public string Psychiatry_Circumstantiality
-        {
-            get
-            {
-                return this._Psychiatry_Circumstantiality;
-            }
-            set
-            {
-                if ((this._Psychiatry_Circumstantiality != value))
-                {
-                    this._Psychiatry_Circumstantiality = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Flight_Ideas", DbType = "VarChar(200)")]
-        public string Psychiatry_Flight_Ideas
-        {
-            get
-            {
-                return this._Psychiatry_Flight_Ideas;
-            }
-            set
-            {
-                if ((this._Psychiatry_Flight_Ideas != value))
-                {
-                    this._Psychiatry_Flight_Ideas = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thought_Insertion", DbType = "VarChar(200)")]
-        public string Psychiatry_Thought_Insertion
-        {
-            get
-            {
-                return this._Psychiatry_Thought_Insertion;
-            }
-            set
-            {
-                if ((this._Psychiatry_Thought_Insertion != value))
-                {
-                    this._Psychiatry_Thought_Insertion = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thought_Withdrawal", DbType = "VarChar(200)")]
-        public string Psychiatry_Thought_Withdrawal
-        {
-            get
-            {
-                return this._Psychiatry_Thought_Withdrawal;
-            }
-            set
-            {
-                if ((this._Psychiatry_Thought_Withdrawal != value))
-                {
-                    this._Psychiatry_Thought_Withdrawal = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thought_Broadcasting", DbType = "VarChar(200)")]
-        public string Psychiatry_Thought_Broadcasting
-        {
-            get
-            {
-                return this._Psychiatry_Thought_Broadcasting;
-            }
-            set
-            {
-                if ((this._Psychiatry_Thought_Broadcasting != value))
-                {
-                    this._Psychiatry_Thought_Broadcasting = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thought_Control", DbType = "VarChar(200)")]
-        public string Psychiatry_Thought_Control
-        {
-            get
-            {
-                return this._Psychiatry_Thought_Control;
-            }
-            set
-            {
-                if ((this._Psychiatry_Thought_Control != value))
-                {
-                    this._Psychiatry_Thought_Control = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Dellusion", DbType = "VarChar(200)")]
-        public string Psychiatry_Dellusion
-        {
-            get
-            {
-                return this._Psychiatry_Dellusion;
-            }
-            set
-            {
-                if ((this._Psychiatry_Dellusion != value))
-                {
-                    this._Psychiatry_Dellusion = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Overvalued_Ideas", DbType = "VarChar(200)")]
-        public string Psychiatry_Overvalued_Ideas
-        {
-            get
-            {
-                return this._Psychiatry_Overvalued_Ideas;
-            }
-            set
-            {
-                if ((this._Psychiatry_Overvalued_Ideas != value))
-                {
-                    this._Psychiatry_Overvalued_Ideas = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Depresonalization", DbType = "VarChar(200)")]
-        public string Psychiatry_Depresonalization
-        {
-            get
-            {
-                return this._Psychiatry_Depresonalization;
-            }
-            set
-            {
-                if ((this._Psychiatry_Depresonalization != value))
-                {
-                    this._Psychiatry_Depresonalization = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Derealization", DbType = "VarChar(200)")]
-        public string Psychiatry_Derealization
-        {
-            get
-            {
-                return this._Psychiatry_Derealization;
-            }
-            set
-            {
-                if ((this._Psychiatry_Derealization != value))
-                {
-                    this._Psychiatry_Derealization = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Sexual_History", DbType = "VarChar(200)")]
-        public string Psychiatry_Sexual_History
-        {
-            get
-            {
-                return this._Psychiatry_Sexual_History;
-            }
-            set
-            {
-                if ((this._Psychiatry_Sexual_History != value))
-                {
-                    this._Psychiatry_Sexual_History = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Phobies", DbType = "VarChar(200)")]
-        public string Psychiatry_Phobies
-        {
-            get
-            {
-                return this._Psychiatry_Phobies;
-            }
-            set
-            {
-                if ((this._Psychiatry_Phobies != value))
-                {
-                    this._Psychiatry_Phobies = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Homocidial_Ideas", DbType = "VarChar(200)")]
-        public string Psychiatry_Homocidial_Ideas
-        {
-            get
-            {
-                return this._Psychiatry_Homocidial_Ideas;
-            }
-            set
-            {
-                if ((this._Psychiatry_Homocidial_Ideas != value))
-                {
-                    this._Psychiatry_Homocidial_Ideas = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Illusion", DbType = "VarChar(200)")]
-        public string Psychiatry_Illusion
-        {
-            get
-            {
-                return this._Psychiatry_Illusion;
-            }
-            set
-            {
-                if ((this._Psychiatry_Illusion != value))
-                {
-                    this._Psychiatry_Illusion = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Hallucination", DbType = "VarChar(200)")]
-        public string Psychiatry_Hallucination
-        {
-            get
-            {
-                return this._Psychiatry_Hallucination;
-            }
-            set
-            {
-                if ((this._Psychiatry_Hallucination != value))
-                {
-                    this._Psychiatry_Hallucination = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Orientation_Time", DbType = "VarChar(200)")]
-        public string Psychiatry_Orientation_Time
-        {
-            get
-            {
-                return this._Psychiatry_Orientation_Time;
-            }
-            set
-            {
-                if ((this._Psychiatry_Orientation_Time != value))
-                {
-                    this._Psychiatry_Orientation_Time = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Place", DbType = "VarChar(200)")]
-        public string Psychiatry_Place
-        {
-            get
-            {
-                return this._Psychiatry_Place;
-            }
-            set
-            {
-                if ((this._Psychiatry_Place != value))
-                {
-                    this._Psychiatry_Place = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Person", DbType = "VarChar(200)")]
-        public string Psychiatry_Person
-        {
-            get
-            {
-                return this._Psychiatry_Person;
-            }
-            set
-            {
-                if ((this._Psychiatry_Person != value))
-                {
-                    this._Psychiatry_Person = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Attention_Concentration", DbType = "VarChar(200)")]
-        public string Psychiatry_Attention_Concentration
-        {
-            get
-            {
-                return this._Psychiatry_Attention_Concentration;
-            }
-            set
-            {
-                if ((this._Psychiatry_Attention_Concentration != value))
-                {
-                    this._Psychiatry_Attention_Concentration = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Days_Week", DbType = "VarChar(200)")]
-        public string Psychiatry_Days_Week
-        {
-            get
-            {
-                return this._Psychiatry_Days_Week;
-            }
-            set
-            {
-                if ((this._Psychiatry_Days_Week != value))
-                {
-                    this._Psychiatry_Days_Week = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Immediate_Memory", DbType = "VarChar(200)")]
-        public string Psychiatry_Immediate_Memory
-        {
-            get
-            {
-                return this._Psychiatry_Immediate_Memory;
-            }
-            set
-            {
-                if ((this._Psychiatry_Immediate_Memory != value))
-                {
-                    this._Psychiatry_Immediate_Memory = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Recent_Events", DbType = "VarChar(200)")]
-        public string Psychiatry_Recent_Events
-        {
-            get
-            {
-                return this._Psychiatry_Recent_Events;
-            }
-            set
-            {
-                if ((this._Psychiatry_Recent_Events != value))
-                {
-                    this._Psychiatry_Recent_Events = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Adress_Recall_Two", DbType = "VarChar(200)")]
-        public string Psychiatry_Adress_Recall_Two
-        {
-            get
-            {
-                return this._Psychiatry_Adress_Recall_Two;
-            }
-            set
-            {
-                if ((this._Psychiatry_Adress_Recall_Two != value))
-                {
-                    this._Psychiatry_Adress_Recall_Two = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Remote_Events", DbType = "VarChar(200)")]
-        public string Psychiatry_Remote_Events
-        {
-            get
-            {
-                return this._Psychiatry_Remote_Events;
-            }
-            set
-            {
-                if ((this._Psychiatry_Remote_Events != value))
-                {
-                    this._Psychiatry_Remote_Events = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Adress_Recall_Five", DbType = "VarChar(200)")]
-        public string Psychiatry_Adress_Recall_Five
-        {
-            get
-            {
-                return this._Psychiatry_Adress_Recall_Five;
-            }
-            set
-            {
-                if ((this._Psychiatry_Adress_Recall_Five != value))
-                {
-                    this._Psychiatry_Adress_Recall_Five = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_General_knowledge", DbType = "VarChar(200)")]
-        public string Psychiatry_General_knowledge
-        {
-            get
-            {
-                return this._Psychiatry_General_knowledge;
-            }
-            set
-            {
-                if ((this._Psychiatry_General_knowledge != value))
-                {
-                    this._Psychiatry_General_knowledge = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Arthemetic_Calculation", DbType = "VarChar(200)")]
-        public string Psychiatry_Arthemetic_Calculation
-        {
-            get
-            {
-                return this._Psychiatry_Arthemetic_Calculation;
-            }
-            set
-            {
-                if ((this._Psychiatry_Arthemetic_Calculation != value))
-                {
-                    this._Psychiatry_Arthemetic_Calculation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Abstraction", DbType = "VarChar(200)")]
-        public string Psychiatry_Abstraction
-        {
-            get
-            {
-                return this._Psychiatry_Abstraction;
-            }
-            set
-            {
-                if ((this._Psychiatry_Abstraction != value))
-                {
-                    this._Psychiatry_Abstraction = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Insight", DbType = "VarChar(50)")]
-        public string Psychiatry_Insight
-        {
-            get
-            {
-                return this._Psychiatry_Insight;
-            }
-            set
-            {
-                if ((this._Psychiatry_Insight != value))
-                {
-                    this._Psychiatry_Insight = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaFace", DbType = "VarChar(500)")]
-        public string DermaFace
-        {
-            get
-            {
-                return this._DermaFace;
-            }
-            set
-            {
-                if ((this._DermaFace != value))
-                {
-                    this._DermaFace = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaNeck", DbType = "VarChar(500)")]
-        public string DermaNeck
-        {
-            get
-            {
-                return this._DermaNeck;
-            }
-            set
-            {
-                if ((this._DermaNeck != value))
-                {
-                    this._DermaNeck = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaTrunk", DbType = "VarChar(500)")]
-        public string DermaTrunk
-        {
-            get
-            {
-                return this._DermaTrunk;
-            }
-            set
-            {
-                if ((this._DermaTrunk != value))
-                {
-                    this._DermaTrunk = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaUpperLimb", DbType = "VarChar(500)")]
-        public string DermaUpperLimb
-        {
-            get
-            {
-                return this._DermaUpperLimb;
-            }
-            set
-            {
-                if ((this._DermaUpperLimb != value))
-                {
-                    this._DermaUpperLimb = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaLowerLimb", DbType = "VarChar(500)")]
-        public string DermaLowerLimb
-        {
-            get
-            {
-                return this._DermaLowerLimb;
-            }
-            set
-            {
-                if ((this._DermaLowerLimb != value))
-                {
-                    this._DermaLowerLimb = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaFlexures", DbType = "VarChar(500)")]
-        public string DermaFlexures
-        {
-            get
-            {
-                return this._DermaFlexures;
-            }
-            set
-            {
-                if ((this._DermaFlexures != value))
-                {
-                    this._DermaFlexures = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaGenitalias", DbType = "VarChar(500)")]
-        public string DermaGenitalias
-        {
-            get
-            {
-                return this._DermaGenitalias;
-            }
-            set
-            {
-                if ((this._DermaGenitalias != value))
-                {
-                    this._DermaGenitalias = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaHair", DbType = "VarChar(500)")]
-        public string DermaHair
-        {
-            get
-            {
-                return this._DermaHair;
-            }
-            set
-            {
-                if ((this._DermaHair != value))
-                {
-                    this._DermaHair = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaNail", DbType = "VarChar(500)")]
-        public string DermaNail
-        {
-            get
-            {
-                return this._DermaNail;
-            }
-            set
-            {
-                if ((this._DermaNail != value))
-                {
-                    this._DermaNail = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaMucousMembrane", DbType = "VarChar(500)")]
-        public string DermaMucousMembrane
-        {
-            get
-            {
-                return this._DermaMucousMembrane;
-            }
-            set
-            {
-                if ((this._DermaMucousMembrane != value))
-                {
-                    this._DermaMucousMembrane = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaEyes", DbType = "VarChar(500)")]
-        public string DermaEyes
-        {
-            get
-            {
-                return this._DermaEyes;
-            }
-            set
-            {
-                if ((this._DermaEyes != value))
-                {
-                    this._DermaEyes = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaEars", DbType = "VarChar(500)")]
-        public string DermaEars
-        {
-            get
-            {
-                return this._DermaEars;
-            }
-            set
-            {
-                if ((this._DermaEars != value))
-                {
-                    this._DermaEars = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaNose", DbType = "VarChar(500)")]
-        public string DermaNose
-        {
-            get
-            {
-                return this._DermaNose;
-            }
-            set
-            {
-                if ((this._DermaNose != value))
-                {
-                    this._DermaNose = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaLips", DbType = "VarChar(500)")]
-        public string DermaLips
-        {
-            get
-            {
-                return this._DermaLips;
-            }
-            set
-            {
-                if ((this._DermaLips != value))
-                {
-                    this._DermaLips = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Problem", DbType = "VarChar(200)")]
-        public string Psychiatry_HBM_Problem
-        {
-            get
-            {
-                return this._Psychiatry_HBM_Problem;
-            }
-            set
-            {
-                if ((this._Psychiatry_HBM_Problem != value))
-                {
-                    this._Psychiatry_HBM_Problem = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Caused", DbType = "VarChar(200)")]
-        public string Psychiatry_HBM_Caused
-        {
-            get
-            {
-                return this._Psychiatry_HBM_Caused;
-            }
-            set
-            {
-                if ((this._Psychiatry_HBM_Caused != value))
-                {
-                    this._Psychiatry_HBM_Caused = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Started", DbType = "VarChar(200)")]
-        public string Psychiatry_HBM_Started
-        {
-            get
-            {
-                return this._Psychiatry_HBM_Started;
-            }
-            set
-            {
-                if ((this._Psychiatry_HBM_Started != value))
-                {
-                    this._Psychiatry_HBM_Started = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Course", DbType = "VarChar(200)")]
-        public string Psychiatry_HBM_Course
-        {
-            get
-            {
-                return this._Psychiatry_HBM_Course;
-            }
-            set
-            {
-                if ((this._Psychiatry_HBM_Course != value))
-                {
-                    this._Psychiatry_HBM_Course = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Treatment", DbType = "VarChar(200)")]
-        public string Psychiatry_HBM_Treatment
-        {
-            get
-            {
-                return this._Psychiatry_HBM_Treatment;
-            }
-            set
-            {
-                if ((this._Psychiatry_HBM_Treatment != value))
-                {
-                    this._Psychiatry_HBM_Treatment = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Effects", DbType = "VarChar(200)")]
-        public string Psychiatry_HBM_Effects
-        {
-            get
-            {
-                return this._Psychiatry_HBM_Effects;
-            }
-            set
-            {
-                if ((this._Psychiatry_HBM_Effects != value))
-                {
-                    this._Psychiatry_HBM_Effects = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Pluse", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Pluse
-        {
-            get
-            {
-                return this._Psychiatry_PE_Pluse;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Pluse != value))
-                {
-                    this._Psychiatry_PE_Pluse = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_BP", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_BP
-        {
-            get
-            {
-                return this._Psychiatry_PE_BP;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_BP != value))
-                {
-                    this._Psychiatry_PE_BP = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Temperature", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Temperature
-        {
-            get
-            {
-                return this._Psychiatry_PE_Temperature;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Temperature != value))
-                {
-                    this._Psychiatry_PE_Temperature = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Weight", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Weight
-        {
-            get
-            {
-                return this._Psychiatry_PE_Weight;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Weight != value))
-                {
-                    this._Psychiatry_PE_Weight = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_RespiratoryRate", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_RespiratoryRate
-        {
-            get
-            {
-                return this._Psychiatry_PE_RespiratoryRate;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_RespiratoryRate != value))
-                {
-                    this._Psychiatry_PE_RespiratoryRate = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Jaundice", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Jaundice
-        {
-            get
-            {
-                return this._Psychiatry_PE_Jaundice;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Jaundice != value))
-                {
-                    this._Psychiatry_PE_Jaundice = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Anemia", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Anemia
-        {
-            get
-            {
-                return this._Psychiatry_PE_Anemia;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Anemia != value))
-                {
-                    this._Psychiatry_PE_Anemia = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Cyanosis", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Cyanosis
-        {
-            get
-            {
-                return this._Psychiatry_PE_Cyanosis;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Cyanosis != value))
-                {
-                    this._Psychiatry_PE_Cyanosis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Clubbing", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Clubbing
-        {
-            get
-            {
-                return this._Psychiatry_PE_Clubbing;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Clubbing != value))
-                {
-                    this._Psychiatry_PE_Clubbing = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_JVP", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_JVP
-        {
-            get
-            {
-                return this._Psychiatry_PE_JVP;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_JVP != value))
-                {
-                    this._Psychiatry_PE_JVP = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_LymphNodes", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_LymphNodes
-        {
-            get
-            {
-                return this._Psychiatry_PE_LymphNodes;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_LymphNodes != value))
-                {
-                    this._Psychiatry_PE_LymphNodes = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Edema", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Edema
-        {
-            get
-            {
-                return this._Psychiatry_PE_Edema;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Edema != value))
-                {
-                    this._Psychiatry_PE_Edema = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Respiratory", DbType = "VarChar(200)")]
-        public string Psychiatry_PE_Respiratory
-        {
-            get
-            {
-                return this._Psychiatry_PE_Respiratory;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Respiratory != value))
-                {
-                    this._Psychiatry_PE_Respiratory = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Cardiovascular", DbType = "VarChar(200)")]
-        public string Psychiatry_PE_Cardiovascular
-        {
-            get
-            {
-                return this._Psychiatry_PE_Cardiovascular;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Cardiovascular != value))
-                {
-                    this._Psychiatry_PE_Cardiovascular = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Gastro_Intestinal", DbType = "VarChar(200)")]
-        public string Psychiatry_PE_Gastro_Intestinal
-        {
-            get
-            {
-                return this._Psychiatry_PE_Gastro_Intestinal;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Gastro_Intestinal != value))
-                {
-                    this._Psychiatry_PE_Gastro_Intestinal = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Observation", DbType = "VarChar(300)")]
-        public string Psychiatry_PE_Observation
-        {
-            get
-            {
-                return this._Psychiatry_PE_Observation;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Observation != value))
-                {
-                    this._Psychiatry_PE_Observation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Cranial_Nerves", DbType = "VarChar(500)")]
-        public string Psychiatry_PE_Cranial_Nerves
-        {
-            get
-            {
-                return this._Psychiatry_PE_Cranial_Nerves;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Cranial_Nerves != value))
-                {
-                    this._Psychiatry_PE_Cranial_Nerves = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Limb_Strength", DbType = "VarChar(200)")]
-        public string Psychiatry_PE_Limb_Strength
-        {
-            get
-            {
-                return this._Psychiatry_PE_Limb_Strength;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Limb_Strength != value))
-                {
-                    this._Psychiatry_PE_Limb_Strength = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Spasticity", DbType = "VarChar(200)")]
-        public string Psychiatry_PE_Spasticity
-        {
-            get
-            {
-                return this._Psychiatry_PE_Spasticity;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Spasticity != value))
-                {
-                    this._Psychiatry_PE_Spasticity = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Position", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Position
-        {
-            get
-            {
-                return this._Psychiatry_PE_Position;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Position != value))
-                {
-                    this._Psychiatry_PE_Position = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Vibration", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Vibration
-        {
-            get
-            {
-                return this._Psychiatry_PE_Vibration;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Vibration != value))
-                {
-                    this._Psychiatry_PE_Vibration = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Stereognosis", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Stereognosis
-        {
-            get
-            {
-                return this._Psychiatry_PE_Stereognosis;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Stereognosis != value))
-                {
-                    this._Psychiatry_PE_Stereognosis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Pain", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Pain
-        {
-            get
-            {
-                return this._Psychiatry_PE_Pain;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Pain != value))
-                {
-                    this._Psychiatry_PE_Pain = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Biceps", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Biceps
-        {
-            get
-            {
-                return this._Psychiatry_PE_Biceps;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Biceps != value))
-                {
-                    this._Psychiatry_PE_Biceps = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Triceps", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Triceps
-        {
-            get
-            {
-                return this._Psychiatry_PE_Triceps;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Triceps != value))
-                {
-                    this._Psychiatry_PE_Triceps = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Brachioradialis", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Brachioradialis
-        {
-            get
-            {
-                return this._Psychiatry_PE_Brachioradialis;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Brachioradialis != value))
-                {
-                    this._Psychiatry_PE_Brachioradialis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Quadriceps", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Quadriceps
-        {
-            get
-            {
-                return this._Psychiatry_PE_Quadriceps;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Quadriceps != value))
-                {
-                    this._Psychiatry_PE_Quadriceps = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Patellar", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Patellar
-        {
-            get
-            {
-                return this._Psychiatry_PE_Patellar;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Patellar != value))
-                {
-                    this._Psychiatry_PE_Patellar = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Achilles", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Achilles
-        {
-            get
-            {
-                return this._Psychiatry_PE_Achilles;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Achilles != value))
-                {
-                    this._Psychiatry_PE_Achilles = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Extensor", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Extensor
-        {
-            get
-            {
-                return this._Psychiatry_PE_Extensor;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Extensor != value))
-                {
-                    this._Psychiatry_PE_Extensor = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Frontal", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Frontal
-        {
-            get
-            {
-                return this._Psychiatry_PE_Frontal;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Frontal != value))
-                {
-                    this._Psychiatry_PE_Frontal = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Finger", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Finger
-        {
-            get
-            {
-                return this._Psychiatry_PE_Finger;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Finger != value))
-                {
-                    this._Psychiatry_PE_Finger = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Heel", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Heel
-        {
-            get
-            {
-                return this._Psychiatry_PE_Heel;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Heel != value))
-                {
-                    this._Psychiatry_PE_Heel = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Movements", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Movements
-        {
-            get
-            {
-                return this._Psychiatry_PE_Movements;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Movements != value))
-                {
-                    this._Psychiatry_PE_Movements = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Gait", DbType = "VarChar(50)")]
-        public string Psychiatry_PE_Gait
-        {
-            get
-            {
-                return this._Psychiatry_PE_Gait;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Gait != value))
-                {
-                    this._Psychiatry_PE_Gait = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Neck_Rigidity", DbType = "Bit")]
-        public System.Nullable<bool> Psychiatry_PE_Neck_Rigidity
-        {
-            get
-            {
-                return this._Psychiatry_PE_Neck_Rigidity;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Neck_Rigidity != value))
-                {
-                    this._Psychiatry_PE_Neck_Rigidity = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Kerning_Sign", DbType = "Bit")]
-        public System.Nullable<bool> Psychiatry_PE_Kerning_Sign
-        {
-            get
-            {
-                return this._Psychiatry_PE_Kerning_Sign;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Kerning_Sign != value))
-                {
-                    this._Psychiatry_PE_Kerning_Sign = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Brudzinki_Sign", DbType = "Bit")]
-        public System.Nullable<bool> Psychiatry_PE_Brudzinki_Sign
-        {
-            get
-            {
-                return this._Psychiatry_PE_Brudzinki_Sign;
-            }
-            set
-            {
-                if ((this._Psychiatry_PE_Brudzinki_Sign != value))
-                {
-                    this._Psychiatry_PE_Brudzinki_Sign = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Summary", DbType = "VarChar(500)")]
-        public string Psychiatry_For_Summary
-        {
-            get
-            {
-                return this._Psychiatry_For_Summary;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_Summary != value))
-                {
-                    this._Psychiatry_For_Summary = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Diagnosis", DbType = "VarChar(200)")]
-        public string Psychiatry_For_Diagnosis
-        {
-            get
-            {
-                return this._Psychiatry_For_Diagnosis;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_Diagnosis != value))
-                {
-                    this._Psychiatry_For_Diagnosis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisI", DbType = "VarChar(200)")]
-        public string Psychiatry_For_AxisI
-        {
-            get
-            {
-                return this._Psychiatry_For_AxisI;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_AxisI != value))
-                {
-                    this._Psychiatry_For_AxisI = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisII", DbType = "VarChar(200)")]
-        public string Psychiatry_For_AxisII
-        {
-            get
-            {
-                return this._Psychiatry_For_AxisII;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_AxisII != value))
-                {
-                    this._Psychiatry_For_AxisII = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisIII", DbType = "VarChar(200)")]
-        public string Psychiatry_For_AxisIII
-        {
-            get
-            {
-                return this._Psychiatry_For_AxisIII;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_AxisIII != value))
-                {
-                    this._Psychiatry_For_AxisIII = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisIV", DbType = "VarChar(200)")]
-        public string Psychiatry_For_AxisIV
-        {
-            get
-            {
-                return this._Psychiatry_For_AxisIV;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_AxisIV != value))
-                {
-                    this._Psychiatry_For_AxisIV = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisV", DbType = "VarChar(200)")]
-        public string Psychiatry_For_AxisV
-        {
-            get
-            {
-                return this._Psychiatry_For_AxisV;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_AxisV != value))
-                {
-                    this._Psychiatry_For_AxisV = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_PredisposingFactors", DbType = "VarChar(200)")]
-        public string Psychiatry_For_PredisposingFactors
-        {
-            get
-            {
-                return this._Psychiatry_For_PredisposingFactors;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_PredisposingFactors != value))
-                {
-                    this._Psychiatry_For_PredisposingFactors = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_PrecipitatingFactors", DbType = "VarChar(200)")]
-        public string Psychiatry_For_PrecipitatingFactors
-        {
-            get
-            {
-                return this._Psychiatry_For_PrecipitatingFactors;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_PrecipitatingFactors != value))
-                {
-                    this._Psychiatry_For_PrecipitatingFactors = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_PrepetuatingFactors", DbType = "VarChar(200)")]
-        public string Psychiatry_For_PrepetuatingFactors
-        {
-            get
-            {
-                return this._Psychiatry_For_PrepetuatingFactors;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_PrepetuatingFactors != value))
-                {
-                    this._Psychiatry_For_PrepetuatingFactors = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Investigation", DbType = "VarChar(300)")]
-        public string Psychiatry_For_Investigation
-        {
-            get
-            {
-                return this._Psychiatry_For_Investigation;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_Investigation != value))
-                {
-                    this._Psychiatry_For_Investigation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Medical", DbType = "VarChar(300)")]
-        public string Psychiatry_For_Medical
-        {
-            get
-            {
-                return this._Psychiatry_For_Medical;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_Medical != value))
-                {
-                    this._Psychiatry_For_Medical = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Psychological", DbType = "VarChar(500)")]
-        public string Psychiatry_For_Psychological
-        {
-            get
-            {
-                return this._Psychiatry_For_Psychological;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_Psychological != value))
-                {
-                    this._Psychiatry_For_Psychological = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Major_Issues", DbType = "VarChar(500)")]
-        public string Psychiatry_Major_Issues
-        {
-            get
-            {
-                return this._Psychiatry_Major_Issues;
-            }
-            set
-            {
-                if ((this._Psychiatry_Major_Issues != value))
-                {
-                    this._Psychiatry_Major_Issues = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Strengths", DbType = "VarChar(500)")]
-        public string Psychiatry_For_Strengths
-        {
-            get
-            {
-                return this._Psychiatry_For_Strengths;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_Strengths != value))
-                {
-                    this._Psychiatry_For_Strengths = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Goals", DbType = "VarChar(500)")]
-        public string Psychiatry_For_Goals
-        {
-            get
-            {
-                return this._Psychiatry_For_Goals;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_Goals != value))
-                {
-                    this._Psychiatry_For_Goals = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Strategies", DbType = "VarChar(500)")]
-        public string Psychiatry_For_Strategies
-        {
-            get
-            {
-                return this._Psychiatry_For_Strategies;
-            }
-            set
-            {
-                if ((this._Psychiatry_For_Strategies != value))
-                {
-                    this._Psychiatry_For_Strategies = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Procedure_Operation", DbType = "VarChar(100)")]
-        public string Procedure_Operation
-        {
-            get
-            {
-                return this._Procedure_Operation;
-            }
-            set
-            {
-                if ((this._Procedure_Operation != value))
-                {
-                    this._Procedure_Operation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Procedure_Detail", DbType = "VarChar(100)")]
-        public string Procedure_Detail
-        {
-            get
-            {
-                return this._Procedure_Detail;
-            }
-            set
-            {
-                if ((this._Procedure_Detail != value))
-                {
-                    this._Procedure_Detail = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Diagonosis", DbType = "VarChar(100)")]
-        public string Diagonosis
-        {
-            get
-            {
-                return this._Diagonosis;
-            }
-            set
-            {
-                if ((this._Diagonosis != value))
-                {
-                    this._Diagonosis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Room_Type", DbType = "VarChar(10)")]
-        public string Room_Type
-        {
-            get
-            {
-                return this._Room_Type;
-            }
-            set
-            {
-                if ((this._Room_Type != value))
-                {
-                    this._Room_Type = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge", DbType = "Bit")]
-        public System.Nullable<bool> Discharge
-        {
-            get
-            {
-                return this._Discharge;
-            }
-            set
-            {
-                if ((this._Discharge != value))
-                {
-                    this._Discharge = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Discount_Type", DbType = "VarChar(50)")]
-        public string Patient_Discount_Type
-        {
-            get
-            {
-                return this._Patient_Discount_Type;
-            }
-            set
-            {
-                if ((this._Patient_Discount_Type != value))
-                {
-                    this._Patient_Discount_Type = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_weight", DbType = "VarChar(50)")]
-        public string Peads_weight
-        {
-            get
-            {
-                return this._Peads_weight;
-            }
-            set
-            {
-                if ((this._Peads_weight != value))
-                {
-                    this._Peads_weight = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Length", DbType = "VarChar(50)")]
-        public string Peads_Length
-        {
-            get
-            {
-                return this._Peads_Length;
-            }
-            set
-            {
-                if ((this._Peads_Length != value))
-                {
-                    this._Peads_Length = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_HC", DbType = "VarChar(50)")]
-        public string Peads_HC
-        {
-            get
-            {
-                return this._Peads_HC;
-            }
-            set
-            {
-                if ((this._Peads_HC != value))
-                {
-                    this._Peads_HC = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_General_Appearance", DbType = "VarChar(300)")]
-        public string Peads_General_Appearance
-        {
-            get
-            {
-                return this._Peads_General_Appearance;
-            }
-            set
-            {
-                if ((this._Peads_General_Appearance != value))
-                {
-                    this._Peads_General_Appearance = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Cyanosis", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Cyanosis
-        {
-            get
-            {
-                return this._Peads_Cyanosis;
-            }
-            set
-            {
-                if ((this._Peads_Cyanosis != value))
-                {
-                    this._Peads_Cyanosis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Jaundice", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Jaundice
-        {
-            get
-            {
-                return this._Peads_Jaundice;
-            }
-            set
-            {
-                if ((this._Peads_Jaundice != value))
-                {
-                    this._Peads_Jaundice = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Lethargy", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Lethargy
-        {
-            get
-            {
-                return this._Peads_Lethargy;
-            }
-            set
-            {
-                if ((this._Peads_Lethargy != value))
-                {
-                    this._Peads_Lethargy = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Rash", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Rash
-        {
-            get
-            {
-                return this._Peads_Rash;
-            }
-            set
-            {
-                if ((this._Peads_Rash != value))
-                {
-                    this._Peads_Rash = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Others", DbType = "VarChar(500)")]
-        public string Peads_Others
-        {
-            get
-            {
-                return this._Peads_Others;
-            }
-            set
-            {
-                if ((this._Peads_Others != value))
-                {
-                    this._Peads_Others = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Caput", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Caput
-        {
-            get
-            {
-                return this._Peads_Caput;
-            }
-            set
-            {
-                if ((this._Peads_Caput != value))
-                {
-                    this._Peads_Caput = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Cephalhematoma", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Cephalhematoma
-        {
-            get
-            {
-                return this._Peads_Cephalhematoma;
-            }
-            set
-            {
-                if ((this._Peads_Cephalhematoma != value))
-                {
-                    this._Peads_Cephalhematoma = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Anterioropen", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Anterioropen
-        {
-            get
-            {
-                return this._Peads_Anterioropen;
-            }
-            set
-            {
-                if ((this._Peads_Anterioropen != value))
-                {
-                    this._Peads_Anterioropen = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_AnteriorClose", DbType = "Bit")]
-        public System.Nullable<bool> Peads_AnteriorClose
-        {
-            get
-            {
-                return this._Peads_AnteriorClose;
-            }
-            set
-            {
-                if ((this._Peads_AnteriorClose != value))
-                {
-                    this._Peads_AnteriorClose = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Dextrocardia", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Dextrocardia
-        {
-            get
-            {
-                return this._Peads_Dextrocardia;
-            }
-            set
-            {
-                if ((this._Peads_Dextrocardia != value))
-                {
-                    this._Peads_Dextrocardia = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Bulging", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Bulging
-        {
-            get
-            {
-                return this._Peads_Bulging;
-            }
-            set
-            {
-                if ((this._Peads_Bulging != value))
-                {
-                    this._Peads_Bulging = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Murmur", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Murmur
-        {
-            get
-            {
-                return this._Peads_Murmur;
-            }
-            set
-            {
-                if ((this._Peads_Murmur != value))
-                {
-                    this._Peads_Murmur = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_HeartSound", DbType = "VarChar(200)")]
-        public string Peads_HeartSound
-        {
-            get
-            {
-                return this._Peads_HeartSound;
-            }
-            set
-            {
-                if ((this._Peads_HeartSound != value))
-                {
-                    this._Peads_HeartSound = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Nasal", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Nasal
-        {
-            get
-            {
-                return this._Peads_Nasal;
-            }
-            set
-            {
-                if ((this._Peads_Nasal != value))
-                {
-                    this._Peads_Nasal = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Recessions", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Recessions
-        {
-            get
-            {
-                return this._Peads_Recessions;
-            }
-            set
-            {
-                if ((this._Peads_Recessions != value))
-                {
-                    this._Peads_Recessions = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_AddedSounds", DbType = "VarChar(200)")]
-        public string Peads_AddedSounds
-        {
-            get
-            {
-                return this._Peads_AddedSounds;
-            }
-            set
-            {
-                if ((this._Peads_AddedSounds != value))
-                {
-                    this._Peads_AddedSounds = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Flat", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Flat
-        {
-            get
-            {
-                return this._Peads_Flat;
-            }
-            set
-            {
-                if ((this._Peads_Flat != value))
-                {
-                    this._Peads_Flat = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Distended", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Distended
-        {
-            get
-            {
-                return this._Peads_Distended;
-            }
-            set
-            {
-                if ((this._Peads_Distended != value))
-                {
-                    this._Peads_Distended = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Scaphoid", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Scaphoid
-        {
-            get
-            {
-                return this._Peads_Scaphoid;
-            }
-            set
-            {
-                if ((this._Peads_Scaphoid != value))
-                {
-                    this._Peads_Scaphoid = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Liver", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Liver
-        {
-            get
-            {
-                return this._Peads_Liver;
-            }
-            set
-            {
-                if ((this._Peads_Liver != value))
-                {
-                    this._Peads_Liver = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Spleen", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Spleen
-        {
-            get
-            {
-                return this._Peads_Spleen;
-            }
-            set
-            {
-                if ((this._Peads_Spleen != value))
-                {
-                    this._Peads_Spleen = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_GITOthers", DbType = "VarChar(500)")]
-        public string Peads_GITOthers
-        {
-            get
-            {
-                return this._Peads_GITOthers;
-            }
-            set
-            {
-                if ((this._Peads_GITOthers != value))
-                {
-                    this._Peads_GITOthers = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Sucking", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Sucking
-        {
-            get
-            {
-                return this._Peads_Sucking;
-            }
-            set
-            {
-                if ((this._Peads_Sucking != value))
-                {
-                    this._Peads_Sucking = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Rooting", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Rooting
-        {
-            get
-            {
-                return this._Peads_Rooting;
-            }
-            set
-            {
-                if ((this._Peads_Rooting != value))
-                {
-                    this._Peads_Rooting = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Moro", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Moro
-        {
-            get
-            {
-                return this._Peads_Moro;
-            }
-            set
-            {
-                if ((this._Peads_Moro != value))
-                {
-                    this._Peads_Moro = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_CNSOthers", DbType = "VarChar(500)")]
-        public string Peads_CNSOthers
-        {
-            get
-            {
-                return this._Peads_CNSOthers;
-            }
-            set
-            {
-                if ((this._Peads_CNSOthers != value))
-                {
-                    this._Peads_CNSOthers = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_FullTerm", DbType = "Bit")]
-        public System.Nullable<bool> Peads_FullTerm
-        {
-            get
-            {
-                return this._Peads_FullTerm;
-            }
-            set
-            {
-                if ((this._Peads_FullTerm != value))
-                {
-                    this._Peads_FullTerm = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PreTerm", DbType = "Bit")]
-        public System.Nullable<bool> Peads_PreTerm
-        {
-            get
-            {
-                return this._Peads_PreTerm;
-            }
-            set
-            {
-                if ((this._Peads_PreTerm != value))
-                {
-                    this._Peads_PreTerm = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_DateOfDelivery", DbType = "Date")]
-        public System.Nullable<System.DateTime> Peads_DateOfDelivery
-        {
-            get
-            {
-                return this._Peads_DateOfDelivery;
-            }
-            set
-            {
-                if ((this._Peads_DateOfDelivery != value))
-                {
-                    this._Peads_DateOfDelivery = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_TimeOfDelivery", DbType = "VarChar(10)")]
-        public string Peads_TimeOfDelivery
-        {
-            get
-            {
-                return this._Peads_TimeOfDelivery;
-            }
-            set
-            {
-                if ((this._Peads_TimeOfDelivery != value))
-                {
-                    this._Peads_TimeOfDelivery = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Booked", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Booked
-        {
-            get
-            {
-                return this._Peads_Booked;
-            }
-            set
-            {
-                if ((this._Peads_Booked != value))
-                {
-                    this._Peads_Booked = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_UnBooked", DbType = "Bit")]
-        public System.Nullable<bool> Peads_UnBooked
-        {
-            get
-            {
-                return this._Peads_UnBooked;
-            }
-            set
-            {
-                if ((this._Peads_UnBooked != value))
-                {
-                    this._Peads_UnBooked = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_DAIHandling", DbType = "Bit")]
-        public System.Nullable<bool> Peads_DAIHandling
-        {
-            get
-            {
-                return this._Peads_DAIHandling;
-            }
-            set
-            {
-                if ((this._Peads_DAIHandling != value))
-                {
-                    this._Peads_DAIHandling = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_ANTURash", DbType = "Bit")]
-        public System.Nullable<bool> Peads_ANTURash
-        {
-            get
-            {
-                return this._Peads_ANTURash;
-            }
-            set
-            {
-                if ((this._Peads_ANTURash != value))
-                {
-                    this._Peads_ANTURash = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PIH", DbType = "Bit")]
-        public System.Nullable<bool> Peads_PIH
-        {
-            get
-            {
-                return this._Peads_PIH;
-            }
-            set
-            {
-                if ((this._Peads_PIH != value))
-                {
-                    this._Peads_PIH = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_GDM", DbType = "Bit")]
-        public System.Nullable<bool> Peads_GDM
-        {
-            get
-            {
-                return this._Peads_GDM;
-            }
-            set
-            {
-                if ((this._Peads_GDM != value))
-                {
-                    this._Peads_GDM = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Vacinated", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Vacinated
-        {
-            get
-            {
-                return this._Peads_Vacinated;
-            }
-            set
-            {
-                if ((this._Peads_Vacinated != value))
-                {
-                    this._Peads_Vacinated = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_ANTOthers", DbType = "VarChar(500)")]
-        public string Peads_ANTOthers
-        {
-            get
-            {
-                return this._Peads_ANTOthers;
-            }
-            set
-            {
-                if ((this._Peads_ANTOthers != value))
-                {
-                    this._Peads_ANTOthers = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_SVD", DbType = "Bit")]
-        public System.Nullable<bool> Peads_SVD
-        {
-            get
-            {
-                return this._Peads_SVD;
-            }
-            set
-            {
-                if ((this._Peads_SVD != value))
-                {
-                    this._Peads_SVD = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_LSCS", DbType = "Bit")]
-        public System.Nullable<bool> Peads_LSCS
-        {
-            get
-            {
-                return this._Peads_LSCS;
-            }
-            set
-            {
-                if ((this._Peads_LSCS != value))
-                {
-                    this._Peads_LSCS = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Emergency", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Emergency
-        {
-            get
-            {
-                return this._Peads_Emergency;
-            }
-            set
-            {
-                if ((this._Peads_Emergency != value))
-                {
-                    this._Peads_Emergency = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Elective", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Elective
-        {
-            get
-            {
-                return this._Peads_Elective;
-            }
-            set
-            {
-                if ((this._Peads_Elective != value))
-                {
-                    this._Peads_Elective = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PlaceOfDelivery", DbType = "VarChar(100)")]
-        public string Peads_PlaceOfDelivery
-        {
-            get
-            {
-                return this._Peads_PlaceOfDelivery;
-            }
-            set
-            {
-                if ((this._Peads_PlaceOfDelivery != value))
-                {
-                    this._Peads_PlaceOfDelivery = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_IndicationForLSCS", DbType = "VarChar(500)")]
-        public string Peads_IndicationForLSCS
-        {
-            get
-            {
-                return this._Peads_IndicationForLSCS;
-            }
-            set
-            {
-                if ((this._Peads_IndicationForLSCS != value))
-                {
-                    this._Peads_IndicationForLSCS = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_apgerScore1min", DbType = "VarChar(10)")]
-        public string Peads_apgerScore1min
-        {
-            get
-            {
-                return this._Peads_apgerScore1min;
-            }
-            set
-            {
-                if ((this._Peads_apgerScore1min != value))
-                {
-                    this._Peads_apgerScore1min = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_apgerScore5min", DbType = "VarChar(10)")]
-        public string Peads_apgerScore5min
-        {
-            get
-            {
-                return this._Peads_apgerScore5min;
-            }
-            set
-            {
-                if ((this._Peads_apgerScore5min != value))
-                {
-                    this._Peads_apgerScore5min = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Resuscitation", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Resuscitation
-        {
-            get
-            {
-                return this._Peads_Resuscitation;
-            }
-            set
-            {
-                if ((this._Peads_Resuscitation != value))
-                {
-                    this._Peads_Resuscitation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_NatalOthers", DbType = "VarChar(500)")]
-        public string Peads_NatalOthers
-        {
-            get
-            {
-                return this._Peads_NatalOthers;
-            }
-            set
-            {
-                if ((this._Peads_NatalOthers != value))
-                {
-                    this._Peads_NatalOthers = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Moaning", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Moaning
-        {
-            get
-            {
-                return this._Peads_Moaning;
-            }
-            set
-            {
-                if ((this._Peads_Moaning != value))
-                {
-                    this._Peads_Moaning = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_RespDistress", DbType = "Bit")]
-        public System.Nullable<bool> Peads_RespDistress
-        {
-            get
-            {
-                return this._Peads_RespDistress;
-            }
-            set
-            {
-                if ((this._Peads_RespDistress != value))
-                {
-                    this._Peads_RespDistress = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PostNATALCyanosis", DbType = "Bit")]
-        public System.Nullable<bool> Peads_PostNATALCyanosis
-        {
-            get
-            {
-                return this._Peads_PostNATALCyanosis;
-            }
-            set
-            {
-                if ((this._Peads_PostNATALCyanosis != value))
-                {
-                    this._Peads_PostNATALCyanosis = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Fits", DbType = "Bit")]
-        public System.Nullable<bool> Peads_Fits
-        {
-            get
-            {
-                return this._Peads_Fits;
-            }
-            set
-            {
-                if ((this._Peads_Fits != value))
-                {
-                    this._Peads_Fits = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_ReluctanceToFeed", DbType = "Bit")]
-        public System.Nullable<bool> Peads_ReluctanceToFeed
-        {
-            get
-            {
-                return this._Peads_ReluctanceToFeed;
-            }
-            set
-            {
-                if ((this._Peads_ReluctanceToFeed != value))
-                {
-                    this._Peads_ReluctanceToFeed = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PostNatalOthers", DbType = "VarChar(500)")]
-        public string Peads_PostNatalOthers
-        {
-            get
-            {
-                return this._Peads_PostNatalOthers;
-            }
-            set
-            {
-                if ((this._Peads_PostNatalOthers != value))
-                {
-                    this._Peads_PostNatalOthers = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vaccination_History", DbType = "VarChar(MAX)")]
-        public string Vaccination_History
-        {
-            get
-            {
-                return this._Vaccination_History;
-            }
-            set
-            {
-                if ((this._Vaccination_History != value))
-                {
-                    this._Vaccination_History = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Other_History", DbType = "VarChar(MAX)")]
-        public string Other_History
-        {
-            get
-            {
-                return this._Other_History;
-            }
-            set
-            {
-                if ((this._Other_History != value))
-                {
-                    this._Other_History = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HMFIntact", DbType = "Bit")]
-        public System.Nullable<bool> HMFIntact
-        {
-            get
-            {
-                return this._HMFIntact;
-            }
-            set
-            {
-                if ((this._HMFIntact != value))
-                {
-                    this._HMFIntact = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CranialNerves", DbType = "Bit")]
-        public System.Nullable<bool> CranialNerves
-        {
-            get
-            {
-                return this._CranialNerves;
-            }
-            set
-            {
-                if ((this._CranialNerves != value))
-                {
-                    this._CranialNerves = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FurtherExplanation", DbType = "NVarChar(200)")]
-        public string FurtherExplanation
-        {
-            get
-            {
-                return this._FurtherExplanation;
-            }
-            set
-            {
-                if ((this._FurtherExplanation != value))
-                {
-                    this._FurtherExplanation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SignsOfMeningism", DbType = "Bit")]
-        public System.Nullable<bool> SignsOfMeningism
-        {
-            get
-            {
-                return this._SignsOfMeningism;
-            }
-            set
-            {
-                if ((this._SignsOfMeningism != value))
-                {
-                    this._SignsOfMeningism = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HeartSound", DbType = "Bit")]
-        public System.Nullable<bool> HeartSound
-        {
-            get
-            {
-                return this._HeartSound;
-            }
-            set
-            {
-                if ((this._HeartSound != value))
-                {
-                    this._HeartSound = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Arrhythmias", DbType = "Bit")]
-        public System.Nullable<bool> Arrhythmias
-        {
-            get
-            {
-                return this._Arrhythmias;
-            }
-            set
-            {
-                if ((this._Arrhythmias != value))
-                {
-                    this._Arrhythmias = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Murmur", DbType = "Bit")]
-        public System.Nullable<bool> Murmur
-        {
-            get
-            {
-                return this._Murmur;
-            }
-            set
-            {
-                if ((this._Murmur != value))
-                {
-                    this._Murmur = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AnyOtherAddedSound", DbType = "Bit")]
-        public System.Nullable<bool> AnyOtherAddedSound
-        {
-            get
-            {
-                return this._AnyOtherAddedSound;
-            }
-            set
-            {
-                if ((this._AnyOtherAddedSound != value))
-                {
-                    this._AnyOtherAddedSound = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AnyOtherFindings", DbType = "Bit")]
-        public System.Nullable<bool> AnyOtherFindings
-        {
-            get
-            {
-                return this._AnyOtherFindings;
-            }
-            set
-            {
-                if ((this._AnyOtherFindings != value))
-                {
-                    this._AnyOtherFindings = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Wheeze", DbType = "Bit")]
-        public System.Nullable<bool> Wheeze
-        {
-            get
-            {
-                return this._Wheeze;
-            }
-            set
-            {
-                if ((this._Wheeze != value))
-                {
-                    this._Wheeze = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ranchi", DbType = "Bit")]
-        public System.Nullable<bool> Ranchi
-        {
-            get
-            {
-                return this._Ranchi;
-            }
-            set
-            {
-                if ((this._Ranchi != value))
-                {
-                    this._Ranchi = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AnyOtherSound", DbType = "Bit")]
-        public System.Nullable<bool> AnyOtherSound
-        {
-            get
-            {
-                return this._AnyOtherSound;
-            }
-            set
-            {
-                if ((this._AnyOtherSound != value))
-                {
-                    this._AnyOtherSound = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AbdomenSoft", DbType = "Bit")]
-        public System.Nullable<bool> AbdomenSoft
-        {
-            get
-            {
-                return this._AbdomenSoft;
-            }
-            set
-            {
-                if ((this._AbdomenSoft != value))
-                {
-                    this._AbdomenSoft = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Tenderness", DbType = "Bit")]
-        public System.Nullable<bool> Tenderness
-        {
-            get
-            {
-                return this._Tenderness;
-            }
-            set
-            {
-                if ((this._Tenderness != value))
-                {
-                    this._Tenderness = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Guarding", DbType = "Bit")]
-        public System.Nullable<bool> Guarding
-        {
-            get
-            {
-                return this._Guarding;
-            }
-            set
-            {
-                if ((this._Guarding != value))
-                {
-                    this._Guarding = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BowelSound", DbType = "Bit")]
-        public System.Nullable<bool> BowelSound
-        {
-            get
-            {
-                return this._BowelSound;
-            }
-            set
-            {
-                if ((this._BowelSound != value))
-                {
-                    this._BowelSound = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Distention", DbType = "Bit")]
-        public System.Nullable<bool> Distention
-        {
-            get
-            {
-                return this._Distention;
-            }
-            set
-            {
-                if ((this._Distention != value))
-                {
-                    this._Distention = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FluidThrill", DbType = "Bit")]
-        public System.Nullable<bool> FluidThrill
-        {
-            get
-            {
-                return this._FluidThrill;
-            }
-            set
-            {
-                if ((this._FluidThrill != value))
-                {
-                    this._FluidThrill = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ShiftingDullness", DbType = "Bit")]
-        public System.Nullable<bool> ShiftingDullness
-        {
-            get
-            {
-                return this._ShiftingDullness;
-            }
-            set
-            {
-                if ((this._ShiftingDullness != value))
-                {
-                    this._ShiftingDullness = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_EpigastriaDiscomfort", DbType = "Bit")]
-        public System.Nullable<bool> EpigastriaDiscomfort
-        {
-            get
-            {
-                return this._EpigastriaDiscomfort;
-            }
-            set
-            {
-                if ((this._EpigastriaDiscomfort != value))
-                {
-                    this._EpigastriaDiscomfort = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RetrosternalBurning", DbType = "Bit")]
-        public System.Nullable<bool> RetrosternalBurning
-        {
-            get
-            {
-                return this._RetrosternalBurning;
-            }
-            set
-            {
-                if ((this._RetrosternalBurning != value))
-                {
-                    this._RetrosternalBurning = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Jondus", DbType = "Bit")]
-        public System.Nullable<bool> Jondus
-        {
-            get
-            {
-                return this._Jondus;
-            }
-            set
-            {
-                if ((this._Jondus != value))
-                {
-                    this._Jondus = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Pallor", DbType = "Bit")]
-        public System.Nullable<bool> Pallor
-        {
-            get
-            {
-                return this._Pallor;
-            }
-            set
-            {
-                if ((this._Pallor != value))
-                {
-                    this._Pallor = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dehydration", DbType = "Bit")]
-        public System.Nullable<bool> Dehydration
-        {
-            get
-            {
-                return this._Dehydration;
-            }
-            set
-            {
-                if ((this._Dehydration != value))
-                {
-                    this._Dehydration = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GCSOrientation", DbType = "Bit")]
-        public System.Nullable<bool> GCSOrientation
-        {
-            get
-            {
-                return this._GCSOrientation;
-            }
-            set
-            {
-                if ((this._GCSOrientation != value))
-                {
-                    this._GCSOrientation = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Conscious_Orientely", DbType = "Bit")]
-        public System.Nullable<bool> Conscious_Orientely
-        {
-            get
-            {
-                return this._Conscious_Orientely;
-            }
-            set
-            {
-                if ((this._Conscious_Orientely != value))
-                {
-                    this._Conscious_Orientely = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NVB_Right", DbType = "Bit")]
-        public System.Nullable<bool> NVB_Right
-        {
-            get
-            {
-                return this._NVB_Right;
-            }
-            set
-            {
-                if ((this._NVB_Right != value))
-                {
-                    this._NVB_Right = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NVB_Left", DbType = "Bit")]
-        public System.Nullable<bool> NVB_Left
-        {
-            get
-            {
-                return this._NVB_Left;
-            }
-            set
-            {
-                if ((this._NVB_Left != value))
-                {
-                    this._NVB_Left = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Crepitation_Right", DbType = "Bit")]
-        public System.Nullable<bool> Crepitation_Right
-        {
-            get
-            {
-                return this._Crepitation_Right;
-            }
-            set
-            {
-                if ((this._Crepitation_Right != value))
-                {
-                    this._Crepitation_Right = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Crepitation_Left", DbType = "Bit")]
-        public System.Nullable<bool> Crepitation_Left
-        {
-            get
-            {
-                return this._Crepitation_Left;
-            }
-            set
-            {
-                if ((this._Crepitation_Left != value))
-                {
-                    this._Crepitation_Left = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CNS_Value", DbType = "VarChar(500)")]
-        public string CNS_Value
-        {
-            get
-            {
-                return this._CNS_Value;
-            }
-            set
-            {
-                if ((this._CNS_Value != value))
-                {
-                    this._CNS_Value = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CVS_Value", DbType = "VarChar(500)")]
-        public string CVS_Value
-        {
-            get
-            {
-                return this._CVS_Value;
-            }
-            set
-            {
-                if ((this._CVS_Value != value))
-                {
-                    this._CVS_Value = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RESP_Value", DbType = "VarChar(500)")]
-        public string RESP_Value
-        {
-            get
-            {
-                return this._RESP_Value;
-            }
-            set
-            {
-                if ((this._RESP_Value != value))
-                {
-                    this._RESP_Value = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GIT_Value", DbType = "VarChar(500)")]
-        public string GIT_Value
-        {
-            get
-            {
-                return this._GIT_Value;
-            }
-            set
-            {
-                if ((this._GIT_Value != value))
-                {
-                    this._GIT_Value = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GPE_Value", DbType = "VarChar(500)")]
-        public string GPE_Value
-        {
-            get
-            {
-                return this._GPE_Value;
-            }
-            set
-            {
-                if ((this._GPE_Value != value))
-                {
-                    this._GPE_Value = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Eye_Opening_Response", DbType = "VarChar(10)")]
-        public string Eye_Opening_Response
-        {
-            get
-            {
-                return this._Eye_Opening_Response;
-            }
-            set
-            {
-                if ((this._Eye_Opening_Response != value))
-                {
-                    this._Eye_Opening_Response = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Motor_Response", DbType = "VarChar(10)")]
-        public string Motor_Response
-        {
-            get
-            {
-                return this._Motor_Response;
-            }
-            set
-            {
-                if ((this._Motor_Response != value))
-                {
-                    this._Motor_Response = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Verbal_Response", DbType = "VarChar(10)")]
-        public string Verbal_Response
-        {
-            get
-            {
-                return this._Verbal_Response;
-            }
-            set
-            {
-                if ((this._Verbal_Response != value))
-                {
-                    this._Verbal_Response = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Accumulated_Response", DbType = "VarChar(10)")]
-        public string Accumulated_Response
-        {
-            get
-            {
-                return this._Accumulated_Response;
-            }
-            set
-            {
-                if ((this._Accumulated_Response != value))
-                {
-                    this._Accumulated_Response = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_remarks_call_to_doctor", DbType = "VarChar(MAX)")]
-        public string remarks_call_to_doctor
-        {
-            get
-            {
-                return this._remarks_call_to_doctor;
-            }
-            set
-            {
-                if ((this._remarks_call_to_doctor != value))
-                {
-                    this._remarks_call_to_doctor = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PU_R", DbType = "NVarChar(MAX)")]
-        public string PU_R
-        {
-            get
-            {
-                return this._PU_R;
-            }
-            set
-            {
-                if ((this._PU_R != value))
-                {
-                    this._PU_R = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PU_L", DbType = "NVarChar(MAX)")]
-        public string PU_L
-        {
-            get
-            {
-                return this._PU_L;
-            }
-            set
-            {
-                if ((this._PU_L != value))
-                {
-                    this._PU_L = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PL_L", DbType = "NVarChar(MAX)")]
-        public string PL_L
-        {
-            get
-            {
-                return this._PL_L;
-            }
-            set
-            {
-                if ((this._PL_L != value))
-                {
-                    this._PL_L = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PL_R", DbType = "NVarChar(MAX)")]
-        public string PL_R
-        {
-            get
-            {
-                return this._PL_R;
-            }
-            set
-            {
-                if ((this._PL_R != value))
-                {
-                    this._PL_R = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SU_R", DbType = "Bit")]
-        public System.Nullable<bool> SU_R
-        {
-            get
-            {
-                return this._SU_R;
-            }
-            set
-            {
-                if ((this._SU_R != value))
-                {
-                    this._SU_R = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SU_L", DbType = "Bit")]
-        public System.Nullable<bool> SU_L
-        {
-            get
-            {
-                return this._SU_L;
-            }
-            set
-            {
-                if ((this._SU_L != value))
-                {
-                    this._SU_L = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SL_R", DbType = "Bit")]
-        public System.Nullable<bool> SL_R
-        {
-            get
-            {
-                return this._SL_R;
-            }
-            set
-            {
-                if ((this._SL_R != value))
-                {
-                    this._SL_R = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SL_L", DbType = "Bit")]
-        public System.Nullable<bool> SL_L
-        {
-            get
-            {
-                return this._SL_L;
-            }
-            set
-            {
-                if ((this._SL_L != value))
-                {
-                    this._SL_L = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TruckTorso", DbType = "VarChar(MAX)")]
-        public string TruckTorso
-        {
-            get
-            {
-                return this._TruckTorso;
-            }
-            set
-            {
-                if ((this._TruckTorso != value))
-                {
-                    this._TruckTorso = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Clinical_Summary", DbType = "NVarChar(MAX)")]
-        public string Clinical_Summary
-        {
-            get
-            {
-                return this._Clinical_Summary;
-            }
-            set
-            {
-                if ((this._Clinical_Summary != value))
-                {
-                    this._Clinical_Summary = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctors_Note", DbType = "NVarChar(MAX)")]
-        public string Doctors_Note
-        {
-            get
-            {
-                return this._Doctors_Note;
-            }
-            set
-            {
-                if ((this._Doctors_Note != value))
-                {
-                    this._Doctors_Note = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Provisional_Diagnosis_Examination", DbType = "VarChar(500)")]
-        public string Provisional_Diagnosis_Examination
-        {
-            get
-            {
-                return this._Provisional_Diagnosis_Examination;
-            }
-            set
-            {
-                if ((this._Provisional_Diagnosis_Examination != value))
-                {
-                    this._Provisional_Diagnosis_Examination = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sehat_Card_Holder_CNIC", DbType = "VarChar(MAX)")]
-        public string Sehat_Card_Holder_CNIC
-        {
-            get
-            {
-                return this._Sehat_Card_Holder_CNIC;
-            }
-            set
-            {
-                if ((this._Sehat_Card_Holder_CNIC != value))
-                {
-                    this._Sehat_Card_Holder_CNIC = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_JVP_Param", DbType = "Bit")]
-        public System.Nullable<bool> JVP_Param
-        {
-            get
-            {
-                return this._JVP_Param;
-            }
-            set
-            {
-                if ((this._JVP_Param != value))
-                {
-                    this._JVP_Param = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Edema_Param", DbType = "Bit")]
-        public System.Nullable<bool> Edema_Param
-        {
-            get
-            {
-                return this._Edema_Param;
-            }
-            set
-            {
-                if ((this._Edema_Param != value))
-                {
-                    this._Edema_Param = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cyanosis_Param", DbType = "Bit")]
-        public System.Nullable<bool> Cyanosis_Param
-        {
-            get
-            {
-                return this._Cyanosis_Param;
-            }
-            set
-            {
-                if ((this._Cyanosis_Param != value))
-                {
-                    this._Cyanosis_Param = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_patient_main_department", DbType = "NVarChar(150)")]
-        public string patient_main_department
-        {
-            get
-            {
-                return this._patient_main_department;
-            }
-            set
-            {
-                if ((this._patient_main_department != value))
-                {
-                    this._patient_main_department = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_packagae_type", DbType = "NVarChar(150)")]
-        public string packagae_type
-        {
-            get
-            {
-                return this._packagae_type;
-            }
-            set
-            {
-                if ((this._packagae_type != value))
-                {
-                    this._packagae_type = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_packagae_name", DbType = "NVarChar(150)")]
-        public string packagae_name
-        {
-            get
-            {
-                return this._packagae_name;
-            }
-            set
-            {
-                if ((this._packagae_name != value))
-                {
-                    this._packagae_name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ipd_Procedure", DbType = "NVarChar(150)")]
-        public string ipd_Procedure
-        {
-            get
-            {
-                return this._ipd_Procedure;
-            }
-            set
-            {
-                if ((this._ipd_Procedure != value))
-                {
-                    this._ipd_Procedure = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Procedure_Desc", DbType = "NVarChar(150)")]
-        public string Procedure_Desc
-        {
-            get
-            {
-                return this._Procedure_Desc;
-            }
-            set
-            {
-                if ((this._Procedure_Desc != value))
-                {
-                    this._Procedure_Desc = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Panel_Company1", DbType = "VarChar(100)")]
-        public string Panel_Company1
-        {
-            get
-            {
-                return this._Panel_Company1;
-            }
-            set
-            {
-                if ((this._Panel_Company1 != value))
-                {
-                    this._Panel_Company1 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_InsuranceCardNo1", DbType = "NVarChar(100)")]
-        public string InsuranceCardNo1
-        {
-            get
-            {
-                return this._InsuranceCardNo1;
-            }
-            set
-            {
-                if ((this._InsuranceCardNo1 != value))
-                {
-                    this._InsuranceCardNo1 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CardHolderName1", DbType = "NVarChar(100)")]
-        public string CardHolderName1
-        {
-            get
-            {
-                return this._CardHolderName1;
-            }
-            set
-            {
-                if ((this._CardHolderName1 != value))
-                {
-                    this._CardHolderName1 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CompanyNAme", DbType = "NVarChar(150)")]
-        public string CompanyNAme
-        {
-            get
-            {
-                return this._CompanyNAme;
-            }
-            set
-            {
-                if ((this._CompanyNAme != value))
-                {
-                    this._CompanyNAme = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ApproveLimit", DbType = "NVarChar(150)")]
-        public string ApproveLimit
-        {
-            get
-            {
-                return this._ApproveLimit;
-            }
-            set
-            {
-                if ((this._ApproveLimit != value))
-                {
-                    this._ApproveLimit = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ApproveDays", DbType = "NVarChar(150)")]
-        public string ApproveDays
-        {
-            get
-            {
-                return this._ApproveDays;
-            }
-            set
-            {
-                if ((this._ApproveDays != value))
-                {
-                    this._ApproveDays = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RoomLimit", DbType = "NVarChar(150)")]
-        public string RoomLimit
-        {
-            get
-            {
-                return this._RoomLimit;
-            }
-            set
-            {
-                if ((this._RoomLimit != value))
-                {
-                    this._RoomLimit = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CardLimit", DbType = "NVarChar(150)")]
-        public string CardLimit
-        {
-            get
-            {
-                return this._CardLimit;
-            }
-            set
-            {
-                if ((this._CardLimit != value))
-                {
-                    this._CardLimit = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Discount
-        {
-            get
-            {
-                return this._Discount;
-            }
-            set
-            {
-                if ((this._Discount != value))
-                {
-                    this._Discount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Private_Charges_instruction", DbType = "NVarChar(150)")]
-        public string Private_Charges_instruction
-        {
-            get
-            {
-                return this._Private_Charges_instruction;
-            }
-            set
-            {
-                if ((this._Private_Charges_instruction != value))
-                {
-                    this._Private_Charges_instruction = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_Amount", DbType = "Int NOT NULL")]
-        public int Advance_Amount
-        {
-            get
-            {
-                return this._Advance_Amount;
-            }
-            set
-            {
-                if ((this._Advance_Amount != value))
-                {
-                    this._Advance_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_Type", DbType = "VarChar(500)")]
-        public string Discharge_Type
-        {
-            get
-            {
-                return this._Discharge_Type;
-            }
-            set
-            {
-                if ((this._Discharge_Type != value))
-                {
-                    this._Discharge_Type = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_Request", DbType = "Bit")]
-        public System.Nullable<bool> Discharge_Request
-        {
-            get
-            {
-                return this._Discharge_Request;
-            }
-            set
-            {
-                if ((this._Discharge_Request != value))
-                {
-                    this._Discharge_Request = value;
-                }
-            }
-        }
-    }
-
     public partial class GetPurchaseOrderChartResult
     {
 
@@ -210632,6 +203119,7628 @@ namespace PMS
                 if ((this._Qty != value))
                 {
                     this._Qty = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetInPatientDetailResult
+    {
+
+        private string _Patient_Type;
+
+        private int _Patient_ID;
+
+        private string _Full_Name;
+
+        private System.Nullable<System.DateTime> _Entry_Date;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private string _Mobile1;
+
+        private string _Permanent_Address;
+
+        private string _Gender;
+
+        private string _Age_years;
+
+        private string _Panel_Company;
+
+        private string _CardHolderName;
+
+        private string _InsuranceCardNo;
+
+        private string _PolicyHolderName;
+
+        private string _AdmissionType;
+
+        private string _SehatCardNo;
+
+        private string _VisitId;
+
+        private string _IdentificationMarks;
+
+        private string _Diagnosis;
+
+        private System.Nullable<System.DateTime> _DateOfDeath;
+
+        private System.Nullable<System.TimeSpan> _TimeOfDeath;
+
+        private string _PlaceOfDeath;
+
+        private string _CauseOfDeath;
+
+        private string _IssuingOfficerName;
+
+        private string _DeathCertifiedBy1;
+
+        private string _DeathCertifiedBy2;
+
+        private string _BodyHandedOverTo;
+
+        private string _FamilyPersonName;
+
+        private string _CNIC;
+
+        private string _RelationWithDeceased;
+
+        private string _CMO_Police;
+
+        private int _In_Patient_ID;
+
+        private System.Nullable<System.DateTime> _Admission_Date;
+
+        private string _Issuance_Of;
+
+        private System.Nullable<int> _Room_ID;
+
+        private System.Nullable<int> _Ward_ID;
+
+        private System.Nullable<int> _Bed_No;
+
+        private string _Department;
+
+        private string _Doctor;
+
+        private string _Health_Complaints;
+
+        private System.Nullable<System.DateTime> _Expected_Discharge_Date;
+
+        private string _Diabetes_Value;
+
+        private string _Referring_Doctor;
+
+        private string _Recommended_Diet;
+
+        private string _Provisional_Diagnosis;
+
+        private string _Pulse_Min;
+
+        private string _BP_mm_Hg;
+
+        private string _Temp_C;
+
+        private string _Respiration_Min;
+
+        private string _Height_Cm;
+
+        private string _Weight_Kg;
+
+        private string _Discharge_By;
+
+        private System.Nullable<System.DateTime> _Discharge_On;
+
+        private string _Prevention_Precaution;
+
+        private System.Nullable<System.DateTime> _Next_Visit;
+
+        private string _L_M_P;
+
+        private System.Nullable<System.DateTime> _Receiving_date;
+
+        private string _RN_Special_Instruction;
+
+        private string _RN_Patient_General_Condition;
+
+        private string _HistoryOfPeresentIllness;
+
+        private string _HistoryOfFamily;
+
+        private string _HistoryOfPastIllness;
+
+        private string _CVS;
+
+        private string _GIT;
+
+        private string _RESP;
+
+        private string _SocioEconomicHistory;
+
+        private string _CNS;
+
+        private string _GYNAE;
+
+        private string _ObstetricHistory;
+
+        private string _AllergiesHistory;
+
+        private string _ProvisionalDiagnosis;
+
+        private string _TreatmentHistory;
+
+        private string _txtRemarksHistory;
+
+        private System.Nullable<bool> _chkPallor;
+
+        private System.Nullable<bool> _chkJVP;
+
+        private System.Nullable<bool> _chkaganoris;
+
+        private System.Nullable<bool> _chkunconceed;
+
+        private System.Nullable<bool> _chkjaundice;
+
+        private System.Nullable<bool> _hydration;
+
+        private System.Nullable<bool> _edema;
+
+        private System.Nullable<bool> _chk1;
+
+        private System.Nullable<bool> _chk2;
+
+        private System.Nullable<bool> _chk3;
+
+        private System.Nullable<bool> _chk4;
+
+        private System.Nullable<bool> _chk5;
+
+        private System.Nullable<bool> _chk6;
+
+        private System.Nullable<bool> _chk7;
+
+        private System.Nullable<bool> _chk8;
+
+        private string _txtInputBox1;
+
+        private string _Reffer_No;
+
+        private string _Reffer_To;
+
+        private string _Birth_History;
+
+        private string _Drug_History;
+
+        private string _Personal_History;
+
+        private string _Local;
+
+        private string _Mucculor;
+
+        private string _ENT_Throat_IDL;
+
+        private string _ENT_Throat_Nose;
+
+        private string _ENT_Ear_Right;
+
+        private string _Ent_Ear_Left;
+
+        private System.Nullable<bool> _ENT_Rinnes_Right_PosNeg;
+
+        private System.Nullable<bool> _ENT_Rinnes_Lft_PosNeg;
+
+        private System.Nullable<bool> _ENT_Rinnes_Right_FalseNeg;
+
+        private System.Nullable<bool> _ENT_Rinnes_Lft_FalseNeg;
+
+        private System.Nullable<bool> _ENT_Webber_Central;
+
+        private System.Nullable<bool> _ENT_Webber_Lateralized;
+
+        private System.Nullable<bool> _ENT_Investigation_PTA;
+
+        private System.Nullable<bool> _ENT_Investigation_Tympanometry;
+
+        private System.Nullable<bool> _ENT_Rinnes_Right_Neg;
+
+        private System.Nullable<bool> _ENT_Rinnes_Lft_Neg;
+
+        private System.Nullable<bool> _ENT_Rinnes_Right_FNeg;
+
+        private System.Nullable<bool> _ENT_Rinnes_Lft_FNeg;
+
+        private string _Psychiatry_Informant;
+
+        private string _Psychiatry_Source_Referral;
+
+        private System.Nullable<bool> _Psychiatry_Walking;
+
+        private System.Nullable<bool> _Psychiatry_Talking;
+
+        private System.Nullable<bool> _Psychiatry_Others;
+
+        private string _Psychiatry_Menstrual;
+
+        private string _Psychiatry_Attachment_Separation;
+
+        private string _Psychiatry_Health;
+
+        private System.Nullable<bool> _Psychiatry_Neck_Holding;
+
+        private string _Psychiatry_Nail_Biting;
+
+        private string _Psychiatry_Temper_Tantrums;
+
+        private string _Psychiatry_Bed_Wetting;
+
+        private string _Psychiatry_Academics;
+
+        private string _Psychiatry_Menarche;
+
+        private string _Psychiatry_Peer_Relationship;
+
+        private string _Psychiatry_Behaviour;
+
+        private string _Psychiatry_Occupational_History;
+
+        private string _Psychiatry_Substance_Use;
+
+        private string _Psychiatry_Forensic_Use;
+
+        private string _Psychiatry_Relationship;
+
+        private string _Psychiatry_Leisure_Activities;
+
+        private string _Psychiatry_Attitude_Standards;
+
+        private string _Psychiatry_Prevalling_Mood;
+
+        private string _Psychiatry_Reaction_Stress;
+
+        private string _Psychiatry_Religious_Practices;
+
+        private string _Psychiatry_Father;
+
+        private string _Psychiatry_Mother;
+
+        private string _Psychiatry_Siblings;
+
+        private string _Psychiatry_Home_Atmosphere;
+
+        private string _Psychiatry_Familial_Illness;
+
+        private string _Psychiatry_Actual_age;
+
+        private string _Psychiatry_Race;
+
+        private string _Psychiatry_Tattoos_body_scars;
+
+        private string _Psychiatry_Body_Habitus;
+
+        private string _Psychiatry_Dress;
+
+        private string _Psychiatry_Hygiene;
+
+        private string _Psychiatry_Psychomotor_Activity;
+
+        private string _Psychiatry_Involuntary_movements;
+
+        private string _Psychiatry_Dystonia_EPS;
+
+        private string _Psychiatry_Tardive_dyskinesia;
+
+        private string _Psychiatry_Tics;
+
+        private string _Psychiatry_Tremors;
+
+        private string _Psychiatry_Attentiveness_interview;
+
+        private string _Psychiatry_Eye_Contact;
+
+        private string _Psychiatry_Level_Consciousness;
+
+        private string _Psychiatry_Rate;
+
+        private string _Psychiatry_Rhythm;
+
+        private string _Psychiatry_Volume;
+
+        private string _Psychiatry_Tone;
+
+        private string _Psychiatry_Modulation;
+
+        private string _Psychiatry_Depressed;
+
+        private string _Psychiatry_Elated;
+
+        private string _Psychiatry_Irritable;
+
+        private string _Psychiatry_Labile;
+
+        private string _Psychiatry_Incongruent;
+
+        private string _Psychiatry_Blunting_Flattening_Apathy;
+
+        private string _Psychiatry_Thinking;
+
+        private string _Psychiatry_Plans;
+
+        private string _Psychiatry_Actions;
+
+        private string _Psychiatry_Preservative;
+
+        private string _Psychiatry_LoosAssociation;
+
+        private string _Psychiatry_Tangentiaility;
+
+        private string _Psychiatry_Circumstantiality;
+
+        private string _Psychiatry_Flight_Ideas;
+
+        private string _Psychiatry_Thought_Insertion;
+
+        private string _Psychiatry_Thought_Withdrawal;
+
+        private string _Psychiatry_Thought_Broadcasting;
+
+        private string _Psychiatry_Thought_Control;
+
+        private string _Psychiatry_Dellusion;
+
+        private string _Psychiatry_Overvalued_Ideas;
+
+        private string _Psychiatry_Depresonalization;
+
+        private string _Psychiatry_Derealization;
+
+        private string _Psychiatry_Sexual_History;
+
+        private string _Psychiatry_Phobies;
+
+        private string _Psychiatry_Homocidial_Ideas;
+
+        private string _Psychiatry_Illusion;
+
+        private string _Psychiatry_Hallucination;
+
+        private string _Psychiatry_Orientation_Time;
+
+        private string _Psychiatry_Place;
+
+        private string _Psychiatry_Person;
+
+        private string _Psychiatry_Attention_Concentration;
+
+        private string _Psychiatry_Days_Week;
+
+        private string _Psychiatry_Immediate_Memory;
+
+        private string _Psychiatry_Recent_Events;
+
+        private string _Psychiatry_Adress_Recall_Two;
+
+        private string _Psychiatry_Remote_Events;
+
+        private string _Psychiatry_Adress_Recall_Five;
+
+        private string _Psychiatry_General_knowledge;
+
+        private string _Psychiatry_Arthemetic_Calculation;
+
+        private string _Psychiatry_Abstraction;
+
+        private string _Psychiatry_Insight;
+
+        private string _DermaFace;
+
+        private string _DermaNeck;
+
+        private string _DermaTrunk;
+
+        private string _DermaUpperLimb;
+
+        private string _DermaLowerLimb;
+
+        private string _DermaFlexures;
+
+        private string _DermaGenitalias;
+
+        private string _DermaHair;
+
+        private string _DermaNail;
+
+        private string _DermaMucousMembrane;
+
+        private string _DermaEyes;
+
+        private string _DermaEars;
+
+        private string _DermaNose;
+
+        private string _DermaLips;
+
+        private string _Psychiatry_HBM_Problem;
+
+        private string _Psychiatry_HBM_Caused;
+
+        private string _Psychiatry_HBM_Started;
+
+        private string _Psychiatry_HBM_Course;
+
+        private string _Psychiatry_HBM_Treatment;
+
+        private string _Psychiatry_HBM_Effects;
+
+        private string _Psychiatry_PE_Pluse;
+
+        private string _Psychiatry_PE_BP;
+
+        private string _Psychiatry_PE_Temperature;
+
+        private string _Psychiatry_PE_Weight;
+
+        private string _Psychiatry_PE_RespiratoryRate;
+
+        private string _Psychiatry_PE_Jaundice;
+
+        private string _Psychiatry_PE_Anemia;
+
+        private string _Psychiatry_PE_Cyanosis;
+
+        private string _Psychiatry_PE_Clubbing;
+
+        private string _Psychiatry_PE_JVP;
+
+        private string _Psychiatry_PE_LymphNodes;
+
+        private string _Psychiatry_PE_Edema;
+
+        private string _Psychiatry_PE_Respiratory;
+
+        private string _Psychiatry_PE_Cardiovascular;
+
+        private string _Psychiatry_PE_Gastro_Intestinal;
+
+        private string _Psychiatry_PE_Observation;
+
+        private string _Psychiatry_PE_Cranial_Nerves;
+
+        private string _Psychiatry_PE_Limb_Strength;
+
+        private string _Psychiatry_PE_Spasticity;
+
+        private string _Psychiatry_PE_Position;
+
+        private string _Psychiatry_PE_Vibration;
+
+        private string _Psychiatry_PE_Stereognosis;
+
+        private string _Psychiatry_PE_Pain;
+
+        private string _Psychiatry_PE_Biceps;
+
+        private string _Psychiatry_PE_Triceps;
+
+        private string _Psychiatry_PE_Brachioradialis;
+
+        private string _Psychiatry_PE_Quadriceps;
+
+        private string _Psychiatry_PE_Patellar;
+
+        private string _Psychiatry_PE_Achilles;
+
+        private string _Psychiatry_PE_Extensor;
+
+        private string _Psychiatry_PE_Frontal;
+
+        private string _Psychiatry_PE_Finger;
+
+        private string _Psychiatry_PE_Heel;
+
+        private string _Psychiatry_PE_Movements;
+
+        private string _Psychiatry_PE_Gait;
+
+        private System.Nullable<bool> _Psychiatry_PE_Neck_Rigidity;
+
+        private System.Nullable<bool> _Psychiatry_PE_Kerning_Sign;
+
+        private System.Nullable<bool> _Psychiatry_PE_Brudzinki_Sign;
+
+        private string _Psychiatry_For_Summary;
+
+        private string _Psychiatry_For_Diagnosis;
+
+        private string _Psychiatry_For_AxisI;
+
+        private string _Psychiatry_For_AxisII;
+
+        private string _Psychiatry_For_AxisIII;
+
+        private string _Psychiatry_For_AxisIV;
+
+        private string _Psychiatry_For_AxisV;
+
+        private string _Psychiatry_For_PredisposingFactors;
+
+        private string _Psychiatry_For_PrecipitatingFactors;
+
+        private string _Psychiatry_For_PrepetuatingFactors;
+
+        private string _Psychiatry_For_Investigation;
+
+        private string _Psychiatry_For_Medical;
+
+        private string _Psychiatry_For_Psychological;
+
+        private string _Psychiatry_Major_Issues;
+
+        private string _Psychiatry_For_Strengths;
+
+        private string _Psychiatry_For_Goals;
+
+        private string _Psychiatry_For_Strategies;
+
+        private string _Procedure_Operation;
+
+        private string _Procedure_Detail;
+
+        private string _Diagonosis;
+
+        private string _Room_Type;
+
+        private System.Nullable<bool> _Discharge;
+
+        private string _Patient_Discount_Type;
+
+        private string _Peads_weight;
+
+        private string _Peads_Length;
+
+        private string _Peads_HC;
+
+        private string _Peads_General_Appearance;
+
+        private System.Nullable<bool> _Peads_Cyanosis;
+
+        private System.Nullable<bool> _Peads_Jaundice;
+
+        private System.Nullable<bool> _Peads_Lethargy;
+
+        private System.Nullable<bool> _Peads_Rash;
+
+        private string _Peads_Others;
+
+        private System.Nullable<bool> _Peads_Caput;
+
+        private System.Nullable<bool> _Peads_Cephalhematoma;
+
+        private System.Nullable<bool> _Peads_Anterioropen;
+
+        private System.Nullable<bool> _Peads_AnteriorClose;
+
+        private System.Nullable<bool> _Peads_Dextrocardia;
+
+        private System.Nullable<bool> _Peads_Bulging;
+
+        private System.Nullable<bool> _Peads_Murmur;
+
+        private string _Peads_HeartSound;
+
+        private System.Nullable<bool> _Peads_Nasal;
+
+        private System.Nullable<bool> _Peads_Recessions;
+
+        private string _Peads_AddedSounds;
+
+        private System.Nullable<bool> _Peads_Flat;
+
+        private System.Nullable<bool> _Peads_Distended;
+
+        private System.Nullable<bool> _Peads_Scaphoid;
+
+        private System.Nullable<bool> _Peads_Liver;
+
+        private System.Nullable<bool> _Peads_Spleen;
+
+        private string _Peads_GITOthers;
+
+        private System.Nullable<bool> _Peads_Sucking;
+
+        private System.Nullable<bool> _Peads_Rooting;
+
+        private System.Nullable<bool> _Peads_Moro;
+
+        private string _Peads_CNSOthers;
+
+        private System.Nullable<bool> _Peads_FullTerm;
+
+        private System.Nullable<bool> _Peads_PreTerm;
+
+        private System.Nullable<System.DateTime> _Peads_DateOfDelivery;
+
+        private string _Peads_TimeOfDelivery;
+
+        private System.Nullable<bool> _Peads_Booked;
+
+        private System.Nullable<bool> _Peads_UnBooked;
+
+        private System.Nullable<bool> _Peads_DAIHandling;
+
+        private System.Nullable<bool> _Peads_ANTURash;
+
+        private System.Nullable<bool> _Peads_PIH;
+
+        private System.Nullable<bool> _Peads_GDM;
+
+        private System.Nullable<bool> _Peads_Vacinated;
+
+        private string _Peads_ANTOthers;
+
+        private System.Nullable<bool> _Peads_SVD;
+
+        private System.Nullable<bool> _Peads_LSCS;
+
+        private System.Nullable<bool> _Peads_Emergency;
+
+        private System.Nullable<bool> _Peads_Elective;
+
+        private string _Peads_PlaceOfDelivery;
+
+        private string _Peads_IndicationForLSCS;
+
+        private string _Peads_apgerScore1min;
+
+        private string _Peads_apgerScore5min;
+
+        private System.Nullable<bool> _Peads_Resuscitation;
+
+        private string _Peads_NatalOthers;
+
+        private System.Nullable<bool> _Peads_Moaning;
+
+        private System.Nullable<bool> _Peads_RespDistress;
+
+        private System.Nullable<bool> _Peads_PostNATALCyanosis;
+
+        private System.Nullable<bool> _Peads_Fits;
+
+        private System.Nullable<bool> _Peads_ReluctanceToFeed;
+
+        private string _Peads_PostNatalOthers;
+
+        private string _Vaccination_History;
+
+        private string _Other_History;
+
+        private System.Nullable<bool> _HMFIntact;
+
+        private System.Nullable<bool> _CranialNerves;
+
+        private string _FurtherExplanation;
+
+        private System.Nullable<bool> _SignsOfMeningism;
+
+        private System.Nullable<bool> _HeartSound;
+
+        private System.Nullable<bool> _Arrhythmias;
+
+        private System.Nullable<bool> _Murmur;
+
+        private System.Nullable<bool> _AnyOtherAddedSound;
+
+        private System.Nullable<bool> _AnyOtherFindings;
+
+        private System.Nullable<bool> _Wheeze;
+
+        private System.Nullable<bool> _Ranchi;
+
+        private System.Nullable<bool> _AnyOtherSound;
+
+        private System.Nullable<bool> _AbdomenSoft;
+
+        private System.Nullable<bool> _Tenderness;
+
+        private System.Nullable<bool> _Guarding;
+
+        private System.Nullable<bool> _BowelSound;
+
+        private System.Nullable<bool> _Distention;
+
+        private System.Nullable<bool> _FluidThrill;
+
+        private System.Nullable<bool> _ShiftingDullness;
+
+        private System.Nullable<bool> _EpigastriaDiscomfort;
+
+        private System.Nullable<bool> _RetrosternalBurning;
+
+        private System.Nullable<bool> _Jondus;
+
+        private System.Nullable<bool> _Pallor;
+
+        private System.Nullable<bool> _Dehydration;
+
+        private System.Nullable<bool> _GCSOrientation;
+
+        private System.Nullable<bool> _Conscious_Orientely;
+
+        private System.Nullable<bool> _NVB_Right;
+
+        private System.Nullable<bool> _NVB_Left;
+
+        private System.Nullable<bool> _Crepitation_Right;
+
+        private System.Nullable<bool> _Crepitation_Left;
+
+        private string _CNS_Value;
+
+        private string _CVS_Value;
+
+        private string _RESP_Value;
+
+        private string _GIT_Value;
+
+        private string _GPE_Value;
+
+        private string _Eye_Opening_Response;
+
+        private string _Motor_Response;
+
+        private string _Verbal_Response;
+
+        private string _Accumulated_Response;
+
+        private string _remarks_call_to_doctor;
+
+        private string _PU_R;
+
+        private string _PU_L;
+
+        private string _PL_L;
+
+        private string _PL_R;
+
+        private System.Nullable<bool> _SU_R;
+
+        private System.Nullable<bool> _SU_L;
+
+        private System.Nullable<bool> _SL_R;
+
+        private System.Nullable<bool> _SL_L;
+
+        private string _TruckTorso;
+
+        private string _Clinical_Summary;
+
+        private string _Doctors_Note;
+
+        private string _Provisional_Diagnosis_Examination;
+
+        private string _Sehat_Card_Holder_CNIC;
+
+        private System.Nullable<bool> _JVP_Param;
+
+        private System.Nullable<bool> _Edema_Param;
+
+        private System.Nullable<bool> _Cyanosis_Param;
+
+        private string _patient_main_department;
+
+        private string _packagae_type;
+
+        private string _packagae_name;
+
+        private string _ipd_Procedure;
+
+        private string _Procedure_Desc;
+
+        private string _Panel_Company1;
+
+        private string _InsuranceCardNo1;
+
+        private string _CardHolderName1;
+
+        private string _CompanyNAme;
+
+        private string _ApproveLimit;
+
+        private string _ApproveDays;
+
+        private string _RoomLimit;
+
+        private string _CardLimit;
+
+        private System.Nullable<decimal> _Discount;
+
+        private string _Private_Charges_instruction;
+
+        private int _Advance_Amount;
+
+        private string _Discharge_Type;
+
+        private System.Nullable<bool> _Discharge_Request;
+
+        private int _Guardian_Id;
+
+        private string _G_Name;
+
+        private string _G_RelationShip;
+
+        private string _G_Address;
+
+        private string _G_CNIC;
+
+        private string _G_Phone;
+
+        public sp_GetInPatientDetailResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Type", DbType = "VarChar(50)")]
+        public string Patient_Type
+        {
+            get
+            {
+                return this._Patient_Type;
+            }
+            set
+            {
+                if ((this._Patient_Type != value))
+                {
+                    this._Patient_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
+        public int Patient_ID
+        {
+            get
+            {
+                return this._Patient_ID;
+            }
+            set
+            {
+                if ((this._Patient_ID != value))
+                {
+                    this._Patient_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(100)")]
+        public string Full_Name
+        {
+            get
+            {
+                return this._Full_Name;
+            }
+            set
+            {
+                if ((this._Full_Name != value))
+                {
+                    this._Full_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Entry_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Entry_Date
+        {
+            get
+            {
+                return this._Entry_Date;
+            }
+            set
+            {
+                if ((this._Entry_Date != value))
+                {
+                    this._Entry_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this._Created_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mobile1", DbType = "VarChar(50)")]
+        public string Mobile1
+        {
+            get
+            {
+                return this._Mobile1;
+            }
+            set
+            {
+                if ((this._Mobile1 != value))
+                {
+                    this._Mobile1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Permanent_Address", DbType = "NVarChar(350)")]
+        public string Permanent_Address
+        {
+            get
+            {
+                return this._Permanent_Address;
+            }
+            set
+            {
+                if ((this._Permanent_Address != value))
+                {
+                    this._Permanent_Address = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Gender", DbType = "VarChar(50)")]
+        public string Gender
+        {
+            get
+            {
+                return this._Gender;
+            }
+            set
+            {
+                if ((this._Gender != value))
+                {
+                    this._Gender = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Age_years", DbType = "VarChar(50)")]
+        public string Age_years
+        {
+            get
+            {
+                return this._Age_years;
+            }
+            set
+            {
+                if ((this._Age_years != value))
+                {
+                    this._Age_years = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Panel_Company", DbType = "VarChar(100)")]
+        public string Panel_Company
+        {
+            get
+            {
+                return this._Panel_Company;
+            }
+            set
+            {
+                if ((this._Panel_Company != value))
+                {
+                    this._Panel_Company = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CardHolderName", DbType = "NVarChar(100)")]
+        public string CardHolderName
+        {
+            get
+            {
+                return this._CardHolderName;
+            }
+            set
+            {
+                if ((this._CardHolderName != value))
+                {
+                    this._CardHolderName = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_InsuranceCardNo", DbType = "NVarChar(100)")]
+        public string InsuranceCardNo
+        {
+            get
+            {
+                return this._InsuranceCardNo;
+            }
+            set
+            {
+                if ((this._InsuranceCardNo != value))
+                {
+                    this._InsuranceCardNo = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PolicyHolderName", DbType = "NVarChar(100)")]
+        public string PolicyHolderName
+        {
+            get
+            {
+                return this._PolicyHolderName;
+            }
+            set
+            {
+                if ((this._PolicyHolderName != value))
+                {
+                    this._PolicyHolderName = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AdmissionType", DbType = "VarChar(50)")]
+        public string AdmissionType
+        {
+            get
+            {
+                return this._AdmissionType;
+            }
+            set
+            {
+                if ((this._AdmissionType != value))
+                {
+                    this._AdmissionType = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SehatCardNo", DbType = "VarChar(150)")]
+        public string SehatCardNo
+        {
+            get
+            {
+                return this._SehatCardNo;
+            }
+            set
+            {
+                if ((this._SehatCardNo != value))
+                {
+                    this._SehatCardNo = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VisitId", DbType = "VarChar(150)")]
+        public string VisitId
+        {
+            get
+            {
+                return this._VisitId;
+            }
+            set
+            {
+                if ((this._VisitId != value))
+                {
+                    this._VisitId = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IdentificationMarks", DbType = "VarChar(200)")]
+        public string IdentificationMarks
+        {
+            get
+            {
+                return this._IdentificationMarks;
+            }
+            set
+            {
+                if ((this._IdentificationMarks != value))
+                {
+                    this._IdentificationMarks = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Diagnosis", DbType = "VarChar(200)")]
+        public string Diagnosis
+        {
+            get
+            {
+                return this._Diagnosis;
+            }
+            set
+            {
+                if ((this._Diagnosis != value))
+                {
+                    this._Diagnosis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DateOfDeath", DbType = "Date")]
+        public System.Nullable<System.DateTime> DateOfDeath
+        {
+            get
+            {
+                return this._DateOfDeath;
+            }
+            set
+            {
+                if ((this._DateOfDeath != value))
+                {
+                    this._DateOfDeath = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TimeOfDeath", DbType = "Time")]
+        public System.Nullable<System.TimeSpan> TimeOfDeath
+        {
+            get
+            {
+                return this._TimeOfDeath;
+            }
+            set
+            {
+                if ((this._TimeOfDeath != value))
+                {
+                    this._TimeOfDeath = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PlaceOfDeath", DbType = "VarChar(100)")]
+        public string PlaceOfDeath
+        {
+            get
+            {
+                return this._PlaceOfDeath;
+            }
+            set
+            {
+                if ((this._PlaceOfDeath != value))
+                {
+                    this._PlaceOfDeath = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CauseOfDeath", DbType = "VarChar(100)")]
+        public string CauseOfDeath
+        {
+            get
+            {
+                return this._CauseOfDeath;
+            }
+            set
+            {
+                if ((this._CauseOfDeath != value))
+                {
+                    this._CauseOfDeath = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IssuingOfficerName", DbType = "VarChar(100)")]
+        public string IssuingOfficerName
+        {
+            get
+            {
+                return this._IssuingOfficerName;
+            }
+            set
+            {
+                if ((this._IssuingOfficerName != value))
+                {
+                    this._IssuingOfficerName = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeathCertifiedBy1", DbType = "VarChar(80)")]
+        public string DeathCertifiedBy1
+        {
+            get
+            {
+                return this._DeathCertifiedBy1;
+            }
+            set
+            {
+                if ((this._DeathCertifiedBy1 != value))
+                {
+                    this._DeathCertifiedBy1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DeathCertifiedBy2", DbType = "VarChar(80)")]
+        public string DeathCertifiedBy2
+        {
+            get
+            {
+                return this._DeathCertifiedBy2;
+            }
+            set
+            {
+                if ((this._DeathCertifiedBy2 != value))
+                {
+                    this._DeathCertifiedBy2 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BodyHandedOverTo", DbType = "VarChar(80)")]
+        public string BodyHandedOverTo
+        {
+            get
+            {
+                return this._BodyHandedOverTo;
+            }
+            set
+            {
+                if ((this._BodyHandedOverTo != value))
+                {
+                    this._BodyHandedOverTo = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FamilyPersonName", DbType = "NVarChar(80)")]
+        public string FamilyPersonName
+        {
+            get
+            {
+                return this._FamilyPersonName;
+            }
+            set
+            {
+                if ((this._FamilyPersonName != value))
+                {
+                    this._FamilyPersonName = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CNIC", DbType = "NVarChar(50)")]
+        public string CNIC
+        {
+            get
+            {
+                return this._CNIC;
+            }
+            set
+            {
+                if ((this._CNIC != value))
+                {
+                    this._CNIC = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RelationWithDeceased", DbType = "NVarChar(50)")]
+        public string RelationWithDeceased
+        {
+            get
+            {
+                return this._RelationWithDeceased;
+            }
+            set
+            {
+                if ((this._RelationWithDeceased != value))
+                {
+                    this._RelationWithDeceased = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CMO_Police", DbType = "NVarChar(70)")]
+        public string CMO_Police
+        {
+            get
+            {
+                return this._CMO_Police;
+            }
+            set
+            {
+                if ((this._CMO_Police != value))
+                {
+                    this._CMO_Police = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_In_Patient_ID", DbType = "Int NOT NULL")]
+        public int In_Patient_ID
+        {
+            get
+            {
+                return this._In_Patient_ID;
+            }
+            set
+            {
+                if ((this._In_Patient_ID != value))
+                {
+                    this._In_Patient_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Admission_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Admission_Date
+        {
+            get
+            {
+                return this._Admission_Date;
+            }
+            set
+            {
+                if ((this._Admission_Date != value))
+                {
+                    this._Admission_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Issuance_Of", DbType = "VarChar(3)")]
+        public string Issuance_Of
+        {
+            get
+            {
+                return this._Issuance_Of;
+            }
+            set
+            {
+                if ((this._Issuance_Of != value))
+                {
+                    this._Issuance_Of = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Room_ID", DbType = "Int")]
+        public System.Nullable<int> Room_ID
+        {
+            get
+            {
+                return this._Room_ID;
+            }
+            set
+            {
+                if ((this._Room_ID != value))
+                {
+                    this._Room_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_ID", DbType = "Int")]
+        public System.Nullable<int> Ward_ID
+        {
+            get
+            {
+                return this._Ward_ID;
+            }
+            set
+            {
+                if ((this._Ward_ID != value))
+                {
+                    this._Ward_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bed_No", DbType = "Int")]
+        public System.Nullable<int> Bed_No
+        {
+            get
+            {
+                return this._Bed_No;
+            }
+            set
+            {
+                if ((this._Bed_No != value))
+                {
+                    this._Bed_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(50)")]
+        public string Department
+        {
+            get
+            {
+                return this._Department;
+            }
+            set
+            {
+                if ((this._Department != value))
+                {
+                    this._Department = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor", DbType = "VarChar(5)")]
+        public string Doctor
+        {
+            get
+            {
+                return this._Doctor;
+            }
+            set
+            {
+                if ((this._Doctor != value))
+                {
+                    this._Doctor = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Health_Complaints", DbType = "VarChar(MAX)")]
+        public string Health_Complaints
+        {
+            get
+            {
+                return this._Health_Complaints;
+            }
+            set
+            {
+                if ((this._Health_Complaints != value))
+                {
+                    this._Health_Complaints = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Expected_Discharge_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Expected_Discharge_Date
+        {
+            get
+            {
+                return this._Expected_Discharge_Date;
+            }
+            set
+            {
+                if ((this._Expected_Discharge_Date != value))
+                {
+                    this._Expected_Discharge_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Diabetes_Value", DbType = "VarChar(50)")]
+        public string Diabetes_Value
+        {
+            get
+            {
+                return this._Diabetes_Value;
+            }
+            set
+            {
+                if ((this._Diabetes_Value != value))
+                {
+                    this._Diabetes_Value = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referring_Doctor", DbType = "VarChar(50)")]
+        public string Referring_Doctor
+        {
+            get
+            {
+                return this._Referring_Doctor;
+            }
+            set
+            {
+                if ((this._Referring_Doctor != value))
+                {
+                    this._Referring_Doctor = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Recommended_Diet", DbType = "VarChar(MAX)")]
+        public string Recommended_Diet
+        {
+            get
+            {
+                return this._Recommended_Diet;
+            }
+            set
+            {
+                if ((this._Recommended_Diet != value))
+                {
+                    this._Recommended_Diet = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Provisional_Diagnosis", DbType = "VarChar(MAX)")]
+        public string Provisional_Diagnosis
+        {
+            get
+            {
+                return this._Provisional_Diagnosis;
+            }
+            set
+            {
+                if ((this._Provisional_Diagnosis != value))
+                {
+                    this._Provisional_Diagnosis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Pulse_Min", DbType = "VarChar(10)")]
+        public string Pulse_Min
+        {
+            get
+            {
+                return this._Pulse_Min;
+            }
+            set
+            {
+                if ((this._Pulse_Min != value))
+                {
+                    this._Pulse_Min = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BP_mm_Hg", DbType = "VarChar(10)")]
+        public string BP_mm_Hg
+        {
+            get
+            {
+                return this._BP_mm_Hg;
+            }
+            set
+            {
+                if ((this._BP_mm_Hg != value))
+                {
+                    this._BP_mm_Hg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Temp_C", DbType = "VarChar(10)")]
+        public string Temp_C
+        {
+            get
+            {
+                return this._Temp_C;
+            }
+            set
+            {
+                if ((this._Temp_C != value))
+                {
+                    this._Temp_C = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Respiration_Min", DbType = "VarChar(10)")]
+        public string Respiration_Min
+        {
+            get
+            {
+                return this._Respiration_Min;
+            }
+            set
+            {
+                if ((this._Respiration_Min != value))
+                {
+                    this._Respiration_Min = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Height_Cm", DbType = "VarChar(10)")]
+        public string Height_Cm
+        {
+            get
+            {
+                return this._Height_Cm;
+            }
+            set
+            {
+                if ((this._Height_Cm != value))
+                {
+                    this._Height_Cm = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Weight_Kg", DbType = "VarChar(10)")]
+        public string Weight_Kg
+        {
+            get
+            {
+                return this._Weight_Kg;
+            }
+            set
+            {
+                if ((this._Weight_Kg != value))
+                {
+                    this._Weight_Kg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_By", DbType = "VarChar(50)")]
+        public string Discharge_By
+        {
+            get
+            {
+                return this._Discharge_By;
+            }
+            set
+            {
+                if ((this._Discharge_By != value))
+                {
+                    this._Discharge_By = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_On", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Discharge_On
+        {
+            get
+            {
+                return this._Discharge_On;
+            }
+            set
+            {
+                if ((this._Discharge_On != value))
+                {
+                    this._Discharge_On = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Prevention_Precaution", DbType = "VarChar(MAX)")]
+        public string Prevention_Precaution
+        {
+            get
+            {
+                return this._Prevention_Precaution;
+            }
+            set
+            {
+                if ((this._Prevention_Precaution != value))
+                {
+                    this._Prevention_Precaution = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Next_Visit", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Next_Visit
+        {
+            get
+            {
+                return this._Next_Visit;
+            }
+            set
+            {
+                if ((this._Next_Visit != value))
+                {
+                    this._Next_Visit = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_L_M_P", DbType = "VarChar(200)")]
+        public string L_M_P
+        {
+            get
+            {
+                return this._L_M_P;
+            }
+            set
+            {
+                if ((this._L_M_P != value))
+                {
+                    this._L_M_P = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receiving_date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Receiving_date
+        {
+            get
+            {
+                return this._Receiving_date;
+            }
+            set
+            {
+                if ((this._Receiving_date != value))
+                {
+                    this._Receiving_date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RN_Special_Instruction", DbType = "VarChar(200)")]
+        public string RN_Special_Instruction
+        {
+            get
+            {
+                return this._RN_Special_Instruction;
+            }
+            set
+            {
+                if ((this._RN_Special_Instruction != value))
+                {
+                    this._RN_Special_Instruction = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RN_Patient_General_Condition", DbType = "VarChar(200)")]
+        public string RN_Patient_General_Condition
+        {
+            get
+            {
+                return this._RN_Patient_General_Condition;
+            }
+            set
+            {
+                if ((this._RN_Patient_General_Condition != value))
+                {
+                    this._RN_Patient_General_Condition = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HistoryOfPeresentIllness", DbType = "VarChar(MAX)")]
+        public string HistoryOfPeresentIllness
+        {
+            get
+            {
+                return this._HistoryOfPeresentIllness;
+            }
+            set
+            {
+                if ((this._HistoryOfPeresentIllness != value))
+                {
+                    this._HistoryOfPeresentIllness = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HistoryOfFamily", DbType = "VarChar(MAX)")]
+        public string HistoryOfFamily
+        {
+            get
+            {
+                return this._HistoryOfFamily;
+            }
+            set
+            {
+                if ((this._HistoryOfFamily != value))
+                {
+                    this._HistoryOfFamily = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HistoryOfPastIllness", DbType = "VarChar(MAX)")]
+        public string HistoryOfPastIllness
+        {
+            get
+            {
+                return this._HistoryOfPastIllness;
+            }
+            set
+            {
+                if ((this._HistoryOfPastIllness != value))
+                {
+                    this._HistoryOfPastIllness = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CVS", DbType = "VarChar(500)")]
+        public string CVS
+        {
+            get
+            {
+                return this._CVS;
+            }
+            set
+            {
+                if ((this._CVS != value))
+                {
+                    this._CVS = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GIT", DbType = "VarChar(MAX)")]
+        public string GIT
+        {
+            get
+            {
+                return this._GIT;
+            }
+            set
+            {
+                if ((this._GIT != value))
+                {
+                    this._GIT = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RESP", DbType = "VarChar(MAX)")]
+        public string RESP
+        {
+            get
+            {
+                return this._RESP;
+            }
+            set
+            {
+                if ((this._RESP != value))
+                {
+                    this._RESP = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SocioEconomicHistory", DbType = "VarChar(MAX)")]
+        public string SocioEconomicHistory
+        {
+            get
+            {
+                return this._SocioEconomicHistory;
+            }
+            set
+            {
+                if ((this._SocioEconomicHistory != value))
+                {
+                    this._SocioEconomicHistory = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CNS", DbType = "VarChar(MAX)")]
+        public string CNS
+        {
+            get
+            {
+                return this._CNS;
+            }
+            set
+            {
+                if ((this._CNS != value))
+                {
+                    this._CNS = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GYNAE", DbType = "VarChar(MAX)")]
+        public string GYNAE
+        {
+            get
+            {
+                return this._GYNAE;
+            }
+            set
+            {
+                if ((this._GYNAE != value))
+                {
+                    this._GYNAE = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ObstetricHistory", DbType = "VarChar(MAX)")]
+        public string ObstetricHistory
+        {
+            get
+            {
+                return this._ObstetricHistory;
+            }
+            set
+            {
+                if ((this._ObstetricHistory != value))
+                {
+                    this._ObstetricHistory = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllergiesHistory", DbType = "VarChar(MAX)")]
+        public string AllergiesHistory
+        {
+            get
+            {
+                return this._AllergiesHistory;
+            }
+            set
+            {
+                if ((this._AllergiesHistory != value))
+                {
+                    this._AllergiesHistory = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ProvisionalDiagnosis", DbType = "VarChar(MAX)")]
+        public string ProvisionalDiagnosis
+        {
+            get
+            {
+                return this._ProvisionalDiagnosis;
+            }
+            set
+            {
+                if ((this._ProvisionalDiagnosis != value))
+                {
+                    this._ProvisionalDiagnosis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TreatmentHistory", DbType = "VarChar(MAX)")]
+        public string TreatmentHistory
+        {
+            get
+            {
+                return this._TreatmentHistory;
+            }
+            set
+            {
+                if ((this._TreatmentHistory != value))
+                {
+                    this._TreatmentHistory = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_txtRemarksHistory", DbType = "VarChar(MAX)")]
+        public string txtRemarksHistory
+        {
+            get
+            {
+                return this._txtRemarksHistory;
+            }
+            set
+            {
+                if ((this._txtRemarksHistory != value))
+                {
+                    this._txtRemarksHistory = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkPallor", DbType = "Bit")]
+        public System.Nullable<bool> chkPallor
+        {
+            get
+            {
+                return this._chkPallor;
+            }
+            set
+            {
+                if ((this._chkPallor != value))
+                {
+                    this._chkPallor = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkJVP", DbType = "Bit")]
+        public System.Nullable<bool> chkJVP
+        {
+            get
+            {
+                return this._chkJVP;
+            }
+            set
+            {
+                if ((this._chkJVP != value))
+                {
+                    this._chkJVP = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkaganoris", DbType = "Bit")]
+        public System.Nullable<bool> chkaganoris
+        {
+            get
+            {
+                return this._chkaganoris;
+            }
+            set
+            {
+                if ((this._chkaganoris != value))
+                {
+                    this._chkaganoris = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkunconceed", DbType = "Bit")]
+        public System.Nullable<bool> chkunconceed
+        {
+            get
+            {
+                return this._chkunconceed;
+            }
+            set
+            {
+                if ((this._chkunconceed != value))
+                {
+                    this._chkunconceed = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chkjaundice", DbType = "Bit")]
+        public System.Nullable<bool> chkjaundice
+        {
+            get
+            {
+                return this._chkjaundice;
+            }
+            set
+            {
+                if ((this._chkjaundice != value))
+                {
+                    this._chkjaundice = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_hydration", DbType = "Bit")]
+        public System.Nullable<bool> hydration
+        {
+            get
+            {
+                return this._hydration;
+            }
+            set
+            {
+                if ((this._hydration != value))
+                {
+                    this._hydration = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_edema", DbType = "Bit")]
+        public System.Nullable<bool> edema
+        {
+            get
+            {
+                return this._edema;
+            }
+            set
+            {
+                if ((this._edema != value))
+                {
+                    this._edema = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk1", DbType = "Bit")]
+        public System.Nullable<bool> chk1
+        {
+            get
+            {
+                return this._chk1;
+            }
+            set
+            {
+                if ((this._chk1 != value))
+                {
+                    this._chk1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk2", DbType = "Bit")]
+        public System.Nullable<bool> chk2
+        {
+            get
+            {
+                return this._chk2;
+            }
+            set
+            {
+                if ((this._chk2 != value))
+                {
+                    this._chk2 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk3", DbType = "Bit")]
+        public System.Nullable<bool> chk3
+        {
+            get
+            {
+                return this._chk3;
+            }
+            set
+            {
+                if ((this._chk3 != value))
+                {
+                    this._chk3 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk4", DbType = "Bit")]
+        public System.Nullable<bool> chk4
+        {
+            get
+            {
+                return this._chk4;
+            }
+            set
+            {
+                if ((this._chk4 != value))
+                {
+                    this._chk4 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk5", DbType = "Bit")]
+        public System.Nullable<bool> chk5
+        {
+            get
+            {
+                return this._chk5;
+            }
+            set
+            {
+                if ((this._chk5 != value))
+                {
+                    this._chk5 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk6", DbType = "Bit")]
+        public System.Nullable<bool> chk6
+        {
+            get
+            {
+                return this._chk6;
+            }
+            set
+            {
+                if ((this._chk6 != value))
+                {
+                    this._chk6 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk7", DbType = "Bit")]
+        public System.Nullable<bool> chk7
+        {
+            get
+            {
+                return this._chk7;
+            }
+            set
+            {
+                if ((this._chk7 != value))
+                {
+                    this._chk7 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_chk8", DbType = "Bit")]
+        public System.Nullable<bool> chk8
+        {
+            get
+            {
+                return this._chk8;
+            }
+            set
+            {
+                if ((this._chk8 != value))
+                {
+                    this._chk8 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_txtInputBox1", DbType = "VarChar(500)")]
+        public string txtInputBox1
+        {
+            get
+            {
+                return this._txtInputBox1;
+            }
+            set
+            {
+                if ((this._txtInputBox1 != value))
+                {
+                    this._txtInputBox1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reffer_No", DbType = "VarChar(50)")]
+        public string Reffer_No
+        {
+            get
+            {
+                return this._Reffer_No;
+            }
+            set
+            {
+                if ((this._Reffer_No != value))
+                {
+                    this._Reffer_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reffer_To", DbType = "VarChar(50)")]
+        public string Reffer_To
+        {
+            get
+            {
+                return this._Reffer_To;
+            }
+            set
+            {
+                if ((this._Reffer_To != value))
+                {
+                    this._Reffer_To = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Birth_History", DbType = "VarChar(MAX)")]
+        public string Birth_History
+        {
+            get
+            {
+                return this._Birth_History;
+            }
+            set
+            {
+                if ((this._Birth_History != value))
+                {
+                    this._Birth_History = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Drug_History", DbType = "VarChar(MAX)")]
+        public string Drug_History
+        {
+            get
+            {
+                return this._Drug_History;
+            }
+            set
+            {
+                if ((this._Drug_History != value))
+                {
+                    this._Drug_History = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Personal_History", DbType = "VarChar(MAX)")]
+        public string Personal_History
+        {
+            get
+            {
+                return this._Personal_History;
+            }
+            set
+            {
+                if ((this._Personal_History != value))
+                {
+                    this._Personal_History = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Local", DbType = "VarChar(50)")]
+        public string Local
+        {
+            get
+            {
+                return this._Local;
+            }
+            set
+            {
+                if ((this._Local != value))
+                {
+                    this._Local = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mucculor", DbType = "VarChar(50)")]
+        public string Mucculor
+        {
+            get
+            {
+                return this._Mucculor;
+            }
+            set
+            {
+                if ((this._Mucculor != value))
+                {
+                    this._Mucculor = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Throat_IDL", DbType = "VarChar(200)")]
+        public string ENT_Throat_IDL
+        {
+            get
+            {
+                return this._ENT_Throat_IDL;
+            }
+            set
+            {
+                if ((this._ENT_Throat_IDL != value))
+                {
+                    this._ENT_Throat_IDL = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Throat_Nose", DbType = "VarChar(200)")]
+        public string ENT_Throat_Nose
+        {
+            get
+            {
+                return this._ENT_Throat_Nose;
+            }
+            set
+            {
+                if ((this._ENT_Throat_Nose != value))
+                {
+                    this._ENT_Throat_Nose = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Ear_Right", DbType = "VarChar(200)")]
+        public string ENT_Ear_Right
+        {
+            get
+            {
+                return this._ENT_Ear_Right;
+            }
+            set
+            {
+                if ((this._ENT_Ear_Right != value))
+                {
+                    this._ENT_Ear_Right = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ent_Ear_Left", DbType = "VarChar(200)")]
+        public string Ent_Ear_Left
+        {
+            get
+            {
+                return this._Ent_Ear_Left;
+            }
+            set
+            {
+                if ((this._Ent_Ear_Left != value))
+                {
+                    this._Ent_Ear_Left = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Right_PosNeg", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Rinnes_Right_PosNeg
+        {
+            get
+            {
+                return this._ENT_Rinnes_Right_PosNeg;
+            }
+            set
+            {
+                if ((this._ENT_Rinnes_Right_PosNeg != value))
+                {
+                    this._ENT_Rinnes_Right_PosNeg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Lft_PosNeg", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Rinnes_Lft_PosNeg
+        {
+            get
+            {
+                return this._ENT_Rinnes_Lft_PosNeg;
+            }
+            set
+            {
+                if ((this._ENT_Rinnes_Lft_PosNeg != value))
+                {
+                    this._ENT_Rinnes_Lft_PosNeg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Right_FalseNeg", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Rinnes_Right_FalseNeg
+        {
+            get
+            {
+                return this._ENT_Rinnes_Right_FalseNeg;
+            }
+            set
+            {
+                if ((this._ENT_Rinnes_Right_FalseNeg != value))
+                {
+                    this._ENT_Rinnes_Right_FalseNeg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Lft_FalseNeg", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Rinnes_Lft_FalseNeg
+        {
+            get
+            {
+                return this._ENT_Rinnes_Lft_FalseNeg;
+            }
+            set
+            {
+                if ((this._ENT_Rinnes_Lft_FalseNeg != value))
+                {
+                    this._ENT_Rinnes_Lft_FalseNeg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Webber_Central", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Webber_Central
+        {
+            get
+            {
+                return this._ENT_Webber_Central;
+            }
+            set
+            {
+                if ((this._ENT_Webber_Central != value))
+                {
+                    this._ENT_Webber_Central = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Webber_Lateralized", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Webber_Lateralized
+        {
+            get
+            {
+                return this._ENT_Webber_Lateralized;
+            }
+            set
+            {
+                if ((this._ENT_Webber_Lateralized != value))
+                {
+                    this._ENT_Webber_Lateralized = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Investigation_PTA", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Investigation_PTA
+        {
+            get
+            {
+                return this._ENT_Investigation_PTA;
+            }
+            set
+            {
+                if ((this._ENT_Investigation_PTA != value))
+                {
+                    this._ENT_Investigation_PTA = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Investigation_Tympanometry", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Investigation_Tympanometry
+        {
+            get
+            {
+                return this._ENT_Investigation_Tympanometry;
+            }
+            set
+            {
+                if ((this._ENT_Investigation_Tympanometry != value))
+                {
+                    this._ENT_Investigation_Tympanometry = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Right_Neg", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Rinnes_Right_Neg
+        {
+            get
+            {
+                return this._ENT_Rinnes_Right_Neg;
+            }
+            set
+            {
+                if ((this._ENT_Rinnes_Right_Neg != value))
+                {
+                    this._ENT_Rinnes_Right_Neg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Lft_Neg", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Rinnes_Lft_Neg
+        {
+            get
+            {
+                return this._ENT_Rinnes_Lft_Neg;
+            }
+            set
+            {
+                if ((this._ENT_Rinnes_Lft_Neg != value))
+                {
+                    this._ENT_Rinnes_Lft_Neg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Right_FNeg", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Rinnes_Right_FNeg
+        {
+            get
+            {
+                return this._ENT_Rinnes_Right_FNeg;
+            }
+            set
+            {
+                if ((this._ENT_Rinnes_Right_FNeg != value))
+                {
+                    this._ENT_Rinnes_Right_FNeg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ENT_Rinnes_Lft_FNeg", DbType = "Bit")]
+        public System.Nullable<bool> ENT_Rinnes_Lft_FNeg
+        {
+            get
+            {
+                return this._ENT_Rinnes_Lft_FNeg;
+            }
+            set
+            {
+                if ((this._ENT_Rinnes_Lft_FNeg != value))
+                {
+                    this._ENT_Rinnes_Lft_FNeg = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Informant", DbType = "VarChar(200)")]
+        public string Psychiatry_Informant
+        {
+            get
+            {
+                return this._Psychiatry_Informant;
+            }
+            set
+            {
+                if ((this._Psychiatry_Informant != value))
+                {
+                    this._Psychiatry_Informant = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Source_Referral", DbType = "VarChar(200)")]
+        public string Psychiatry_Source_Referral
+        {
+            get
+            {
+                return this._Psychiatry_Source_Referral;
+            }
+            set
+            {
+                if ((this._Psychiatry_Source_Referral != value))
+                {
+                    this._Psychiatry_Source_Referral = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Walking", DbType = "Bit")]
+        public System.Nullable<bool> Psychiatry_Walking
+        {
+            get
+            {
+                return this._Psychiatry_Walking;
+            }
+            set
+            {
+                if ((this._Psychiatry_Walking != value))
+                {
+                    this._Psychiatry_Walking = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Talking", DbType = "Bit")]
+        public System.Nullable<bool> Psychiatry_Talking
+        {
+            get
+            {
+                return this._Psychiatry_Talking;
+            }
+            set
+            {
+                if ((this._Psychiatry_Talking != value))
+                {
+                    this._Psychiatry_Talking = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Others", DbType = "Bit")]
+        public System.Nullable<bool> Psychiatry_Others
+        {
+            get
+            {
+                return this._Psychiatry_Others;
+            }
+            set
+            {
+                if ((this._Psychiatry_Others != value))
+                {
+                    this._Psychiatry_Others = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Menstrual", DbType = "VarChar(200)")]
+        public string Psychiatry_Menstrual
+        {
+            get
+            {
+                return this._Psychiatry_Menstrual;
+            }
+            set
+            {
+                if ((this._Psychiatry_Menstrual != value))
+                {
+                    this._Psychiatry_Menstrual = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Attachment_Separation", DbType = "VarChar(200)")]
+        public string Psychiatry_Attachment_Separation
+        {
+            get
+            {
+                return this._Psychiatry_Attachment_Separation;
+            }
+            set
+            {
+                if ((this._Psychiatry_Attachment_Separation != value))
+                {
+                    this._Psychiatry_Attachment_Separation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Health", DbType = "VarChar(200)")]
+        public string Psychiatry_Health
+        {
+            get
+            {
+                return this._Psychiatry_Health;
+            }
+            set
+            {
+                if ((this._Psychiatry_Health != value))
+                {
+                    this._Psychiatry_Health = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Neck_Holding", DbType = "Bit")]
+        public System.Nullable<bool> Psychiatry_Neck_Holding
+        {
+            get
+            {
+                return this._Psychiatry_Neck_Holding;
+            }
+            set
+            {
+                if ((this._Psychiatry_Neck_Holding != value))
+                {
+                    this._Psychiatry_Neck_Holding = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Nail_Biting", DbType = "VarChar(200)")]
+        public string Psychiatry_Nail_Biting
+        {
+            get
+            {
+                return this._Psychiatry_Nail_Biting;
+            }
+            set
+            {
+                if ((this._Psychiatry_Nail_Biting != value))
+                {
+                    this._Psychiatry_Nail_Biting = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Temper_Tantrums", DbType = "VarChar(200)")]
+        public string Psychiatry_Temper_Tantrums
+        {
+            get
+            {
+                return this._Psychiatry_Temper_Tantrums;
+            }
+            set
+            {
+                if ((this._Psychiatry_Temper_Tantrums != value))
+                {
+                    this._Psychiatry_Temper_Tantrums = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Bed_Wetting", DbType = "VarChar(200)")]
+        public string Psychiatry_Bed_Wetting
+        {
+            get
+            {
+                return this._Psychiatry_Bed_Wetting;
+            }
+            set
+            {
+                if ((this._Psychiatry_Bed_Wetting != value))
+                {
+                    this._Psychiatry_Bed_Wetting = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Academics", DbType = "VarChar(200)")]
+        public string Psychiatry_Academics
+        {
+            get
+            {
+                return this._Psychiatry_Academics;
+            }
+            set
+            {
+                if ((this._Psychiatry_Academics != value))
+                {
+                    this._Psychiatry_Academics = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Menarche", DbType = "VarChar(200)")]
+        public string Psychiatry_Menarche
+        {
+            get
+            {
+                return this._Psychiatry_Menarche;
+            }
+            set
+            {
+                if ((this._Psychiatry_Menarche != value))
+                {
+                    this._Psychiatry_Menarche = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Peer_Relationship", DbType = "VarChar(200)")]
+        public string Psychiatry_Peer_Relationship
+        {
+            get
+            {
+                return this._Psychiatry_Peer_Relationship;
+            }
+            set
+            {
+                if ((this._Psychiatry_Peer_Relationship != value))
+                {
+                    this._Psychiatry_Peer_Relationship = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Behaviour", DbType = "VarChar(200)")]
+        public string Psychiatry_Behaviour
+        {
+            get
+            {
+                return this._Psychiatry_Behaviour;
+            }
+            set
+            {
+                if ((this._Psychiatry_Behaviour != value))
+                {
+                    this._Psychiatry_Behaviour = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Occupational_History", DbType = "VarChar(200)")]
+        public string Psychiatry_Occupational_History
+        {
+            get
+            {
+                return this._Psychiatry_Occupational_History;
+            }
+            set
+            {
+                if ((this._Psychiatry_Occupational_History != value))
+                {
+                    this._Psychiatry_Occupational_History = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Substance_Use", DbType = "VarChar(200)")]
+        public string Psychiatry_Substance_Use
+        {
+            get
+            {
+                return this._Psychiatry_Substance_Use;
+            }
+            set
+            {
+                if ((this._Psychiatry_Substance_Use != value))
+                {
+                    this._Psychiatry_Substance_Use = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Forensic_Use", DbType = "VarChar(200)")]
+        public string Psychiatry_Forensic_Use
+        {
+            get
+            {
+                return this._Psychiatry_Forensic_Use;
+            }
+            set
+            {
+                if ((this._Psychiatry_Forensic_Use != value))
+                {
+                    this._Psychiatry_Forensic_Use = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Relationship", DbType = "VarChar(200)")]
+        public string Psychiatry_Relationship
+        {
+            get
+            {
+                return this._Psychiatry_Relationship;
+            }
+            set
+            {
+                if ((this._Psychiatry_Relationship != value))
+                {
+                    this._Psychiatry_Relationship = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Leisure_Activities", DbType = "VarChar(200)")]
+        public string Psychiatry_Leisure_Activities
+        {
+            get
+            {
+                return this._Psychiatry_Leisure_Activities;
+            }
+            set
+            {
+                if ((this._Psychiatry_Leisure_Activities != value))
+                {
+                    this._Psychiatry_Leisure_Activities = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Attitude_Standards", DbType = "VarChar(200)")]
+        public string Psychiatry_Attitude_Standards
+        {
+            get
+            {
+                return this._Psychiatry_Attitude_Standards;
+            }
+            set
+            {
+                if ((this._Psychiatry_Attitude_Standards != value))
+                {
+                    this._Psychiatry_Attitude_Standards = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Prevalling_Mood", DbType = "VarChar(200)")]
+        public string Psychiatry_Prevalling_Mood
+        {
+            get
+            {
+                return this._Psychiatry_Prevalling_Mood;
+            }
+            set
+            {
+                if ((this._Psychiatry_Prevalling_Mood != value))
+                {
+                    this._Psychiatry_Prevalling_Mood = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Reaction_Stress", DbType = "VarChar(200)")]
+        public string Psychiatry_Reaction_Stress
+        {
+            get
+            {
+                return this._Psychiatry_Reaction_Stress;
+            }
+            set
+            {
+                if ((this._Psychiatry_Reaction_Stress != value))
+                {
+                    this._Psychiatry_Reaction_Stress = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Religious_Practices", DbType = "VarChar(200)")]
+        public string Psychiatry_Religious_Practices
+        {
+            get
+            {
+                return this._Psychiatry_Religious_Practices;
+            }
+            set
+            {
+                if ((this._Psychiatry_Religious_Practices != value))
+                {
+                    this._Psychiatry_Religious_Practices = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Father", DbType = "VarChar(200)")]
+        public string Psychiatry_Father
+        {
+            get
+            {
+                return this._Psychiatry_Father;
+            }
+            set
+            {
+                if ((this._Psychiatry_Father != value))
+                {
+                    this._Psychiatry_Father = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Mother", DbType = "VarChar(200)")]
+        public string Psychiatry_Mother
+        {
+            get
+            {
+                return this._Psychiatry_Mother;
+            }
+            set
+            {
+                if ((this._Psychiatry_Mother != value))
+                {
+                    this._Psychiatry_Mother = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Siblings", DbType = "VarChar(200)")]
+        public string Psychiatry_Siblings
+        {
+            get
+            {
+                return this._Psychiatry_Siblings;
+            }
+            set
+            {
+                if ((this._Psychiatry_Siblings != value))
+                {
+                    this._Psychiatry_Siblings = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Home_Atmosphere", DbType = "VarChar(200)")]
+        public string Psychiatry_Home_Atmosphere
+        {
+            get
+            {
+                return this._Psychiatry_Home_Atmosphere;
+            }
+            set
+            {
+                if ((this._Psychiatry_Home_Atmosphere != value))
+                {
+                    this._Psychiatry_Home_Atmosphere = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Familial_Illness", DbType = "VarChar(200)")]
+        public string Psychiatry_Familial_Illness
+        {
+            get
+            {
+                return this._Psychiatry_Familial_Illness;
+            }
+            set
+            {
+                if ((this._Psychiatry_Familial_Illness != value))
+                {
+                    this._Psychiatry_Familial_Illness = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Actual_age", DbType = "VarChar(200)")]
+        public string Psychiatry_Actual_age
+        {
+            get
+            {
+                return this._Psychiatry_Actual_age;
+            }
+            set
+            {
+                if ((this._Psychiatry_Actual_age != value))
+                {
+                    this._Psychiatry_Actual_age = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Race", DbType = "VarChar(200)")]
+        public string Psychiatry_Race
+        {
+            get
+            {
+                return this._Psychiatry_Race;
+            }
+            set
+            {
+                if ((this._Psychiatry_Race != value))
+                {
+                    this._Psychiatry_Race = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tattoos_body_scars", DbType = "VarChar(200)")]
+        public string Psychiatry_Tattoos_body_scars
+        {
+            get
+            {
+                return this._Psychiatry_Tattoos_body_scars;
+            }
+            set
+            {
+                if ((this._Psychiatry_Tattoos_body_scars != value))
+                {
+                    this._Psychiatry_Tattoos_body_scars = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Body_Habitus", DbType = "VarChar(200)")]
+        public string Psychiatry_Body_Habitus
+        {
+            get
+            {
+                return this._Psychiatry_Body_Habitus;
+            }
+            set
+            {
+                if ((this._Psychiatry_Body_Habitus != value))
+                {
+                    this._Psychiatry_Body_Habitus = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Dress", DbType = "VarChar(200)")]
+        public string Psychiatry_Dress
+        {
+            get
+            {
+                return this._Psychiatry_Dress;
+            }
+            set
+            {
+                if ((this._Psychiatry_Dress != value))
+                {
+                    this._Psychiatry_Dress = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Hygiene", DbType = "VarChar(200)")]
+        public string Psychiatry_Hygiene
+        {
+            get
+            {
+                return this._Psychiatry_Hygiene;
+            }
+            set
+            {
+                if ((this._Psychiatry_Hygiene != value))
+                {
+                    this._Psychiatry_Hygiene = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Psychomotor_Activity", DbType = "VarChar(200)")]
+        public string Psychiatry_Psychomotor_Activity
+        {
+            get
+            {
+                return this._Psychiatry_Psychomotor_Activity;
+            }
+            set
+            {
+                if ((this._Psychiatry_Psychomotor_Activity != value))
+                {
+                    this._Psychiatry_Psychomotor_Activity = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Involuntary_movements", DbType = "VarChar(200)")]
+        public string Psychiatry_Involuntary_movements
+        {
+            get
+            {
+                return this._Psychiatry_Involuntary_movements;
+            }
+            set
+            {
+                if ((this._Psychiatry_Involuntary_movements != value))
+                {
+                    this._Psychiatry_Involuntary_movements = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Dystonia_EPS", DbType = "VarChar(200)")]
+        public string Psychiatry_Dystonia_EPS
+        {
+            get
+            {
+                return this._Psychiatry_Dystonia_EPS;
+            }
+            set
+            {
+                if ((this._Psychiatry_Dystonia_EPS != value))
+                {
+                    this._Psychiatry_Dystonia_EPS = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tardive_dyskinesia", DbType = "VarChar(200)")]
+        public string Psychiatry_Tardive_dyskinesia
+        {
+            get
+            {
+                return this._Psychiatry_Tardive_dyskinesia;
+            }
+            set
+            {
+                if ((this._Psychiatry_Tardive_dyskinesia != value))
+                {
+                    this._Psychiatry_Tardive_dyskinesia = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tics", DbType = "VarChar(200)")]
+        public string Psychiatry_Tics
+        {
+            get
+            {
+                return this._Psychiatry_Tics;
+            }
+            set
+            {
+                if ((this._Psychiatry_Tics != value))
+                {
+                    this._Psychiatry_Tics = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tremors", DbType = "VarChar(200)")]
+        public string Psychiatry_Tremors
+        {
+            get
+            {
+                return this._Psychiatry_Tremors;
+            }
+            set
+            {
+                if ((this._Psychiatry_Tremors != value))
+                {
+                    this._Psychiatry_Tremors = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Attentiveness_interview", DbType = "VarChar(200)")]
+        public string Psychiatry_Attentiveness_interview
+        {
+            get
+            {
+                return this._Psychiatry_Attentiveness_interview;
+            }
+            set
+            {
+                if ((this._Psychiatry_Attentiveness_interview != value))
+                {
+                    this._Psychiatry_Attentiveness_interview = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Eye_Contact", DbType = "VarChar(200)")]
+        public string Psychiatry_Eye_Contact
+        {
+            get
+            {
+                return this._Psychiatry_Eye_Contact;
+            }
+            set
+            {
+                if ((this._Psychiatry_Eye_Contact != value))
+                {
+                    this._Psychiatry_Eye_Contact = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Level_Consciousness", DbType = "VarChar(200)")]
+        public string Psychiatry_Level_Consciousness
+        {
+            get
+            {
+                return this._Psychiatry_Level_Consciousness;
+            }
+            set
+            {
+                if ((this._Psychiatry_Level_Consciousness != value))
+                {
+                    this._Psychiatry_Level_Consciousness = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Rate", DbType = "VarChar(200)")]
+        public string Psychiatry_Rate
+        {
+            get
+            {
+                return this._Psychiatry_Rate;
+            }
+            set
+            {
+                if ((this._Psychiatry_Rate != value))
+                {
+                    this._Psychiatry_Rate = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Rhythm", DbType = "VarChar(200)")]
+        public string Psychiatry_Rhythm
+        {
+            get
+            {
+                return this._Psychiatry_Rhythm;
+            }
+            set
+            {
+                if ((this._Psychiatry_Rhythm != value))
+                {
+                    this._Psychiatry_Rhythm = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Volume", DbType = "VarChar(200)")]
+        public string Psychiatry_Volume
+        {
+            get
+            {
+                return this._Psychiatry_Volume;
+            }
+            set
+            {
+                if ((this._Psychiatry_Volume != value))
+                {
+                    this._Psychiatry_Volume = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tone", DbType = "VarChar(200)")]
+        public string Psychiatry_Tone
+        {
+            get
+            {
+                return this._Psychiatry_Tone;
+            }
+            set
+            {
+                if ((this._Psychiatry_Tone != value))
+                {
+                    this._Psychiatry_Tone = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Modulation", DbType = "VarChar(200)")]
+        public string Psychiatry_Modulation
+        {
+            get
+            {
+                return this._Psychiatry_Modulation;
+            }
+            set
+            {
+                if ((this._Psychiatry_Modulation != value))
+                {
+                    this._Psychiatry_Modulation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Depressed", DbType = "VarChar(200)")]
+        public string Psychiatry_Depressed
+        {
+            get
+            {
+                return this._Psychiatry_Depressed;
+            }
+            set
+            {
+                if ((this._Psychiatry_Depressed != value))
+                {
+                    this._Psychiatry_Depressed = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Elated", DbType = "VarChar(200)")]
+        public string Psychiatry_Elated
+        {
+            get
+            {
+                return this._Psychiatry_Elated;
+            }
+            set
+            {
+                if ((this._Psychiatry_Elated != value))
+                {
+                    this._Psychiatry_Elated = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Irritable", DbType = "VarChar(200)")]
+        public string Psychiatry_Irritable
+        {
+            get
+            {
+                return this._Psychiatry_Irritable;
+            }
+            set
+            {
+                if ((this._Psychiatry_Irritable != value))
+                {
+                    this._Psychiatry_Irritable = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Labile", DbType = "VarChar(200)")]
+        public string Psychiatry_Labile
+        {
+            get
+            {
+                return this._Psychiatry_Labile;
+            }
+            set
+            {
+                if ((this._Psychiatry_Labile != value))
+                {
+                    this._Psychiatry_Labile = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Incongruent", DbType = "VarChar(200)")]
+        public string Psychiatry_Incongruent
+        {
+            get
+            {
+                return this._Psychiatry_Incongruent;
+            }
+            set
+            {
+                if ((this._Psychiatry_Incongruent != value))
+                {
+                    this._Psychiatry_Incongruent = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Blunting_Flattening_Apathy", DbType = "VarChar(200)")]
+        public string Psychiatry_Blunting_Flattening_Apathy
+        {
+            get
+            {
+                return this._Psychiatry_Blunting_Flattening_Apathy;
+            }
+            set
+            {
+                if ((this._Psychiatry_Blunting_Flattening_Apathy != value))
+                {
+                    this._Psychiatry_Blunting_Flattening_Apathy = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thinking", DbType = "VarChar(200)")]
+        public string Psychiatry_Thinking
+        {
+            get
+            {
+                return this._Psychiatry_Thinking;
+            }
+            set
+            {
+                if ((this._Psychiatry_Thinking != value))
+                {
+                    this._Psychiatry_Thinking = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Plans", DbType = "VarChar(200)")]
+        public string Psychiatry_Plans
+        {
+            get
+            {
+                return this._Psychiatry_Plans;
+            }
+            set
+            {
+                if ((this._Psychiatry_Plans != value))
+                {
+                    this._Psychiatry_Plans = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Actions", DbType = "VarChar(200)")]
+        public string Psychiatry_Actions
+        {
+            get
+            {
+                return this._Psychiatry_Actions;
+            }
+            set
+            {
+                if ((this._Psychiatry_Actions != value))
+                {
+                    this._Psychiatry_Actions = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Preservative", DbType = "VarChar(200)")]
+        public string Psychiatry_Preservative
+        {
+            get
+            {
+                return this._Psychiatry_Preservative;
+            }
+            set
+            {
+                if ((this._Psychiatry_Preservative != value))
+                {
+                    this._Psychiatry_Preservative = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_LoosAssociation", DbType = "VarChar(200)")]
+        public string Psychiatry_LoosAssociation
+        {
+            get
+            {
+                return this._Psychiatry_LoosAssociation;
+            }
+            set
+            {
+                if ((this._Psychiatry_LoosAssociation != value))
+                {
+                    this._Psychiatry_LoosAssociation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Tangentiaility", DbType = "VarChar(200)")]
+        public string Psychiatry_Tangentiaility
+        {
+            get
+            {
+                return this._Psychiatry_Tangentiaility;
+            }
+            set
+            {
+                if ((this._Psychiatry_Tangentiaility != value))
+                {
+                    this._Psychiatry_Tangentiaility = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Circumstantiality", DbType = "VarChar(200)")]
+        public string Psychiatry_Circumstantiality
+        {
+            get
+            {
+                return this._Psychiatry_Circumstantiality;
+            }
+            set
+            {
+                if ((this._Psychiatry_Circumstantiality != value))
+                {
+                    this._Psychiatry_Circumstantiality = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Flight_Ideas", DbType = "VarChar(200)")]
+        public string Psychiatry_Flight_Ideas
+        {
+            get
+            {
+                return this._Psychiatry_Flight_Ideas;
+            }
+            set
+            {
+                if ((this._Psychiatry_Flight_Ideas != value))
+                {
+                    this._Psychiatry_Flight_Ideas = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thought_Insertion", DbType = "VarChar(200)")]
+        public string Psychiatry_Thought_Insertion
+        {
+            get
+            {
+                return this._Psychiatry_Thought_Insertion;
+            }
+            set
+            {
+                if ((this._Psychiatry_Thought_Insertion != value))
+                {
+                    this._Psychiatry_Thought_Insertion = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thought_Withdrawal", DbType = "VarChar(200)")]
+        public string Psychiatry_Thought_Withdrawal
+        {
+            get
+            {
+                return this._Psychiatry_Thought_Withdrawal;
+            }
+            set
+            {
+                if ((this._Psychiatry_Thought_Withdrawal != value))
+                {
+                    this._Psychiatry_Thought_Withdrawal = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thought_Broadcasting", DbType = "VarChar(200)")]
+        public string Psychiatry_Thought_Broadcasting
+        {
+            get
+            {
+                return this._Psychiatry_Thought_Broadcasting;
+            }
+            set
+            {
+                if ((this._Psychiatry_Thought_Broadcasting != value))
+                {
+                    this._Psychiatry_Thought_Broadcasting = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Thought_Control", DbType = "VarChar(200)")]
+        public string Psychiatry_Thought_Control
+        {
+            get
+            {
+                return this._Psychiatry_Thought_Control;
+            }
+            set
+            {
+                if ((this._Psychiatry_Thought_Control != value))
+                {
+                    this._Psychiatry_Thought_Control = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Dellusion", DbType = "VarChar(200)")]
+        public string Psychiatry_Dellusion
+        {
+            get
+            {
+                return this._Psychiatry_Dellusion;
+            }
+            set
+            {
+                if ((this._Psychiatry_Dellusion != value))
+                {
+                    this._Psychiatry_Dellusion = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Overvalued_Ideas", DbType = "VarChar(200)")]
+        public string Psychiatry_Overvalued_Ideas
+        {
+            get
+            {
+                return this._Psychiatry_Overvalued_Ideas;
+            }
+            set
+            {
+                if ((this._Psychiatry_Overvalued_Ideas != value))
+                {
+                    this._Psychiatry_Overvalued_Ideas = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Depresonalization", DbType = "VarChar(200)")]
+        public string Psychiatry_Depresonalization
+        {
+            get
+            {
+                return this._Psychiatry_Depresonalization;
+            }
+            set
+            {
+                if ((this._Psychiatry_Depresonalization != value))
+                {
+                    this._Psychiatry_Depresonalization = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Derealization", DbType = "VarChar(200)")]
+        public string Psychiatry_Derealization
+        {
+            get
+            {
+                return this._Psychiatry_Derealization;
+            }
+            set
+            {
+                if ((this._Psychiatry_Derealization != value))
+                {
+                    this._Psychiatry_Derealization = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Sexual_History", DbType = "VarChar(200)")]
+        public string Psychiatry_Sexual_History
+        {
+            get
+            {
+                return this._Psychiatry_Sexual_History;
+            }
+            set
+            {
+                if ((this._Psychiatry_Sexual_History != value))
+                {
+                    this._Psychiatry_Sexual_History = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Phobies", DbType = "VarChar(200)")]
+        public string Psychiatry_Phobies
+        {
+            get
+            {
+                return this._Psychiatry_Phobies;
+            }
+            set
+            {
+                if ((this._Psychiatry_Phobies != value))
+                {
+                    this._Psychiatry_Phobies = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Homocidial_Ideas", DbType = "VarChar(200)")]
+        public string Psychiatry_Homocidial_Ideas
+        {
+            get
+            {
+                return this._Psychiatry_Homocidial_Ideas;
+            }
+            set
+            {
+                if ((this._Psychiatry_Homocidial_Ideas != value))
+                {
+                    this._Psychiatry_Homocidial_Ideas = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Illusion", DbType = "VarChar(200)")]
+        public string Psychiatry_Illusion
+        {
+            get
+            {
+                return this._Psychiatry_Illusion;
+            }
+            set
+            {
+                if ((this._Psychiatry_Illusion != value))
+                {
+                    this._Psychiatry_Illusion = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Hallucination", DbType = "VarChar(200)")]
+        public string Psychiatry_Hallucination
+        {
+            get
+            {
+                return this._Psychiatry_Hallucination;
+            }
+            set
+            {
+                if ((this._Psychiatry_Hallucination != value))
+                {
+                    this._Psychiatry_Hallucination = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Orientation_Time", DbType = "VarChar(200)")]
+        public string Psychiatry_Orientation_Time
+        {
+            get
+            {
+                return this._Psychiatry_Orientation_Time;
+            }
+            set
+            {
+                if ((this._Psychiatry_Orientation_Time != value))
+                {
+                    this._Psychiatry_Orientation_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Place", DbType = "VarChar(200)")]
+        public string Psychiatry_Place
+        {
+            get
+            {
+                return this._Psychiatry_Place;
+            }
+            set
+            {
+                if ((this._Psychiatry_Place != value))
+                {
+                    this._Psychiatry_Place = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Person", DbType = "VarChar(200)")]
+        public string Psychiatry_Person
+        {
+            get
+            {
+                return this._Psychiatry_Person;
+            }
+            set
+            {
+                if ((this._Psychiatry_Person != value))
+                {
+                    this._Psychiatry_Person = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Attention_Concentration", DbType = "VarChar(200)")]
+        public string Psychiatry_Attention_Concentration
+        {
+            get
+            {
+                return this._Psychiatry_Attention_Concentration;
+            }
+            set
+            {
+                if ((this._Psychiatry_Attention_Concentration != value))
+                {
+                    this._Psychiatry_Attention_Concentration = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Days_Week", DbType = "VarChar(200)")]
+        public string Psychiatry_Days_Week
+        {
+            get
+            {
+                return this._Psychiatry_Days_Week;
+            }
+            set
+            {
+                if ((this._Psychiatry_Days_Week != value))
+                {
+                    this._Psychiatry_Days_Week = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Immediate_Memory", DbType = "VarChar(200)")]
+        public string Psychiatry_Immediate_Memory
+        {
+            get
+            {
+                return this._Psychiatry_Immediate_Memory;
+            }
+            set
+            {
+                if ((this._Psychiatry_Immediate_Memory != value))
+                {
+                    this._Psychiatry_Immediate_Memory = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Recent_Events", DbType = "VarChar(200)")]
+        public string Psychiatry_Recent_Events
+        {
+            get
+            {
+                return this._Psychiatry_Recent_Events;
+            }
+            set
+            {
+                if ((this._Psychiatry_Recent_Events != value))
+                {
+                    this._Psychiatry_Recent_Events = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Adress_Recall_Two", DbType = "VarChar(200)")]
+        public string Psychiatry_Adress_Recall_Two
+        {
+            get
+            {
+                return this._Psychiatry_Adress_Recall_Two;
+            }
+            set
+            {
+                if ((this._Psychiatry_Adress_Recall_Two != value))
+                {
+                    this._Psychiatry_Adress_Recall_Two = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Remote_Events", DbType = "VarChar(200)")]
+        public string Psychiatry_Remote_Events
+        {
+            get
+            {
+                return this._Psychiatry_Remote_Events;
+            }
+            set
+            {
+                if ((this._Psychiatry_Remote_Events != value))
+                {
+                    this._Psychiatry_Remote_Events = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Adress_Recall_Five", DbType = "VarChar(200)")]
+        public string Psychiatry_Adress_Recall_Five
+        {
+            get
+            {
+                return this._Psychiatry_Adress_Recall_Five;
+            }
+            set
+            {
+                if ((this._Psychiatry_Adress_Recall_Five != value))
+                {
+                    this._Psychiatry_Adress_Recall_Five = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_General_knowledge", DbType = "VarChar(200)")]
+        public string Psychiatry_General_knowledge
+        {
+            get
+            {
+                return this._Psychiatry_General_knowledge;
+            }
+            set
+            {
+                if ((this._Psychiatry_General_knowledge != value))
+                {
+                    this._Psychiatry_General_knowledge = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Arthemetic_Calculation", DbType = "VarChar(200)")]
+        public string Psychiatry_Arthemetic_Calculation
+        {
+            get
+            {
+                return this._Psychiatry_Arthemetic_Calculation;
+            }
+            set
+            {
+                if ((this._Psychiatry_Arthemetic_Calculation != value))
+                {
+                    this._Psychiatry_Arthemetic_Calculation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Abstraction", DbType = "VarChar(200)")]
+        public string Psychiatry_Abstraction
+        {
+            get
+            {
+                return this._Psychiatry_Abstraction;
+            }
+            set
+            {
+                if ((this._Psychiatry_Abstraction != value))
+                {
+                    this._Psychiatry_Abstraction = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Insight", DbType = "VarChar(50)")]
+        public string Psychiatry_Insight
+        {
+            get
+            {
+                return this._Psychiatry_Insight;
+            }
+            set
+            {
+                if ((this._Psychiatry_Insight != value))
+                {
+                    this._Psychiatry_Insight = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaFace", DbType = "VarChar(500)")]
+        public string DermaFace
+        {
+            get
+            {
+                return this._DermaFace;
+            }
+            set
+            {
+                if ((this._DermaFace != value))
+                {
+                    this._DermaFace = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaNeck", DbType = "VarChar(500)")]
+        public string DermaNeck
+        {
+            get
+            {
+                return this._DermaNeck;
+            }
+            set
+            {
+                if ((this._DermaNeck != value))
+                {
+                    this._DermaNeck = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaTrunk", DbType = "VarChar(500)")]
+        public string DermaTrunk
+        {
+            get
+            {
+                return this._DermaTrunk;
+            }
+            set
+            {
+                if ((this._DermaTrunk != value))
+                {
+                    this._DermaTrunk = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaUpperLimb", DbType = "VarChar(500)")]
+        public string DermaUpperLimb
+        {
+            get
+            {
+                return this._DermaUpperLimb;
+            }
+            set
+            {
+                if ((this._DermaUpperLimb != value))
+                {
+                    this._DermaUpperLimb = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaLowerLimb", DbType = "VarChar(500)")]
+        public string DermaLowerLimb
+        {
+            get
+            {
+                return this._DermaLowerLimb;
+            }
+            set
+            {
+                if ((this._DermaLowerLimb != value))
+                {
+                    this._DermaLowerLimb = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaFlexures", DbType = "VarChar(500)")]
+        public string DermaFlexures
+        {
+            get
+            {
+                return this._DermaFlexures;
+            }
+            set
+            {
+                if ((this._DermaFlexures != value))
+                {
+                    this._DermaFlexures = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaGenitalias", DbType = "VarChar(500)")]
+        public string DermaGenitalias
+        {
+            get
+            {
+                return this._DermaGenitalias;
+            }
+            set
+            {
+                if ((this._DermaGenitalias != value))
+                {
+                    this._DermaGenitalias = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaHair", DbType = "VarChar(500)")]
+        public string DermaHair
+        {
+            get
+            {
+                return this._DermaHair;
+            }
+            set
+            {
+                if ((this._DermaHair != value))
+                {
+                    this._DermaHair = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaNail", DbType = "VarChar(500)")]
+        public string DermaNail
+        {
+            get
+            {
+                return this._DermaNail;
+            }
+            set
+            {
+                if ((this._DermaNail != value))
+                {
+                    this._DermaNail = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaMucousMembrane", DbType = "VarChar(500)")]
+        public string DermaMucousMembrane
+        {
+            get
+            {
+                return this._DermaMucousMembrane;
+            }
+            set
+            {
+                if ((this._DermaMucousMembrane != value))
+                {
+                    this._DermaMucousMembrane = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaEyes", DbType = "VarChar(500)")]
+        public string DermaEyes
+        {
+            get
+            {
+                return this._DermaEyes;
+            }
+            set
+            {
+                if ((this._DermaEyes != value))
+                {
+                    this._DermaEyes = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaEars", DbType = "VarChar(500)")]
+        public string DermaEars
+        {
+            get
+            {
+                return this._DermaEars;
+            }
+            set
+            {
+                if ((this._DermaEars != value))
+                {
+                    this._DermaEars = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaNose", DbType = "VarChar(500)")]
+        public string DermaNose
+        {
+            get
+            {
+                return this._DermaNose;
+            }
+            set
+            {
+                if ((this._DermaNose != value))
+                {
+                    this._DermaNose = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DermaLips", DbType = "VarChar(500)")]
+        public string DermaLips
+        {
+            get
+            {
+                return this._DermaLips;
+            }
+            set
+            {
+                if ((this._DermaLips != value))
+                {
+                    this._DermaLips = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Problem", DbType = "VarChar(200)")]
+        public string Psychiatry_HBM_Problem
+        {
+            get
+            {
+                return this._Psychiatry_HBM_Problem;
+            }
+            set
+            {
+                if ((this._Psychiatry_HBM_Problem != value))
+                {
+                    this._Psychiatry_HBM_Problem = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Caused", DbType = "VarChar(200)")]
+        public string Psychiatry_HBM_Caused
+        {
+            get
+            {
+                return this._Psychiatry_HBM_Caused;
+            }
+            set
+            {
+                if ((this._Psychiatry_HBM_Caused != value))
+                {
+                    this._Psychiatry_HBM_Caused = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Started", DbType = "VarChar(200)")]
+        public string Psychiatry_HBM_Started
+        {
+            get
+            {
+                return this._Psychiatry_HBM_Started;
+            }
+            set
+            {
+                if ((this._Psychiatry_HBM_Started != value))
+                {
+                    this._Psychiatry_HBM_Started = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Course", DbType = "VarChar(200)")]
+        public string Psychiatry_HBM_Course
+        {
+            get
+            {
+                return this._Psychiatry_HBM_Course;
+            }
+            set
+            {
+                if ((this._Psychiatry_HBM_Course != value))
+                {
+                    this._Psychiatry_HBM_Course = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Treatment", DbType = "VarChar(200)")]
+        public string Psychiatry_HBM_Treatment
+        {
+            get
+            {
+                return this._Psychiatry_HBM_Treatment;
+            }
+            set
+            {
+                if ((this._Psychiatry_HBM_Treatment != value))
+                {
+                    this._Psychiatry_HBM_Treatment = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_HBM_Effects", DbType = "VarChar(200)")]
+        public string Psychiatry_HBM_Effects
+        {
+            get
+            {
+                return this._Psychiatry_HBM_Effects;
+            }
+            set
+            {
+                if ((this._Psychiatry_HBM_Effects != value))
+                {
+                    this._Psychiatry_HBM_Effects = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Pluse", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Pluse
+        {
+            get
+            {
+                return this._Psychiatry_PE_Pluse;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Pluse != value))
+                {
+                    this._Psychiatry_PE_Pluse = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_BP", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_BP
+        {
+            get
+            {
+                return this._Psychiatry_PE_BP;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_BP != value))
+                {
+                    this._Psychiatry_PE_BP = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Temperature", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Temperature
+        {
+            get
+            {
+                return this._Psychiatry_PE_Temperature;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Temperature != value))
+                {
+                    this._Psychiatry_PE_Temperature = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Weight", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Weight
+        {
+            get
+            {
+                return this._Psychiatry_PE_Weight;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Weight != value))
+                {
+                    this._Psychiatry_PE_Weight = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_RespiratoryRate", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_RespiratoryRate
+        {
+            get
+            {
+                return this._Psychiatry_PE_RespiratoryRate;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_RespiratoryRate != value))
+                {
+                    this._Psychiatry_PE_RespiratoryRate = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Jaundice", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Jaundice
+        {
+            get
+            {
+                return this._Psychiatry_PE_Jaundice;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Jaundice != value))
+                {
+                    this._Psychiatry_PE_Jaundice = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Anemia", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Anemia
+        {
+            get
+            {
+                return this._Psychiatry_PE_Anemia;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Anemia != value))
+                {
+                    this._Psychiatry_PE_Anemia = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Cyanosis", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Cyanosis
+        {
+            get
+            {
+                return this._Psychiatry_PE_Cyanosis;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Cyanosis != value))
+                {
+                    this._Psychiatry_PE_Cyanosis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Clubbing", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Clubbing
+        {
+            get
+            {
+                return this._Psychiatry_PE_Clubbing;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Clubbing != value))
+                {
+                    this._Psychiatry_PE_Clubbing = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_JVP", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_JVP
+        {
+            get
+            {
+                return this._Psychiatry_PE_JVP;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_JVP != value))
+                {
+                    this._Psychiatry_PE_JVP = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_LymphNodes", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_LymphNodes
+        {
+            get
+            {
+                return this._Psychiatry_PE_LymphNodes;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_LymphNodes != value))
+                {
+                    this._Psychiatry_PE_LymphNodes = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Edema", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Edema
+        {
+            get
+            {
+                return this._Psychiatry_PE_Edema;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Edema != value))
+                {
+                    this._Psychiatry_PE_Edema = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Respiratory", DbType = "VarChar(200)")]
+        public string Psychiatry_PE_Respiratory
+        {
+            get
+            {
+                return this._Psychiatry_PE_Respiratory;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Respiratory != value))
+                {
+                    this._Psychiatry_PE_Respiratory = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Cardiovascular", DbType = "VarChar(200)")]
+        public string Psychiatry_PE_Cardiovascular
+        {
+            get
+            {
+                return this._Psychiatry_PE_Cardiovascular;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Cardiovascular != value))
+                {
+                    this._Psychiatry_PE_Cardiovascular = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Gastro_Intestinal", DbType = "VarChar(200)")]
+        public string Psychiatry_PE_Gastro_Intestinal
+        {
+            get
+            {
+                return this._Psychiatry_PE_Gastro_Intestinal;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Gastro_Intestinal != value))
+                {
+                    this._Psychiatry_PE_Gastro_Intestinal = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Observation", DbType = "VarChar(300)")]
+        public string Psychiatry_PE_Observation
+        {
+            get
+            {
+                return this._Psychiatry_PE_Observation;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Observation != value))
+                {
+                    this._Psychiatry_PE_Observation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Cranial_Nerves", DbType = "VarChar(500)")]
+        public string Psychiatry_PE_Cranial_Nerves
+        {
+            get
+            {
+                return this._Psychiatry_PE_Cranial_Nerves;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Cranial_Nerves != value))
+                {
+                    this._Psychiatry_PE_Cranial_Nerves = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Limb_Strength", DbType = "VarChar(200)")]
+        public string Psychiatry_PE_Limb_Strength
+        {
+            get
+            {
+                return this._Psychiatry_PE_Limb_Strength;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Limb_Strength != value))
+                {
+                    this._Psychiatry_PE_Limb_Strength = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Spasticity", DbType = "VarChar(200)")]
+        public string Psychiatry_PE_Spasticity
+        {
+            get
+            {
+                return this._Psychiatry_PE_Spasticity;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Spasticity != value))
+                {
+                    this._Psychiatry_PE_Spasticity = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Position", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Position
+        {
+            get
+            {
+                return this._Psychiatry_PE_Position;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Position != value))
+                {
+                    this._Psychiatry_PE_Position = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Vibration", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Vibration
+        {
+            get
+            {
+                return this._Psychiatry_PE_Vibration;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Vibration != value))
+                {
+                    this._Psychiatry_PE_Vibration = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Stereognosis", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Stereognosis
+        {
+            get
+            {
+                return this._Psychiatry_PE_Stereognosis;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Stereognosis != value))
+                {
+                    this._Psychiatry_PE_Stereognosis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Pain", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Pain
+        {
+            get
+            {
+                return this._Psychiatry_PE_Pain;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Pain != value))
+                {
+                    this._Psychiatry_PE_Pain = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Biceps", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Biceps
+        {
+            get
+            {
+                return this._Psychiatry_PE_Biceps;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Biceps != value))
+                {
+                    this._Psychiatry_PE_Biceps = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Triceps", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Triceps
+        {
+            get
+            {
+                return this._Psychiatry_PE_Triceps;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Triceps != value))
+                {
+                    this._Psychiatry_PE_Triceps = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Brachioradialis", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Brachioradialis
+        {
+            get
+            {
+                return this._Psychiatry_PE_Brachioradialis;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Brachioradialis != value))
+                {
+                    this._Psychiatry_PE_Brachioradialis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Quadriceps", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Quadriceps
+        {
+            get
+            {
+                return this._Psychiatry_PE_Quadriceps;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Quadriceps != value))
+                {
+                    this._Psychiatry_PE_Quadriceps = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Patellar", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Patellar
+        {
+            get
+            {
+                return this._Psychiatry_PE_Patellar;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Patellar != value))
+                {
+                    this._Psychiatry_PE_Patellar = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Achilles", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Achilles
+        {
+            get
+            {
+                return this._Psychiatry_PE_Achilles;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Achilles != value))
+                {
+                    this._Psychiatry_PE_Achilles = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Extensor", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Extensor
+        {
+            get
+            {
+                return this._Psychiatry_PE_Extensor;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Extensor != value))
+                {
+                    this._Psychiatry_PE_Extensor = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Frontal", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Frontal
+        {
+            get
+            {
+                return this._Psychiatry_PE_Frontal;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Frontal != value))
+                {
+                    this._Psychiatry_PE_Frontal = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Finger", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Finger
+        {
+            get
+            {
+                return this._Psychiatry_PE_Finger;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Finger != value))
+                {
+                    this._Psychiatry_PE_Finger = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Heel", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Heel
+        {
+            get
+            {
+                return this._Psychiatry_PE_Heel;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Heel != value))
+                {
+                    this._Psychiatry_PE_Heel = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Movements", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Movements
+        {
+            get
+            {
+                return this._Psychiatry_PE_Movements;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Movements != value))
+                {
+                    this._Psychiatry_PE_Movements = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Gait", DbType = "VarChar(50)")]
+        public string Psychiatry_PE_Gait
+        {
+            get
+            {
+                return this._Psychiatry_PE_Gait;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Gait != value))
+                {
+                    this._Psychiatry_PE_Gait = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Neck_Rigidity", DbType = "Bit")]
+        public System.Nullable<bool> Psychiatry_PE_Neck_Rigidity
+        {
+            get
+            {
+                return this._Psychiatry_PE_Neck_Rigidity;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Neck_Rigidity != value))
+                {
+                    this._Psychiatry_PE_Neck_Rigidity = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Kerning_Sign", DbType = "Bit")]
+        public System.Nullable<bool> Psychiatry_PE_Kerning_Sign
+        {
+            get
+            {
+                return this._Psychiatry_PE_Kerning_Sign;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Kerning_Sign != value))
+                {
+                    this._Psychiatry_PE_Kerning_Sign = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_PE_Brudzinki_Sign", DbType = "Bit")]
+        public System.Nullable<bool> Psychiatry_PE_Brudzinki_Sign
+        {
+            get
+            {
+                return this._Psychiatry_PE_Brudzinki_Sign;
+            }
+            set
+            {
+                if ((this._Psychiatry_PE_Brudzinki_Sign != value))
+                {
+                    this._Psychiatry_PE_Brudzinki_Sign = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Summary", DbType = "VarChar(500)")]
+        public string Psychiatry_For_Summary
+        {
+            get
+            {
+                return this._Psychiatry_For_Summary;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_Summary != value))
+                {
+                    this._Psychiatry_For_Summary = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Diagnosis", DbType = "VarChar(200)")]
+        public string Psychiatry_For_Diagnosis
+        {
+            get
+            {
+                return this._Psychiatry_For_Diagnosis;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_Diagnosis != value))
+                {
+                    this._Psychiatry_For_Diagnosis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisI", DbType = "VarChar(200)")]
+        public string Psychiatry_For_AxisI
+        {
+            get
+            {
+                return this._Psychiatry_For_AxisI;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_AxisI != value))
+                {
+                    this._Psychiatry_For_AxisI = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisII", DbType = "VarChar(200)")]
+        public string Psychiatry_For_AxisII
+        {
+            get
+            {
+                return this._Psychiatry_For_AxisII;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_AxisII != value))
+                {
+                    this._Psychiatry_For_AxisII = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisIII", DbType = "VarChar(200)")]
+        public string Psychiatry_For_AxisIII
+        {
+            get
+            {
+                return this._Psychiatry_For_AxisIII;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_AxisIII != value))
+                {
+                    this._Psychiatry_For_AxisIII = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisIV", DbType = "VarChar(200)")]
+        public string Psychiatry_For_AxisIV
+        {
+            get
+            {
+                return this._Psychiatry_For_AxisIV;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_AxisIV != value))
+                {
+                    this._Psychiatry_For_AxisIV = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_AxisV", DbType = "VarChar(200)")]
+        public string Psychiatry_For_AxisV
+        {
+            get
+            {
+                return this._Psychiatry_For_AxisV;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_AxisV != value))
+                {
+                    this._Psychiatry_For_AxisV = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_PredisposingFactors", DbType = "VarChar(200)")]
+        public string Psychiatry_For_PredisposingFactors
+        {
+            get
+            {
+                return this._Psychiatry_For_PredisposingFactors;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_PredisposingFactors != value))
+                {
+                    this._Psychiatry_For_PredisposingFactors = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_PrecipitatingFactors", DbType = "VarChar(200)")]
+        public string Psychiatry_For_PrecipitatingFactors
+        {
+            get
+            {
+                return this._Psychiatry_For_PrecipitatingFactors;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_PrecipitatingFactors != value))
+                {
+                    this._Psychiatry_For_PrecipitatingFactors = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_PrepetuatingFactors", DbType = "VarChar(200)")]
+        public string Psychiatry_For_PrepetuatingFactors
+        {
+            get
+            {
+                return this._Psychiatry_For_PrepetuatingFactors;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_PrepetuatingFactors != value))
+                {
+                    this._Psychiatry_For_PrepetuatingFactors = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Investigation", DbType = "VarChar(300)")]
+        public string Psychiatry_For_Investigation
+        {
+            get
+            {
+                return this._Psychiatry_For_Investigation;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_Investigation != value))
+                {
+                    this._Psychiatry_For_Investigation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Medical", DbType = "VarChar(300)")]
+        public string Psychiatry_For_Medical
+        {
+            get
+            {
+                return this._Psychiatry_For_Medical;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_Medical != value))
+                {
+                    this._Psychiatry_For_Medical = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Psychological", DbType = "VarChar(500)")]
+        public string Psychiatry_For_Psychological
+        {
+            get
+            {
+                return this._Psychiatry_For_Psychological;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_Psychological != value))
+                {
+                    this._Psychiatry_For_Psychological = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_Major_Issues", DbType = "VarChar(500)")]
+        public string Psychiatry_Major_Issues
+        {
+            get
+            {
+                return this._Psychiatry_Major_Issues;
+            }
+            set
+            {
+                if ((this._Psychiatry_Major_Issues != value))
+                {
+                    this._Psychiatry_Major_Issues = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Strengths", DbType = "VarChar(500)")]
+        public string Psychiatry_For_Strengths
+        {
+            get
+            {
+                return this._Psychiatry_For_Strengths;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_Strengths != value))
+                {
+                    this._Psychiatry_For_Strengths = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Goals", DbType = "VarChar(500)")]
+        public string Psychiatry_For_Goals
+        {
+            get
+            {
+                return this._Psychiatry_For_Goals;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_Goals != value))
+                {
+                    this._Psychiatry_For_Goals = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Psychiatry_For_Strategies", DbType = "VarChar(500)")]
+        public string Psychiatry_For_Strategies
+        {
+            get
+            {
+                return this._Psychiatry_For_Strategies;
+            }
+            set
+            {
+                if ((this._Psychiatry_For_Strategies != value))
+                {
+                    this._Psychiatry_For_Strategies = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Procedure_Operation", DbType = "VarChar(100)")]
+        public string Procedure_Operation
+        {
+            get
+            {
+                return this._Procedure_Operation;
+            }
+            set
+            {
+                if ((this._Procedure_Operation != value))
+                {
+                    this._Procedure_Operation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Procedure_Detail", DbType = "VarChar(100)")]
+        public string Procedure_Detail
+        {
+            get
+            {
+                return this._Procedure_Detail;
+            }
+            set
+            {
+                if ((this._Procedure_Detail != value))
+                {
+                    this._Procedure_Detail = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Diagonosis", DbType = "VarChar(100)")]
+        public string Diagonosis
+        {
+            get
+            {
+                return this._Diagonosis;
+            }
+            set
+            {
+                if ((this._Diagonosis != value))
+                {
+                    this._Diagonosis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Room_Type", DbType = "VarChar(10)")]
+        public string Room_Type
+        {
+            get
+            {
+                return this._Room_Type;
+            }
+            set
+            {
+                if ((this._Room_Type != value))
+                {
+                    this._Room_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge", DbType = "Bit")]
+        public System.Nullable<bool> Discharge
+        {
+            get
+            {
+                return this._Discharge;
+            }
+            set
+            {
+                if ((this._Discharge != value))
+                {
+                    this._Discharge = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Discount_Type", DbType = "VarChar(50)")]
+        public string Patient_Discount_Type
+        {
+            get
+            {
+                return this._Patient_Discount_Type;
+            }
+            set
+            {
+                if ((this._Patient_Discount_Type != value))
+                {
+                    this._Patient_Discount_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_weight", DbType = "VarChar(50)")]
+        public string Peads_weight
+        {
+            get
+            {
+                return this._Peads_weight;
+            }
+            set
+            {
+                if ((this._Peads_weight != value))
+                {
+                    this._Peads_weight = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Length", DbType = "VarChar(50)")]
+        public string Peads_Length
+        {
+            get
+            {
+                return this._Peads_Length;
+            }
+            set
+            {
+                if ((this._Peads_Length != value))
+                {
+                    this._Peads_Length = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_HC", DbType = "VarChar(50)")]
+        public string Peads_HC
+        {
+            get
+            {
+                return this._Peads_HC;
+            }
+            set
+            {
+                if ((this._Peads_HC != value))
+                {
+                    this._Peads_HC = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_General_Appearance", DbType = "VarChar(300)")]
+        public string Peads_General_Appearance
+        {
+            get
+            {
+                return this._Peads_General_Appearance;
+            }
+            set
+            {
+                if ((this._Peads_General_Appearance != value))
+                {
+                    this._Peads_General_Appearance = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Cyanosis", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Cyanosis
+        {
+            get
+            {
+                return this._Peads_Cyanosis;
+            }
+            set
+            {
+                if ((this._Peads_Cyanosis != value))
+                {
+                    this._Peads_Cyanosis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Jaundice", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Jaundice
+        {
+            get
+            {
+                return this._Peads_Jaundice;
+            }
+            set
+            {
+                if ((this._Peads_Jaundice != value))
+                {
+                    this._Peads_Jaundice = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Lethargy", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Lethargy
+        {
+            get
+            {
+                return this._Peads_Lethargy;
+            }
+            set
+            {
+                if ((this._Peads_Lethargy != value))
+                {
+                    this._Peads_Lethargy = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Rash", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Rash
+        {
+            get
+            {
+                return this._Peads_Rash;
+            }
+            set
+            {
+                if ((this._Peads_Rash != value))
+                {
+                    this._Peads_Rash = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Others", DbType = "VarChar(500)")]
+        public string Peads_Others
+        {
+            get
+            {
+                return this._Peads_Others;
+            }
+            set
+            {
+                if ((this._Peads_Others != value))
+                {
+                    this._Peads_Others = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Caput", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Caput
+        {
+            get
+            {
+                return this._Peads_Caput;
+            }
+            set
+            {
+                if ((this._Peads_Caput != value))
+                {
+                    this._Peads_Caput = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Cephalhematoma", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Cephalhematoma
+        {
+            get
+            {
+                return this._Peads_Cephalhematoma;
+            }
+            set
+            {
+                if ((this._Peads_Cephalhematoma != value))
+                {
+                    this._Peads_Cephalhematoma = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Anterioropen", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Anterioropen
+        {
+            get
+            {
+                return this._Peads_Anterioropen;
+            }
+            set
+            {
+                if ((this._Peads_Anterioropen != value))
+                {
+                    this._Peads_Anterioropen = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_AnteriorClose", DbType = "Bit")]
+        public System.Nullable<bool> Peads_AnteriorClose
+        {
+            get
+            {
+                return this._Peads_AnteriorClose;
+            }
+            set
+            {
+                if ((this._Peads_AnteriorClose != value))
+                {
+                    this._Peads_AnteriorClose = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Dextrocardia", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Dextrocardia
+        {
+            get
+            {
+                return this._Peads_Dextrocardia;
+            }
+            set
+            {
+                if ((this._Peads_Dextrocardia != value))
+                {
+                    this._Peads_Dextrocardia = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Bulging", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Bulging
+        {
+            get
+            {
+                return this._Peads_Bulging;
+            }
+            set
+            {
+                if ((this._Peads_Bulging != value))
+                {
+                    this._Peads_Bulging = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Murmur", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Murmur
+        {
+            get
+            {
+                return this._Peads_Murmur;
+            }
+            set
+            {
+                if ((this._Peads_Murmur != value))
+                {
+                    this._Peads_Murmur = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_HeartSound", DbType = "VarChar(200)")]
+        public string Peads_HeartSound
+        {
+            get
+            {
+                return this._Peads_HeartSound;
+            }
+            set
+            {
+                if ((this._Peads_HeartSound != value))
+                {
+                    this._Peads_HeartSound = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Nasal", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Nasal
+        {
+            get
+            {
+                return this._Peads_Nasal;
+            }
+            set
+            {
+                if ((this._Peads_Nasal != value))
+                {
+                    this._Peads_Nasal = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Recessions", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Recessions
+        {
+            get
+            {
+                return this._Peads_Recessions;
+            }
+            set
+            {
+                if ((this._Peads_Recessions != value))
+                {
+                    this._Peads_Recessions = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_AddedSounds", DbType = "VarChar(200)")]
+        public string Peads_AddedSounds
+        {
+            get
+            {
+                return this._Peads_AddedSounds;
+            }
+            set
+            {
+                if ((this._Peads_AddedSounds != value))
+                {
+                    this._Peads_AddedSounds = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Flat", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Flat
+        {
+            get
+            {
+                return this._Peads_Flat;
+            }
+            set
+            {
+                if ((this._Peads_Flat != value))
+                {
+                    this._Peads_Flat = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Distended", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Distended
+        {
+            get
+            {
+                return this._Peads_Distended;
+            }
+            set
+            {
+                if ((this._Peads_Distended != value))
+                {
+                    this._Peads_Distended = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Scaphoid", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Scaphoid
+        {
+            get
+            {
+                return this._Peads_Scaphoid;
+            }
+            set
+            {
+                if ((this._Peads_Scaphoid != value))
+                {
+                    this._Peads_Scaphoid = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Liver", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Liver
+        {
+            get
+            {
+                return this._Peads_Liver;
+            }
+            set
+            {
+                if ((this._Peads_Liver != value))
+                {
+                    this._Peads_Liver = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Spleen", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Spleen
+        {
+            get
+            {
+                return this._Peads_Spleen;
+            }
+            set
+            {
+                if ((this._Peads_Spleen != value))
+                {
+                    this._Peads_Spleen = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_GITOthers", DbType = "VarChar(500)")]
+        public string Peads_GITOthers
+        {
+            get
+            {
+                return this._Peads_GITOthers;
+            }
+            set
+            {
+                if ((this._Peads_GITOthers != value))
+                {
+                    this._Peads_GITOthers = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Sucking", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Sucking
+        {
+            get
+            {
+                return this._Peads_Sucking;
+            }
+            set
+            {
+                if ((this._Peads_Sucking != value))
+                {
+                    this._Peads_Sucking = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Rooting", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Rooting
+        {
+            get
+            {
+                return this._Peads_Rooting;
+            }
+            set
+            {
+                if ((this._Peads_Rooting != value))
+                {
+                    this._Peads_Rooting = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Moro", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Moro
+        {
+            get
+            {
+                return this._Peads_Moro;
+            }
+            set
+            {
+                if ((this._Peads_Moro != value))
+                {
+                    this._Peads_Moro = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_CNSOthers", DbType = "VarChar(500)")]
+        public string Peads_CNSOthers
+        {
+            get
+            {
+                return this._Peads_CNSOthers;
+            }
+            set
+            {
+                if ((this._Peads_CNSOthers != value))
+                {
+                    this._Peads_CNSOthers = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_FullTerm", DbType = "Bit")]
+        public System.Nullable<bool> Peads_FullTerm
+        {
+            get
+            {
+                return this._Peads_FullTerm;
+            }
+            set
+            {
+                if ((this._Peads_FullTerm != value))
+                {
+                    this._Peads_FullTerm = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PreTerm", DbType = "Bit")]
+        public System.Nullable<bool> Peads_PreTerm
+        {
+            get
+            {
+                return this._Peads_PreTerm;
+            }
+            set
+            {
+                if ((this._Peads_PreTerm != value))
+                {
+                    this._Peads_PreTerm = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_DateOfDelivery", DbType = "Date")]
+        public System.Nullable<System.DateTime> Peads_DateOfDelivery
+        {
+            get
+            {
+                return this._Peads_DateOfDelivery;
+            }
+            set
+            {
+                if ((this._Peads_DateOfDelivery != value))
+                {
+                    this._Peads_DateOfDelivery = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_TimeOfDelivery", DbType = "VarChar(10)")]
+        public string Peads_TimeOfDelivery
+        {
+            get
+            {
+                return this._Peads_TimeOfDelivery;
+            }
+            set
+            {
+                if ((this._Peads_TimeOfDelivery != value))
+                {
+                    this._Peads_TimeOfDelivery = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Booked", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Booked
+        {
+            get
+            {
+                return this._Peads_Booked;
+            }
+            set
+            {
+                if ((this._Peads_Booked != value))
+                {
+                    this._Peads_Booked = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_UnBooked", DbType = "Bit")]
+        public System.Nullable<bool> Peads_UnBooked
+        {
+            get
+            {
+                return this._Peads_UnBooked;
+            }
+            set
+            {
+                if ((this._Peads_UnBooked != value))
+                {
+                    this._Peads_UnBooked = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_DAIHandling", DbType = "Bit")]
+        public System.Nullable<bool> Peads_DAIHandling
+        {
+            get
+            {
+                return this._Peads_DAIHandling;
+            }
+            set
+            {
+                if ((this._Peads_DAIHandling != value))
+                {
+                    this._Peads_DAIHandling = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_ANTURash", DbType = "Bit")]
+        public System.Nullable<bool> Peads_ANTURash
+        {
+            get
+            {
+                return this._Peads_ANTURash;
+            }
+            set
+            {
+                if ((this._Peads_ANTURash != value))
+                {
+                    this._Peads_ANTURash = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PIH", DbType = "Bit")]
+        public System.Nullable<bool> Peads_PIH
+        {
+            get
+            {
+                return this._Peads_PIH;
+            }
+            set
+            {
+                if ((this._Peads_PIH != value))
+                {
+                    this._Peads_PIH = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_GDM", DbType = "Bit")]
+        public System.Nullable<bool> Peads_GDM
+        {
+            get
+            {
+                return this._Peads_GDM;
+            }
+            set
+            {
+                if ((this._Peads_GDM != value))
+                {
+                    this._Peads_GDM = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Vacinated", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Vacinated
+        {
+            get
+            {
+                return this._Peads_Vacinated;
+            }
+            set
+            {
+                if ((this._Peads_Vacinated != value))
+                {
+                    this._Peads_Vacinated = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_ANTOthers", DbType = "VarChar(500)")]
+        public string Peads_ANTOthers
+        {
+            get
+            {
+                return this._Peads_ANTOthers;
+            }
+            set
+            {
+                if ((this._Peads_ANTOthers != value))
+                {
+                    this._Peads_ANTOthers = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_SVD", DbType = "Bit")]
+        public System.Nullable<bool> Peads_SVD
+        {
+            get
+            {
+                return this._Peads_SVD;
+            }
+            set
+            {
+                if ((this._Peads_SVD != value))
+                {
+                    this._Peads_SVD = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_LSCS", DbType = "Bit")]
+        public System.Nullable<bool> Peads_LSCS
+        {
+            get
+            {
+                return this._Peads_LSCS;
+            }
+            set
+            {
+                if ((this._Peads_LSCS != value))
+                {
+                    this._Peads_LSCS = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Emergency", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Emergency
+        {
+            get
+            {
+                return this._Peads_Emergency;
+            }
+            set
+            {
+                if ((this._Peads_Emergency != value))
+                {
+                    this._Peads_Emergency = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Elective", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Elective
+        {
+            get
+            {
+                return this._Peads_Elective;
+            }
+            set
+            {
+                if ((this._Peads_Elective != value))
+                {
+                    this._Peads_Elective = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PlaceOfDelivery", DbType = "VarChar(100)")]
+        public string Peads_PlaceOfDelivery
+        {
+            get
+            {
+                return this._Peads_PlaceOfDelivery;
+            }
+            set
+            {
+                if ((this._Peads_PlaceOfDelivery != value))
+                {
+                    this._Peads_PlaceOfDelivery = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_IndicationForLSCS", DbType = "VarChar(500)")]
+        public string Peads_IndicationForLSCS
+        {
+            get
+            {
+                return this._Peads_IndicationForLSCS;
+            }
+            set
+            {
+                if ((this._Peads_IndicationForLSCS != value))
+                {
+                    this._Peads_IndicationForLSCS = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_apgerScore1min", DbType = "VarChar(10)")]
+        public string Peads_apgerScore1min
+        {
+            get
+            {
+                return this._Peads_apgerScore1min;
+            }
+            set
+            {
+                if ((this._Peads_apgerScore1min != value))
+                {
+                    this._Peads_apgerScore1min = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_apgerScore5min", DbType = "VarChar(10)")]
+        public string Peads_apgerScore5min
+        {
+            get
+            {
+                return this._Peads_apgerScore5min;
+            }
+            set
+            {
+                if ((this._Peads_apgerScore5min != value))
+                {
+                    this._Peads_apgerScore5min = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Resuscitation", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Resuscitation
+        {
+            get
+            {
+                return this._Peads_Resuscitation;
+            }
+            set
+            {
+                if ((this._Peads_Resuscitation != value))
+                {
+                    this._Peads_Resuscitation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_NatalOthers", DbType = "VarChar(500)")]
+        public string Peads_NatalOthers
+        {
+            get
+            {
+                return this._Peads_NatalOthers;
+            }
+            set
+            {
+                if ((this._Peads_NatalOthers != value))
+                {
+                    this._Peads_NatalOthers = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Moaning", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Moaning
+        {
+            get
+            {
+                return this._Peads_Moaning;
+            }
+            set
+            {
+                if ((this._Peads_Moaning != value))
+                {
+                    this._Peads_Moaning = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_RespDistress", DbType = "Bit")]
+        public System.Nullable<bool> Peads_RespDistress
+        {
+            get
+            {
+                return this._Peads_RespDistress;
+            }
+            set
+            {
+                if ((this._Peads_RespDistress != value))
+                {
+                    this._Peads_RespDistress = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PostNATALCyanosis", DbType = "Bit")]
+        public System.Nullable<bool> Peads_PostNATALCyanosis
+        {
+            get
+            {
+                return this._Peads_PostNATALCyanosis;
+            }
+            set
+            {
+                if ((this._Peads_PostNATALCyanosis != value))
+                {
+                    this._Peads_PostNATALCyanosis = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_Fits", DbType = "Bit")]
+        public System.Nullable<bool> Peads_Fits
+        {
+            get
+            {
+                return this._Peads_Fits;
+            }
+            set
+            {
+                if ((this._Peads_Fits != value))
+                {
+                    this._Peads_Fits = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_ReluctanceToFeed", DbType = "Bit")]
+        public System.Nullable<bool> Peads_ReluctanceToFeed
+        {
+            get
+            {
+                return this._Peads_ReluctanceToFeed;
+            }
+            set
+            {
+                if ((this._Peads_ReluctanceToFeed != value))
+                {
+                    this._Peads_ReluctanceToFeed = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Peads_PostNatalOthers", DbType = "VarChar(500)")]
+        public string Peads_PostNatalOthers
+        {
+            get
+            {
+                return this._Peads_PostNatalOthers;
+            }
+            set
+            {
+                if ((this._Peads_PostNatalOthers != value))
+                {
+                    this._Peads_PostNatalOthers = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Vaccination_History", DbType = "VarChar(MAX)")]
+        public string Vaccination_History
+        {
+            get
+            {
+                return this._Vaccination_History;
+            }
+            set
+            {
+                if ((this._Vaccination_History != value))
+                {
+                    this._Vaccination_History = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Other_History", DbType = "VarChar(MAX)")]
+        public string Other_History
+        {
+            get
+            {
+                return this._Other_History;
+            }
+            set
+            {
+                if ((this._Other_History != value))
+                {
+                    this._Other_History = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HMFIntact", DbType = "Bit")]
+        public System.Nullable<bool> HMFIntact
+        {
+            get
+            {
+                return this._HMFIntact;
+            }
+            set
+            {
+                if ((this._HMFIntact != value))
+                {
+                    this._HMFIntact = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CranialNerves", DbType = "Bit")]
+        public System.Nullable<bool> CranialNerves
+        {
+            get
+            {
+                return this._CranialNerves;
+            }
+            set
+            {
+                if ((this._CranialNerves != value))
+                {
+                    this._CranialNerves = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FurtherExplanation", DbType = "NVarChar(200)")]
+        public string FurtherExplanation
+        {
+            get
+            {
+                return this._FurtherExplanation;
+            }
+            set
+            {
+                if ((this._FurtherExplanation != value))
+                {
+                    this._FurtherExplanation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SignsOfMeningism", DbType = "Bit")]
+        public System.Nullable<bool> SignsOfMeningism
+        {
+            get
+            {
+                return this._SignsOfMeningism;
+            }
+            set
+            {
+                if ((this._SignsOfMeningism != value))
+                {
+                    this._SignsOfMeningism = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_HeartSound", DbType = "Bit")]
+        public System.Nullable<bool> HeartSound
+        {
+            get
+            {
+                return this._HeartSound;
+            }
+            set
+            {
+                if ((this._HeartSound != value))
+                {
+                    this._HeartSound = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Arrhythmias", DbType = "Bit")]
+        public System.Nullable<bool> Arrhythmias
+        {
+            get
+            {
+                return this._Arrhythmias;
+            }
+            set
+            {
+                if ((this._Arrhythmias != value))
+                {
+                    this._Arrhythmias = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Murmur", DbType = "Bit")]
+        public System.Nullable<bool> Murmur
+        {
+            get
+            {
+                return this._Murmur;
+            }
+            set
+            {
+                if ((this._Murmur != value))
+                {
+                    this._Murmur = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AnyOtherAddedSound", DbType = "Bit")]
+        public System.Nullable<bool> AnyOtherAddedSound
+        {
+            get
+            {
+                return this._AnyOtherAddedSound;
+            }
+            set
+            {
+                if ((this._AnyOtherAddedSound != value))
+                {
+                    this._AnyOtherAddedSound = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AnyOtherFindings", DbType = "Bit")]
+        public System.Nullable<bool> AnyOtherFindings
+        {
+            get
+            {
+                return this._AnyOtherFindings;
+            }
+            set
+            {
+                if ((this._AnyOtherFindings != value))
+                {
+                    this._AnyOtherFindings = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Wheeze", DbType = "Bit")]
+        public System.Nullable<bool> Wheeze
+        {
+            get
+            {
+                return this._Wheeze;
+            }
+            set
+            {
+                if ((this._Wheeze != value))
+                {
+                    this._Wheeze = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ranchi", DbType = "Bit")]
+        public System.Nullable<bool> Ranchi
+        {
+            get
+            {
+                return this._Ranchi;
+            }
+            set
+            {
+                if ((this._Ranchi != value))
+                {
+                    this._Ranchi = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AnyOtherSound", DbType = "Bit")]
+        public System.Nullable<bool> AnyOtherSound
+        {
+            get
+            {
+                return this._AnyOtherSound;
+            }
+            set
+            {
+                if ((this._AnyOtherSound != value))
+                {
+                    this._AnyOtherSound = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AbdomenSoft", DbType = "Bit")]
+        public System.Nullable<bool> AbdomenSoft
+        {
+            get
+            {
+                return this._AbdomenSoft;
+            }
+            set
+            {
+                if ((this._AbdomenSoft != value))
+                {
+                    this._AbdomenSoft = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Tenderness", DbType = "Bit")]
+        public System.Nullable<bool> Tenderness
+        {
+            get
+            {
+                return this._Tenderness;
+            }
+            set
+            {
+                if ((this._Tenderness != value))
+                {
+                    this._Tenderness = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Guarding", DbType = "Bit")]
+        public System.Nullable<bool> Guarding
+        {
+            get
+            {
+                return this._Guarding;
+            }
+            set
+            {
+                if ((this._Guarding != value))
+                {
+                    this._Guarding = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_BowelSound", DbType = "Bit")]
+        public System.Nullable<bool> BowelSound
+        {
+            get
+            {
+                return this._BowelSound;
+            }
+            set
+            {
+                if ((this._BowelSound != value))
+                {
+                    this._BowelSound = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Distention", DbType = "Bit")]
+        public System.Nullable<bool> Distention
+        {
+            get
+            {
+                return this._Distention;
+            }
+            set
+            {
+                if ((this._Distention != value))
+                {
+                    this._Distention = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FluidThrill", DbType = "Bit")]
+        public System.Nullable<bool> FluidThrill
+        {
+            get
+            {
+                return this._FluidThrill;
+            }
+            set
+            {
+                if ((this._FluidThrill != value))
+                {
+                    this._FluidThrill = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ShiftingDullness", DbType = "Bit")]
+        public System.Nullable<bool> ShiftingDullness
+        {
+            get
+            {
+                return this._ShiftingDullness;
+            }
+            set
+            {
+                if ((this._ShiftingDullness != value))
+                {
+                    this._ShiftingDullness = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_EpigastriaDiscomfort", DbType = "Bit")]
+        public System.Nullable<bool> EpigastriaDiscomfort
+        {
+            get
+            {
+                return this._EpigastriaDiscomfort;
+            }
+            set
+            {
+                if ((this._EpigastriaDiscomfort != value))
+                {
+                    this._EpigastriaDiscomfort = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RetrosternalBurning", DbType = "Bit")]
+        public System.Nullable<bool> RetrosternalBurning
+        {
+            get
+            {
+                return this._RetrosternalBurning;
+            }
+            set
+            {
+                if ((this._RetrosternalBurning != value))
+                {
+                    this._RetrosternalBurning = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Jondus", DbType = "Bit")]
+        public System.Nullable<bool> Jondus
+        {
+            get
+            {
+                return this._Jondus;
+            }
+            set
+            {
+                if ((this._Jondus != value))
+                {
+                    this._Jondus = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Pallor", DbType = "Bit")]
+        public System.Nullable<bool> Pallor
+        {
+            get
+            {
+                return this._Pallor;
+            }
+            set
+            {
+                if ((this._Pallor != value))
+                {
+                    this._Pallor = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dehydration", DbType = "Bit")]
+        public System.Nullable<bool> Dehydration
+        {
+            get
+            {
+                return this._Dehydration;
+            }
+            set
+            {
+                if ((this._Dehydration != value))
+                {
+                    this._Dehydration = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GCSOrientation", DbType = "Bit")]
+        public System.Nullable<bool> GCSOrientation
+        {
+            get
+            {
+                return this._GCSOrientation;
+            }
+            set
+            {
+                if ((this._GCSOrientation != value))
+                {
+                    this._GCSOrientation = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Conscious_Orientely", DbType = "Bit")]
+        public System.Nullable<bool> Conscious_Orientely
+        {
+            get
+            {
+                return this._Conscious_Orientely;
+            }
+            set
+            {
+                if ((this._Conscious_Orientely != value))
+                {
+                    this._Conscious_Orientely = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NVB_Right", DbType = "Bit")]
+        public System.Nullable<bool> NVB_Right
+        {
+            get
+            {
+                return this._NVB_Right;
+            }
+            set
+            {
+                if ((this._NVB_Right != value))
+                {
+                    this._NVB_Right = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NVB_Left", DbType = "Bit")]
+        public System.Nullable<bool> NVB_Left
+        {
+            get
+            {
+                return this._NVB_Left;
+            }
+            set
+            {
+                if ((this._NVB_Left != value))
+                {
+                    this._NVB_Left = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Crepitation_Right", DbType = "Bit")]
+        public System.Nullable<bool> Crepitation_Right
+        {
+            get
+            {
+                return this._Crepitation_Right;
+            }
+            set
+            {
+                if ((this._Crepitation_Right != value))
+                {
+                    this._Crepitation_Right = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Crepitation_Left", DbType = "Bit")]
+        public System.Nullable<bool> Crepitation_Left
+        {
+            get
+            {
+                return this._Crepitation_Left;
+            }
+            set
+            {
+                if ((this._Crepitation_Left != value))
+                {
+                    this._Crepitation_Left = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CNS_Value", DbType = "VarChar(500)")]
+        public string CNS_Value
+        {
+            get
+            {
+                return this._CNS_Value;
+            }
+            set
+            {
+                if ((this._CNS_Value != value))
+                {
+                    this._CNS_Value = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CVS_Value", DbType = "VarChar(500)")]
+        public string CVS_Value
+        {
+            get
+            {
+                return this._CVS_Value;
+            }
+            set
+            {
+                if ((this._CVS_Value != value))
+                {
+                    this._CVS_Value = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RESP_Value", DbType = "VarChar(500)")]
+        public string RESP_Value
+        {
+            get
+            {
+                return this._RESP_Value;
+            }
+            set
+            {
+                if ((this._RESP_Value != value))
+                {
+                    this._RESP_Value = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GIT_Value", DbType = "VarChar(500)")]
+        public string GIT_Value
+        {
+            get
+            {
+                return this._GIT_Value;
+            }
+            set
+            {
+                if ((this._GIT_Value != value))
+                {
+                    this._GIT_Value = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GPE_Value", DbType = "VarChar(500)")]
+        public string GPE_Value
+        {
+            get
+            {
+                return this._GPE_Value;
+            }
+            set
+            {
+                if ((this._GPE_Value != value))
+                {
+                    this._GPE_Value = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Eye_Opening_Response", DbType = "VarChar(10)")]
+        public string Eye_Opening_Response
+        {
+            get
+            {
+                return this._Eye_Opening_Response;
+            }
+            set
+            {
+                if ((this._Eye_Opening_Response != value))
+                {
+                    this._Eye_Opening_Response = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Motor_Response", DbType = "VarChar(10)")]
+        public string Motor_Response
+        {
+            get
+            {
+                return this._Motor_Response;
+            }
+            set
+            {
+                if ((this._Motor_Response != value))
+                {
+                    this._Motor_Response = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Verbal_Response", DbType = "VarChar(10)")]
+        public string Verbal_Response
+        {
+            get
+            {
+                return this._Verbal_Response;
+            }
+            set
+            {
+                if ((this._Verbal_Response != value))
+                {
+                    this._Verbal_Response = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Accumulated_Response", DbType = "VarChar(10)")]
+        public string Accumulated_Response
+        {
+            get
+            {
+                return this._Accumulated_Response;
+            }
+            set
+            {
+                if ((this._Accumulated_Response != value))
+                {
+                    this._Accumulated_Response = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_remarks_call_to_doctor", DbType = "VarChar(MAX)")]
+        public string remarks_call_to_doctor
+        {
+            get
+            {
+                return this._remarks_call_to_doctor;
+            }
+            set
+            {
+                if ((this._remarks_call_to_doctor != value))
+                {
+                    this._remarks_call_to_doctor = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PU_R", DbType = "NVarChar(MAX)")]
+        public string PU_R
+        {
+            get
+            {
+                return this._PU_R;
+            }
+            set
+            {
+                if ((this._PU_R != value))
+                {
+                    this._PU_R = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PU_L", DbType = "NVarChar(MAX)")]
+        public string PU_L
+        {
+            get
+            {
+                return this._PU_L;
+            }
+            set
+            {
+                if ((this._PU_L != value))
+                {
+                    this._PU_L = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PL_L", DbType = "NVarChar(MAX)")]
+        public string PL_L
+        {
+            get
+            {
+                return this._PL_L;
+            }
+            set
+            {
+                if ((this._PL_L != value))
+                {
+                    this._PL_L = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PL_R", DbType = "NVarChar(MAX)")]
+        public string PL_R
+        {
+            get
+            {
+                return this._PL_R;
+            }
+            set
+            {
+                if ((this._PL_R != value))
+                {
+                    this._PL_R = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SU_R", DbType = "Bit")]
+        public System.Nullable<bool> SU_R
+        {
+            get
+            {
+                return this._SU_R;
+            }
+            set
+            {
+                if ((this._SU_R != value))
+                {
+                    this._SU_R = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SU_L", DbType = "Bit")]
+        public System.Nullable<bool> SU_L
+        {
+            get
+            {
+                return this._SU_L;
+            }
+            set
+            {
+                if ((this._SU_L != value))
+                {
+                    this._SU_L = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SL_R", DbType = "Bit")]
+        public System.Nullable<bool> SL_R
+        {
+            get
+            {
+                return this._SL_R;
+            }
+            set
+            {
+                if ((this._SL_R != value))
+                {
+                    this._SL_R = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SL_L", DbType = "Bit")]
+        public System.Nullable<bool> SL_L
+        {
+            get
+            {
+                return this._SL_L;
+            }
+            set
+            {
+                if ((this._SL_L != value))
+                {
+                    this._SL_L = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TruckTorso", DbType = "VarChar(MAX)")]
+        public string TruckTorso
+        {
+            get
+            {
+                return this._TruckTorso;
+            }
+            set
+            {
+                if ((this._TruckTorso != value))
+                {
+                    this._TruckTorso = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Clinical_Summary", DbType = "NVarChar(MAX)")]
+        public string Clinical_Summary
+        {
+            get
+            {
+                return this._Clinical_Summary;
+            }
+            set
+            {
+                if ((this._Clinical_Summary != value))
+                {
+                    this._Clinical_Summary = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctors_Note", DbType = "NVarChar(MAX)")]
+        public string Doctors_Note
+        {
+            get
+            {
+                return this._Doctors_Note;
+            }
+            set
+            {
+                if ((this._Doctors_Note != value))
+                {
+                    this._Doctors_Note = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Provisional_Diagnosis_Examination", DbType = "VarChar(500)")]
+        public string Provisional_Diagnosis_Examination
+        {
+            get
+            {
+                return this._Provisional_Diagnosis_Examination;
+            }
+            set
+            {
+                if ((this._Provisional_Diagnosis_Examination != value))
+                {
+                    this._Provisional_Diagnosis_Examination = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sehat_Card_Holder_CNIC", DbType = "VarChar(MAX)")]
+        public string Sehat_Card_Holder_CNIC
+        {
+            get
+            {
+                return this._Sehat_Card_Holder_CNIC;
+            }
+            set
+            {
+                if ((this._Sehat_Card_Holder_CNIC != value))
+                {
+                    this._Sehat_Card_Holder_CNIC = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_JVP_Param", DbType = "Bit")]
+        public System.Nullable<bool> JVP_Param
+        {
+            get
+            {
+                return this._JVP_Param;
+            }
+            set
+            {
+                if ((this._JVP_Param != value))
+                {
+                    this._JVP_Param = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Edema_Param", DbType = "Bit")]
+        public System.Nullable<bool> Edema_Param
+        {
+            get
+            {
+                return this._Edema_Param;
+            }
+            set
+            {
+                if ((this._Edema_Param != value))
+                {
+                    this._Edema_Param = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cyanosis_Param", DbType = "Bit")]
+        public System.Nullable<bool> Cyanosis_Param
+        {
+            get
+            {
+                return this._Cyanosis_Param;
+            }
+            set
+            {
+                if ((this._Cyanosis_Param != value))
+                {
+                    this._Cyanosis_Param = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_patient_main_department", DbType = "NVarChar(150)")]
+        public string patient_main_department
+        {
+            get
+            {
+                return this._patient_main_department;
+            }
+            set
+            {
+                if ((this._patient_main_department != value))
+                {
+                    this._patient_main_department = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_packagae_type", DbType = "NVarChar(150)")]
+        public string packagae_type
+        {
+            get
+            {
+                return this._packagae_type;
+            }
+            set
+            {
+                if ((this._packagae_type != value))
+                {
+                    this._packagae_type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_packagae_name", DbType = "NVarChar(150)")]
+        public string packagae_name
+        {
+            get
+            {
+                return this._packagae_name;
+            }
+            set
+            {
+                if ((this._packagae_name != value))
+                {
+                    this._packagae_name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ipd_Procedure", DbType = "NVarChar(150)")]
+        public string ipd_Procedure
+        {
+            get
+            {
+                return this._ipd_Procedure;
+            }
+            set
+            {
+                if ((this._ipd_Procedure != value))
+                {
+                    this._ipd_Procedure = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Procedure_Desc", DbType = "NVarChar(150)")]
+        public string Procedure_Desc
+        {
+            get
+            {
+                return this._Procedure_Desc;
+            }
+            set
+            {
+                if ((this._Procedure_Desc != value))
+                {
+                    this._Procedure_Desc = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Panel_Company1", DbType = "VarChar(100)")]
+        public string Panel_Company1
+        {
+            get
+            {
+                return this._Panel_Company1;
+            }
+            set
+            {
+                if ((this._Panel_Company1 != value))
+                {
+                    this._Panel_Company1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_InsuranceCardNo1", DbType = "NVarChar(100)")]
+        public string InsuranceCardNo1
+        {
+            get
+            {
+                return this._InsuranceCardNo1;
+            }
+            set
+            {
+                if ((this._InsuranceCardNo1 != value))
+                {
+                    this._InsuranceCardNo1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CardHolderName1", DbType = "NVarChar(100)")]
+        public string CardHolderName1
+        {
+            get
+            {
+                return this._CardHolderName1;
+            }
+            set
+            {
+                if ((this._CardHolderName1 != value))
+                {
+                    this._CardHolderName1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CompanyNAme", DbType = "NVarChar(150)")]
+        public string CompanyNAme
+        {
+            get
+            {
+                return this._CompanyNAme;
+            }
+            set
+            {
+                if ((this._CompanyNAme != value))
+                {
+                    this._CompanyNAme = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ApproveLimit", DbType = "NVarChar(150)")]
+        public string ApproveLimit
+        {
+            get
+            {
+                return this._ApproveLimit;
+            }
+            set
+            {
+                if ((this._ApproveLimit != value))
+                {
+                    this._ApproveLimit = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ApproveDays", DbType = "NVarChar(150)")]
+        public string ApproveDays
+        {
+            get
+            {
+                return this._ApproveDays;
+            }
+            set
+            {
+                if ((this._ApproveDays != value))
+                {
+                    this._ApproveDays = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RoomLimit", DbType = "NVarChar(150)")]
+        public string RoomLimit
+        {
+            get
+            {
+                return this._RoomLimit;
+            }
+            set
+            {
+                if ((this._RoomLimit != value))
+                {
+                    this._RoomLimit = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CardLimit", DbType = "NVarChar(150)")]
+        public string CardLimit
+        {
+            get
+            {
+                return this._CardLimit;
+            }
+            set
+            {
+                if ((this._CardLimit != value))
+                {
+                    this._CardLimit = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount
+        {
+            get
+            {
+                return this._Discount;
+            }
+            set
+            {
+                if ((this._Discount != value))
+                {
+                    this._Discount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Private_Charges_instruction", DbType = "NVarChar(150)")]
+        public string Private_Charges_instruction
+        {
+            get
+            {
+                return this._Private_Charges_instruction;
+            }
+            set
+            {
+                if ((this._Private_Charges_instruction != value))
+                {
+                    this._Private_Charges_instruction = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Advance_Amount", DbType = "Int NOT NULL")]
+        public int Advance_Amount
+        {
+            get
+            {
+                return this._Advance_Amount;
+            }
+            set
+            {
+                if ((this._Advance_Amount != value))
+                {
+                    this._Advance_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_Type", DbType = "VarChar(500)")]
+        public string Discharge_Type
+        {
+            get
+            {
+                return this._Discharge_Type;
+            }
+            set
+            {
+                if ((this._Discharge_Type != value))
+                {
+                    this._Discharge_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discharge_Request", DbType = "Bit")]
+        public System.Nullable<bool> Discharge_Request
+        {
+            get
+            {
+                return this._Discharge_Request;
+            }
+            set
+            {
+                if ((this._Discharge_Request != value))
+                {
+                    this._Discharge_Request = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Guardian_Id", DbType = "Int NOT NULL")]
+        public int Guardian_Id
+        {
+            get
+            {
+                return this._Guardian_Id;
+            }
+            set
+            {
+                if ((this._Guardian_Id != value))
+                {
+                    this._Guardian_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_G_Name", DbType = "NVarChar(MAX)")]
+        public string G_Name
+        {
+            get
+            {
+                return this._G_Name;
+            }
+            set
+            {
+                if ((this._G_Name != value))
+                {
+                    this._G_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_G_RelationShip", DbType = "VarChar(100)")]
+        public string G_RelationShip
+        {
+            get
+            {
+                return this._G_RelationShip;
+            }
+            set
+            {
+                if ((this._G_RelationShip != value))
+                {
+                    this._G_RelationShip = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_G_Address", DbType = "NVarChar(500)")]
+        public string G_Address
+        {
+            get
+            {
+                return this._G_Address;
+            }
+            set
+            {
+                if ((this._G_Address != value))
+                {
+                    this._G_Address = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_G_CNIC", DbType = "VarChar(500)")]
+        public string G_CNIC
+        {
+            get
+            {
+                return this._G_CNIC;
+            }
+            set
+            {
+                if ((this._G_CNIC != value))
+                {
+                    this._G_CNIC = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_G_Phone", DbType = "VarChar(500)")]
+        public string G_Phone
+        {
+            get
+            {
+                return this._G_Phone;
+            }
+            set
+            {
+                if ((this._G_Phone != value))
+                {
+                    this._G_Phone = value;
                 }
             }
         }
