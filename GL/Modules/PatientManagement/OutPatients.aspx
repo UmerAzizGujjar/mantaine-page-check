@@ -3944,7 +3944,7 @@
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {
                 var options = '<option value=""> Select Medicine  </option>'
                 $.each(JSON.parse(Medicine), function (key, value) {
-                    options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                    options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                 });
 
                 $('#txtPharmacyItem').html(options);

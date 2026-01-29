@@ -4573,7 +4573,7 @@ namespace PMS
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
 
 
-                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 72 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
                     ddlDepartments.DataSource = valusets;
                     ddlDepartments.DataTextField = "DataValue_Description";
                     ddlDepartments.DataValueField = "DataValue_Name";
@@ -5579,6 +5579,7 @@ namespace PMS
                     lblMultiSelect.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+                    tr1MedicalSubsidy.Visible = false;
                     ddlMedicalSubsidy.Visible = false;
 
                     object valusets;
