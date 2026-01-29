@@ -41,7 +41,7 @@ namespace PMS
                         Created_Time = DateTime.Now,
                         Book_ID = AppConfig.Book_ID,
                         Company_ID = AppConfig.Company_ID,
-                        Ward_No = (DBClass.getMaxEntry_No("Ward_Definition", "Ward_No"))
+                        Ward_No = (DBClass.getMaxEntry_No("Ward_Definition", "Ward_No").ToString())
                 };
                 }
                 else

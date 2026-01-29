@@ -663,9 +663,6 @@ namespace PMS
         partial void InsertPurchase_Return_Master(Purchase_Return_Master instance);
         partial void UpdatePurchase_Return_Master(Purchase_Return_Master instance);
         partial void DeletePurchase_Return_Master(Purchase_Return_Master instance);
-        partial void InsertWard_Definition(Ward_Definition instance);
-        partial void UpdateWard_Definition(Ward_Definition instance);
-        partial void DeleteWard_Definition(Ward_Definition instance);
         partial void InsertReceipt(Receipt instance);
         partial void UpdateReceipt(Receipt instance);
         partial void DeleteReceipt(Receipt instance);
@@ -927,12 +924,16 @@ namespace PMS
         partial void InsertPatient(Patient instance);
         partial void UpdatePatient(Patient instance);
         partial void DeletePatient(Patient instance);
+        partial void InsertWard_Definition(Ward_Definition instance);
+        partial void UpdateWard_Definition(Ward_Definition instance);
+        partial void DeleteWard_Definition(Ward_Definition instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -2677,14 +2678,6 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<Ward_Definition> Ward_Definitions
-        {
-            get
-            {
-                return this.GetTable<Ward_Definition>();
-            }
-        }
-
         public System.Data.Linq.Table<Receipt> Receipts
         {
             get
@@ -3378,6 +3371,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Patient>();
+            }
+        }
+
+        public System.Data.Linq.Table<Ward_Definition> Ward_Definitions
+        {
+            get
+            {
+                return this.GetTable<Ward_Definition>();
             }
         }
 
@@ -82251,332 +82252,6 @@ namespace PMS
         }
     }
 
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Ward_Definition")]
-    public partial class Ward_Definition : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Ward_ID;
-
-        private System.Nullable<int> _Ward_No;
-
-        private string _Department;
-
-        private string _Ward_Type;
-
-        private System.Nullable<int> _No_Of_Beds;
-
-        private System.Nullable<decimal> _Ward_Charges;
-
-        private System.Nullable<System.Guid> _Created_By;
-
-        private System.Nullable<System.DateTime> _Created_Time;
-
-        private System.Nullable<System.Guid> _Updated_By;
-
-        private System.Nullable<System.DateTime> _Updated_Time;
-
-        private System.Nullable<int> _Company_ID;
-
-        private System.Nullable<int> _Book_ID;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnWard_IDChanging(int value);
-        partial void OnWard_IDChanged();
-        partial void OnWard_NoChanging(System.Nullable<int> value);
-        partial void OnWard_NoChanged();
-        partial void OnDepartmentChanging(string value);
-        partial void OnDepartmentChanged();
-        partial void OnWard_TypeChanging(string value);
-        partial void OnWard_TypeChanged();
-        partial void OnNo_Of_BedsChanging(System.Nullable<int> value);
-        partial void OnNo_Of_BedsChanged();
-        partial void OnWard_ChargesChanging(System.Nullable<decimal> value);
-        partial void OnWard_ChargesChanged();
-        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnCreated_ByChanged();
-        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnCreated_TimeChanged();
-        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnUpdated_ByChanged();
-        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnUpdated_TimeChanged();
-        partial void OnCompany_IDChanging(System.Nullable<int> value);
-        partial void OnCompany_IDChanged();
-        partial void OnBook_IDChanging(System.Nullable<int> value);
-        partial void OnBook_IDChanged();
-        #endregion
-
-        public Ward_Definition()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Ward_ID
-        {
-            get
-            {
-                return this._Ward_ID;
-            }
-            set
-            {
-                if ((this._Ward_ID != value))
-                {
-                    this.OnWard_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Ward_ID = value;
-                    this.SendPropertyChanged("Ward_ID");
-                    this.OnWard_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_No", DbType = "Int")]
-        public System.Nullable<int> Ward_No
-        {
-            get
-            {
-                return this._Ward_No;
-            }
-            set
-            {
-                if ((this._Ward_No != value))
-                {
-                    this.OnWard_NoChanging(value);
-                    this.SendPropertyChanging();
-                    this._Ward_No = value;
-                    this.SendPropertyChanged("Ward_No");
-                    this.OnWard_NoChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(3)")]
-        public string Department
-        {
-            get
-            {
-                return this._Department;
-            }
-            set
-            {
-                if ((this._Department != value))
-                {
-                    this.OnDepartmentChanging(value);
-                    this.SendPropertyChanging();
-                    this._Department = value;
-                    this.SendPropertyChanged("Department");
-                    this.OnDepartmentChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_Type", DbType = "NVarChar(50)")]
-        public string Ward_Type
-        {
-            get
-            {
-                return this._Ward_Type;
-            }
-            set
-            {
-                if ((this._Ward_Type != value))
-                {
-                    this.OnWard_TypeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Ward_Type = value;
-                    this.SendPropertyChanged("Ward_Type");
-                    this.OnWard_TypeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_No_Of_Beds", DbType = "Int")]
-        public System.Nullable<int> No_Of_Beds
-        {
-            get
-            {
-                return this._No_Of_Beds;
-            }
-            set
-            {
-                if ((this._No_Of_Beds != value))
-                {
-                    this.OnNo_Of_BedsChanging(value);
-                    this.SendPropertyChanging();
-                    this._No_Of_Beds = value;
-                    this.SendPropertyChanged("No_Of_Beds");
-                    this.OnNo_Of_BedsChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_Charges", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Ward_Charges
-        {
-            get
-            {
-                return this._Ward_Charges;
-            }
-            set
-            {
-                if ((this._Ward_Charges != value))
-                {
-                    this.OnWard_ChargesChanging(value);
-                    this.SendPropertyChanging();
-                    this._Ward_Charges = value;
-                    this.SendPropertyChanged("Ward_Charges");
-                    this.OnWard_ChargesChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Created_By
-        {
-            get
-            {
-                return this._Created_By;
-            }
-            set
-            {
-                if ((this._Created_By != value))
-                {
-                    this.OnCreated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_By = value;
-                    this.SendPropertyChanged("Created_By");
-                    this.OnCreated_ByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Created_Time
-        {
-            get
-            {
-                return this._Created_Time;
-            }
-            set
-            {
-                if ((this._Created_Time != value))
-                {
-                    this.OnCreated_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_Time = value;
-                    this.SendPropertyChanged("Created_Time");
-                    this.OnCreated_TimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Updated_By
-        {
-            get
-            {
-                return this._Updated_By;
-            }
-            set
-            {
-                if ((this._Updated_By != value))
-                {
-                    this.OnUpdated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Updated_By = value;
-                    this.SendPropertyChanged("Updated_By");
-                    this.OnUpdated_ByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Updated_Time
-        {
-            get
-            {
-                return this._Updated_Time;
-            }
-            set
-            {
-                if ((this._Updated_Time != value))
-                {
-                    this.OnUpdated_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Updated_Time = value;
-                    this.SendPropertyChanged("Updated_Time");
-                    this.OnUpdated_TimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
-        public System.Nullable<int> Company_ID
-        {
-            get
-            {
-                return this._Company_ID;
-            }
-            set
-            {
-                if ((this._Company_ID != value))
-                {
-                    this.OnCompany_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Company_ID = value;
-                    this.SendPropertyChanged("Company_ID");
-                    this.OnCompany_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
-        public System.Nullable<int> Book_ID
-        {
-            get
-            {
-                return this._Book_ID;
-            }
-            set
-            {
-                if ((this._Book_ID != value))
-                {
-                    this.OnBook_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Book_ID = value;
-                    this.SendPropertyChanged("Book_ID");
-                    this.OnBook_IDChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Receipts")]
     public partial class Receipt : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -161363,6 +161038,332 @@ namespace PMS
                     this._Remarks = value;
                     this.SendPropertyChanged("Remarks");
                     this.OnRemarksChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Ward_Definition")]
+    public partial class Ward_Definition : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Ward_ID;
+
+        private string _Ward_No;
+
+        private string _Department;
+
+        private string _Ward_Type;
+
+        private System.Nullable<int> _No_Of_Beds;
+
+        private System.Nullable<decimal> _Ward_Charges;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        private System.Nullable<int> _Company_ID;
+
+        private System.Nullable<int> _Book_ID;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnWard_IDChanging(int value);
+        partial void OnWard_IDChanged();
+        partial void OnWard_NoChanging(string value);
+        partial void OnWard_NoChanged();
+        partial void OnDepartmentChanging(string value);
+        partial void OnDepartmentChanged();
+        partial void OnWard_TypeChanging(string value);
+        partial void OnWard_TypeChanged();
+        partial void OnNo_Of_BedsChanging(System.Nullable<int> value);
+        partial void OnNo_Of_BedsChanged();
+        partial void OnWard_ChargesChanging(System.Nullable<decimal> value);
+        partial void OnWard_ChargesChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        partial void OnCompany_IDChanging(System.Nullable<int> value);
+        partial void OnCompany_IDChanged();
+        partial void OnBook_IDChanging(System.Nullable<int> value);
+        partial void OnBook_IDChanged();
+        #endregion
+
+        public Ward_Definition()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Ward_ID
+        {
+            get
+            {
+                return this._Ward_ID;
+            }
+            set
+            {
+                if ((this._Ward_ID != value))
+                {
+                    this.OnWard_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ward_ID = value;
+                    this.SendPropertyChanged("Ward_ID");
+                    this.OnWard_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_No", DbType = "VarChar(30)")]
+        public string Ward_No
+        {
+            get
+            {
+                return this._Ward_No;
+            }
+            set
+            {
+                if ((this._Ward_No != value))
+                {
+                    this.OnWard_NoChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ward_No = value;
+                    this.SendPropertyChanged("Ward_No");
+                    this.OnWard_NoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "VarChar(3)")]
+        public string Department
+        {
+            get
+            {
+                return this._Department;
+            }
+            set
+            {
+                if ((this._Department != value))
+                {
+                    this.OnDepartmentChanging(value);
+                    this.SendPropertyChanging();
+                    this._Department = value;
+                    this.SendPropertyChanged("Department");
+                    this.OnDepartmentChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_Type", DbType = "NVarChar(50)")]
+        public string Ward_Type
+        {
+            get
+            {
+                return this._Ward_Type;
+            }
+            set
+            {
+                if ((this._Ward_Type != value))
+                {
+                    this.OnWard_TypeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ward_Type = value;
+                    this.SendPropertyChanged("Ward_Type");
+                    this.OnWard_TypeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_No_Of_Beds", DbType = "Int")]
+        public System.Nullable<int> No_Of_Beds
+        {
+            get
+            {
+                return this._No_Of_Beds;
+            }
+            set
+            {
+                if ((this._No_Of_Beds != value))
+                {
+                    this.OnNo_Of_BedsChanging(value);
+                    this.SendPropertyChanging();
+                    this._No_Of_Beds = value;
+                    this.SendPropertyChanged("No_Of_Beds");
+                    this.OnNo_Of_BedsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_Charges", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Ward_Charges
+        {
+            get
+            {
+                return this._Ward_Charges;
+            }
+            set
+            {
+                if ((this._Ward_Charges != value))
+                {
+                    this.OnWard_ChargesChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ward_Charges = value;
+                    this.SendPropertyChanged("Ward_Charges");
+                    this.OnWard_ChargesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
+        public System.Nullable<int> Company_ID
+        {
+            get
+            {
+                return this._Company_ID;
+            }
+            set
+            {
+                if ((this._Company_ID != value))
+                {
+                    this.OnCompany_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Company_ID = value;
+                    this.SendPropertyChanged("Company_ID");
+                    this.OnCompany_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
+        public System.Nullable<int> Book_ID
+        {
+            get
+            {
+                return this._Book_ID;
+            }
+            set
+            {
+                if ((this._Book_ID != value))
+                {
+                    this.OnBook_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Book_ID = value;
+                    this.SendPropertyChanged("Book_ID");
+                    this.OnBook_IDChanged();
                 }
             }
         }
