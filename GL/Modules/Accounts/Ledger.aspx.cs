@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Infragistics.Documents.Reports.HTML;
+using Infragistics.Documents.Reports.RTF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -119,6 +121,26 @@ namespace PMS
                         DateDiv.Visible = true;
                         break;
 
+                    case "SIHD":
+                        vendorDiv.Visible = true;
+                        stockDiv.Visible = false;
+                        accountDiv.Visible = false;
+                        vendorTypeDiv.Visible = false;
+                        lblAccount.Visible = false;
+                        txtAccount_ID.Visible = false;
+                        sttDate.Visible = true;
+                        txtStart_Date.Visible = true;
+                        txtEnd_Date.Visible = true;
+                        endDate.Visible = true;
+                        lblVendor.Text = "Ware House";
+                        System.Data.DataTable dtDept2 = DBClass.getDataTable("Select DataValue_Name,DataValue_Description FROM dbo.DataValues p JOIN dbo.ValueSet v ON p.ValueSet_ID = v.ValueSet_ID WHERE v.ValueSet_Description = 'Ware House'");
+                        ddlVendor.DataSource = dtDept2;
+                        ddlVendor.DataTextField = "DataValue_Description";
+                        ddlVendor.DataValueField = "DataValue_Name";
+                        ddlVendor.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                        ddlVendor.AppendDataBoundItems = true;
+                        ddlVendor.DataBind();
+                        break;
 
                     case "Stock_Consumption_Details":
                         vendorDiv.Visible = false;
@@ -203,6 +225,10 @@ namespace PMS
                 case "SIH":
                     query = "ReportName=PharmacyStock&ReportTitle=Stock In Hand &Stock=" + ddlStock.SelectedValue + "";
                     break;
+                case "SIHD":
+                    query = "ReportName=PharmacyStockDetail&ReportTitle=Stock In Hand Detail from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&WareHouse=" + ddlVendor.SelectedValue;
+                    break;
+
                 case "Stock_Consumption_Details":
                     query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + "";
                     break;

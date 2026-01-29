@@ -40,17 +40,17 @@
             function PrintCRV() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
-                var locationInfo = window.location;
-                var url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
-                if (!locationInfo.origin.includes('localhost')) {
-                    var urlInfo = window.location.href.split('/');
-                    var ip = urlInfo[2];
-                    var foldername = urlInfo[3];
-                    url = 'http://' + ip + '/' + foldername + "../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
-                }
-                window.open(url, '_blank');
+                 var locationInfo = window.location;
+                 var url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
+                 if (!locationInfo.origin.includes('localhost')) {
+                     var urlInfo = window.location.href.split('/');
+                     var ip = urlInfo[2];
+                     var foldername = urlInfo[3];
+                     url = 'http://' + ip + '/' + foldername + "../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
+                 }
+                 window.open(url, '_blank');
 
-            }
+             }
             function ApproveBill() {
                 debugger;
                 var BillId = '<% =Request.QueryString["Bill_ID"] %>';
