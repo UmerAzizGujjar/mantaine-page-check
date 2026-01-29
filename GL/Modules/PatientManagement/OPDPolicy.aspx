@@ -949,6 +949,13 @@
                                         <div class="field-desc">Cashier</div>
                                     </div>
                                 </div>
+                                <div class="right-item" onclick="toggleRight(this)">
+                                    <input type="checkbox" id="remarks" name="rights[]" value="remarks" />
+                                    <div>
+                                        <label for="Remarks">Remarks</label>
+                                        <div class="field-desc">Remarks</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -963,12 +970,7 @@
                 </form>
             </div>
 
-          <%--  <div class="companies-list">
-                <h3>Saved Companies</h3>
-                <div id="companies-container">
-                    <p style="color: #718096; text-align: center; padding: 20px;">No companies configured yet. Create your first company above.</p>
-                </div>
-            </div>--%>
+     
         </div>
     </div>
      <div class="col-lg-4 col-md-6 col-sm-8 company-section">

@@ -44,26 +44,42 @@
     function PrintVoucher() {
         var InvId = '<% =Request.QueryString["Adv_ID"] %>';
         var locationInfo = window.location;
+
+        var user_name = '<% =AppConfig.Company_Name %>';
+        if (user_name == 'As-Siraat Serving Humanity') {
+            reportPath = '../../ReportViewer.aspx';
+        } else {
+            reportPath = 'ReportViewer.aspx'; // same folder
+        }
+
         var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Advance Payment Voucher&TransID=' + InvId + '&TransType=ADV';;
         if (!locationInfo.origin.includes('localhost')) {
             var urlInfo = window.location.href.split('/');
             var ip = urlInfo[2];
             var foldername = urlInfo[3];
 
-            url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Advance Payment Voucher&TransID=' + InvId + '&TransType=ADV';
+            url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Voucher&ReportTitle=Advance Payment Voucher&TransID=' + InvId + '&TransType=ADV';
         }
         window.open(url, '_blank');
     }
     function Print() {
         var InvId = '<% =Request.QueryString["Adv_ID"] %>';
         var locationInfo = window.location;
+
+        var user_name = '<% =AppConfig.Company_Name %>';
+        if (user_name == 'As-Siraat Serving Humanity') {
+            reportPath = '../../ReportViewer.aspx';
+        } else {
+            reportPath = 'ReportViewer.aspx'; // same folder
+        }
+
         var url = '/ReportViewer.aspx?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + InvId;
         if (!locationInfo.origin.includes('localhost')) {
             var urlInfo = window.location.href.split('/');
             var ip = urlInfo[2];
             var foldername = urlInfo[3];
 
-            url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + InvId;
+            url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Advance_Base_Print&ReportTitle=Advance Payment &Adv_ID=' + InvId;
         }
         window.open(url, '_blank');
     }

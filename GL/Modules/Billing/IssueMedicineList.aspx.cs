@@ -42,6 +42,9 @@ namespace PMS
                                             .Select(rg => rg.mr_no_sequence) .FirstOrDefault(),
                                             Received_Amount = AB.Received_Amount,
                                             Bill_ID = AB.Bill_ID,
+                                            Total_Amount = AB.Total_Amount,
+                                            Discount_Amount = AB.Discount_Amount,
+                                            Balance_Amount = AB.Balance_Amount,
                                         };
 
                     var FilteredCount = IssueMedicine.Count();

@@ -756,12 +756,20 @@
             debugger;
             var id = '<% =Request.QueryString["IGP_ID"] %>';
             var locationInfo = window.location;
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
             var url = '/ReportViewer.aspx?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + id;
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + id;
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + id;
             }
             window.open(url, '_blank');
         }
@@ -780,12 +788,20 @@
             debugger;
             var id = '<% =Request.QueryString["IGP_ID"] %>';
             var locationInfo = window.location;
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
             var url = '/ReportViewer.aspx?ReportName=Inspection&ReportTitle=Inward Gate Pass List&Igpid=' + id;
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Inspection&ReportTitle=Inward Gate Pass List&Igpid=' + id;
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Inspection&ReportTitle=Inward Gate Pass List&Igpid=' + id;
             }
             window.open(url, '_blank');
         }

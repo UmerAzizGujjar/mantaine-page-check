@@ -22,9 +22,10 @@
             });
             var SI_ID = '<%= Request.QueryString["SI_ID"]%>';
              if (SI_ID != "") {
-                 LoadDetail(SI_ID);
+                
 
                  setTimeout(function () { LoadMaster(SI_ID); }, 1000);
+                 setTimeout(function () { LoadDetail(SI_ID); }, 2500);
                  $("#btnSave").val('Update');
              }
            
@@ -363,7 +364,7 @@
             });
         }
 
-
+        
         function append(anchor) {
             debugger;
             count = 0;
@@ -399,7 +400,7 @@
             }
             if (IsBatch == "false" || IsBatch == "False") {
               //  $('#ddlBatchNum').attr("disabled", 'disabled');
-                $('#tblStoreIssueBote').find('input[name = ddlBatchNum]').attr("disabled", 'disabled');
+                //$('#tblStoreIssueBote').find('input[name = ddlBatchNum]').attr("disabled", 'disabled');
             }
             var length = $("#tblStoreIssueBote tr:gt(0)").length;
             if (length > 0) {
@@ -436,7 +437,7 @@
                     '<td style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + item_name + '</td>' +
                     '<td style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + unit + '</td>' +
                 //'<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this)" style="width: 75px !IMPORTANT;" ></select></td>' +
-                    '<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this),GetCGSRate(this)" style="width: 75px !IMPORTANT;" ' + (IsBatch.toLowerCase() === 'false' ? 'disabled' : '') + ' ></select></td>' +
+                    '<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this),GetCGSRate(this)" style="width: 75px !IMPORTANT;" ></select></td>' +
                     '<td style="padding-top: 9px;text-align: center;padding-top: 2px !important;"  ><input type="text" id="txtStoreStock' + length + '" name="txtStoreStock" readonly=true value="' + Stock + '" style="height: 22px!important;width: 70px !important;" ></td>' +
                     '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px;  width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtmirQty' + length + '" name="txtmirQty" value="' + Qty + '" disabled/></td>' +
                     '<td style="paddin g-top: 2px;"><input type="text" style=" font-size: 10px; width: 64px!important;                                        height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + length + '" name="txtIssueQty" value="0" onkeyup="calculateBalanceQty(this)"/></td>' +
@@ -638,24 +639,42 @@
         function PrintVoucher() {
             var id = '<% =Request.QueryString["SI_ID"] %>';
             var locationInfo = window.location;
+
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
             var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SIN Voucher&TransID=' + id + '&TransType=SIN';
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=SIN Voucher&TransID=' + id + '&TransType=SIN';
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Voucher&ReportTitle=SIN Voucher&TransID=' + id + '&TransType=SIN';
             }
             window.open(url, '_blank');
         }
         function btn_Print() {
             var id = '<% =Request.QueryString["SI_ID"] %>';
             var locationInfo = window.location;
+
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
             var url = '/ReportViewer.aspx?ReportName=StoreIssueBasePrint&ReportTitle=Store Issue Note&SI_ID=' + id;
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=StoreIssueBasePrint&ReportTitle=Store Issue Note&SI_ID=' + id;
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=StoreIssueBasePrint&ReportTitle=Store Issue Note&SI_ID=' + id;
             }
             window.open(url, '_blank');
         }
