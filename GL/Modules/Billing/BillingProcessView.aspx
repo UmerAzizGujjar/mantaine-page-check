@@ -15,22 +15,15 @@
         function PrintBilling(Bill_ID) {
             debugger;
             var locationInfo = window.location;
-
             var user_name = '<% =AppConfig.Company_Name %>';
-            if (user_name == 'As-Siraat Serving Humanity') {
-                reportPath = '../../ReportViewer.aspx';
-            } else {
-                reportPath = 'ReportViewer.aspx'; // same folder
+            url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + Bill_ID;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + Bill_ID;
             }
-
-            var url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + Bill_ID;
-              if (!locationInfo.origin.includes('localhost')) {
-                  var urlInfo = window.location.href.split('/');
-                  var ip = urlInfo[2];
-                  var foldername = urlInfo[3];
-                  url = 'http://' + ip + '/' + ffoldername + '/' + reportPath +  '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + Bill_ID;
-              }
-              window.open(url, '_blank');
+            window.open(url, '_blank');
 
         }
 
