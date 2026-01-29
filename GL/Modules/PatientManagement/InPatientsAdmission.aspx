@@ -60,6 +60,16 @@
                 format: '_/15',
                 separator: '/'
             });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtG_CNIC'),
+                format: '_____-_______-_',
+                separator: '-'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtG_Phone'),
+                format: '____-_______',
+                separator: '-'
+            });
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").select2({
                 placeholder: "Select a doctor",
                 allowClear: true
@@ -6652,26 +6662,7 @@
                                             <asp:TextBox ID="txtExpected_Discharge_Date" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top:1%">
-                                        <div class="col-lg-2 col-md-4 col-sm-6" id="saveprintbtn">
-                                            <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-4 col-sm-6">
-                                            <input type="button" class="btn-primry" onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-4 col-sm-6">
-                                            <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-4 col-sm-6">
-                                            <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-4 col-sm-6">
-                                            <input type="button" class="btn btn-yellow" id="btnAdvance" value="Advance " onclick="GoToAdvance()" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-2 col-sm-2">
-                                            <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                                  <div class="col-lg-3 co-md-4 col-sm-6" style="margin-top:-4%" >                                                                       
                                     <h2> Today Admission : </h2>
@@ -9250,30 +9241,28 @@
         </div>
     </div>
     <div class="row mt">
-        <div class="col-lg-9 col-md-9 col-sm-9">
+        <div class="col-lg-12 col-md-9 col-sm-9">
             <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-4 col-sm-6">
                     <asp:Label ID="LblGuardianName" runat="server" Text="Guardian Name"></asp:Label>
                     <asp:TextBox ID="txtGuardianName" runat="server" placeholder="Enter full name"></asp:TextBox>
                 </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-4 col-sm-6">
                     <asp:Label ID="LblG_Relationship" runat="server" Text="Relationship"></asp:Label>
                     <asp:TextBox ID="txtG_Relationship" runat="server" placeholder="e.g., Father, Mother, Spouse"></asp:TextBox>
                 </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <asp:Label ID="LblG_Address" runat="server" Text="Address"></asp:Label>
-                    <asp:TextBox ID="txtG_Address" runat="server" TextMode="MultiLine" Rows="2" Style="width:100%" placeholder="Complete address"></asp:TextBox>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-4 col-sm-6">
                     <asp:Label ID="LblG_CNIC" runat="server" Text="CNIC"></asp:Label>
                     <asp:TextBox ID="txtG_CNIC" runat="server" placeholder="XXXXX-XXXXXXX-X" MaxLength="15"></asp:TextBox>
                 </div>
-            </div>
-            <div class="row mt">
-                <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-4 col-sm-6">
                     <asp:Label ID="LblG_Phone" runat="server" Text="Phone Number"></asp:Label>
                     <asp:TextBox ID="txtG_Phone" runat="server" placeholder="03XX-XXXXXXX" MaxLength="15"></asp:TextBox>
                 </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <asp:Label ID="LblG_Address" runat="server" Text="Address"></asp:Label>
+                    <asp:TextBox ID="txtG_Address" runat="server" TextMode="MultiLine" Rows="1" Style="width:100%" placeholder="Complete address"></asp:TextBox>
+                </div>                
             </div>
             <div class="row mt">
                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -9515,7 +9504,30 @@
         </div>
     </div>
 
-
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12">
+            <div class="row" style="margin-top: 1%">
+                <div class="col-lg-2 col-md-4 col-sm-6" id="saveprintbtn">
+                    <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn-primry" onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-yellow" id="btnAdvance" value="Advance " onclick="GoToAdvance()" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
+                </div>
+            </div>
+        </div>
+    </div>
      <div id="PsychiatryModel" class="modal fade" role="dialog" style="width: 1080px; overflow-y: overaly; margin-left: 95px;">
         <div class="modal-dialog">
             <div class="modal-content" style="width: 1060px;">

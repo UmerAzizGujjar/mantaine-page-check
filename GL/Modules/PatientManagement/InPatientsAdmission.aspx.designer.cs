@@ -4137,24 +4137,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtG_Relationship;
 
         /// <summary>
-        /// LblG_Address control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblG_Address;
-
-        /// <summary>
-        /// txtG_Address control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtG_Address;
-
-        /// <summary>
         /// LblG_CNIC control.
         /// </summary>
         /// <remarks>
@@ -4189,6 +4171,24 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtG_Phone;
+
+        /// <summary>
+        /// LblG_Address control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LblG_Address;
+
+        /// <summary>
+        /// txtG_Address control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtG_Address;
 
         /// <summary>
         /// lblNextOfKinMessage control.
