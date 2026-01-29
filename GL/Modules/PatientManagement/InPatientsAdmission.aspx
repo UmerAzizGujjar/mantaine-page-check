@@ -194,9 +194,8 @@
             });
 
             var existingPatientId = $('#<%= txtPatient_ID.ClientID %>').val();
-    if (existingPatientId && existingPatientId !== "(New)") {
-        $('#<%= hdfPatient_ID.ClientID %>').val(existingPatientId);
-    }tientId);
+            if (existingPatientId && existingPatientId !== "(New)") {
+                $('#<%= hdfPatient_ID.ClientID %>').val(existingPatientId);
             }
 
         });
@@ -4967,60 +4966,60 @@
 
             var Issuance_Of = document.getElementById('<%= ddlIssuance_Of.ClientID%>').value;
 
-            var wardDiv = document.getElementById('<%= ddlWard_No.ClientID%>').closest('.col-lg-3');
-            var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
-            var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
-            var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
+           var wardDiv = document.getElementById('<%= ddlWard_No.ClientID%>').closest('.col-lg-3');
+           var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
+           var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
+           var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
 
-            if (Issuance_Of == 0) {
-                document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
-               document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
-               document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
-
-               document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
-               document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
-               document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
-
-               document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
-               document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
-
-               document.getElementById('tblWards').style.display = "none";
-               document.getElementById('tblRooms').style.display = "none";
-
-               wardDiv.style.display = "none";
-               bedDiv.style.display = "none";
-               roomDiv.style.display = "none";
-               roomTypeDiv.style.display = "none";
-           }
-           else if (Issuance_Of == '001') {
+           if (Issuance_Of == 0) {
                document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
-               document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
+        document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
 
-               document.getElementById('<%= ddlWard_No.ClientID%>').disabled = false;
-               document.getElementById('<%= txtBed_No.ClientID%>').disabled = true;
-               document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
-               document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
+        document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
+        document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
 
-               document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
-               document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroudWhite";
+        document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
+        document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
 
-               document.getElementById('tblWards').style.display = "table";
-               document.getElementById('tblRooms').style.display = "none";
+        document.getElementById('tblWards').style.display = "none";
+        document.getElementById('tblRooms').style.display = "none";
 
-               wardDiv.style.display = "block";
-               bedDiv.style.display = "block";
-               roomDiv.style.display = "none";
-               roomTypeDiv.style.display = "none";
-           }
-           else {
-               document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
+        wardDiv.style.display = "none";
+        bedDiv.style.display = "none";
+        roomDiv.style.display = "none";
+        roomTypeDiv.style.display = "none";
+    }
+    else if (Issuance_Of == '001') {
+        document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
 
-               document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
-               document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = false;
-               document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
+        document.getElementById('<%= ddlWard_No.ClientID%>').disabled = false;
+        document.getElementById('<%= txtBed_No.ClientID%>').disabled = true;
+        document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
 
-               document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroudWhite";
-               document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
+        document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
+        document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroudWhite";
+
+        document.getElementById('tblWards').style.display = "table";
+        document.getElementById('tblRooms').style.display = "none";
+
+        wardDiv.style.display = "block";
+        bedDiv.style.display = "block";
+        roomDiv.style.display = "none";
+        roomTypeDiv.style.display = "none";
+    }
+    else {
+        document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
+
+        document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
+        document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = false;
+        document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
+
+        document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroudWhite";
+        document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
 
                 document.getElementById('tblWards').style.display = "none";
                 document.getElementById('tblRooms').style.display = "table";
@@ -5619,7 +5618,7 @@
                 data: "{'PatientID':" + Patient_ID + "}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: OnSuccess,
+                 success: OnSuccess,
                 failure: function (response) {
                     alert(response.d);
                 }
@@ -6087,12 +6086,10 @@
             cell.innerHTML = actions;
         }
 
-        debugger;
+
         function SaveNextOfKinDetails() {
-            debugger;
             var patientId = $('#<%= hdfPatient_ID.ClientID %>').val();
 
-            // If hdfPatient_ID is invalid, try getting from txtPatient_ID
             if (!patientId || patientId === "(New)" || patientId.trim() === "") {
                 patientId = $('#<%= txtPatient_ID.ClientID %>').val();
             }
@@ -6117,6 +6114,7 @@
 
             showNextOfKinMessage("Saving Next of Kin details...", "info");
 
+            var success = false;
             $.ajax({
                 type: "POST",
                 url: "InPatientsAdmission.aspx/SaveNextOfKin",
@@ -6131,27 +6129,34 @@
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
+                async: false,
                 success: function (response) {
                     if (response.d === "success") {
                         showNextOfKinMessage("Next of Kin details saved successfully!", "success");
+                        success = true;
                     } else {
                         showNextOfKinMessage("Warning: " + response.d, "warning");
+                        success = true;
                     }
                 },
-                error: function (xhr, status, error) {
-                    console.error("Error saving Next of Kin:", error);
+                error: function (error) {
+                    console.error("Error saving Next of Kin: ", error);
                     showNextOfKinMessage("Warning: Could not save Next of Kin details", "warning");
+                    success = true;
                 }
             });
+
+            return success;
         }
 
 
         function showNextOfKinMessage(message, type) {
             var $msg = $('#<%= lblNextOfKinMessage.ClientID %>');
-            if ($msg.length === 0) return;
+            if ($msg.length === 0) return; 
 
             $msg.text(message);
             $msg.show();
+
             $msg.removeAttr('style');
             $msg.css({
                 'display': 'block',
@@ -6190,7 +6195,7 @@
             if (type === "success" || type === "info") {
                 setTimeout(function () {
                     if ($('#<%= lblNextOfKinMessage.ClientID %>').text() === message) {
-                        $('#<%= lblNextOfKinMessage.ClientID %>').fadeOut();
+                $('#<%= lblNextOfKinMessage.ClientID %>').fadeOut();
                     }
                 }, 5000);
             }
@@ -6234,7 +6239,6 @@
         }
     </style>
 </asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="col-lg-8 col-md-10 col-sm-12">
         <div class="row">
@@ -6512,11 +6516,10 @@
             <div>
                 <div id="tabs">
                     <ul>
-                        <li><a href="#Tab-1">Admission Details</a></li>                      
-                        <li><a href="#Tab-NextOfKin">Next of Kin</a></li>                    
+                        <li><a href="#Tab-1">Admission Details</a></li>
+                        <li><a href="#Tab-NextOfKin">Next to Kin</a></li>
                     </ul>
 
-                    
                     <div id="Tab-1">
                         <div id="OtherDetails">
                             <div class="row">
@@ -6954,7 +6957,6 @@
                         </div>
                     </div>
 
-                    
                     
                     <div id="Tab-2" style="display:none;">
                         <table>
@@ -9241,46 +9243,45 @@
                         </table>
                     </div>
 
-                    <div id="Tab-NextOfKin" style="display:none;">
-<div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-8">
-        <h2>Next of Kin Details :</h2>
-    </div>
-</div>
-<div class="row mt">
-    <div class="col-lg-9 col-md-9 col-sm-9">
-        <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <asp:Label ID="LblGuardianName" runat="server" Text="Guardian Name"></asp:Label>
-                <asp:TextBox ID="txtGuardianName" runat="server" placeholder="Enter full name"></asp:TextBox>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <asp:Label ID="LblG_Relationship" runat="server" Text="Relationship"></asp:Label>
-                <asp:TextBox ID="txtG_Relationship" runat="server" placeholder="e.g., Father, Mother, Spouse"></asp:TextBox>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <asp:Label ID="LblG_Address" runat="server" Text="Address"></asp:Label>
-                <asp:TextBox ID="txtG_Address" runat="server" TextMode="MultiLine" Rows="2" Style="width:100%" placeholder="Complete address"></asp:TextBox>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <asp:Label ID="LblG_CNIC" runat="server" Text="CNIC"></asp:Label>
-                <asp:TextBox ID="txtG_CNIC" runat="server" placeholder="XXXXX-XXXXXXX-X" MaxLength="15"></asp:TextBox>
-            </div>
-        </div>
-        <div class="row mt">
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <asp:Label ID="LblG_Phone" runat="server" Text="Phone Number"></asp:Label>
-                <asp:TextBox ID="txtG_Phone" runat="server" placeholder="03XX-XXXXXXX" MaxLength="15"></asp:TextBox>
-            </div>
-        </div>
-        <div class="row mt">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <asp:Label ID="lblNextOfKinMessage" runat="server" Style="font-weight: bold; padding: 10px; border-radius: 4px; display: none;"></asp:Label>
-            </div>
+     <div id="Tab-NextOfKin" style="display:none;">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-8">
+            <h2>Next of Kin Details :</h2>
         </div>
     </div>
-</div>
+    <div class="row mt">
+        <div class="col-lg-9 col-md-9 col-sm-9">
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <asp:Label ID="LblGuardianName" runat="server" Text="Guardian Name"></asp:Label>
+                    <asp:TextBox ID="txtGuardianName" runat="server" placeholder="Enter full name"></asp:TextBox>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <asp:Label ID="LblG_Relationship" runat="server" Text="Relationship"></asp:Label>
+                    <asp:TextBox ID="txtG_Relationship" runat="server" placeholder="e.g., Father, Mother, Spouse"></asp:TextBox>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <asp:Label ID="LblG_Address" runat="server" Text="Address"></asp:Label>
+                    <asp:TextBox ID="txtG_Address" runat="server" TextMode="MultiLine" Rows="2" Style="width:100%" placeholder="Complete address"></asp:TextBox>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <asp:Label ID="LblG_CNIC" runat="server" Text="CNIC"></asp:Label>
+                    <asp:TextBox ID="txtG_CNIC" runat="server" placeholder="XXXXX-XXXXXXX-X" MaxLength="15"></asp:TextBox>
+                </div>
             </div>
+            <div class="row mt">
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <asp:Label ID="LblG_Phone" runat="server" Text="Phone Number"></asp:Label>
+                    <asp:TextBox ID="txtG_Phone" runat="server" placeholder="03XX-XXXXXXX" MaxLength="15"></asp:TextBox>
+                </div>
+            </div>
+            <div class="row mt">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <asp:Label ID="lblNextOfKinMessage" runat="server" Style="font-weight: bold; padding: 10px; border-radius: 4px; display: none;"></asp:Label>
+                </div>
+            </div>
+        </div>
+    </div>
                 </div>
                 <div>
                     
@@ -12018,7 +12019,7 @@
                 </div>
             </div>
             <asp:HiddenField ID="queryString" runat="server"/>
-             <asp:HiddenField ID="hdnGuardianId" runat="server" Value="0" />
+            <asp:HiddenField ID="hdnGuardianId" runat="server" Value="0" />
         </div>
 
               
