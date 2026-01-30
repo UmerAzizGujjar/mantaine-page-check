@@ -352,7 +352,7 @@ namespace PMS.Modules.Dashboards
                                     AdmissionDate = ip.Admission_Date,
                                     Department = _dbContext.GetDataValueName("Patient Main Category", ip.Department) ?? "N/A",
                                     WardType = wd != null ? wd.Ward_Type : "N/A",
-                                    WardNo = wd != null ? (wd.Ward_No.HasValue ? wd.Ward_No.Value.ToString() : "N/A") : "N/A",
+                                    WardNo = wd != null && !string.IsNullOrWhiteSpace(wd.Ward_No) ? wd.Ward_No: "N/A",
                                     RoomNo = r != null ? r.Room_No : "N/A",
                                     BedNo = wa != null ? (wa.Bed_No_Assigned.HasValue ? wa.Bed_No_Assigned.Value.ToString() : "N/A") : "N/A",
                                     AttendingDoctor = wardDoc != null ? wardDoc.Emp_Name : (emp != null ? emp.Emp_Name : "N/A"),

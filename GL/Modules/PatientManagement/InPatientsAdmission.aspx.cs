@@ -387,7 +387,7 @@ namespace PMS
                 
                 #endregion
 
-                if (qry != null)
+                if (qry != null) 
                 {
                     //*************** Admission Tab*************************//       
                     hdfPatient_ID.Value = qry.Patient_ID.ToString();
@@ -470,8 +470,25 @@ namespace PMS
                     {
                         ddlPanelCompany.SelectedValue = string.IsNullOrEmpty(qry.Panel_Company) ? "0" : qry.Panel_Company;
                     }
+                    if (qry.Guardian_Id > 0)
+                    {
+                        hdnGuardianId.Value = qry.Guardian_Id.ToString();
+                        txtGuardianName.Text = qry.G_Name ?? string.Empty;
+                        txtG_Relationship.Text = qry.G_RelationShip ?? string.Empty;
+                        txtG_Address.Text = qry.G_Address ?? string.Empty;
+                        txtG_CNIC.Text = qry.G_CNIC ?? string.Empty;
+                        txtG_Phone.Text = qry.G_Phone ?? string.Empty;
+                    }
+                    else
+                    {
+                        hdnGuardianId.Value = "0";
+                        txtGuardianName.Text = string.Empty;
+                        txtG_Relationship.Text = string.Empty;
+                        txtG_Address.Text = string.Empty;
+                        txtG_CNIC.Text = string.Empty;
+                        txtG_Phone.Text = string.Empty;
+                    }
 
-                   
 
                     txtHealth_Complaints.Text = qry.Health_Complaints;
                     if (qry.Expected_Discharge_Date != null)
@@ -5355,5 +5372,79 @@ namespace PMS
             }
             return pts;
         }
+
+        [WebMethod]
+        public static string SaveNextOfKin(string patientId, string guardianId, string guardianName,string relationship, string address, string cnic, string phone)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(patientId) || patientId == "(New)")
+                {
+                    return "Patient admission must be saved before adding Next of Kin details.";
+                }
+
+                int parsedGuardianId;
+                bool isUpdate = int.TryParse(guardianId, out parsedGuardianId) && parsedGuardianId > 0;
+
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    Next_To_Kin kinRecord;
+
+                    if (isUpdate)
+                    {
+                        kinRecord = db.Next_To_Kins.FirstOrDefault(k => k.Guardian_Id == parsedGuardianId);
+                        if (kinRecord == null)
+                        {
+                            return "Next of Kin record not found for update.";
+                        }
+
+                        kinRecord.G_Name = guardianName;
+                        kinRecord.G_RelationShip = relationship;
+                        kinRecord.G_Address = address;
+                        kinRecord.G_CNIC = cnic;
+                        kinRecord.G_Phone = phone;
+                        kinRecord.Updated_By = AppConfig.UserID;
+                        kinRecord.Updated_Date = DateTime.Now;
+                    }
+                    else
+                    {
+                        var existing = db.Next_To_Kins.FirstOrDefault(k => k.Patient_Id == patientId);
+                        if (existing != null)
+                        {
+                            existing.G_Name = guardianName;
+                            existing.G_RelationShip = relationship;
+                            existing.G_Address = address;
+                            existing.G_CNIC = cnic;
+                            existing.G_Phone = phone;
+                            existing.Updated_By = AppConfig.UserID;
+                            existing.Updated_Date = DateTime.Now;
+                            kinRecord = existing;
+                        }
+                        else
+                        {
+                            kinRecord = new Next_To_Kin
+                            {
+                                Patient_Id = patientId,
+                                G_Name = guardianName,
+                                G_RelationShip = relationship,
+                                G_Address = address,
+                                G_CNIC = cnic,
+                                G_Phone = phone,
+                                Created_By = AppConfig.UserID,
+                                Created_Date = DateTime.Now
+                            };
+                            db.Next_To_Kins.InsertOnSubmit(kinRecord);
+                        }
+                    }
+
+                    db.SubmitChanges();
+                    return "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error saving Next of Kin details: " + ex.Message;
+            }
+        }       
     }
 }

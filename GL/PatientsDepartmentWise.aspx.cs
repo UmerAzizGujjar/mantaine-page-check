@@ -5579,6 +5579,7 @@ namespace PMS
                     lblMultiSelect.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+                    tr1MedicalSubsidy.Visible = false;
                     ddlMedicalSubsidy.Visible = false;
 
                     object valusets;
