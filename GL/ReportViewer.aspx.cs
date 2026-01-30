@@ -4304,6 +4304,27 @@ namespace PMS
                     throw;
                 }
             }
+            else if (reportName == "InpatientAdmissionSlip")
+            {
+                try
+                {
+                    reportPath += "InPatient/rpt_In_Patient_ID_AdmissionSlip.rpt";
+                    rd.Load(reportPath);
+                    string in_pat = Request.QueryString["In_Patient_ID"];
+                    int ipd = Convert.ToInt32(in_pat);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+                    rd.SetParameterValue("@In_Patient_ID", ipd);
+                    
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
             else if (reportName == "Certificate_In_Patient")
             {
                 string rptFileName = "InPatient/rptDeath_CertifcateIn_Patient.rpt";
