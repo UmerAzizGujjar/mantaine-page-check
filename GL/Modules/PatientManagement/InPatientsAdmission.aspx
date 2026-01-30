@@ -8,7 +8,7 @@
         localStorage.IsDischarge = 0;
         $(document).ready(function () {
             getprvpat_id();
-          
+
             $('#btnsaveprint').click(function () {
 
                 $('#btnsaveprint').attr('disabled', true);
@@ -29,7 +29,7 @@
 
             });
             debugger;
-            
+
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_txtCNIC'),
                 format: '_____-_______-_',
@@ -59,6 +59,16 @@
                 elm: document.getElementById('ctl00_MainContent_txtAcc'),
                 format: '_/15',
                 separator: '/'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtG_CNIC'),
+                format: '_____-_______-_',
+                separator: '-'
+            });
+            MaskedInput({
+                elm: document.getElementById('ctl00_MainContent_txtG_Phone'),
+                format: '____-_______',
+                separator: '-'
             });
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").select2({
                 placeholder: "Select a doctor",
@@ -192,6 +202,12 @@
                 var cursorPosition = 3;
                 phoneInput.setSelectionRange(cursorPosition, cursorPosition);
             });
+
+            var existingPatientId = $('#<%= txtPatient_ID.ClientID %>').val();
+            if (existingPatientId && existingPatientId !== "(New)") {
+                $('#<%= hdfPatient_ID.ClientID %>').val(existingPatientId);
+            }
+
         });
         function saveprint() {
             debugger;
@@ -1293,7 +1309,7 @@
 
 
             var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
-          
+
             var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
             var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
             var txtHealth_Complaints = $('#ctl00_MainContent_txtHealth_Complaints').val();
@@ -1302,7 +1318,7 @@
             var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
             var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
             var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-           
+
             //if (PatientDiscountType == "10") {
             //    if (PanelCompany == "0") {
             //        Swal.fire({
@@ -1843,7 +1859,7 @@
             var CNIC = $("#ctl00_MainContent_txtCNIC").val();
             var RelationWithDeceased = $("#ctl00_MainContent_txtRelationWithDeceased").val();
             var CMO_Police = $("#ctl00_MainContent_txtCMO_Police").val();
-          
+
 
             var ID = '<%= Request.QueryString["ID"]%>';
             PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date, ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory,
@@ -3018,7 +3034,7 @@
                 var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
                 var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
                 var DichargChk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-         
+
                 PageMethods.SaveWardInformation(btnsave, PatID, InPatID, ddlWard_No, txtBed_No, txtExpected_Discharge_Date, ddlDoctor, DichargChk, function (response) {
 
                     debugger;
@@ -3445,7 +3461,9 @@
             $("#btnsaveprint").attr("disabled", true);
 
             $('#loadingimage').show();
+            SaveNextOfKinDetails();
             CheckExistInOutPatient();
+
         }
 
         function LoadHistory() {
@@ -3612,8 +3630,8 @@
         function GoToAdvance() {
             debugger;
             var Reg_Patient_ID = $('#<%= txtPatient_ID.ClientID%>').val();
-    
-            window.open("../Billing/AddNewAdvance.aspx?Reg_ID=" + Reg_Patient_ID  );
+
+            window.open("../Billing/AddNewAdvance.aspx?Reg_ID=" + Reg_Patient_ID);
         }
 
         function LoadHistoryTabHistory(PatientID) {
@@ -4613,7 +4631,7 @@
 
             });
             <%if (Request.QueryString["ID"] != null)
-              {%>
+        {%>
 
             $('#btnSave').val("Update");
             $('#saveprintbtn').hide();
@@ -4952,19 +4970,19 @@
             });
         }
 
-       function chkIssuance_Of_Select() {
-    $('#tblWards tbody tr').remove();
-    $('#tblRooms tbody tr').remove();
+        function chkIssuance_Of_Select() {
+            $('#tblWards tbody tr').remove();
+            $('#tblRooms tbody tr').remove();
 
-    var Issuance_Of = document.getElementById('<%= ddlIssuance_Of.ClientID%>').value;
+            var Issuance_Of = document.getElementById('<%= ddlIssuance_Of.ClientID%>').value;
 
-    var wardDiv = document.getElementById('<%= ddlWard_No.ClientID%>').closest('.col-lg-3');
-    var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
-    var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
-    var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
+           var wardDiv = document.getElementById('<%= ddlWard_No.ClientID%>').closest('.col-lg-3');
+           var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
+           var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
+           var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
 
-    if (Issuance_Of == 0) {
-        document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
+           if (Issuance_Of == 0) {
+               document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
         document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
         document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
 
@@ -5013,15 +5031,15 @@
         document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroudWhite";
         document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
 
-        document.getElementById('tblWards').style.display = "none";
-        document.getElementById('tblRooms').style.display = "table";
+                document.getElementById('tblWards').style.display = "none";
+                document.getElementById('tblRooms').style.display = "table";
 
-        wardDiv.style.display = "none";
-        bedDiv.style.display = "block";
-        roomDiv.style.display = "block";
-        roomTypeDiv.style.display = "block";
-    }
-}
+                wardDiv.style.display = "none";
+                bedDiv.style.display = "block";
+                roomDiv.style.display = "block";
+                roomTypeDiv.style.display = "block";
+            }
+        }
 
         function chkrefer_Of_Select() {
             $('#tblBed tbody tr').remove();
@@ -5030,43 +5048,43 @@
             var Issuance_Of = document.getElementById('<%= ddlReferTo.ClientID%>').value;
             if (Issuance_Of == 0) {
                 document.getElementById('<%= ddlroom.ClientID%>').value = 0;
-            document.getElementById('<%= ddlRoomType.ClientID%>').value = 0;
-            document.getElementById('<%= ddlwards.ClientID%>').value = 0;
+                document.getElementById('<%= ddlRoomType.ClientID%>').value = 0;
+                document.getElementById('<%= ddlwards.ClientID%>').value = 0;
 
 
-            document.getElementById('<%= ddlroom.ClientID%>').disabled = true;
-            document.getElementById('<%= ddlRoomType.ClientID%>').disabled = true;
-            document.getElementById('<%= ddlwards.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlroom.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlRoomType.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlwards.ClientID%>').disabled = true;
 
 
-            document.getElementById('<%= ddlroom.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlroom.ClientID%>').className = "dropdownBackgroud";
 
-            document.getElementById('<%= ddlwards.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlwards.ClientID%>').className = "dropdownBackgroud";
 
 
-        }
-        else if (Issuance_Of == '001') {
+            }
+            else if (Issuance_Of == '001') {
 
-            document.getElementById('<%= ddlroom.ClientID%>').value = 0;
-            document.getElementById('<%= ddlRoomType.ClientID%>').value = 0;
-            document.getElementById('<%= ddlwards.ClientID%>').disabled = false;
-            document.getElementById('<%= txtBedno.ClientID%>').disabled = true;
-            document.getElementById('<%= ddlroom.ClientID%>').disabled = true;
-            document.getElementById('<%= ddlRoomType.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlroom.ClientID%>').value = 0;
+                document.getElementById('<%= ddlRoomType.ClientID%>').value = 0;
+                document.getElementById('<%= ddlwards.ClientID%>').disabled = false;
+                document.getElementById('<%= txtBedno.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlroom.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlRoomType.ClientID%>').disabled = true;
 
-            document.getElementById('<%= ddlroom.ClientID%>').className = "dropdownBackgroud";
-            document.getElementById('<%= ddlwards.ClientID%>').className = "dropdownBackgroudWhite";
-        }
-        else {
+                document.getElementById('<%= ddlroom.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlwards.ClientID%>').className = "dropdownBackgroudWhite";
+            }
+            else {
 
-            document.getElementById('<%= ddlwards.ClientID%>').value = 0;
+                document.getElementById('<%= ddlwards.ClientID%>').value = 0;
 
-            document.getElementById('<%= ddlwards.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlwards.ClientID%>').disabled = true;
 
-            document.getElementById('<%= ddlRoomType.ClientID%>').disabled = false;
-            document.getElementById('<%= ddlroom.ClientID%>').disabled = true;
-            document.getElementById('<%= ddlroom.ClientID%>').className = "dropdownBackgroudWhite";
-            document.getElementById('<%= ddlwards.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlRoomType.ClientID%>').disabled = false;
+                document.getElementById('<%= ddlroom.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlroom.ClientID%>').className = "dropdownBackgroudWhite";
+                document.getElementById('<%= ddlwards.ClientID%>').className = "dropdownBackgroud";
             }
         }
         function PendingAdmisionPatients() {
@@ -5200,7 +5218,7 @@
         function ChangePanel() {
             debugger;
             var type = $('#ctl00_MainContent_ddlPatientType').val();
-            
+
             $("#ctl00_MainContent_panelshow").hide();
 
             if (type === "10") {
@@ -5219,7 +5237,7 @@
                 $('#ctl00_MainContent_lblPanelCompany').hide();
                 $('#ctl00_MainContent_ddlPanelCompany').hide();
                 $("#ctl00_MainContent_lblCardHolderName").hide();
-              
+
                 $("#ctl00_MainContent_lblInsuranceCardNo").hide();
                 $("#ctl00_MainContent_txtInsuranceCardNo").hide();
                 $("#ctl00_MainContent_lblPolicyHolderName").hide();
@@ -5251,30 +5269,30 @@
                 $("#ctl00_MainContent_lblSehatHolder").hide();
                 $("#ctl00_MainContent_txtSehatHolder").hide();
             }
-          
+
         }
         var originalFee;
-            function Calc_Discount() {
-                debugger;
+        function Calc_Discount() {
+            debugger;
 
-                var disc_perc = $('#ctl00_MainContent_txtDiscount').val();
-                var currentFee = $('#ctl00_MainContent_txtadmissionfee').val();
-              
+            var disc_perc = $('#ctl00_MainContent_txtDiscount').val();
+            var currentFee = $('#ctl00_MainContent_txtadmissionfee').val();
 
-                if (!originalFee) {
-                    originalFee = Number(currentFee);
-                }
 
-                if (disc_perc && !isNaN(disc_perc) && originalFee && !isNaN(originalFee)) {
-
-                    var discountAmount = (Number(disc_perc) / 100) * originalFee;
-                    var discountedFee = originalFee - discountAmount;
-
-                    $('#ctl00_MainContent_txtadmissionfee').val(discountedFee.toFixed(0));
-                } else {
-                    $('#ctl00_MainContent_txtadmissionfee').val(originalFee.toFixed(0));
-                }
+            if (!originalFee) {
+                originalFee = Number(currentFee);
             }
+
+            if (disc_perc && !isNaN(disc_perc) && originalFee && !isNaN(originalFee)) {
+
+                var discountAmount = (Number(disc_perc) / 100) * originalFee;
+                var discountedFee = originalFee - discountAmount;
+
+                $('#ctl00_MainContent_txtadmissionfee').val(discountedFee.toFixed(0));
+            } else {
+                $('#ctl00_MainContent_txtadmissionfee').val(originalFee.toFixed(0));
+            }
+        }
 
 
         function Selectroom(anchor) {
@@ -5559,7 +5577,7 @@
             });
         }
 
-        
+
         function loadReferenceInformation() {
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID%>").val();
             $.ajax({
@@ -5610,7 +5628,7 @@
                 data: "{'PatientID':" + Patient_ID + "}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: OnSuccess,
+                 success: OnSuccess,
                 failure: function (response) {
                     alert(response.d);
                 }
@@ -5656,7 +5674,7 @@
 
                 $('#<%= vLbl_Patient_Type.ClientID%>').text(data.d.PatientType);
 
-                
+
                 $('#ctl00_MainContent_txtadvamount').val(data.d.AdvanceAmount);
                 $('#<%= vLbl_Patient_AdmitCatagory.ClientID%>').text(data.d.Type);
 
@@ -5819,7 +5837,7 @@
         debugger;
         function fillmrnos() {
             debugger;
-            var data = {}; 
+            var data = {};
             $.ajax({
                 type: "POST",
                 url: "InPatientsAdmission.aspx/Getmr_no",
@@ -6077,6 +6095,122 @@
             actions += '<a style="color:#FDC303;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick="EditPatientDetail(' + Reg_Patient_ID + ')"><i class="fa fa-pencil-square-o"></i></a>';
             cell.innerHTML = actions;
         }
+
+
+        function SaveNextOfKinDetails() {
+            var patientId = $('#<%= hdfPatient_ID.ClientID %>').val();
+
+            if (!patientId || patientId === "(New)" || patientId.trim() === "") {
+                patientId = $('#<%= txtPatient_ID.ClientID %>').val();
+            }
+
+            if (!patientId || patientId === "(New)" || patientId.trim() === "") {
+                console.log("Patient ID invalid, returning early");
+                showNextOfKinMessage("Please select a patient first.", "warning");
+                return;
+            }
+
+            var guardianName = $('#<%= txtGuardianName.ClientID %>').val().trim();
+            var relationship = $('#<%= txtG_Relationship.ClientID %>').val().trim();
+            var address = $('#<%= txtG_Address.ClientID %>').val().trim();
+            var cnic = $('#<%= txtG_CNIC.ClientID %>').val().trim();
+            var phone = $('#<%= txtG_Phone.ClientID %>').val().trim();
+            var guardianId = $('#<%= hdnGuardianId.ClientID %>').val();
+
+            if (!guardianName && !relationship && !address && !cnic && !phone) {
+                console.log("All fields empty, skipping save");
+                return;
+            }
+
+            showNextOfKinMessage("Saving Next of Kin details...", "info");
+
+            var success = false;
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/SaveNextOfKin",
+                data: JSON.stringify({
+                    patientId: patientId,
+                    guardianId: guardianId,
+                    guardianName: guardianName,
+                    relationship: relationship,
+                    address: address,
+                    cnic: cnic,
+                    phone: phone
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d === "success") {
+                        showNextOfKinMessage("Next of Kin details saved successfully!", "success");
+                        success = true;
+                    } else {
+                        showNextOfKinMessage("Warning: " + response.d, "warning");
+                        success = true;
+                    }
+                },
+                error: function (error) {
+                    console.error("Error saving Next of Kin: ", error);
+                    showNextOfKinMessage("Warning: Could not save Next of Kin details", "warning");
+                    success = true;
+                }
+            });
+
+            return success;
+        }
+
+
+        function showNextOfKinMessage(message, type) {
+            var $msg = $('#<%= lblNextOfKinMessage.ClientID %>');
+            if ($msg.length === 0) return; 
+
+            $msg.text(message);
+            $msg.show();
+
+            $msg.removeAttr('style');
+            $msg.css({
+                'display': 'block',
+                'font-weight': 'bold',
+                'padding': '10px',
+                'border-radius': '4px',
+                'margin-top': '10px'
+            });
+
+            if (type === "success") {
+                $msg.css({
+                    'background-color': '#d4edda',
+                    'color': '#155724',
+                    'border': '1px solid #c3e6cb'
+                });
+            } else if (type === "error") {
+                $msg.css({
+                    'background-color': '#f8d7da',
+                    'color': '#721c24',
+                    'border': '1px solid #f5c6cb'
+                });
+            } else if (type === "warning") {
+                $msg.css({
+                    'background-color': '#fff3cd',
+                    'color': '#856404',
+                    'border': '1px solid #ffeaa7'
+                });
+            } else if (type === "info") {
+                $msg.css({
+                    'background-color': '#d1ecf1',
+                    'color': '#0c5460',
+                    'border': '1px solid #bee5eb'
+                });
+            }
+
+            if (type === "success" || type === "info") {
+                setTimeout(function () {
+                    if ($('#<%= lblNextOfKinMessage.ClientID %>').text() === message) {
+                $('#<%= lblNextOfKinMessage.ClientID %>').fadeOut();
+                    }
+                }, 5000);
+            }
+        }
+
 
 
     </script>
@@ -6392,7 +6526,8 @@
             <div>
                 <div id="tabs">
                     <ul>
-                        <li><a href="#Tab-1">Admission Details</a></li>                      
+                        <li><a href="#Tab-1">Admission Details</a></li>
+                        <li><a href="#Tab-NextOfKin">Next to Kin</a></li>
                     </ul>
 
                     <div id="Tab-1">
@@ -6527,26 +6662,7 @@
                                             <asp:TextBox ID="txtExpected_Discharge_Date" runat="server"></asp:TextBox>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top:1%">
-                                        <div class="col-lg-2 col-md-4 col-sm-6" id="saveprintbtn">
-                                            <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-4 col-sm-6">
-                                            <input type="button" class="btn-primry" onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-4 col-sm-6">
-                                            <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-4 col-sm-6">
-                                            <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-4 col-sm-6">
-                                            <input type="button" class="btn btn-yellow" id="btnAdvance" value="Advance " onclick="GoToAdvance()" />
-                                        </div>
-                                        <div class="col-lg-2 col-md-2 col-sm-2">
-                                            <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                                  <div class="col-lg-3 co-md-4 col-sm-6" style="margin-top:-4%" >                                                                       
                                     <h2> Today Admission : </h2>
@@ -6831,6 +6947,7 @@
 
                         </div>
                     </div>
+
                     
                     <div id="Tab-2" style="display:none;">
                         <table>
@@ -9116,6 +9233,44 @@
                             </tr>
                         </table>
                     </div>
+
+     <div id="Tab-NextOfKin" style="display:none;">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-8">
+            <h2>Next of Kin Details :</h2>
+        </div>
+    </div>
+    <div class="row mt">
+        <div class="col-lg-12 col-md-9 col-sm-9">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <asp:Label ID="LblGuardianName" runat="server" Text="Guardian Name"></asp:Label>
+                    <asp:TextBox ID="txtGuardianName" runat="server" placeholder="Enter full name"></asp:TextBox>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <asp:Label ID="LblG_Relationship" runat="server" Text="Relationship"></asp:Label>
+                    <asp:TextBox ID="txtG_Relationship" runat="server" placeholder="e.g., Father, Mother, Spouse"></asp:TextBox>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <asp:Label ID="LblG_CNIC" runat="server" Text="CNIC"></asp:Label>
+                    <asp:TextBox ID="txtG_CNIC" runat="server" placeholder="XXXXX-XXXXXXX-X" MaxLength="15"></asp:TextBox>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <asp:Label ID="LblG_Phone" runat="server" Text="Phone Number"></asp:Label>
+                    <asp:TextBox ID="txtG_Phone" runat="server" placeholder="03XX-XXXXXXX" MaxLength="15"></asp:TextBox>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <asp:Label ID="LblG_Address" runat="server" Text="Address"></asp:Label>
+                    <asp:TextBox ID="txtG_Address" runat="server" TextMode="MultiLine" Rows="1" Style="width:100%" placeholder="Complete address"></asp:TextBox>
+                </div>                
+            </div>
+            <div class="row mt">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <asp:Label ID="lblNextOfKinMessage" runat="server" Style="font-weight: bold; padding: 10px; border-radius: 4px; display: none;"></asp:Label>
+                </div>
+            </div>
+        </div>
+    </div>
                 </div>
                 <div>
                     
@@ -9349,7 +9504,30 @@
         </div>
     </div>
 
-
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12">
+            <div class="row" style="margin-top: 1%">
+                <div class="col-lg-2 col-md-4 col-sm-6" id="saveprintbtn">
+                    <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn-primry" onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-yellow" id="btnAdvance" value="Advance " onclick="GoToAdvance()" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
+                </div>
+            </div>
+        </div>
+    </div>
      <div id="PsychiatryModel" class="modal fade" role="dialog" style="width: 1080px; overflow-y: overaly; margin-left: 95px;">
         <div class="modal-dialog">
             <div class="modal-content" style="width: 1060px;">
@@ -11853,6 +12031,7 @@
                 </div>
             </div>
             <asp:HiddenField ID="queryString" runat="server"/>
+            <asp:HiddenField ID="hdnGuardianId" runat="server" Value="0" />
         </div>
 
               
