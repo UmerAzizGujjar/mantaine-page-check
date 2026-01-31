@@ -335,6 +335,7 @@
     <Content Include="Modules\Administrator\AssetSelection.aspx" />
     <Content Include="Modules\Administrator\DoctorPayableView.aspx" />
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
+    <Content Include="Modules\PatientManagement\DialysisForm.aspx" />
     <Content Include="Modules\PatientManagement\NewEmergencyCase.aspx" />
     <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OldOutPatient.aspx" />
@@ -26766,6 +26767,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\Doctor_Payable.aspx.designer.cs">
       <DependentUpon>Doctor_Payable.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\DialysisForm.aspx.cs">
+      <DependentUpon>DialysisForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\DialysisForm.aspx.designer.cs">
+      <DependentUpon>DialysisForm.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\NewEmergencyCase.aspx.cs">
       <DependentUpon>NewEmergencyCase.aspx</DependentUpon>
