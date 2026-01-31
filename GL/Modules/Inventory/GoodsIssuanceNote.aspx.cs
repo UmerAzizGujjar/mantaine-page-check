@@ -170,10 +170,29 @@ namespace PMS.Inventory
             return (new JavaScriptSerializer()).Serialize(detail);
         }
         [WebMethod]
+        public static decimal GetCGSRate(string itemCode, string batchNo, string wareHouse)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var item = db.INV_Items.FirstOrDefault(i => i.Item_Code == itemCode);
+                if (item == null)
+                    return 0;
+
+                int itemId = item.Item_ID;
+
+                // Get correct batch based on warehouse
+                //string effectiveBatch = (wareHouse == "008") ? batchNo : "0";
+
+                decimal? rate = db.GetCGSAmounts(itemId, wareHouse, batchNo);
+
+                return rate ?? 0;
+            }
+        }
+        [WebMethod]
         public static decimal GetStock(string itemCode, string batchNo, string wareHouse)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            int ItemId = Convert.ToInt32(DBClass.getField("select Item_ID from INV_Items where Item_ID='" + itemCode + "'"));
+            int ItemId = Convert.ToInt32(DBClass.getField("select Item_ID from INV_Items where Item_Code='" + itemCode + "'"));
             decimal st = (decimal)db.GetItemBatchStock(ItemId, batchNo, wareHouse);
             return st;
         }

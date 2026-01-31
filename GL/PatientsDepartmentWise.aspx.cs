@@ -114,6 +114,7 @@ namespace PMS
                     trDoctor.Visible = true;
                     tr_Summary.Visible = true;
                     lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
                     lblPatientType.Text = "Operators";
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Main Category");
@@ -2654,6 +2655,27 @@ namespace PMS
                     dpROw.Visible = false;
 
                 }
+                if (this.PageTitle == "DailySaleSummary")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+                }
                 if (this.PageTitle == "Fast_Slow_Non_Moving_Stock")
                 {
                     string x = "Fast Slow Moving Stock Report";
@@ -3314,18 +3336,18 @@ namespace PMS
                     ddlDepartments.Visible = true;
                     ddlDepartments.Items.Clear();
 
-                    // Get Cardiology Tests (Main_Department = '004')
+                    // Get Cardiology Tests (Main_Department = '008')
                     DataTable tests = DBClass.getDataTable(@"
         SELECT Test_ID, Test_Name 
         FROM Lab_Tests 
-        WHERE Main_Department = '004' AND Active = 1
+        WHERE Main_Department = '008' AND Active = 1
     ");
 
                     // Get Group Categories (ValueSet_ID = 70, Division = '004')
                     DataTable groups = DBClass.getDataTable(@"
         SELECT DataValue_Name, DataValue_Description 
         FROM DataValues 
-        WHERE ValueSet_ID = 70 AND Division = '004'
+        WHERE ValueSet_ID = 70 AND Division = '008'
     ");
 
                     // Combine
@@ -4573,7 +4595,7 @@ namespace PMS
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
 
 
-                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 72 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
                     ddlDepartments.DataSource = valusets;
                     ddlDepartments.DataTextField = "DataValue_Description";
                     ddlDepartments.DataValueField = "DataValue_Name";
@@ -5579,6 +5601,7 @@ namespace PMS
                     lblMultiSelect.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+                    tr1MedicalSubsidy.Visible = false;
                     ddlMedicalSubsidy.Visible = false;
 
                     object valusets;
@@ -6523,7 +6546,7 @@ namespace PMS
 
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var tests = from t in db.Lab_Tests
-                        where t.Main_Department == "004" && t.Active == true
+                        where t.Main_Department == "008" && t.Active == true
                         select new { t.Test_ID, Test_Name = t.Test_Name, t.Group_Category };
             List<TestIDsAndGroupCategory> listOfTest = new List<TestIDsAndGroupCategory>();
             int counter = 1;

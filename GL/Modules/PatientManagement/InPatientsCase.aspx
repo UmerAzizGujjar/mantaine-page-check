@@ -591,7 +591,10 @@
             var In_Patient_ID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
             window.open('../../ReportViewer.aspx?ReportName=In_Patient_VitalSigns&ReportTitle=In Patient Vital Sign Print' + '&In_Patient_ID=' + In_Patient_ID);
         }
-
+        function PrintVitals() {
+            var In_Patient_ID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            window.open('../../ReportViewer.aspx?ReportName=PrintIPDVitals&ReportTitle=In Patient Doctor Print' + '&In_Patient_ID=' + In_Patient_ID);
+        }
         function ProgressNote() {
 
             var In_Patient_ID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
@@ -7198,7 +7201,7 @@
                                                 </div>
                                             <div class="col-lg-2 col-md-3 col-sm-4">
                                   <asp:Label ID="lblSaturation" runat="server" Text="O2 Saturation"></asp:Label>
-                                     <asp:TextBox ID="txtSaturation_Oxygen2" runat="server" TabIndex="2"></asp:TextBox>
+                                     <asp:TextBox ID="txtSaturation" runat="server" TabIndex="2"></asp:TextBox>
                                             </div>
                                             <div class="col-lg-1 col-md-3 col-sm-4">
                                                 </div>
@@ -7216,7 +7219,7 @@
                                                <div class="row">
                                                    <div class="col-lg-2 col-md-6 col-sm-4">
                                                        <label></label>
-                                                  <asp:TextBox ID="txtSaturation" runat="server" TabIndex="2"></asp:TextBox>                                                  
+                                                  <asp:TextBox ID="txtSaturation_Oxygen2" runat="server" TabIndex="2"></asp:TextBox>                                                  
                                                    </div>
                                                    <div class="col-lg-1 col-md-6 col-sm-4">
                                                          </div>
@@ -7251,6 +7254,9 @@
                                                      <input type="button" id="btn_add" value="Add" style="position: relative; left: 731px; display: none; /* float: left!important; */float: left;" />
                                                       <asp:Label ID="lblRecieving_Time" runat="server" Text=" Receiving Date & Time" Visible="false" ></asp:Label>
                                                       <asp:TextBox ID="txtReceiving_Date" runat="server" ReadOnly="true" Visible="false" ></asp:TextBox>
+                                                     <div class="col-lg-2">
+                                                     <input type="button" value="Print" id="PrintVital" class="btn btn-primry" onclick ="PrintVitals();" />
+                                                         </div>
                                                  </div>
                                         </form>                                                                                           
                         </table>

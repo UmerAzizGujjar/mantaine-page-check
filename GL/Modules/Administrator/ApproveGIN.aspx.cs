@@ -20,7 +20,7 @@ namespace PMS
             bool hasEntryRights = false;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var form_id = 3;
+                var form_id = 6;
                 var user_id = AppConfig.UserID;
 
                 hasEntryRights = (from SASD in db.Sys_Approval_Stage_Details
@@ -41,7 +41,7 @@ namespace PMS
             foreach (int id in GINIds)
             {
                 var user_id = AppConfig.UserID;
-                 var StoreIssue_id = id;
+                var StoreIssue_id = id;
                 var form_id = 6;
 
                 Store_Issue SI = (from tbl in db.Store_Issues
@@ -53,7 +53,7 @@ namespace PMS
                                             join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
                                             join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
                                             join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
-                                            where SASD.UserId == user_id && SATF.FormId == form_id && SASM.IsDeleted == false
+                                            where SASD.UserId == user_id  && SASM.IsDeleted == false
                                             select new { SASM.IsFinalApproval, SATF.FormId }).ToList();
 
                     if (IsFinalApprovals.Any(approval => approval.IsFinalApproval == true && approval.FormId == form_id))
@@ -66,7 +66,7 @@ namespace PMS
                                                           join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
                                                           join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
                                                           join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
-                                                          where tbl.UserId == user_id && SASM.IsFinalApproval == true && SATF.FormId == form_id && SASM.IsDeleted == false
+                                                          where tbl.UserId == user_id && SASM.IsFinalApproval == true && SATF.FormId == form_id &&   SASM.IsDeleted == false
                                                           select tbl).FirstOrDefault();
                         if (SASD != null)
                         {

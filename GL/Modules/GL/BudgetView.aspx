@@ -103,13 +103,13 @@
                             var actionButtons = `
                         <a href="#" class="editListBtn" onclick="Edit(${full.Budget_ID})" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil" ></i></a>
                         <a class="printListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReport(${full.Budget_ID})"><i class="fa fa-print"></i></a>`;
-                            if (full.Voucher_Status === 'CREATED') {
+                            if (full.Voucher_Status == 'Created') {
                                 actionButtons += `
-                            <a href="#" class="delListBtn"  onclick="deleteConfirm(${full.Budget_ID})" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-trash-o" style="color:white !important;"></i></a>`;
+                            <a href="#" class=""  onclick="ApproveBudget(${full.Budget_ID})" name="btnApprove" style="border-radius: 4px;background-color: #519e7e;color: white;padding: 4px 11px;"></i>Approve</a>`;
                             }
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            //var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
-                            result = actionButtons  + print;
+                            result = actionButtons ;
                             return result;
                         }, width: "15%"
                     }

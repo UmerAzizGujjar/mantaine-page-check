@@ -5,6 +5,7 @@ $(document).ready(function () {
     $('.show').show();
     $('#divcard').hide();
     $('#divapprove').hide();
+    $('#divvoucher').hide();
     $('#btn-opdprint').hide();
     /*  $('#divvoucher').hide();*/
     $("#tabs").on('click', 'li', function () {
@@ -81,7 +82,6 @@ $(document).ready(function () {
         { id: '#ddldoctor', method: 'GetDoctor' },
         { id: '#ddlpanel', method: 'GetPanel' },
         { id: '#ddlcashier', method: 'GetCasher' }
-
     ];
 
     dropdowns.forEach(item => {
@@ -183,92 +183,9 @@ $(document).ready(function () {
     FillModePresentation();
     get_totalpatient();
     FillUserAccount();
-    FillCashier();
+    /*    FillCashier();*/
 
 });
-function Get_Pat_Info_Reffer(reg_id) {
-    $.ajax({
-        type: "POST",
-        url: "OPD.aspx/GetBasicInfoOFReffer",
-        data: JSON.stringify({ reg_id: reg_id }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (resp) {
-            debugger;
-            var data = JSON.parse(resp.d);
-            $('#txtPatientNo').val(data.Mr_No);
-            $('#txtpatient_no').val(data.pat_no);
-            $('#txt_patname').val(data.Name);
-            $('#txt_F_Name').val(data.FatherName);
-            $('#txtage').val(data.Age);
-            $('#txtnic').val(data.CNIC_Masked);
-            $('#txtmobile').val(data.Mobile);
-            $('#txtAdrress').val(data.PermanentAdrress);
-            $('#hdn_regid').val(data.Reg_PatientID);
-            $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
-            $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
-
-            debugger;
-
-            $('#ddlmartialstatus').html(
-                $('<option>', {
-                    value: data.MaritalStatus,
-                    text: data.MaritalStatus_text
-                })
-            );
-            $('#ddlGender').html(
-                $('<option>', {
-                    value: data.Gender,
-                    text: data.Gender_text
-                })
-            );
-            $('#ddlDepartment').html(
-                $('<option>', {
-                    value: data.departmentid,
-                    text: data.department_Text
-                })
-            );
-
-            $('#ddlPatient_Type').html(
-                $('<option>', {
-                    value: data.pat_type_Val,
-                    text: data.pat_type_text
-                })
-            ); loaddata();
-
-            var $select = $('#ddldoctor');
-
-
-            $select.empty().append(
-                $('<option>', {
-                    value: data.doctorId,
-                    text: data.DoctorName
-                })
-            );
-
-
-            var $select = $('#ddldoctor');
-
-            $select.empty().append(
-                new Option(data.DoctorName, data.doctorId, true, true) // creates selected option
-            );
-
-
-            $select.trigger({
-                type: 'select2:select',
-                params: {
-                    data: { id: data.doctorId, text: data.DoctorName }
-                }
-            });
-
-
-        },
-        error: function (response) {
-            alert("Error: " + response.responseText);
-            console.error("AJAX Error: ", response);
-        }
-    });
-}
 function fillDropdown($dropdown, methodName) {
     if ($dropdown.data('filled')) return;
 
@@ -359,6 +276,89 @@ function OnFilterPatients(data) {
 function OnFailPatients(exc) {
     alert(exc.get_message());
 }
+function Get_Pat_Info_Reffer(reg_id) {
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/GetBasicInfoOFReffer",
+        data: JSON.stringify({ reg_id: reg_id }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (resp) {
+            debugger;
+            var data = JSON.parse(resp.d);
+            $('#txtPatientNo').val(data.Mr_No);
+            $('#txtpatient_no').val(data.pat_no);
+            $('#txt_patname').val(data.Name);
+            $('#txt_F_Name').val(data.FatherName);
+            $('#txtage').val(data.Age);
+            $('#txtnic').val(data.CNIC_Masked);
+            $('#txtmobile').val(data.Mobile);
+            $('#txtAdrress').val(data.PermanentAdrress);
+            $('#hdn_regid').val(data.Reg_PatientID);
+            $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
+            $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
+
+            debugger;
+
+            $('#ddlmartialstatus').html(
+                $('<option>', {
+                    value: data.MaritalStatus,
+                    text: data.MaritalStatus_text
+                })
+            );
+            $('#ddlGender').html(
+                $('<option>', {
+                    value: data.Gender,
+                    text: data.Gender_text
+                })
+            );
+            $('#ddlDepartment').html(
+                $('<option>', {
+                    value: data.departmentid,
+                    text: data.department_Text
+                })
+            );
+
+            $('#ddlPatient_Type').html(
+                $('<option>', {
+                    value: data.pat_type_Val,
+                    text: data.pat_type_text
+                })
+            ); loaddata();
+
+            var $select = $('#ddldoctor');
+
+
+            $select.empty().append(
+                $('<option>', {
+                    value: data.doctorId,
+                    text: data.DoctorName
+                })
+            );
+
+
+            var $select = $('#ddldoctor');
+
+            $select.empty().append(
+                new Option(data.DoctorName, data.doctorId, true, true) // creates selected option
+            );
+
+
+            $select.trigger({
+                type: 'select2:select',
+                params: {
+                    data: { id: data.doctorId, text: data.DoctorName }
+                }
+            });
+
+
+        },
+        error: function (response) {
+            alert("Error: " + response.responseText);
+            console.error("AJAX Error: ", response);
+        }
+    });
+}
 function Get_Pat_Info_Apt(reg_id, apt_Id) {
     $.ajax({
         type: "POST",
@@ -445,6 +445,7 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
     });
 }
 function Get_Pat_Info(reg_id) {
+
     $.ajax({
         type: "POST",
         url: "OPD.aspx/GetBasicInfo",
@@ -479,8 +480,8 @@ function Get_Pat_Info(reg_id) {
                     text: data.Gender_text
                 })
             );
-
             checkcardvalidation();
+
 
 
         },
@@ -490,7 +491,6 @@ function Get_Pat_Info(reg_id) {
         }
     });
 }
-
 
 function addfunc() {
     debugger;
@@ -612,11 +612,11 @@ function OnFilter(data) {
     ClearResults();
 
     for (var i = 0; i < data.length; i++) {
-        AddResult_Appointment(data[i].Appointment_ID, data[i].Appointment_No,data[i].App_Date, data[i].Patient_Name, data[i].Emp_name, data[i].Age, data[i].Phone, data[i].pat_id);
+        AddResult_Appointment(data[i].Appointment_ID, data[i].Appointment_No, data[i].App_Date, data[i].Patient_Name, data[i].Emp_name, data[i].Age, data[i].Phone, data[i].pat_id);
     }
 }
 var reg_id;
-function AddResult_Appointment(Appointment_ID, Appointment_No,App_Date, Patient_Name, Emp_name, Age, Phone, pat_id) {
+function AddResult_Appointment(Appointment_ID, Appointment_No, App_Date, Patient_Name, Emp_name, Age, Phone, pat_id) {
     debugger;
     reg_id = pat_id;
     $('#hdnAptId').val(Appointment_ID);
@@ -753,33 +753,35 @@ function FillUserAccount() {
     return options;
 }
 
-function FillCashier() {
+//function FillCashier() {
 
-    $.ajax({
-        url: 'OPD.aspx/GetCasher',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function (response) {
+//    $.ajax({
+//        url: 'OPD.aspx/GetCasher',
+//        type: 'POST',
+//        contentType: 'application/json; charset=utf-8',
+//        dataType: 'json',
+//        success: function (response) {
 
-            var data = response.d ? JSON.parse(response.d) : response;
-            var options = '';
+//            var data = response.d ? JSON.parse(response.d) : response;
+//            var options = '';
 
-            if (data.length > 0) {
-                $.each(data, function (i, value) {
-                    options += '<option value="' + value.Cashier_ID + '" selected>'
-                        + value.Cashier_Name +
-                        '</option>';
-                });
+//            if (data.length > 0) {
+//                $.each(data, function (i, value) {
+//                    options += '<option value="' + value.Cashier_ID + '" selected>'
+//                        + value.Cashier_Name +
+//                        '</option>';
+//                });
 
-                $('#ddlcashier').html(options).prop('disabled', true);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching cashier:', error);
-        }
-    });
-}
+//                $('#ddlcashier').html(options).prop('disabled', true);
+//            }
+//        },
+//        error: function (xhr, status, error) {
+//            console.error('Error fetching cashier:', error);
+//        }
+//    });
+//}
+
+
 
 var originalFee;
 
@@ -1056,6 +1058,7 @@ function SavePatient() {
             });
             Approve(ini_patientID)
             get_pat_initial_info(ini_patientID);
+
         },
         error: function (xhr, status, error) {
             console.error("Error: ", error);
@@ -1074,9 +1077,8 @@ function SavePatient() {
         }
     });
 }
-
 function Approve(pat_id) {
-    PageMethods.approvepatient(pat_id, function (Tests) {
+    PageMethods.ApproveRegpatient(pat_id, function (Tests) {
         debugger
         var message = JSON.parse(Tests);
         if (message[0].Message != null || message[0].Message != "") {
@@ -1095,8 +1097,6 @@ function Approve(pat_id) {
         }
     });
 }
-
-
 function SaveData() {
     debugger;
 
@@ -1144,6 +1144,7 @@ function SaveData() {
     var accountid = $('#ddlCashInHand').val();
     var IssueCard = $('#chckcardissue').prop('checked');
     var FreeCheck = $('#chckfreecheck').prop('checked');
+    var Remarks = $('#txtremarks').val() || "";
 
     if (discount < 100.0 && Fees == 0.0) {
 
@@ -1213,6 +1214,7 @@ function SaveData() {
         });
         return;
     }
+
     if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!Department || Department === "0")) {
         Swal.fire({
             icon: 'error',
@@ -1319,7 +1321,8 @@ function SaveData() {
         AntiForgeryToken: hfAntiForgery, // ✅ THIS WAS THE BUG — NOW FIXED
         EmployeeName: EmployeeName,
         EmployeeDept: EmployeeDept,
-        StudentName: StudentName
+        StudentName: StudentName,
+        Remarks: Remarks
     };
 
     // 👇 Optional: Log to verify
@@ -1461,8 +1464,6 @@ function loadEmpData() {
 
 }
 function get_totalpatient() {
-    debugger;
-    var options = '<option value="0">Please Select</option>';
     $.ajax({
         url: 'OPD.aspx/GetCount',
         type: 'POST',
@@ -1470,20 +1471,55 @@ function get_totalpatient() {
         dataType: 'json',
         success: function (response) {
             debugger;
-            var data = response.d ? JSON.parse(response.d) : response;
+            // Parse the JSON string inside response.d
+            var data = JSON.parse(response.d); // ASP.NET wraps in .d
 
-            $('#ctl00_MainContent_lbltotpat').html(data);
-
-
+            // Update UI elements
+            $('#ctl00_MainContent_lbltotpat').text(data.TotalPatients);
+            $('#ctl00_MainContent_lblg31').text(data.Filter1);
+            $('#ctl00_MainContent_lblg30').text(data.Filter2);
+            $('#ctl00_MainContent_lblg29').text(data.Filter3);
         },
         error: function (xhr, status, error) {
-            console.error('Error fetching area data:', error);
+            console.error('Error fetching patient counts:', error);
         }
     });
-
-    return options;
-
 }
+
+
+function getVisitDays(regPatId) {
+    if (!regPatId || regPatId <= 0) return;
+
+    $.ajax({
+        url: 'OPD.aspx/GetVisitDays',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ regPatId: regPatId }),
+        dataType: 'json',
+        success: function (response) {
+
+            var data = response.d ? JSON.parse(response.d) : response;
+
+            if (data.recentVisitDays !== null && data.recentVisitDays !== undefined) {
+                $('#Span2').text(data.recentVisitDays);
+            } else {
+                $('#Span2').text('');
+            }
+
+            if (data.previousVisitDays !== null && data.previousVisitDays !== undefined) {
+                $('#Span6').text(data.previousVisitDays);
+            } else {
+                $('#Span6').text('');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching visit days:', error);
+            $('#Span2').text('');
+            $('#Span6').text('');
+        }
+    });
+}
+
 function getpanelRate() {
     var panelid = $('#ddlpanel').val();
     $.ajax({
@@ -1547,6 +1583,7 @@ function loadPatientDetail(OPDID) {
             $('#txtdependent').val(data.Dependent).attr('disabled', true);
             $('#txtemployee').val(data.Employee_Name).attr('disabled', true);
             $('#txtreferenceno').val(data.Refference_No).attr('disabled', true);
+            $('#txtremarks').val(data.Remarks).attr('disabled', true);
 
 
 
@@ -1633,6 +1670,7 @@ function loadPatientDetail(OPDID) {
             debugger;
             if (stat != "Approved") {
                 $('#divapprove').show();
+                $('#divvoucher').hide();
             }
             //if (data.Patient_Type != "01") {
             //    $('#field_Clinic').hide();
@@ -1755,7 +1793,7 @@ function OnFilterReferPatients(data) {
             '<td>' + pat.Mobile1 + '</td>' +
             '<td>' +
             '<a class="tooltips" style="color:#438eb9; font-size:16px; display:flex; justify-content:center;" ' +
-            'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\')">' +
+            'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\', \'' + pat.OPDID + '\')">' +
             '<i class="fa fa-plus-circle"></i>' +
             '<span class="tooltiptxt">Select</span>' +
             '</a>' +
@@ -1780,10 +1818,10 @@ $('#txtReferEmergencySearch').off('input').on('input', function () {
     FillReferPatientsList();
 });
 
-function AddReferPatientDetail(reg_id) {
+function AddReferPatientDetail(reg_id, OPDID) {
     try {
         var isAdd = true;
-        window.location.href = "OPD.aspx?Reffered_id=" + reg_id + "&isAdd=" + isAdd;
+        window.location.href = "OPD.aspx?Reffered_id_opd=" + reg_id + "&isAdd=" + isAdd + "&opd_id=" + OPDID;
     } catch (err) {
         alert(err.message);
     }
@@ -1807,40 +1845,4 @@ function OPD_Print(OPD_ID) {
     }
 
     window.open(url, '_blank');
-}
-
-
-
-
-function getVisitDays(regPatId) {
-    if (!regPatId || regPatId <= 0) return;
-
-    $.ajax({
-        url: 'OPD.aspx/GetVisitDays',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({ regPatId: regPatId }),
-        dataType: 'json',
-        success: function (response) {
-
-            var data = response.d ? JSON.parse(response.d) : response;
-
-            if (data.recentVisitDays !== null && data.recentVisitDays !== undefined) {
-                $('#Span2').text(data.recentVisitDays);
-            } else {
-                $('#Span2').text('');
-            }
-
-            if (data.previousVisitDays !== null && data.previousVisitDays !== undefined) {
-                $('#Span6').text(data.previousVisitDays);
-            } else {
-                $('#Span6').text('');
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error fetching visit days:', error);
-            $('#Span2').text('');
-            $('#Span6').text('');
-        }
-    });
 }

@@ -20,7 +20,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=VendorPerson&ReportTitle=Vendor Person&ID=' + Vendor_ID;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=VendorPerson&ReportTitle=Vendor Person&ID=' + Vendor_ID;
             }
             window.open(url, '_blank');
         }

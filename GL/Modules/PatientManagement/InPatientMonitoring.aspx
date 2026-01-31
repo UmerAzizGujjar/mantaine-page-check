@@ -291,7 +291,17 @@
             window.open(url, '_blank');
         }
 
+        function PrintNotes() {
+            debugger;
+            var In_Patient_ID = $('#ctl00_MainContent_hdnInpatient_id').val();
+            var url = '../../ReportViewer.aspx?ReportName=NursingProgressNote&ReportTitle=Nursing Notes Report' + '&In_Patient_ID=' + In_Patient_ID;
+            window.open(url, '_blank');
+        }
 
+        function PrintVitals() {
+            var In_Patient_ID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            window.open('../../ReportViewer.aspx?ReportName=PrintIPDVitals&ReportTitle=In Patient Doctor Print' + '&In_Patient_ID=' + In_Patient_ID);
+        }
         function drawchart(dataValues) {
             
             var data = new google.visualization.DataTable(dataValues);
@@ -2650,7 +2660,7 @@
             return uuid;
         }
         function bindControls() {
-
+            debugger;
             var hdFile_ID = $("#hdfPatient_ID").val();
 
             if (hdFile_ID != "(New)") {
@@ -2680,6 +2690,7 @@
             return xmlHttp.responseText;
         }
         function loadtokenInputsDefault() {
+            debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
                 {
                     tokenLimit: 1,
@@ -2697,6 +2708,7 @@
                 });
         }
         function loadAjax() {
+            debugger;
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
             $.ajax({
                 type: "POST",
@@ -2727,11 +2739,13 @@
             }
         }
         function loadtokenInputs(data) {
+            debugger;
             $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
                 {
                     prePopulate: data,
                     tokenLimit: 1,
                     onAdd: function (item) {
+                        debugger;
                         $("#hdfPatient_ID").val(item.id);
                         loadAjax();
                     }
@@ -3852,6 +3866,10 @@
                                 <label></label>
                                 <input type="button" id="btnAddPulse" class="btn btn-primry" onclick="AddMonitering()" value="Add" />
                             </div>
+                            <div class="col-lg-1 col-md-4 col-sm-6">
+                                <label></label>
+                            <input type="button" value="Print" id="PrintVital" class="btn btn-primry" onclick ="PrintVitals();" />
+                            </div>
                         </div>
                     </form>
                     <div id="chart_div" style="margin-top: -16%; height: 296px" class="responsive">
@@ -3928,6 +3946,9 @@
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <asp:Label ID="Label12" runat="server" Text="Date/Time"></asp:Label>
                             <asp:TextBox ID="txtDate" runat="server" disabled="disabled"></asp:TextBox>
+                            </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input id="printNote" type="button" class="btn btn-primry" value ="Print" onclick="PrintNotes();" />
                             </div>
                     </div>
                     <div class="row">

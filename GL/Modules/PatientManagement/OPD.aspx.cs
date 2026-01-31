@@ -1091,6 +1091,7 @@ namespace PMS.Modules.PatientManagement
                 db.SubmitChanges();
             }
             return pat?.pat_id.ToString() ?? "0";
+
         }
         [WebMethod]
         public static string Getcardvalidation()
@@ -1185,6 +1186,7 @@ namespace PMS.Modules.PatientManagement
                 data.EmployeeDept = SanitizeInput(data.EmployeeDept);
                 data.reffer_no = SanitizeInput(data.reffer_no);
                 data.dependent = SanitizeInput(data.dependent);
+                data.Remarks = SanitizeInput(data.Remarks);
             }
 
             var errors = new List<string>();
@@ -1366,6 +1368,7 @@ namespace PMS.Modules.PatientManagement
                     pat.Employee_Name = data.EmployeeName;
                     pat.Emp_Department = data.EmployeeDept;
                     pat.Actual_amount = data.Actual_Fees;
+                    pat.Remarks = data.Remarks;
 
                     if (data.FreeCheck == true)
                     {
@@ -2099,6 +2102,7 @@ namespace PMS.Modules.PatientManagement
                     CNIC_Masked = MaskCNIC(patient.NIC),
                     MaritalStatus_text = Encode(db.GetDataValueName("Marital Status", patient.Marital_Status)),
                     Permanent_Address = Encode(patient.Permanent_Address),
+                    Remarks = Encode(patient.Remarks),
                     Receipt_Amount = patient.Receipt_Amount,
                     Actual_amount = patient.Actual_amount,
                     Category_text = Encode(db.GetDataValueName("Patient Main Category", patient.Patient_Main_Category)),
@@ -2483,6 +2487,7 @@ namespace PMS.Modules.PatientManagement
             public bool? FreeCheck { get; set; }
             public int Fees { get; set; }
             public int Actual_Fees { get; set; }
+            public string Remarks { get; set; }
         }
     }
 }

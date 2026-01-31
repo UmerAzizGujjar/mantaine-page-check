@@ -12,6 +12,10 @@
             if (refundID) {
                 LoadPatientDetails(refundID);
             }
+
+            $('#txtHospitalRefund, #txtDoctorRefund').on('input', updateTotalRefund);
+            updateTotalRefund();
+            $('#TotalRefundAmount').prop('disabled', true);
         });
 
         function LoadPatientDetails(refundID) {
@@ -56,6 +60,13 @@
             $('#txtActualAmount').val((data.Actual_amount || 0).toFixed(2));
 
             $('#btnSave').val('Update');
+        }
+
+        function updateTotalRefund() {
+            var hospitalRefund = parseFloat($('#txtHospitalRefund').val()) || 0;
+            var doctorRefund = parseFloat($('#txtDoctorRefund').val()) || 0;
+            var total = hospitalRefund + doctorRefund;
+            $('#TotalRefundAmount').val(total.toFixed(2));
         }
 
         function parseAspNetDate(dateStr) {
@@ -423,6 +434,11 @@
                 <label>Doctor Refund</label>
                 <input type="text" id="txtDoctorRefund" class="form-control text-right" />
             </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label>Total Refund</label>
+                <input type="text" id="TotalRefundAmount" class="form-control text-right" />
+            </div>
+
             <div class="col-lg-2 col-md-6 col-sm-12">
                 <label>Remarks</label>
                 <input type="text" id="txtRemarks" class="form-control" />

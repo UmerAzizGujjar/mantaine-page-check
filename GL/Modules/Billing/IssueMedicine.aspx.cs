@@ -471,6 +471,7 @@ namespace PMS
             public string Dept { get; set; }
             public decimal totalPayable { get; set; }
             public decimal DiscAmnt { get; set; }
+            public decimal MasterDiscount { get; set; }
             public decimal flatdisc { get; set; }
             public decimal DiscPercent { get; set; }
             public decimal AmntReceived { get; set; }
@@ -484,6 +485,7 @@ namespace PMS
         public class Medicindetails
         {
             public int Itemid { get; set; }
+            public int hdnItemid { get; set; }
             public string ItemName { get; set; }
             public decimal Amount { get; set; }
             public decimal DiscPer { get; set; }
@@ -533,6 +535,7 @@ namespace PMS
             newBill.Seq_InvoiceNo = db.GetSale_InoviceNo();
             newBill.Discount_Percentage = data.DiscPercent;
             newBill.Discount_Amount = data.DiscAmnt;
+            newBill.Master_Discount = data.MasterDiscount;
             newBill.Disc_Adjustment = data.flatdisc;
             newBill.Total_Amount = data.totalPayable;
             newBill.Received_Amount = data.AmntReceived;
@@ -618,11 +621,25 @@ namespace PMS
             // Inserting or Updating Bill Details
             foreach (Medicindetails dtls in data.Save_list)
             {
+                int Item_Id;
+                if(dtls.Itemid==0)
+                {
+                    Item_Id = dtls.hdnItemid;
+                }
+                else
+                {
+                    Item_Id = dtls.Itemid;
+                }
+                if(dtls.Itemid==0 && dtls.hdnItemid==0)
+                {
+                    Item_Id = (from inv in db.INV_Items where inv.Description == dtls.ItemName && inv.Is_Active == true && (inv.IsCancel == null || inv.IsCancel == false) select inv.Item_ID).FirstOrDefault();
+                }
+
                 Ar_Billing_Detail newBillDetails = new Ar_Billing_Detail();
                 newBillDetails.Bill_ID = newBill.Bill_ID;
                 newBillDetails.ParentTrans_Name = "IssueMedicine";
                 newBillDetails.ParentTrans_Type = "Medicine";
-                newBillDetails.Item_ID = dtls.Itemid;                
+                newBillDetails.Item_ID = Item_Id;                
                 newBillDetails.Item_Name = dtls.ItemName;
                 //var Item_Id = (from aac in db.INV_Items where (aac.Description == dtls.ItemName) select aac.Item_ID).FirstOrDefault();
                 //newBillDetails.Item_ID = Item_Id;
@@ -837,12 +854,12 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var panel = (from data in db.Ar_Billings
-                         where data.IsPharmacy == true && data.Invoice_No != null && (data.isCancel == false || data.isCancel == null)
+                         where data.IsPharmacy == true && data.Invoice_No != null && (data.isCancel == false || data.isCancel == null) orderby data.Bill_ID descending
                          select new
                          {
                              Bill_ID = data.Bill_ID,
                              Seq_InvoiceNo = data.Seq_InvoiceNo,
-                         }).ToList();
+                         }).ToList().Take(200);
             return (new JavaScriptSerializer()).Serialize(panel);
         }
 

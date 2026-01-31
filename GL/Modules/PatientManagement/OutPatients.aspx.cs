@@ -956,6 +956,13 @@ namespace PMS
             ddlPeads_apgerScore5min.Items.Add(new ListItem("Select Score", "0"));
             ddlPeads_apgerScore5min.DataBind();
 
+            valueset = DBClass.GetValueSet("Verbal Consent");
+            ddlverbal_consent.DataSource = valueset;
+            ddlverbal_consent.DataTextField = "DataValue_Description";
+            ddlverbal_consent.DataValueField = "DataValue_Name";
+            ddlverbal_consent.Items.Add(new ListItem("Please Select", "0"));
+            ddlverbal_consent.DataBind();
+
             valueset = DBClass.GetValueSet("Ortho Examination");
             ddlOrthoType.DataSource = valueset;
             ddlOrthoType.DataTextField = "DataValue_Description";
@@ -1137,7 +1144,8 @@ namespace PMS
                         OPD.Special_Test = data.Special_Test;
                         OPD.Area_Of_Interest = data.Area_Of_Interest;
                         OPD.Birth_History = data.Birth_History;
-                        if (data.Reffer_To != "")
+                        OPD.Verbal_Consent = data.Verbal_Consent;
+                    if (data.Reffer_To != "")
                         {
                             var P = (from tbl in db.Patients
                                      where tbl.Patient_ID == data.Patient_ID
@@ -2041,6 +2049,7 @@ namespace PMS
             txtPeads_PlaceOfDelivery.Text = qry.Peads_PlaceOfDelivery;
             txtPeads_IndicationForLSCS.Text = qry.Peads_IndicationForLSCS;
             ddlPeads_apgerScore1min.SelectedValue = qry.Peads_apgerScore1min;
+            ddlverbal_consent.SelectedValue = qry.Verbal_Consent;
             ddlPeads_apgerScore5min.SelectedValue = qry.Peads_apgerScore5min;
             chkPeads_Resuscitation.Checked = qry.Peads_Resuscitation.Value;
             txtPeads_NatalOthers.Text = qry.Peads_NatalOthers;
@@ -5354,13 +5363,25 @@ on d.Doctor_Id equals hr.Emp_ID
             return (new JavaScriptSerializer()).Serialize(dep);
         }
         [WebMethod]
-        public static string LoadDoctor()
+        public static string loadAllDoc()
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var doctor = (from emp in db.HR_Employees
-
-                              where emp.Resign_Date == null && emp.IsDoctor == true
+                              where emp.IsDoctor == true && emp.userid == Convert.ToString(AppConfig.UserID)
+                              select new { emp.Emp_ID, emp.Emp_Name }).ToList();
+                return (new JavaScriptSerializer()).Serialize(doctor);
+            }
+            return "";
+        }
+        [WebMethod]
+        public static string LoadDoctor(int id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var docid = (from opd in db.Out_Patients where opd.Out_Patient_ID == id select opd.Doctor_ID).FirstOrDefault();
+                var doctor = (from emp in db.HR_Employees
+                              where emp.IsDoctor == true && emp.Emp_ID == Convert.ToInt32(docid)
                               select new { emp.Emp_ID, emp.Emp_Name }).ToList();
                 return (new JavaScriptSerializer()).Serialize(doctor);
             }
@@ -5378,6 +5399,22 @@ on d.Doctor_Id equals hr.Emp_ID
                 return (new JavaScriptSerializer()).Serialize(doctor);
             }
             return "";
+        }
+        [WebMethod]
+        public static string FillDurationDropDown()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = from d in db.DataValues
+                         join v in db.ValueSets
+                         on d.ValueSet_ID equals v.ValueSet_ID
+                         where v.ValueSet_Name == "Duration"
+                         select new
+                         {
+                             d.DataValue_Name,
+                             d.DataValue_Description,
+                             d.Segment1
+                         };
+            return (new JavaScriptSerializer().Serialize(Routes));
         }
         [WebMethod]
         public static string LoadDesignation(int DocID)
@@ -5830,6 +5867,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public bool chkPeads_Rooting { get; set; }
             public bool chkPeads_Moro { get; set; }
             public string txtPeads_CNSOthers { get; set; }
+            public string Verbal_Consent { get; set; }
             public bool chkPeads_FullTerm { get; set; }
             public bool chkPeads_PreTerm { get; set; }
             public string txtPeads_DateOfDelivery { get; set; }

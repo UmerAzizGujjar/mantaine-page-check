@@ -344,28 +344,7 @@
             });
 
             // Function to load Sale Return Invoice Number into the dropdown
-            function loadInvoiceNumbers() {
-                var optionInv = '';
-                PageMethods.AllInvoiceNumbers(function (Tests) {
-                    optionInv = '<option value="0">Please Select</option>';
-                    $.each(JSON.parse(Tests), function (key, value) {
-                        optionInv += '<option value="' + value.Bill_ID + '" >' + value.Seq_InvoiceNo + '</option>';
-                    });
-                    $('#ddlInvoiceNumber').html(optionInv);
-                });
-            }
-            // Function to load Sale Return Items into the dropdown
-            function loadSaleReturnItems() {
-                var optionInv = '';
-                PageMethods.SaleReturnItems(function (Tests) {
-                    optionInv = '<option value="0">Please Select</option>';
-                    $.each(JSON.parse(Tests), function (key, value) {
-                        optionInv += '<option value="' + value.Item_ID + '" >' + value.Description + '</option>';
-                    });
-                    $('#ddlSaleReturnItems').html(optionInv);
-                    $('#ddlSaleReturnItems').select2();
-                });
-            }
+
             $('#SaleReturnModal').on('hide.bs.modal', function () {
                 $(this).find('input[type="text"]').val('');
                 $(this).find('select').val(null).trigger('change');
@@ -374,6 +353,28 @@
 
         });
         // Function to load Sale Return Inovice Items Data
+        function loadInvoiceNumbers() {
+            var optionInv = '';
+            PageMethods.AllInvoiceNumbers(function (Tests) {
+                optionInv = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionInv += '<option value="' + value.Bill_ID + '" >' + value.Seq_InvoiceNo + '</option>';
+                });
+                $('#ddlInvoiceNumber').html(optionInv);
+            });
+        }
+        // Function to load Sale Return Items into the dropdown
+        function loadSaleReturnItems() {
+            var optionInv = '';
+            PageMethods.SaleReturnItems(function (Tests) {
+                optionInv = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionInv += '<option value="' + value.Item_ID + '" >' + value.Description + '</option>';
+                });
+                $('#ddlSaleReturnItems').html(optionInv);
+                $('#ddlSaleReturnItems').select2();
+            });
+        }
         function AddSaleReturnInvoiceMaster() {
             debugger
             var invNo = $('#ddlInvoiceNumber').val();
@@ -460,6 +461,7 @@
                                 '<td ><input type="text" name="txtRBatch_No" value="' + item.Batch_No + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td style="display: none"><input type="hidden" value="' + item.Item_ID + '" name="txtRItemID" id="txtRItemID"></td>' +
                                 '<td style="display: none"><input type="hidden" value="' + item.CGSRate + '" name="txtCGSRate" id="txtCGSRate"></td>' +
+                                '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
                                 '</tr>';
                             $('#saleReturnTableBody').append(row);
@@ -521,6 +523,7 @@
                                 '<td><select id="txtRBatch_Nos' + (rowIndex + 1) + '" name="txtRBatch_Nos" onchange="updateReturnStock(this)" ></select></td>' +
                                 '<td style="display:none;"><input type="text"  id="txtRBatch_No' + (rowIndex + 1) + '" name="txtRBatch_No"  value=""/> </td>' +
                                 '<td  style="display:none;"><input type="hidden"  name="txtCGSRate" alue="' + data[0].CGSRate + '" id="txtCGSRate' + (rowIndex + 1) + '"></td>' +
+                                '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
                                 //'<td><input type="text" name="txtRBatch_No" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
                                 '</tr>';
@@ -888,6 +891,7 @@
                             var netAmt = $(this).find('input[name="txtRnet"]').val() || 0;
                             var Batch_No = $(this).find('input[name="txtRBatch_No"]').val();
                             var CGSRate = $(this).find('input[name="txtCGSRate"]').val() || 0;
+
 
                             var CGSAmount = CGSRate * qty;
 
@@ -1626,7 +1630,7 @@
                         '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
-
+                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
 
                         '</tr>';
@@ -1737,6 +1741,7 @@
                         '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
+                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                         '</tr>';
                     $('#tblDetails #tblbody').append(rows);
@@ -1810,7 +1815,7 @@
             var Dept = $('#ddlDepartment').val();
             var totalPayable = $('#txtTotalPayable').val();
             var DiscPercent = $('#txtDisPer').val();
-            var DiscAmnt = $('#txtDisAmt').val();
+            var MasterDiscount = $('#txtDisAmt').val();
             var flatdisc = $('#txtFlatDisc').val();
             if (flatdisc == "" || flatdisc == "visionplus") {
                 flatdisc = 0;
@@ -1838,6 +1843,10 @@
             }
             
             var linediscount = $('#txtLineDisc').val();
+            var DiscAmnt = $('#txttotalDisc').val();
+            if (DiscAmnt == '') {
+                DiscAmnt = 0.00;
+            }
             var Rbtn = $('input[name="rbtn"]:checked').val();
             var patId = out_Patient_Id;
             var invNumber = $("#Inv_No").val();
@@ -1856,10 +1865,13 @@
                 var batchno = $($(value).find('td input[name=BatchNo]')[0]).val();
                 var expdate = $($(value).find('td input[name=exp_date]')[0]).val();
                 var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
+                var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
                 var CGSAmount = CGSRate * Qty;
                 if (batchno == null) {
                     batchno = '';
                 }
+               
+
                 if (parseFloat(Stock) <= 0 && parseFloat(Qty) > 0) {
                     Swal.fire({
                         icon: 'error',
@@ -1888,7 +1900,7 @@
                 }
                 var NetAmount = $($(value).find('td')[11]).text();
                 Save_list.push({
-                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount,
+                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid,
                 });
             });
             debugger;
@@ -1906,11 +1918,12 @@
                 "Dept": Dept,
                 "totalPayable": totalPayable,
                 "DiscPercent": DiscPercent,
-                "DiscAmnt": DiscAmnt,
+                "MasterDiscount": MasterDiscount,               
                 "flatdisc": flatdisc,
                 "AmntReceived": AmntReceived,
                 "BalanceAmount": BalanceAmount,
                 "linediscount": linediscount,
+                "DiscAmnt": DiscAmnt,
                 "Save_list": Save_list,
                 "invNumber": invNumber
             };
@@ -1990,7 +2003,8 @@
                     var Dept = $('#ddlDepartment').val();
                     var totalPayable = $('#txtTotalPayable').val();
                     var DiscPercent = $('#txtDisPer').val();
-                    var DiscAmnt = $('#txtDisAmt').val();
+                    var MasterDiscount = $('#txtDisAmt').val();
+
                     var flatdisc = $('#txtFlatDisc').val();
                     if (flatdisc == "" || flatdisc == "visionplus") {
                         flatdisc = 0;
@@ -2001,6 +2015,10 @@
                         BalanceAmount = 0;
                     }
                     var linediscount = $('#txtLineDisc').val();
+                    var DiscAmnt = $('#txttotalDisc').val();
+                    if (DiscAmnt == '') {
+                        DiscAmnt = 0.00;
+                    }
                     var Rbtn = $('input[name="rbtn"]:checked').val();
                     var patId = out_Patient_Id;
                     var invNumber = $("#Inv_No").val();
@@ -2010,7 +2028,7 @@
 
                     $.each($('#tblDetails tbody tr'), function (key, value) {
                         debugger;
-                        var Itemid = $($(value).find('td input[name=ItemID]')[0]).val();
+                        
                         var ItemName = $($(value).find('td input[name=Itemdesc]')[0]).val();
                         var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
                         var Stock = $($(value).find('td input[name=txtStock]')[0]).val();
@@ -2020,7 +2038,10 @@
                         var batchno = $($(value).find('td input[name=BatchNo]')[0]).val();
                         var expdate = $($(value).find('td input[name=exp_date]')[0]).val();
                         var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
+                        var Itemid = $($(value).find('td input[name=ItemID]')[0]).val();
+                        var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
                         var CGSAmount = CGSRate * Qty;
+                       
                         if (batchno == null) {
                             batchno = '';
                         }
@@ -2054,7 +2075,7 @@
                         }
                         var NetAmount = $($(value).find('td')[11]).text();
                         Save_list.push({
-                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount,
+                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid,
                         });
                     });
                     debugger;
@@ -2072,11 +2093,12 @@
                         "Dept": Dept,
                         "totalPayable": totalPayable,
                         "DiscPercent": DiscPercent,
-                        "DiscAmnt": DiscAmnt,
+                        "MasterDiscount": MasterDiscount,
                         "flatdisc": flatdisc,
                         "AmntReceived": AmntReceived,
                         "BalanceAmount": BalanceAmount,
                         "linediscount": linediscount,
+                        "DiscAmnt": DiscAmnt,
                         "Save_list": Save_list,
                         "invNumber": invNumber
                     };
@@ -2550,7 +2572,7 @@
                             '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                             '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
-
+                            '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                             '</tr>';
 
@@ -2925,8 +2947,8 @@
                 </div>
                 <div class="row mb-2 align-items-center left-right-margin">
                     <div class="col-lg-6">
-                        <label>Amount Received</label>
-                        <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()"  />
+                        <label>Total Discount</label>
+                        <input type="text" id="txttotalDisc" tabindex="20" class="form-control text-end" readonly="readonly"  />
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <label>Adjustment (Alt+A)</label>
@@ -2935,9 +2957,12 @@
 
                 </div>
                 <!-- Amount Received -->
-                <div class="row mb-2 align-items-center  left-right-margin" id="divBalance">
-
-                    <div class="col-lg-6 d-flex align-items-center">
+                <div class="row mb-2 align-items-center  left-right-margin" >
+                     <div class="col-lg-6">
+                        <label>Amount Received</label>
+                        <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()"  />
+                    </div>
+                    <div class="col-lg-6 d-flex align-items-center" id="divBalance">
                         <label class="ms-3">Balance</label>
                         <input type="text" id="txtBalances" tabindex="22" class="form-control text-end text-primary" disabled />
                     </div>

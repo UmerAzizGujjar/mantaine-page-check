@@ -50,7 +50,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=VendorPerson&ReportTitle=Vendor Person&ID=' + id;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=VendorPerson&ReportTitle=Vendor Person&ID=' + id;
             }
             window.open(url, '_blank');
         }
@@ -76,7 +76,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=VendorCompany&ReportTitle=Vendor Company&ID=' + id;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=VendorCompany&ReportTitle=Vendor Company&ID=' + id;
             }
             window.open(url, '_blank');
         }
@@ -88,7 +88,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=VendorGeneralItem&ReportTitle=Vendor General Item&ID=' + id;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=VendorGeneralItem&ReportTitle=Vendor General Item&ID=' + id;
             }
             window.open(url, '_blank');
         }
@@ -100,7 +100,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=PharmacyItem&ReportTitle=Vendor Pharmacy Item&ID=' + id;
+                url = 'http://' + ip + '/' + foldername + '../../ReportViewer.aspx?ReportName=PharmacyItem&ReportTitle=Vendor Pharmacy Item&ID=' + id;
             }
             window.open(url, '_blank');
         }

@@ -285,8 +285,8 @@ namespace PMS
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
                 string warehouse = Request.QueryString["WareHouse"].ToString();
-                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
-                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string StartDateTime = Request.QueryString["startDate"].ToString();
+                string EndDateTime = Request.QueryString["endDate"].ToString();
                 reportPath += "Pharmacy/rptPharmacyStockDetail.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
@@ -435,14 +435,14 @@ namespace PMS
             }
             else if (reportName == "AdminissionSlip")
             {
-
+                var in_patient_id = Request.QueryString["Inpatient_ID"].ToString();
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 reportPath += "InPatient/rptAdmissionPrint.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
-                rd.SetParameterValue("@patientId", Convert.ToInt32(Request.QueryString["Inpatient_ID"]));
+                rd.SetParameterValue("@patientId", in_patient_id);
             }
             else if (reportName == "DischargePrint")
             {
@@ -1759,7 +1759,7 @@ namespace PMS
                 rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
-                rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
+                //rd.SetParameterValue("@Item_ID", ItemID, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
             }
@@ -2754,6 +2754,29 @@ namespace PMS
                 //  var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string operatorID = "0";
                 string rptFileName = "TransactionalDetails/AllDoctorShareDetail.rpt";
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string CheckSummary = Request.QueryString["Summary"].ToString();
+                if (CheckSummary == "true")
+                {
+                    rptFileName = "TransactionalDetails/AllDoctorShareDetail_Summary.rpt";
+
+                    reportTitle =
+                        "Hospital Admission Detail from " +
+                        Request.QueryString["StartDate"] + " " +
+                        Request.QueryString["StartTime"] + " to " +
+                        Request.QueryString["EndDate"] + " " +
+                        Request.QueryString["EndTime"] +
+                        "&StartDate=" + Request.QueryString["StartDate"] +
+                        "&EndDate=" + Request.QueryString["EndDate"] +
+                        "&StartTime=" + Request.QueryString["StartTime"] +
+                        "&EndTime=" + Request.QueryString["EndTime"] +
+                        "&DoctorID=" + Request.QueryString["DoctorID"] +
+                        "&Operator=" + (Request.QueryString["Operator"] ?? "0") +
+                        "&Department=" + (Request.QueryString["Department"] ?? "0") +
+                        "&PatientType=" + Request.QueryString["PatientType"];
+                }
+
                 reportPath += rptFileName;
                 rd.Load(reportPath);
 
@@ -2783,7 +2806,7 @@ namespace PMS
                 rd.SetParameterValue("@DepartmentID", departmentID);
                 rd.SetParameterValue("@Patient_Type", PatType);
                 rd.SetParameterValue("@DoctorID", doctorID);
-                // rd.SetParameterValue("CompanyLogo", logoPath);
+                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Operator", operatorID);
             }
@@ -3181,6 +3204,21 @@ namespace PMS
                 rd.SetParameterValue("ReportTitle", reportTitle);
                 rd.SetParameterValue("@StartDate", StartDateTime);
                 rd.SetParameterValue("@EndDate", EndDateTime);
+            }
+            else if (reportName == "Daily_Sale_Summary")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string rptFileName = "Pharmacy/rptDailySaleSummary.rpt";
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@StartDate", StartDateTime);
+                rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "FastSlow_Non_Moving_Stock")
             {
@@ -4230,10 +4268,72 @@ namespace PMS
                 {
                     reportPath += "InPatient/rpt_In_Patient_ID_DoctorNote.rpt";
                     rd.Load(reportPath);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                     rd.SetParameterValue("@In_Patient_ID", Request.QueryString["In_Patient_ID"]);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            else if (reportName == "PrintIPDVitals")
+            {
+                try
+                {
+                    reportPath += "InPatient/rpt_In_Patient_Vitals_Report.rpt";
+                    rd.Load(reportPath);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+                    rd.SetParameterValue("@In_Patient_ID", Request.QueryString["In_Patient_ID"]);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            else if (reportName == "NursingProgressNote")
+            {
+                try
+                {
+                    reportPath += "InPatient/rpt_In_Patient_ID_NursingNote.rpt";
+                    rd.Load(reportPath);
+                    string in_pat = Request.QueryString["In_Patient_ID"];
+                    int ipd = Convert.ToInt32(in_pat);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+                    rd.SetParameterValue("@In_Patient_ID", ipd);
+                    rd.SetParameterValue("@In_Patient_ID", ipd, rd.Subreports[0].Name.ToString());
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            else if (reportName == "InpatientAdmissionSlip")
+            {
+                try
+                {
+                    reportPath += "InPatient/rpt_In_Patient_ID_AdmissionSlip.rpt";
+                    rd.Load(reportPath);
+                    string in_pat = Request.QueryString["In_Patient_ID"];
+                    int ipd = Convert.ToInt32(in_pat);
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                    rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+                    rd.SetParameterValue("@In_Patient_ID", ipd);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -4405,52 +4505,52 @@ namespace PMS
                 }
             }
 
-            else if (reportName == "PharmacySaleReport")
-            {
-                string InvoiceNo = Request.QueryString["Invoice_No"].ToString();
-                if (InvoiceNo == null || InvoiceNo == "")
-                {
-                    string rptFileName = "rptSaleReport.rpt";
+            //else if (reportName == "PharmacySaleReport")
+            //{
+            //    string InvoiceNo = Request.QueryString["Invoice_No"].ToString();
+            //    if (InvoiceNo == null || InvoiceNo == "")
+            //    {
+            //        string rptFileName = "rptSaleReport.rpt";
 
-                    string StartDateTime = Request.QueryString["StartDateTime"].ToString();
-                    string EndDateTime = Request.QueryString["EndDateTime"].ToString();
-                    string CheckSummary = Request.QueryString["Summary"].ToString();
-                    if (CheckSummary == "true")
-                    {
-                        rptFileName = "rptSaleReportSummary.rpt";
-                        reportTitle = "Sale Summary Report from " + StartDateTime + " to " + EndDateTime;
-                    }
+            //        string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+            //        string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+            //        string CheckSummary = Request.QueryString["Summary"].ToString();
+            //        if (CheckSummary == "true")
+            //        {
+            //            rptFileName = "rptSaleReportSummary.rpt";
+            //            reportTitle = "Sale Summary Report from " + StartDateTime + " to " + EndDateTime;
+            //        }
 
-                    reportPath += rptFileName;
-                    rd.Load(reportPath);
-                    rd.SetParameterValue("@FromDate", StartDateTime);
-                    rd.SetParameterValue("@ToDate", EndDateTime);
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    rd.SetParameterValue("Title", reportTitle);
-                    rd.SetParameterValue("@UserId", Request.QueryString["Operator"]);
-                    if (InvoiceNo == null || InvoiceNo == "")
-                        InvoiceNo = "0";
-                    rd.SetParameterValue("@Invoice_No", InvoiceNo);
-                    rd.SetParameterValue("@FromDate", StartDateTime, rd.Subreports[0].Name.ToString());
-                    rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
-                    rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
-                    rd.SetParameterValue("@Invoice_No", InvoiceNo, rd.Subreports[0].Name.ToString());
-                    rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
+            //        reportPath += rptFileName;
+            //        rd.Load(reportPath);
+            //        rd.SetParameterValue("@FromDate", StartDateTime);
+            //        rd.SetParameterValue("@ToDate", EndDateTime);
+            //        rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //        rd.SetParameterValue("Title", reportTitle);
+            //        rd.SetParameterValue("@UserId", Request.QueryString["Operator"]);
+            //        if (InvoiceNo == null || InvoiceNo == "")
+            //            InvoiceNo = "0";
+            //        rd.SetParameterValue("@Invoice_No", InvoiceNo);
+            //        rd.SetParameterValue("@FromDate", StartDateTime, rd.Subreports[0].Name.ToString());
+            //        rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[0].Name.ToString());
+            //        rd.SetParameterValue("@UserId", Request.QueryString["Operator"], rd.Subreports[0].Name.ToString());
+            //        rd.SetParameterValue("@Invoice_No", InvoiceNo, rd.Subreports[0].Name.ToString());
+            //        rd.Subreports[0].RecordSelectionFormula = "{spSaleReport;1.TotalAmount} < 0";
 
-                }
-                else
-                {
-                    string rptFileName = "rptPharmacySlip_New.rpt";
-                    reportPath += rptFileName;
-                    rd.Load(reportPath);
-                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
-                    rd.SetParameterValue("Address", companyAddress);
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    rd.SetParameterValue("Title", reportTitle);
-                    rd.SetParameterValue("@Invoice_No", InvoiceNo);
+            //    }
+            //    else
+            //    {
+            //        string rptFileName = "rptPharmacySlip_New.rpt";
+            //        reportPath += rptFileName;
+            //        rd.Load(reportPath);
+            //        string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+            //        rd.SetParameterValue("Address", companyAddress);
+            //        rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //        rd.SetParameterValue("Title", reportTitle);
+            //        rd.SetParameterValue("@Invoice_No", InvoiceNo);
 
-                }
-            }
+            //    }
+            //}
 
             else if (reportName == "BloodIssuance")
             {
@@ -7206,7 +7306,7 @@ namespace PMS
             connectionInfo.Password = Password;
             connectionInfo.UserID = UserID;
             rd.Database.Tables[0].ApplyLogOnInfo(logOnInfo);
-            if (reportName == "BloodBankCashCollection" || reportName == "Lab_Test_Investigation" || reportName == "TotalPatientRegsreport" || reportName == "DeptWisePatientsCardDetails" || reportName == "MER" || reportName == "AllCashReport" || reportName == "DeptWisePatients" || reportName == "PatientsTypesDetails" || reportName == "rptPatientInvestigationBilling" || reportName == "rptInPatientDetail" || reportName == "AllDoctorShareDetail" || reportName == "GOP_Details" || reportName == "GOP_Summary" || reportName == "BedAllocationReport" || reportName == "DepartmentwiseCashSummary" || reportName == "AdmissionDetail" || reportName == "Discharge Detail" || reportName == "DepartmentConversion" || reportName == "Procedure_Detail" || reportName == "Services_List" || reportName == "InsuranceCompanies" || reportName == "MainTestDepartments" || reportName == "GroupMainTestDepartments" || reportName == "SehatSahulatWise" || reportName == "SehatSahulatWiseExpensive" || reportName == "Patient_Transaction_Detail_Type" || reportName == "Patient_Transaction_Detail_SehatSahulatCard" || reportName == "OutPatientsINP" || reportName == "DeptWisePatients" || reportName == "PackageDetailReport" || reportName == "ProcedureDetail" || reportName == "PrivateAdmitionDetail" || reportName == "OPDPrivateDetail" || reportName == "AdvanceDetail" || reportName == "DailyRevenue" || reportName == "OutSourceTestDetail" || reportName == "ConsolidateMedicalSubsidy" || reportName == "PrivateProcedureDetail" || reportName == "TestResultStatus" || reportName == "LabTestDetailCollection" || reportName == "LabTestWiseSummary" || reportName == "Procedure_Service_List" || reportName == "ChargePolicyWiseSummary" || reportName == "LabCashReceivingCollection" || reportName == "BloodIssuance" || reportName == "WholeBloodStockLedger" || reportName == "ComponentBloodStockLedger" || reportName == "CBloodBankStockLedger" || reportName == "LabResultPending" || reportName == "BloodBankLabTest_Details" || reportName == "Blood_Bank_Cash_Collection_Details" || reportName == "NonCashBloodBankRevenue" || reportName == "ComponentBloodBankStockLedger" || reportName == "BloodBankStockLedger" || reportName == "BloodResultPending" || reportName == "OPDTimeLine" || reportName == "WardAllocationTimeLine" || reportName == "ProcedureTimeLine" || reportName == "ProcedureTimeLineDetail" || reportName == "BedOccupancy" || reportName == "AverageLengthOfStay" || reportName == "DepartmentWiseProcedureTimeLine" || reportName == "TestWiseMonthly" || reportName == "TestWiseMonthlyLabTestDepartment" || reportName == "Discharge Time Line Detail")
+            if (reportName == "OPDDetailReport"  || reportName == "DoctorShare_Report" || reportName == "Discharge_Detail" || reportName == "BloodBankCashCollection" || reportName == "Lab_Test_Investigation" || reportName == "TotalPatientRegsreport" || reportName == "DeptWisePatientsCardDetails" || reportName == "MER" || reportName == "AllCashReport" || reportName == "DeptWisePatients" || reportName == "PatientsTypesDetails" || reportName == "rptPatientInvestigationBilling" || reportName == "rptInPatientDetail" || reportName == "AllDoctorShareDetail" || reportName == "GOP_Details" || reportName == "GOP_Summary" || reportName == "BedAllocationReport" || reportName == "DepartmentwiseCashSummary" || reportName == "AdmissionDetail" || reportName == "Discharge Detail" || reportName == "DepartmentConversion" || reportName == "Procedure_Detail" || reportName == "Services_List" || reportName == "InsuranceCompanies" || reportName == "MainTestDepartments" || reportName == "GroupMainTestDepartments" || reportName == "SehatSahulatWise" || reportName == "SehatSahulatWiseExpensive" || reportName == "Patient_Transaction_Detail_Type" || reportName == "Patient_Transaction_Detail_SehatSahulatCard" || reportName == "OutPatientsINP" || reportName == "DeptWisePatients" || reportName == "PackageDetailReport" || reportName == "ProcedureDetail" || reportName == "PrivateAdmitionDetail" || reportName == "OPDPrivateDetail" || reportName == "AdvanceDetail" || reportName == "DailyRevenue" || reportName == "OutSourceTestDetail" || reportName == "ConsolidateMedicalSubsidy" || reportName == "PrivateProcedureDetail" || reportName == "TestResultStatus" || reportName == "LabTestDetailCollection" || reportName == "LabTestWiseSummary" || reportName == "Procedure_Service_List" || reportName == "ChargePolicyWiseSummary" || reportName == "LabCashReceivingCollection" || reportName == "BloodIssuance" || reportName == "WholeBloodStockLedger" || reportName == "ComponentBloodStockLedger" || reportName == "CBloodBankStockLedger" || reportName == "LabResultPending" || reportName == "BloodBankLabTest_Details" || reportName == "Blood_Bank_Cash_Collection_Details" || reportName == "NonCashBloodBankRevenue" || reportName == "ComponentBloodBankStockLedger" || reportName == "BloodBankStockLedger" || reportName == "BloodResultPending" || reportName == "OPDTimeLine" || reportName == "WardAllocationTimeLine" || reportName == "ProcedureTimeLine" || reportName == "ProcedureTimeLineDetail" || reportName == "BedOccupancy" || reportName == "AverageLengthOfStay" || reportName == "DepartmentWiseProcedureTimeLine" || reportName == "TestWiseMonthly" || reportName == "TestWiseMonthlyLabTestDepartment" || reportName == "Discharge Time Line Detail")
             {
                 string Export_To_Excel = Request.QueryString["ExportPDF"].ToString();
                 //rd.ExportToHttpResponse(ExportFormatType.Excel, Response, true, "ExportedReport");
