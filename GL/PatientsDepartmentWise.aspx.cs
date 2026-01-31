@@ -114,6 +114,7 @@ namespace PMS
                     trDoctor.Visible = true;
                     tr_Summary.Visible = true;
                     lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
                     lblPatientType.Text = "Operators";
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Main Category");
@@ -2634,6 +2635,27 @@ namespace PMS
                     dpROw.Visible = false;
                 }
                 if (this.PageTitle == "TimeAndMotion")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+                }
+                if (this.PageTitle == "DailySaleSummary")
                 {
 
                     tr_Summary.Visible = false;

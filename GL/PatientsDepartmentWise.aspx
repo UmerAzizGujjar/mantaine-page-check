@@ -822,6 +822,7 @@
                     }--%>
                     else if (rptTitle == "OPD_Detail_Report") {
                         debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
                         var startDate = $('#ctl00_MainContent_txtStart_Date').val();
                         var startTime = $('#ctl00_MainContent_txtSTime').val();
@@ -841,7 +842,8 @@
                             '&FilterClinic=' + filterclinic +
                             '&DoctorID=' + doc + 
                             '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
-                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0")
+                            + '&ExportPDF=' + exporttopdf;
 
                         window.open(url, '_blank');
                     }
@@ -1145,6 +1147,11 @@
                     else if (rptTitle == "TimeAndMotion") {
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=TimeAndMotion&ReportTitle=Time and Motion Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() ;
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "DailySaleSummary") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Daily_Sale_Summary&ReportTitle=Time and Motion Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() ;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Fast_Slow_Non_Moving_Stock") {
