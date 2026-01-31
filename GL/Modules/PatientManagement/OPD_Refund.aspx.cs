@@ -106,12 +106,18 @@ namespace PMS.Modules.PatientManagement
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     long opdNo = string.IsNullOrEmpty(data.OPD_No) ? 0 : Convert.ToInt64(data.OPD_No);
-                    int patientID = string.IsNullOrEmpty(data.Patient_ID) ? 0 : Convert.ToInt32(data.Patient_ID);
-                    int regPatId = string.IsNullOrEmpty(data.Reg_PatId) ? 0 : Convert.ToInt32(data.Reg_PatId);
+                    if (string.IsNullOrWhiteSpace(data.Patient_ID))
+                        return "Error: OPD Patient is required.";
+                    int patientID = Convert.ToInt32(data.Patient_ID);
+                    if (string.IsNullOrWhiteSpace(data.Reg_PatId))
+                        return "Error: Registered Patient ID is required.";
+                    int regPatId = Convert.ToInt32(data.Reg_PatId);
+                    var regPatient = db.Reg_patients.FirstOrDefault(r => r.pat_id == regPatId);
+                    if (regPatient == null)
+                        return $"Error: Registered Patient with ID {regPatId} does not exist.";
                     DateTime refundDate = DateTime.Now;
                     if (!string.IsNullOrWhiteSpace(data.Refund_Date))
                         DateTime.TryParse(data.Refund_Date, out refundDate);
-
                     decimal totalRefund = data.Hospital_Refund + data.Doctor_Refund;
 
                     if (string.IsNullOrEmpty(data.Refund_ID))
@@ -119,8 +125,8 @@ namespace PMS.Modules.PatientManagement
                         PMS.OPD_Refund refund = new PMS.OPD_Refund
                         {
                             OPD_No = opdNo,
-                            pat_id = patientID, 
-                            Reg_PatId = regPatId,  
+                            pat_id = patientID,
+                            Reg_PatId = regPatId,
                             Refund_Date = refundDate,
                             Hospital_Refund = data.Hospital_Refund,
                             Doctor_Refund = data.Doctor_Refund,
@@ -130,6 +136,18 @@ namespace PMS.Modules.PatientManagement
                             Creation_Date = DateTime.Now
                         };
                         db.OPD_Refunds.InsertOnSubmit(refund);
+                        db.SubmitChanges();
+
+                        Guid userId = AppConfig.UserID;
+                        var result = db.SpApprove_OPDRefund(patientID, userId).FirstOrDefault();
+
+                        if (result != null && !string.IsNullOrEmpty(result.Message))
+                        {
+                            if (!result.Message.Contains("successfully"))
+                            {
+                                return "Refund saved, but voucher issue: " + result.Message;
+                            }
+                        }
                     }
                     else
                     {
@@ -141,8 +159,8 @@ namespace PMS.Modules.PatientManagement
                             return "Error: Refund not found.";
 
                         refund.OPD_No = opdNo;
-                        refund.pat_id = patientID;       
-                        refund.Reg_PatId = regPatId;   
+                        refund.pat_id = patientID;
+                        refund.Reg_PatId = regPatId;
                         refund.Refund_Date = refundDate;
                         refund.Hospital_Refund = data.Hospital_Refund;
                         refund.Doctor_Refund = data.Doctor_Refund;
@@ -162,6 +180,7 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
+
         public class RefundModel
         {
             public string Refund_ID { get; set; }
@@ -172,6 +191,7 @@ namespace PMS.Modules.PatientManagement
             public decimal Hospital_Refund { get; set; }
             public decimal Doctor_Refund { get; set; }
             public string Remarks { get; set; }
+            public static Guid UserID { get; set; }
         }
 
         [WebMethod]
