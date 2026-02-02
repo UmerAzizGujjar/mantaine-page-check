@@ -2,20 +2,21 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    
 
 
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+    
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
             $('#ctl00_lblMessage').hide();
             LoadPage();
         });
 
-
         function PrintReceipt(pat_id) {
-            debugger;
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + pat_id;
+
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
@@ -26,24 +27,48 @@
         }
 
         function LoadPage() {
-            $("#example").DataTable({
-                "processing": true,
-                "serverSide": true,
-                "dom": 'lBfrtip',
-                "lengthChange": true,
-                "buttons": [
+            var table = $("#example").DataTable({
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                dom: 'lBfrtip',
+                lengthChange: true,
+
+                buttons: [
                     {
-                        text: 'Add',
+                        text: '<i class="fa fa-plus"></i> Add',
                         className: 'dt-button buttons-copy buttons-html5',
                         action: function () {
                             window.location = 'RegisterPatient.aspx';
                         }
                     },
-                    'copy', 'excel', 'pdf',
+                    {
+                        extend: 'copy',
+                        text: '<i class="fa fa-copy"></i> Copy',
+                        className: 'dt-button buttons-copy'
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="fa fa-file-excel"></i> Excel',
+                        className: 'dt-button buttons-excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fa fa-file-pdf"></i> PDF',
+                        className: 'dt-button buttons-pdf'
+                    },
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fa fa-columns"></i> Columns',
+                        className: 'dt-button buttons-colvis',
+                        collectionLayout: 'fixed two-column',
+                        postfixButtons: ['colvisRestore']
+                    }
                 ],
-                "filter": true,
-                "order": [[1, "asc"]], 
-                "ajax": function (data, callback, settings) {
+
+                order: [[1, "asc"]],
+
+                ajax: function (data, callback) {
                     $.ajax({
                         type: "POST",
                         url: "RegList.aspx/ViewList",
@@ -64,79 +89,98 @@
                                 recordsFiltered: response.d.recordsFiltered,
                                 data: response.d.data
                             });
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
                         }
                     });
                 },
-                "columns": [
-                    { "data": "pat_id", "visible": false, "width": "0%", "orderable": false }, 
-                    { "data": "MRNO", "name": "MRNO", "width": "8%", "orderable": true }, 
-                    { "data": "Full_Name", "width": "15%", "orderable": false },
-                    { "data": "Age_years", "name": "Age_years", "width": "8%", "orderable": true }, 
-                    {
-                        "data": "Created_time", "name": "Created_time",
-                        "render": function (data, type, full) {
-                            debugger;
-                            var date = full.Created_time;
-                            date = moment(date).format('DD-MMM-YYYY');
-                            return date;
-                        }, "width": "9%"
-                    },
-                    { "data": "NIC", "width": "15%", "orderable": false }, 
-                    { "data": "Mobile1", "width": "10%", "orderable": false }, 
-                    { "data": "Permanent_Address", "width": "30%", "orderable": false }, 
-                    {
-                        render: function (data, type, full) {
-                            var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.pat_id + ')" style="border-radius: 4px;   padding: 5px 8px 5px 8px;"><i  class="fa fa-pencil"></i></a>';
-                            var print = '<a  class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReceipt(' + full.pat_id + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
-                            var result;
-                            result = res + print;
-                            return result;
-                        }, "width": "8%", "orderable": false 
-                    }
-                ],
-                   "initComplete": function (settings, json) {
-                    var lengthContainer = document.querySelector('#example_length');
-                        var lengthDropdown = document.querySelector('#example_length select');
-                        var label = document.querySelector('#example_length label');
 
-                        if (lengthDropdown && label && lengthContainer) {
-                            var labelText = document.createElement('span');
-                            labelText.textContent = 'Show entries ';
-                            labelText.style.marginTop = '10px';
-                            labelText.style.display = 'inline-block';
-
-                            lengthDropdown.style.width = '60px';
-                            label.innerHTML = '';
-                            label.style.display = 'inline-flex';
-                            label.style.marginTop = '17px';
-                            label.appendChild(labelText);
-                            label.appendChild(lengthDropdown);
-                        } else {
-                            console.log("Length dropdown, label, or container not found");
+                columns: [
+                    { data: "pat_id", visible: false, orderable: false }, // 0
+                    { data: "MRNO", name: "MRNO" },                         // 1
+                    { data: "Full_Name" },                                  // 2
+                    { data: "Age_years", name: "Age_years" },               // 3
+                    {
+                        data: "Created_time",
+                        name: "Created_time",
+                        render: function (data) {
+                            return moment(data).format('DD-MMM-YYYY');
                         }
-                    }
+                    },                                                       // 4
+                    { data: "NIC" },                                        // 5
+                    { data: "Mobile1" },                                    // 6
+                    { data: "Permanent_Address" },                          // 7
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, full) {
+                            return `
+                             <a href="#" onclick="editOpen(${full.pat_id})" class="action-btn" title="Edit">
+                                 <i class="fa fa-pencil" style="color: #667eea;"></i>
+                             </a>
+                             <a href="#" style="margin-left:6px" onclick="PrintReceipt(${full.pat_id})" class="action-btn" title="Print">
+                                 <i class="fa fa-print" style="color: #10b981;"></i>
+                             </a>`;
+                        }
+                    }                                                        // 8
+                ],
 
+                columnDefs: [
+                    { targets: [0], visible: false }, // Pat ID hidden always
+                    { targets: [8], className: "noVis" } // Action column not hideable
+                ],
 
+                initComplete: function () {
+                    var api = this.api();
+                    updateColumnHeaders(api);
+                },
+
+                drawCallback: function () {
+                    var api = this.api();
+                    updateColumnHeaders(api);
+                }
+            });
+
+            // Add event listener for column visibility changes
+            table.on('column-visibility.dt', function (e, settings, column, state) {
+                setTimeout(function () {
+                    updateColumnHeaders(table);
+                }, 100);
             });
         }
+
+        function updateColumnHeaders(table) {
+            var api = table;
+            var headers = api.columns().header();
+
+            api.columns().every(function (index) {
+                var column = api.column(index);
+                var header = $(headers[index]);
+                var isVisible = column.visible();
+
+                // Update header indicator
+                if (isVisible) {
+                    header.removeClass('hidden-col');
+                } else {
+                    header.addClass('hidden-col');
+                }
+            });
+        }
+
         function editOpen(id) {
-            window.open("RegisterPatient.aspx?Reg_id=" + id + "");
+            window.open("RegisterPatient.aspx?Reg_id=" + id);
         }
     </script>
 </asp:Content>
-<%--kk--%>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <br />
+  
     <div class="row">
         <div class="table-container col-lg-12 col-md-12 col-sm-12">
-            <table id="example" class="table table-striped table-bordered display">
+            <table id="example" class="table table-striped table-bordered display" style="width:100%">
                 <thead>
                     <tr>
-                        <th style="display: none; width: 0%;">Pat ID</th>
+                        <th>Pat ID</th>
                         <th>MR No.</th>
                         <th>Name</th>
                         <th>Age</th>
@@ -147,8 +191,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="tblbody">
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
