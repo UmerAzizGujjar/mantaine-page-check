@@ -1,22 +1,24 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Biodatadashboard.aspx.cs" Inherits="PMS.Modules.Dashboards.Biodatadashboard" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
+<script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
        <style type="text/css">
-       .table tr {
-           border: 1px solid #D9E4E6;
-           height:55px !important;
-       }
-
-           .table tr th {
-               text-align: center;
-                border: 1px solid #FFF;
-background-color: #308665db;
-color: white;
+           .table tr {
+               border: 1px solid #D9E4E6;
+               height: 55px !important;
            }
-                      .table tr td {
-              text-align: center;
-               border: 1px solid #009b05;
 
-          }
+               .table tr th {
+                   text-align: center;
+                   border: 1px solid #FFF;
+                   background-color: #308665db;
+                   color: white;
+               }
+
+               .table tr td {
+                   text-align: center;
+                   border: 1px solid #009b05;
+               }
 
    </style>
      <script type="text/javascript">
@@ -248,14 +250,17 @@ color: white;
            </div>
 
        </div>
-       <div class="row" style="float: right; margin-top: 20px!important">
-           <div class="col-lg-1">
-
-               <input type="button" id="serach" value="Search" onclick="Loadsearchboard()" />
+           <div class="row">
+               <div class="col-lg-10 col-md-4 col-sm-6">
+           <div class="row">
+               <div class="col-lg-2">
+                   <input type="button" class="btn btn-primry" id="serach" value="Search" onclick="Loadsearchboard()" />
+               </div>
            </div>
-       </div>
-
+               </div>
+               </div>
        <div class="row" style="margin-top: 60px; overflow: scroll!important; height: 700px !important;">
+           
            <div class="col-lg-3">
                <h3>Registartion Details</h3>
                <table class="table" id="regdetail">

@@ -540,7 +540,7 @@
         });
 
         function PrintMecicationDetail() {
-
+            debugger;
             var In_Patient_ID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
             window.open('../../ReportViewer.aspx?ReportName=Medication&ReportTitle=In Patient Medication Print' + '&In_Patient_ID=' + In_Patient_ID);
         }
