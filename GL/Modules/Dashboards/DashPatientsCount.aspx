@@ -2,8 +2,6 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
         <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
-
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
 
     <style type="text/css">
@@ -313,15 +311,15 @@
         <!-- FILTER BAR -->
         <div class="filter-bar">
             <div class="row align-items-end g-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label">Department</label>
                     <select id="ddlDepartemt" class="form-select"></select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label">From Date</label>
                     <input type="text" id="StartDate" class="form-control" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label">To Date</label>
                     <input type="text" id="EndDate" class="form-control" />
                 </div>
