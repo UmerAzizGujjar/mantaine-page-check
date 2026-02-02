@@ -250,14 +250,17 @@
            </div>
 
        </div>
-       <div class="row" style="float: right; margin-top: 20px!important">
-           <div class="col-lg-1">
-
-               <input type="button" id="serach" value="Search" onclick="Loadsearchboard()" />
+           <div class="row">
+               <div class="col-lg-10 col-md-4 col-sm-6">
+           <div class="row">
+               <div class="col-lg-2">
+                   <input type="button" class="btn btn-primry" id="serach" value="Search" onclick="Loadsearchboard()" />
+               </div>
            </div>
-       </div>
-
+               </div>
+               </div>
        <div class="row" style="margin-top: 60px; overflow: scroll!important; height: 700px !important;">
+           
            <div class="col-lg-3">
                <h3>Registartion Details</h3>
                <table class="table" id="regdetail">

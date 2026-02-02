@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬NoorHospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬ASsiraat_Standard" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -11347,6 +11347,43 @@
       <Column Name="Oct" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
       <Column Name="Nov" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
       <Column Name="Dec" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Bio_Data_Dashborad" Method="sp_Bio_Data_Dashborad">
+    <Parameter Name="startdate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="enddate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="gender" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="symptoms" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="city" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="area" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_Bio_Data_DashboradResult">
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Created_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Patient_Address" Type="System.String" DbType="NVarChar(301) NOT NULL" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Mobile1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="opdcreatedtime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Symtom_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="val_area" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="val_city" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Out_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Out_Patient_ID1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Symptoms" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetTopSymptoms" Method="sp_GetTopSymptoms">
+    <Parameter Name="startdate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="enddate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="gender" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="symptoms" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="city" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="area" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetTopSymptomsResult">
+      <Column Name="symtom_count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="symtom_name" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
