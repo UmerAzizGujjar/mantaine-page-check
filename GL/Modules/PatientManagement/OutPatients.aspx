@@ -46,6 +46,7 @@
             
         }
         function loaddoctor(id) {
+
             PageMethods.LoadDoctor(id, function (res) {
                 var doctor = JSON.parse(res);
                 var options = '';
@@ -1662,6 +1663,15 @@
 
             });
             AllowOPDTabs();
+            var ids = '<%=Request.QueryString["ID"]%>';
+            debugger;
+            if (ids != "") {
+                loaddoctor(id);
+
+            }
+            else {
+                loadAllDoctor();
+            }
             //localStorage.clear();
             
             $('#Add_Unlisted_Medicine').attr('disabled', false);
@@ -1994,7 +2004,7 @@
                         value.Folllow_Date = "";
                     //if (value.Doctor_ID != null)
                     //    $('#ctl00_MainContent_ddlDoctorName').val(value.Doctor_ID).trigger('change');
-                    if (value.Doctor_ID == "0") {
+                    if (value.Doctor_ID == null) {
                         loadAllDoctor();
                         $('#ctl00_MainContent_ddlDoctorName').attr('disabled', true);
                     }
@@ -3503,6 +3513,7 @@
 
 
             var ids = '<%=Request.QueryString["ID"]%>';
+            debugger;
             if (ids != "") {
                 loaddoctor(id);
 
