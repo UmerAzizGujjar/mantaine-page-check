@@ -777,10 +777,13 @@
 
                     $('#ddlmanu').html(
                         $('<option>', {
-                            value: parse.Manufacture_Company,
-                            text: parse.Manufacture_Text
+                            value: parse.Manufacture_Company == 0 ? 0 : parse.Manufacture_Company,
+                            text: (!parse.Manufacture_Text || parse.Manufacture_Company == 0)
+                                ? 'Please Select'
+                                : parse.Manufacture_Text
                         })
                     );
+
 
                     $('#ddlitem_type').html(
                         $('<option>', {
@@ -812,22 +815,29 @@
 
                     $('#ddlitem_Qty').html(
                         $('<option>', {
-                            value: parse.Item_Category,
-                            text: parse.Item_Category_Text
+                            value: parse.Item_Category == 0 ? 0 : parse.Item_Category,
+                            text: (!parse.Item_Category_Text || parse.Item_Category == 0)
+                                ? 'Please Select'
+                                : parse.Item_Category_Text
                         })
                     );
 
+
                     $('#ddlProcedureTypes').html(
                         $('<option>', {
-                            value: parse.Procedure_Type,
-                            text: parse.Procedure_Type_Text
+                            value: parse.Procedure_Type == 0 ? 0 : parse.Procedure_Type,
+                            text: (!parse.Procedure_Type_Text || parse.Procedure_Type == 0)
+                                ? 'Please Select'
+                                : parse.Procedure_Type_Text
                         })
                     );
 
                     $('#ddldepartment').html(
                         $('<option>', {
-                            value: parse.DepartmentId,
-                            text: parse.DepartmentId_Text
+                            value: parse.DepartmentId == 0 ? 0 : parse.DepartmentId,
+                            text: (!parse.DepartmentId_Text || parse.DepartmentId == 0)
+                                ? 'Please Select'
+                                : parse.DepartmentId_Text
                         })
                     );
 

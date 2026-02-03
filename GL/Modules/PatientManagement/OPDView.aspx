@@ -93,13 +93,22 @@
                 "lengthChange": true,
                 "buttons": [
                     {
-                    text: 'Add',
-                    className: 'dt-button buttons-copy buttons-html5',
-                    action: function () {
-                        window.location = 'OPD.aspx';
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            window.location = 'OPD.aspx';
+                        }
+                    },
+                    'copy',
+                    'excel',
+                    'pdf',
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fa fa-columns"></i> Columns',
+                        className: 'dt-button buttons-colvis',
+                        collectionLayout: 'fixed two-column',
+                        postfixButtons: ['colvisRestore']
                     }
-                },
-                    'copy', 'excel', 'pdf',
                 ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
@@ -141,7 +150,8 @@
                     { "data": "Patient_ID", "visible": false, "width": "0%", "orderable": false },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
                     { "data": "Opd_No", "name": "Opd_No", "width": "5%", "orderable": false },
-                    { "data": "Full_Name", "width": "13%", "orderable": false },
+                    { "data": "Token_No", "name": "Token_No", "width": "5%", "orderable": false },
+                    { "data": "Full_Name", "width": "10%", "orderable": false },
                     { "data": "Patient_Type", "width": "6%", "orderable": false },
                     { "data": "Department", "width": "10%", "orderable": false },
                     { "data": "NIC", "width": "8%", "orderable": false },
@@ -200,10 +210,11 @@
                     <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
                   <thead id="ihead">
                     <tr>
-                        <th style="width:2% !important;">Sr#</th>                 <!-- 1st: Sr# -->
-                        <th style="display: none;">Patient ID</th>      <!-- 2nd: Hidden -->
+                        <th style="width:2% !important;">Sr#</th>                
+                        <th style="display: none;">Patient ID</th>    
                         <th style="width: 8%;">MR No.</th>
                         <th style="width: 5%;">OPD</th>
+                        <th style="width: 5%;">Token No</th>
                         <th style="width: 13%;">Name</th>
                         <th style="width: 10%;">Category</th>
                         <th style="width: 10%;">Department</th>
