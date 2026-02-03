@@ -695,7 +695,9 @@
                             '<td style="padding-right: 3px!important;"><input type="hidden" name="txtPONO" id="txtPONO' + rowlength + '" value="" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/>' + PONum + '</td>' +
                             '<td style="padding-right: 3px!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + rowlength + '" value="' + value.Item_Code + '" style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/> ' + value.Item_Code + ' </td>' +
                             '<td style="padding-left: 3px!important;"><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '" value="' + value.Description + '" style="width:50px !important;text-align:left;font-size:9px;height:10px !important ;"/> ' + value.Description + ' </td>' +
+                            '<td><input type="text" name="txtuomqty" id="txtuomqty' + rowlength + '" value="' + value.UOM_Qty + '" style="width:50px !important;text-align:left;font-size:9px;height:21px !important ;" /></td>' +
                             '<td style="padding-left: 3px!important;"><input type="hidden" name="txtUnit" id="txtUnit' + rowlength + '" value="' + value.Unit + '" />' + value.UnitName + ' </td>' +
+
                             '<td><input type="text" name="BatchNo" id="BatchNo' + rowlength + '" value="" style="width:50px !important;text-align:left;font-size:9px;height:21px !important ;" onkeyup="BatchValidation(this)"/></td>' +
                             '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtdeliverydate" id="txtdeliverydate' + rowlength + '" value="' + datetime + '" readonly="readonly"/></td>' +
                             '<td style="padding-right: 3px!important;"><input type="hidden" value="' + parseFloat(value.Qty).toFixed(2) + '" style="width: 50px !important;text-align:right;font-size:9px;height:10px !important; id="POQty' + rowlength + '" name="POQty" style="width:50px !important;"></input>' + parseFloat(value.Qty).toFixed(2) + '</td>' +
@@ -1114,6 +1116,7 @@
                             <th style="width: 30px; text-align: center;">PO #</th>
                             <th style="width: 40px; text-align: center; font-size: 10px;">Item Code</th>
                             <th style="width: 195px; text-align: center;">Item Description</th>
+                            <th style="width: 35px; text-align: center;">UOM_QTY</th>
                             <th style="width: 35px; text-align: center;">Unit</th>
                             <th style="width: 40px; text-align: center;">Batch No</th>
                             <th style="width: 62px; text-align: center;">PO Delivery Date</th>
