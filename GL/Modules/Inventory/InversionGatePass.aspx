@@ -226,6 +226,7 @@
                             '<td align="right !important" style="padding-right: 3px!important;"><input type="hidden" name="txtPONO" id="txtPONO' + (key + 1) + '"  value="' + value.PO_No + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/>' + value.PO_No + '</td>' +
                             '<td style="padding-right: 3px!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + (key + 1) + '"  value="' + value.Item_Code + '"  style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"/> ' + value.Item_Code + ' </td>' +
                             '<td style="padding-left: 3px!important;"><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '"  value="' + value.Description + '" style="width:50px !important;text-align:left;font-size:9px;height:10px;!important"/> ' + value.Description + ' </td>' +
+                            '<td><input type="text" name="txtuomqty" id="txtuomqty' + rowlength + '"  value="' + value.UOM_Qty + '" style="width:50px !important;text-align:left;font-size:9px;height:21px !important;" /></td>' +
                             '<td style="padding-left: 3px!important;"><input type="hidden" name="txtUnit" id="txtUnit' + rowlength + '"  value="' + value.Unit_ID + '" />' + value.UOM + ' </td>' +
                             '<td><input type="text" name="BatchNo" id="BatchNo' + rowlength + '"  value="' + value.BatchNum + '" style="width:50px !important;text-align:left;font-size:9px;height:21px !important;" onkeyup="BatchValidation(this)"/></td>' +
                             '<td><input type="text" style="width:65px !important;text-align:center;font-size:9px;height:21px !important;" name="txtdeliverydate" id="txtdeliverydate' + (key + 1) + '"  value="' + datetime + '" readonly="readonly" /></td>' +
@@ -357,6 +358,7 @@
                     var ExpDate = ExpDateValue ? new Date(ExpDateValue).setHours(0, 0, 0, 0) : null;
                     var MfgDate = MfgDateValue ? new Date(MfgDateValue).setHours(0, 0, 0, 0) : null;
                     var BatchNo = $($(value).find('td input[name=BatchNo]')[0]).val();
+                    var txtuomqty = $($(value).find('td input[name=txtuomqty]')[0]).val();
                     var Isbatch = $($(value).find('td input[name=Isbatch]')[0]).val();
                     var item_code = $($(value).find('td input[name=txtItemCode]')[0]).val();
                     var igpQTy = parseFloat($($(value).find('td input[name=IgpQty]')[0]).val()) || 0;
@@ -519,7 +521,7 @@
                 debugger;
                 table.find('tr').each(function (key, value) {
                     debugger;
-                    Item_list.push({ 'PODetailId': $(value).find('td input[name=txtPODetailId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'RcvQty': $(value).find('td input[name=RcvQty]').val(), 'POQty': $(value).find('td input[name=POQty]').val(), 'BatchNo': $(value).find('td input[name=BatchNo]').val(), 'BlncQty': $(value).find('td input[name=blncQty]').val(), 'IgpQty': $(value).find('td input[name=IgpQty]').val(), 'InspecQty': $(value).find('td input[name=InspQty]').val(), 'BounusQty': $(value).find('td input[name=BounusQty]').val(), 'Mfgdate': $(value).find('td input[name=txtMfgdate]').val(), 'Expdate': $(value).find('td input[name=Expdate]').val(), });
+                    Item_list.push({ 'PODetailId': $(value).find('td input[name=txtPODetailId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'RcvQty': $(value).find('td input[name=RcvQty]').val(), 'POQty': $(value).find('td input[name=POQty]').val(), 'BatchNo': $(value).find('td input[name=BatchNo]').val(), 'txtuomqty': $(value).find('td input[name=txtuomqty]').val(), 'BlncQty': $(value).find('td input[name=blncQty]').val(), 'IgpQty': $(value).find('td input[name=IgpQty]').val(), 'InspecQty': $(value).find('td input[name=InspQty]').val(), 'BounusQty': $(value).find('td input[name=BounusQty]').val(), 'Mfgdate': $(value).find('td input[name=txtMfgdate]').val(), 'Expdate': $(value).find('td input[name=Expdate]').val(), });
                 });
                 var AllItemDetail = { 'Igp_num': IgpNo, 'Date': date, 'Vendor': Vendor, 'DriverName': DriverName, 'VehicleNum': VehicleNum, 'BilityNum': Bility_No, 'remarks': Remarks, 'InvOrg': InvOrg, 'ItemList': Item_list };
                 PageMethods.SaveIgpDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
