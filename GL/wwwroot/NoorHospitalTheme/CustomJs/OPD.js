@@ -179,6 +179,39 @@ $(document).ready(function () {
         }, 0);
     });
 
+    const defaultValues = {
+        '#ddlCountry': '01',
+        '#ddl_Province': '01',
+        '#txtcity': '0001',
+        '#txtarea': '001'
+    };
+
+    function setDefaultDropdownValue(selector, defaultValue) {
+        const $el = $(selector);
+        if ($el.length === 0) return;
+
+        const methodMap = {
+            '#ddlCountry': 'GetCountry',
+            '#ddl_Province': 'GetProvince',
+            '#txtcity': 'GetCity',
+            '#txtarea': 'GetArea'
+        };
+
+        const method = methodMap[selector];
+        if (!method) return;
+
+        fillDropdown($el, method, function () {
+            $el.val(defaultValue).trigger('change');
+            if ($el.hasClass('select2-hidden-accessible')) {
+                $el.trigger('change.select2');
+            }
+        });
+    }
+
+    Object.keys(defaultValues).forEach(selector => {
+        setDefaultDropdownValue(selector, defaultValues[selector]);
+    });
+
     showhide();
     FillModePresentation();
     get_totalpatient();
@@ -186,8 +219,11 @@ $(document).ready(function () {
     FillCashier();
 
 });
-function fillDropdown($dropdown, methodName) {
-    if ($dropdown.data('filled')) return;
+function fillDropdown($dropdown, methodName, callback = null) {
+    if ($dropdown.data('filled')) {
+        if (callback) callback();
+        return;
+    }
 
     $dropdown.data('filled', false);
 
@@ -211,17 +247,22 @@ function fillDropdown($dropdown, methodName) {
                 $dropdown.html(options)
                     .data('filled', true)
                     .trigger('change');
-                if ($dropdown.hasClass('select2-hidden-accessible')) {
+
+                if ($dropdown.hasClass('select2-hidden-accessible') && $dropdown.select2('isOpen')) {
                     $dropdown.select2('close').select2('open');
                 }
+
+                if (callback) callback();
             } catch (e) {
                 console.error(`Error parsing data from ${methodName}:`, e);
                 $dropdown.data('filled', false);
+                if (callback) callback();
             }
         },
         error: function (xhr, status, error) {
             console.error(`Error fetching ${methodName}:`, error);
             $dropdown.data('filled', false);
+            if (callback) callback();
         }
     });
 }
