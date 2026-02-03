@@ -1980,10 +1980,10 @@
         <elementListCompartment Id="65733121-3979-4174-8a01-8f2bcca3b3a7" absoluteBounds="37.39, 57.21, 1.9700000000000002, 2.941609700520833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="dec7ba32-0d15-42f2-abf5-6c199a7090a6" absoluteBounds="55.5, 45.25, 2, 3.1170068359375">
+    <classShape Id="fb0e44c1-e2a9-4763-a6d3-576181666dd2" absoluteBounds="55.375, 45.25, 2, 3.1170068359375">
       <DataClassMoniker Name="/DataBaseDataContext/Goods_Return_Detail" />
       <nestedChildShapes>
-        <elementListCompartment Id="731c0c8d-deda-4fe5-81ac-f6318390579e" absoluteBounds="55.515, 45.71, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="f564824e-1bcb-4d03-b0de-234723894a0c" absoluteBounds="55.39, 45.71, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>
