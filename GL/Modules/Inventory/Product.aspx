@@ -409,15 +409,20 @@
             PageMethods.Getbatch_grn(item_id, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
-
+                debugger;
                 $.each(parsedData.GRN_Details, function (key, value) {
-                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
+                    debugger;
+                    options += '<option value="' + value.BatchNum +
+                        '" data-uomqty="' + value.uomqty + '">' +
+                        value.BatchNum + '</option>';
                 });
 
                 $.each(parsedData.Stock_Adjustment_Details, function (key, value) {
-                    options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
+                    options += '<option value="' + value.BatchNum +
+                        '" data-uomqty="0">' +   // no uomqty available here
+                        value.BatchNum + '</option>';
                 });
-
+                debugger;
                 $('#ddlBatchNum').html(options);
                 $('#ddlBatchNum').select2();
                 $('.select2-container--default').css('width', "150px")
@@ -426,16 +431,20 @@
             });
         }
         function AppendBatch() {
-            debugger
+            debugger;
+
             var selectedOption = $('#ddlBatchNum option:selected');
             var selectedValue = selectedOption.val();
             var selectedText = selectedOption.text();
+            var uomqty = selectedOption.data('uomqty') || 0;
+
             if (selectedValue && selectedValue !== "0") {
-                var rows = '';
                 var rowlength = BatchTable.rows.length;
-                rows = '<tr>' +
+
+                var rows = '<tr>' +
                     '<td>' +
-                    '<input type="hidden" name="ddlBatch" id="ddlBatch' + rowlength + '" value="' + selectedText + '" />' + selectedText +
+                    '<input type="hidden" name="ddlBatch" id="ddlBatch' + rowlength + '" value="' + selectedText + '" />' +
+                    selectedText +
                     '</td>' +
                     '<td>' +
                     '<input type="text" name="txtBatchRate" id="txtBatchRate' + rowlength + '" value="0" />' +
@@ -444,14 +453,19 @@
                     '<input type="text" name="txtsehatcardrate" id="txtsehatcardrate' + rowlength + '" value="0" />' +
                     '</td>' +
                     '<td>' +
-                    '<input type="text" name="txtUom_Qty" id="txtUom_Qty' + rowlength + '" value="0" />' +
+                    '<input type="text" name="txtUom_Qty" id="txtUom_Qty' + rowlength + '" value="' + uomqty + '" />' +
                     '</td>' +
-                    '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
+                    '<td>' +
+                    '<a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">' +
+                    '<i class="glyphicon glyphicon-trash" style="width:15px;font-size:13px;color:#f30a0a;"></i>' +
+                    '</a>' +
                     '</td>' +
-                    '</tr>'
+                    '</tr>';
+
                 $('#BatchTable_body').append(rows);
             }
         }
+
 
         function GetDiscountItem() {
             $.ajax({
