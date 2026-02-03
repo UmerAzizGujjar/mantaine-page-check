@@ -185,7 +185,7 @@ namespace PMS
 
 
             var wards = (from tbl2 in db.Ward_Definitions
-                         where tbl2.Department == "024"
+                         where (tbl2.Ward_Type != null && tbl2.Ward_Type.ToLower().Contains("Emergency"))
                          select tbl2).ToList();
 
             ddlWard_No.DataSource = wards;

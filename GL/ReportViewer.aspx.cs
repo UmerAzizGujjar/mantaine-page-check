@@ -4120,12 +4120,14 @@ namespace PMS
             {
                 try
                 {
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     reportPath += "InPatient/rpt_GetIn_Patient_ID_Medication.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("Title", reportTitle);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                     rd.SetParameterValue("@In_Patient_ID", Request.QueryString["In_Patient_ID"]);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
                 }
                 catch (Exception ex)
                 {

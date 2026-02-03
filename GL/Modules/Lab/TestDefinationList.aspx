@@ -75,6 +75,7 @@
                     { "data": "Group_Category", "name": "Group_Category", "orderable": true },
                     { "data": "Group_Department", "name": "Group_Department", "orderable": true },
                     { "data": "Unit", "name": "Unit", "orderable": false },
+                    { "data": "Rate", "name": "Rate", "orderable": false },
                     { "data": "Active", "name": "Active", "orderable": false },
                     {
                         "render": function (data, type, full) {
@@ -218,6 +219,7 @@
                     <th>Group Category</th>
                     <th>Group Department</th>
                     <th>Unit</th>
+                    <th>Rate</th>
                     <th>Active</th>
                     <th>Action</th>
                         </tr>

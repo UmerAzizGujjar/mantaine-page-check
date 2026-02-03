@@ -260,6 +260,8 @@
     <Content Include="Modules\Inventory\BOM.aspx" />
     <Content Include="Modules\Inventory\BOM_View.aspx" />
     <Content Include="Modules\Inventory\FurtherTaxDefinition.aspx" />
+    <Content Include="Modules\Inventory\GoodsRerturnNote.aspx" />
+    <Content Include="Modules\Inventory\GoodsRerturnNoteView.aspx" />
     <Content Include="Modules\Inventory\PharmacyView.aspx" />
     <Content Include="Modules\Inventory\Service.aspx" />
     <Content Include="Modules\Inventory\ServiceView.aspx" />
@@ -26116,6 +26118,20 @@
     </Compile>
     <Compile Include="Modules\Inventory\FurtherTaxDefinition.aspx.designer.cs">
       <DependentUpon>FurtherTaxDefinition.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Inventory\GoodsRerturnNote.aspx.cs">
+      <DependentUpon>GoodsRerturnNote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Inventory\GoodsRerturnNote.aspx.designer.cs">
+      <DependentUpon>GoodsRerturnNote.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Inventory\GoodsRerturnNoteView.aspx.cs">
+      <DependentUpon>GoodsRerturnNoteView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Inventory\GoodsRerturnNoteView.aspx.designer.cs">
+      <DependentUpon>GoodsRerturnNoteView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Inventory\PharmacyView.aspx.cs">
       <DependentUpon>PharmacyView.aspx</DependentUpon>

@@ -101,7 +101,7 @@
             return (((sign) ? '' : '-') + num);
         }
         function GetDetail(PO_No) {
-
+            debugger;
             PageMethods.GetPODetail(PO_No, function (res) {
                 var Test = JSON.parse(res);
 
@@ -147,6 +147,7 @@
         }
 
         function append(anchor, isBulk = false) {
+            debugger;
             // debugger; // Removed for performance, uncomment if needed for testing
             var row = $(anchor).parents('tr')[0];
             var PR_Num = $($(row).find('td')[1]).text();
@@ -156,9 +157,11 @@
             var pr_detail_id = $($(row).find('td')[9]).text();
             var Qty = $($(row).find('td')[4]).text();
             var itemcode = $($(row).find('td')[5]).text();
+            var UOM_Qty = $($(row).find('td')[10]).text();
 
             if (unit == "null") unit = "";
             if (Rate == "null" || Rate == "NaN") Rate = "0";
+            if (UOM_Qty == "null" || UOM_Qty == "") UOM_Qty = "0";
 
             var length = $("#tblItemDescription tr:gt(0)").length + 1;
 
@@ -190,6 +193,7 @@
                     '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + ' </td>' +
                     '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + ' </td>' +
                     '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + Qty + '"/></input></td>' +
+                    '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + UOM_Qty + '" /></td>' + 
                     '<td>' + '<input type="text" id="txtBonusQty' + length + '"' + ' style="text-align:right;width:50px!important;font-size:9px;height:20px;"' + ' name="txtBonusQty" value="0"' + ' data-toggle="tooltip"' + ' data-placement="bottom"' + ' title="Enter Bonus quantity in Loose"' + '/>' + '</td>' +
                     '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + Rate + '" /></td>' +
                     '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +
@@ -258,7 +262,7 @@
             return xmlHttp.responseText;
         }
         function LoadPrNoDetail(pr_id) {
-            debugger
+            debugger;
             PageMethods.getPurchaseByID(pr_id, function (data) {
                 debugger;
                 var Test = JSON.parse(data);
@@ -266,9 +270,8 @@
                 var rows = "";
                 for (var i = 0; i < Test.length; i++) {
                     debugger;
-
                     rows = '<tr><td><input class="chktd" id="chktd" name="chktd" type="checkbox" style=" margin-top: -2px;" onclick="append(this)"/></td><td style="display:none;">' + Test[i].PR_Num + '</td><td style="display:none;">' + Test[i].Item_ID + '</td><td>' + Test[i].Description + '</td><td>' + parseFloat(Test[i].Qty).toFixed(2)
-                        + '</td><td style="display:none;">' + Test[i].Item_Code + '</td><td style="display:none;">' + Test[i].Unit + '</td><td style="display:none;">' + parseFloat(Test[i].Pack_Quantity).toFixed(2) + '</td><td style="display:none;">' + parseFloat(Test[i].UnitPrice).toFixed(2) + '</td><td style="display:none;">' + Test[i].PR_Detail_ID + '</td></tr>';
+                        + '</td><td style="display:none;">' + Test[i].Item_Code + '</td><td style="display:none;">' + Test[i].Unit + '</td><td style="display:none;">' + parseFloat(Test[i].Pack_Quantity).toFixed(2) + '</td><td style="display:none;">' + parseFloat(Test[i].UnitPrice).toFixed(2) + '</td><td style="display:none;">' + Test[i].PR_Detail_ID + '</td><td style="display:none;">' + (Test[i].UOM_Qty != null ? Test[i].UOM_Qty : '0') + '</td></tr>'; 
                     $('#tblPOItemstModelTable tbody').append(rows);
                 }
                 $('#POItemsModel').modal({
@@ -536,6 +539,7 @@
                     if (value.pr_id.includes("ERROR") || value.pr_id.includes("Execute") || value.pr_id.includes("There")) value.pr_id = "";
                     if (value.CS_Ven_No == null) value.CS_Ven_No = "";
                     if (value.PRDetailId == null) value.PRDetailId = 0;
+                    if (value.UOM_Qty == null) value.UOM_Qty = 0;
 
                     var rowlength = $('#tblItemDescription tr').length;
                     var row = '<tr>' +
@@ -546,6 +550,7 @@
                         '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + (key + 1) + '"  value="' + value.Item_Name + '" /> ' + value.Item_Name + ' </td>' +
                         '<td style="text-align:left!important;"><input type="hidden" name="txtUnit" id="txtUnit' + (key + 1) + '"  value="' + value.Unit + '" />' + value.Unit + ' </td>' +
                         '<td><input type="text"  id="txtQty' + (key + 1) + '" name="txtQty" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" value=' + parseFloat(value.Qty).toFixed(2) + '></input></td>' +
+                        '<td><input type="text" id="txtUOMQty' + (key + 1) + '" name="txtUOMQty" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.UOM_Qty != null ? parseFloat(value.UOM_Qty).toFixed(2) : '0') + '" /></td>' +
                         '<td><input type="text" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.Bonus_Qty != null ? parseFloat(value.Bonus_Qty).toFixed(2) : '0') + '" id="txtBonusQty' + (key + 1) + '" name="txtBonusQty" /></td>' +
                         '<td><input type="text" name="txtRate" style="text-align:right ;width:50px !important;font-size:9px;height:20px" onkeyup="CulculateAmonutWithQty(this)" id="txtRate' + (key + 1) + '"  value="' + parseFloat(value.Rate).toFixed(2) + '" /></td>' +
                         '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" readonly="readonly"  name="txtDisPer" id="txtDisPer' + (key + 1) + '"  value="' + value.Discount_Percentage + '" /></td>' +
@@ -719,6 +724,7 @@
                             '<td style="padding-left: 8px!important;padding-top: 7px!important;"><input type="hidden" name="txtItemName" id="txtItemName' + rowlength + '"  value="' + value.Description + '"/> ' + value.Description + ' </td>' +
                             '<td> <input type="hidden" name="txtUnit" id="txtUnit' + rowlength + '"  value="' + value.Unit + '" />' + value.UnitName + ' </td>' +
                             '<td><input type="text"  id="txtQty' + rowlength + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-top: 4px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + value.Qty + '"/></input></td>' +
+                            '<td><input type="text" id="txtUOMQty' + rowlength + '" name="txtUOMQty" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.UOM_Qty != null ? parseFloat(value.UOM_Qty).toFixed(2) : '0') + '" /></td>' +
                             '<td>' + value.Pack_Quantity + '</td>' +
                             '<td><input type="text" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-top: 4px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + rowlength + '"  value="' + value.Purchase_Rate + '" /></td>' +
 
@@ -1090,6 +1096,8 @@
                 table.find('tr').each(function (key, value) {
                     var Qty = $(value).find('td input[name=txtQty]').val();
                     var Rate = $(value).find('td input[name=txtRate]').val();
+                    var UOM_Qty = $(value).find('td input[name=txtUOMQty]').val();
+
                     if (Qty == 0 || Qty == "" || Qty < 0) {
                         proceed = false;
                         Swal.fire({
@@ -1123,6 +1131,23 @@
                         });
                         
                         $("#btnSave").prop("disabled", false).removeAttr("disabled");
+                    }
+                    if (UOM_Qty == "0" || UOM_Qty == "" || parseFloat(UOM_Qty) <= 0) {
+                        proceed = false;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please add UOM_Qty',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $("#btnSave").prop("disabled", false).removeAttr("disabled");
+                        return false;
                     }
                 });
             }
@@ -1176,7 +1201,7 @@
                     }
                     else {
                         Item_list.push({
-                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'BonusQty': $(value).find('td input[name=txtBonusQty]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val(), 'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(), 'AdvanceTax_Amount': $(value).find('td input[name=txtAdvanceTaxAmount]').val(), 'FurtherTax_Id': $("#ddlFurtherTax" + (key + 1) + " option:selected").val(), 'BonusTax': $(value).find('td input[name=txtBonusAmount]').val(),
+                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'BonusQty': $(value).find('td input[name=txtBonusQty]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'UOM_Qty': $(value).find('td input[name=txtUOMQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val(), 'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(), 'AdvanceTax_Amount': $(value).find('td input[name=txtAdvanceTaxAmount]').val(), 'FurtherTax_Id': $("#ddlFurtherTax" + (key + 1) + " option:selected").val(), 'BonusTax': $(value).find('td input[name=txtBonusAmount]').val(),
                             'FurtherTax_Amount': $(value).find('td input[name=txtFurtherTaxAmount]').val(),
 
                         });
@@ -1466,6 +1491,7 @@
                     <th style="width: 218px; text-align: center;">Item Description</th>
                     <th style="width: 60px;">Unit</th>
                     <th style="width: 60px;">Qty</th>
+                    <th style="width: 60px;">UOM Qty</th>
                     <th style="width: 60px;">Bonus Qty</th>
                     <th style="width: 60px;">Rate</th>
                     <th style="width: 63px;">Dis %</th>

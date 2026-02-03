@@ -193,6 +193,7 @@ namespace PMS
         public class BatchStock
         {
             public string BatchNum { get; set; }
+            public int? uomqty { get; set; }
             //public string Source { get; set; }
         }
 

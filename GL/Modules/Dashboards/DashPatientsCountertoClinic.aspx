@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DashPatientsCountertoClinic.aspx.cs" Inherits="PMS.Modules.Dashboards.DashPatientsCountertoClinic" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js" type="text/javascript"></script>
+    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js" type="text/javascript"></script>
         <style type="text/css">
         .table tr {
             border: 1px solid #D9E4E6;
@@ -27,12 +29,11 @@
             width: 250px;
             height:70px;
         }
-         select{
-        width:200px !important;
-    }
-         input{
-             width:200px !important;
-         }
+            select {
+                width: 200px !important;
+            }
+
+        
         #Box3 {
             width: 250px;
             height:70px;
@@ -211,7 +212,9 @@
             <label> End Date: </label>
             <input type="text" id="txtedate" />
         </div>
+        
         <div class="col-lg-2">
+            <label></label>
             <input type="button" id="serach" class="btn btn-primry" value="Search" onclick="Loadsearchboard()" />
         </div>
     </div>
