@@ -101,7 +101,7 @@
             return (((sign) ? '' : '-') + num);
         }
         function GetDetail(PO_No) {
-
+            debugger;
             PageMethods.GetPODetail(PO_No, function (res) {
                 var Test = JSON.parse(res);
 
@@ -147,6 +147,7 @@
         }
 
         function append(anchor, isBulk = false) {
+            debugger;
             // debugger; // Removed for performance, uncomment if needed for testing
             var row = $(anchor).parents('tr')[0];
             var PR_Num = $($(row).find('td')[1]).text();
@@ -156,7 +157,7 @@
             var pr_detail_id = $($(row).find('td')[9]).text();
             var Qty = $($(row).find('td')[4]).text();
             var itemcode = $($(row).find('td')[5]).text();
-            var UOM_Qty = $($(row).find('td')[7]).text();
+            var UOM_Qty = $($(row).find('td')[10]).text();
 
             if (unit == "null") unit = "";
             if (Rate == "null" || Rate == "NaN") Rate = "0";
@@ -261,7 +262,7 @@
             return xmlHttp.responseText;
         }
         function LoadPrNoDetail(pr_id) {
-            debugger
+            debugger;
             PageMethods.getPurchaseByID(pr_id, function (data) {
                 debugger;
                 var Test = JSON.parse(data);

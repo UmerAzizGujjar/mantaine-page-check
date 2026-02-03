@@ -934,6 +934,7 @@ namespace PMS
         partial void UpdateGRN_Detail(GRN_Detail instance);
         partial void DeleteGRN_Detail(GRN_Detail instance);
         #endregion
+
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -212579,6 +212580,8 @@ namespace PMS
 
         private System.Nullable<decimal> _UnitPrice;
 
+        private System.Nullable<decimal> _UOM_Qty;
+
         public sp_GetPRDetailByPRIDResult()
         {
         }
@@ -212739,6 +212742,22 @@ namespace PMS
                 if ((this._UnitPrice != value))
                 {
                     this._UnitPrice = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UOM_Qty", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> UOM_Qty
+        {
+            get
+            {
+                return this._UOM_Qty;
+            }
+            set
+            {
+                if ((this._UOM_Qty != value))
+                {
+                    this._UOM_Qty = value;
                 }
             }
         }
