@@ -211,6 +211,7 @@ namespace PMS.AP
                                d.Batch_No,
                                d.Expire_Date,
                                d.Qty,
+                               d.UOM_Qty,
                                d.Rate,
                                d.Amount,
                                d.Discount_Amount,
@@ -431,6 +432,7 @@ namespace PMS.AP
             public int FurtherTax_Id { get; set; }
             public string BonusQty { get; set; }
             public string BonusTax { get; set; }
+            public string UOM_Qty { get; set; }
 
         }
         [WebMethod]
@@ -591,6 +593,14 @@ namespace PMS.AP
                 ltd.Unit = POitem.Unit;
                 ltd.Qty = Convert.ToDecimal(POitem.Qty);
                 ltd.Bonus_Qty = !string.IsNullOrEmpty(POitem.BonusQty) ? Convert.ToDecimal(POitem.BonusQty): 0;
+                if (!string.IsNullOrEmpty(POitem.UOM_Qty))
+                {
+                    ltd.UOM_Qty = Convert.ToDecimal(POitem.UOM_Qty);
+                }
+                else
+                {
+                    ltd.UOM_Qty = null;
+                }
                 ltd.Rate = Convert.ToDecimal(POitem.Rate);
                 ltd.Amount = Convert.ToDecimal(POitem.Amount);
                 //if (POitem.Fed_Percentage != "")
