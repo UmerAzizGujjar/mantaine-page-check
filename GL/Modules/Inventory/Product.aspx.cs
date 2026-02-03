@@ -231,7 +231,8 @@ namespace PMS.Inventory
 
                                  select new
                                  {
-                                     BatchNum = ds.BatchNum
+                                     BatchNum = ds.BatchNum,
+                                     uomqty = ds.UOM_Qty,
                                  }).ToList();
                 foreach (var batchNum in grnResult)
                 {
@@ -242,6 +243,7 @@ namespace PMS.Inventory
                         batchStockListgrn.Add(new BatchStock
                         {
                             BatchNum = batchNum.BatchNum,
+                            uomqty = batchNum.uomqty,
 
                         });
                     }

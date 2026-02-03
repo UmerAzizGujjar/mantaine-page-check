@@ -62,6 +62,7 @@ namespace PMS.Inventory
             public string BlncQty { get; set; }
             public string IgpQty { get; set; }
             public string BounusQty { get; set; }
+            public int? txtuomqty { get; set; }
             public int PODetailId { get; set; }
             public string Mfgdate { get; set; }
             public string Expdate { get; set; }
@@ -164,6 +165,11 @@ namespace PMS.Inventory
                 ltd.PO_Item_ID = Convert.ToInt32(POitem.PODetailId);
                 ltd.Item_Id = Convert.ToInt32(DBClass.getField("select Item_Id from inv_items where Item_Code=" + Convert.ToInt32(POitem.ItemCode)));
                 ltd.BatchNum = POitem.BatchNo;
+                if (POitem.txtuomqty != 0)
+                {
+                    ltd.UOM_Qty = POitem.txtuomqty;
+                }
+             
                 if (POitem.Mfgdate != "")
                 {
                     ltd.MfgDate = Convert.ToDateTime(POitem.Mfgdate);
