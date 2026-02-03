@@ -15,7 +15,23 @@ namespace PMS.Modules.Dashboards
         {
 
         }
+        [WebMethod]
+        public static string GetYears()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
 
+            var Dis = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Years"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(Dis));
+        }
         [WebMethod]
         public static string GetPatientsCount(string txt_sdate, string txt_edate)
         {
@@ -30,7 +46,41 @@ namespace PMS.Modules.Dashboards
                 return new JavaScriptSerializer().Serialize(resultObj);
             }
         }
+        [WebMethod]
+        public static string GetYearlyInventorySummary(int year)
+        {
+            string result = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_YearlyInventorySummary(year).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query);
+            }
+            return result;
+        }
 
+        [WebMethod]
+        public static string GetYearlyPharmacySummary(int year)
+        {
+            string result = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_YearlyPharmacySummary(year).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query);
+            }
+            return result;
+        }
+
+        [WebMethod]
+        public static string GetYearlyPharmacyRevenu(int year)
+        {
+            string result = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_YearlyPharmacyRevenue(year).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query);
+            }
+            return result;
+        }
         public class PatientCountResult
         {
             public int TotalPatients { get; set; }
