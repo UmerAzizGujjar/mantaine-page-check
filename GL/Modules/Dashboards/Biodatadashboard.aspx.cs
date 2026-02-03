@@ -97,36 +97,36 @@ namespace PMS.Modules.Dashboards
             }
             return data;
         }
-        //[WebMethod]
-        //public static string LoadDashboard(string startdate, string enddate, string gender, string symptoms, string city, string area)
-        //{
-        //    string result = string.Empty;
+        [WebMethod]
+        public static string LoadDashboard(string startdate, string enddate, string gender, string symptoms, string city, string area)
+        {
+            string result = string.Empty;
 
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var query = db.sp_Bio_Data_Dashborad(startdate, enddate, gender, symptoms, city, area).ToList();
-
-
-        //        result = (new JavaScriptSerializer()).Serialize(query);
-        //    }
-
-        //    return result;
-        //}
-        //[WebMethod]
-        //public static string LoadPaiDashboard(string startdate, string enddate, string gender, string symptoms, string city, string area)
-        //{
-        //    string result = string.Empty;
-
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var query = db.sp_GetTopSymptoms(startdate, enddate, gender, symptoms, city, area).ToList();
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_Bio_Data_Dashborad(startdate, enddate, gender, symptoms, city, area).ToList();
 
 
-        //        result = (new JavaScriptSerializer()).Serialize(query);
-        //    }
+                result = (new JavaScriptSerializer()).Serialize(query);
+            }
 
-        //    return result;
-        //}
+            return result;
+        }
+        [WebMethod]
+        public static string LoadPaiDashboard(string startdate, string enddate, string gender, string symptoms, string city, string area)
+        {
+            string result = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.sp_GetTopSymptoms(startdate, enddate, gender, symptoms, city, area).ToList();
+
+
+                result = (new JavaScriptSerializer()).Serialize(query);
+            }
+
+            return result;
+        }
 
     }
 }

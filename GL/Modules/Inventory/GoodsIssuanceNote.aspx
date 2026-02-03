@@ -682,25 +682,24 @@
             debugger;
             var fileInput = $('#choseGINfile')[0];
             if (fileInput.files.length > 0) {
-                debugger;
                 var data = new FormData();
                 data.append('file', $('#choseGINfile')[0].files[0]);
                 data.append('ID', ID);
                 $.ajax({
                     type: 'post',
-                    url: '../../UploadGINFiles.ashx',
+                    url: '../../upload/UploadGINFiles.ashx',
                     data: data,
                     success: function (status) {
-
                     },
                     processData: false,
                     contentType: false,
                     error: function () {
-                        alert(" something went wrong!");
+                     
                     }
                 });
             }
         }
+     
 
         function UserUnApproveButtonRights() {
             debugger;

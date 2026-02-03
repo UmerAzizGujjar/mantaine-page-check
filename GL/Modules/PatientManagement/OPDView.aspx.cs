@@ -32,7 +32,7 @@ namespace PMS.Modules.PatientManagement
             // Treat null/empty as '0' (not allowed) for safety
             if (Convert.ToBoolean(allowValue) == true)
             {
-                return "Allowed"; 
+                return "Allowed";
             }
             else
             {
@@ -150,7 +150,7 @@ namespace PMS.Modules.PatientManagement
                     var pat = from p in _dbContext.Patients
                               join rg in _dbContext.Reg_patients on p.Reg_PatId equals rg.pat_id
                               where (p.isCancel == false || p.isCancel == null) &&
-                                    (p.Opd_No.ToString().Contains(searchValue) || rg.mr_no_sequence.Contains(searchValue)  || rg.Full_Name.Contains(searchValue) || rg.NIC.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category", p.Patient_Main_Category).Contains(searchValue) || _dbContext.GetDataValueName("Patient Type", p.Patient_Type).Contains(searchValue) || (from hr in _dbContext.HR_Employees where hr.Emp_ID == Convert.ToInt32(p.Doctor_ID) select hr.Emp_Name).FirstOrDefault().ToString().Contains(searchValue) || (isDateSearch && p.Created_Time >= searchDate && p.Created_Time < searchDate.AddDays(1)))
+                                    (p.Opd_No.ToString().Contains(searchValue) || rg.mr_no_sequence.Contains(searchValue) || rg.Full_Name.Contains(searchValue) || rg.NIC.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category", p.Patient_Main_Category).Contains(searchValue) || _dbContext.GetDataValueName("Patient Type", p.Patient_Type).Contains(searchValue) || (from hr in _dbContext.HR_Employees where hr.Emp_ID == Convert.ToInt32(p.Doctor_ID) select hr.Emp_Name).FirstOrDefault().ToString().Contains(searchValue) || (isDateSearch && p.Created_Time >= searchDate && p.Created_Time < searchDate.AddDays(1)))
                               select new
                               {
                                   Opd_No = Convert.ToInt32(p.Opd_No),
@@ -166,7 +166,7 @@ namespace PMS.Modules.PatientManagement
                                   Patient_Type = _dbContext.GetDataValueName("Patient Type", p.Patient_Type)
                               };
 
-                   
+
 
                     var FilteredCount = pat.Count();
                     switch (sortColumn)
@@ -187,7 +187,7 @@ namespace PMS.Modules.PatientManagement
                             pat = sortColumnDirection == "asc" ? pat.OrderBy(a => a.Age) : pat.OrderByDescending(a => a.Age);
                             break;
                         default:
-                            pat = pat.OrderByDescending(a => a.Created_Time); 
+                            pat = pat.OrderByDescending(a => a.Created_Time);
                             break;
                     }
 

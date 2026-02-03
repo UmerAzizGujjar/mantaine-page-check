@@ -119,7 +119,8 @@ namespace PMS
                         Group_Department = _dbContext.GetDataValueName("Test Departments", t.Group_Department) ?? string.Empty,
                         Main_Department = _dbContext.GetDataValueName("Main Test Departments", t.Main_Department) ?? string.Empty,
                         Unit = _dbContext.GetDataValueName("Test Units", t.Unit) ?? string.Empty,
-                        Active = t.Active
+                        Active = t.Active,
+                        Rate = t.Rate
                     });
 
                     // Sorting

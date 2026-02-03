@@ -332,48 +332,35 @@
         </div>
     </div>
 
-    <br />
-    <br />
     <div class="row">
-
-        <div class="col-md-4">
+        <div class="col-md-2">
             <label>Department</label>
             <select id="ddlDepartemt"></select>
         </div>
-        <div class="col-lg-3">
-            <label>
-                Start Date:
-            </label>
+        <div class="col-lg-2">
+            <label> Start Date:</label>
             <input type="text" id="txtsdate" />
         </div>
 
-        <div class="col-lg-3">
-            <label>
-                End Date:
-            </label>
+        <div class="col-lg-2">
+            <label>End Date:</label>
             <input type="text" id="txtedate" />
         </div>
         <div class="col-lg-2">
-
-            <input type="button" id="serach" value="Search" onclick="search()" />
+            <label></label>
+            <input type="button" id="serach" value="Search" class="btn btn-primry" onclick="search()" />
         </div>
     </div>
-
-    <br />
-    <br />
-
     <div class="row">
         <div class="col-lg-12">
             <div id="chartDepartmentStatistics" style="height: 420px; width: 100%;"></div>
         </div>
     </div>
-    <br />
-    <br />
-            <div class="row"  style="margin-top:60px;">
-    <div class="col-lg-12">
-        <div id="loadingSpinner" style="display: none;">Loading...</div>
-        <div id="chartContainer_Qty" style="height: 320px; width: 70%;"></div>
-
+    <div class="row" style="margin-top: 60px;">
+        <div class="col-lg-3 col-md-6 col-sm-12"></div>
+        <div class="col-lg-6">
+            <div id="loadingSpinner" style="display: none;">Loading...</div>
+            <div id="chartContainer_Qty" style="height: 320px; width: 70%;"></div>
+        </div>
     </div>
-</div>
 </asp:Content>
