@@ -176,42 +176,95 @@ namespace PMS.Modules.Inventory
                              Store_Stock = DBClass.getField("Select dbo.GetItemBatchStock(" + data.Item_Id + ", '','')"),
                              data.Rate,
                              data.Stock_Return_Qty,
-                            // data.Remarks,
+                             data.Remarks,
                              data.Amount,
+                             data.BalanceStock
                              //SaveTimeStock = data.Store_Stock,
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(query);
         }
+        //[WebMethod]
+        //public static string LoadSINDetail(string GIN_id)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+        //    var query = (from data in db.Store_Issue_Details.Where(x => x.Store_Issue_Id.Equals(GIN_id))
+        //                 select new
+        //                 {   
+        //                     SIN_No = (from si in db.Store_Issues where si.Store_Issue_Id == Convert.ToInt32(GIN_id) select si.Store_Issue_No).FirstOrDefault(),
+        //                     Approvedate = DBClass.getField("select Replace(convert(varchar, Approved_Time, 106), ' ','-') from Store_Issue where Store_Issue_Id=" + Convert.ToInt32(GIN_id)),
+        //                     //Approvedate = (from si in db.Store_Issues where si.Store_Issue_Id == Convert.ToInt32(GIN_id) select si.Approved_Time).FirstOrDefault(),
+        //                     data.Department,
+        //                     data.Issue_Qty,
+        //                     data.Item_Id,
+        //                     data.Store_Issue_Detail_Id,
+        //                     data.BatchNum,
+        //                     Item_code = DBClass.getField("select Item_Code from inv_items where Item_Id=" + data.Item_Id),
+        //                     Unit = (from st in db.Store_Issue_Details
+        //                             join item in db.INV_Items on st.Item_Id equals item.Item_ID
+        //                             select db.GetDataValueName("UOM", item.Unit)).FirstOrDefault(),
+        //                     Description = DBClass.getField("select Description from inv_items where Item_Id=" + data.Item_Id),
+        //                     IsBatch = DBClass.getField("select IsBatch from inv_items where Item_Id=" + data.Item_Id),
+        //                     Store_Stock = DBClass.getField("Select dbo.GetItemBatchStock(" + data.Item_Id + ", '','')"),
+        //                     data.Rate,
+        //                     data.Amount,
+        //                     SaveTimeStock = data.Store_Stock,
+        //                     Balance_Stock = db.Goods_Return_Details
+        //                            .Where(gr => gr.SIN_Details == data.Store_Issue_Detail_Id)
+        //                            .Sum(gr => (decimal?)gr.Stock_Return_Qty) ?? 0
+        //                 }).ToList();
+        //    return (new JavaScriptSerializer()).Serialize(query);
+        //}
         [WebMethod]
         public static string LoadSINDetail(string GIN_id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var query = (from data in db.Store_Issue_Details.Where(x => x.Store_Issue_Id.Equals(GIN_id))
-                         select new
-                         {   
-                             SIN_No = (from si in db.Store_Issues where si.Store_Issue_Id == Convert.ToInt32(GIN_id) select si.Store_Issue_No).FirstOrDefault(),
-                             Approvedate = DBClass.getField("select Replace(convert(varchar, Approved_Time, 106), ' ','-') from Store_Issue where Store_Issue_Id=" + Convert.ToInt32(GIN_id)),
-                             //Approvedate = (from si in db.Store_Issues where si.Store_Issue_Id == Convert.ToInt32(GIN_id) select si.Approved_Time).FirstOrDefault(),
-                             data.Department,
-                             data.Issue_Qty,
-                             data.Item_Id,
-                             data.Store_Issue_Detail_Id,
-                             data.BatchNum,
-                             Item_code = DBClass.getField("select Item_Code from inv_items where Item_Id=" + data.Item_Id),
-                             Unit = (from st in db.Store_Issue_Details
-                                     join item in db.INV_Items on st.Item_Id equals item.Item_ID
-                                     select db.GetDataValueName("UOM", item.Unit)).FirstOrDefault(),
-                             Description = DBClass.getField("select Description from inv_items where Item_Id=" + data.Item_Id),
-                             IsBatch = DBClass.getField("select IsBatch from inv_items where Item_Id=" + data.Item_Id),
-                             Store_Stock = DBClass.getField("Select dbo.GetItemBatchStock(" + data.Item_Id + ", '','')"),
-                             data.Rate,
-                             data.Amount,
-                             SaveTimeStock = data.Store_Stock,
-                             Balance_Stock = db.Goods_Return_Details
-                                    .Where(gr => gr.SIN_Details == data.Store_Issue_Detail_Id)
-                                    .Sum(gr => (decimal?)gr.Stock_Return_Qty) ?? 0
-                         }).ToList();
-            return (new JavaScriptSerializer()).Serialize(query);
+            int ginId = Convert.ToInt32(GIN_id);
+
+            var query =
+    (from data in db.Store_Issue_Details
+     let ReturnedQty =
+         db.Goods_Return_Details
+           .Where(gr => gr.SIN_Details == data.Store_Issue_Detail_Id)
+           .Sum(gr => (decimal?)gr.Stock_Return_Qty) ?? 0
+
+     let BalanceStock = data.Issue_Qty - ReturnedQty
+
+     where data.Store_Issue_Id == ginId
+           && BalanceStock > 0
+     select new
+                 {
+                     SIN_No = db.Store_Issues
+                                .Where(si => si.Store_Issue_Id == ginId)
+                                .Select(si => si.Store_Issue_No)
+                                .FirstOrDefault(),
+
+                     Approvedate = DBClass.getField(
+                         "select Replace(convert(varchar, Approved_Time, 106), ' ','-') from Store_Issue where Store_Issue_Id=" + ginId
+                     ),
+
+                     data.Department,
+                     data.Issue_Qty,
+                     data.Item_Id,
+                     data.Store_Issue_Detail_Id,
+                     data.BatchNum,
+
+                     Item_code = DBClass.getField("select Item_Code from inv_items where Item_Id=" + data.Item_Id),
+
+                     Unit = (from st in db.Store_Issue_Details
+                             join item in db.INV_Items on st.Item_Id equals item.Item_ID
+                             select db.GetDataValueName("UOM", item.Unit)).FirstOrDefault(),
+
+                     Description = DBClass.getField("select Description from inv_items where Item_Id=" + data.Item_Id),
+                     IsBatch = DBClass.getField("select IsBatch from inv_items where Item_Id=" + data.Item_Id),
+                     Store_Stock = DBClass.getField("Select dbo.GetItemBatchStock(" + data.Item_Id + ", '','')"),
+
+                     data.Rate,
+                     data.Amount,
+                     SaveTimeStock = data.Store_Stock,
+                     Balance_Stock = BalanceStock
+                 }).ToList();
+
+            return new JavaScriptSerializer().Serialize(query);
         }
 
         [WebMethod]
@@ -266,8 +319,9 @@ namespace PMS.Modules.Inventory
                 sid.Department = item.txtDepartment;
                 sid.Amount = item.total_amount;
                 sid.Rate = item.txtRate;
-                //sid.Remarks = item.Remarks;
+                sid.Remarks = item.Remarks;
                 sid.Batch_Number = item.BatchNum;
+                sid.BalanceStock = item.balance_Qty;
                 db.Goods_Return_Details.InsertOnSubmit(sid);
                 db.SubmitChanges();
             }
@@ -289,6 +343,7 @@ namespace PMS.Modules.Inventory
             public string item_Id { get; set; }
             public decimal Return_Qty { get; set; }
             public decimal IssueQty { get; set; }
+            public decimal balance_Qty { get; set; }
             public string Remarks { get; set; }
             public string txtDepartment { get; set; }
             public string BatchNum { get; set; }

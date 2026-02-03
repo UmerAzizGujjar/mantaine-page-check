@@ -3430,7 +3430,7 @@
                     try {
                         var pharmacyItems = JSON.parse(response.d);
                         $.each(pharmacyItems, function (key, value) {
-                            options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                            options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                         });
                         $('#txtPharmacyItem').append(options).trigger('change');
                     } catch (error) {

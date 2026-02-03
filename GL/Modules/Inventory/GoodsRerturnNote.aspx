@@ -83,8 +83,9 @@
                         '<td><input type="hidden" id="SaveTimeStock" name= "SaveTimeStock" value="' + parseFloat(parsed_Date[i].Store_Stock).toFixed(2) + '"/>' + parseFloat(parsed_Date[i].Store_Stock).toFixed(2) + '</td>' +
                     '<td><input type="hidden" id="Issue_Qty' + length +'" name= "Issue_Qty" value="' + parseFloat(parsed_Date[i].Store_Issue_Qty).toFixed(2) + '"/>' + parseFloat(parsed_Date[i].Store_Issue_Qty).toFixed(2) + '</td>' +
                     '<td><input type="text" id="Return_Qty' + length +'" name= "Return_Qty" value="' + parseFloat(parsed_Date[i].Stock_Return_Qty).toFixed(2) + '"/></td>' +
-                    '<td><input type="text" readonly id="Balance_Stock' + length +'" name= "Balance_Stock" onkeyup="CalculateBlance(this)" value="' + parseFloat(parsed_Date[i].Balance_Stock).toFixed(2) + '"/></td>' +
-                        '<td><input type="text" id="txtRemarks" name= "txtRemarks" value=""/></td>' +
+                    '<td><input type="text" readonly id="Balance_Stock' + length + '" name= "Balance_Stock" onkeyup="CalculateBlance(this)" value="' + parseFloat(parsed_Date[i].BalanceStock).toFixed(2) + '"/></td>' +
+                    '<td><input type="text" id="txtRemarks" name= "txtRemarks" value=""/></td>' +
+                    '<td style="display:none;"><input type="hidden" id="txtBalance_Stock' + length + '" name= "txtBalance_Stock" readonly value="' + parseFloat(parsed_Date[i].BalanceStock).toFixed(2) + '"/></td>' +
                     '<td style="display:none;"><input type="hidden" id="txtRate" name= "txtRate" value="' + parseFloat(parsed_Date[i].Rate).toFixed(2) + '"/></td>' +
                     '<td style="display:none;"><input type="hidden" id="Store_Issue_Detail_Id" name= "Store_Issue_Detail_Id" value="' + parsed_Date[i].SIN_Details + '"/></td>' +
                         '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
@@ -220,8 +221,9 @@
                     '<td><input type="hidden" id="Issue_Qty' + length +'" name= "Issue_Qty" value="' + parseFloat(parsed_Date[i].Issue_Qty).toFixed(2) + '"/>' + parseFloat(parsed_Date[i].Issue_Qty).toFixed(2) + '</td>' +
                     '<td><input type="text" id="Return_Qty' + length +'" name= "Return_Qty" onkeyup="CalculateBlance(this)" value="0"/></td>' +
                     '<td><input type="text" id="Balance_Stock' + length +'" name= "Balance_Stock" readonly value="' + parseFloat(parsed_Date[i].Balance_Stock).toFixed(2) + '"/></td>' +
+                    
                     '<td><input type="text" id="txtRemarks' + length +'" name= "txtRemarks" value=""/></td>' +
-
+                    '<td style="display:none;"><input type="hidden" id="txtBalance_Stock' + length + '" name= "txtBalance_Stock" readonly value="' + parseFloat(parsed_Date[i].Balance_Stock).toFixed(2) + '"/></td>' +
                     '<td style="display:none;"><input type="hidden" id="txtRate' + length +'" name= "txtRate" value="' + parseFloat(parsed_Date[i].Rate).toFixed(2) + '"/></td>' +
                     '<td style="display:none;"><input type="hidden" id="Store_Issue_Detail_Id' + length +'" name= "Store_Issue_Detail_Id" value="' + parsed_Date[i].Store_Issue_Detail_Id + '"/></td>' +
                         '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
@@ -245,7 +247,10 @@
             var row = $(anchor).parents('tr')[0];
             var Return_Qty = $($(row).find('input[name=Return_Qty]')).val();
             var Issue_Qty = $($(row).find('input[name=Issue_Qty]')).val();
-            var Balance = parseInt(Issue_Qty) - parseInt(Return_Qty) ;
+            var Balance_Stock = $($(row).find('input[name=txtBalance_Stock]')).val();
+      
+
+            var Balance = parseInt(Issue_Qty) - (parseInt(Return_Qty) + (parseInt(Balance_Stock))  ) ;
             $($(row).find('input[name=Balance_Stock]')).val(Balance);
            
         }
@@ -278,14 +283,14 @@
                 var BatchNum = $(value).find('td input[name=BatchNum]').val();
                 var txtRate = $(value).find('td input[name=txtRate]').val();
                 var txtSaveTimeStock = $(value).find('td input[name=txtSaveTimeStock]').val();
-                var Balance_Stock = $(value).find('td input[name=Balance_Stock]').val();
+                var balance_Qty = $(value).find('td input[name=Balance_Stock]').val();
                 var total_amount = txtRate * Return_Qty
 
-                if ((parseFloat(IssueQty) < (parseFloat(Return_Qty) + parseFloat(Balance_Stock)))) {
+                if (( parseFloat(balance_Qty) < 0 )) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: 'Return Qty Must Be Less Than Issue Stock',
+                        text: 'Return Qty Must Be Equal Or Less Than Issue Stock',
                         showConfirmButton: false,
                         timer: 2000,
                         customClass: {
@@ -315,7 +320,8 @@
                     return false;
                 }
             Item_list.push({
-                    'item_Id': item_Id, 'Store_Issue_Detail_Id': Store_Issue_Detail_Id, 'txtDepartment': txtDepartment, 'Return_Qty': Return_Qty, 'IssueQty': IssueQty, 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'txtRate': txtRate, 'total_amount': total_amount});
+                'item_Id': item_Id, 'Store_Issue_Detail_Id': Store_Issue_Detail_Id, 'txtDepartment': txtDepartment, 'Return_Qty': Return_Qty, 'IssueQty': IssueQty, 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'txtRate': txtRate, 'total_amount': total_amount, 'balance_Qty': balance_Qty
+});
             });
             if (checkstock == true) {
                 return false;
@@ -324,7 +330,7 @@
             var AllItemDetail = { 'StoreReturn_id': StoreReturn_id, 'Store_Return_No': Store_Return_No, 'GIN': GIN, 'department_id': department_id, 'inventory_id': inventory_id, 'ItemList': Item_list };
             PageMethods.Save(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 debugger;
-                sendFile(res);
+               // sendFile(res);
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
