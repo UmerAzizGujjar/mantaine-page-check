@@ -1096,6 +1096,8 @@
                 table.find('tr').each(function (key, value) {
                     var Qty = $(value).find('td input[name=txtQty]').val();
                     var Rate = $(value).find('td input[name=txtRate]').val();
+                    var UOM_Qty = $(value).find('td input[name=txtUOMQty]').val();
+
                     if (Qty == 0 || Qty == "" || Qty < 0) {
                         proceed = false;
                         Swal.fire({
@@ -1129,6 +1131,23 @@
                         });
                         
                         $("#btnSave").prop("disabled", false).removeAttr("disabled");
+                    }
+                    if (UOM_Qty == "0" || UOM_Qty == "" || parseFloat(UOM_Qty) <= 0) {
+                        proceed = false;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please add UOM_Qty',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $("#btnSave").prop("disabled", false).removeAttr("disabled");
+                        return false;
                     }
                 });
             }
