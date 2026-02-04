@@ -22,6 +22,14 @@
                 }
                 loadmed();
             });
+            $(document).on('click', '.btnEdit', function (e) {
+                e.preventDefault();
+
+                var patId = $(this).data('patid');
+                var mrNo = $(this).data('mrno');
+
+                hideModel(patId, mrNo);
+            });
             loadmed();
             LoadWarehouses();
             LoadWarehousesforSaleReturn();
@@ -2337,27 +2345,63 @@
             $('#queueModal').modal('show');
         }
 
+        //function fillPendingPatientsLists() {
+        //    PageMethods.PendingPatients(function (data) {
+        //        debugger;
+        //        var parsedData = JSON.parse(data);
+        //        var rows = '';
+        //        $.each(parsedData, function (key, value) {
+        //            debugger;
+        //            var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
+        //            var retdate = moment(TrnsDate).format('LLLL');
+        //            var status = '';
+        //            rows += '<tr> <td>' + value.mr_no_sequence + '</td> ' + '<td>' + value.Full_Name + '</td> ' + '<td>' + retdate + '</td> ' + ' <td> <a href="javascript:void(0)" onclick=hideModel(' + value.pat_id + ', \'' + value.mr_no_sequence + '\')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
+        //        });
+        //        debugger;
+        //        $('#tblPendingPatients tbody').html(rows);
+        //        $(".se-pre-con").fadeOut("slow");
+
+        //    }, function (exec) { })
+        //}
         function fillPendingPatientsLists() {
             PageMethods.PendingPatients(function (data) {
-                debugger;
+
                 var parsedData = JSON.parse(data);
                 var rows = '';
+
                 $.each(parsedData, function (key, value) {
-                    debugger;
+
                     var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
                     var retdate = moment(TrnsDate).format('LLLL');
-                    var status = '';
-                    rows += '<tr> <td>' + value.mr_no_sequence + '</td> ' + '<td>' + value.Full_Name + '</td> ' + '<td>' + retdate + '</td> ' + ' <td> <a href="javascript:void(0)" onclick=hideModel(' + value.pat_id + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
+
+                    rows += '<tr>' +
+                        '<td>' + value.mr_no_sequence + '</td>' +
+                        '<td>' + value.Full_Name + '</td>' +
+                        '<td>' + retdate + '</td>' +
+                        '<td>' +
+                        '<a href="#" class="btnEdit" ' +
+                        'data-patid="' + value.pat_id + '" ' +
+                        'data-mrno="' + value.mr_no_sequence + '">' +
+                        '<i class="fa fa-edit fa-2x"></i>' +
+                        '</a>' +
+                        '</td>' +
+                        '</tr>';
                 });
-                debugger;
+
                 $('#tblPendingPatients tbody').html(rows);
                 $(".se-pre-con").fadeOut("slow");
 
-            }, function (exec) { })
+            }, function (err) {
+                console.log(err);
+            });
         }
 
-        function hideModel(pat_id) {
+        debugger;
+        function hideModel(pat_id, mr_no_sequence) {
+            debugger;
+            console.log(pat_id, mr_no_sequence);
             $('#queueModal').modal('hide');
+            $('#token-input-txtMRNo').val(mr_no_sequence)
             getOPDandIPDNO(pat_id)
 
         }
@@ -2414,16 +2458,22 @@
                         type: "post",
                         url: "IssueMedicine.aspx/GetItemCodesOPD",
                         data: JSON.stringify({
-                            "Pat_Id": Pat_Id,
+                            Pat_Id: Pat_Id
                         }),
                         dataType: 'JSON',
                         contentType: "application/json; charset=utf-8",
                         async: false,
                         success: function (msg) {
                             debugger;
+
                             var data = JSON.parse(msg.d);
-                            debugger;
-                            $.each(data, function (key, value) {
+                            var doctorId = data.DoctorInfo?.Doctor_ID || 0;
+                            var department = data.DoctorInfo?.Patient_Main_Category || '';
+                            $('#ddlDoctor').val(doctorId).trigger('change')
+                            $('#ddlDepartment').val(department).trigger('change')
+                            $('#ddlDoctor').attr('disabled', true);
+                            $('#ddlDepartment').attr('disabled', true);
+                            $.each(data.ItemCodes, function (index, value) {
                                 debugger;
                                 itemIds.push(value);
                             });
@@ -2443,9 +2493,16 @@
                         success: function (msg) {
                             debugger;
                             var data = JSON.parse(msg.d);
+                            var doctorId = data.DoctorInfo?.Doctor_ID || 0;
+                            var department = data.DoctorInfo?.Patient_Main_Category || '';
+                            $('#ddlDoctor').val(doctorId).trigger('change')
+                            
+                            $('#ddlDepartment').val(department).trigger('change')
+                            $('#ddlDoctor').attr('disabled', true);
+                            $('#ddlDepartment').attr('disabled', true);
                             getWardAndBed(pat_Id)
                             debugger;
-                            $.each(data, function (key, value) {
+                            $.each(data.ItemCodes, function (key, value) {
                                 debugger;
                                 itemIds.push(value);
 
@@ -2544,40 +2601,27 @@
                         var warehouse = $("#ddlWarehouse").val()
                         var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
                         date = moment(date).format('D-MMM-YYYY');
-                        debugger;
                         rows =
                             '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" > ' + data[0].Item_ID + '</td>' +
                             '<td> ' + (rowIndex + 1) + '</td>' +
                             '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" > ' + data[0].Item_Code + '</td>' +
                             '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
-
                             '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
-
                             '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
-
                             '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
-
                             '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
-
                             '<td style="text-align: right;" ><input type="text" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
-
                             '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
-
                             '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
-
                             '<td style="text-align:Right;"></td>' +
                             '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
-
                             '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' +
                             '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                             '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
                             '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
-                            '</tr>';
-
-
-                            
+                            '</tr>';                            
                         $('#tblDetails tbody').append(rows);
                     
                         PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
