@@ -515,6 +515,19 @@
                 var Bility_No = $('#txtBility_No').val();
                 var Remarks = $('#txtRemarks').val();
                 var InvOrg = $('#ddlInv_Org').val();
+                if (!InvOrg || InvOrg === "0") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warehouse Required',
+                        text: 'Please select a warehouse.',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return;
+                }
                 var table = $('#tblItemDescriptionDetail');
                 debugger;
                 var Item_list = [];

@@ -209,6 +209,7 @@
     <Content Include="Modules\Administrator\AddDoctor_Packages.aspx" />
     <Content Include="Modules\Administrator\AddHospital.aspx" />
     <Content Include="Modules\Administrator\AddPanel_Packages.aspx" />
+    <Content Include="Modules\Administrator\ApproveGoodsReturn.aspx" />
     <Content Include="Modules\Administrator\Token_List.aspx" />
     <Content Include="Modules\Administrator\API.aspx" />
     <Content Include="Modules\Administrator\AssetDepereciation.aspx" />
@@ -25768,6 +25769,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\AddPanel_Packages.aspx.designer.cs">
       <DependentUpon>AddPanel_Packages.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\ApproveGoodsReturn.aspx.cs">
+      <DependentUpon>ApproveGoodsReturn.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\ApproveGoodsReturn.aspx.designer.cs">
+      <DependentUpon>ApproveGoodsReturn.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Administrator\Token_List.aspx.cs">
       <DependentUpon>Token_List.aspx</DependentUpon>
