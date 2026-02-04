@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -110,46 +111,107 @@ namespace PMS
             }
         }
 
-        public void buttonimageuploadNotes_Click(Object sender, EventArgs e)
+        //public void buttonimageuploadNotes_Click(Object sender, EventArgs e)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+        //    var count = Request.Files.Count;
+        //    var detail_ID = session_obejct.Value;
+        //    if (fileUploadMultiple.HasFile)
+        //    {
+        //        for (int i = 0; i < Request.Files.Count; i++)
+        //        {
+        //            HttpPostedFile fileUpload = Request.Files[i];
+
+        //            Test_Image image = new Test_Image();
+        //            int imageNo = Convert.ToInt32(DBClass.getField("Select isnull(Max(Image_No),0) + 1 from Test_Image where Lab_Test_Detail_ID = " + detail_ID + ""));
+
+        //            string fname = HttpContext.Current.Server.MapPath("LabTestImg/" + imageNo + "-" + detail_ID + ".png");
+
+        //            string image_Path = "LabTestImg/" + imageNo + "-" + detail_ID + ".png";
+
+        //            if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(image_Path)))
+        //            {
+        //                // file exist
+        //                string savePath = HttpContext.Current.Server.MapPath(image_Path);
+        //                System.IO.File.Delete(savePath);
+        //                string sql = "delete from Test_Image where Image_path ='" + image_Path + "'";
+        //                DBClass.executeNonQueryWithoutBegin(sql);
+        //            }
+
+
+        //            fileUpload.SaveAs(fname);
+        //            image.Image_No = imageNo;
+        //            image.Image_path = image_Path;
+        //            image.Lab_Test_Detail_ID = Convert.ToInt32(detail_ID);
+        //            db.Test_Images.InsertOnSubmit(image);
+        //            db.SubmitChanges();
+        //        }
+
+        //    }
+        //}
+        public void buttonimageuploadNotes_Click(object sender, EventArgs e)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var count = Request.Files.Count;
             var detail_ID = session_obejct.Value;
-            if (fileUploadMultiple.HasFile)
+
+            if (!fileUploadMultiple.HasFile)
+                return;
+
+            // New root folder
+            string dirFullPath = Server.MapPath("~/wwwroot/images/LabTestImg/");
+
+            // Create directory if not exists
+            if (!Directory.Exists(dirFullPath))
             {
-                for (int i = 0; i < Request.Files.Count; i++)
+                Directory.CreateDirectory(dirFullPath);
+            }
+
+            for (int i = 0; i < Request.Files.Count; i++)
+            {
+                HttpPostedFile fileUpload = Request.Files[i];
+
+                Test_Image image = new Test_Image();
+
+                // SAME OLD IMAGE NO LOGIC
+                int imageNo = Convert.ToInt32(
+                    DBClass.getField(
+                        "SELECT ISNULL(MAX(Image_No),0) + 1 FROM Test_Image WHERE Lab_Test_Detail_ID = " + detail_ID
+                    )
+                );
+
+                // SAME OLD FILE NAME
+                string fileName = imageNo + "-" + detail_ID + ".png";
+
+                // Physical path (NEW FOLDER)
+                string physicalPath = Path.Combine(dirFullPath, fileName);
+
+                // DB path (SAME STRUCTURE IDEA)
+                string image_Path = "~../../../../wwwroot/images/LabTestImg/" + fileName;
+
+                // SAME OLD DELETE LOGIC
+                if (File.Exists(physicalPath))
                 {
-                    HttpPostedFile fileUpload = Request.Files[i];
+                    File.Delete(physicalPath);
 
-                    Test_Image image = new Test_Image();
-                    int imageNo = Convert.ToInt32(DBClass.getField("Select isnull(Max(Image_No),0) + 1 from Test_Image where Lab_Test_Detail_ID = " + detail_ID + ""));
-
-                    string fname = HttpContext.Current.Server.MapPath("LabTestImg/" + imageNo + "-" + detail_ID + ".png");
-
-                    string image_Path = "LabTestImg/" + imageNo + "-" + detail_ID + ".png";
-
-                    if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(image_Path)))
-                    {
-                        // file exist
-                        string savePath = HttpContext.Current.Server.MapPath(image_Path);
-                        System.IO.File.Delete(savePath);
-                        string sql = "delete from Test_Image where Image_path ='" + image_Path + "'";
-                        DBClass.executeNonQueryWithoutBegin(sql);
-                    }
-
-
-                    fileUpload.SaveAs(fname);
-                    image.Image_No = imageNo;
-                    image.Image_path = image_Path;
-                    image.Lab_Test_Detail_ID = Convert.ToInt32(detail_ID);
-                    db.Test_Images.InsertOnSubmit(image);
-                    db.SubmitChanges();
+                    string sql = "DELETE FROM Test_Image WHERE Image_path = '" + image_Path + "'";
+                    DBClass.executeNonQueryWithoutBegin(sql);
                 }
 
+                // Save file
+                fileUpload.SaveAs(physicalPath);
+
+                // Save DB record
+                image.Image_No = imageNo;
+                image.Image_path = image_Path;
+                image.Lab_Test_Detail_ID = Convert.ToInt32(detail_ID);
+
+                db.Test_Images.InsertOnSubmit(image);
+                db.SubmitChanges();
             }
         }
 
-       
+
+
 
         [WebMethod]
         public static string SaveGroupTest(int Lab_ID, List<GroupTestDetails> TesttDetails)

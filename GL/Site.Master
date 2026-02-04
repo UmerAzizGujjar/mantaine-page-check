@@ -64,6 +64,7 @@
         <script src="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/Latest_Datatable/vfs_fonts.js")%>" type="text/javascript"></script>
         <script src="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/Latest_Datatable/buttons.print.min.js")%>" type="text/javascript"></script>
         <script src="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js")%>" type="text/javascript"></script>
+        <script src="<%= Page.ResolveClientUrl("~/wwwroot/Tibbit_theme/Latest_Datatable/LatestDataTableColumns.min.js")%>" type="text/javascript"></script>
         <%--datatable js--%>
         <script type="text/javascript" src="<%=Page.ResolveUrl("~/wwwroot/Tibbit_theme/Scripts/jquery.tokeninput.js") %>"></script>
         <script type="text/javascript" src="<%=Page.ResolveUrl("~/wwwroot/Tibbit_theme/js/jquery-ui.min.js") %>"></script>

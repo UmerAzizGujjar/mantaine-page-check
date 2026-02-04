@@ -163,7 +163,8 @@ namespace PMS.Modules.PatientManagement
                                   Age = p.Age_years,
                                   Doctor_Id = (from hr in _dbContext.HR_Employees where hr.Emp_ID == Convert.ToInt32(p.Doctor_ID) select hr.Emp_Name).FirstOrDefault(),
                                   Department = _dbContext.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
-                                  Patient_Type = _dbContext.GetDataValueName("Patient Type", p.Patient_Type)
+                                  Patient_Type = _dbContext.GetDataValueName("Patient Type", p.Patient_Type),
+                                  Token_No  = p.Doc_Token
                               };
 
 

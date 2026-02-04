@@ -98,10 +98,25 @@ namespace PMS
         public static string GetItemCodesIPD(int Pat_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+
+            var depAndDoc = (from ip in db.In_Patients
+                             where ip.In_Patient_ID == Pat_Id
+                             select new
+                             {
+                                 ip.Doctor,
+                                 ip.Department
+                             }).FirstOrDefault();
+
             var itemCodes = (from  ip in db.In_Patient_Medicines 
                              where ip.Patient_ID == Pat_Id
                              select ip.Item_Code).ToList();
-            return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+
+            var result = new
+            {
+                DoctorInfo = depAndDoc,
+                ItemCodes = itemCodes
+            };
+            return (new JavaScriptSerializer()).Serialize(result); ;
 
         }
         [WebMethod]
@@ -114,19 +129,51 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 
         }
+        //[WebMethod]
+        //public static string GetItemCodesOPD(int Pat_Id)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+
+        //    var DepAndDoc = (from o in db.Out_Patients 
+        //                     join p in db.Patients on o.Patient_ID equals p.Patient_ID
+        //                     where o.Out_Patient_ID == Pat_Id
+        //                     select new { o.Doctor_ID ,p.Patient_Main_Category}).FirstOrDefault();
+
+        //    var itemCodes = (from  ip in db.In_Patient_Medicines join o in db.Out_Patients on ip.Patient_ID equals o.Out_Patient_ID                       
+        //                     where o.Out_Patient_ID == Pat_Id
+        //                     select ip.Item_Code).ToList();
+        //    return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+
+        //}
         [WebMethod]
         public static string GetItemCodesOPD(int Pat_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var itemCodes = (from  ip in db.In_Patient_Medicines join o in db.Out_Patients on ip.Patient_ID equals o.Out_Patient_ID
+
+            var depAndDoc = (from o in db.Out_Patients
                              join p in db.Patients on o.Patient_ID equals p.Patient_ID
                              where o.Out_Patient_ID == Pat_Id
-                             select ip.Item_Code).ToList();
-            return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+                             select new
+                             {
+                                 Doctor_ID = o.Doctor_ID,
+                                 Patient_Main_Category = p.Patient_Main_Category
+                             }).FirstOrDefault();
 
+            var itemCodes = (from ip in db.In_Patient_Medicines
+                             join o in db.Out_Patients
+                                on ip.Patient_ID equals o.Out_Patient_ID
+                             where o.Out_Patient_ID == Pat_Id
+                             select ip.Item_Code).ToList();
+
+            var result = new
+            {
+                DoctorInfo = depAndDoc,
+                ItemCodes = itemCodes
+            };
+
+            return new JavaScriptSerializer().Serialize(result);
         }
 
- 
         [WebMethod]
         public static string GetinvBatch(int med_id)
         {
@@ -193,6 +240,7 @@ namespace PMS
         public class BatchStock
         {
             public string BatchNum { get; set; }
+            public int? uomqty { get; set; }
             //public string Source { get; set; }
         }
 
