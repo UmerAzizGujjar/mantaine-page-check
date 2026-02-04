@@ -48,7 +48,10 @@
             LoadEmergencyWardBedCounts(date, date);
             LoadIPDWardBedCounts(date, date);
             LoadTotalIPDAdmitted();
-
+            var year = new Date().getFullYear();
+            LoadYearlyInventorySummary(year);
+            LoadYearlyPharmecySummary(year);
+            LoadYearlyPharmecyRevenu(year);
 
         });
         function search() {
@@ -82,7 +85,103 @@
             LoadIPDWardBedCounts(dt, dts);
 
         }
+        function LoadYearlyInventorySummary(year) {
+            PageMethods.GetYearlyInventorySummary(year, function (res) {
+                var data = JSON.parse(res);
 
+                // Clear previous data
+                $('#tblInventorySummary thead').empty();
+                $('#tblInventorySummary tbody').empty();
+
+                // 🔹 Table Header (Months)
+                var headerRow = '<tr><th style ="text-align : center">Stock Block</th>';
+                var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                $.each(months, function (i, m) {
+                    headerRow += '<th style ="text-align : center">' + m + '</th>';
+                });
+                headerRow += '</tr>';
+                $('#tblInventorySummary thead').append(headerRow);
+
+                // 🔹 Build rows from pivoted data
+                $.each(data, function (i, val) {
+                    var row = '<tr><td>' + val.Metric.replace(/_/g, ' ') + '</td>';
+                    $.each(months, function (j, m) {
+                        var monthValue = val[m] !== null ? parseFloat(val[m]).toFixed(2) : '0.00';
+                        row += '<td>' + monthValue + '</td>';
+                    });
+                    row += '</tr>';
+                    $('#tblInventorySummary tbody').append(row);
+                });
+            });
+        }
+
+        function LoadYearlyPharmecyRevenu(year) {
+            PageMethods.GetYearlyPharmacyRevenu(year, function (res) {
+                var data = JSON.parse(res);
+                $('#tblPharmacyRevenu thead').empty();
+                $('#tblPharmacyRevenu tbody').empty();
+
+                var headerRow = '<tr><th style ="text-align : center">Stock Block</th>';
+                var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                $.each(months, function (i, m) {
+                    headerRow += '<th style ="text-align : center">' + m + '</th>';
+                });
+                headerRow += '</tr>';
+                $('#tblPharmacyRevenu thead').append(headerRow);
+
+                // 🔹 Build rows from pivoted data
+                $.each(data, function (i, val) {
+                    var row = '<tr><td>' + val.Metric.replace(/_/g, ' ') + '</td>';
+                    $.each(months, function (j, m) {
+                        var monthValue = val[m] !== null ? parseFloat(val[m]).toFixed(2) : '0.00';
+                        row += '<td>' + monthValue + '</td>';
+                    });
+                    row += '</tr>';
+                    $('#tblPharmacyRevenu tbody').append(row);
+                });
+            });
+        }
+
+        function LoadYearlyPharmecySummary(year) {
+            PageMethods.GetYearlyPharmacySummary(year, function (res) {
+                var data = JSON.parse(res);
+                $('#tblPharmacySummary thead').empty();
+                $('#tblPharmacySummary tbody').empty();
+
+                var headerRow = '<tr><th style ="text-align : center">Stock Block</th>';
+                var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                $.each(months, function (i, m) {
+                    headerRow += '<th style ="text-align : center">' + m + '</th>';
+                });
+                headerRow += '</tr>';
+                $('#tblPharmacySummary thead').append(headerRow);
+
+                // 🔹 Build rows from pivoted data
+                $.each(data, function (i, val) {
+                    var row = '<tr><td>' + val.Metric.replace(/_/g, ' ') + '</td>';
+                    $.each(months, function (j, m) {
+                        var monthValue = val[m] !== null ? parseFloat(val[m]).toFixed(2) : '0.00';
+                        row += '<td>' + monthValue + '</td>';
+                    });
+                    row += '</tr>';
+                    $('#tblPharmacySummary tbody').append(row);
+                });
+            });
+        }
+        function LoadYears() {
+            //var options = ''
+            PageMethods.GetYears(function (data) {
+                var options = '<option value="0" >Please Select</option>';
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddlyears').html(options);
+                $('#ddlyears').select2();
+            });
+        }
         function LoadPatientsCount(startdate, Enddate) {
             var txt_sdate = startdate;
             var txt_edate = Enddate;
@@ -240,6 +339,13 @@
                     console.error("Error occurred: " + status + " " + error);
                 }
             });
+        }
+        function loadInventoryandPharmcay() {
+            var year = $('#ddlyears').val();
+
+            LoadYearlyPharmecySummary(year);
+            LoadYearlyPharmecyRevenu(year);
+            LoadYearlyInventorySummary(year);
         }
         function LoadInvestigationCount(startdate, Enddate) {
             var txt_sdate = startdate;
@@ -2249,6 +2355,46 @@
                 </div>
             </div>
         </div>
+
+         <div class="row">
+     <div class="row">
+          <div class="col-lg-1">
+         <label>Years</label>
+         </div>
+         <div class="col-lg-1">
+             <select id="ddlyears" onchange="loadInventoryandPharmcay();">
+                
+             </select>
+         </div>
+     </div>
+     <div class="row">
+         <div class="col-lg-12">
+             <h2>Inventory Record</h2>
+             <table id="tblInventorySummary" class="table table-bordered table-striped text-center">
+                 <thead></thead>
+                 <tbody></tbody>
+             </table>
+         </div>
+     </div>
+     <div class="row">
+         <div class="col-lg-12">
+             <h2>Pharmacy Record</h2>
+             <table id="tblPharmacySummary" class="table table-bordered table-striped text-center">
+                 <thead></thead>
+                 <tbody></tbody>
+             </table>
+         </div>
+     </div>
+     <div class="row">
+         <div class="col-lg-12">
+             <h2>Pharmacy Revenue</h2>
+             <table id="tblPharmacyRevenu" class="table table-bordered table-striped text-center">
+                 <thead></thead>
+                 <tbody></tbody>
+             </table>
+         </div>
+     </div>
+ </div>
     </div>
 </asp:Content>
 
