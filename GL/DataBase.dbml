@@ -11393,4 +11393,11 @@
       <Column Name="InspecQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
+  <Function Name="dbo.spApproveStore_Return" Method="spApproveStore_Return">
+    <Parameter Name="sid" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="spApproveStore_ReturnResult">
+      <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(22) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
 </Database>

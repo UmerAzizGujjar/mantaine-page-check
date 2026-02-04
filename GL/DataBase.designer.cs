@@ -934,6 +934,7 @@ namespace PMS
         partial void UpdateGoods_Return_Detail(Goods_Return_Detail instance);
         partial void DeleteGoods_Return_Detail(Goods_Return_Detail instance);
         #endregion
+
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -5231,6 +5232,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iGPId);
             return ((ISingleResult<sp_GetIGPDetailByIGPIDResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApproveStore_Return")]
+        public ISingleResult<spApproveStore_ReturnResult> spApproveStore_Return([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> sid, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), sid, user_id);
+            return ((ISingleResult<spApproveStore_ReturnResult>)(result.ReturnValue));
         }
     }
 
@@ -212799,6 +212807,32 @@ namespace PMS
                 if ((this._InspecQty != value))
                 {
                     this._InspecQty = value;
+                }
+            }
+        }
+    }
+
+    public partial class spApproveStore_ReturnResult
+    {
+
+        private string _Column1;
+
+        public spApproveStore_ReturnResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Name = "", Storage = "_Column1", DbType = "VarChar(22) NOT NULL", CanBeNull = false)]
+        public string Column1
+        {
+            get
+            {
+                return this._Column1;
+            }
+            set
+            {
+                if ((this._Column1 != value))
+                {
+                    this._Column1 = value;
                 }
             }
         }
