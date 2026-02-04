@@ -11,6 +11,7 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
@@ -435,11 +436,18 @@ namespace PMS
             }
             else if (reportName == "AdminissionSlip")
             {
+                //var user_id = 
                 var in_patient_id = Request.QueryString["Inpatient_ID"].ToString();
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                var user_id = AppConfig.UserID;
+
+                var userName = DBClass.getField( $"SELECT dbo.getUserName('{user_id}')");
+
+
                 reportPath += "InPatient/rptAdmissionPrint.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("User_ID", userName);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@patientId", in_patient_id);
@@ -3219,6 +3227,20 @@ namespace PMS
                 rd.SetParameterValue("@StartDate", StartDateTime);
                 rd.SetParameterValue("@EndDate", EndDateTime);
                 rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "YearlyPharmacyOverallSummaryReport")
+            {
+                string year = Request.QueryString["Year"].ToString();
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string rptFileName = "Pharmacy/YearlyPharmacyOverallSummaryReport.rpt";
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@Year", year);
             }
             else if (reportName == "FastSlow_Non_Moving_Stock")
             {

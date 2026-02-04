@@ -7,6 +7,25 @@
 
 
     <script type="text/javascript">
+        function populateYears() {
+            var currentYear = 2025;
+            var yearSelect = $('#<%= ddlYear.ClientID %>');
+
+    // Clear existing options (keep "Select Year")
+    yearSelect.find('option').not(':first').remove();
+
+    // Add years (2025 + 10 previous years)
+    for (var year = currentYear; year >= currentYear - 10; year--) {
+        yearSelect.append($('<option></option>')
+            .attr('value', year)
+            .text(year));
+    }
+
+    // Set 2025 as selected
+    yearSelect.val('2025');
+
+    console.log("Years populated successfully: 2015-2025");
+}
         function FillAnalysisTests() {
             var options = '<option value="All">All</option>';
             PageMethods.GetLabTestsForAnalysis(function (data) {
@@ -172,6 +191,22 @@
             loadMRNo();
             LoadInvNo();
             loadmed();
+
+
+            if (ReportTitle == "YearlyPharmacyOverallSummary") {
+                $('#<%= YearDiv.ClientID %>').show();
+        $('#<%= DateDiv.ClientID %>').hide();
+        $('#<%= Time_Row.ClientID %>').hide();
+
+        // 👉 PLACE THE CODE RIGHT HERE 👈
+        // ✅ Populate years AFTER DOM is ready
+        setTimeout(function () {
+            populateYears();
+        }, 100);
+    }
+
+
+
             var bool = '<%= Convert.ToBoolean(AllowPatientRecord)%>'
             debugger;
             if (bool == "False") {
@@ -258,6 +293,20 @@
                         var Component = $("#ctl00_MainContent_ddlMainDepartment").val();
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=ComponentBloodBankStockLedger&ReportTitle=  ' + $("#ctl00_MainContent_ddlMainDepartment option:selected ").text() + '    summary Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&Component=' + Component + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blanks');
+                    }
+                    else if (rptTitle == "YearlyPharmacyOverallSummary") {
+                        debugger;
+                        $('#<%= YearDiv.ClientID %>').show();
+                        $('#<%= DateDiv.ClientID %>').hide();
+                        $('#<%= Time_Row.ClientID %>').hide();
+                        var selectedYear = $('#ctl00_MainContent_ddlYear').val();
+                  
+                        if (selectedYear === "0") {
+                            alert('Please select a year');
+                            return;
+                        }
+                        var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear;
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == "SAR") {
@@ -1489,7 +1538,6 @@ var Item = $("#ctl00_MainContent_ddlMainDepartment").val();
     </script>
 
 
-
     <div class="container mt-4">
         <div class="row mb-3">
             <div class="col-lg-3 col-md-4 col-sm-12" id="MRDiv" visible="false" runat="server">
@@ -1522,6 +1570,16 @@ var Item = $("#ctl00_MainContent_ddlMainDepartment").val();
                 <asp:Label runat="server" ID="lblMainDepartment" Text="Main Department"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlMainDepartment" AppendDataBoundItems="true"></asp:DropDownList>
             </div>
+            <!-- Year Dropdown for Pharmacy Overall Summary Report -->
+        <div class="row mb-3" id="YearDiv" runat="server" visible="false">
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <asp:Label ID="lblYear" runat="server" Text="Financial Year" CssClass="form-label"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlYear" CssClass="form-control">
+                    <asp:ListItem Text="Select Year" Value="0"></asp:ListItem>
+                </asp:DropDownList>
+            </div>
+        </div>
+            <%--new yearly div placed--%>
             <div class="col-lg-3 col-md-4 col-sm-12" id="trTestResult1" visible="false" runat="server">
                 <asp:Label runat="server" ID="lblTestName" Text="Test Name"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlTestName" AppendDataBoundItems="true"></asp:DropDownList>
