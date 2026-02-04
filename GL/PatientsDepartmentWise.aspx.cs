@@ -3307,6 +3307,25 @@ namespace PMS
 
 
                 }
+                if (this.PageTitle == "YearlyPharmacyOverallSummary")
+                {
+                    
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    dpROw.Visible = false;
+                    YearDiv.Visible = true;
+
+                }
 
                 else if (this.PageTitle == "Cardiology_Cash_Collection")
                 {
