@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <style>
+    <style type="text/css">
         .search-container {
             position: relative;
             width: 100%;
@@ -968,7 +968,19 @@
                 separator: '/'
             });
 
+            jQuery(function ($) {
+                MaskedInput({
+                    elm: document.getElementById('txtSearch'),
+                    format: '+92__________',
+                    separator: '-'
+                });
+                var phoneInput = document.getElementById('txtSearch');
+                var cursorPosition = 3;
+                phoneInput.setSelectionRange(cursorPosition, cursorPosition);
+            });
             loadDepartments();
+            fillmartial();
+            fillgender();
             GetSymptomsByDepartment();
             $('#departments').change(function () {
                 const selectedValue = $(this).val();
@@ -1292,10 +1304,10 @@
                     searchResults.innerHTML = patients.map(patient => {
                         const displayText = `${patient.PatientNo}-${patient.FullName}`;
                         return `
-             <div class="result-item" 
-                  onclick="loadPatient('${patient.RegID}'); document.getElementById('searchResults').classList.remove('active');">
-                 <div>${highlightText(displayText, query)}</div>
-             </div>`;
+             <div class="result-item"
+                      onclick="checkBeforeLoadPatient('${patient.RegID}')">
+                      <div>${highlightText(displayText, query)}</div>
+                           </div>`;
                     }).join('');
                 }
                 searchResults.classList.add('active');
@@ -1345,6 +1357,63 @@
                 }
             });
         });
+
+        function checkBeforeLoadPatient(patientId) {
+
+            $.ajax({
+                type: "POST",
+                url: "NewEmergencyCase.aspx/CheckExistOutPatient",
+                data: JSON.stringify({ Patient_ID: patientId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    var status = response.d; 
+
+                    if (status === "OPD") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Patient in OPD',
+                            text: 'First discharge patient from OPD',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return; 
+                    }                  
+
+                    if (status === "IPD") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Patient in IPD',
+                            text: 'First discharge patient from IPD',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return; 
+                    }
+                    loadPatient(patientId);
+                    document.getElementById('searchResults').classList.remove('active');
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Unable to check patient status'
+                    });
+                }
+            });
+        }
+
 
         function showdeathtab() {
             debugger;
@@ -1813,6 +1882,8 @@
             cell.innerHTML = actions;
         }
 
+        
+
         function AddPatientDetail(PatientID) {
            
             debugger;
@@ -1893,6 +1964,56 @@
                 $('#txt_mobile').val(unmaskedValue);
             }, 100);
             $('#txt_name').focus();
+        }
+
+        function AddNewPatient() {
+            debugger;
+            $('#ddl_pnl_cpy').next(".select2-container").hide();
+            clearPatient();
+            $('#hdfPatient_ID').val('(New)');
+            $('#PatientModel').modal({
+                backdrop: 'static'
+            });
+            $("#ddl_name").focus();
+            MaskedInput({
+                elm: document.getElementById('txt_cnic'),
+                format: '_____-_______-_',
+                separator: '-'
+
+            });
+        }
+
+        function clearPatient() {
+            $('#txt_name').val("");
+            $('#txt_relation').val("");
+            $('#txt_mobile').val("");
+            $('#txt_dob').val("");
+            $('#txt_cnic').val("");
+            $('#txt_Address').val('');
+            $('#updatePatient_Data').hide();
+            $('#RevistPat').hide();
+        }
+
+        function fillgender() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetGender(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddl_Gender').html(options);
+            });
+            return options;
+        }
+
+        function fillmartial() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetMartailStatus(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddl_status').html(options);
+            });
+            return options;
         }
        
         function Get_Doctor_Info() {
@@ -5000,10 +5121,156 @@
             });
         }
 
+        function SavePatient() {
+            debugger;
+            $('#SavePatient_Data').attr('disabled', true);
+            var Prefix_PatientName = $('#ddl_name').val();
+            var PatientName = $('#txt_name').val();
+            var PatientID = $('#hdfPatient_ID').val();  
+            var Full_Name = Prefix_PatientName + PatientName;
+            debugger;
+            var RelationType = $('#ddlRelation').val();
+            var Relation = $('#txt_relation').val();
+            var Gender = $('#ddl_Gender').val();
+            var Mobile = $('#txt_mobile').val();
+            var PreFix_DOB = $('#PrefixAge').val();
+
+            if (PreFix_DOB == "Undefined" || PreFix_DOB == null) {
+                PreFix_DOB = "";
+            }
+            var Age = $('#txt_dob').val();
+            var Date_Of_Birth = $('#txtAge_yearss').val();
+            var CNIC = $('#txt_cnic').val();
+            var Address = $('#txt_Address').val();
+            var martail_status = $('#ddl_status').val();
+
+            if ((PatientName == "")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Patient Name',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                $('#SavePatient_Data').attr('disabled', false);
+                return;
+            }
+
+            // ✅ Add Mobile validation
+            if (!Mobile || Mobile.replace(/_/g, '').length < 11) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Enter Complete Mobile Number',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                $('#txt_mobile').focus();
+                $('#SavePatient_Data').attr('disabled', false);
+                return;
+            }
+
+            var data = JSON.stringify({
+                "Full_Name": Full_Name,
+                "RelationType": RelationType,
+                "Relation": Relation,
+                "Gender": Gender,
+                "Mobile": Mobile,
+                "Date_Of_Birth": Date_Of_Birth,
+                "CNIC": CNIC,
+                "Address": Address,
+                "PatientID": PatientID,
+                "martail_status": martail_status,
+                "Age": Age,
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "NewEmergencyCase.aspx/SavePatientDetail",
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    var Reg_Patient_ID = data.d;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Your Record Save and Load Successfully',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    $('#PatientModel').modal('hide');
+                    AddPatientDetail(Reg_Patient_ID)
+                },
+                error: function (response) {
+                    alert("Error");
+                    $('#SavePatient_Data').attr('disabled', false);
+                }
+            });
+        }
+        function CalculateDateOfBirth() {
+            var ageInput = $('#txt_dob').val();
+            var unit = $('#PrefixAge').val();
+
+            var amount = parseInt(ageInput, 10);
+
+            if (isNaN(amount) || amount <= 0 || amount > 1500) {
+                $('#txtAge_yearss').val('');
+                return;
+            }
+
+            var now = moment();
+            var dob;
+            if (unit === "Year") {
+                dob = now.clone().subtract(amount, 'years');
+            } else if (unit === "Month") {
+                dob = now.clone().subtract(amount, 'months');
+            } else if (unit === "Day") {
+                dob = now.clone().subtract(amount, 'days');
+            } else {
+                $('#txtAge_yearss').val('');
+                return;
+            }
+
+            var finalDate = dob.format("DD/MM/YYYY");
+
+            var $input = $('#txtAge_yearss');
+            if (!$input.hasClass('hasDatepicker')) {
+                $input.datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+0",
+                    dateFormat: "dd/mm/yy"
+                });
+            }
+
+            $input.datepicker('setDate', dob.toDate());
+            $input.unmask().mask("99/99/9999");
+        }
+
     </script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <input type="hidden" id="hdfPatient_ID" value="(New)" />
     <div id="queueModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -7217,6 +7484,140 @@
             </div>
 
         </div>
+              <div id="PatientModel" class="modal fade-in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content modalSize" style="width: 1104px; margin-left: -77px; height: 308px; margin-top: 117px; /* 316px */">
+
+            <form>
+                <div class="container-fluid">
+                    <div class="row" style="margin-top: 40px!important;">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>MR No</label>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input type="text" tabindex="1" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
+                        </div>
+
+
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <label>Gender</label>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <select id="ddl_Gender" tabindex="5" style="width: 197px;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>Name<span style="color:red;">*</span></label>
+                        </div>
+
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <select class="impo-drop1 fcux" tabindex="3" name="name" id="ddl_name">
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="B/O.">B/O.</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input name="dob"  type="text" id="txt_name" tabindex="4" style="margin-left: -12px !important" />
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <label>Martial Status</label>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <select  tabindex="6" id="ddl_status"  style="width: 197px;">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>Relation</label>
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <select class="impo-drop fcux" tabindex="7" name="name" id="ddlRelation">
+                                <option value="S/O">S/O</option>
+                                <option value="W/O">W/O</option>
+                                <option value="D/O">D/O</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input type="text" id="txt_relation" tabindex="8" style="margin-left: -12px !important" />
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <label>Mobile</label>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input type="text" tabindex="9" id="txt_mobile" style="width: 197px !important;" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>Age/DOB</label>
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <select name="name" tabindex="10" id="PrefixAge" >
+                                <option value="Year">Year</option>
+                                <option value="Month">Month</option>
+                                <option value="Day">Day</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input type="text" id="txt_dob" tabindex="11" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
+                            <input class="fcux" type="text" id="txtAge_yearss" style="display: inline; width: 65% !important" placeholder="mm ddyy" />
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <label>CNIC</label>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input tabindex="12"  type="text" id="txt_cnic" style="width: 200px !important" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                        <div class="col-lg-1 col-md-3 col-sm-4">
+                            <label>Address</label>
+                        </div>
+
+                        <div class="col-lg-6 col-md-3 col-sm-4">
+                            <input type="text" tabindex="13" id="txt_Address"  />
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="modal-footer" style="margin-top: 6%;">
+                <input type="button"  id="SavePatient_Data" class="btn btn-primry" tabindex="13" name="savePatient_Data" value="Save" style="width:10% !important" onclick="SavePatient();" />
+                <%-- <input type="button" id="RevistPat" name="RevistPat" value="Revist" onclick="SaveRevist_Patient();" />--%>
+                <input type="button" id="updatePatient_Data" class="btn btn-primry"  name="updatePatient_Data" style="text-transform: capitalize;width:10% !important" value="Update" onclick="SavePatient();" tabindex="23" />
+                <input type="button" id="CloseSearchModel" class="btn-gray" style="width:10% !important" name="saveENT" value="Close" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
     </div>
 
 

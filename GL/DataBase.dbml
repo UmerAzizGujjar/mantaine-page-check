@@ -5822,42 +5822,6 @@
       <Column Name="Discount_Block" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.In_Patient_Medicines" Member="In_Patient_Medicines">
-    <Type Name="In_Patient_Medicine">
-      <Column Name="In_Patient_Medicine_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Medicine_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Frequency" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="Recomended_Dosage" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Oral" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Injections" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Medicine_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="AttendingParamedical_Staff" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="chkDiccharge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Nurse_Name" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Dosage_From" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Dosage_Qty" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Other_Instruction" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="EmergencyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Assigned" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Regular" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="STAT" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="PRN" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Start_Date_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Stop_Date_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="High_Risk_Drug" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Max_PRN_Dose" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Username" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Nurse_Name_Nurse_Note" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="isBuild" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Rcv_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Req_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Store_Issue" Member="Store_Issues">
     <Type Name="Store_Issue">
       <Column Name="Store_Issue_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7270,6 +7234,42 @@
       <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.In_Patient_Medicines" Member="In_Patient_Medicines">
+    <Type Name="In_Patient_Medicine">
+      <Column Name="In_Patient_Medicine_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Medicine_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Frequency" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Recomended_Dosage" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Oral" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Injections" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Medicine_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AttendingParamedical_Staff" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Doctor_ID" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="chkDiccharge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Nurse_Name" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Dosage_From" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Dosage_Qty" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Other_Instruction" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="EmergencyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Assigned" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Regular" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="STAT" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="PRN" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Start_Date_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Stop_Date_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="High_Risk_Drug" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Max_PRN_Dose" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Username" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Nurse_Name_Nurse_Note" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="isBuild" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Rcv_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Req_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -11391,6 +11391,13 @@
       <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
       <Column Name="InspStatus" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
       <Column Name="InspecQty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spApproveStore_Return" Method="spApproveStore_Return">
+    <Parameter Name="sid" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="spApproveStore_ReturnResult">
+      <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(22) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>

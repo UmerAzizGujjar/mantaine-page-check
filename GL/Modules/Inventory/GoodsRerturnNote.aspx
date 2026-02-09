@@ -250,7 +250,7 @@
             var Balance_Stock = $($(row).find('input[name=txtBalance_Stock]')).val();
       
 
-            var Balance = parseInt(Issue_Qty) - (parseInt(Return_Qty) + (parseInt(Balance_Stock))  ) ;
+            var Balance = parseInt(Issue_Qty) - (parseInt(Return_Qty))  ;
             $($(row).find('input[name=Balance_Stock]')).val(Balance);
            
         }
