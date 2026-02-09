@@ -67,12 +67,13 @@
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({ GINIds: selectedIds }),
             success: function (response) {
+                var message = response.d;
+
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Data saved successfully.',
-                    showConfirmButton: false,
-                    timer: 2500,
+                    icon: message.includes('Approved Successfully') ? 'success' : 'error',
+                    title: 'Message',
+                    text: message,
+                    showConfirmButton: true,
                     customClass: {
                         popup: 'swal-big-popup',
                         title: 'swal-big-title',
