@@ -1368,7 +1368,7 @@
                 dataType: "json",
                 success: function (response) {
 
-                    var status = response.d; 
+                    var status = response.d;
 
                     if (status === "OPD") {
                         Swal.fire({
@@ -1383,8 +1383,8 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-                        return; 
-                    }                  
+                        return;
+                    }
 
                     if (status === "IPD") {
                         Swal.fire({
@@ -1399,7 +1399,7 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-                        return; 
+                        return;
                     }
                     loadPatient(patientId);
                     document.getElementById('searchResults').classList.remove('active');
@@ -1882,10 +1882,10 @@
             cell.innerHTML = actions;
         }
 
-        
+
 
         function AddPatientDetail(PatientID) {
-           
+
             debugger;
             $.ajax({
                 type: "POST",
@@ -1911,26 +1911,26 @@
 
                         if (outID && outID !== "0") {
                             window.location = "NewEmergencyCase.aspx?ID=" + outID;
-                            return; 
+                            return;
                         }
 
                         $('#<%= vlblPatients_Name.ClientID %>').text(name);
-                $('#<%= vLbl_Age.ClientID %>').text(gender + " - " + age + " yrs"); // spacing improved
-                $('#<%= vLbl_Adress.ClientID %>').text(address);
-                $('#<%= vLbl_Contact.ClientID %>').text(mobile);
-                $("#<%= hdfReg_ID.ClientID %>").val(data.Reg_Patient_ID); // ✅ was `regPatID` → should be `Reg_Patient_ID`
-                // FillPreviousLabTests();
-                // FillPreviousMedicines();
-                // FillPreviousServices();
-                // FillPreviousDiagnosticTests();
+                        $('#<%= vLbl_Age.ClientID %>').text(gender + " - " + age + " yrs"); // spacing improved
+                        $('#<%= vLbl_Adress.ClientID %>').text(address);
+                        $('#<%= vLbl_Contact.ClientID %>').text(mobile);
+                        $("#<%= hdfReg_ID.ClientID %>").val(data.Reg_Patient_ID); // ✅ was `regPatID` → should be `Reg_Patient_ID`
+                        // FillPreviousLabTests();
+                        // FillPreviousMedicines();
+                        // FillPreviousServices();
+                        // FillPreviousDiagnosticTests();
                         $('#PatientsSearchModel').modal('hide');
-            }
-        },
-        error: function (xhr, status, error) { // ✅ `failure` → `error` (jQuery uses `error`, not `failure`)
-            console.error("AJAX Error:", status, error);
+                    }
+                },
+                error: function (xhr, status, error) { // ✅ `failure` → `error` (jQuery uses `error`, not `failure`)
+                    console.error("AJAX Error:", status, error);
+                }
+            });
         }
-    });
-}
         function addfunc() {
             debugger;
             var maskedValue = $('#txtSearch').val();
@@ -2015,7 +2015,7 @@
             });
             return options;
         }
-       
+
         function Get_Doctor_Info() {
 
             var Doctor_Val = document.getElementById('<%= ddl_Department.ClientID%>').value;
@@ -4815,7 +4815,7 @@
 
             console.log("Data being sent:", data);
 
-            $.ajax({               
+            $.ajax({
                 type: "POST",
                 url: "NewEmergencyCase.aspx/SaveRecord", // Replace with your actual page name
                 data: JSON.stringify({ data: data }),
@@ -5126,7 +5126,7 @@
             $('#SavePatient_Data').attr('disabled', true);
             var Prefix_PatientName = $('#ddl_name').val();
             var PatientName = $('#txt_name').val();
-            var PatientID = $('#hdfPatient_ID').val();  
+            var PatientID = $('#hdfPatient_ID').val();
             var Full_Name = Prefix_PatientName + PatientName;
             debugger;
             var RelationType = $('#ddlRelation').val();
@@ -6596,7 +6596,7 @@
                                                 <div class="vital-row" style="display: flex; align-items: center; width: 48%; margin-bottom: 15px;">
                                                     <div style="display: flex; align-items: center; width: 100%;">
                                                         <asp:Label ID="Label98" runat="server" Text="Receiving Date & Time"></asp:Label>
-                                                        <asp:TextBox ID="txttxtReceiving_DateDesc" runat="server" ReadOnly="true"  Style="width: 100%;"></asp:TextBox>
+                                                        <asp:TextBox ID="txttxtReceiving_DateDesc" runat="server" ReadOnly="true" Style="width: 100%;"></asp:TextBox>
                                                     </div>
                                                 </div>
 
@@ -7484,140 +7484,140 @@
             </div>
 
         </div>
-              <div id="PatientModel" class="modal fade-in" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content modalSize" style="width: 1104px; margin-left: -77px; height: 308px; margin-top: 117px; /* 316px */">
+        <div id="PatientModel" class="modal fade-in" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content modalSize" style="width: 1104px; margin-left: -77px; height: 308px; margin-top: 117px; /* 316px */">
 
-            <form>
-                <div class="container-fluid">
-                    <div class="row" style="margin-top: 40px!important;">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>MR No</label>
-                        </div>
+                    <form>
+                        <div class="container-fluid">
+                            <div class="row" style="margin-top: 40px!important;">
+                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-1 col-md-3 col-sm-4">
+                                    <label>MR No</label>
+                                </div>
 
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" tabindex="1" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
-                        </div>
-
-
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Gender</label>
-                        </div>
-
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select id="ddl_Gender" tabindex="5" style="width: 197px;">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Name<span style="color:red;">*</span></label>
-                        </div>
-
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select class="impo-drop1 fcux" tabindex="3" name="name" id="ddl_name">
-                                <option value="Mr.">Mr.</option>
-                                <option value="Mrs.">Mrs.</option>
-                                <option value="Ms.">Ms.</option>
-                                <option value="B/O.">B/O.</option>
-                            </select>
-                        </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <input type="text" tabindex="1" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
+                                </div>
 
 
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input name="dob"  type="text" id="txt_name" tabindex="4" style="margin-left: -12px !important" />
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Martial Status</label>
-                        </div>
+                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <label>Gender</label>
+                                </div>
 
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <select  tabindex="6" id="ddl_status"  style="width: 197px;">
-                                <option></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Relation</label>
-                        </div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select class="impo-drop fcux" tabindex="7" name="name" id="ddlRelation">
-                                <option value="S/O">S/O</option>
-                                <option value="W/O">W/O</option>
-                                <option value="D/O">D/O</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_relation" tabindex="8" style="margin-left: -12px !important" />
-                        </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <select id="ddl_Gender" tabindex="5" style="width: 197px;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-1 col-md-3 col-sm-4">
+                                    <label>Name<span style="color: red;">*</span></label>
+                                </div>
 
-                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>Mobile</label>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" tabindex="9" id="txt_mobile" style="width: 197px !important;" />
-                        </div>
-                    </div>
+                                <div class="col-lg-1 col-md-3 col-sm-4">
+                                    <select class="impo-drop1 fcux" tabindex="3" name="name" id="ddl_name">
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        <option value="B/O.">B/O.</option>
+                                    </select>
+                                </div>
 
-                    <div class="row">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Age/DOB</label>
-                        </div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <select name="name" tabindex="10" id="PrefixAge" >
-                                <option value="Year">Year</option>
-                                <option value="Month">Month</option>
-                                <option value="Day">Day</option>
-                            </select>
-                        </div>
 
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input type="text" id="txt_dob" tabindex="11" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
-                            <input class="fcux" type="text" id="txtAge_yearss" style="display: inline; width: 65% !important" placeholder="mm ddyy" />
-                        </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <input name="dob" type="text" id="txt_name" tabindex="4" style="margin-left: -12px !important" />
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <label>Martial Status</label>
+                                </div>
 
-                        <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <label>CNIC</label>
-                        </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <select tabindex="6" id="ddl_status" style="width: 197px;">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-1 col-md-3 col-sm-4">
+                                    <label>Relation</label>
+                                </div>
+                                <div class="col-lg-1 col-md-3 col-sm-4">
+                                    <select class="impo-drop fcux" tabindex="7" name="name" id="ddlRelation">
+                                        <option value="S/O">S/O</option>
+                                        <option value="W/O">W/O</option>
+                                        <option value="D/O">D/O</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <input type="text" id="txt_relation" tabindex="8" style="margin-left: -12px !important" />
+                                </div>
 
-                        <div class="col-lg-2 col-md-3 col-sm-4">
-                            <input tabindex="12"  type="text" id="txt_cnic" style="width: 200px !important" />
-                        </div>
-                    </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <label>Mobile</label>
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <input type="text" tabindex="9" id="txt_mobile" style="width: 197px !important;" />
+                                </div>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                        <div class="col-lg-1 col-md-3 col-sm-4">
-                            <label>Address</label>
-                        </div>
+                            <div class="row">
+                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-1 col-md-3 col-sm-4">
+                                    <label>Age/DOB</label>
+                                </div>
+                                <div class="col-lg-1 col-md-3 col-sm-4">
+                                    <select name="name" tabindex="10" id="PrefixAge">
+                                        <option value="Year">Year</option>
+                                        <option value="Month">Month</option>
+                                        <option value="Day">Day</option>
+                                    </select>
+                                </div>
 
-                        <div class="col-lg-6 col-md-3 col-sm-4">
-                            <input type="text" tabindex="13" id="txt_Address"  />
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <input type="text" id="txt_dob" tabindex="11" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
+                                    <input class="fcux" type="text" id="txtAge_yearss" style="display: inline; width: 65% !important" placeholder="mm ddyy" />
+                                </div>
+
+                                <div class="col-lg-2 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <label>CNIC</label>
+                                </div>
+
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <input tabindex="12" type="text" id="txt_cnic" style="width: 200px !important" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                                <div class="col-lg-1 col-md-3 col-sm-4">
+                                    <label>Address</label>
+                                </div>
+
+                                <div class="col-lg-6 col-md-3 col-sm-4">
+                                    <input type="text" tabindex="13" id="txt_Address" />
+                                </div>
+                            </div>
                         </div>
+                    </form>
+
+
+                    <div class="modal-footer" style="margin-top: 6%;">
+                        <input type="button" id="SavePatient_Data" class="btn btn-primry" tabindex="13" name="savePatient_Data" value="Save" style="width: 10% !important" onclick="SavePatient();" />
+                        <%-- <input type="button" id="RevistPat" name="RevistPat" value="Revist" onclick="SaveRevist_Patient();" />--%>
+                        <input type="button" id="updatePatient_Data" class="btn btn-primry" name="updatePatient_Data" style="text-transform: capitalize; width: 10% !important" value="Update" onclick="SavePatient();" tabindex="23" />
+                        <input type="button" id="CloseSearchModel" class="btn-gray" style="width: 10% !important" name="saveENT" value="Close" data-dismiss="modal" />
                     </div>
                 </div>
-            </form>
-
-
-            <div class="modal-footer" style="margin-top: 6%;">
-                <input type="button"  id="SavePatient_Data" class="btn btn-primry" tabindex="13" name="savePatient_Data" value="Save" style="width:10% !important" onclick="SavePatient();" />
-                <%-- <input type="button" id="RevistPat" name="RevistPat" value="Revist" onclick="SaveRevist_Patient();" />--%>
-                <input type="button" id="updatePatient_Data" class="btn btn-primry"  name="updatePatient_Data" style="text-transform: capitalize;width:10% !important" value="Update" onclick="SavePatient();" tabindex="23" />
-                <input type="button" id="CloseSearchModel" class="btn-gray" style="width:10% !important" name="saveENT" value="Close" data-dismiss="modal" />
             </div>
         </div>
-    </div>
-</div>
     </div>
 
 
