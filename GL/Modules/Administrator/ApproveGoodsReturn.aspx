@@ -241,22 +241,35 @@
                        "width": "7%",
                        "orderable": false
                    }
-               ]
+               ],
+               "initComplete": function (settings, json) {
+                   var lengthContainer = document.querySelector('#tblResult_length');
+                   var lengthDropdown = document.querySelector('#tblResult_length select');
+                   var label = document.querySelector('#tblResult_length label');
+
+                   if (lengthDropdown && label && lengthContainer) {
+                       var labelText = document.createElement('span');
+                       labelText.textContent = 'Show entries ';
+                       labelText.style.marginTop = '10px';
+                       labelText.style.display = 'inline-block';
+
+                       lengthDropdown.style.width = '60px';
+                       label.innerHTML = '';
+                       label.style.display = 'inline-flex';
+                       label.style.marginTop = '17px';
+                       label.appendChild(labelText);
+                       label.appendChild(lengthDropdown);
+                   } else {
+                       console.log("Length dropdown, label, or container not found");
+                   }
+               }
            });
        }
    </script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container-fluid" style="padding: 20px;">
-        <div class="row">
-            <div class="col-md-12">
-                <h3 style="margin-bottom: 20px; color: #333;">
-                    <i class="fa fa-clipboard-check"></i> Approve Store Return Notes
-                </h3>
-            </div>
-        </div>
-        
+    <div class="container-fluid" style="padding: 20px;">        
         <div class="table-container col-lg-12 col-md-12 col-sm-10">
             <table class="table table-hover table-striped table-bordered" id="tblResult" style="width:100%;">
                 <thead id="ihead">
