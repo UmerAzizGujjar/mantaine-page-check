@@ -638,7 +638,7 @@ on DM.Rouster_id equals DD.Rouster_id
         public static string CancelAppointment(string appointmentId)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var cancelbooking = DBClass.getField("UPDATE appointment_form SET cancelAppointment = 1, Time = NULL WHERE Appointment_ID = " + appointmentId);
+            var cancelbooking = DBClass.getField("UPDATE Derma_Appointment SET cancelAppointment = 1 WHERE Derma_Appointment_Id = " + appointmentId);
             return cancelbooking.ToString();
 
         }

@@ -933,6 +933,9 @@ namespace PMS
         partial void InsertIn_Patient_Medicine(In_Patient_Medicine instance);
         partial void UpdateIn_Patient_Medicine(In_Patient_Medicine instance);
         partial void DeleteIn_Patient_Medicine(In_Patient_Medicine instance);
+        partial void InsertUserDataTablePreference(UserDataTablePreference instance);
+        partial void UpdateUserDataTablePreference(UserDataTablePreference instance);
+        partial void DeleteUserDataTablePreference(UserDataTablePreference instance);
         #endregion
 
         public DataBaseDataContext() :
@@ -3401,6 +3404,14 @@ namespace PMS
             get
             {
                 return this.GetTable<In_Patient_Medicine>();
+            }
+        }
+
+        public System.Data.Linq.Table<UserDataTablePreference> UserDataTablePreferences
+        {
+            get
+            {
+                return this.GetTable<UserDataTablePreference>();
             }
         }
 
@@ -162303,6 +162314,140 @@ namespace PMS
                     this._Req_Qty = value;
                     this.SendPropertyChanged("Req_Qty");
                     this.OnReq_QtyChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.UserDataTablePreferences")]
+    public partial class UserDataTablePreference : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _PreferenceID;
+
+        private string _UserID;
+
+        private string _PageName;
+
+        private string _ColumnVisibility;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnPreferenceIDChanging(int value);
+        partial void OnPreferenceIDChanged();
+        partial void OnUserIDChanging(string value);
+        partial void OnUserIDChanged();
+        partial void OnPageNameChanging(string value);
+        partial void OnPageNameChanged();
+        partial void OnColumnVisibilityChanging(string value);
+        partial void OnColumnVisibilityChanged();
+        #endregion
+
+        public UserDataTablePreference()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PreferenceID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int PreferenceID
+        {
+            get
+            {
+                return this._PreferenceID;
+            }
+            set
+            {
+                if ((this._PreferenceID != value))
+                {
+                    this.OnPreferenceIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._PreferenceID = value;
+                    this.SendPropertyChanged("PreferenceID");
+                    this.OnPreferenceIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UserID", DbType = "NVarChar(128) NOT NULL", CanBeNull = false)]
+        public string UserID
+        {
+            get
+            {
+                return this._UserID;
+            }
+            set
+            {
+                if ((this._UserID != value))
+                {
+                    this.OnUserIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._UserID = value;
+                    this.SendPropertyChanged("UserID");
+                    this.OnUserIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PageName", DbType = "NVarChar(100) NOT NULL", CanBeNull = false)]
+        public string PageName
+        {
+            get
+            {
+                return this._PageName;
+            }
+            set
+            {
+                if ((this._PageName != value))
+                {
+                    this.OnPageNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._PageName = value;
+                    this.SendPropertyChanged("PageName");
+                    this.OnPageNameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ColumnVisibility", DbType = "NVarChar(MAX) NOT NULL", CanBeNull = false)]
+        public string ColumnVisibility
+        {
+            get
+            {
+                return this._ColumnVisibility;
+            }
+            set
+            {
+                if ((this._ColumnVisibility != value))
+                {
+                    this.OnColumnVisibilityChanging(value);
+                    this.SendPropertyChanging();
+                    this._ColumnVisibility = value;
+                    this.SendPropertyChanged("ColumnVisibility");
+                    this.OnColumnVisibilityChanged();
                 }
             }
         }
