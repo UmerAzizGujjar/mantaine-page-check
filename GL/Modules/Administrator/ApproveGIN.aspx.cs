@@ -12,7 +12,7 @@ namespace PMS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+
         }
         [WebMethod]
         public static bool CheckUserRights()
@@ -53,12 +53,9 @@ namespace PMS
 
                 if (SI == null)
                 {
-                    var IsFinalApprovals = (from SASD in db.Sys_Approval_Stage_Details
-                                            join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
-                                            join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
-                                            join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
-                                            where SASD.UserId == user_id && SATF.FormId == form_id && SASM.IsDeleted == false
-                                            select new { SASM.IsFinalApproval, SATF.FormId }).ToList();
+                    resultMessages.Add($"GIN {ginId}: Invalid Store Issue ID");
+                    continue;
+                }
 
                 var spResult = db
                     .spApproveStore_Issue(SI.Store_Issue_Id, user_id)
@@ -210,9 +207,9 @@ namespace PMS
             foreach (int id in GINIds)
             {
                 var user_id = AppConfig.UserID;
-                 var StoreIssue_id = id;
+                var StoreIssue_id = id;
                 var form_id = 6;
-                 Store_Issue SI = (from tbl in db.Store_Issues
+                Store_Issue SI = (from tbl in db.Store_Issues
                                   where tbl.Store_Issue_Id == Convert.ToInt32(StoreIssue_id)
                                   select tbl).SingleOrDefault();
                 if (SI != null)
@@ -309,14 +306,14 @@ namespace PMS
                     {
                         switch (sortColumn)
                         {
-                            
+
                             case "SINO":
                                 formattedQuery = sortColumnDirection == "asc"
                                     ? formattedQuery.OrderBy(x => x.SINO)
                                     : formattedQuery.OrderByDescending(x => x.SINO);
                                 break;
 
-                           
+
                             default:
                                 formattedQuery = formattedQuery.OrderByDescending(x => x.SINO);
                                 break;
@@ -339,7 +336,7 @@ namespace PMS
             }
         }
 
-        
+
 
     }
 }
