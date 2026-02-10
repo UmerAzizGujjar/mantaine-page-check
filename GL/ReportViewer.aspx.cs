@@ -3629,6 +3629,8 @@ namespace PMS
                     && Request.QueryString["CostCenter"] != null && Request.QueryString["AllAccounts"] != null)
                 {
                     string DeptID = Request.QueryString["Department"].ToString();
+                    string CostCenter = Request.QueryString["CostCenter"].ToString();
+                    string CostCenterName = Request.QueryString["CostCenterName"].ToString();
                     reportPath += "GeneralLedger/rptLadgerCostCenter.rpt";
                     rd.Load(reportPath);
                     rd.SummaryInfo.ReportTitle = reportTitle;
@@ -3636,11 +3638,11 @@ namespace PMS
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("@start_date", Convert.ToDateTime(Request.QueryString["startDate"]));
                     rd.SetParameterValue("@end_date", Convert.ToDateTime(Request.QueryString["endDate"]));
-                    rd.SetParameterValue("@Cost_Center", Request.QueryString["CostCenter"]);
+                    rd.SetParameterValue("@Cost_Center", CostCenter);
                     rd.SetParameterValue("@Dept_id", Convert.ToInt32(DeptID));
                     rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
                     rd.SetParameterValue("@Book_ID", AppConfig.Book_ID);
-                    rd.SetParameterValue("CostCenterName", Request.QueryString["CostCenterName"]);
+                    rd.SetParameterValue("CostCenterName", CostCenterName);
                     if (!Convert.ToBoolean(Request.QueryString["AllAccounts"]) && Request.QueryString["Account_Code"] != null)
                     {
                         rd.RecordSelectionFormula = "{Ladger.Account_Code} =\"" + Request.QueryString["Account_Code"] + "\"";

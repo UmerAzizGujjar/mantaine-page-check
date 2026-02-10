@@ -538,7 +538,7 @@ namespace PMS
                         query = "ReportName=TrailForCostCenter&ReportTitle=Trail For Cost Center From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.Text + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&AllAccounts=" + rbtAll.Checked.ToString().ToLower();
                         break;
                     case "LBC":
-                        query = "ReportName=LedgerForCostCenter&ReportTitle=Ledger For Cost Center  From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.SelectedValue + "&Department=" + ddlCostCenter.SelectedValue + "&AllAccounts=" + chbAllAccounts.Checked + "&Account_Code=" + Account_Code + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text;
+                        query = "ReportName=LedgerForCostCenter&ReportTitle=Ledger For Cost Center  From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.SelectedValue + "&Department=" + ddlDepartment.SelectedValue + "&AllAccounts=" + chbAllAccounts.Checked + "&Account_Code=" + Account_Code + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text;
                         break;
                     case "COA":
                         query = "ReportName=ChartOfAccount&ReportTitle=Chart Of Account &Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked;
