@@ -78,17 +78,17 @@
 
         }
         function loadCustomerTokenInput() {
-            $("#ctl00_MainContent_txtCustomer").tokenInput("../../json.aspx?Table=Ar_Customers&Record=New",
+            $("#ctl00_MainContent_txtCustomer").tokenInput("json.aspx?Table=Ar_Customers&Record=New",
 
                    {
                        tokenLimit: 1
                    });
-            $("#ctl00_MainContent_txtCustomerFrom").tokenInput("../../json.aspx?Table=Ar_Customers&Record=New",
+            $("#ctl00_MainContent_txtCustomerFrom").tokenInput("json.aspx?Table=Ar_Customers&Record=New",
 
                   {
                       tokenLimit: 1
                   });
-            $("#ctl00_MainContent_txtCustomerTo").tokenInput("../../json.aspx?Table=Ar_Customers&Record=New",
+            $("#ctl00_MainContent_txtCustomerTo").tokenInput("json.aspx?Table=Ar_Customers&Record=New",
 
                   {
                       tokenLimit: 1
@@ -96,7 +96,7 @@
         }
         function loadPurchasedPlotsListTokenInput() {
 
-            $("#ctl00_MainContent_txtPlotsList").tokenInput("../../json.aspx?Table=Plots&Transaction=AllPlots",
+            $("#ctl00_MainContent_txtPlotsList").tokenInput("json.aspx?Table=Plots&Transaction=AllPlots",
              {
                  tokenLimit: 1
              });
@@ -104,28 +104,28 @@
 
         function loadStartEndAccountTokenInput() {
             //$("#ctl00_MainContent_txtSpecificAccount").tokenInput("clear");
-            $("#ctl00_MainContent_txtStart_Code").tokenInput("../../json.aspx", {
+            $("#ctl00_MainContent_txtStart_Code").tokenInput("json.aspx", {
                 tokenLimit: 1
             });
-            $("#ctl00_MainContent_txtEnd_Code").tokenInput("../../json.aspx", {
+            $("#ctl00_MainContent_txtEnd_Code").tokenInput("json.aspx", {
                 tokenLimit: 1
             });
         }
         function loadSpecificAccountTokenInput() {
             //$("#ctl00_MainContent_txtSpecificAccount").tokenInput("clear");
-            $("#ctl00_MainContent_txtSpecificAccount").tokenInput("../../json.aspx", {
+            $("#ctl00_MainContent_txtSpecificAccount").tokenInput("json.aspx", {
                 tokenLimit: 1
             });
         }
         function loadAccountCodeForCashBookTokenInput() {
-            $("#ctl00_MainContent_txtAccountCodeForCashBook").tokenInput("../../json.aspx", {
+            $("#ctl00_MainContent_txtAccountCodeForCashBook").tokenInput("json.aspx", {
                 tokenLimit: 1
             });
         }
         function loadAccountCodeNameTokenInput() {
             var Account_Code_Name = $("#ctl00_MainContent_txtAccount_Code_Name");
             if (Account_Code_Name != null) {
-                $("#ctl00_MainContent_txtAccount_Code_Name").tokenInput("../../json.aspx?Bank=1",
+                $("#ctl00_MainContent_txtAccount_Code_Name").tokenInput("json.aspx?Bank=1",
                    {
                        tokenLimit: 1
                    });
@@ -134,7 +134,7 @@
         function loadAccountBankSummaryTokenInput() {
             var Account_Code_Name = $("#ctl00_MainContent_txtAccountBankSummary");
             if (Account_Code_Name != null) {
-                $("#ctl00_MainContent_txtAccountBankSummary").tokenInput("../../json.aspx",
+                $("#ctl00_MainContent_txtAccountBankSummary").tokenInput("json.aspx",
                    {
                        tokenLimit: 1
                    });
@@ -144,14 +144,14 @@
         function loadPlotTokenInputs() {
             var Plot_Info = $("#ctl00_MainContent_txtPlot_Info");
             if (Plot_Info != null) {
-                $("#ctl00_MainContent_txtPlot_Info").tokenInput("../../json.aspx?Table=Plots&Transaction=Purchases",
+                $("#ctl00_MainContent_txtPlot_Info").tokenInput("json.aspx?Table=Plots&Transaction=Purchases",
                 {
                     tokenLimit: 1
                 });
             }
         }
         function loadAccountCodeTokenInputs() {
-            $("#ctl00_MainContent_txtAccountCode").tokenInput("../../json.aspx", {
+            $("#ctl00_MainContent_txtAccountCode").tokenInput("json.aspx", {
                 tokenLimit: 1
             });
         }
