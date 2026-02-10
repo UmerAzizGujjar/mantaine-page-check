@@ -74,6 +74,7 @@
 
 
                 $('#ddlPatient_Type').attr('disabled', false);
+                Get_Pat_Info(Reffered_id);
                 //$('#ddlcashier').attr('disabled', true);
             }
             if (refferopd_id != "" && Reffered_id_opd != "") {
