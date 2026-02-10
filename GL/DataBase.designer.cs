@@ -4552,13 +4552,6 @@ namespace PMS
             return ((ISingleResult<sp_LoadVenDetailsResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApproveStore_Issue")]
-        public ISingleResult<spApproveStore_IssueResult> spApproveStore_Issue([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> sid, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), sid, user_id);
-            return ((ISingleResult<spApproveStore_IssueResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetAllitemsDetails")]
         public ISingleResult<spGetAllitemsDetailsResult> spGetAllitemsDetails([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(100)")] string searchText, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowPharmacy, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> allowGeneralItem, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> warehouse)
         {
@@ -5250,6 +5243,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), sid, user_id);
             return ((ISingleResult<spApproveStore_ReturnResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApproveStore_Issue")]
+        public ISingleResult<spApproveStore_IssueResult> spApproveStore_Issue([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> sid, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), sid, user_id);
+            return ((ISingleResult<spApproveStore_IssueResult>)(result.ReturnValue));
         }
     }
 
@@ -179389,32 +179389,6 @@ namespace PMS
         }
     }
 
-    public partial class spApproveStore_IssueResult
-    {
-
-        private string _Column1;
-
-        public spApproveStore_IssueResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Name = "", Storage = "_Column1", DbType = "VarChar(1000)")]
-        public string Column1
-        {
-            get
-            {
-                return this._Column1;
-            }
-            set
-            {
-                if ((this._Column1 != value))
-                {
-                    this._Column1 = value;
-                }
-            }
-        }
-    }
-
     public partial class spGetAllitemsDetailsResult
     {
 
@@ -212978,6 +212952,32 @@ namespace PMS
                 if ((this._Column1 != value))
                 {
                     this._Column1 = value;
+                }
+            }
+        }
+    }
+
+    public partial class spApproveStore_IssueResult
+    {
+
+        private string _Message;
+
+        public spApproveStore_IssueResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(22) NOT NULL", CanBeNull = false)]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
                 }
             }
         }

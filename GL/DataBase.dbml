@@ -9021,13 +9021,6 @@
       <Column Name="TotalSalesTax5" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spApproveStore_Issue" Method="spApproveStore_Issue">
-    <Parameter Name="sid" Type="System.Int64" DbType="BigInt" />
-    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="spApproveStore_IssueResult">
-      <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spGetAllitemsDetails" Method="spGetAllitemsDetails">
     <Parameter Name="searchText" Type="System.String" DbType="NVarChar(100)" />
     <Parameter Name="allowPharmacy" Type="System.Boolean" DbType="Bit" />
@@ -11406,6 +11399,13 @@
     <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="spApproveStore_ReturnResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(22) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spApproveStore_Issue" Method="spApproveStore_Issue">
+    <Parameter Name="sid" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="spApproveStore_IssueResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(22) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>
