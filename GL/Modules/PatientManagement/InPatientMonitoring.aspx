@@ -1820,6 +1820,8 @@
             $('#ctl00_MainContent_txtSaturationRoom').val($($(row).find('td')[8]).text());
 
             $('#ctl00_MainContent_txtSaturation_Oxygen1').val($($(row).find('td')[9]).text());
+            $('#ctl00_MainContent_txtHeight').val($($(row).find('td')[10]).text());
+            $('#ctl00_MainContent_txtBMI').val($($(row).find('td')[11]).text());
         }
         function editProgress(AnchorTag) {
             $('#btnAddPulse').val('Update');
@@ -1836,6 +1838,8 @@
             $('#ctl00_MainContent_txtSaturationRoom').val($($(row).find('td')[8]).text());
 
             $('#ctl00_MainContent_txtSaturation_Oxygen1').val($($(row).find('td')[9]).text());
+            $('#ctl00_MainContent_txtHeight').val($($(row).find('td')[10]).text());
+            $('#ctl00_MainContent_txtBMI').val($($(row).find('td')[11]).text());
         }
         function bindDate() {
             $("#ctl00_MainContent_txtMedicine_Given_Date").datepicker({ dateFormat: 'mm/dd/yy' });
@@ -1995,7 +1999,7 @@
 
                 var datetime = '<%= DateTime.Now%>';
                 if ($('#btnAddPulse').val() == 'Add') {
-                    var row = '<tr> <td> ' + datetime + ' </td><td> ' + $('#ctl00_MainContent_txtPulse_Min').val() + '</td> <td> ' + $('#ctl00_MainContent_txtBP_mm_Hg').val() + ' </td> <td> ' + $('#ctl00_MainContent_txtTemp_C').val() + '</td><td> ' + $('#ctl00_MainContent_txtRespiration_Min').val() + ' </td> <td> ' + $('#ctl00_MainContent_txtBlood').val() + '</td><td> ' + $('#ctl00_MainContent_txtWeight_Kg').val() + ' </td><td> ' + $('#ctl00_MainContent_txtSaturation').val() + ' </td><td > ' + $('#ctl00_MainContent_txtSaturationRoom').val() + ' </td><td > ' + $('#ctl00_MainContent_txtSaturation_Oxygen1').val() + ' </td>' + ' </td> <td> <a href="#" onclick="editPlus(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
+                    var row = '<tr> <td> ' + datetime + ' </td><td> ' + $('#ctl00_MainContent_txtPulse_Min').val() + '</td> <td> ' + $('#ctl00_MainContent_txtBP_mm_Hg').val() + ' </td> <td> ' + $('#ctl00_MainContent_txtTemp_C').val() + '</td><td> ' + $('#ctl00_MainContent_txtRespiration_Min').val() + ' </td> <td> ' + $('#ctl00_MainContent_txtBlood').val() + '</td><td> ' + $('#ctl00_MainContent_txtWeight_Kg').val() + ' </td><td> ' + $('#ctl00_MainContent_txtSaturation').val() + ' </td><td > ' + $('#ctl00_MainContent_txtSaturationRoom').val() + ' </td><td > ' + $('#ctl00_MainContent_txtSaturation_Oxygen1').val() + ' </td><td > ' + $('#ctl00_MainContent_txtHeight').val() + ' </td><td > ' + $('#ctl00_MainContent_txtBMI').val() + ' </td>' + ' </td> <td> <a href="#" onclick="editPlus(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td> </tr>';
                     var table = $('#tblMoinitring tbody');
                     table.append(row);
                     $('#ctl00_MainContent_txtPulse_Min').val('');
@@ -2017,6 +2021,8 @@
                     $(row).find('td')[5].innerText = $('#ctl00_MainContent_txtBlood').val();
                     $(row).find('td')[6].innerText = $('#ctl00_MainContent_txtWeight_Kg').val();
                     $(row).find('td')[7].innerText = $('#ctl00_MainContent_txtSaturation').val();
+                    $(row).find('td')[10].innerText = $('#ctl00_MainContent_txtHeight').val();
+                    $(row).find('td')[11].innerText = $('#ctl00_MainContent_txtBMI').val();
 
                     $('#btnAddPulse').val('Add')
                 }
@@ -2354,7 +2360,7 @@
                     var timeStamp = parseInt(value.Mon_Date.substr(6, 10));
                     var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
                     rows += '<tr> <td> ' + date + ' </td> <td> ' + value.Pulse_Min
-                        + ' </td> <td> ' + value.BP_mm_Hg + ' </td> <td> ' + value.Temp_C + ' </td><td> ' + value.Respiration_Min + ' </td> <td> ' + value.Blood_Suger + ' </td> <td> ' + value.Weight_Kg + '</td><td> ' + value.Saturation + '</td><td > ' + value.Room_Air + ' </td><td > ' + value.With_Oxygen + ' </td></tr>';
+                        + ' </td> <td> ' + value.BP_mm_Hg + ' </td> <td> ' + value.Temp_C + ' </td><td> ' + value.Respiration_Min + ' </td> <td> ' + value.Blood_Suger + ' </td> <td> ' + value.Weight_Kg + '</td><td> ' + value.Saturation + '</td><td > ' + value.Room_Air + ' </td><td > ' + value.With_Oxygen + ' </td><td > ' + value.Height + ' </td><td > ' + value.BMI + ' </td></tr>';
                 });
 
                 $('#tblVitalParametersHistory tbody tr').remove();
@@ -2589,7 +2595,7 @@
             var MoinitringList = [];
             table.find('tbody tr').each(function (key, value) {
 
-                MoinitringList.push({ 'Date': $($(value).find('td')[0]).text(), 'Pulse_Min': $($(value).find('td')[1]).text(), 'BP_mm_Hg': $($(value).find('td')[2]).text(), 'Temp_C': $($(value).find('td')[3]).text(), 'Respiration_Min': $($(value).find('td')[4]).text(), 'Blood_Suger': $($(value).find('td')[5]).text(), 'Weight_Kg': $($(value).find('td')[6]).text(), 'Saturation': $($(value).find('td')[7]).text(), 'Room_Air': $($(value).find('td')[8]).text(), 'With_Oxygen': $($(value).find('td')[9]).text() });
+                MoinitringList.push({ 'Date': $($(value).find('td')[0]).text(), 'Pulse_Min': $($(value).find('td')[1]).text(), 'BP_mm_Hg': $($(value).find('td')[2]).text(), 'Temp_C': $($(value).find('td')[3]).text(), 'Respiration_Min': $($(value).find('td')[4]).text(), 'Blood_Suger': $($(value).find('td')[5]).text(), 'Weight_Kg': $($(value).find('td')[6]).text(), 'Saturation': $($(value).find('td')[7]).text(), 'Room_Air': $($(value).find('td')[8]).text(), 'With_Oxygen': $($(value).find('td')[9]).text(), 'Height': $($(value).find('td')[10]).text(), 'BMI': $($(value).find('td')[11]).text() });
 
             });
             var btnsave = $('#btnSave').val();
@@ -3852,6 +3858,21 @@
                                 </div>
                             </div>
                             <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                            <div class="col-lg-2 col-md-3 col-sm-4">
+                               <label for="txtHeight">Height (cm)</label>
+                                <div class="marchk">
+                                    <asp:TextBox ID="txtHeight" runat="server" TabIndex="2"></asp:TextBox>
+<%--                                    <asp:CheckBox runat="server" ID="chk_WithOxygen" Style="margin-left: 10px;" />--%>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                            <div class="col-lg-2 col-md-3 col-sm-4">
+                               <label for="txtBMI">BMI</label>
+                                <div class="marchk">
+                                    <asp:TextBox ID="txtBMI" runat="server" TabIndex="2"></asp:TextBox>
+<%--                                    <asp:CheckBox runat="server" ID="chk_WithOxygen" Style="margin-left: 10px;" />--%>
+                                </div>
+                            </div>
                         <%--    <div class="col-lg-1 col-md-4 col-sm-6" style="display: flex; align-items: center; margin-top: 1%;">
                                 <asp:Label ID="Label10" runat="server" Text="Graph" Style="margin-right: 5px;"></asp:Label>
                                 <asp:CheckBox ID="chkGraph" runat="server" onclick="showGraph();" />
@@ -3889,6 +3910,8 @@
                                     <th>Saturation</th>
                                     <th>Room Air</th>
                                     <th>With Oxygen</th>
+                                    <th>Height</th>
+                                    <th>BMI</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -3921,6 +3944,8 @@
                                             <th>Saturation</th>
                                             <th>Room Air</th>
                                             <th>With Oxygen</th>
+                                            <th>Height</th>
+                                            <th>BMI</th>
                                         </tr>
                                     </thead>
                                     <tbody>

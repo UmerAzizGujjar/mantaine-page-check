@@ -307,7 +307,7 @@ namespace PMS
                                         
                                          where pm.Patient_ID == PatientID
 
-                                         select new { pm.Mon_Date, pm.Pulse_Min, pm.BP_mm_Hg, pm.Temp_C, pm.Respiration_Min, pm.Blood_Suger, pm.Weight_Kg, pm.Saturation,pm.With_Oxygen,pm.Room_Air }).ToList();
+                                         select new { pm.Mon_Date, pm.Pulse_Min, pm.BP_mm_Hg, pm.Temp_C, pm.Respiration_Min, pm.Blood_Suger, pm.Weight_Kg, pm.Saturation,pm.With_Oxygen,pm.Room_Air,pm.Height_Cm,pm.BMI }).ToList();
 
 
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
@@ -760,6 +760,8 @@ namespace PMS
             public string Respiration_Min { get; set; }
             public string Weight_Kg { set; get; }
             public string Blood_Suger { set; get; }
+            public string Height { set; get; }
+            public string BMI { set; get; }
             public string Saturation { set; get; }
             public string Room_Air { set; get; }
 
@@ -796,6 +798,8 @@ namespace PMS
                     oInPatient_MoniteringDetail.Respiration_Min = test.Respiration_Min;
                     oInPatient_MoniteringDetail.Blood_Suger = test.Blood_Suger;
                     oInPatient_MoniteringDetail.Weight_Kg = test.Weight_Kg;
+                    oInPatient_MoniteringDetail.Height_Cm = test.Height;
+                    oInPatient_MoniteringDetail.BMI = test.BMI;
                     oInPatient_MoniteringDetail.Saturation = test.Saturation;
                  
                     oInPatient_MoniteringDetail.Room_Air = test.Room_Air;
@@ -1433,6 +1437,8 @@ namespace PMS
             public int Respiration_Min { get; set; }
             public int Weight_Kg { get; set; }
             public int Blood_Suger { get; set; }
+            public int BMI { get; set; }
+            public int Height { get; set; }
             public int Saturation { get; set; }
         }
 

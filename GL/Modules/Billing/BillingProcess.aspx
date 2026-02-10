@@ -5181,7 +5181,7 @@
                 var CNIC = $('#txt_cnic').val();
                 var Address = $('#txt_Address').val();
                 var martail_status = $('#ddl_status').val();
-                if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || Address == "")) {
+                if ((PatientName == "" || Mobile == "" )) {
 
 
                     alert("Please Enter compulsory Fields");

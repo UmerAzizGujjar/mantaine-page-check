@@ -1440,7 +1440,7 @@
 
                             var retdateRec = moment.unix(TrnsDateRec).format('MM/DD/YYYY hh:mm:ss A');
                             rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.RateBeats
-                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.User_Name + '</td></tr>';
+                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.Blood_Suger + '</td><td>' + value.BMI + '</td><td>' + value.Weight_Kg + '</td><td>' + value.Height_cm + '</td><td>' + value.User_Name + '</td></tr>';
                         }
                     });
 
@@ -1695,6 +1695,10 @@
 
             var BP_mm_Hg = $('#ctl00_MainContent_txtBP').val();
             var Temp_C = $('#ctl00_MainContent_txtTemp').val();
+            var BMI = $('#ctl00_MainContent_txtBMI').val();
+            var Weight = $('#ctl00_MainContent_txtWeight').val();
+            var Height = $('#ctl00_MainContent_txtHeight').val();
+            var BSR = $('#ctl00_MainContent_txtBSR').val();
             var Respiration_Min = $('#ctl00_MainContent_txtRespiration').val();
             var txtRN_Special_Instruction = toHtml('#ctl00_MainContent_txtRN_Special_Instruction');
             var txtReceiving_Date = $('#ctl00_MainContent_txtReceiving_Date').val();
@@ -2212,6 +2216,13 @@
 
             var PulseRate = $('#ctl00_MainContent_txtPulseRate').val();
             var BPDischarge = $('#ctl00_MainContent_txtBPDischarge').val();
+
+            var WeightDischarge = $('#ctl00_MainContent_txtWeightDischarge').val();
+            var HeightDischarge = $('#ctl00_MainContent_txtHeightDischarge').val();
+            var BMIDischarge = $('#ctl00_MainContent_txtBMIDischarge').val();
+            var BSRDischarge = $('#ctl00_MainContent_txtBSRDischarge').val();
+
+
             var Rhythmdischarge = $('#ctl00_MainContent_ddlRhythmdischarge').val();
             var volumedisc = $('#ctl00_MainContent_ddlvolumedisc').val();
             var Tempdisch = $('#ctl00_MainContent_txtTempdisch').val();
@@ -2254,10 +2265,10 @@
 
 
 
-            PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlWard_No, txtHealth_Complaints, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory,
+            PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlWard_No, txtHealth_Complaints, BP_mm_Hg, Temp_C, BMI, Weight, Height, BSR, Respiration_Min, txtRN_Special_Instruction, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory,
                 txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb,
                 DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane,
-                DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtDischarge_On, ddlDischarge_By, txtNext_Visit, txtAdvice, chkdischarge, patienttype, referto, referward, referbed_no, referroomno, referroomtype, RateBeats, ddlEmrgRhythm, ddlEmrgVolume, OthersRN, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, Saturation, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, Murmur, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, FurtherExplanation, PulseRate, BPDischarge, Tempdisch, volumedisc, RespRateDesc, Rhythmdischarge, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_Date_Discharge, IdentificationMarks, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, ID, SULR, SULL, SLLR, SLLL, PULR, PULL, PLLR, PLLL, Torso, clinical_Notes, Doctor_Notes, Provisional_Diagnosis_Examination, doc, JVP, Edema, Cyanosis, Discharge_Request, ddlDischarge_Type,
+                DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtDischarge_On, ddlDischarge_By, txtNext_Visit, txtAdvice, chkdischarge, patienttype, referto, referward, referbed_no, referroomno, referroomtype, RateBeats, ddlEmrgRhythm, ddlEmrgVolume, OthersRN, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, Saturation, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, Murmur, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, FurtherExplanation, PulseRate, BPDischarge, WeightDischarge, HeightDischarge, BMIDischarge, BSRDischarge, Tempdisch, volumedisc, RespRateDesc, Rhythmdischarge, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_Date_Discharge, IdentificationMarks, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, ID, SULR, SULL, SLLR, SLLL, PULR, PULL, PLLR, PLLL, Torso, clinical_Notes, Doctor_Notes, Provisional_Diagnosis_Examination, doc, JVP, Edema, Cyanosis, Discharge_Request, ddlDischarge_Type,
                 function (response) {
                     debugger;
 
@@ -2534,7 +2545,7 @@
                             var TrnsDateRec = parseInt(value.Receiving_date.substr(6, 10));
                             var retdateRec = moment.unix(TrnsDateRec).format('M/D/YYYY h:m:s A');
                             rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.Temp_C
-                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.RespirationRate + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.User_Name + '</td></tr>';
+                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.RespirationRate + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.Blood_Suger + '</td><td>' + value.BMI + '</td><td>' + value.Weight_Kg + '</td><td>' + value.Height_cm + '</td><td>' + value.User_Name + '</td></tr>';
                         }
                     });
 
@@ -2558,7 +2569,58 @@
                 }, function (e) { });
             }
         }
+        function calculateBMI() {
+            var height_in_cm = parseFloat($('#ctl00_MainContent_txtHeight').val());
+            var weight_kg = parseFloat($('#ctl00_MainContent_txtWeight').val());
 
+
+            if (isNaN(height_in_cm) || isNaN(weight_kg)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter valid height and weight.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            var height_m = height_in_cm / 100;
+            var calcBMI = weight_kg / (height_m * height_m);
+
+            $('#ctl00_MainContent_txtBMI').val(calcBMI.toFixed(2));
+        }
+        function calculateBMIDisharge() {
+            var height_in_cm = parseFloat($('#ctl00_MainContent_txtHeightDischarge').val());
+            var weight_kg = parseFloat($('#ctl00_MainContent_txtWeightDischarge').val());
+
+
+            if (isNaN(height_in_cm) || isNaN(weight_kg)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter valid height and weight.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
+            var height_m = height_in_cm / 100;
+            var calcBMI = weight_kg / (height_m * height_m);
+
+            $('#ctl00_MainContent_txtBMIDischarge').val(calcBMI.toFixed(2));
+        }
         function FillRotations() {
             var options = '';
             PageMethods.GetRotations(function (GetRotations) {
@@ -7162,74 +7224,97 @@
                     <div id="Tab-2">
                       
                                     <table style="padding: 100px">
-                                           <form id="item">
+                                           <form id="items">
                                         <div class="row">
                                   <div class="col-lg-3 col-md-3 col-sm-4">
                                        <h2>Receiving Note: </h2>
                                       </div>
                                             </div>
                                      <div class="row">
-                                     <div class="col-lg-2 col-md-3 col-sm-4">
+                                     <div class="col-lg-3 col-md-3 col-sm-4">
                                      <asp:Label ID="lblRateBeats" runat="server" Text="Pulse Rate (Beats per Min)"></asp:Label>
                                     <asp:TextBox ID="txtRateBeats" runat="server" TabIndex="1"></asp:TextBox>
                                          </div>
-                                         <div class="col-lg-1 col-md-3 col-sm-4">
-                                             </div>
-                                          <div class="col-lg-2 col-md-3 col-sm-4">
+                                        <%-- <div class="col-lg-1 col-md-3 col-sm-4">
+                                             </div>--%>
+                                          <div class="col-lg-3 col-md-3 col-sm-4">
                                          <asp:Label ID="LblBP" runat="server" Text="Blood Pressure (120/80)"></asp:Label>
                                          <asp:TextBox ID="txtBP" runat="server" TabIndex="2"></asp:TextBox>
                                          </div>
-                                         <div class="col-lg-1 col-md-3 col-sm-4">
-                                         </div>
-                                         <div class="col-lg-2 col-md-3 col-sm-4">
+                                      <%--   <div class="col-lg-1 col-md-3 col-sm-4">
+                                         </div>--%>
+                                         <div class="col-lg-3 col-md-3 col-sm-4">
                                              <asp:Label ID="LblTemp" runat="server" Text="Temperature (°F)"></asp:Label>
                                              <asp:TextBox ID="txtTemp" runat="server" TabIndex="3"></asp:TextBox>
                                          </div>
-                                         <div class="col-lg-1 col-md-3 col-sm-4">
-                                         </div>
-                                         <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <%--     <div class="col-lg-1 col-md-3 col-sm-4">
+                                         </div>--%>
+                                         <div class="col-lg-3 col-md-3 col-sm-4">
                                          <asp:label ID="lblRhythm" runat="server" Text="Rhythm"></asp:label>
                                          <asp:DropDownList runat="server" AppendDataBoundItems="true" ID="ddlRhythm"></asp:DropDownList>
                                          </div>                                         
                                          </div>
+                                     <div class="row">
+                                     <div class="col-lg-3 col-md-3 col-sm-4">
+                                     <asp:Label ID="lblBSR" runat="server" Text="BSR (mg/dl)"></asp:Label>
+                                    <asp:TextBox ID="txtBSR" runat="server" TabIndex="1"></asp:TextBox>
+                                         </div>
+                       
+                                          <div class="col-lg-3 col-md-3 col-sm-4">
+                                         <asp:Label ID="LblWeight" runat="server" Text="Weight (kg)"></asp:Label>
+                                         <asp:TextBox ID="txtWeight" runat="server" TabIndex="2" onchange="calculateBMI()"></asp:TextBox>
+                                         </div>
+                             <%--            <div class="col-lg-1 col-md-3 col-sm-4">
+                                         </div>--%>
+                                         <div class="col-lg-3 col-md-3 col-sm-4">
+                                             <asp:Label ID="LblHeight" runat="server" Text="Height (cm)"></asp:Label>
+                                             <asp:TextBox ID="txtHeight" runat="server" TabIndex="3" onchange="calculateBMI()"></asp:TextBox>
+                                         </div>
+                                 <%--        <div class="col-lg-1 col-md-3 col-sm-4">
+                                         </div>--%>
+                                         <div class="col-lg-3 col-md-3 col-sm-4">
+                                         <asp:label ID="lblBMI" runat="server" Text="BMI"></asp:label>
+                                         <asp:TextBox ID="txtBMI" runat="server" TabIndex="3"></asp:TextBox>
+                                         </div>                                         
+                                         </div>
                                         <div class="row">                                       
-                                         <div class="col-lg-2 col-md-3 col-sm-4">
+                                         <div class="col-lg-3 col-md-3 col-sm-4">
                                         <asp:Label ID="LblRespiration" runat="server" Text="Respiration Rate (/min)"></asp:Label>
                                         <asp:TextBox ID="txtRespiration" runat="server" TabIndex="4"></asp:TextBox>
                                              </div>
-                                            <div class="col-lg-1 col-md-3 col-sm-4">
-                                                </div>
-                                            <div class="col-lg-2 col-md-3 col-sm-4">
+                                  <%--          <div class="col-lg-1 col-md-3 col-sm-4">
+                                                </div>--%>
+                                            <div class="col-lg-3 col-md-3 col-sm-4">
                                   <asp:Label ID="lblSaturation" runat="server" Text="O2 Saturation"></asp:Label>
                                      <asp:TextBox ID="txtSaturation" runat="server" TabIndex="2"></asp:TextBox>
                                             </div>
-                                            <div class="col-lg-1 col-md-3 col-sm-4">
-                                                </div>
-                                            <div class="col-lg-2 col-md-3 col-sm-4">
+                                        <%--    <div class="col-lg-1 col-md-3 col-sm-4">
+                                                </div>--%>
+                                            <div class="col-lg-3 col-md-3 col-sm-4">
                                             <asp:Label ID="lblOthersReceiveNote" runat="server" Text="Others"></asp:Label>
                                     <asp:TextBox ID="txtOthersRcvNote" runat="server"  TextMode="MultiLine" TabIndex="2" Style="width:100% !important;height:33px !important"></asp:TextBox>
                                             </div>
-                                            <div class="col-lg-1 col-md-3 col-sm-4">
-                                                </div>
-                                            <div class="col-lg-2 col-md-3 col-sm-4">
+                                           <%-- <div class="col-lg-1 col-md-3 col-sm-4">
+                                                </div>--%>
+                                            <div class="col-lg-3 col-md-3 col-sm-4">
                                                 <asp:Label ID="lblVolume" runat="server" Text="Volume"></asp:Label>
                                         <asp:DropDownList runat="server" ID="ddlVolume" AppendDataBoundItems="true"></asp:DropDownList>
                                             </div>
                                             </div>
                                                <div class="row">
-                                                   <div class="col-lg-2 col-md-6 col-sm-4">
+                                                   <div class="col-lg-3 col-md-6 col-sm-4">
                                                        <label></label>
                                                   <asp:TextBox ID="txtSaturation_Oxygen2" runat="server" TabIndex="2"></asp:TextBox>                                                  
                                                    </div>
-                                                   <div class="col-lg-1 col-md-6 col-sm-4">
-                                                         </div>
-                                                   <div class="col-lg-2 col-md-3 col-sm-4">
+                                               <%--    <div class="col-lg-1 col-md-6 col-sm-4">
+                                                         </div>--%>
+                                                   <div class="col-lg-3 col-md-3 col-sm-4">
                                                        <label></label>
                                                   <asp:TextBox ID="txtSaturation_Oxygen1" runat="server" TabIndex="2"></asp:TextBox>                                                      
                                                    </div>
-                                                   <div class="col-lg-1 col-md-6 col-sm-4">
-                                                   </div>
-                                                   <div class="col-lg-5 col-md-6 col-sm-4">
+                                               <%--    <div class="col-lg-1 col-md-6 col-sm-4">
+                                                   </div>--%>
+                                                   <div class="col-lg-6 col-md-6 col-sm-4">
                                                        <asp:Label ID="lblRN_Special_Instruction" runat="server" Text="Special Instruction"></asp:Label>
                                                        <asp:TextBox ID="txtRN_Special_Instruction" runat="server" TabIndex="9" TextMode="MultiLine" class="todolist" Style="width:100%;height:33px" onchange="FillInstruction()"></asp:TextBox>
                                                    </div>
@@ -7287,6 +7372,10 @@
                                                 <th>O2 Saturation</th>                                                
                                                 <th>O2 Saturation_Oxygen1</th>
                                                 <th>O2 Saturation_Oxygen2</th>
+                                                <th>BSR</th>
+                                                <th>BMI</th>
+                                                <th>Wt</th>
+                                                <th>Ht</th>
                                                    <th>Username</th>                                             
                                             </tr>
                                         </thead>
@@ -9495,6 +9584,24 @@
                                              </div>
                                              </div>
                                          <div class="row">
+                                             <div class="col-lg-3 col-md-3 col-sm-4">
+                                                 <asp:Label ID="Label12" runat="server" Text="BSR (mg/dl)"></asp:Label>
+                                                 <asp:TextBox ID="txtBSRDischarge" runat="server" TabIndex="1"></asp:TextBox>
+                                             </div>
+                                             <div class="col-lg-3 col-md-3 col-sm-4">
+                                                 <asp:Label ID="Label16" runat="server" Text="Weight (kg)"></asp:Label>
+                                                 <asp:TextBox ID="txtWeightDischarge" runat="server" TabIndex="2" onchange="calculateBMIDisharge()"></asp:TextBox>
+                                             </div>
+                                             <div class="col-lg-3 col-md-3 col-sm-4">
+                                                 <asp:Label ID="Label18" runat="server" Text="Height (cm)"></asp:Label>
+                                                 <asp:TextBox ID="txtHeightDischarge" runat="server" TabIndex="3" onchange="calculateBMIDisharge()"></asp:TextBox>
+                                             </div>
+                                             <div class="col-lg-3 col-md-3 col-sm-4">
+                                                 <asp:Label ID="Label87" runat="server" Text="BMI"></asp:Label>
+                                                 <asp:TextBox ID="txtBMIDischarge" runat="server" TabIndex="3"></asp:TextBox>
+                                             </div>
+                                         </div>
+                                         <div class="row">
                                              <div class="col-lg-3 col-md-6 col-sm-12">
                                                  <asp:Label ID="Label104" runat="server" Text="O2 Saturation"></asp:Label>
                                                  <asp:TextBox ID="txtSaturation_Oxygen2_desc" runat="server" TabIndex="2"></asp:TextBox>
@@ -9628,6 +9735,10 @@
                                                 <th>O2 Saturation</th>                                                
                                                 <th>O2 Saturation_Oxygen1</th>
                                                 <th>O2 Saturation_Oxygen2</th>
+                                                <th>O2 BSR</th>
+                                                <th>O2 BMI</th>
+                                                <th>O2 Wt</th>
+                                                <th>O2 Ht</th>
                                                  <th>Username</th>
                                             </tr>
                                         </thead>
