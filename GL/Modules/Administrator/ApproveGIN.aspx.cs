@@ -53,9 +53,12 @@ namespace PMS
 
                 if (SI == null)
                 {
-                    resultMessages.Add($"GIN {ginId}: Invalid Store Issue ID");
-                    continue;
-                }
+                    var IsFinalApprovals = (from SASD in db.Sys_Approval_Stage_Details
+                                            join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
+                                            join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
+                                            join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                                            where SASD.UserId == user_id && SATF.FormId == form_id && SASM.IsDeleted == false
+                                            select new { SASM.IsFinalApproval, SATF.FormId }).ToList();
 
                 var spResult = db
                     .spApproveStore_Issue(SI.Store_Issue_Id, user_id)

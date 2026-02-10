@@ -335,7 +335,8 @@
                         debugger;
                         var parse = JSON.parse(response.d);
                         var length = parse.length;
-
+                        $('#token-input-txtBillNo').attr('disabled', 'disabled');
+                        $('#token-input-txtMR_No').attr('disabled', 'disabled');
                         $("#txtSample_No").val(parse[0].Sample_No);
                         $("#hdSample_ID").val(parse[0].Sample_ID);
                         $("#txtSampleCollected_Date").val(parse[0].Sample_Collected_Date);
