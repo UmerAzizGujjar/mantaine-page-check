@@ -24,6 +24,13 @@
                          }
                      },
                      'copy', 'excel', 'pdf',
+                     {
+                         extend: 'colvis',
+                         text: '<i class="fa fa-columns"></i> Columns',
+                         className: 'dt-button buttons-colvis',
+                         collectionLayout: 'fixed two-column',
+                         postfixButtons: ['colvisRestore']
+                     }
                  ],
                  "filter": true,
                  "order": [[1, "asc"]],

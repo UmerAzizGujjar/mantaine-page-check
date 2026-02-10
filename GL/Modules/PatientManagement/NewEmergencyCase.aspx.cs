@@ -45,6 +45,215 @@ namespace PMS.Modules.PatientManagement
             }
           
         }
+
+        [WebMethod]
+        public static string CheckExistOutPatient(int Patient_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var patientExistOPD = (from OPD in db.Out_Patients
+                                       where OPD.Reg_PatId == Patient_ID
+                                             && OPD.Discharge == false
+                                       orderby OPD.Out_Patient_ID descending
+                                       select new
+                                       {
+                                           OPD.Patient_ID,
+                                           OPD.Out_Patient_ID,
+                                       }).FirstOrDefault();
+
+                var patientExistIPD = (from IPD in db.In_Patients
+                                       where IPD.Patient_ID == Patient_ID
+                                             && IPD.Discharge == false
+                                       orderby IPD.In_Patient_ID descending
+                                       select new
+                                       {
+                                           IPD.Patient_ID,
+                                           IPD.In_Patient_ID,
+                                       }).FirstOrDefault();
+
+                if (patientExistOPD != null)
+                {
+                    return "OPD"; 
+                }
+                else if (patientExistIPD != null)
+                {
+                    return "IPD";
+                }
+                else
+                {
+                    return "Not Exist";
+                }
+            }
+        }
+
+        [WebMethod]
+        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            Reg_patient pat = null;
+            if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
+            {
+                pat = db.Reg_patients.Where(w => w.pat_id == Convert.ToInt32(PatientID)).FirstOrDefault();
+
+                if (pat != null)
+                {
+                    pat.Relation_prefix = RelationType;
+                    pat.Full_Name = Full_Name;
+                    pat.Father_Name = Relation;
+                    pat.Gender = Gender;
+                    pat.Mobile1 = Mobile;
+                    pat.Age_years = Age;
+                    if (string.IsNullOrWhiteSpace(Date_Of_Birth))
+                    {
+                        pat.DOB = null;
+                    }
+                    else
+                    {
+                        if (!DateTime.TryParseExact(
+                            Date_Of_Birth.Trim(),
+                            "dd/MM/yyyy",
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None,
+                            out DateTime dob))
+                        {
+                            return "ERROR: Date must be in dd/MM/yyyy format (e.g., 19/12/2000).";
+                        }
+                        pat.DOB = dob;
+                    }
+                    pat.NIC = CNIC;
+                    pat.Permanent_Address = Address;
+                    pat.Martial_Status = martail_status;
+                    pat.walkin = true;
+                    db.SubmitChanges();
+                }
+            }
+            else
+            {
+                pat = new Reg_patient();
+                string PatientNumber = (DBClass.getMaxEntry_No("Reg_patient", "Patient_No")).ToString();
+                pat.Patient_No = Convert.ToInt32(PatientNumber);
+                pat.Full_Name = Full_Name;
+                pat.Father_Name = Relation;
+                pat.Relation_prefix = RelationType;
+                pat.Gender = Gender;
+                pat.Mobile1 = Mobile;
+                pat.Age_years = Age;
+                pat.NIC = CNIC;
+                pat.Permanent_Address = Address;
+                pat.Created_time = DateTime.Now;
+                pat.Created_by = AppConfig.UserID;
+                pat.iscancel = false;
+                pat.Martial_Status = martail_status;
+                if (string.IsNullOrWhiteSpace(Date_Of_Birth))
+                {
+                    pat.DOB = null;
+                    pat.Age_years = null;
+                }
+                else
+                {
+                    if (!DateTime.TryParseExact(
+                        Date_Of_Birth,
+                        "dd/MM/yyyy",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out DateTime dob))
+                    {
+                        return "ERROR: Invalid date format. Use dd/MM/yyyy (e.g., 19/12/2000).";
+                    }
+
+                    pat.DOB = dob;
+                    DateTime today = DateTime.Today;
+                    int years = today.Year - dob.Year;
+                    int months = today.Month - dob.Month;
+                    int days = today.Day - dob.Day;
+
+                    if (days < 0)
+                    {
+                        months--;
+                        int prevMonth = today.Month == 1 ? 12 : today.Month - 1;
+                        int prevYear = today.Month == 1 ? today.Year - 1 : today.Year;
+                        days += DateTime.DaysInMonth(prevYear, prevMonth);
+                    }
+                    if (months < 0)
+                    {
+                        years--;
+                        months += 12;
+                    }
+
+                    string formattedAge = "";
+                    if (years > 0)
+                    {
+                        formattedAge = $"{years}Y";
+                        if (months > 0) formattedAge += $" {months}M";
+                        if (days > 0) formattedAge += $" {days}D";
+                    }
+                    else if (months > 0)
+                    {
+                        formattedAge = $"{months}M";
+                        if (days > 0) formattedAge += $" {days}D";
+                    }
+                    else
+                    {
+                        formattedAge = $"{days}D";
+                    }
+
+                    pat.Age_years = formattedAge;
+                }
+
+                var companyID = AppConfig.Company_ID;
+                var company = (from dt in db.sys_Companies
+                               where dt.Company_ID == companyID
+                               select dt).FirstOrDefault();
+                string companyCode = company.CompanyCode;
+                string MR_Sequence = companyCode + "-" + PatientNumber;
+                pat.mr_no_sequence = MR_Sequence;
+                pat.walkin = true;
+                db.Reg_patients.InsertOnSubmit(pat);
+                db.SubmitChanges();
+            }
+            return pat.pat_id.ToString();
+        }
+
+        [WebMethod]
+        public static string GetGender()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Gender"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetMartailStatus()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Marital Status"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         private void LoadAllDoctors()
         {
             db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -515,7 +724,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            HMFIntact1.Checked = true;
+                            HMFIntact1.Checked = false;
                         }
                     }
 
@@ -527,7 +736,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            CranialNerves1.Checked = true;
+                            CranialNerves1.Checked = false;
                         }
                     }
 
@@ -540,7 +749,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            SignsOfMeningism1.Checked = true;
+                            SignsOfMeningism1.Checked = false;
                         }
                     }
 
@@ -553,7 +762,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            HeartSound1.Checked = true;
+                            HeartSound1.Checked = false;
                         }
                     }
 
@@ -567,7 +776,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            Arrhythmias1.Checked = true;
+                            Arrhythmias1.Checked = false;
                         }
                     }
 
@@ -580,7 +789,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            Murmur1.Checked = true;
+                            Murmur1.Checked = false;
                         }
                     }
 
@@ -593,7 +802,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            AnyOtherAddedSound1.Checked = true;
+                            AnyOtherAddedSound1.Checked = false;
                         }
                     }
 
@@ -606,7 +815,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            AnyOtherFindings1.Checked = true;
+                            AnyOtherFindings1.Checked = false;
                         }
                     }
 
@@ -619,7 +828,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            Wheeze1.Checked = true;
+                            Wheeze1.Checked = false;
                         }
                     }
 
@@ -631,7 +840,7 @@ namespace PMS.Modules.PatientManagement
                         }
                         else
                         {
-                            Ranchi1.Checked = true;
+                            Ranchi1.Checked = false;
                         }
                     }
 
