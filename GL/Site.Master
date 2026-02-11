@@ -822,78 +822,79 @@
         function RedirectToPR() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApprovePR.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovePR.aspx") %>';
         }
         function RedirectToRFQ() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApproveRFQ.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveRFQ.aspx") %>';
         }
         function RedirectToCS() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApproveCS.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveCS.aspx") %>';
         }
         function RedirectToPO() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApprovePO.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovePO.aspx") %>';
         }
         function RedirectToIGP() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApproveIGP.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveIGP.aspx") %>';
         }
         function RedirectToGRN() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApproveGRN.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveGRN.aspx") %>';
         }
         function RedirectToGIR() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApproveGIR.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveGIR.aspx") %>';
         }
         function RedirectToGIN() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApproveGIN.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveGIN.aspx") %>';
         }
         function RedirectToStockAdj() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApproveStockAdj.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveStockAdj.aspx") %>';
         }
         function RedirectToStoreStockTransfer() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApproveStoreStockTransfer.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveStoreStockTransfer.aspx") %>';
         }
         function RedirectToMI() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApproveMI.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveMI.aspx") %>';
         }
         function RedirectToPI() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApprovePI.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovePI.aspx") %>';
         }
         function RedirectToPayment() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApprovePayment.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovePayment.aspx") %>';
         }
         function RedirectToAdvance() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/Approveadvance.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/Approveadvance.aspx") %>';
         }
         function RedirectToApprovedPRFsAck() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = "/Modules/Administrator/ApprovedPRFsAck.aspx";
+            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovedPRFsAck.aspx") %>';
         }
+
 
     </script>
 </head>

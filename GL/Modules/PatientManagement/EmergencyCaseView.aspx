@@ -19,6 +19,24 @@
          }
 
         function LoadPage() {
+            let savedVisibility = null;
+
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCaseView.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                        }
+                    }
+                }
+            });
+
             var table = $("#tblResult").DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -80,31 +98,26 @@
                     {
                         "data": "Admission_Date", "name": "Admission_Date",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Admission_Date;
-                            //date = moment(date).format('DD-MMM-YYYY');
                             date = moment(date).format('DD-MMM-YYYY hh:mm:ss A');
-
                             return date;
                         }, "width": "15%", "orderable": false
                     },
                     {
                         "data": "Discharge_On", "name": "Discharge_On",
                         "render": function (data, type, full) {
-                            debugger;
                             var date = full.Discharge_On;
                             if (!date) {
-                                return ""; 
+                                return "";
                             }
                             date = moment(date).format('DD-MMM-YYYY hh:mm:ss A');
                             return date;
                         },
                         "width": "10%"
                     },
-
                     { "data": "AdmitDays", "width": "10%", "orderable": false },
                     {
-                        "data": "Patinet_Condition","width": "10%", "orderable": false, "render": function (data, type, full) {
+                        "data": "Patinet_Condition", "width": "10%", "orderable": false, "render": function (data, type, full) {
                             if (data === "Immediate") {
                                 return "Short Stay";
                             }
@@ -118,29 +131,42 @@
                     },
                     {
                         render: function (data, type, full) {
-                            debugger;
-                            var res = '<a href="#" onclick="editOpen(' + full.Emergency_ID + ')" class="editListBtn" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
-
+                            var res = '<a href="#" onclick="editOpen(' + full.Emergency_ID + ')" class="editListBtn" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
-
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintEmergencyPatient(' + full.Emergency_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
-                            var result;
-                            result = res +Del + print;
-                            return result;
+                            return res + Del + print;
                         }, "width": "15%", "orderable": false
                     }
-
                 ],
                 "createdRow": function (row, data, dataIndex) {
                     if (data.AdmitDays >= 1 && (data.Discharge_ON == null || data.Discharge_ON === "")) {
                         $(row).css({
                             "background-color": "#f8d7da",
-                           // "color": "#721c24",
                             "font-weight": "bold"
                         });
                     }
                 },
                 "initComplete": function (settings, json) {
+                    const api = this.api();
+                    if (savedVisibility && Array.isArray(savedVisibility)) {
+                        if (savedVisibility.length === api.columns().count()) {
+                            api.columns().every(function (index) {
+                                this.visible(savedVisibility[index]);
+                            });
+                        }
+                    }
+                    api.on('column-visibility.dt', function (e, settings, column, state) {
+                        let currentVis = [];
+                        api.columns().every(function () {
+                            currentVis.push(this.visible());
+                        });
+
+                        PageMethods.SaveUserColumnPreferences(
+                            JSON.stringify(currentVis),
+                            function () { },
+                            function (error) { }
+                        );
+                    });
                     var lengthContainer = document.querySelector('#tblResult_length');
                     var lengthDropdown = document.querySelector('#tblResult_length select');
                     var label = document.querySelector('#tblResult_length label');
@@ -157,12 +183,10 @@
                         label.style.marginTop = '17px';
                         label.appendChild(labelText);
                         label.appendChild(lengthDropdown);
-                    } else {
-                        console.log("Length dropdown, label, or container not found");
                     }
                 }
-
             });
+
             $('#filterStatus').on('change', function () {
                 table.ajax.reload();
             });
