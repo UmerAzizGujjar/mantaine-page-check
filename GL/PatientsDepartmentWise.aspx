@@ -1200,7 +1200,7 @@
                     }
                     else if (rptTitle == "DailySaleSummary") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=Daily_Sale_Summary&ReportTitle=Time and Motion Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() ;
+                        var url = 'ReportViewer.aspx?ReportName=Daily_Sale_Summary&ReportTitle=Daily Sale Summary Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() ;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Fast_Slow_Non_Moving_Stock") {
