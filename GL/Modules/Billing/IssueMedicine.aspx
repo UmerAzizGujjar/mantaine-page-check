@@ -1631,7 +1631,7 @@
 
                         '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="width: 75px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
 
-                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 100px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
+                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 100px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
 
                         '<td style="text-align:Right;"></td>' +
                         '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
@@ -1742,7 +1742,7 @@
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
                         '<td><input type="number" name="DisPer" min="0" value="0"' + disDisabledAttr + ' class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
-                        '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
+                        '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
 
                         '<td style="text-align:Right;"></td>' +
                         '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
@@ -2612,7 +2612,7 @@
                             '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
                             '<td style="text-align: right;" ><input type="text" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
                             '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" autocomplete="off" onclick="this.select();" /> </td>' +
-                            '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" /></td>' +
+                            '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
                             '<td style="text-align:Right;"></td>' +
                             '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' +
@@ -2623,7 +2623,7 @@
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                             '</tr>';                            
                         $('#tblDetails tbody').append(rows);
-                    
+                        //onkeyup = "CalculateSummarieDiscountAmountWise(' + rowIndex + ')"
                         PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
                             debugger;
                             var parsedData = JSON.parse(data);

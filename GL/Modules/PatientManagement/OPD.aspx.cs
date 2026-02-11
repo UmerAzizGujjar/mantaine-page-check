@@ -1035,7 +1035,15 @@ namespace PMS.Modules.PatientManagement
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.Age_years = Age;
-                    pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                    if (Date_Of_Birth == "")
+                    {
+                        pat.DOB = null;
+                    }
+                    else
+                    {
+                        pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                    }
+                   
                     pat.NIC = CNIC;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
@@ -1062,7 +1070,15 @@ namespace PMS.Modules.PatientManagement
                 pat.Gender = Gender;
                 pat.Mobile1 = Mobile;
                 pat.Age_years = Age;
-                pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                if (Date_Of_Birth == "")
+                {
+                    pat.DOB = null;
+                }
+                else
+                {
+                    pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                }
+                   
                 pat.NIC = CNIC;
                 pat.Permanent_Address = Address;
               

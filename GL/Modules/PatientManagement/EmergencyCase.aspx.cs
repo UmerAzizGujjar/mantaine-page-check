@@ -2992,10 +2992,11 @@ namespace PMS
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var checkRepeat = (from rm in db.Ward_Allocations
-                                   join emrp in db.Emergency_Patients
-                                   on rm.EmergencyID equals emrp.Emergency_ID
+
+                var checkRepeat = (from  emrp in db.Emergency_Patients
+                                 
                                    where emrp.Patient_ID == PatientID
+                                   && (emrp.Discharge == false || emrp.Discharge == null)
                                    select emrp.Emergency_ID).FirstOrDefault();
 
                 return (new JavaScriptSerializer()).Serialize(checkRepeat);

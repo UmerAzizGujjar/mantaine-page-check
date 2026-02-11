@@ -295,7 +295,7 @@ function SavePatient() {
         valid = false;
 
     }
-    if ((PatientName == "" || Mobile == "+92__________" || Age == "" || Relation == "0" || Address == "0")) {
+    if ((PatientName == "" || Mobile == "+92__________" )) {
         
         $('#SavePatient_Data').attr('disabled', false);
         return;

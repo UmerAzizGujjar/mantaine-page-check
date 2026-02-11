@@ -242,38 +242,44 @@ namespace PMS.Modules.PatientManagement
         }
 
        
+        //[WebMethod]
         [WebMethod]
         public static string SavePatientDetail(
-            string Full_Name, string RelationType, string Relation, string Gender,
-            string Mobile, string Date_Of_Birth, string CNIC, string Address,
-            string PatientID, string martail_status, string Age, string city, string area,
-            string city_val, string area_val, string Blood_Group, string State, string Country,string cardfee, string AntiForgeryToken)
+    string Full_Name, string RelationType, string Relation, string Gender,
+    string Mobile, string Date_Of_Birth, string CNIC, string Address,
+    string PatientID, string martail_status, string Age, string city, string area,
+    string city_val, string area_val, string Blood_Group, string State, string Country,
+    string cardfee, string AntiForgeryToken)
         {
-            if (!DateTime.TryParseExact(Date_Of_Birth, "dd/MM/yyyy",
-             CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDOB))
-            {
-                return "ERROR: Invalid Date of Birth format. Use dd/MM/yyyy.";
-            }
-
+            // Validate Session
             if (HttpContext.Current.Session["UserID"] == null)
                 return "ERROR: Unauthorized. Please log in.";
 
+            // Validate CSRF Token
             string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
             if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(AntiForgeryToken))
                 return "ERROR: Invalid request. Possible CSRF attack.";
 
+            // Sanitize Inputs
             Full_Name = SanitizeInput(Full_Name);
             Relation = SanitizeInput(Relation);
             Address = SanitizeInput(Address);
-            // Note: RelationType is from a fixed dropdown (Mr./Mrs./B/O.) — assumed safe
-            // Mobile, CNIC, Age, etc. are validated by strict regex — low XSS risk
 
-            var errors = new List<string>();
+            // ---------------------------
+            // Parse Date of Birth (Nullable)
+            // ---------------------------
+            DateTime? parsedDOB = null;
 
-     
+            if (!string.IsNullOrWhiteSpace(Date_Of_Birth))
+            {
+                if (!DateTime.TryParseExact(Date_Of_Birth, "dd/MM/yyyy",
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime tempDOB))
+                {
+                    return "ERROR: Invalid Date of Birth format. Use dd/MM/yyyy.";
+                }
 
-            if (errors.Any())
-                return "ERROR: " + string.Join("; ", errors);
+                parsedDOB = tempDOB;
+            }
 
             try
             {
@@ -286,20 +292,24 @@ namespace PMS.Modules.PatientManagement
                     {
                         int patId = Convert.ToInt32(PatientID);
                         pat = db.Reg_patients.FirstOrDefault(w => w.pat_id == patId);
+
                         if (pat == null)
                             return "ERROR: Patient record not found.";
                     }
                     else
                     {
                         pat = new Reg_patient();
+
                         string PatientNumber = DBClass.getMaxEntry_No("Reg_patient", "Patient_No").ToString();
                         pat.Patient_No = Convert.ToInt32(PatientNumber);
                         pat.walkin = false;
                         pat.Created_time = DateTime.Now;
+
                         if (Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId))
                             pat.Created_by = userId;
                         else
                             return "ERROR: Invalid user session.";
+
                         pat.iscancel = false;
 
                         var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
@@ -307,15 +317,14 @@ namespace PMS.Modules.PatientManagement
                         pat.mr_no_sequence = $"{companyCode}-{PatientNumber}";
                     }
 
-                    pat.Relation_prefix = RelationType; 
-                    pat.Full_Name = Full_Name;        
-                    pat.Father_Name = Relation;   
+                    // Assign Values
+                    pat.Relation_prefix = RelationType;
+                    pat.Full_Name = Full_Name;
+                    pat.Father_Name = Relation;
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
-                    pat.Age_years = Age;
-                    //pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
                     pat.NIC = CNIC;
-                    pat.Permanent_Address = Address;    
+                    pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                     pat.city = city;
                     pat.area = area;
@@ -324,68 +333,237 @@ namespace PMS.Modules.PatientManagement
                     pat.State = State;
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
-                    //pat.Card_fee = Convert.ToDecimal(cardfee);
-                    // Parse Card Fee safely
+
+                    // Card Fee Safe Parse
                     decimal cardFeeValue = 0;
                     if (!string.IsNullOrWhiteSpace(cardfee))
                     {
-                        if (!decimal.TryParse(cardfee.Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out cardFeeValue))
+                        if (!decimal.TryParse(cardfee.Trim(), NumberStyles.Number,
+                            CultureInfo.InvariantCulture, out cardFeeValue))
                         {
                             return "ERROR: Invalid card fee. Please enter a valid number (e.g., 100.50).";
                         }
                     }
                     pat.Card_fee = cardFeeValue;
+
+                    // Save DOB (Nullable)
                     pat.DOB = parsedDOB;
-                    DateTime dob = pat.DOB.Value.Date;
-                    DateTime today = DateTime.Today;
 
-                    int years = today.Year - dob.Year;
-                    int months = today.Month - dob.Month;
-                    int days = today.Day - dob.Day;
+                    // ---------------------------
+                    // Age Calculation (Only if DOB exists)
+                    // ---------------------------
+                    if (parsedDOB.HasValue)
+                    {
+                        DateTime dob = parsedDOB.Value.Date;
+                        DateTime today = DateTime.Today;
 
-                    if (days < 0)
-                    {
-                        months--;
-                        days += DateTime.DaysInMonth(today.Year, today.Month == 1 ? 12 : today.Month - 1);
-                    }
-                    if (months < 0)
-                    {
-                        years--;
-                        months += 12;
-                    }
+                        int years = today.Year - dob.Year;
+                        int months = today.Month - dob.Month;
+                        int days = today.Day - dob.Day;
 
-                    string formattedAge = "";
-                    if (years > 0)
-                    {
-                        formattedAge = $"{years}Y";
-                        if (months > 0) formattedAge += $" {months}M";
-                        if (days > 0) formattedAge += $" {days}D";
-                    }
-                    else if (months > 0)
-                    {
-                        formattedAge = $"{months}M";
-                        if (days > 0) formattedAge += $" {days}D";
+                        if (days < 0)
+                        {
+                            months--;
+                            DateTime previousMonth = today.AddMonths(-1);
+                            days += DateTime.DaysInMonth(previousMonth.Year, previousMonth.Month);
+                        }
+
+                        if (months < 0)
+                        {
+                            years--;
+                            months += 12;
+                        }
+
+                        string formattedAge = "";
+
+                        if (years > 0)
+                        {
+                            formattedAge = $"{years}Y";
+                            if (months > 0) formattedAge += $" {months}M";
+                            if (days > 0) formattedAge += $" {days}D";
+                        }
+                        else if (months > 0)
+                        {
+                            formattedAge = $"{months}M";
+                            if (days > 0) formattedAge += $" {days}D";
+                        }
+                        else
+                        {
+                            formattedAge = $"{days}D";
+                        }
+
+                        pat.Age_years = formattedAge;
                     }
                     else
                     {
-                        formattedAge = $"{days}D";
+                        // If DOB not provided, use manually entered age
+                        pat.Age_years = Age;
                     }
-
-                    pat.Age_years = formattedAge;
 
                     if (isNew)
                         db.Reg_patients.InsertOnSubmit(pat);
 
                     db.SubmitChanges();
+
                     return pat.pat_id.ToString();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Log ex if needed (e.g., to file or DB)
                 return "ERROR: Failed to save patient. Please try again.";
             }
         }
+
+        //public static string SavePatientDetail(
+        //    string Full_Name, string RelationType, string Relation, string Gender,
+        //    string Mobile, string Date_Of_Birth, string CNIC, string Address,
+        //    string PatientID, string martail_status, string Age, string city, string area,
+        //    string city_val, string area_val, string Blood_Group, string State, string Country,string cardfee, string AntiForgeryToken)
+        //{
+        //    if(Date_Of_Birth == "")
+        //    {
+        //        Date_Of_Birth = null;
+        //    }
+        //    else
+        //    {
+        //        if (!DateTime.TryParseExact(Date_Of_Birth, "dd/MM/yyyy",
+        //     CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDOB))
+        //        {
+        //            return "ERROR: Invalid Date of Birth format. Use dd/MM/yyyy.";
+        //        }
+        //    }
+
+        //    if (HttpContext.Current.Session["UserID"] == null)
+        //        return "ERROR: Unauthorized. Please log in.";
+
+        //    string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
+        //    if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(AntiForgeryToken))
+        //        return "ERROR: Invalid request. Possible CSRF attack.";
+
+        //    Full_Name = SanitizeInput(Full_Name);
+        //    Relation = SanitizeInput(Relation);
+        //    Address = SanitizeInput(Address);
+        //    // Note: RelationType is from a fixed dropdown (Mr./Mrs./B/O.) — assumed safe
+        //    // Mobile, CNIC, Age, etc. are validated by strict regex — low XSS risk
+
+        //    var errors = new List<string>();
+
+
+
+        //    if (errors.Any())
+        //        return "ERROR: " + string.Join("; ", errors);
+
+        //    try
+        //    {
+        //        using (var db = new DataBaseDataContext())
+        //        {
+        //            Reg_patient pat;
+        //            bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
+
+        //            if (!isNew)
+        //            {
+        //                int patId = Convert.ToInt32(PatientID);
+        //                pat = db.Reg_patients.FirstOrDefault(w => w.pat_id == patId);
+        //                if (pat == null)
+        //                    return "ERROR: Patient record not found.";
+        //            }
+        //            else
+        //            {
+        //                pat = new Reg_patient();
+        //                string PatientNumber = DBClass.getMaxEntry_No("Reg_patient", "Patient_No").ToString();
+        //                pat.Patient_No = Convert.ToInt32(PatientNumber);
+        //                pat.walkin = false;
+        //                pat.Created_time = DateTime.Now;
+        //                if (Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId))
+        //                    pat.Created_by = userId;
+        //                else
+        //                    return "ERROR: Invalid user session.";
+        //                pat.iscancel = false;
+
+        //                var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
+        //                string companyCode = company?.CompanyCode ?? "HOSP";
+        //                pat.mr_no_sequence = $"{companyCode}-{PatientNumber}";
+        //            }
+
+        //            pat.Relation_prefix = RelationType; 
+        //            pat.Full_Name = Full_Name;        
+        //            pat.Father_Name = Relation;   
+        //            pat.Gender = Gender;
+        //            pat.Mobile1 = Mobile;
+        //            pat.Age_years = Age;
+        //            //pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        //            pat.NIC = CNIC;
+        //            pat.Permanent_Address = Address;    
+        //            pat.Martial_Status = martail_status;
+        //            pat.city = city;
+        //            pat.area = area;
+        //            pat.val_city = city_val;
+        //            pat.val_area = area_val;
+        //            pat.State = State;
+        //            pat.Blood_Group = Blood_Group;
+        //            pat.Country = Country;
+        //            //pat.Card_fee = Convert.ToDecimal(cardfee);
+        //            // Parse Card Fee safely
+        //            decimal cardFeeValue = 0;
+        //            if (!string.IsNullOrWhiteSpace(cardfee))
+        //            {
+        //                if (!decimal.TryParse(cardfee.Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out cardFeeValue))
+        //                {
+        //                    return "ERROR: Invalid card fee. Please enter a valid number (e.g., 100.50).";
+        //                }
+        //            }
+        //            pat.Card_fee = cardFeeValue;
+        //            pat.DOB = parsedDOB;
+        //            DateTime dob = pat.DOB.Value.Date;
+        //            DateTime today = DateTime.Today;
+
+        //            int years = today.Year - dob.Year;
+        //            int months = today.Month - dob.Month;
+        //            int days = today.Day - dob.Day;
+
+        //            if (days < 0)
+        //            {
+        //                months--;
+        //                days += DateTime.DaysInMonth(today.Year, today.Month == 1 ? 12 : today.Month - 1);
+        //            }
+        //            if (months < 0)
+        //            {
+        //                years--;
+        //                months += 12;
+        //            }
+
+        //            string formattedAge = "";
+        //            if (years > 0)
+        //            {
+        //                formattedAge = $"{years}Y";
+        //                if (months > 0) formattedAge += $" {months}M";
+        //                if (days > 0) formattedAge += $" {days}D";
+        //            }
+        //            else if (months > 0)
+        //            {
+        //                formattedAge = $"{months}M";
+        //                if (days > 0) formattedAge += $" {days}D";
+        //            }
+        //            else
+        //            {
+        //                formattedAge = $"{days}D";
+        //            }
+
+        //            pat.Age_years = formattedAge;
+
+        //            if (isNew)
+        //                db.Reg_patients.InsertOnSubmit(pat);
+
+        //            db.SubmitChanges();
+        //            return pat.pat_id.ToString();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log ex if needed (e.g., to file or DB)
+        //        return "ERROR: Failed to save patient. Please try again.";
+        //    }
+        //}
 
         [WebMethod]
         public static string GetRegData(int reg_id)
