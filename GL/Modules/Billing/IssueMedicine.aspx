@@ -2972,7 +2972,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <label>Line Discount</label>
-                        <input type="text" id="txtLineDisc" tabindex="17" onchange="sumdiscount();" autocomplete="off" class="form-control me-2" onkeypress='return event.charCode >= 48 && event.charCode <= 57' readonly="readonly" />
+                        <input type="text" id="txtLineDisc" tabindex="17" onkeyup="sumdiscount();" autocomplete="off" class="form-control me-2" onkeypress='return event.charCode >= 48 && event.charCode <= 57' readonly="readonly" />
                     </div>
 
                 </div>
@@ -2980,11 +2980,11 @@
                     <div class="col-lg-6">
                         <label>Disc %</label>
 
-                        <input type="text" tabindex="18" onchange="sumdiscount();" id="txtDisPer" class="form-control me-2" onkeyup="CalculateSummariesMasterDiscount(false)" />
+                        <input type="text" tabindex="18"  id="txtDisPer" class="form-control me-2" onkeyup="CalculateSummariesMasterDiscount(false),sumdiscount()" />
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <label>Disc (Alt+D)</label>
-                        <input type="text" id="txtDisAmt" tabindex="19" onchange="sumdiscount();" class="form-control ms-2" onkeyup="CalculateSummariesMasterDiscount(true)" />
+                        <input type="text" id="txtDisAmt" tabindex="19"  class="form-control ms-2" onkeyup="CalculateSummariesMasterDiscount(true),sumdiscount()" />
 
                     </div>
 

@@ -3347,9 +3347,7 @@
                             } else {
                                 shareType = '';
                             }
-
-                            console.log("Processing:", itemanme, "→ Share_type:", shareType);
-
+                            var TestDate = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
                             // ✅ Build select safely
                             var disabledAttr = (shareType === '002') ? ' disabled' : '';
                             var doctorSelect =
@@ -3391,6 +3389,7 @@
                                 '<td><input type="number" id="DocShare' + rowIndex + '" name="DocShare" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
                                 '<td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
                                 '<td>' + doctorSelect + '</td>' +
+                                '<td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate +' </td>' +
                                 '</tr>';
 
                             $('#tblDetails tbody').append(row);
