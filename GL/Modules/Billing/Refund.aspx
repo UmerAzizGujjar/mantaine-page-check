@@ -233,23 +233,37 @@
             debugger;
             var list = document.getElementById('tblDetails');
             var doctorsList = document.getElementById('Doctor_Share_Table');
+            var totalDoctorRefund = 0;
+            var totalHospitalRefund = 0;
             var totalDoctorDistribution = 0;
-            var totalDoctorShare = 0;
             for (var i = 0; i < list.rows.length - 1; i++) {
-                var data = $('#DocRefund' + i + '').val();
-                if (data == '')
-                    data = 0;
-                totalDoctorShare += parseInt(data);
+
+                var docRefund = $('#DocRefund' + i).val();
+                var hosRefund = $(list.rows[i + 1]).find('input[name="HosRefund"]').val();
+
+                if (docRefund == '' || isNaN(docRefund))
+                    docRefund = 0;
+
+                if (hosRefund == '' || isNaN(hosRefund))
+                    hosRefund = 0;
+
+                totalDoctorRefund += parseFloat(docRefund);
+                totalHospitalRefund += parseFloat(hosRefund);
             }
             for (var i = 0; i < doctorsList.rows.length - 1; i++) {
-                var data = $('#RefundDis' + i + '').val();
-                if (data == '')
+
+                var data = $('#RefundDis' + i).val();
+
+                if (data == '' || isNaN(data))
                     data = 0;
-                totalDoctorDistribution += parseInt(data);
+
+                totalDoctorDistribution += parseFloat(data);
             }
-            $('#txtTotalDoctorShare').val(totalDoctorShare);
+            var combinedTotal = totalDoctorRefund + totalHospitalRefund;
+            $('#txtTotalDoctorShare').val(combinedTotal);
             $('#txtDoctorTotalDistribution').val(totalDoctorDistribution);
         }
+
 
         function httpGet(theUrl) {
             var xmlHttp = null;
@@ -326,28 +340,52 @@
             debugger;
             var proceed = true;
 
-            var Totaldoctorshare = $('#txtTotalDoctorShare').val();
-            var Totaldoctordistribution = $('#txtDoctorTotalDistribution').val();
+            $('#tblDetails tbody tr').each(function (index, row) {
 
-            //if (Totaldoctorshare != Totaldoctordistribution) {
-            //    Swal.fire({
-            //        icon: 'error',
-            //        title: 'Error!',
-            //        text: 'Doctor Refund and Doctor Distribution Refund Should be Same.',
-            //        showConfirmButton: false,
-            //        timer: 2000,
-            //        customClass: {
-            //            popup: 'swal-big-popup',
-            //            title: 'swal-big-title',
-            //            htmlContainer: 'swal-big-text'
-            //        }
-            //    });
+                var doctorShare = parseFloat($(row).find('td:eq(4)').text()) || 0;  
+                var hospitalShare = parseFloat($(row).find('td:eq(5)').text()) || 0;  
 
-            //    proceed = false;
-            //}
+                var doctorRefund = parseFloat($(row).find('input[name="DocRefund"]').val()) || 0;
+                var hospitalRefund = parseFloat($(row).find('input[name="HosRefund"]').val()) || 0;
+
+                if (doctorRefund > doctorShare) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Doctor Refund!',
+                        text: 'Doctor Refund cannot be greater than Doctor Share.',
+                        confirmButtonColor: '#d33',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    proceed = false;
+                    return false; 
+                }
+
+                if (hospitalRefund > hospitalShare) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Hospital Refund!',
+                        text: 'Hospital Refund cannot be greater than Hospital Share.',
+                        confirmButtonColor: '#d33',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                    proceed = false;
+                    return false; 
+                }
+            });
 
             return proceed;
         }
+
     </script>
 
     <div class="container-fluid">
@@ -526,7 +564,7 @@
                         </td>
                         <td>
                             <div>
-                                <fieldset>
+                                <fieldset style="display:none">
                                     <legend style="margin-bottom: 0px">Doctor Refund Distribution</legend>
                                     <div class="table-responsive" style="max-height: 217px;">
                                         <table class="table table-borderless" id="Doctor_Share_Table">
@@ -561,7 +599,7 @@
                 <div id="dvSummary">
 
                     <tr>
-                        <td>Total Doctor Refund</td>
+                        <td>Total Refund</td>
                         <td>
                             <input type="text" id="txtTotalDoctorShare" class="form-control text-right fs-4" disabled="disabled" />
                         </td>

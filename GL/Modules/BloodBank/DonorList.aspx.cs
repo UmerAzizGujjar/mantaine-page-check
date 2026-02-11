@@ -104,37 +104,66 @@ namespace PMS
             }
         }
 
+        [WebMethod]
+        public static string GetUserColumnPreferences()
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "DonorList";
 
+                using (var db = new DataBaseDataContext())
+                {
+                    var pref = db.UserDataTablePreferences
+                                  .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
 
+                    if (pref != null)
+                        return pref.ColumnVisibility;
+                    else
+                        return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
 
+        [WebMethod]
+        public static void SaveUserColumnPreferences(string visibilityJson)
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "DonorList";
 
+                using (var db = new DataBaseDataContext())
+                {
+                    var existing = db.UserDataTablePreferences
+                                     .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
 
-        //[WebMethod]
-        //public static string GetRecord()
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-        //    var Result = (from records in db.Donors
-        //                  select new
-        //                  {
-        //                      records.Donor_Id,
-        //                      // records.Donor_Name,
-        //                      // records.Donor_No,
-        //                      records.Donor_Name,
-        //                      records.Donor_LastDonation,
-        //                      Donation_Check = records.Donating_First_Time == true ? "First Time" : null,
+                    if (existing != null)
+                    {
+                        existing.ColumnVisibility = visibilityJson;
+                    }
+                    else
+                    {
+                        db.UserDataTablePreferences.InsertOnSubmit(new UserDataTablePreference
+                        {
+                            UserID = userId,
+                            PageName = pageName,
+                            ColumnVisibility = visibilityJson
+                        });
+                    }
 
-        //                      records.Donor_Address,
-        //                      ABO = db.GetDataValueName("ABO group", records.ABO),
-        //                      RH_Type = records.Rh_Type == "01" ? "Positive" : (records.Rh_Type == "02" ? "Negative" : ""),
-        //                      Mr_No = DBClass.GetMRNOBy_PatientID(Convert.ToInt32(records.Patient_Id)),
-
-        //                      name = (from pt in db.Patients where pt.Patient_ID == records.Patient_Id select pt.Full_Name).FirstOrDefault(),
-        //                      // Name = DBClass.getField("select full_name from patients where patient_id=" + records.Patient_Id),
-
-        //                  }).OrderByDescending(x => x.Donor_Id).Take(200).ToList();
-
-        //    return (new JavaScriptSerializer()).Serialize(Result);
-        //}
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
     }
 }
