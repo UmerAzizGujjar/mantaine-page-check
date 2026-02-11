@@ -109,7 +109,7 @@
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReport(' + full.Purchase_Return_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
-                            result = res  + print;
+                            result = res;//  + print;
                             return result;
                         }, width: "8%"
                     }
