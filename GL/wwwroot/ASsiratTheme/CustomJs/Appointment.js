@@ -886,7 +886,7 @@ function SavePatient() {
     var city_val = $('#txtcity').val();
     var area_val = $('#txtarea').val();
 
-    if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || houseno == "" || city_val == "0" || area_val == "0")) {
+    if ((PatientName == "" || Mobile == "" )) {
 
 
         alert("Please Enter compulsory Fields");

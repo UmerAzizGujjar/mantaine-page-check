@@ -3082,7 +3082,14 @@ namespace PMS
 
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
-                pt.Age = pat.Age_years.ToString();
+                if(pat.Age_years == null)
+                {
+                    pt.Age = "";
+                }
+                else {
+                    pt.Age = pat.Age_years.ToString();
+                }
+                    
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
