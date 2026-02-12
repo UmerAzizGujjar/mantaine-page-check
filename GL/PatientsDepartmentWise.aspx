@@ -223,6 +223,7 @@
             $('#ctl00_MainContent_ddlPatientType').select2();
             $('#ctl00_MainContent_ddlwareHouse').select2();
             $('#ctl00_MainContent_ddlMainDepartment').select2();
+            $('#ctl00_MainContent_ddlMedicalSubsidy').select2();
             $('#ctl00_MainContent_ddlStock').select2();
             $('#ctl00_MainContent_ddlMovementType').select2();
             $('#ctl00_MainContent_ddlItemCategory').select2();
@@ -314,7 +315,8 @@
                        // var exporttopdf = $('#chkExportPDF')[0].checked;
                         var sDate = ($("#ctl00_MainContent_txtStart_Date").val());
                         var eDate = ($("#ctl00_MainContent_txtEnd_Date").val());
-                        var url = 'ReportViewer.aspx?ReportName=StockAdjustment&ReportTitle= ' + rptTitle + '&startDate=' + sDate + '&endDate=' + eDate ;
+                        var department = ($("#ctl00_MainContent_ddlDepartments").val());
+                        var url = 'ReportViewer.aspx?ReportName=StockAdjustment&ReportTitle= ' + rptTitle + '&startDate=' + sDate + '&endDate=' + eDate + '&Department=' + department;
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == "STM") {
@@ -458,8 +460,8 @@
                         debugger;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=BedOccupancy&ReportTitle=Bed Occupancy from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
-                        window.open(url, '_blanks');
+                        var url = 'ReportViewer.aspx?ReportName=BedOccupancy&ReportTitle=Bed Occupancy from ' +  $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blank');
                     }
 
                     else if (rptTitle == 'TotalpatientsandRevisitpatientsreport') {
@@ -553,8 +555,8 @@
                         debugger;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=AverageLengthOfStay&ReportTitle=Average Length Of Stay from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
-                        window.open(url, '_blanks');
+                        var url = 'ReportViewer.aspx?ReportName=AverageLengthOfStay&ReportTitle=Average Length Of Stay from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blank');
                     }
                     else if (rptTitle == 'TestWiseMonthly') {
                         debugger;
@@ -625,8 +627,8 @@
                         debugger;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=ProcedureTimeLine&ReportTitle=Procedure Time Line from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
-                        window.open(url, '_blanks');
+                        var url = 'ReportViewer.aspx?ReportName=ProcedureTimeLine&ReportTitle=Procedure Time Line from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blank');
                     }
                     else if (rptTitle == 'DepartmentWiseProcedureTimeLine') {
                         debugger;
@@ -675,7 +677,7 @@
                     }
                     else if (rptTitle == "Service_Wise_Summary_Report") {
                        //<%-- var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;--%>
-                        var url = 'ReportViewer.aspx?ReportName=Service_Wise_Summary_Report&ReportTitle=Service Wise Summary from  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0"); //+ '&Summary=' + summary ;
+                        var url = 'ReportViewer.aspx?ReportName=Service_Wise_Summary_Report&ReportTitle=Service Wise Summary from  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ($("#ctl00_MainContent_ddlDepartments").val() || "0")  + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0"); //+ '&Summary=' + summary ;
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == "Operator_Wise_Billing_Report") {
@@ -1281,6 +1283,19 @@ var Item = $("#ctl00_MainContent_ddlMainDepartment").val();
                         debugger;
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=MER&ReportTitle=Medicine Expiry Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "StockValuationReport") {
+                        debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var itemgroup = ($("#ctl00_MainContent_ddlPatientType").val());
+                        var url = 'ReportViewer.aspx?ReportName=StockCategoryValuationReport&ReportTitle=Stock Valuation Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&itemgroup=' + itemgroup + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "PurchaseReturnReport") {
+                        debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=PurchaseReturnReport&ReportTitle=Purchase Return Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
 

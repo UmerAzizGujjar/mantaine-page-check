@@ -14,6 +14,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
+using System.Web.UI.MobileControls.Adapters;
 using System.Web.UI.WebControls;
 
 namespace PMS
@@ -1407,6 +1408,125 @@ namespace PMS
                     ddlItemCategory.Visible = false;
 
                 }
+                if (this.PageTitle == "StockValuationReport")
+                {
+                    string x = "Stock Valuation Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    Time_Row.Visible = true;  // could be problematic
+                    DateDiv.Visible = true;
+                    trSearch1.Visible = true;
+                    
+                    op_FilterClinic.Visible = false;
+                    lblMultiSelect.Visible = false;
+
+                    trSearch1.Visible = true;
+                
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    object valusets;
+                    lblPatientType.Text = "Item Group";
+                    DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
+
+                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 3166 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+
+                    lblPatientType.Visible = true;
+                    ddlPatientType.Visible = true;
+
+                }
+                if (this.PageTitle == "PurchaseReturnReport")
+                {
+                    string x = "Purchase Return Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    Time_Row.Visible = true;  // could be problematic
+                    DateDiv.Visible = true;
+                    trSearch1.Visible = true;
+                    
+                    op_FilterClinic.Visible = false;
+                    lblMultiSelect.Visible = false;
+
+                    trSearch1.Visible = true;
+                
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    
+                }
                 #endregion
                 #region General Patient Modules
                 else if (this.PageTitle == "TotalOpdDischargeReport")
@@ -2561,7 +2681,7 @@ namespace PMS
                 }
                 else if (PageTitle == "SAR")
                 {
-                    dpROw.Visible = false;
+                    dpROw.Visible = true;
                     Time_Row.Visible = false;
                     DateDiv.Visible = true;
                     sttDate.Visible = true;
@@ -2570,6 +2690,25 @@ namespace PMS
                     txtEnd_Date.Visible = true;
                     tr_Export.Visible = false;
                     tr_Summary.Visible = false;
+
+                    object valusets;
+                    lblDepartment.Text = "Reason";
+
+                    DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
+
+
+                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 3161 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
+
+
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+
                 }
                 else if (PageTitle == "SehatSahulatWiseExpensive")
                 {
@@ -3638,6 +3777,100 @@ namespace PMS
 
 
                 }
+
+                if (this.PageTitle == "Bed_Occupancy")
+                {
+                    dpROw.Visible = false;
+
+                    tr1MedicalSubsidy.Visible = true;
+                    lblMedical.Text = "Time Line";
+                    tr_Export.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    optRw.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = false;
+
+                    lblMedical.Text = "Time Line";
+
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    AllowPatientRecord = false;
+
+                    ddlMedicalSubsidy.Items.Clear();
+                    ddlMedicalSubsidy.Items.Add("Annually With Stay Days");
+                    ddlMedicalSubsidy.Items.Add("Annually With Stay Days Summary");
+                    ddlMedicalSubsidy.Items.Add("Monthly");
+                    ddlMedicalSubsidy.Items.Add("Annually");
+
+                }
+                if (this.PageTitle == "Procedure_Time_Line")
+                {
+                    dpROw.Visible = false;
+
+                    tr1MedicalSubsidy.Visible = true;
+                    lblMedical.Text = "Time Line";
+                    tr_Export.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    optRw.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = false;
+
+                    lblMedical.Text = "Time Line";
+
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    AllowPatientRecord = false;
+                    ddlMedicalSubsidy.Items.Add("Monthly");
+                    ddlMedicalSubsidy.Items.Add("Annually");
+
+                }
+                if (this.PageTitle == "AverageLengthOfStay")
+                {
+                    dpROw.Visible = false;
+
+                    tr1MedicalSubsidy.Visible = true;
+                    lblMedical.Text = "Time Line";
+                    tr_Export.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    optRw.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = false;
+
+                    lblMedical.Text = "Time Line";
+
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    AllowPatientRecord = false;
+
+                    ddlMedicalSubsidy.Items.Clear();
+                    //ddlMedicalSubsidy.Items.Add("Annually");
+                    ddlMedicalSubsidy.Items.Add("Annually with Stay Days");
+                    ddlMedicalSubsidy.Items.Add("Annually with Stay Days Summary");
+                    ddlMedicalSubsidy.Items.Add("Monthly");
+                    ddlMedicalSubsidy.Items.Add("Annually");
+
+                }
                 if (this.PageTitle == "Sale_Report_Summary")
                 {
 
@@ -3841,7 +4074,7 @@ namespace PMS
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                 }
-                else if (this.PageTitle == "OPD_Time_Line" || this.PageTitle == "IPD_Time_Line" || this.PageTitle == "Discharge_Time_Line" || this.PageTitle == "Ward_Allocation_Time_Line" || this.PageTitle == "Procedure_Time_Line" || this.PageTitle == "Bed_Occupancy" || this.PageTitle == "AverageLengthOfStay" || this.PageTitle == "DepartmentWiseProcedureTimeLine")
+                else if (this.PageTitle == "OPD_Time_Line" || this.PageTitle == "IPD_Time_Line" || this.PageTitle == "Discharge_Time_Line" || this.PageTitle == "Ward_Allocation_Time_Line" ||  this.PageTitle == "DepartmentWiseProcedureTimeLine")
                 {
                     dpROw.Visible = false;
 
@@ -3875,19 +4108,19 @@ namespace PMS
                     ddlMedicalSubsidy.Items.Add("Annually");
 
 
-                    if (this.PageTitle == "AverageLengthOfStay")
-                    {
-                        ddlMedicalSubsidy.Items.Clear();
-                        //ddlMedicalSubsidy.Items.Add("Annually");
-                        ddlMedicalSubsidy.Items.Add("Annually with Stay Days");
-                        ddlMedicalSubsidy.Items.Add("Annually with Stay Days Summary");
-                    }
-                    else if (this.PageTitle == "Bed_Occupancy")
-                    {
-                        ddlMedicalSubsidy.Items.Clear();
-                        ddlMedicalSubsidy.Items.Add("Annually With Stay Days");
-                        ddlMedicalSubsidy.Items.Add("Annually With Stay Days Summary");
-                    }
+                    //if (this.PageTitle == "AverageLengthOfStay")
+                    //{
+                    //    ddlMedicalSubsidy.Items.Clear();
+                    //    //ddlMedicalSubsidy.Items.Add("Annually");
+                    //    ddlMedicalSubsidy.Items.Add("Annually with Stay Days");
+                    //    ddlMedicalSubsidy.Items.Add("Annually with Stay Days Summary");
+                    //}
+                    //else if (this.PageTitle == "Bed_OccupancyBed_OccupancyBed_OccupancyBed_OccupancyBed_Occupancy")
+                    //{
+                    //    ddlMedicalSubsidy.Items.Clear();
+                    //    ddlMedicalSubsidy.Items.Add("Annually With Stay Days");
+                    //    ddlMedicalSubsidy.Items.Add("Annually With Stay Days Summary");
+                    //}
 
                     if (AllowPatientRecord)
                     {
