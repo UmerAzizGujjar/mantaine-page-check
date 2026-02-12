@@ -93,18 +93,20 @@ namespace PMS
                                      Age =b.Age_years,
                                      Consultant_ID = a.Doctor_Id,
                                      a.Appointment_No,
-                                     //a.Appointment_Code,
                                      App_Date = a.Appointment_Date,
                                      Time =a.Doctor_Start_Time,
                                      a.Status,
                                      a.cancelAppointment,
                                      created_time= a.Created_Date,
                                      emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Doctor_Id) select data.Emp_Name).FirstOrDefault(),
+                                     machine_name = db.GetDataValueName("Machine", a.Machine_Id) ?? "",
                                      Procedure_Id = a.Procedure_Id,
                                      Procedure_Name = (from item in db.INV_Items where item.Item_ID == Convert.ToInt32(a.Procedure_Id) select item.Description).FirstOrDefault(),
                                      Technician_Name = (from h in db.HR_Employees where h.Emp_ID == Convert.ToInt32(a.Helper_Id) select h.Emp_Name).FirstOrDefault(),
                                      Helper_Start_Time = a.Helper_Start_Time,
-                                     Helper_End_Time = a.Helper_End_Time
+                                     Helper_End_Time = a.Helper_End_Time,
+                                     Machine_start_time = a.Machine_Start_Time,
+                                     Machine_End_Time = a.Machine_End_Time
 
 
 
@@ -141,11 +143,14 @@ namespace PMS
                                      a.cancelAppointment,
                                      created_time = a.Created_Date,
                                      emp_name = (from data in db.HR_Employees where data.Emp_ID == Convert.ToInt32(a.Doctor_Id) select data.Emp_Name).FirstOrDefault(),
+                                     machine_name = db.GetDataValueName("Machine", a.Machine_Id) ?? "",
                                      Procedure_Name = (from item in db.INV_Items where item.Item_ID == Convert.ToInt32(a.Procedure_Id) select item.Description).FirstOrDefault(),
                                      Procedure_Id = a.Procedure_Id,
                                      Technician_Name = (from h in db.HR_Employees where h.Emp_ID == Convert.ToInt32(a.Helper_Id) select h.Emp_Name).FirstOrDefault(),
                                      Helper_Start_Time = a.Helper_Start_Time,
-                                     Helper_End_Time = a.Helper_End_Time
+                                     Helper_End_Time = a.Helper_End_Time.Value,
+                                     Machine_start_time = a.Machine_Start_Time,
+                                     Machine_End_Time = a.Machine_End_Time
                                  }).ToList().OrderByDescending(x => x.created_time);
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }

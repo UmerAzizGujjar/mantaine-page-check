@@ -474,8 +474,10 @@
                     if (hasRights) {
                         debugger;
                         $('#btnApprove').show();
+                        $('#btnUnApprove').show();
                     } else {
                         $('#btnApprove').hide();
+                        $('#btnUnApprove').hide();
                     }
                 },
                 failure: function (response) {
