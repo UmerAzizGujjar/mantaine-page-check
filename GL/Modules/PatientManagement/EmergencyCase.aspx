@@ -60,6 +60,15 @@
                 separator: '/'
             });
 
+            $('#txt_cnic').attr('placeholder', '_____-_______-_');
+
+            MaskedInput({
+                elm: document.getElementById('txt_cnic'),
+                format: '_____-_______-_',
+                separator: '-'
+
+            });
+
             var Reg_ID = '<%= Request.QueryString["Reg_ID"] %>';
 
             if (Reg_ID && Reg_ID !== "undefined" && Reg_ID.trim() !== "") {
@@ -5606,12 +5615,7 @@
                 backdrop: 'static'
             });
             $("#ddl_name").focus();
-            MaskedInput({
-                elm: document.getElementById('txt_cnic'),
-                format: '_____-_______-_',
-                separator: '-'
-
-            });
+           
         }
 
         function clearPatient() {
