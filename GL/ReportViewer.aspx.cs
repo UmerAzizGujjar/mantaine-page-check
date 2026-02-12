@@ -1029,7 +1029,7 @@ namespace PMS
                 rd.SetParameterValue("@Operator", "0");
                 rd.SetParameterValue("@Trans_Type", "DISCHARGE");
             }
-            else if (reportName == "BedOccupancy")
+            else if (reportName == "Discharge")
             {
                 string reportType = Request.QueryString["Report_Type"].ToString();
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
@@ -1070,17 +1070,70 @@ namespace PMS
                 rd.SetParameterValue("@Operator", "0");
                 rd.SetParameterValue("@Trans_Type", "DISCHARGE");
             }
-            else if (reportName == "")
+            else if (reportName == "AverageLengthOfStay")
             {
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
                 string reportType = Request.QueryString["Report_Type"].ToString();
                 string fileName = string.Empty;
-                
+                if (reportType == "Annually")
+                {
+                    fileName = "Hospital/rptMonthlyRegistrationsOfDepartmentAnually_Decimals.rpt";
+                }
+                else if (reportType == "Annually with Stay Days")
+                {
+                    fileName = "Hospital/rptALOS_AnuallyWithDays.rpt";
+                }
+                else if (reportType == "Annually with Stay Days Summary")
+                {
+                    fileName = "Hospital/rptALOS_AnuallyWithDays_Summary.rpt";
+                }
+                reportPath += fileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", "" + reportType + " ALOS Report From " + Convert.ToDateTime(Request.QueryString["sDate"]).ToString("dd-MMM-yyyy") + " To " + Convert.ToDateTime(Request.QueryString["eDate"]).ToString("dd-MMM-yyyy"));
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("@Operator", "0");
+                rd.SetParameterValue("@Trans_Type", "ALOS");
+            }
+            else if (reportName == "BedOccupancy")
+            {
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string reportType = Request.QueryString["Report_Type"].ToString();
+                string fileName = string.Empty;
+                if (reportType == "Monthly")
+                {
+                    //fileName = "rptWard_Room_Allocation_Monthly_Daywise_Summary.rpt";
+                    fileName = "Hospital/rptBed_Occupancy_Of_Month.rpt";
+                }
+                else if (reportType == "Annually")
+                {
+                    //fileName = "rptMonthlyAnnualWardAllocation.rpt";
+                    fileName = "Hospital/rptBedOccupancyAnnually.rpt";
+                }
+                else if (reportType == "Annually With Stay Days")
+                {
+                    fileName = "Hospital/rptBed_Occupancy_With_Stay_Days_Anually.rpt";
+                }
+                else if (reportType == "Annually With Stay Days Summary")
+                {
+                    fileName = "Hospital/rptBed_Occupancy_With_Stay_Days_Anually_Summary.rpt";
+                }
+                else if (reportType == "Annually With Stay Days Summary Department Wise")
+                {
+                    fileName = "Hospital/rptBed_Occupancy_With_Stay_Days_Anually_SummaryDepartmentWise.rpt";
+                }
+
                 reportPath += fileName;
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", "" + reportType + " Bed Occupancy Time Line Report From " + Convert.ToDateTime(Request.QueryString["sDate"]).ToString("dd-MMM-yyyy") + " To " + Convert.ToDateTime(Request.QueryString["eDate"]).ToString("dd-MMM-yyyy"));
-                rd.SetParameterValue("@stDate", Convert.ToDateTime(Request.QueryString["sDate"]));
-                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
                 rd.SetParameterValue("@Operator", "0");
                 rd.SetParameterValue("@Trans_Type", "BedOccupancy");
                 if (reportType == "Annually With Stay Days" || reportType == "Annually With Stay Days Summary")
@@ -1824,7 +1877,7 @@ namespace PMS
                 string ItemID = Request.QueryString["ItemID"].ToString();
                 string vendorID = Request.QueryString["VendorId"].ToString();
 
-                string rptFileName = "Inventory/rptPurchaseReturnReport.rpt";
+                string rptFileName = "Inven/rptPurchaseReturnReport.rpt";
 
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
@@ -5594,6 +5647,32 @@ namespace PMS
                 rd.SetParameterValue("@Operator", Request.QueryString["Operator"]);
                 string departmentID = Request.QueryString["Department"].ToString();
                 rd.SetParameterValue("@DepartmentID", departmentID);
+            }
+            else if (reportName == "ProcedureTimeLine")
+            {
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string reportType = Request.QueryString["Report_Type"].ToString();
+                string fileName = string.Empty;
+                if (reportType == "Monthly")
+                {
+                    fileName = "Hospital/rptDailyProcedureAssignemt_Monthly.rpt";
+                }
+                else if (reportType == "Annually")
+                {
+                    //fileName = "rptMonthlyProcedureAssignment_Anually.rpt";
+                    fileName = "Hospital/rptProcedureTimeLineAnnually.rpt";
+                }
+                reportPath += fileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", "" + reportType + " Procedure Time Line Report From " + Convert.ToDateTime(Request.QueryString["sDate"]).ToString("dd-MMM-yyyy") + " To " + Convert.ToDateTime(Request.QueryString["eDate"]).ToString("dd-MMM-yyyy"));
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("@Operator", "0");
+                rd.SetParameterValue("@Trans_Type", "Procedure");
             }
             else if (reportName == "ProcedureTimeLineDetail")
             {

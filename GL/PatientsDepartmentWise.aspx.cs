@@ -3777,6 +3777,100 @@ namespace PMS
 
 
                 }
+
+                if (this.PageTitle == "Bed_Occupancy")
+                {
+                    dpROw.Visible = false;
+
+                    tr1MedicalSubsidy.Visible = true;
+                    lblMedical.Text = "Time Line";
+                    tr_Export.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    optRw.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = false;
+
+                    lblMedical.Text = "Time Line";
+
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    AllowPatientRecord = false;
+
+                    ddlMedicalSubsidy.Items.Clear();
+                    ddlMedicalSubsidy.Items.Add("Annually With Stay Days");
+                    ddlMedicalSubsidy.Items.Add("Annually With Stay Days Summary");
+                    ddlMedicalSubsidy.Items.Add("Monthly");
+                    ddlMedicalSubsidy.Items.Add("Annually");
+
+                }
+                if (this.PageTitle == "Procedure_Time_Line")
+                {
+                    dpROw.Visible = false;
+
+                    tr1MedicalSubsidy.Visible = true;
+                    lblMedical.Text = "Time Line";
+                    tr_Export.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    optRw.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = false;
+
+                    lblMedical.Text = "Time Line";
+
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    AllowPatientRecord = false;
+                    ddlMedicalSubsidy.Items.Add("Monthly");
+                    ddlMedicalSubsidy.Items.Add("Annually");
+
+                }
+                if (this.PageTitle == "AverageLengthOfStay")
+                {
+                    dpROw.Visible = false;
+
+                    tr1MedicalSubsidy.Visible = true;
+                    lblMedical.Text = "Time Line";
+                    tr_Export.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    optRw.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = false;
+
+                    lblMedical.Text = "Time Line";
+
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    tr_Summary.Visible = false;
+                    AllowPatientRecord = false;
+
+                    ddlMedicalSubsidy.Items.Clear();
+                    //ddlMedicalSubsidy.Items.Add("Annually");
+                    ddlMedicalSubsidy.Items.Add("Annually with Stay Days");
+                    ddlMedicalSubsidy.Items.Add("Annually with Stay Days Summary");
+                    ddlMedicalSubsidy.Items.Add("Monthly");
+                    ddlMedicalSubsidy.Items.Add("Annually");
+
+                }
                 if (this.PageTitle == "Sale_Report_Summary")
                 {
 
@@ -3980,7 +4074,7 @@ namespace PMS
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                 }
-                else if (this.PageTitle == "OPD_Time_Line" || this.PageTitle == "IPD_Time_Line" || this.PageTitle == "Discharge_Time_Line" || this.PageTitle == "Ward_Allocation_Time_Line" || this.PageTitle == "Procedure_Time_Line" || this.PageTitle == "Bed_Occupancy" || this.PageTitle == "AverageLengthOfStay" || this.PageTitle == "DepartmentWiseProcedureTimeLine")
+                else if (this.PageTitle == "OPD_Time_Line" || this.PageTitle == "IPD_Time_Line" || this.PageTitle == "Discharge_Time_Line" || this.PageTitle == "Ward_Allocation_Time_Line" ||  this.PageTitle == "DepartmentWiseProcedureTimeLine")
                 {
                     dpROw.Visible = false;
 
@@ -4014,19 +4108,19 @@ namespace PMS
                     ddlMedicalSubsidy.Items.Add("Annually");
 
 
-                    if (this.PageTitle == "AverageLengthOfStay")
-                    {
-                        ddlMedicalSubsidy.Items.Clear();
-                        //ddlMedicalSubsidy.Items.Add("Annually");
-                        ddlMedicalSubsidy.Items.Add("Annually with Stay Days");
-                        ddlMedicalSubsidy.Items.Add("Annually with Stay Days Summary");
-                    }
-                    else if (this.PageTitle == "Bed_Occupancy")
-                    {
-                        ddlMedicalSubsidy.Items.Clear();
-                        ddlMedicalSubsidy.Items.Add("Annually With Stay Days");
-                        ddlMedicalSubsidy.Items.Add("Annually With Stay Days Summary");
-                    }
+                    //if (this.PageTitle == "AverageLengthOfStay")
+                    //{
+                    //    ddlMedicalSubsidy.Items.Clear();
+                    //    //ddlMedicalSubsidy.Items.Add("Annually");
+                    //    ddlMedicalSubsidy.Items.Add("Annually with Stay Days");
+                    //    ddlMedicalSubsidy.Items.Add("Annually with Stay Days Summary");
+                    //}
+                    //else if (this.PageTitle == "Bed_OccupancyBed_OccupancyBed_OccupancyBed_OccupancyBed_Occupancy")
+                    //{
+                    //    ddlMedicalSubsidy.Items.Clear();
+                    //    ddlMedicalSubsidy.Items.Add("Annually With Stay Days");
+                    //    ddlMedicalSubsidy.Items.Add("Annually With Stay Days Summary");
+                    //}
 
                     if (AllowPatientRecord)
                     {
