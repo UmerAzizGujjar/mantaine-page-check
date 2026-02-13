@@ -4107,6 +4107,11 @@ namespace PMS
                     reportPath += "LabRadiology/rptLabTestHistopathology.rpt";
 
                 }
+                else if (reportColumns == 13)
+                {
+                    reportPath += "LabRadiology/rptLabTestRadiology_Xray.rpt";
+
+                }
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 string list = string.Empty;
