@@ -70,6 +70,16 @@
                 format: '____-_______',
                 separator: '-'
             });
+
+            $('#txt_cnic').attr('placeholder', '_____-_______-_');
+            MaskedInput({
+                elm: document.getElementById('txt_cnic'),
+                format: '_____-_______-_',
+                separator: '-'
+
+            });
+
+
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").select2({
                 placeholder: "Select a doctor",
                 allowClear: true
@@ -5866,12 +5876,7 @@
                 backdrop: 'static'
             });
             $("#ddl_name").focus();
-            MaskedInput({
-                elm: document.getElementById('txt_cnic'),
-                format: '_____-_______-_',
-                separator: '-'
-
-            });
+           
         }
 
         function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {

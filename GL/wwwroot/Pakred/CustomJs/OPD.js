@@ -149,6 +149,15 @@ $(document).ready(function () {
 
     });
 
+    MaskedInput({
+        elm: document.getElementById('txt_cnic'),
+        format: '_____-_______-_',
+        separator: '-'
+
+    });
+
+    $('#txt_cnic').attr('placeholder', '_____-_______-_');
+
     $('#txt_mobile').on('focus', function () {
         var input = this;
         setTimeout(function () {
@@ -520,12 +529,7 @@ function AddNewPatient() {
         backdrop: 'static'
     });
     $("#ddl_name").focus();
-    MaskedInput({
-        elm: document.getElementById('txt_cnic'),
-        format: '_____-_______-_',
-        separator: '-'
-
-    });
+    
 }
 function clearPatient() {
 
