@@ -1579,7 +1579,7 @@
             debugger;
             try {
                 isAdd = true;
-                window.location.href = "Appointment.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
+                window.location.href = "Derma_Appointment.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
 
             } catch (err) {
                 alert(err.message);
