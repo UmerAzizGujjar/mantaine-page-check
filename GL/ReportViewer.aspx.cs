@@ -4021,6 +4021,9 @@ namespace PMS
             }
             else if (reportName == "BillingBaseReport")
             {
+                var user_id = AppConfig.UserID;
+                var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+
                 reportPath += "PatientManagement/rptBillBasePrintHalf.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
@@ -4029,6 +4032,7 @@ namespace PMS
                 rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("UserName", userName);
             }
             else if (reportName == "ReceiptbasePrint")
             {
