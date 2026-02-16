@@ -468,7 +468,7 @@
                                 '<td><input type="text" name="txtRnet" value="' + item.Net_Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td ><input type="text" name="txtRBatch_No" value="' + item.Batch_No + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td style="display: none"><input type="hidden" value="' + item.Item_ID + '" name="txtRItemID" id="txtRItemID"></td>' +
-                                '<td style="display: none"><input type="hidden" value="' + item.CGSRate + '" name="txtCGSRate" id="txtCGSRate"></td>' +
+                                '<td style="display: none"><input type="hidden" value="' + item.CGSRate + '" name="txtRCGSRate" id="txtRCGSRate"></td>' +
                                 '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
                                 '</tr>';
@@ -530,7 +530,7 @@
                                 '<td><input type="text" name="txtRnet" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td><select id="txtRBatch_Nos' + (rowIndex + 1) + '" name="txtRBatch_Nos" onchange="updateReturnStock(this)" ></select></td>' +
                                 '<td style="display:none;"><input type="text"  id="txtRBatch_No' + (rowIndex + 1) + '" name="txtRBatch_No"  value=""/> </td>' +
-                                '<td  style="display:none;"><input type="hidden"  name="txtCGSRate" alue="' + data[0].CGSRate + '" id="txtCGSRate' + (rowIndex + 1) + '"></td>' +
+                                '<td  style="display:none;"><input type="hidden"  name="txtRCGSRate" alue="' + data[0].CGSRate + '" id="txtRCGSRate' + (rowIndex + 1) + '"></td>' +
                                 '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
                                 //'<td><input type="text" name="txtRBatch_No" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
@@ -586,6 +586,8 @@
             }
             var itemId = $(row).find('td:eq(0)').text().trim();
             var batchNumber = $(anchors).find('option:selected').text().trim();
+            var warehouse = $('#ddl_Warehouse').find('option:selected').val();
+            var hdndiscountType = $('#hdndiscountType').val();
 
             $('#txtRBatch_No' + counter).val(batchNumber);
             $.ajax({
@@ -593,7 +595,9 @@
                 url: "IssueMedicine.aspx/GetStockByBatch",
                 data: JSON.stringify({
                     "itemId": itemId,
-                    "batchNumber": batchNumber
+                    "hdndiscountType": hdndiscountType,                                  
+                    "batchNumber": batchNumber,
+                    "warehouse": warehouse
                 }),
                 dataType: 'JSON',
                 contentType: "application/json; charset=utf-8",
@@ -610,7 +614,7 @@
                     date = moment(date).format('D-MMM-YYYY');
                     debugger;
                     $('#txtRStock' + counter).val(stock);
-                    $('#txtCGSRate' + counter).val(CGSRate);
+                    $('#txtRCGSRate' + counter).val(CGSRate);
                 },
                 error: function (xhr, status, error) {
                     console.log("Error fetching stock: " + error);
@@ -889,6 +893,7 @@
                         var Item_list = [];
                         var isValid = true;
                         table.find('tr').each(function () {
+                            debugger;
                             var itemID = $(this).find('input[name="txtRItemID"]').val() || 0;
                             var billDetailsID = $(this).find('input[name="txtRBill_Details_ID"]').val() || 0;
                             var itemName = $(this).find('input[name="txtRItemDescription"]').val() || 0;
@@ -898,9 +903,9 @@
                             var disAmt = $(this).find('input[name="txtRDisAmount"]').val() || 0;
                             var netAmt = $(this).find('input[name="txtRnet"]').val() || 0;
                             var Batch_No = $(this).find('input[name="txtRBatch_No"]').val();
-                            var CGSRate = $(this).find('input[name="txtCGSRate"]').val() || 0;
+                            var CGSRate = $(this).find('input[name="txtRCGSRate"]').val() || 0;
 
-
+                            debugger;
                             var CGSAmount = CGSRate * qty;
 
                             if (Batch_No == 'Please Select' || Batch_No == '0' || Batch_No == "") {
@@ -1231,7 +1236,8 @@
             var txtAmountReceived = parseFloat($('#txtAmountReceived').val()) || 0;
             var totalDisc = $('#txttotalDisc').val() || 0;
             totalDisc = txtLineDisc + txtDisAmt;
-            $('#txttotalDisc').val(totalDisc.toFixed(2));
+            totalDisc = Math.round(totalDisc); 
+            $('#txttotalDisc').val(totalDisc);
         }
         function CalculateSummarieDiscountAmountWise(rowIndex) {
             debugger;
@@ -1313,6 +1319,7 @@
                 var disAmt = 0;
                 if (disper > 0) {
                     disAmt = (netamt * disper) / 100;
+                    disAmt = Math.round(disAmt);
                 }
                 else {
                     disAmt = 0;
@@ -1435,7 +1442,9 @@
                 FlatDisc = 0;
             }
             var ReceivedAmount = $('#txtAmountReceived').val();
-            $('#txtLineDisc').val(TotalDiscountAmount.toFixed(2));
+            TotalDiscountAmount = Math.round(TotalDiscountAmount); 
+            $('#txtLineDisc').val(TotalDiscountAmount);
+            //$('#txtLineDisc').val(TotalDiscountAmount.toFixed(2));
             var discfinalAmnt = $('#txtLineDisc').val() || 0;
             //$('#txtAmountReceived').val(parseFloat(TotalAmount.toFixed()) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc));
             console.log(blnceCondition)
@@ -1660,13 +1669,13 @@
             var itemId = $('#medName').find('option:selected').val();
             var Batch = $('#batchno').find('option:selected').val();
             var warehouse = $('#ddlWarehouse').find('option:selected').val();
-          
+            var hdndiscountType = $('#hdndiscountType').val();
             var rowIndex = parseInt($('#tblDetails tbody tr').length);
             let rows;
             var expdate = '';
             var itemExists = false;
 
-            var hdndiscountType = $('#hdndiscountType').val();
+            
 
             $('#tblDetails tbody tr').each(function () {
                 var existingItemId = $(this).find('input[name="ItemID"]').val();

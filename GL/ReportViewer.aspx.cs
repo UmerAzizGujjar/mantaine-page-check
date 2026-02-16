@@ -109,6 +109,10 @@ namespace PMS
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from Store_Issue where Store_Issue_Id = " + transID).ToString();
                     }
+                    else if (transType == "GRN")
+                    {
+                        VoucherId = DBClass.getField("select Voucher_ID from Goods_Return_Notes where Store_Return_Id = " + transID).ToString();
+                    }
                     else if (transType == "LabShare")
                     {
                         VoucherId = DBClass.getField("select Voucher_ID from lab_test_Detail where lab_test_Detail_Id = " + transID).ToString();
