@@ -195,7 +195,7 @@ namespace PMS
                     File.Delete(physicalPath);
 
                     //string sql = "DELETE FROM Test_Image WHERE Image_path = '" + image_Path + "'";
-                    DBClass.executeNonQueryWithoutBegin(sql);
+                    //DBClass.executeNonQueryWithoutBegin(sql);
                 }
 
                 // Save file
