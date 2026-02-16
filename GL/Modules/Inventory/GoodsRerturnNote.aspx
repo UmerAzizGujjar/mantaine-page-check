@@ -348,6 +348,28 @@
                 $('#btnSave').val("Update");
             });
         }
+        function PrintVoucher() {
+            var id = '<% =Request.QueryString["SI_ID"] %>';
+            var locationInfo = window.location;
+
+
+                    var user_name = '<% =AppConfig.Company_Name %>';
+                    if (user_name == 'As-Siraat Serving Humanity') {
+                        reportPath = '../../ReportViewer.aspx';
+                    } else {
+                        reportPath = 'ReportViewer.aspx'; // same folder
+                    }
+
+                    var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=GRN Voucher&TransID=' + id + '&TransType=GRN';
+                    if (!locationInfo.origin.includes('localhost')) {
+                        var urlInfo = window.location.href.split('/');
+                        var ip = urlInfo[2];
+                        var foldername = urlInfo[3];
+                        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=Voucher&ReportTitle=GRN Voucher&TransID=' + id + '&TransType=GRN';
+                    }
+                    window.open(url, '_blank');
+                }
+
     </script>
 
 </asp:Content>
@@ -376,7 +398,7 @@
             </div>
         
             <div class="col-lg-2 col-md-4 col-sm-12">
-                <label>GIR#</label>
+                <label>GIN#</label>
                 <select id="ddlGIN"  class="form-select"></select>
             </div>
             <div class="col-lg-1 col-md-2 col-sm-6">
@@ -390,7 +412,7 @@
                     <table class="table table-hover table-striped table-bordered" id="tblGINItems">
                         <thead>
                             <tr>
-                                <th>SIN No </th>
+                                <th>GIN No </th>
                                 <th style="display:none;">Item ID</th>
                                 <th>GIN App Date</th>
                                 <th>Department</th>

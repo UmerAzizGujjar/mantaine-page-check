@@ -8,7 +8,7 @@
     
    <script type="text/javascript">
        window.skipDevToolsCheck = true;
-    </script>
+   </script>
     <style type="text/css">
         .buttonDisabled {
             opacity: 0.65;
