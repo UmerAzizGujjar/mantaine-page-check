@@ -194,7 +194,7 @@ namespace PMS
                 {
                     File.Delete(physicalPath);
 
-                    string sql = "DELETE FROM Test_Image WHERE Image_path = '" + image_Path + "'";
+                    //string sql = "DELETE FROM Test_Image WHERE Image_path = '" + image_Path + "'";
                     DBClass.executeNonQueryWithoutBegin(sql);
                 }
 
