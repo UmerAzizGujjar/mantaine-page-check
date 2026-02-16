@@ -2502,8 +2502,8 @@
                         success: function (msg) {
                             debugger;
                             var data = JSON.parse(msg.d);
-                            var doctorId = data.DoctorInfo?.Doctor_ID || 0;
-                            var department = data.DoctorInfo?.Patient_Main_Category || '';
+                            var doctorId = data.DoctorInfo?.Doctor || 0;
+                            var department = data.DoctorInfo?.Department || '';
                             $('#ddlDoctor').val(doctorId).trigger('change')
                             
                             $('#ddlDepartment').val(department).trigger('change')

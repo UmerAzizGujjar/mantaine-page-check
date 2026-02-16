@@ -32,6 +32,27 @@
 
 
         function LoadPage() {
+            let savedVisibility = null;
+
+            $.ajax({
+                type: "POST",
+                url: "ServiceView.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                            console.warn("Invalid column visibility JSON");
+                        }
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load column preferences");
+                }
+            });
             $("#example").DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -105,6 +126,30 @@
                     }
                 ],
                 "initComplete": function (settings, json) {
+                    const api = this.api();
+                    if (savedVisibility && Array.isArray(savedVisibility)) {
+                        if (savedVisibility.length === api.columns().count()) {
+                            api.columns().every(function (index) {
+                                this.visible(savedVisibility[index]);
+                            });
+                        }
+                    }
+                    api.on('column-visibility.dt', function (e, settings, column, state) {
+                        let currentVis = [];
+                        api.columns().every(function () {
+                            currentVis.push(this.visible());
+                        });
+                        PageMethods.SaveUserColumnPreferences(
+                            JSON.stringify(currentVis),
+                            function () {
+                                console.log("Column preferences saved");
+                            },
+                            function (error) {
+                                console.error("Failed to save preferences:", error);
+                            }
+                        );
+                    });
+
                     var lengthContainer = document.querySelector('#example_length');
                     var lengthDropdown = document.querySelector('#example_length select');
                     var label = document.querySelector('#example_length label');
@@ -121,8 +166,6 @@
                         label.style.marginTop = '17px';
                         label.appendChild(labelText);
                         label.appendChild(lengthDropdown);
-                    } else {
-                        console.log("Length dropdown, label, or container not found");
                     }
                 }
             }); 

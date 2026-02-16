@@ -78,10 +78,10 @@ namespace Salon.GL
                 RadTreeNode tn = new RadTreeNode(item.Account_Code + " - " + item.Account_Name, item.Account_ID.ToString());
                 tn.ExpandMode = TreeNodeExpandMode.ServerSideCallBack;
                 parentTn.Nodes.Add(tn);
-               addChildNodesLevel(tn, item.Account_ID);
+                addChildNodesLevel(tn, item.Account_ID);
             }
             db.Dispose();
-        }        
+        }
         protected void btnaddSave_Click(object sender, EventArgs e)
         {
         }
@@ -116,7 +116,7 @@ namespace Salon.GL
                 {
                     string accountCode = txtParent_Code.Text + "" + txtAccount_Code.Text;
                     int rec = (from acc in db.GL_Accounts
-                               where ((acc.Account_Code == accountCode)&&(acc.Book_ID == AppConfig.Book_ID))
+                               where ((acc.Account_Code == accountCode) && (acc.Book_ID == AppConfig.Book_ID))
                                select acc).Count();
                     if (rec != 0)
                     {
@@ -176,12 +176,12 @@ namespace Salon.GL
             int level;
             string parentCode;
             string[] accountLength;
-           
+
             var qry = (from c in db.GL_Accounts
                        where c.Account_ID == parentId
                        select c).SingleOrDefault();
             parentCode = qry.Account_Code;
-            level = Convert.ToInt32(qry.Levels) + 1; 
+            level = Convert.ToInt32(qry.Levels) + 1;
 
             if (level == 4)
             {
@@ -200,7 +200,7 @@ namespace Salon.GL
             var tbl = (from config in db.Configurations
                        where config.Configuration_Name == "Chart of Accounts Level"
                        select config).SingleOrDefault();
-            accountLength = tbl.Configuration_Value.Split(',');                 
+            accountLength = tbl.Configuration_Value.Split(',');
             string maxcode = DBClass.getField("select isnull(max(account_serial),0) from gl_accounts where parent_code=" + parentId + " and Levels>1");
             int newcode = Convert.ToInt32(maxcode);
             newcode += 1;
@@ -315,16 +315,16 @@ namespace Salon.GL
                 rbtnBank.Visible = false;
                 rbtnCash.Visible = false;
             }
-            
+
             var parentCode = (from c in db.GL_Accounts
                               where c.Account_ID == parentId
                               select new { c.Account_Code }).SingleOrDefault();
 
-            
+
             var tbl = (from config in db.Configurations
                        where config.Configuration_Name == "Chart of Accounts Level"
                        select config).SingleOrDefault();
-            accountLength = tbl.Configuration_Value.Split(',');                 
+            accountLength = tbl.Configuration_Value.Split(',');
             string maxcode = DBClass.getField("select Isnull(max(account_serial),0) from gl_accounts where parent_code=" + parentId + " and Levels>1");
             int newcode = Convert.ToInt32(maxcode);
             newcode += 1;
@@ -337,14 +337,14 @@ namespace Salon.GL
             txtAccount_Name.Focus();
             hdnAddOrEdit.Value = "Add";
             btnEditSave.Text = "Save";
-           
+
         }
 
         protected void RadTreeView1_NodeEdit(object sender, RadTreeNodeEditEventArgs e)
         {
             int accountId = Convert.ToInt32(RadTreeView1.SelectedNode.Value);
             DataBaseDataContext db = new DataBaseDataContext(connectionString);
-            RadTreeNode tn = e.Node;            
+            RadTreeNode tn = e.Node;
             var qry = (from acc in db.GL_Accounts
                        where acc.Account_ID == accountId
                        select acc);
@@ -374,7 +374,7 @@ namespace Salon.GL
             foreach (var item in qry)
             {
                 RadTreeNode tn = new RadTreeNode(item.Account_Code + " - " + item.Account_Name, item.Account_ID.ToString());
-                if(item.Levels != 4)
+                if (item.Levels != 4)
                     tn.ExpandMode = TreeNodeExpandMode.ServerSideCallBack;
                 parentTn.Nodes.Add(tn);
             }
@@ -438,7 +438,7 @@ namespace Salon.GL
             if (count > 0)
             {
                 btnDelete.Enabled = false;
-                btnDelete.CssClass= "buttonDisabled";
+                btnDelete.CssClass = "buttonDisabled";
             }
             else
             {

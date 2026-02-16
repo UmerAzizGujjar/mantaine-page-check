@@ -167,62 +167,7 @@
             }
         }
     </script>
-<%-- <script type="text/javascript">
-        $(document).ready(function () {
-            // Initialize Select2 only for visible <select> elements
-            applySelect2ToVisible();
 
-            // Handle Bootstrap Tabs: Initialize Select2 when tab is shown
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                const target = $(e.target).attr("href");
-                setTimeout(function () {
-                    $(target).find('select').each(function () {
-                        initializeSelect2($(this));
-                    });
-                }, 10); // Small delay to ensure visibility
-            });
-
-            // Handle Bootstrap Modals
-            $('.modal').on('shown.bs.modal', function () {
-                $(this).find('select').each(function () {
-                    initializeSelect2($(this));
-                });
-            });
-
-            // Optional: Reapply after AJAX UpdatePanel postbacks (ASP.NET WebForms)
-            if (typeof (Sys) !== 'undefined') {
-                Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
-                    applySelect2ToVisible();
-                });
-            }
-        });
-
-        // Reusable function to safely initialize Select2
-        function initializeSelect2($select) {
-            if ($select.hasClass("select2-hidden-accessible")) {
-                return; // Already initialized
-            }
-
-            // Only initialize if the select and its closest container are visible
-            if ($select.is(':visible') && $select.closest(':visible').length > 0) {
-                $select.select2({
-                    placeholder: "Select...",
-                    allowClear: true
-                    
-                });
-            }
-        }
-
-        // Apply Select2 to all visible selects
-        function applySelect2ToVisible() {
-            $('select').each(function () {
-                initializeSelect2($(this));
-            });
-        }
-
-        // Export to global scope so you can call it manually if needed
-        window.applySelect2ToVisible = applySelect2ToVisible;
-    </script>--%>
 
 
     <script type="text/javascript">
@@ -822,78 +767,79 @@
         function RedirectToPR() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovePR.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApprovePR.aspx";
         }
         function RedirectToRFQ() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveRFQ.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApproveRFQ.aspx";
         }
         function RedirectToCS() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveCS.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApproveCS.aspx";
         }
         function RedirectToPO() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovePO.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApprovePO.aspx";
         }
         function RedirectToIGP() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveIGP.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApproveIGP.aspx";
         }
         function RedirectToGRN() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveGRN.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApproveGRN.aspx";
         }
         function RedirectToGIR() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveGIR.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApproveGIR.aspx";
         }
         function RedirectToGIN() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveGIN.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApproveGIN.aspx";
         }
         function RedirectToStockAdj() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveStockAdj.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApproveStockAdj.aspx";
         }
         function RedirectToStoreStockTransfer() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveStoreStockTransfer.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApproveStoreStockTransfer.aspx";
         }
         function RedirectToMI() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApproveMI.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApproveMI.aspx";
         }
         function RedirectToPI() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovePI.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApprovePI.aspx";
         }
         function RedirectToPayment() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovePayment.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApprovePayment.aspx";
         }
         function RedirectToAdvance() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/Approveadvance.aspx") %>';
+            window.location.href = "/Modules/Administrator/Approveadvance.aspx";
         }
         function RedirectToApprovedPRFsAck() {
             debugger;
             window.history.replaceState({}, document.title, "/");
-            window.location.href = '<%= ResolveUrl("~/Modules/Administrator/ApprovedPRFsAck.aspx") %>';
+            window.location.href = "/Modules/Administrator/ApprovedPRFsAck.aspx";
         }
+
 
 
     </script>

@@ -1881,7 +1881,7 @@ namespace PMS
                 string ItemID = Request.QueryString["ItemID"].ToString();
                 string vendorID = Request.QueryString["VendorId"].ToString();
 
-                string rptFileName = "Inven/rptPurchaseReturnReport.rpt";
+                string rptFileName = "Inventory/rptPurchaseReturnReport.rpt";
 
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
@@ -4056,6 +4056,7 @@ namespace PMS
             else if (reportName == "TestResultQ")
             {
                 int reportColumns = Convert.ToInt32(Request.QueryString["ReportColumn"]);
+                int reportcolumntest = reportColumns;
                 if (reportColumns == 2)
                 {
                     reportPath += "LabRadiology/rptLabTestResultQ_2.rpt";
@@ -4109,6 +4110,26 @@ namespace PMS
                 else if (reportColumns == 12)
                 {
                     reportPath += "LabRadiology/rptLabTestHistopathology.rpt";
+
+                }
+                else if (reportColumns == 13)
+                {
+                    reportPath += "LabRadiology/rptLabTestRadiology_Xray.rpt";
+
+                }
+                else if (reportColumns == 14)
+                {
+                    reportPath += "LabRadiology/rptLabTestRadiology_CTScan.rpt";
+
+                }
+                else if (reportColumns == 15)
+                {
+                    reportPath += "LabRadiology/rptLabTestRadiology_MRI.rpt";
+
+                }
+                else if (reportColumns == 16)
+                {
+                    reportPath += "LabRadiology/rptLabTestResultQ_Cardio.rpt";
 
                 }
                 rd.Load(reportPath);
