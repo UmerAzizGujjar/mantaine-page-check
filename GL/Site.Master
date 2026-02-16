@@ -167,62 +167,7 @@
             }
         }
     </script>
-<%-- <script type="text/javascript">
-        $(document).ready(function () {
-            // Initialize Select2 only for visible <select> elements
-            applySelect2ToVisible();
 
-            // Handle Bootstrap Tabs: Initialize Select2 when tab is shown
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                const target = $(e.target).attr("href");
-                setTimeout(function () {
-                    $(target).find('select').each(function () {
-                        initializeSelect2($(this));
-                    });
-                }, 10); // Small delay to ensure visibility
-            });
-
-            // Handle Bootstrap Modals
-            $('.modal').on('shown.bs.modal', function () {
-                $(this).find('select').each(function () {
-                    initializeSelect2($(this));
-                });
-            });
-
-            // Optional: Reapply after AJAX UpdatePanel postbacks (ASP.NET WebForms)
-            if (typeof (Sys) !== 'undefined') {
-                Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
-                    applySelect2ToVisible();
-                });
-            }
-        });
-
-        // Reusable function to safely initialize Select2
-        function initializeSelect2($select) {
-            if ($select.hasClass("select2-hidden-accessible")) {
-                return; // Already initialized
-            }
-
-            // Only initialize if the select and its closest container are visible
-            if ($select.is(':visible') && $select.closest(':visible').length > 0) {
-                $select.select2({
-                    placeholder: "Select...",
-                    allowClear: true
-                    
-                });
-            }
-        }
-
-        // Apply Select2 to all visible selects
-        function applySelect2ToVisible() {
-            $('select').each(function () {
-                initializeSelect2($(this));
-            });
-        }
-
-        // Export to global scope so you can call it manually if needed
-        window.applySelect2ToVisible = applySelect2ToVisible;
-    </script>--%>
 
 
     <script type="text/javascript">

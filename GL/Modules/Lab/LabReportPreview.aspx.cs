@@ -171,6 +171,7 @@ namespace PMS
                 HttpPostedFile fileUpload = Request.Files[i];
 
                 Test_Image image = new Test_Image();
+                Lab_Test_Detail ltd = new Lab_Test_Detail();
 
                 // SAME OLD IMAGE NO LOGIC
                 int imageNo = Convert.ToInt32(
@@ -203,6 +204,7 @@ namespace PMS
                 // Save DB record
                 image.Image_No = imageNo;
                 image.Image_path = image_Path;
+                ltd.Image_path = image_Path;
                 image.Lab_Test_Detail_ID = Convert.ToInt32(detail_ID);
 
                 db.Test_Images.InsertOnSubmit(image);

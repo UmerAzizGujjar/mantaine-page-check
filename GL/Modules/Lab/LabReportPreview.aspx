@@ -1608,7 +1608,7 @@
         var checkCatagory;
        
         function showImage(testDetailID, single) {
-
+            debugger;
             PageMethods.LoadimagesDetail(testDetailID, single, function (res) {
 
                 var container = '';
@@ -1631,8 +1631,9 @@
                     // var img = $("<img onclick='window.open(this.src)' />");
 
 
-                    var img = $('<img onclick="window.open(this.src)" src=""/><a href="#" onclick="deleteImage(this)">Delete</a>');
-                    img.attr("style", "height:82px;width: 82px");
+                    //var img = $('<img onclick="window.open(this.src)" src=""/><a style= href="#" onclick="deleteImage(this)">Delete</a>');
+                    var img = $('<img onclick="window.open(this.src)" src=""/>');
+                    img.attr("style", "height:82px;width: 82px;");
                     var dd = value.Image_path;
 
                     img.attr("src", dd);
