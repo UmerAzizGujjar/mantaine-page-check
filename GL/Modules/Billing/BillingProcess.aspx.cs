@@ -156,16 +156,33 @@ namespace PMS
         [WebMethod]
         public static string GetGLAccounts()
         {
-            string result = string.Empty;
             DataBaseDataContext db = new DataBaseDataContext();
-            var itemsList = (from i in db.GL_Accounts where i.Levels == 4 && (i.Bank == true || i.Cash == true) select new { i.Account_ID, name = i.Account_Code.ToString() + '-' + i.Account_Name }).ToList();
-            if (itemsList != null)
+
+            var cashList = (from i in db.GL_Accounts
+                            where i.Levels == 4 && i.Cash == true
+                            select new
+                            {
+                                i.Account_ID,
+                                name = i.Account_Code + "-" + i.Account_Name
+                            }).ToList();
+
+            var bankList = (from i in db.GL_Accounts
+                            where i.Levels == 4 && i.Bank == true
+                            select new
+                            {
+                                i.Account_ID,
+                                name = i.Account_Code + "-" + i.Account_Name
+                            }).ToList();
+
+            var result = new
             {
-                result = (new JavaScriptSerializer()).Serialize(itemsList);
-            }
-            return result;
-     
+                cash = cashList,
+                bank = bankList
+            };
+
+            return new JavaScriptSerializer().Serialize(result);
         }
+
         [WebMethod]
         public static string CheckRecipeRights()
         {
@@ -592,7 +609,8 @@ namespace PMS
                                where dt.Company_ID == companyID
                                select dt).FirstOrDefault();
                 string companyCode = company.CompanyCode;
-                string MR_Sequence = companyCode + "-" + PatientNumber;
+                string MR_Sequence = string.IsNullOrWhiteSpace(companyCode)? PatientNumber: $"{companyCode}-{PatientNumber}";
+
                 pat.mr_no_sequence = MR_Sequence;
                 pat.walkin = true;
 

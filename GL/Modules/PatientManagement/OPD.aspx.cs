@@ -1097,7 +1097,7 @@ namespace PMS.Modules.PatientManagement
 
                 var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
                 string companyCode = company?.CompanyCode ?? "HOSP";
-                pat.mr_no_sequence = $"{companyCode}-{PatientNumber}";
+                pat.mr_no_sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";
                 pat.Card_fee = Convert.ToDecimal(
                          (from tbl in db.sys_Parms
                           where tbl.Name == "OPD Fee"
