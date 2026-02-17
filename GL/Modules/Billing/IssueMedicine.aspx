@@ -293,6 +293,7 @@
             $("#chkprint").prop("checked", true);
             $('#row22').hide();
             LoadTokenInputsDefaultMRNo();
+            LoadTokenInputsDefaultMRNoSaleReturn();
             $("#chkprint").on('change', function (e) {
                 debugger;
                 var checkPrint = $('#chkprint').is(":checked");
@@ -2189,6 +2190,26 @@
                     }
                 }
             });
+         
+        }
+        function LoadTokenInputsDefaultMRNoSaleReturn() {
+            $("#txtMRNo_SR").tokenInput("../../json.aspx?Table=PatientsForPharmacy", {
+                tokenLimit: 1,
+                onAdd: function (item) {
+                    debugger;
+                    try {
+                        pat_id = item.id;
+                        ///*  LoadPriscription();*/
+                        //out_Patient_Id = pat_id
+                        //getOPDID(pat_id);
+                        //getIPDID(pat_id);
+                        //getOPDandIPDNO(pat_id)
+
+                    } catch (err) {
+                        alert(err.message);
+                    }
+                }
+            });
         }
         var opdId;
         function getOPDID(pat_id) {
@@ -3120,121 +3141,128 @@
     <%--Patient Que Ends--%>
     <!-- Modal Sale Return -->
     <div id="SaleReturnModal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title">Sale Return</h1>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-row">
-                      
-                        <div class="form-group col-lg-2 col-md-2 col-sm-3">
-                            <label for="ddlInvoiceNumber">Invoice #</label>
-                            <select id="ddlInvoiceNumber" style="width: 180px !important;" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
-                        </div>
+    <!-- Updated: Changed to modal-xl and forced width to 95% -->
+    <div class="modal-dialog modal-xl" role="document" style="width: 95% !important; max-width: 65% !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title">Sale Return</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                      <div class="col-lg-2 col-md-4 col-sm-6">
+                          <label>Patient No</label>
+                           <input type="text" id="txtMRNo_SR" tabindex="1" class="form-control" />
 
-                        <div class="form-group col-lg-2 col-md-5 col-sm-3">
-                            <label for="ddlSaleReturnItems">Items</label>
-                            <select id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" style="width: 380px !important;" class="form-control select2"></select>
-                        </div>
-                          <div class="col-lg-2 col-md-4 col-sm-6">
-                              <label>WareHouse</label>
-                              <select id="ddl_Warehouse" class="form-select" onchange="DisableWareHouse()">
-                                  <option value="0">Please Select</option>
-                                  <!-- other options -->
-                              </select>
-                          </div>
-                        <div class="form-group col-lg-1 col-md-2 col-sm-0"></div>
-                        <div class="form-group col-lg-5 col-md-3 col-sm-6">
-                                <table style="width: auto !important">
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Total Payable:</td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnTotalPayable" style="width: 211px!important; height: 25px; text-align: right; font-size: 22px; color: #cd1818 !important;" readonly="readonly" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Total Line Disc :</td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnLineDisc" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Disc :  </td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnDisPer" onkeyup="CalCulateReturnDisc()" readonly="readonly" style="width: 73px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
-                                            &nbsp;%
-                                            <input type="text" id="txtSaleReturnDisAmt" readonly="readonly" style="width: 116px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Adjustment :</td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnFlatDisc" onkeyup="CalculateSaleReturnAdj()" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" autocomplete="off" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Total:  </td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnTotal" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
-                                        </td>
-                                    </tr>
-                                </table>
-                        </div>
                     </div>
-                    <table id="saleReturnTable" class="table table-bordered table-responsive-lg table-responsive-md">
-                        <thead>
-                            <tr>
-                                <th style="width: 5%;">Sr.</th>
-                                <th style="display: none;width: 0%">Billing Detail ID</th>
-                                <th style="width: 25%;">Description</th>
-                                <th style="display: none;width: 0%">Check Qty</th>
-                                <th style="width: 10%;">Qty</th>
-                                <th style="width: 10%;">Stock</th>
-                                <th style="width: 7%;">Rate</th>
-                                <th style="width: 7%;">Dis%</th>
-                                <th style="width: 13%;">Dis Amount</th>
-                                <th style="width: 13%;">Net Amount</th>
-                                <th style="width: 15%;">Batch_No</th>
-                                <th style="width: 10%;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="saleReturnTableBody">
-                        </tbody>
-                    </table>
+                    <div class="form-group col-lg-2 col-md-2 col-sm-3">
+                        <label for="ddlInvoiceNumber">Invoice #</label>
+                        <select id="ddlInvoiceNumber" style="width: 180px !important;" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
+                    </div>
+
+                    <div class="form-group col-lg-2 col-md-5 col-sm-3">
+                        <label for="ddlSaleReturnItems">Items</label>
+                        <select id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" style="width: 380px !important;" class="form-control select2"></select>
+                    </div>
+                      <div class="col-lg-2 col-md-4 col-sm-6">
+                          <label>WareHouse</label>
+                          <select id="ddl_Warehouse" class="form-select" onchange="DisableWareHouse()">
+                              <option value="0">Please Select</option>
+                              <!-- other options -->
+                          </select>
+                      </div>
+                   
+                    <%--<div class="form-group col-lg-1 col-md-2 col-sm-0"></div>--%>
+                      
+                    <div class="form-group col-lg-4 col-md-3 col-sm-6">
+                            <table style="width: auto !important">
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Total Payable:</td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnTotalPayable" style="width: 211px!important; height: 25px; text-align: right; font-size: 22px; color: #cd1818 !important;" readonly="readonly" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Total Line Disc :</td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnLineDisc" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Disc :  </td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnDisPer" onkeyup="CalCulateReturnDisc()" readonly="readonly" style="width: 73px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
+                                        &nbsp;%
+                                        <input type="text" id="txtSaleReturnDisAmt" readonly="readonly" style="width: 116px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Adjustment :</td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnFlatDisc" onkeyup="CalculateSaleReturnAdj()" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" autocomplete="off" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Total:  </td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnTotal" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
+                                    </td>
+                                </tr>
+                            </table>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()">Save & Print</button>
-                     <%--<input type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()" value="Save & Print" style="width: 110px;" />--%>
-                     <button type="button" class="btn btn-primry" onclick="RefreshSaleReturnModal()">Refresh</button>
-                    <button type="button" class="btn btn-primry" data-dismiss="modal">Close</button>
-                </div>
+                <table id="saleReturnTable" class="table table-bordered table-responsive-lg table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">Sr.</th>
+                            <th style="display: none;width: 0%">Billing Detail ID</th>
+                            <th style="width: 25%;">Description</th>
+                            <th style="display: none;width: 0%">Check Qty</th>
+                            <th style="width: 10%;">Qty</th>
+                            <th style="width: 10%;">Stock</th>
+                            <th style="width: 7%;">Rate</th>
+                            <th style="width: 7%;">Dis%</th>
+                            <th style="width: 13%;">Dis Amount</th>
+                            <th style="width: 13%;">Net Amount</th>
+                            <th style="width: 15%;">Batch_No</th>
+                            <th style="width: 10%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="saleReturnTableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()">Save & Print</button>
+                 <%--<input type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()" value="Save & Print" style="width: 110px;" />--%>
+                 <button type="button" class="btn btn-primry" onclick="RefreshSaleReturnModal()">Refresh</button>
+                <button type="button" class="btn btn-primry" data-dismiss="modal">Close</button>
             </div>
         </div>
+    </div>
 
-        <div id="SearchReturnModel" data-backdrop="static" class="modal fade-in" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content" style="width: 345px; margin-left: 80px; margin-top: 317px; height: 200px;">
-                    <div class="modal-header">
-                        <h2 class="modal-title">Login</h2>
+    <div id="SearchReturnModel" data-backdrop="static" class="modal fade-in" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 345px; margin-left: 80px; margin-top: 317px; height: 200px;">
+                <div class="modal-header">
+                    <h2 class="modal-title">Login</h2>
 
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" id="txtReturnuserCode" placeholder="UserCode" style="margin-left: 0;" autocomplete="off" />
-                        <label id="lblReturnUsername"></label>
-                        <input type="password" id="txtReturnpass" placeholder="Password" style="margin-left: 0;" autocomplete="off" />
-                    </div>
-                    <div class="modal-footer">
-                        
-                        <input type="button" class="btn btn-primry" id="btnSaveSaleReturn" onclick="SaveSaleReturn()" value="Save" style="width: 30% !important;" />
-                        <input type="button" class="btn-gray" id="CloseSearchReturnModel" value="Close" data-dismiss="modal" style="width: 30% !important;" />
-                    </div>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="txtReturnuserCode" placeholder="UserCode" style="margin-left: 0;" autocomplete="off" />
+                    <label id="lblReturnUsername"></label>
+                    <input type="password" id="txtReturnpass" placeholder="Password" style="margin-left: 0;" autocomplete="off" />
+                </div>
+                <div class="modal-footer">
+                    
+                    <input type="button" class="btn btn-primry" id="btnSaveSaleReturn" onclick="SaveSaleReturn()" value="Save" style="width: 30% !important;" />
+                    <input type="button" class="btn-gray" id="CloseSearchReturnModel" value="Close" data-dismiss="modal" style="width: 30% !important;" />
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 </asp:Content>

@@ -56,8 +56,8 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-}
-             else if (wareHousefrom == "") {
+            }
+            else if (wareHousefrom == "") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -70,8 +70,8 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-}
-             else if (date == "") {
+            }
+            else if (date == "") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -84,7 +84,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-}
+            }
             else {
                 Swal.fire({
                     icon: 'error',
@@ -98,7 +98,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-}
+            }
             return false;
         }
         var _gloabal = '';
@@ -120,7 +120,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                 $('#txtItemCode').tokenInput('clear');
+                $('#txtItemCode').tokenInput('clear');
                 $("#batchnoddl").empty();
                 $("#txttrnsfer_qty").val('');
                 $("#Textquantity").val('');
@@ -140,7 +140,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-             }
+            }
             debugger;
             var optionsVen = '';
             PageMethods.getbatchno(itemid, warehouse, transferdate, function (Tests) {
@@ -169,20 +169,12 @@
             debugger;
             var stID = '<% =Request.QueryString["stID"] %>';
             var locationInfo = window.location;
-
-            var user_name = '<% =AppConfig.Company_Name %>';
-            if (user_name == 'As-Siraat Serving Humanity') {
-                reportPath = '../../ReportViewer.aspx';
-            } else {
-                reportPath = 'ReportViewer.aspx'; // same folder
-            }
-
             var url = "/ReportViewer.aspx?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + stID;
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + stID;
+                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=StoreTransferPrint&Title=Store Transfer Print &Store_TransferID=" + stID;
             }
             window.open(url, '_blank');
         }
@@ -287,8 +279,8 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-}
-             });
+                }
+            });
             $("#btnUpdate").click(function () {
                 AddStockDetails(true);
             });
@@ -338,10 +330,10 @@
                     $("#lblstatus").show();
                     $("#txtstatus_trnsfer").show();
                     $("#btnSave").hide();
-                    
+
                 }
                 if (checkstat == 'Created' || checkstat == null || checkstat == '') {
-                    
+
                 }
                 $("#stocktable tbody").empty();
                 $.each(data.d, function (i) {
@@ -410,8 +402,8 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-}
-                     else {
+                    }
+                    else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -423,8 +415,9 @@
                                 title: 'swal-big-title',
                                 htmlContainer: 'swal-big-text'
                             }
-                        }); }
-                 }
+                        });
+                    }
+                }
             });
             $("#stocktable").find(".deleteStkItem").bind('click', function () {
                 debugger;
@@ -444,7 +437,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                     return false;
+                    return false;
                 }
                 if (typeof (data) != 'undefined') {
                     var id = $(this).closest("tr").attr('id');
@@ -502,7 +495,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                     $("#" + id).remove();
+                    $("#" + id).remove();
                 },
                 error: function (msg) {
                     alert("Could not deleted.");
@@ -543,7 +536,7 @@
                     }
                 });
 
-                 return false;
+                return false;
             }
             var batcNo = $("#batchnoddl :selected").text();
             if (batcNo == "Please Select") {
@@ -571,7 +564,7 @@
                     }
                 });
 
-                 return false;
+                return false;
             }
             debugger;
             if (itmCode.trim() != "") {
@@ -634,7 +627,7 @@
                                 }
                             });
 
-                             $("#ctl00_MainContent_Select_wareHouseTo").val(0);
+                            $("#ctl00_MainContent_Select_wareHouseTo").val(0);
                             $("#ctl00_MainContent_Select_wareHouseTo").trigger('change');
                             return false;
                         }
@@ -653,7 +646,7 @@
                             }
                         });
 
-                         return false;
+                        return false;
                     }
                 }
             }
@@ -670,8 +663,8 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
- }
-             return false;
+            }
+            return false;
         }
         function AddStockMain() {
             debugger;
@@ -783,7 +776,7 @@
                                     }
                                 });
                                 window.location = "StoreStockTransferView.aspx";
-                               
+
                             }
                         }
                     },
@@ -852,8 +845,9 @@
                         title: 'swal-big-title',
                         htmlContainer: 'swal-big-text'
                     }
-                }); }
-             else if (wareHousefrom == "") Swal.fire({
+                });
+            }
+            else if (wareHousefrom == "") Swal.fire({
                 icon: 'error',
                 title: 'Error!',
                 text: 'Please provide warehouse from',
@@ -865,7 +859,7 @@
                     htmlContainer: 'swal-big-text'
                 }
             });
-             else if (date == "") {
+            else if (date == "") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -877,8 +871,9 @@
                         title: 'swal-big-title',
                         htmlContainer: 'swal-big-text'
                     }
-                }); }
-             else {
+                });
+            }
+            else {
                 return true;
             }
             return false;
@@ -958,7 +953,7 @@
             });
             return vals;
         }
-        
+
         function abcload(anchorTag) {
             debugger;
             var row = $(anchorTag).parents('tr')[0];
