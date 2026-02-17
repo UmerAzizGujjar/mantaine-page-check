@@ -118,6 +118,7 @@ namespace PMS
                     txtEmployeeCode = employee.Emp_No ?? string.Empty,
                     txtEmployee_Name = employee.Emp_Name ?? string.Empty,
                     txtdependent = employee.Dependent ?? string.Empty,
+                    txtPMDC = employee.PMDC ?? string.Empty,
                     txtdoc_qualification = employee.Doc_qualification ?? string.Empty,
                     txtFather_Name = employee.Father_Name ?? string.Empty,
 
@@ -453,6 +454,7 @@ namespace PMS
                 employee.Govt_Hospital = dataa.txtGovt_Hospital;
                 employee.Patient_Type = dataa.ddlPatientType;
                 employee.Dependent = dataa.txtdependent;
+                employee.PMDC = dataa.txtPMDC;
                 employee.Doc_qualification = dataa.txtdoc_qualification;
 
 
@@ -714,6 +716,7 @@ namespace PMS
             public string txtRemarks { get; set; }
             public string ddluser { get; set; }
             public string txtdependent { get; set; }
+            public string txtPMDC { get; set; }
             public string txtdoc_qualification { get; set; }
             public bool isSun { get; set; }
             public bool isMon { get; set; }

@@ -181,6 +181,7 @@
                   $("#txtGovt_Hospital").val(empData.txtGovt_Hospital);
                   $("#ddluser").val(empData.user);
                   $("#txtdependent").val(empData.dependent);
+                  $("#txtPMDC").val(empData.txtPMDC);
 
                   $("#txtdoc_qualification").val(empData.txtdoc_qualification);
                   $("#txtPanelAmount").val(empData.panelrate);
@@ -359,6 +360,7 @@
               var txtRemarks = $('#txtRemarks').val();
               var ddluser = $('#ddluser').val();
               var txtdependent = $('#txtdependent').val();
+              var txtPMDC = $('#txtPMDC').val();
               var txtdoc_qualification = $('#txtdoc_qualification').val();
               var isSun = $('#sun').prop('checked');
               var isMon = $('#mon').prop('checked');
@@ -480,6 +482,7 @@
                   "txtRemarks": txtRemarks,
                   "ddluser": ddluser,
                   "txtdependent": txtdependent,
+                  "txtPMDC": txtPMDC,
                   "txtdoc_qualification": txtdoc_qualification,
                   "isSun": isSun,
                   "isMon": isMon,
@@ -879,9 +882,14 @@
                 <label id="LblChkBlockCategory" for="ChkBlockCategory">Block Category</label>
             </div>
 
-            <div class="col-lg-8 col-md-4 col-sm-6">
-            </div>
+           
         </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label>PMDC</label>
+            <input type="text" id="txtPMDC" name="txtPMDC" />
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-lg-8 col-md-9 col-sm-6">

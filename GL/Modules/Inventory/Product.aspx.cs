@@ -523,22 +523,34 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                         pkg.Amount = Convert.ToDecimal(SalesRate);
                     }
 
-                    if (batchList != null)
+                    if (batchList != null && batchList.Count > 0)
                     {
-                        var existingBatches = db.INV_Item_RateBatchWises.Where(x => x.Item_Id == Convert.ToInt32(ItemId)).ToList();
+                        int currentItemId = Convert.ToInt32(ItemId);
 
-                        var submittedBatchNums = batchList.Where(b => !string.IsNullOrEmpty(b.ddlBatch))
-                                                          .Select(b => b.ddlBatch)
-                                                          .ToList();
-                        var toDelete = existingBatches.Where(x => !submittedBatchNums.Contains(x.Batch_Num)).ToList();
+                        var cleanBatchList = batchList
+                            .Where(b => !string.IsNullOrEmpty(b.ddlBatch))
+                            .GroupBy(b => b.ddlBatch.Trim())
+                            .Select(g => g.Last())
+                            .ToList();
+
+                        var existingBatches = db.INV_Item_RateBatchWises
+                            .Where(x => x.Item_Id == currentItemId)
+                            .ToList();
+
+                        var submittedBatchNums = cleanBatchList.Select(b => b.ddlBatch).ToList();
+
+                        var toDelete = existingBatches
+                            .Where(x => !submittedBatchNums.Contains(x.Batch_Num))
+                            .ToList();
+
                         db.INV_Item_RateBatchWises.DeleteAllOnSubmit(toDelete);
 
-                        foreach (var bth in batchList)
+                        foreach (var bth in cleanBatchList)
                         {
-                            if (string.IsNullOrEmpty(bth.ddlBatch)) continue;
+                            string batchNum = bth.ddlBatch;
 
-                            var existingBatch = db.INV_Item_RateBatchWises
-                                .FirstOrDefault(x => x.Item_Id == Convert.ToInt32(ItemId) && x.Batch_Num == bth.ddlBatch);
+                            var existingBatch = existingBatches
+                                .FirstOrDefault(x => x.Batch_Num == batchNum);
 
                             if (existingBatch != null)
                             {
@@ -550,8 +562,8 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                             {
                                 INV_Item_RateBatchWise btch = new INV_Item_RateBatchWise
                                 {
-                                    Item_Id = Convert.ToInt32(ItemId),
-                                    Batch_Num = bth.ddlBatch,
+                                    Item_Id = currentItemId,
+                                    Batch_Num = batchNum,
                                     Item_Sale_Rate = bth.txtBatchRate,
                                     Sehat_card_rate_batch = bth.txtSCRate,
                                     Uom_Qty = bth.txtUom_Qty,
@@ -559,6 +571,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                                 db.INV_Item_RateBatchWises.InsertOnSubmit(btch);
                             }
                         }
+                        db.SubmitChanges();
                     }
 
                     if (PatientTypeList != null)

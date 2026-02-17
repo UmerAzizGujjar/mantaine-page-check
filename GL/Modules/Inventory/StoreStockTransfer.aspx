@@ -106,8 +106,8 @@
             debugger;
             var warehouse = $('#ctl00_MainContent_Select_wareHouseFrom').val();
             var transferdate = $('#StockTransferDate').val();
-            if (warehouse == "0") {
 
+            if (warehouse == "0") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -127,6 +127,7 @@
                 $("#Textstock").val('');
                 return false;
             }
+
             if (transferdate == '' || transferdate == null) {
                 Swal.fire({
                     icon: 'error',
@@ -140,30 +141,98 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
+                return false;
             }
+
             debugger;
             var optionsVen = '';
+            var addedBatches = new Set();
+
             PageMethods.getbatchno(itemid, warehouse, transferdate, function (Tests) {
-                debugger
-                var data = JSON.parse(Tests);
-                if (data.Batch_No == "") {
-                    getstockdetailnum();
-                }
-                optionsVen = '<option value="0">Please Select</option>';
                 debugger;
-                $.each(JSON.parse(Tests), function (key, value) {
+                var data = JSON.parse(Tests);
+                optionsVen = '<option value="0">Please Select</option>';
+
+                debugger;
+                $.each(data, function (key, value) {
                     debugger;
                     if (value.Batch_No == "Non-Batch" && value.IsBatch == 0) {
+                        return;
                     }
-                    else {
+                    if (!addedBatches.has(value.Batch_No)) {
                         optionsVen += '<option value="' + value.Batch_No + '" >' + value.Batch_No + '</option>';
+                        addedBatches.add(value.Batch_No);
                     }
                 });
+
                 _gloabal = optionsVen;
                 $('#batchnoddl').html(_gloabal);
             });
+
             loadStock($("#txtItemCode").val());
         }
+        //function fillbatchno(itemid) {
+        //    debugger;
+        //    var warehouse = $('#ctl00_MainContent_Select_wareHouseFrom').val();
+        //    var transferdate = $('#StockTransferDate').val();
+        //    if (warehouse == "0") {
+
+        //        Swal.fire({
+        //            icon: 'error',
+        //            title: 'Error!',
+        //            text: 'Please Select WareHouse From',
+        //            showConfirmButton: false,
+        //            timer: 2000,
+        //            customClass: {
+        //                popup: 'swal-big-popup',
+        //                title: 'swal-big-title',
+        //                htmlContainer: 'swal-big-text'
+        //            }
+        //        });
+        //        $('#txtItemCode').tokenInput('clear');
+        //        $("#batchnoddl").empty();
+        //        $("#txttrnsfer_qty").val('');
+        //        $("#Textquantity").val('');
+        //        $("#Textstock").val('');
+        //        return false;
+        //    }
+        //    if (transferdate == '' || transferdate == null) {
+        //        Swal.fire({
+        //            icon: 'error',
+        //            title: 'Error!',
+        //            text: 'Please Enter Stock Transfer Date',
+        //            showConfirmButton: false,
+        //            timer: 2000,
+        //            customClass: {
+        //                popup: 'swal-big-popup',
+        //                title: 'swal-big-title',
+        //                htmlContainer: 'swal-big-text'
+        //            }
+        //        });
+        //    }
+        //    debugger;
+        //    var optionsVen = '';
+        //    PageMethods.getbatchno(itemid, warehouse, transferdate, function (Tests) {
+        //        debugger
+        //        var data = JSON.parse(Tests);
+        //        if (data.Batch_No == "") {
+        //            getstockdetailnum();
+        //        }
+        //        optionsVen = '<option value="0">Please Select</option>';
+        //        debugger;
+        //        $.each(JSON.parse(Tests), function (key, value) {
+        //            debugger;
+        //            if (value.Batch_No == "Non-Batch" && value.IsBatch == 0) {
+        //            }
+        //            else {
+        //                optionsVen += '<option value="' + value.Batch_No + '" >' + value.Batch_No + '</option>';
+        //            }
+        //        });
+        //        _gloabal = optionsVen;
+        //        $('#batchnoddl').html(_gloabal);
+        //    });
+        //    loadStock($("#txtItemCode").val());
+        //}
 
         function PrintStoreTransfer() {
             debugger;
