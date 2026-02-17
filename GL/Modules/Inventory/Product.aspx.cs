@@ -525,6 +525,14 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
 
                     if (batchList != null)
                     {
+                        var existingBatches = db.INV_Item_RateBatchWises.Where(x => x.Item_Id == Convert.ToInt32(ItemId)).ToList();
+
+                        var submittedBatchNums = batchList.Where(b => !string.IsNullOrEmpty(b.ddlBatch))
+                                                          .Select(b => b.ddlBatch)
+                                                          .ToList();
+                        var toDelete = existingBatches.Where(x => !submittedBatchNums.Contains(x.Batch_Num)).ToList();
+                        db.INV_Item_RateBatchWises.DeleteAllOnSubmit(toDelete);
+
                         foreach (var bth in batchList)
                         {
                             if (string.IsNullOrEmpty(bth.ddlBatch)) continue;
