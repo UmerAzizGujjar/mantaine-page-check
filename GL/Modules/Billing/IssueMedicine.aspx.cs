@@ -910,6 +910,49 @@ namespace PMS
                          }).ToList().Take(200);
             return (new JavaScriptSerializer()).Serialize(panel);
         }
+        [WebMethod]
+        public static string AllPharmaPatients()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            var panel = (from patient in db.Reg_patients
+                         join billing in db.Ar_Billings
+                         on patient.pat_id equals billing.Patient_ID into billingJoin
+                         from bill in billingJoin.DefaultIfEmpty()  // LEFT JOIN
+                         where bill != null  // Only patients who have billing records
+                            && bill.IsPharmacy == true
+                            && bill.Invoice_No != null
+                            && (bill.isCancel == false || bill.isCancel == null)
+                         orderby bill.Bill_ID descending
+                         select new
+                         {
+                             id = patient.pat_id,           // For TokenInput
+                             mr_no_sequence = patient.mr_no_sequence,              // For TokenInput display
+                           
+                         }).ToList();
+
+            return (new JavaScriptSerializer()).Serialize(panel);
+        }
+        [WebMethod]
+        public static List<object> GetInvoiceNoByPatient(int reg_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            var invoicenumber = (
+                from billing in db.Ar_Billings
+                where billing.Patient_ID == reg_id
+                   && billing.IsPharmacy == true
+                   && billing.Invoice_No != null
+                   && (billing.isCancel == false || billing.isCancel == null)
+                orderby billing.Bill_ID descending
+                select new
+                {
+                    bill_id = billing.Bill_ID,
+                    Seq_InvoiceNo = billing.Seq_InvoiceNo
+                }).ToList();
+
+            return invoicenumber.Cast<object>().ToList();  // Return as List<object>
+        }
 
         [WebMethod]
         public static string SaleReturnItems()
@@ -982,6 +1025,7 @@ namespace PMS
             var record = js.Deserialize<SaleReturnMaster>(AllItemDetail);
             Pharmacy_SaleReturn saleReturn = new Pharmacy_SaleReturn();
             saleReturn.Bill_ID = int.Parse(record.BillId);
+            saleReturn.Patient_id = int.Parse(record.Patient_id);
             saleReturn.Seq_InvoiceNo = record.InvNo;
             saleReturn.Return_NO = DBClass.GetNewNumber("Return_NO", "Pharmacy_SaleReturns", "").ToString();
             saleReturn.Disc_Percentage = record.DisPer;
@@ -1028,6 +1072,7 @@ namespace PMS
         public class SaleReturnMaster
         {
             public string BillId { get; set; }
+            public string Patient_id { get; set; }
             public string InvNo { get; set; }
             public string warehouse { get; set; }
             public decimal TotalPayable { get; set; }
