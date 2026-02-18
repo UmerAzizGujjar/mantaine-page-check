@@ -366,31 +366,37 @@
                 debugger;
                 var datas = JSON.parse(resp);
                 $.each(datas, function (key, data) {
-
-                    var Batch_Num = data.Batch_Num || [];
-                    var Item_Sale_Rate = data.Item_Sale_Rate || [];
-                    var Sehat_card_rate_batch = data.Sehat_card_rate_batch || [];
-                    var Uom_Qty = data.Uom_Qty || [];
+                    var Batch_Num = data.Batch_Num || '';
+                    var Item_Sale_Rate = data.Item_Sale_Rate || '0';
+                    var Sehat_card_rate_batch = data.Sehat_card_rate_batch || '0';
+                    var Uom_Qty = data.Uom_Qty || '0';
                     var rows = '';
                     var rowlength = BatchTable.rows.length;
+
                     rows = '<tr>' +
                         '<td>' +
-                        '<input type="hidden" name="ddlmed" id="ddlmed' + rowlength + '" value="' + Batch_Num + '" />' + Batch_Num +
+                        '<input type="hidden" name="ddlBatch_' + rowlength + '" value="' + Batch_Num + '" />' +
+                        Batch_Num +
                         '</td>' +
                         '<td>' +
-                        '<input type="hidden" name="txtBatchRate" id="txtBatchRate' + rowlength + '" value="' + Item_Sale_Rate + '" />' + Item_Sale_Rate +
+                        '<input type="hidden" name="txtBatchRate_' + rowlength + '" value="' + Item_Sale_Rate + '" />' +
+                        Item_Sale_Rate +
                         '</td>' +
                         '<td>' +
-                        '<input type="hidden" name="txtsehatcardrate" id="txtsehatcardrate' + rowlength + '" value="' + Sehat_card_rate_batch + '" />' + Sehat_card_rate_batch +
+                        '<input type="hidden" name="txtsehatcardrate_' + rowlength + '" value="' + Sehat_card_rate_batch + '" />' +
+                        Sehat_card_rate_batch +
                         '</td>' +
                         '<td>' +
-                        '<input type="hidden" name="txtBatchRate" id="txtUom_Qty' + rowlength + '" value="' + Uom_Qty + '" />' + Uom_Qty +
+                        '<input type="hidden" name="txtUom_Qty_' + rowlength + '" value="' + Uom_Qty + '" />' +
+                        Uom_Qty +
                         '</td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
+                        '<td>' +
+                        '<a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">' +
+                        '<i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;"></i>' +
+                        '</a>' +
                         '</td>' +
-                        '</tr>'
+                        '</tr>';
                     $('#BatchTable_body').append(rows);
-
                 });
             });
         }
@@ -419,7 +425,7 @@
 
                 $.each(parsedData.Stock_Adjustment_Details, function (key, value) {
                     options += '<option value="' + value.BatchNum +
-                        '" data-uomqty="0">' +   // no uomqty available here
+                        '" data-uomqty="0">' +   
                         value.BatchNum + '</option>';
                 });
                 debugger;
@@ -432,36 +438,34 @@
         }
         function AppendBatch() {
             debugger;
-
             var selectedOption = $('#ddlBatchNum option:selected');
             var selectedValue = selectedOption.val();
             var selectedText = selectedOption.text();
             var uomqty = selectedOption.data('uomqty') || 0;
 
             if (selectedValue && selectedValue !== "0") {
-                var rowlength = BatchTable.rows.length;
+                var rowlength = document.getElementById('BatchTable_body').rows.length;
 
                 var rows = '<tr>' +
                     '<td>' +
-                    '<input type="hidden" name="ddlBatch" id="ddlBatch' + rowlength + '" value="' + selectedText + '" />' +
+                    '<input type="hidden" name="ddlBatch_' + rowlength + '" value="' + selectedText + '" />' +
                     selectedText +
                     '</td>' +
                     '<td>' +
-                    '<input type="text" name="txtBatchRate" id="txtBatchRate' + rowlength + '" value="0" />' +
+                    '<input type="text" name="txtBatchRate_' + rowlength + '" value="0" />' +
                     '</td>' +
                     '<td>' +
-                    '<input type="text" name="txtsehatcardrate" id="txtsehatcardrate' + rowlength + '" value="0" />' +
+                    '<input type="text" name="txtsehatcardrate_' + rowlength + '" value="0" />' +
                     '</td>' +
                     '<td>' +
-                    '<input type="text" name="txtUom_Qty" id="txtUom_Qty' + rowlength + '" value="' + uomqty + '" />' +
+                    '<input type="text" name="txtUom_Qty_' + rowlength + '" value="' + uomqty + '" />' +
                     '</td>' +
                     '<td>' +
                     '<a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">' +
-                    '<i class="glyphicon glyphicon-trash" style="width:15px;font-size:13px;color:#f30a0a;"></i>' +
+                    '<i class="glyphicon glyphicon-trash"></i>' +
                     '</a>' +
                     '</td>' +
                     '</tr>';
-
                 $('#BatchTable_body').append(rows);
             }
         }
@@ -567,12 +571,31 @@
                 else {
                     Id = id
                 }
-                $('#BatchTable_body tr').each(function (key, value) {
-                    var txtBatchRate = $(this).find('input[name="txtBatchRate"]').val();
-                    var txtSCRate = $(this).find('input[name="txtsehatcardrate"]').val();
-                    var txtUom_Qty = $(this).find('input[name="txtUom_Qty"]').val();
-                    var ddlBatch = $(this).find('input[name="ddlBatch"]').val();
-                    batchList.push({ txtBatchRate: txtBatchRate, txtSCRate: txtSCRate, ddlBatch: ddlBatch, txtUom_Qty: txtUom_Qty });
+
+                $('#BatchTable_body tr').each(function (index) {
+                    var $row = $(this);
+                    var ddlBatch = $row.find('input[type="hidden"]').first().val();
+                    var txtBatchRate = $row.find('input[type="text"]').eq(0).val();
+                    var txtSCRate = $row.find('input[type="text"]').eq(1).val();
+                    var txtUom_Qty = $row.find('input[type="text"]').eq(2).val();
+                    if (!txtBatchRate) {
+                        txtBatchRate = $row.find('input[type="hidden"]').eq(1).val();
+                    }
+                    if (!txtSCRate) {
+                        txtSCRate = $row.find('input[type="hidden"]').eq(2).val();
+                    }
+                    if (!txtUom_Qty) {
+                        txtUom_Qty = $row.find('input[type="hidden"]').eq(3).val();
+                    }
+
+                    if (ddlBatch && ddlBatch !== '') {
+                        batchList.push({
+                            txtBatchRate: txtBatchRate || '0',
+                            txtSCRate: txtSCRate || '0',
+                            ddlBatch: ddlBatch,
+                            txtUom_Qty: txtUom_Qty || '0'
+                        });
+                    }
                 });
                 $('#tbodypatientRateList tr').each(function (key, value) {
                     var pat_type = $(this).find('input[name="patient_type_value"]').val();

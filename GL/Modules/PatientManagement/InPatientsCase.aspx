@@ -5207,6 +5207,8 @@
         var TimePicker = '';
         $(document).ready(function () {
 
+
+
             $('#tblDischargeMedication').show();
             $('#btnsaveprint').hide();
 
@@ -5529,6 +5531,7 @@
                 //LoadMedicines();
                 LoadInfusion();
                 LoadDischargeMedicines();
+
             }
 
             FillRotations();
@@ -5543,13 +5546,13 @@
             FillDosageQty();
             FillOtherInstruction();
             if (chk != "") {
-
                 if (localStorage.DoctorNoteTab == "true") {
-
                     $("#tabs").tabs("option", "active", 7);
                     localStorage.DoctorNoteTab = "False";
                 }
-
+                else {
+                    $("#tabs").tabs("option", "active", 0);
+                }
             }
             else {
                 $("#tabs").tabs("option", "active", 0);
@@ -7352,7 +7355,7 @@
                                     <table class="table" id="tblVitalParametersHistory">
                                         <thead>
                                             <tr>
-                                                <td colspan="14">
+                                                <td colspan="20">
                                                     <div id="tblHistoryHeader">
                                                         <h2 class="color">Previous History</h2>
                                                     </div>

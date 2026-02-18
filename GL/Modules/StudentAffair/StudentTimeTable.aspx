@@ -222,7 +222,7 @@
                 '<td style = "width: 78px !important;"><input style="display:none;" type="text" name="clas" id="clas' + rowlength + '"  value="' + ClassVal + '" />' + ClassName + '</td>' +
                 '<td><input type="text"" style="width: 110px!important;font-size: 12px;height: 23px;" name="Date" id="txt_Date' + parseInt(parseInt(rowlength)) + '" value=""  /></td>' +
 
-                '<td style = "width: 220px !important; ">From:<input type="time" name="FTime" value=" " id="FTime' + rowlength + '"  style="width: 94px !important;font-size: 12px;height: 23px;"   /> To: <input type="time" name="TTime"  value="" id="Time' + rowlength + '" style="width: 94px!important;font-size: 12px;height: 23px;" /></td>' +
+                '<td style = "width: 220px !important; ">From:<input type="time" name="FTime" value=" " id="FTime' + rowlength + '"  style="width: 94px !important;font-size: 12px;height: 23px;"   /><br/> To: <input type="time" name="TTime"  value="" id="Time' + rowlength + '" style="width: 94px!important;font-size: 12px;height: 23px;margin-left:15px !important" /></td>' +
 
                 '<td ><select class="subject-dropdown" style ="font-size:12px;height:25px;" id="ddlstdsubj' + rowlength + '" name="ddlGetStuSub"> ' + GetStudentSubject + ' </select > ' +
                 '</td>' +
@@ -713,8 +713,8 @@
             <td>${md.classname}</td>
             <td><input type="text" style="width: 110px !important;font-size: 12px;height: 23px;" name="Date" id="txt_Date${da}" value="${dt} -${ab}" /></td>
             <td>
-                From:<input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="FTime" id="FTime${index}" value="${time}" />
-                To: <input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="TTime" id="Time${index}" value="${ttime}" />
+                From:<input type="time" style="width: 95px!important;font-size: 12px;height: 23px;" name="FTime" id="FTime${index}" value="${time}" /><br/>
+                To: <input type="time" style="width: 95px!important;font-size: 12px;height: 23px;margin-left:15px !important;" name="TTime" id="Time${index}" value="${ttime}" />
             </td>
             <td><select class="subject-dropdown" style="font-size:12px;height:25px;" id="ddlstdsubj${index}" name="ddlGetStuSub">${GetStudentSubject}</select></td>
             <td><select  style="font-size:12px;height:25px;" id="ddlitmeCode${index}" name="ddlSubject">${GlobSubj}</select></td>
@@ -1175,7 +1175,7 @@
                     <tr class="rowtr">
                        <th>Class</th>
                         <th style="width:7%">Date</th>
-                        <th style="width:16%">Time</th>
+                        <th style="width:11%">Time</th>
                         <th >Subjects</th>
                         <th >Sub Subjects</th>
                         <th >Batch</th>
