@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬NoorHospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -6659,45 +6659,6 @@
       <Column Name="User_Id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Reg_patient" Member="Reg_patients">
-    <Type Name="Reg_patient">
-      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Father_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Gender" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Mobile1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="NIC" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="Permanent_Address" Type="System.String" DbType="NVarChar(350)" CanBeNull="true" />
-      <Column Name="Created_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Created_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="iscancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="cancel_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="cancel_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Martial_Status" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="DOB" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="filter_clinic" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Reation_prefix" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Relation_prefix" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="walkin" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="House_No" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="stno_mno" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="city" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="area" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="val_city" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="val_area" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Country" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Province" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Blood_Group" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="State" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="emergency_walk_in" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Voucher_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Card_fee" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Association Name="Reg_patient_OPD_Refund" Member="OPD_Refunds" ThisKey="pat_id" OtherKey="pat_id" Type="OPD_Refund" />
-    </Type>
-  </Table>
   <Table Name="dbo.aspnet_Users" Member="aspnet_Users">
     <Type Name="aspnet_User">
       <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
@@ -7156,7 +7117,6 @@
       <Column Name="Doctor_Refund" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Reg_PatId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Voucher_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Reg_patient_OPD_Refund" Member="Reg_patient" ThisKey="pat_id" OtherKey="pat_id" Type="Reg_patient" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Goods_Return_Notes" Member="Goods_Return_Notes">
@@ -7278,6 +7238,45 @@
       <Column Name="UserID" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
       <Column Name="PageName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="ColumnVisibility" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Reg_patient" Member="Reg_patients">
+    <Type Name="Reg_patient">
+      <Column Name="pat_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Patient_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Father_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Mobile1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NIC" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Permanent_Address" Type="System.String" DbType="NVarChar(350)" CanBeNull="true" />
+      <Column Name="Created_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="iscancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="cancel_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="cancel_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Martial_Status" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DOB" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="filter_clinic" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Reation_prefix" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Relation_prefix" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="walkin" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="House_No" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="stno_mno" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="city" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="area" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="val_city" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="val_area" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Province" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Blood_Group" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="State" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="emergency_walk_in" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Voucher_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Card_fee" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="QRCodePath" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

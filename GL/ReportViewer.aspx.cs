@@ -2875,7 +2875,7 @@ namespace PMS
                     rptFileName = "TransactionalDetails/AllDoctorShareDetail_Summary.rpt";
 
                     reportTitle =
-                        "Hospital Admission Detail from " +
+                        "Doctor Share Report from " +
                         Request.QueryString["StartDate"] + " " +
                         Request.QueryString["StartTime"] + " to " +
                         Request.QueryString["EndDate"] + " " +
@@ -4025,6 +4025,14 @@ namespace PMS
             }
             else if (reportName == "BillingBaseReport")
             {
+                //                string qrPath = DBClass.getField($"SELECT QR_Code_Path FROM reg_patient WHERE pat_id = {Request.QueryString["Patient_ID"]}");
+                var billId = Convert.ToInt32(Request.QueryString["Bill_ID"]);
+                //var bill_ID = billId;
+                // Get Patient_ID from ar_billings
+              //  string patientId = DBClass.getField($@"SELECT patient_id FROM ar_billings WHERE bill_id = {billId}");
+
+                // Get QR Code Path using Patient_ID
+           //     string qrPath = DBClass.getField($@"SELECT QR_Code_Path FROM reg_patient WHERE pat_id = {patientId}");
                 var user_id = AppConfig.UserID;
                 var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
 
@@ -4032,11 +4040,12 @@ namespace PMS
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
                 rd.Load(reportPath);
-                rd.SetParameterValue("@Bill_Id", Convert.ToInt32(Request.QueryString["Bill_ID"]));
+                rd.SetParameterValue("@Bill_Id", billId);
                 rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("UserName", userName);
+        //        rd.SetParameterValue("QrCode", qrPath);
             }
             else if (reportName == "ReceiptbasePrint")
             {
