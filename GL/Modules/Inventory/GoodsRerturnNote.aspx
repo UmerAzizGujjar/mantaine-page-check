@@ -408,57 +408,57 @@
             </div>
 
     </form>
-    <div class="row" style="margin-top:10px !important;">
-                    <table class="table table-hover table-striped table-bordered" id="tblGINItems">
-                        <thead>
-                            <tr>
-                                <th>GIN No </th>
-                                <th style="display:none;">Item ID</th>
-                                <th>GIN App Date</th>
-                                <th>Department</th>
-                                <th>ItemCode</th>
-                                <th>Item Description</th>
-                                <th>UOM</th>
-                                <th>Batch#</th>
-                                <th>Store Stock</th>
-                                <th>Issue Qty</th>
-                                <th>Return Qty</th>
-                                <th>Blnc Qty</th>
-                                <th>Remarks</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+    <div class="row" style="margin-top: 10px !important;">
+        <table class="table table-hover table-striped table-bordered" id="tblGINItems">
+            <thead>
+                <tr>
+                    <th>GIN No </th>
+                    <th style="display: none;">Item ID</th>
+                    <th>GIN App Date</th>
+                    <th>Department</th>
+                    <th>ItemCode</th>
+                    <th>Item Description</th>
+                    <th>UOM</th>
+                    <th>Batch#</th>
+                    <th>Store Stock</th>
+                    <th>Issue Qty</th>
+                    <th>Return Qty</th>
+                    <th>Blnc Qty</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
 
-        <div class="row">
-         <div class="col-lg-8">
+    <div class="row">
+        <div class="col-lg-8">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-primry" id="btnSave" value="Save" onclick="SaveRecord()" />
-            &nbsp;
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" name="" value="Print" class="btn btn-primry" onclick="btn_Print()" />
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsRerturnNoteView.aspx'" />
-            &nbsp;
-        </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'GoodsRerturnNote.aspx'" />
-            &nbsp;
-        </div>
+                    <input type="button" class="btn btn-primry" id="btnSave" value="Save" onclick="SaveRecord()" />
+                    &nbsp;
+                </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
-    <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
-</div>
-        <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden">
-            <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-            &nbsp;
-        </div>
-        
+                    <input type="button" name="" value="Print" class="btn btn-primry" onclick="btn_Print()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsRerturnNoteView.aspx'" />
+                    &nbsp;
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'GoodsRerturnNote.aspx'" />
+                    &nbsp;
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" class="btn btn-primry" value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden">
+                    <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                    &nbsp;
+                </div>
+
             </div>
         </div>
     </div>
