@@ -33,6 +33,9 @@
             loadmed();
             LoadWarehouses();
             LoadWarehousesforSaleReturn();
+            
+             LoadPatientNo();
+
         });
         window.addEventListener('keydown', function (event) {
             if (event.altKey && event.code === 'KeyS') {
@@ -409,10 +412,12 @@
                     },
                 });
             }
+
         }
         function RefreshSaleReturnModal() {
             debugger;
             $('#ddlInvoiceNumber').prop('disabled', false);
+            $('#ddlpat_no').prop('disabled', false);
             $('#ddlSaleReturnItems').prop('disabled', false);
             $('#txtSaleReturnTotalPayable').val('');
             $('#txtSaleReturnLineDisc').val('');
@@ -881,6 +886,7 @@
                 if (userC == userCode && userP == UserPass) {
                     if (validateSaleReturn()) {
                         var BillId = $('#ddlInvoiceNumber').val() || 0;
+                        var Patient_id = $('#ddlpat_no').val() || 0;
                         var warehouse = $("#ddl_Warehouse").val();
                         var InvNo = $('#ddlInvoiceNumber option:selected').text() || '';
                         var TotalPayable = $('#txtSaleReturnTotalPayable').val() || 0;
@@ -945,6 +951,7 @@
                         $('#btnSaveSaleReturn').attr('disabled', true);
                         var AllItemDetail = {
                             'BillId': BillId,
+                            'Patient_id': Patient_id,
                             'InvNo': InvNo,
                             'warehouse': warehouse,
                             'TotalPayable': TotalPayable,
@@ -2211,7 +2218,7 @@
 
                     }
                     else {
-                        console.log("❌ No active OPD visit for Pat_id:", pat_id);
+                        console.log("? No active OPD visit for Pat_id:", pat_id);
 
 
                     }
@@ -2819,6 +2826,67 @@
 
             $("#ddlWarehouse").prop('disabled', true);
         }
+
+
+        
+         function LoadPatientNo() 
+        {
+              var optionpat = '';
+              PageMethods.AllPharmaPatients(function (Tests) {
+                  optionpat = '<option value="0">Please Select</option>';
+                  $.each(JSON.parse(Tests), function (key, value) {
+                      optionpat += '<option value="' + value.id + '" >' + value.mr_no_sequence + '</option>';
+                  });
+                  $('#ddlpat_no').html(optionpat);
+                  $('#ddlpat_no').select2();
+              });
+         }
+         function getInvoiceNo_PatWise() 
+         {
+             
+            var reg_id = $('#ddlpat_no').val();
+
+            if (reg_id == "" || reg_id == null) {
+              //  alert("Please select a patient");
+               // return;
+            }
+
+                $.ajax({
+                    type: "POST",
+                    url: "IssueMedicine.aspx/GetInvoiceNoByPatient",
+                    data: JSON.stringify({ reg_id: parseInt(reg_id) }),  // Ensure it's an integer
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log("Response:", response.d);  // Check this in console
+
+                        // Clear existing options
+                        $('#ddlInvoiceNumber').empty();
+                        $('#ddlInvoiceNumber').append('<option value="">--Select Invoice--</option>');
+
+                        // Populate invoice dropdown
+                        if (response.d && response.d.length > 0) {
+                            $.each(response.d, function (index, item) {
+                                console.log("Item:", item);  // Debug: check property names
+                                $('#ddlInvoiceNumber').append(
+                                    '<option value="' + item.bill_id + '">' + 
+                                    item.Seq_InvoiceNo + '</option>'
+                                );
+                            });
+                        } else {
+                            $('#ddlInvoiceNumber').append('<option value="">No Invoices Found</option>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                       // console.error("AJAX Error:", error);
+                        //console.error("Response Text:", xhr.responseText);
+                        //alert("Error loading invoices: " + error);
+                    }
+                });
+            }
+
+
+
     </script>
 </asp:Content>
 
@@ -2846,7 +2914,7 @@
                     <input type="hidden" id="hdPatientID" />
                     <input type="hidden" id="hdndiscountType" />
                     <input type="text" id="txtMRNo" tabindex="1" class="form-control" />
-                    <input type="text" id="txtTransType" style="display:none" tabindex="1" class="form-control" />
+                    <input type="text" id="txtTransType" style="display: none" tabindex="1" class="form-control" />
                 </div>
                 <div class="col-sm-12 col-md-4 col-lg-3">
                     <label id="LblCustomerName">Walk-in Customer:</label>
@@ -2865,33 +2933,33 @@
                     </select>
                 </div>
             </div>
-                      <div class="row mb-3">
-                          <div class="col-sm-12 col-md-4 col-lg-2">
-                              <label>Patient NO</label>
-                              <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
-                                  <option></option>
-                              </select>
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-4 col-lg-2">
+                    <label>Patient NO</label>
+                    <select class="form-control depName" tabindex="4" id="ddlPatient_No" onchange="getitem_code();">
+                        <option></option>
+                    </select>
 
-                          </div>
-                          <div class="col-sm-12 col-md-4 col-lg-1">
-     <label>   </label>
-    <input type="button" class="btn-primry" onclick="Print_Prescription()" value="Print"/>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-1">
+                    <label></label>
+                    <input type="button" class="btn-primry" onclick="Print_Prescription()" value="Print" />
 
-</div>
-              <div class="col-sm-12 col-md-4 col-lg-3">
-                  <label id="LblPatientType">Patient Type</label>
-                  <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
-              </div>
-              <div class="col-sm-12 col-md-4 col-lg-3">
-                  <label id="LblWard">Ward Name</label>
-                  <input type="text" id="Ward_Name" tabindex="2" autocomplete="off" class="form-control" />
-              </div>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-3">
+                    <label id="LblPatientType">Patient Type</label>
+                    <input type="text" id="txtPatientType" tabindex="2" autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-3">
+                    <label id="LblWard">Ward Name</label>
+                    <input type="text" id="Ward_Name" tabindex="2" autocomplete="off" class="form-control" />
+                </div>
 
-              <div class="col-sm-6 col-md-4 col-lg-3">
-                  <label id="lblBed">Bed No:</label>
-            <input type="text" id="BedName" tabindex="2" autocomplete="off" class="form-control" />
-              </div>
-          </div>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <label id="lblBed">Bed No:</label>
+                    <input type="text" id="BedName" tabindex="2" autocomplete="off" class="form-control" />
+                </div>
+            </div>
 
             <!-- OPD Prescription & Batch -->
             <div class="row mb-3">
@@ -2902,7 +2970,7 @@
                         <option></option>
                     </select>
                 </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="col-lg-2 col-md-4 col-sm-6">
                     <label>WareHouse</label>
                     <select id="ddlWarehouse" class="form-select" onchange="DisableWareHouse()">
                         <option value="0">Please Select</option>
@@ -2910,16 +2978,16 @@
                     </select>
                 </div>
 
-                                <div class="col-lg-2 col-md-4 col-sm-6" >
+                <div class="col-lg-2 col-md-4 col-sm-6">
                     <label class="batchdiv">Batch No:</label>
                     <select id="batchno" class="form-control batchdiv" tabindex="7" onchange="AddMedicineDetail()"></select>
                 </div>
-               
+
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%;">
                     <label id="lblbatch">Batch</label>
                 </div>
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%;">
-                    <input  type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
+                    <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
                 </div>
                 <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-top: 2%;">
                     <label class="me-3">Print</label>
@@ -2964,14 +3032,14 @@
                     <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
-                     <input type="button" class="btn-primry" value="Queue" id ="Queue" onclick="openQueue()" />
+                    <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" />
                 </div>
             </div>
 
         </div>
 
         <!-- Right Section -->
-        <div class="col-lg-3 col-md-12 d-flex flex-column" style="border: 1px solid; border-radius: 10px;padding: 9px">
+        <div class="col-lg-3 col-md-12 d-flex flex-column" style="border: 1px solid; border-radius: 10px; padding: 9px">
             <div id="dvSummary" class="border p-3 rounded h-100">
                 <!-- Total Payable -->
                 <div class="row mb-2 align-items-center left-right-margin">
@@ -2989,11 +3057,11 @@
                     <div class="col-lg-6">
                         <label>Disc %</label>
 
-                        <input type="text" tabindex="18"  id="txtDisPer" class="form-control me-2" onkeyup="CalculateSummariesMasterDiscount(false),sumdiscount()" />
+                        <input type="text" tabindex="18" id="txtDisPer" class="form-control me-2" onkeyup="CalculateSummariesMasterDiscount(false),sumdiscount()" />
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <label>Disc (Alt+D)</label>
-                        <input type="text" id="txtDisAmt" tabindex="19"  class="form-control ms-2" onkeyup="CalculateSummariesMasterDiscount(true),sumdiscount()" />
+                        <input type="text" id="txtDisAmt" tabindex="19" class="form-control ms-2" onkeyup="CalculateSummariesMasterDiscount(true),sumdiscount()" />
 
                     </div>
 
@@ -3001,7 +3069,7 @@
                 <div class="row mb-2 align-items-center left-right-margin">
                     <div class="col-lg-6">
                         <label>Total Discount</label>
-                        <input type="text" id="txttotalDisc" tabindex="20" class="form-control text-end" readonly="readonly"  />
+                        <input type="text" id="txttotalDisc" tabindex="20" class="form-control text-end" readonly="readonly" />
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <label>Adjustment (Alt+A)</label>
@@ -3010,10 +3078,10 @@
 
                 </div>
                 <!-- Amount Received -->
-                <div class="row mb-2 align-items-center  left-right-margin" >
-                     <div class="col-lg-6">
+                <div class="row mb-2 align-items-center  left-right-margin">
+                    <div class="col-lg-6">
                         <label>Amount Received</label>
-                        <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()"  />
+                        <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()" />
                     </div>
                     <div class="col-lg-6 d-flex align-items-center" id="divBalance">
                         <label class="ms-3">Balance</label>
@@ -3039,7 +3107,7 @@
                     <th style="width: 60px; text-align: left;">Dis Amount </th>
                     <th style="width: 60px; text-align: left;">Net Amount </th>
                     <th style="width: 60px; text-align: left;">BatchNo</th>
-                     <th style="width: 70px; text-align: left;">Expiry Date </th>
+                    <th style="width: 70px; text-align: left;">Expiry Date </th>
                     <th style="width: 53px; text-align: left;">Action </th>
                 </tr>
             </thead>
@@ -3079,7 +3147,7 @@
                 <div class="modal-body">
                     <div id="QueueList">
                         <div class="row" style="margin-bottom: 15px">
-                       
+
                             <div class="col-lg-2 text-end">
                                 <a onclick="fillPendingPatientsList()">
                                     <i class="fa fa-refresh fa-2x"></i>
@@ -3090,7 +3158,7 @@
 
 
                         <div class="table-responsive previewTable">
-                            <table class="table table-bordered table-custom" id="tblPendingPatients" style="overflow:auto;">
+                            <table class="table table-bordered table-custom" id="tblPendingPatients" style="overflow: auto;">
                                 <thead id="ihead">
                                     <tr>
                                         <th>MR No</th>
@@ -3120,7 +3188,8 @@
     <%--Patient Que Ends--%>
     <!-- Modal Sale Return -->
     <div id="SaleReturnModal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <!-- Updated: Changed to modal-xl and forced width to 95% -->
+        <div class="modal-dialog modal-xl" role="document" style="width: 95% !important; max-width: 65% !important;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title">Sale Return</h1>
@@ -3130,7 +3199,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
-                      
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <label>Mr No</label>
+                            <select id="ddlpat_no" onchange="getInvoiceNo_PatWise();"></select>
+
+                        </div>
                         <div class="form-group col-lg-2 col-md-2 col-sm-3">
                             <label for="ddlInvoiceNumber">Invoice #</label>
                             <select id="ddlInvoiceNumber" style="width: 180px !important;" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
@@ -3140,58 +3213,60 @@
                             <label for="ddlSaleReturnItems">Items</label>
                             <select id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" style="width: 380px !important;" class="form-control select2"></select>
                         </div>
-                          <div class="col-lg-2 col-md-4 col-sm-6">
-                              <label>WareHouse</label>
-                              <select id="ddl_Warehouse" class="form-select" onchange="DisableWareHouse()">
-                                  <option value="0">Please Select</option>
-                                  <!-- other options -->
-                              </select>
-                          </div>
-                        <div class="form-group col-lg-1 col-md-2 col-sm-0"></div>
-                        <div class="form-group col-lg-5 col-md-3 col-sm-6">
-                                <table style="width: auto !important">
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Total Payable:</td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnTotalPayable" style="width: 211px!important; height: 25px; text-align: right; font-size: 22px; color: #cd1818 !important;" readonly="readonly" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Total Line Disc :</td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnLineDisc" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Disc :  </td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnDisPer" onkeyup="CalCulateReturnDisc()" readonly="readonly" style="width: 73px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
-                                            &nbsp;%
-                                            <input type="text" id="txtSaleReturnDisAmt" readonly="readonly" style="width: 116px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Adjustment :</td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnFlatDisc" onkeyup="CalculateSaleReturnAdj()" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" autocomplete="off" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size: 13px; font-weight: bold">Total:  </td>
-                                        <td>
-                                            <input type="text" id="txtSaleReturnTotal" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
-                                        </td>
-                                    </tr>
-                                </table>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <label>WareHouse</label>
+                            <select id="ddl_Warehouse" class="form-select" onchange="DisableWareHouse()">
+                                <option value="0">Please Select</option>
+                                <!-- other options -->
+                            </select>
+                        </div>
+
+                        <%--<div class="form-group col-lg-1 col-md-2 col-sm-0"></div>--%>
+
+                        <div class="form-group col-lg-4 col-md-3 col-sm-6">
+                            <table style="width: auto !important">
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Total Payable:</td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnTotalPayable" style="width: 211px!important; height: 25px; text-align: right; font-size: 22px; color: #cd1818 !important;" readonly="readonly" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Total Line Disc :</td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnLineDisc" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Disc :  </td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnDisPer" onkeyup="CalCulateReturnDisc()" readonly="readonly" style="width: 73px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
+                                        &nbsp;%
+                                        <input type="text" id="txtSaleReturnDisAmt" readonly="readonly" style="width: 116px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Adjustment :</td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnFlatDisc" onkeyup="CalculateSaleReturnAdj()" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" autocomplete="off" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px; font-weight: bold">Total:  </td>
+                                    <td>
+                                        <input type="text" id="txtSaleReturnTotal" style="width: 211px !important; height: 25px; text-align: right; font-size: 22px; margin-top: -3px;" readonly="readonly" />
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                     <table id="saleReturnTable" class="table table-bordered table-responsive-lg table-responsive-md">
                         <thead>
                             <tr>
                                 <th style="width: 5%;">Sr.</th>
-                                <th style="display: none;width: 0%">Billing Detail ID</th>
+                                <th style="display: none; width: 0%">Billing Detail ID</th>
                                 <th style="width: 25%;">Description</th>
-                                <th style="display: none;width: 0%">Check Qty</th>
+                                <th style="display: none; width: 0%">Check Qty</th>
                                 <th style="width: 10%;">Qty</th>
                                 <th style="width: 10%;">Stock</th>
                                 <th style="width: 7%;">Rate</th>
@@ -3208,8 +3283,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()">Save & Print</button>
-                     <%--<input type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()" value="Save & Print" style="width: 110px;" />--%>
-                     <button type="button" class="btn btn-primry" onclick="RefreshSaleReturnModal()">Refresh</button>
+                    <%--<input type="button" class="btn btn-primry" id="SSearchReturnPop" onclick="SearchReturnPop()" value="Save & Print" style="width: 110px;" />--%>
+                    <button type="button" class="btn btn-primry" onclick="RefreshSaleReturnModal()">Refresh</button>
                     <button type="button" class="btn btn-primry" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -3228,7 +3303,7 @@
                         <input type="password" id="txtReturnpass" placeholder="Password" style="margin-left: 0;" autocomplete="off" />
                     </div>
                     <div class="modal-footer">
-                        
+
                         <input type="button" class="btn btn-primry" id="btnSaveSaleReturn" onclick="SaveSaleReturn()" value="Save" style="width: 30% !important;" />
                         <input type="button" class="btn-gray" id="CloseSearchReturnModel" value="Close" data-dismiss="modal" style="width: 30% !important;" />
                     </div>

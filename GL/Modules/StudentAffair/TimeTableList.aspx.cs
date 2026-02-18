@@ -26,16 +26,10 @@ namespace PMS
                                     Classname = db.GetDataValueName("Student Class", stt.Class),
                                     ProgramName = db.GetDataValueName("Admission Category", stt.Program),
                                     WeekName = db.GetDataValueName("Week", stt.Weeks),
-                                    FirstDate = db.Student_Time_Table_Details
-                                                 .Where(d => d.St_id == stt.St_id)
-                                                 .OrderBy(d => d.Std_Id)
-                                                 .Select(d => d.Date)
-                                                 .FirstOrDefault(),
-                                    LastDate = db.Student_Time_Table_Details
-                                                 .Where(d => d.St_id == stt.St_id)
-                                                 .OrderByDescending(d => d.Std_Id)
-                                                 .Select(d => d.Date)
-                                                 .FirstOrDefault()
+                                    Block = db.GetDataValueName("Academic Block", stt.Block),
+                                    Module = db.GetDataValueName("Academic Module", stt.Module),
+                                    FirstDate = db.Student_Time_Table_Details.Where(d => d.St_id == stt.St_id).OrderBy(d => d.Std_Id).Select(d => d.Date).FirstOrDefault(),
+                                    LastDate = db.Student_Time_Table_Details.Where(d => d.St_id == stt.St_id).OrderByDescending(d => d.Std_Id).Select(d => d.Date).FirstOrDefault()
                                 };
 
                     // 🔹 Apply search (case-insensitive)
@@ -69,6 +63,11 @@ namespace PMS
                             query = sortColumnDirection == "asc"
                                 ? query.OrderBy(x => x.WeekName)
                                 : query.OrderByDescending(x => x.WeekName);
+                            break;
+                        case "DateRange":
+                            query = sortColumnDirection == "asc"
+                                ? query.OrderBy(x => x.FirstDate)
+                                : query.OrderByDescending(x => x.FirstDate);
                             break;
                         default:
                             query = query.OrderByDescending(x => x.St_id);
