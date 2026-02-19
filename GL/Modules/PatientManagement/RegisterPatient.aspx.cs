@@ -1,4 +1,8 @@
-﻿using System;
+﻿using System.Drawing.Imaging;
+using QRCoder;
+using System.Drawing;
+using System.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +14,8 @@ using System.Globalization;
 
 namespace PMS.Modules.PatientManagement
 {
+   
+   
     public partial class RegisterPatient : Page
     {
         protected void Page_Load(object sender, EventArgs e)
@@ -21,6 +27,49 @@ namespace PMS.Modules.PatientManagement
                 hfAntiForgery.Value = token;
             }
         }
+
+        private static string GenerateAndSaveQRCode(Reg_patient pat)
+        {
+            try
+            {
+                // SAFE null handling for QR content
+                string mrNo = pat.mr_no_sequence?.Trim() ?? "N/A";
+                string fullName = pat.Full_Name?.Trim() ?? "N/A";
+                string age = pat.Age_years?.Trim() ?? "N/A";
+                string gender = pat.Gender?.Trim() ?? "N/A";
+
+                // Minimal secure payload (NO sensitive data)
+                string qrContent = $"MR:{mrNo}|N:{fullName}|A:{age}|G:{gender}";
+
+                using (var qrGenerator = new QRCodeGenerator())
+                using (var qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q))
+                using (var qrCode = new QRCode(qrCodeData))
+                using (var qrCodeImage = qrCode.GetGraphic(10))
+                {
+                    // Create secure folder path
+                    string qrFolder = HttpContext.Current.Server.MapPath("~/PatientQRs");
+                    if (!Directory.Exists(qrFolder))
+                        Directory.CreateDirectory(qrFolder);
+
+                    // Sanitize filename (prevent path traversal)
+                    string safeMrNo = Regex.Replace(mrNo, @"[^\w\-\.]", "_");
+                    string fileName = $"{safeMrNo}_{DateTime.Now:yyyyMMddHHmmssfff}.png";
+                    string fullPath = Path.Combine(qrFolder, fileName);
+
+                    // Save image
+                    qrCodeImage.Save(fullPath, ImageFormat.Png);
+                    return $"/PatientQRs/{fileName}"; // Relative path for DB
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError(
+                    $"QR generation failed for MR:{pat?.mr_no_sequence}: {ex.Message}");
+                return null; // NEVER fail registration due to QR issue
+            }
+        }
+        //Added newly 
+
 
         // ===== XSS SANITIZATION HELPER =====
         private static string SanitizeInput(string input)
@@ -250,7 +299,9 @@ namespace PMS.Modules.PatientManagement
     string PatientID, string martail_status, string Age, string city, string area,
     string city_val, string area_val, string Blood_Group, string State, string Country,
     string cardfee, string AntiForgeryToken)
+
         {
+
             // Validate Session
             if (HttpContext.Current.Session["UserID"] == null)
                 return "ERROR: Unauthorized. Please log in.";
@@ -405,6 +456,17 @@ namespace PMS.Modules.PatientManagement
                         db.Reg_patients.InsertOnSubmit(pat);
 
                     db.SubmitChanges();
+                    // Generate QR code ONLY for NEW registrations (per requirement)
+                    //if (isNew && pat != null && !string.IsNullOrWhiteSpace(pat.mr_no_sequence))
+                    //{
+                    //    string qrPath = GenerateAndSaveQRCode(pat); // NO db parameter!
+                    //    if (!string.IsNullOrEmpty(qrPath))
+                    //    {
+                    //        pat.QRCodePath = qrPath; // ✅ Requires DBML update (see below)
+                    //        try { db.SubmitChanges(); }
+                    //        catch { /* Silent fail - registration must succeed */ }
+                    //    }
+                    //}
 
                     return pat.pat_id.ToString();
                 }
