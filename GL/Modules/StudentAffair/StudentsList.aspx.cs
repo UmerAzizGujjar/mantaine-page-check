@@ -158,14 +158,16 @@ namespace PMS
             return StudentId.ToString();
 
         }
+ 
         [WebMethod]
         public static string updatebills()
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.Student_Update).FirstOrDefault();
 
-            string billupdate = DBClass.getField("select dbo.GetRights('Student_Update','" + AppConfig.UserID + "')");
-
-            return (billupdate);
+            return (new JavaScriptSerializer()).Serialize(ups);
         }
         [WebMethod]
         public static string GetFromClass()

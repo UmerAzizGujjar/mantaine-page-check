@@ -84,6 +84,7 @@ namespace PMS.Modules.Accounts
                              Allow_emer_disc = p.Allow_emer_disc,
                              Allow_Recipe = p.Allow_Recipe,
                              AllowSaleReturn = p.AllowSaleReturn,
+                             AllowStudentUpdate = p.Student_Update,
                              AllowActiveItems = p.AllowActiveItems,
                              AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
@@ -192,6 +193,7 @@ namespace PMS.Modules.Accounts
                     user.Refer_IPD = data.AllowReferIPD;
                     user.Allow_Recipe = data.AllowRecipe;
                     user.AllowSaleReturn = data.AllowSaleReturn;
+                    user.Student_Update = data.AllowStudentUpdate;
                     user.AllowActiveItems = data.AllowActiveItems;
                     user.cashier = data.ddlcasher;
                     user.AllowRateEdit = data.AllowRateEdit;
@@ -266,6 +268,7 @@ namespace PMS.Modules.Accounts
                 newuser.Refer_IPD = data.AllowReferIPD;
                 newuser.Allow_Recipe = data.AllowRecipe;
                 newuser.AllowSaleReturn = data.AllowSaleReturn;
+                newuser.Student_Update = data.AllowStudentUpdate;
                 newuser.AllowActiveItems = data.AllowActiveItems;
                 newuser.cashier = data.ddlcasher;
                 newuser.AllowRateEdit = data.AllowRateEdit;
@@ -376,6 +379,7 @@ namespace PMS.Modules.Accounts
             public bool AllowRecipe { get; set; }
             public bool AllowActiveItems { get; set; }
             public bool AllowSaleReturn { get; set; }
+            public bool AllowStudentUpdate { get; set; }
             public bool AllowRateEdit { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }
