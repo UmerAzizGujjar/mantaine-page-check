@@ -1557,7 +1557,15 @@ namespace PMS
                 pt.Patient_No = Convert.ToInt32(pat.pat_id).ToString();
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
-                pt.Age = pat.Age_years.ToString();
+                if(pat.Age_years == null)
+                {
+                    pt.Age = "";
+                }
+                else
+                {
+                    pt.Age = pat.Age_years.ToString();
+                }
+               
                 if (pat.Created_time.HasValue)
                     pt.Entry_Date = pat.Created_time.ToString();
                
