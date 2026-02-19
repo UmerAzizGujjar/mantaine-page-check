@@ -2244,6 +2244,7 @@ function LoadLabResultrpt() {
             var html = '';
 
             PageMethods.GetLabTests(searchValue, function (Tests) {
+                debugger
                 $.each(JSON.parse(Tests), function (key, value) {
                     html += '<div class="labtest-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer;" ' +
                         'onclick="ShowLabTestDetails(\'' + value.SerialNo + '\', \'' + value.TestName + '\')">' +

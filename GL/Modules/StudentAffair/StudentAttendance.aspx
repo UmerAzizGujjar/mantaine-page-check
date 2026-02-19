@@ -787,7 +787,7 @@
      
         function Print() {
 
-
+            debugger;
             var date = $("#ddldate").val();
             var dt = new Date(parseInt(date.substr(6)));
             dt = moment(dt).format('L');
@@ -804,7 +804,7 @@
 
             debugger;
 
-            window.open('/ReportViewer.aspx?ReportName=AttendanceReport&ReportTitle=Student Attendance Report' + '&FTime=' + FromTime + '&TTime=' + ToTime + '&classs=' + classs + '&program=' + program + '&date=' + dt + '&Group=' + Group + '&bathc=' + bathc + '&txt_WholeClass=' + txt_WholeClass);
+            window.open('../../ReportViewer.aspx?ReportName=AttendanceReport&ReportTitle=Student Attendance Report' + '&FTime=' + FromTime + '&TTime=' + ToTime + '&classs=' + classs + '&program=' + program + '&date=' + dt + '&Group=' + Group + '&bathc=' + bathc + '&txt_WholeClass=' + txt_WholeClass);
         }
 
         function ProcessAttendance() {
