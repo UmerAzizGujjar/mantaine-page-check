@@ -457,16 +457,16 @@ namespace PMS.Modules.PatientManagement
 
                     db.SubmitChanges();
                     // Generate QR code ONLY for NEW registrations (per requirement)
-                    if (isNew && pat != null && !string.IsNullOrWhiteSpace(pat.mr_no_sequence))
-                    {
-                        string qrPath = GenerateAndSaveQRCode(pat); // NO db parameter!
-                        if (!string.IsNullOrEmpty(qrPath))
-                        {
-                            pat.QRCodePath = qrPath; // ✅ Requires DBML update (see below)
-                            try { db.SubmitChanges(); }
-                            catch { /* Silent fail - registration must succeed */ }
-                        }
-                    }
+                    //if (isNew && pat != null && !string.IsNullOrWhiteSpace(pat.mr_no_sequence))
+                    //{
+                    //    string qrPath = GenerateAndSaveQRCode(pat); // NO db parameter!
+                    //    if (!string.IsNullOrEmpty(qrPath))
+                    //    {
+                    //        pat.QRCodePath = qrPath; // ✅ Requires DBML update (see below)
+                    //        try { db.SubmitChanges(); }
+                    //        catch { /* Silent fail - registration must succeed */ }
+                    //    }
+                    //}
 
                     return pat.pat_id.ToString();
                 }
