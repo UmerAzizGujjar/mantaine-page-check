@@ -787,7 +787,7 @@
      
         function Print() {
 
-
+            debugger;
             var date = $("#ddldate").val();
             var dt = new Date(parseInt(date.substr(6)));
             dt = moment(dt).format('L');
