@@ -35,33 +35,55 @@ $(document).ready(function () {
     LoadPage();
 });
 
-function LoadPage() {
-    if ($.fn.DataTable.isDataTable('#example')) {
-        $('#example').DataTable().clear().destroy();
-    }
+        function LoadPage() {
+            let savedVisibility = null;
 
-    $("#example").DataTable({
-        "processing": true,
-        "serverSide": true,
-        "dom": 'lBfrtip',
-        "lengthChange": true,
-        buttons: [
-            'copy',
-            'excel',
-            'pdf',
-            {
-                extend: 'colvis',
-                text: '<i class="fa fa-columns"></i> Columns',
-                className: 'dt-button buttons-colvis',
-                collectionLayout: 'fixed two-column',
-                postfixButtons: ['colvisRestore']
+            $.ajax({
+                type: "POST",
+                url: "VoucherView.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                            console.warn("Invalid column visibility JSON");
+                        }
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load column preferences");
+                }
+            });
+
+            if ($.fn.DataTable.isDataTable('#example')) {
+                $('#example').DataTable().clear().destroy();
             }
-        ],
-        "filter": true,
-        "ajax": function (data, callback, settings) {
-            var getquerytype = '<%= Request.QueryString["VoucherType"]%>';
+
+            $("#example").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                buttons: [
+                    'copy',
+                    'excel',
+                    'pdf',
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fa fa-columns"></i> Columns',
+                        className: 'dt-button buttons-colvis',
+                        collectionLayout: 'fixed two-column',
+                        postfixButtons: ['colvisRestore']
+                    }
+                ],
+                "filter": true,
+                "ajax": function (data, callback, settings) {
+                    var getquerytype = '<%= Request.QueryString["VoucherType"]%>';
             var titleText = '';
-            switch(getquerytype) {
+            switch (getquerytype) {
                 case 'CPV': titleText = 'Cash Payment Voucher'; break;
                 case 'CRV': titleText = 'Cash Receipt Voucher'; break;
                 case 'BPV': titleText = 'Bank Payment Voucher'; break;
@@ -139,7 +161,7 @@ function LoadPage() {
             },
             {
                 "data": "Creation_Time",
-                "name": "Creation_Time", 
+                "name": "Creation_Time",
                 "render": function (data, type, full) {
                     return moment(full.Creation_Time).format('D-MMM-YYYY');
                 }, width: "10%"
@@ -173,32 +195,51 @@ function LoadPage() {
                 $(row).removeClass('cancelled-row');
             }
         },
-        "initComplete": function (settings, json) {
-            var lengthContainer = document.querySelector('#example_length');
-            var lengthDropdown = document.querySelector('#example_length select');
-            var label = document.querySelector('#example_length label');
+                "initComplete": function (settings, json) {
+                    const api = this.api();
+                    if (savedVisibility && Array.isArray(savedVisibility)) {
+                        if (savedVisibility.length === api.columns().count()) {
+                            api.columns().every(function (index) {
+                                this.visible(savedVisibility[index]);
+                            });
+                        }
+                    }
+                    api.on('column-visibility.dt', function (e, settings, column, state) {
+                        let currentVis = [];
+                        api.columns().every(function () {
+                            currentVis.push(this.visible());
+                        });
+                        PageMethods.SaveUserColumnPreferences(
+                            JSON.stringify(currentVis),
+                            function () {
+                                console.log("Column preferences saved");
+                            },
+                            function (error) {
+                                console.error("Failed to save preferences:", error);
+                            }
+                        );
+                    });
 
-            if (lengthDropdown && label && lengthContainer) {
-                var labelText = document.createElement('span');
-                labelText.textContent = 'Show entries';
-                labelText.style.marginLeft = '5px';
-                labelText.style.marginTop = '10px';
-                labelText.style.display = 'inline-block';
+                    var lengthContainer = document.querySelector('#example_length');
+                    var lengthDropdown = document.querySelector('#example_length select');
+                    var label = document.querySelector('#example_length label');
 
-                lengthDropdown.style.width = '60px';
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
 
-                label.innerHTML = '';
-                label.style.display = 'inline-flex';
-                label.style.alignItems = 'center';
-                label.style.marginTop = '17px';
-                label.appendChild(labelText);
-                label.appendChild(lengthDropdown);
-            } else {
-                console.log("Length dropdown, label, or container not found");
-            }
-        }
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    }
+                }
     });
-}
+  }
 
 function LoadPageByYear() {
     year = true;
