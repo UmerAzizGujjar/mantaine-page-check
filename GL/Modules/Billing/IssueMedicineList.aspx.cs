@@ -29,17 +29,20 @@ namespace PMS
 
                     var Total_Billings = _dbContext.Ar_Billings.Count();
                     var IssueMedicine = from AB in _dbContext.Ar_Billings
-                                        where (AB.IsPharmacy == true &&
-                                            ((AB.Customer_Name.ToString().Contains(searchValue) || AB.Referred_By_value.ToString().Contains(searchValue) || AB.Received_Amount.ToString().Contains(searchValue))))
-
+                                        where AB.IsPharmacy == true &&
+                                              (
+                                                  (AB.Customer_Name != null && AB.Customer_Name.Contains(searchValue)) ||
+                                                  (AB.Referred_By_value != null && AB.Referred_By_value.Contains(searchValue)) ||
+                                                  (AB.Received_Amount != null && AB.Received_Amount.ToString().Contains(searchValue)) ||
+                                                  _dbContext.Reg_patients.Any(rg =>rg.pat_id == AB.Patient_ID && rg.mr_no_sequence != null && rg.mr_no_sequence.Contains(searchValue))
+                                              )
                                         select new
                                         {
-                                            BillNo = AB.Invoice_No ,
+                                            BillNo = AB.Invoice_No,
                                             Invoice_Date = AB.Invoice_Date,
                                             Customer_Name = AB.Customer_Name,
                                             Referred_By_value = AB.Referred_By_value,
-                                            Patient_ID = _dbContext.Reg_patients .Where(rg => rg.pat_id == AB.Patient_ID) .OrderByDescending(rg => rg.mr_no_sequence)
-                                            .Select(rg => rg.mr_no_sequence) .FirstOrDefault(),
+                                            Patient_ID = _dbContext.Reg_patients.Where(rg => rg.pat_id == AB.Patient_ID).Select(rg => rg.mr_no_sequence).FirstOrDefault(),
                                             Received_Amount = AB.Received_Amount,
                                             Bill_ID = AB.Bill_ID,
                                             Total_Amount = AB.Total_Amount,

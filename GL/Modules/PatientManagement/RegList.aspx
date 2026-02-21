@@ -21,13 +21,42 @@
             window.open(url, '_blank');
         }
 
+        function editOpen(id) {
+            window.open("RegisterPatient.aspx?Reg_id=" + id);
+        }
+
         function LoadPage() {
+            let savedVisibility = null;
+            $.ajax({
+                type: "POST",
+                url: "RegList.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                            console.warn("Invalid column visibility JSON");
+                        }
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load column preferences");
+                }
+            });
+
             var table = $("#example").DataTable({
                 processing: true,
                 serverSide: true,
                 destroy: true,
                 dom: 'lBfrtip',
                 lengthChange: true,
+                columnDefs: savedVisibility ? [] : [
+                    { targets: [0], visible: false },
+                    { targets: [8], className: "noVis" }
+                ],
 
                 buttons: [
                     {
@@ -90,43 +119,83 @@
 
                 columns: [
                     { data: "pat_id", visible: false, orderable: false },
-                    { data: "MRNO", name: "MRNO" },   
-                    { data: "Full_Name" },     
-                    { data: "Age_years", name: "Age_years" },               
+                    { data: "MRNO", name: "MRNO" },
+                    { data: "Full_Name" },
+                    { data: "Age_years", name: "Age_years" },
                     {
                         data: "Created_time",
                         name: "Created_time",
                         render: function (data) {
                             return moment(data).format('DD-MMM-YYYY');
                         }
-                    },                                                       
-                    { data: "NIC" },                                       
-                    { data: "Mobile1" },                                   
-                    { data: "Permanent_Address" },                         
+                    },
+                    { data: "NIC" },
+                    { data: "Mobile1" },
+                    { data: "Permanent_Address" },
                     {
                         data: null,
                         orderable: false,
                         searchable: false,
                         render: function (data, type, full) {
                             return `
-         <a href="#" onclick="editOpen(${full.pat_id})" class="editListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" title="Edit">
-             <i class="fa fa-pencil" style="color: #667eea;"></i>
-         </a>
-         <a href="#" class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;"  onclick="PrintReceipt(${full.pat_id})" class="printListBtn" title="Print">
-             <i class="fa fa-print"></i>
-         </a>`;
+       <a href="#" onclick="editOpen(${full.pat_id})" class="editListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" title="Edit">
+           <i class="fa fa-pencil" style="color: #667eea;"></i>
+       </a>
+       <a href="#" class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;"  onclick="PrintReceipt(${full.pat_id})" class="printListBtn" title="Print">
+           <i class="fa fa-print"></i>
+       </a>`;
                         }
-                    }                                                       // 8
+                    }
                 ],
 
-                columnDefs: [
-                    { targets: [0], visible: false }, // Pat ID hidden always
-                    { targets: [8], className: "noVis" } // Action column not hideable
-                ],
+                initComplete: function (settings, json) {
+                    const api = this.api();
+                    if (savedVisibility && Array.isArray(savedVisibility)) {
+                        if (savedVisibility.length === api.columns().count()) {
+                            api.columns().every(function (index) {
+                                if (index === 0) {
+                                    this.visible(false); 
+                                } else if (index === 8) {
+                                    this.visible(true); 
+                                } else {
+                                    this.visible(savedVisibility[index]);
+                                }
+                            });
+                        }
+                    }
+                    api.on('column-visibility.dt', function (e, settings, column, state) {
+                        let currentVis = [];
+                        api.columns().every(function () {
+                            currentVis.push(this.visible());
+                        });
 
-                initComplete: function () {
-                    var api = this.api();
-                    updateColumnHeaders(api);
+                        PageMethods.SaveUserColumnPreferences(
+                            JSON.stringify(currentVis),
+                            function () {
+                                console.log("Column preferences saved");
+                            },
+                            function (error) {
+                                console.error("Failed to save preferences:", error);
+                            }
+                        );
+                    });
+                    var lengthContainer = document.querySelector('#example_length');
+                    var lengthDropdown = document.querySelector('#example_length select');
+                    var label = document.querySelector('#example_length label');
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    }
                 },
 
                 drawCallback: function () {
@@ -135,7 +204,6 @@
                 }
             });
 
-            // Add event listener for column visibility changes
             table.on('column-visibility.dt', function (e, settings, column, state) {
                 setTimeout(function () {
                     updateColumnHeaders(table);
@@ -152,17 +220,12 @@
                 var header = $(headers[index]);
                 var isVisible = column.visible();
 
-                // Update header indicator
                 if (isVisible) {
                     header.removeClass('hidden-col');
                 } else {
                     header.addClass('hidden-col');
                 }
             });
-        }
-
-        function editOpen(id) {
-            window.open("RegisterPatient.aspx?Reg_id=" + id);
         }
     </script>
 </asp:Content>
