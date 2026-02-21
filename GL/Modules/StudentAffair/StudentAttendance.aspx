@@ -798,6 +798,9 @@
             subvalue = $("#Subject").val();
             var Practical = $("#Practical option:selected").text();
             var Group = $("#ddlGroup ").val();
+            if (Group == "") {
+                Group = "0"
+            }
             var bathc = $("#ddlBatch").val();
             var txt_WholeClass = $('#txt_WholeClass').prop("checked");
             Pracvalue = $("#Practical").val();
