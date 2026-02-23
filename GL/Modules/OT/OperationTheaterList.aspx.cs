@@ -62,7 +62,7 @@ namespace PMS
                     var Operation = from op in _dbContext.Operation_Bookings
                               join p in _dbContext.Reg_patients on op.Patient_ID equals p.pat_id
                               where op.OperationStatus == "done"
-                             && (p.Patient_No.ToString().Contains(searchValue) || p.mr_no_sequence.ToString().Contains(searchValue) || p.Full_Name.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category",op.DepartmentOf_Surgery).Contains(searchValue))
+                             && (p.Patient_No.ToString().Contains(searchValue) || p.mr_no_sequence.ToString().Contains(searchValue) || p.Mobile1.Contains(searchValue) || p.Full_Name.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category",op.DepartmentOf_Surgery).Contains(searchValue))
                                 select new
                               {
                                   Operation_Booking_ID = op.Patient_ID,
@@ -109,6 +109,67 @@ namespace PMS
             catch (Exception ex)
             {
                 throw new Exception("Error fetching patient list", ex);
+            }
+        }
+
+        [WebMethod]
+        public static string GetUserColumnPreferences()
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "Operationtheaterlist";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var pref = db.UserDataTablePreferences
+                                  .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (pref != null)
+                        return pref.ColumnVisibility;
+                    else
+                        return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        [WebMethod]
+        public static void SaveUserColumnPreferences(string visibilityJson)
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "Operationtheaterlist";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var existing = db.UserDataTablePreferences
+                                     .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (existing != null)
+                    {
+                        existing.ColumnVisibility = visibilityJson;
+                    }
+                    else
+                    {
+                        db.UserDataTablePreferences.InsertOnSubmit(new UserDataTablePreference
+                        {
+                            UserID = userId,
+                            PageName = pageName,
+                            ColumnVisibility = visibilityJson
+                        });
+                    }
+
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }

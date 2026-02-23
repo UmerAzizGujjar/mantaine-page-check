@@ -127,5 +127,67 @@ namespace PMS.Inventory
             }
         }
 
+
+        [WebMethod]
+        public static string GetUserColumnPreferences()
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "GoodsIssuanceRequestview";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var pref = db.UserDataTablePreferences
+                                  .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (pref != null)
+                        return pref.ColumnVisibility;
+                    else
+                        return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        [WebMethod]
+        public static void SaveUserColumnPreferences(string visibilityJson)
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "GoodsIssuanceRequestview";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var existing = db.UserDataTablePreferences
+                                     .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (existing != null)
+                    {
+                        existing.ColumnVisibility = visibilityJson;
+                    }
+                    else
+                    {
+                        db.UserDataTablePreferences.InsertOnSubmit(new UserDataTablePreference
+                        {
+                            UserID = userId,
+                            PageName = pageName,
+                            ColumnVisibility = visibilityJson
+                        });
+                    }
+
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }

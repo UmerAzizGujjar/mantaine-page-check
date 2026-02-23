@@ -12,6 +12,27 @@
         });
 
         function LoadPage() {
+            let savedVisibility = null;
+
+            $.ajax({
+                type: "POST",
+                url: "RolesView.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                            console.warn("Invalid column visibility JSON");
+                        }
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load column preferences");
+                }
+            });
             $('#example').DataTable({
                 "processing": true,
                 "serverSide": true,

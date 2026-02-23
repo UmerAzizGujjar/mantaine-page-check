@@ -59,7 +59,7 @@ namespace PMS.AP
         {
             //var userid = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.sp_AutoPO(Convert.ToInt32(CSID),Convert.ToString(AppConfig.UserID));
+            var Details = db.sp_AutoPO(Convert.ToInt32(CSID), Convert.ToString(AppConfig.UserID));
             return (new JavaScriptSerializer()).Serialize(Details);
         }
         [WebMethod]
@@ -89,7 +89,7 @@ namespace PMS.AP
                                             PoID = _dbContext.AP_Purchase_Orders
                                                      .Where(po => po.CS_Master_ID == vendor.CS_Ven_Master_ID)
                                                      .OrderByDescending(po => po.PO_ID)
-                                                     .Select(po => (int?)po.PO_ID) 
+                                                     .Select(po => (int?)po.PO_ID)
                                                      .FirstOrDefault()
                                         };
 
@@ -121,6 +121,67 @@ namespace PMS.AP
             catch (Exception ex)
             {
                 throw new Exception("Error fetching Comparative Statement  list", ex);
+            }
+        }
+
+        [WebMethod]
+        public static string GetUserColumnPreferences()
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "ComparativeStatementVendorView";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var pref = db.UserDataTablePreferences
+                                  .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (pref != null)
+                        return pref.ColumnVisibility;
+                    else
+                        return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        [WebMethod]
+        public static void SaveUserColumnPreferences(string visibilityJson)
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "ComparativeStatementVendorView";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var existing = db.UserDataTablePreferences
+                                     .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (existing != null)
+                    {
+                        existing.ColumnVisibility = visibilityJson;
+                    }
+                    else
+                    {
+                        db.UserDataTablePreferences.InsertOnSubmit(new UserDataTablePreference
+                        {
+                            UserID = userId,
+                            PageName = pageName,
+                            ColumnVisibility = visibilityJson
+                        });
+                    }
+
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }
