@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -55,22 +57,22 @@ namespace PMS.Modules.Appointment
                     var Total_Appointment = query.Count();
 
                     var pat = from DA in query
-                              where (DA.Appointment_No.ToString().Contains(searchValue) ||
-                                     (from rp in _dbContext.Reg_patients
-                                      where rp.pat_id == DA.Patient_Id
-                                      select rp.Full_Name).FirstOrDefault().Contains(searchValue))
+                              join rp in _dbContext.Reg_patients on DA.Patient_Id equals rp.pat_id
+                              where DA.Appointment_No.ToString().Contains(searchValue) || rp.Full_Name.Contains(searchValue) || rp.Mobile1.Contains(searchValue) || (from hr in _dbContext.HR_Employees where hr.Emp_ID == Convert.ToInt32(DA.Doctor_Id) select hr.Emp_Name).FirstOrDefault().Contains(searchValue) || _dbContext.GetDataValueName("Machine", DA.Machine_Id).Contains(searchValue) || _dbContext.aspnet_Users.Where(x => x.UserId == DA.Created_By).Select(x => x.UserName).FirstOrDefault().Contains(searchValue)
+                              || DA.Status.Contains(searchValue) || (isDateSearch && DA.Created_Date >= searchDate && DA.Created_Date < searchDate.AddDays(1))
                               select new
                               {
                                   Derma_Appointment_Id = DA.Derma_Appointment_Id,
                                   Appointment_No = DA.Appointment_No,
-                                  Full_Name = (from rp in _dbContext.Reg_patients where rp.pat_id == DA.Patient_Id select rp.Full_Name).FirstOrDefault(),
-                                  Phone = (from rp in _dbContext.Reg_patients where rp.pat_id == DA.Patient_Id select rp.Mobile1).FirstOrDefault(),
-                                  Age = (from rp in _dbContext.Reg_patients where rp.pat_id == DA.Patient_Id select rp.Age_years).FirstOrDefault(),
+                                  Full_Name = rp.Full_Name,
+                                  Phone = rp.Mobile1,
+                                  Age = rp.Age_years,
                                   Doctor_Id = (from hr in _dbContext.HR_Employees where hr.Emp_ID == Convert.ToInt32(DA.Doctor_Id) select hr.Emp_Name).FirstOrDefault(),
                                   Appointment_Date = DA.Appointment_Date,
                                   Status = DA.Status,
                                   CreatedBY = _dbContext.aspnet_Users.Where(x => x.UserId == DA.Created_By).Select(x => x.UserName).FirstOrDefault(),
                                   Creation_Date = DA.Created_Date,
+                                  Machine_Name = _dbContext.GetDataValueName("Machine", DA.Machine_Id),
                                   Patient_Id = DA.Patient_Id
                               };
 
@@ -95,6 +97,67 @@ namespace PMS.Modules.Appointment
             catch (Exception ex)
             {
                 throw new Exception("Error fetching Appointment list", ex);
+            }
+        }
+
+        [WebMethod]
+        public static string GetUserColumnPreferences()
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "DermaAppointmentlist";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var pref = db.UserDataTablePreferences
+                                  .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (pref != null)
+                        return pref.ColumnVisibility;
+                    else
+                        return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        [WebMethod]
+        public static void SaveUserColumnPreferences(string visibilityJson)
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "DermaAppointmentlist";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var existing = db.UserDataTablePreferences
+                                     .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (existing != null)
+                    {
+                        existing.ColumnVisibility = visibilityJson;
+                    }
+                    else
+                    {
+                        db.UserDataTablePreferences.InsertOnSubmit(new UserDataTablePreference
+                        {
+                            UserID = userId,
+                            PageName = pageName,
+                            ColumnVisibility = visibilityJson
+                        });
+                    }
+
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }
