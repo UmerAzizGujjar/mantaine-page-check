@@ -78,6 +78,7 @@
                         '<td><input style="width: 165px !important;" type=text id="Description_Recvable' + (key + 1) + '" readonly="readonly" name="Description_Recvable"  value="' + value.Description_Recvable + '" /></td>' +
                         '<td><input type="checkbox" style="margin-left:-30px" id="chk_STWH' + (key + 1) + '" name="chk_STWH" ' + chk_STWH_checked + ' /></td>' +
                         '<td><input type="checkbox" style="margin-left:-20px" id="chk_Active' + (key + 1) + '" name="chk_Active" ' + chk_Active_checked + ' /></td>' +
+                        '<td><input type="checkbox" style="margin-left:-20px" id="chk_IsBilling' + (key + 1) + '" name="chk_IsBilling" ' + chk_IsBilling_checked + ' /></td>' +
                         '<td><a href="javascript:void(0)" onclick="EditRow(' + (key + 1) + ')"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i="">'
                     '</td>' +
                '</tr>';
@@ -107,6 +108,7 @@
                 '<td><input style="width: 165px !important;" type=text id="Description_Recvable" name="Description_Recvable"  /></td>' +
                 '<td><input style="margin-left:-30px !important" type="checkbox" id="chk_STWH' + rowlength + '" name="chk_STWH" /></td>' +
                 '<td><input style="margin-left:-20px !important" type="checkbox" id="chk_Active' + rowlength + '" name="chk_Active" /></td>' +
+                '<td><input style="margin-left:-20px !important" type="checkbox" id="chk_IsBilling' + rowlength + '" name="chk_IsBilling" /></td>' +
                 '<td><a href="javascript:void(0)" onclick="EditRow()"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i="">'
             '</td>' +
             '</tr>';
@@ -181,6 +183,7 @@
                     <th>Receivable Description</th>
                     <th>S.T.W.H</th>
                     <th>Active</th>
+                    <th>Is Billing</th>
                     <th style="z-index: 5000;">Action</th>
                 </tr>
             </thead>
