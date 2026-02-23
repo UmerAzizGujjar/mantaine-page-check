@@ -110,7 +110,7 @@ namespace PMS
 
 
 
-                                 }).ToList().OrderByDescending(x => x.created_time);
+                                 }).ToList().OrderBy(x => x.Machine_start_time);
 
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
