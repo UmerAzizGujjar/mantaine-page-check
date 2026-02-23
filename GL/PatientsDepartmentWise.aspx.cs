@@ -6127,7 +6127,7 @@ namespace PMS
                 }
                 if (this.PageTitle == "Stock_In_Hand_Detail")
                 {
-                    string x = "Stokc in Hand Detail";
+                    string x = "Stock in Hand Detail";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     lblMultiSelect.Visible = false;
