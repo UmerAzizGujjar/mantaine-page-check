@@ -35,7 +35,7 @@
             LoadWarehousesforSaleReturn();
             
              LoadPatientNo();
-
+            
         });
         window.addEventListener('keydown', function (event) {
             if (event.altKey && event.code === 'KeyS') {
@@ -365,15 +365,39 @@
         });
         // Function to load Sale Return Inovice Items Data
         function loadInvoiceNumbers() {
-            var optionInv = '';
-            PageMethods.AllInvoiceNumbers(function (Tests) {
-                optionInv = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(Tests), function (key, value) {
-                    optionInv += '<option value="' + value.Bill_ID + '" >' + value.Seq_InvoiceNo + '</option>';
-                });
-                $('#ddlInvoiceNumber').html(optionInv);
+            $('#ddlInvoiceNumber').select2({
+                placeholder: "Please Select",
+                minimumInputLength: 0, // allow dropdown open without typing
+                ajax: {
+                    url: 'IssueMedicine.aspx/AllInvoiceNumbers',
+                    type: 'POST',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    delay: 250,
+                    data: function (params) {
+                        return JSON.stringify({
+                            searchTerm: params.term || ""
+                        });
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: JSON.parse(data.d)
+                        };
+                    }
+                }
             });
         }
+        // Function to load Sale Return Inovice Items Data
+        //function loadInvoiceNumbers() {
+        //    var optionInv = '';
+        //    PageMethods.AllInvoiceNumbers(function (Tests) {
+        //        optionInv = '<option value="0">Please Select</option>';
+        //        $.each(JSON.parse(Tests), function (key, value) {
+        //            optionInv += '<option value="' + value.Bill_ID + '" >' + value.Seq_InvoiceNo + '</option>';
+        //        });
+        //        $('#ddlInvoiceNumber').html(optionInv);
+        //    });
+        //}
         // Function to load Sale Return Items into the dropdown
         function loadSaleReturnItems() {
             var optionInv = '';

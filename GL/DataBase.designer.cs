@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬Pakred_Live")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬As_Siraat(23Feb26)")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -937,7 +937,6 @@ namespace PMS
         partial void UpdateReg_patient(Reg_patient instance);
         partial void DeleteReg_patient(Reg_patient instance);
         #endregion
-
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -4697,20 +4696,6 @@ namespace PMS
             return ((ISingleResult<sp_GetOverallSatisfactionAverageResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetDoctorCountForCEODashboard")]
-        public ISingleResult<sp_GetDoctorCountForCEODashboardResult> sp_GetDoctorCountForCEODashboard([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
-            return ((ISingleResult<sp_GetDoctorCountForCEODashboardResult>)(result.ReturnValue));
-        }
-
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetPatientCountsByDate")]
-        public ISingleResult<sp_GetPatientCountsByDateResult> sp_GetPatientCountsByDate([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
-            return ((ISingleResult<sp_GetPatientCountsByDateResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetEmergencyCountsByDate")]
         public ISingleResult<sp_GetEmergencyCountsByDateResult> sp_GetEmergencyCountsByDate([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
         {
@@ -5250,6 +5235,20 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), sid, user_id);
             return ((ISingleResult<spApproveStore_IssueResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetPatientCountsByDate")]
+        public ISingleResult<sp_GetPatientCountsByDateResult> sp_GetPatientCountsByDate([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
+            return ((ISingleResult<sp_GetPatientCountsByDateResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetDoctorCountForCEODashboard")]
+        public ISingleResult<sp_GetDoctorCountForCEODashboardResult> sp_GetDoctorCountForCEODashboard([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
+            return ((ISingleResult<sp_GetDoctorCountForCEODashboardResult>)(result.ReturnValue));
         }
     }
 
@@ -181522,130 +181521,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_GetDoctorCountForCEODashboardResult
-    {
-
-        private string _Doctor_Name;
-
-        private System.Nullable<int> _Total_Count;
-
-        private decimal _Receipt_Amount;
-
-        public sp_GetDoctorCountForCEODashboardResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Name", DbType = "VarChar(150)")]
-        public string Doctor_Name
-        {
-            get
-            {
-                return this._Doctor_Name;
-            }
-            set
-            {
-                if ((this._Doctor_Name != value))
-                {
-                    this._Doctor_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Count", DbType = "Int")]
-        public System.Nullable<int> Total_Count
-        {
-            get
-            {
-                return this._Total_Count;
-            }
-            set
-            {
-                if ((this._Total_Count != value))
-                {
-                    this._Total_Count = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
-        public decimal Receipt_Amount
-        {
-            get
-            {
-                return this._Receipt_Amount;
-            }
-            set
-            {
-                if ((this._Receipt_Amount != value))
-                {
-                    this._Receipt_Amount = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetPatientCountsByDateResult
-    {
-
-        private int _TotalPatients;
-
-        private int _NewOPD;
-
-        private int _RevisitOPD;
-
-        public sp_GetPatientCountsByDateResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalPatients", DbType = "Int NOT NULL")]
-        public int TotalPatients
-        {
-            get
-            {
-                return this._TotalPatients;
-            }
-            set
-            {
-                if ((this._TotalPatients != value))
-                {
-                    this._TotalPatients = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NewOPD", DbType = "Int NOT NULL")]
-        public int NewOPD
-        {
-            get
-            {
-                return this._NewOPD;
-            }
-            set
-            {
-                if ((this._NewOPD != value))
-                {
-                    this._NewOPD = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RevisitOPD", DbType = "Int NOT NULL")]
-        public int RevisitOPD
-        {
-            get
-            {
-                return this._RevisitOPD;
-            }
-            set
-            {
-                if ((this._RevisitOPD != value))
-                {
-                    this._RevisitOPD = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_GetEmergencyCountsByDateResult
     {
 
@@ -213005,6 +212880,130 @@ namespace PMS
                 if ((this._Message != value))
                 {
                     this._Message = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetPatientCountsByDateResult
+    {
+
+        private System.Nullable<int> _TotalPatients;
+
+        private System.Nullable<int> _Filter_Clinic;
+
+        private System.Nullable<int> _Patient_Main_Category;
+
+        public sp_GetPatientCountsByDateResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalPatients", DbType = "Int")]
+        public System.Nullable<int> TotalPatients
+        {
+            get
+            {
+                return this._TotalPatients;
+            }
+            set
+            {
+                if ((this._TotalPatients != value))
+                {
+                    this._TotalPatients = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Filter_Clinic", DbType = "Int")]
+        public System.Nullable<int> Filter_Clinic
+        {
+            get
+            {
+                return this._Filter_Clinic;
+            }
+            set
+            {
+                if ((this._Filter_Clinic != value))
+                {
+                    this._Filter_Clinic = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Main_Category", DbType = "Int")]
+        public System.Nullable<int> Patient_Main_Category
+        {
+            get
+            {
+                return this._Patient_Main_Category;
+            }
+            set
+            {
+                if ((this._Patient_Main_Category != value))
+                {
+                    this._Patient_Main_Category = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetDoctorCountForCEODashboardResult
+    {
+
+        private string _Doctor_Name;
+
+        private System.Nullable<int> _Total_Count;
+
+        private decimal _Receipt_Amount;
+
+        public sp_GetDoctorCountForCEODashboardResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Name", DbType = "VarChar(150) NOT NULL", CanBeNull = false)]
+        public string Doctor_Name
+        {
+            get
+            {
+                return this._Doctor_Name;
+            }
+            set
+            {
+                if ((this._Doctor_Name != value))
+                {
+                    this._Doctor_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Count", DbType = "Int")]
+        public System.Nullable<int> Total_Count
+        {
+            get
+            {
+                return this._Total_Count;
+            }
+            set
+            {
+                if ((this._Total_Count != value))
+                {
+                    this._Total_Count = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receipt_Amount", DbType = "Decimal(38,2) NOT NULL")]
+        public decimal Receipt_Amount
+        {
+            get
+            {
+                return this._Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Receipt_Amount != value))
+                {
+                    this._Receipt_Amount = value;
                 }
             }
         }
