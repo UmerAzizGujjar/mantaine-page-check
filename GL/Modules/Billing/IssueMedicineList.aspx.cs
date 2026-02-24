@@ -38,7 +38,7 @@ namespace PMS
                                               )
                                         select new
                                         {
-                                            BillNo = AB.Invoice_No,
+                                            BillNo = AB.Seq_InvoiceNo,
                                             Invoice_Date = AB.Invoice_Date,
                                             Customer_Name = AB.Customer_Name,
                                             Referred_By_value = AB.Referred_By_value,
