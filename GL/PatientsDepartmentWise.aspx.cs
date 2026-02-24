@@ -2934,6 +2934,73 @@ namespace PMS
                     dpROw.Visible = false;
 
                 }
+                if (this.PageTitle == "Item_Wise_Gross_Profit_Report")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+                    // ✅ ADD THIS CODE TO POPULATE ITEM DROPDOWN:
+                    td11.Text = "Item Name";
+                    td11.Visible = true;
+                    ddlItemName.Visible = true;
+                    trSearch1.Visible = true;
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+                }
+                if (this.PageTitle == "Category_Wise_Profitability_Report")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = true;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+                    MainDeptDiv.Visible = true;
+                    lblMainDepartment.Text = "Category";
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Item Group");
+                    ddlMainDepartment.DataSource = valusets;
+                    ddlMainDepartment.DataTextField = "DataValue_Description";
+                    ddlMainDepartment.DataValueField = "DataValue_Name";
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+                }
                 if (this.PageTitle == "Fast_Slow_Non_Moving_Stock")
                 {
                     string x = "Fast Slow Moving Stock Report";
@@ -5490,6 +5557,7 @@ namespace PMS
                         ddlPatientType.DataTextField = "Description";
                         ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                         ddlPatientType.DataBind();
+                        tr_Export.Visible = true;
                     }
                     trDoctor.Visible = false;
 

@@ -852,7 +852,8 @@
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == 'HospitalServices') {
-                        var url = 'ReportViewer.aspx?ReportName=HospitalServices&ReportTitle=Hospital Services from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&Patient_Type=' + $("#ctl00_MainContent_ddlDepartments").val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ServiceID=' + $('#ctl00_MainContent_ddlPatientType').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=HospitalServices&ReportTitle=Hospital Services from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '&Patient_Type=' + $("#ctl00_MainContent_ddlDepartments").val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ServiceID=' + $('#ctl00_MainContent_ddlPatientType').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blanks');
                     }
                     else if (rptTitle == 'Daily_Revenue') {
@@ -1203,6 +1204,16 @@
                     else if (rptTitle == "DailySaleSummary") {
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=Daily_Sale_Summary&ReportTitle=Daily Sale Summary Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() ;
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Item_Wise_Gross_Profit_Report") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Item_Wise_Gross_Profit&ReportTitle=Item Wise Gross Profit Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val();
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Category_Wise_Profitability_Report") {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Category_Wise_Profitability_Report&ReportTitle=Category Wise Profit Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Category=' + $('#ctl00_MainContent_ddlMainDepartment').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Fast_Slow_Non_Moving_Stock") {
