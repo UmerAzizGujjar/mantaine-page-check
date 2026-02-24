@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬As_Siraat(23Feb26)" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -9249,24 +9249,6 @@
       <Column Name="OverallAverageSatisfaction" Type="System.Decimal" DbType="Decimal(24,12)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetDoctorCountForCEODashboard" Method="sp_GetDoctorCountForCEODashboard">
-    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
-    <ElementType Name="sp_GetDoctorCountForCEODashboardResult">
-      <Column Name="Doctor_Name" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Total_Count" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,6) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_GetPatientCountsByDate" Method="sp_GetPatientCountsByDate">
-    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
-    <ElementType Name="sp_GetPatientCountsByDateResult">
-      <Column Name="TotalPatients" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="NewOPD" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="RevisitOPD" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetEmergencyCountsByDate" Method="sp_GetEmergencyCountsByDate">
     <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
     <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
@@ -11408,6 +11390,24 @@
     <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="spApproveStore_IssueResult">
       <Column Name="Message" Type="System.String" DbType="VarChar(22) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetPatientCountsByDate" Method="sp_GetPatientCountsByDate">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetPatientCountsByDateResult">
+      <Column Name="TotalPatients" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Filter_Clinic" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_Main_Category" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetDoctorCountForCEODashboard" Method="sp_GetDoctorCountForCEODashboard">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetDoctorCountForCEODashboardResult">
+      <Column Name="Doctor_Name" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Total_Count" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Receipt_Amount" Type="System.Decimal" DbType="Decimal(38,2) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>

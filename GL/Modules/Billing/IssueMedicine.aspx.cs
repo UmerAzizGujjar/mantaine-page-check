@@ -896,20 +896,47 @@ namespace PMS
             }
             return result;
         }
-
         [WebMethod]
-        public static string AllInvoiceNumbers()
+        public static string AllInvoiceNumbers(string searchTerm)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var panel = (from data in db.Ar_Billings
-                         where data.IsPharmacy == true && data.Invoice_No != null && (data.isCancel == false || data.isCancel == null) orderby data.Bill_ID descending
-                         select new
-                         {
-                             Bill_ID = data.Bill_ID,
-                             Seq_InvoiceNo = data.Seq_InvoiceNo,
-                         }).ToList().Take(200);
-            return (new JavaScriptSerializer()).Serialize(panel);
+
+            var query = db.Ar_Billings
+                .Where(data => data.IsPharmacy == true
+                            && data.Invoice_No != null
+                            && (data.isCancel == false || data.isCancel == null));
+
+            // If user is searching
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(x => x.Seq_InvoiceNo.Contains(searchTerm));
+            }
+
+            var result = query
+                .OrderByDescending(x => x.Bill_ID)
+                .Select(x => new
+                {
+                    id = x.Bill_ID,
+                    text = x.Seq_InvoiceNo
+                })
+                .Take(string.IsNullOrEmpty(searchTerm) ? 100 : 200) // 100 default, more if searching
+                .ToList();
+
+            return new JavaScriptSerializer().Serialize(result);
         }
+        //[WebMethod]
+        //public static string AllInvoiceNumbers()
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+        //    var panel = (from data in db.Ar_Billings
+        //                 where data.IsPharmacy == true && data.Invoice_No != null && (data.isCancel == false || data.isCancel == null) orderby data.Bill_ID descending
+        //                 select new
+        //                 {
+        //                     Bill_ID = data.Bill_ID,
+        //                     Seq_InvoiceNo = data.Seq_InvoiceNo,
+        //                 }).ToList().Take(200);
+        //    return (new JavaScriptSerializer()).Serialize(panel);
+        //}
         [WebMethod]
         public static string AllPharmaPatients()
         {
