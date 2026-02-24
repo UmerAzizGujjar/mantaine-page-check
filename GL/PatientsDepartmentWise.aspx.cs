@@ -1523,8 +1523,73 @@ namespace PMS
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
 
-                    lblPatientType.Visible = true;
-                    ddlPatientType.Visible = true;
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                }
+                if (this.PageTitle == "Stock_Transfer_Report")
+                {
+                    string x = "Stock Transfer Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    optRw.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    Time_Row.Visible = true;  // could be problematic
+                    DateDiv.Visible = true;
+                   
+                    op_FilterClinic.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+                    trSearch1.Visible = true;
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    object valusetss = from d in db.aspnet_Users
+                                       select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusetss;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+                    Stock_Movement.Visible = false;
+                    trProcedure1.Visible = false;
+                    ddlProcedure.Visible = false;
+
+
+                    ddlwareHouse.Visible = false;
+                    lblWarehouse.Visible = false;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                    // ✅ ADD THIS CODE TO POPULATE ITEM DROPDOWN:
+                    td11.Text = "Item Name";
+                    td11.Visible = true;
+                    ddlItemName.Visible = true;
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
 
                 }
                 if (this.PageTitle == "PurchaseReturnReport")

@@ -2023,7 +2023,6 @@ namespace PMS
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string ItemID = Request.QueryString["ItemID"].ToString();
                 string vendorID = Request.QueryString["VendorId"].ToString();
-                string itemgroup = Request.QueryString["itemgroup"].ToString();
 
                 string rptFileName = "Inventory/rptInward_Gate_Pass_Report.rpt";
 
@@ -2039,6 +2038,29 @@ namespace PMS
                 rd.SetParameterValue("@itemId", ItemID);
                 rd.SetParameterValue("@Vendor", vendorID);
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+            }
+            else if (reportName == "Stock_Transfer_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string ItemID = Request.QueryString["ItemID"].ToString();
+                string Operator = Request.QueryString["Operator"].ToString();
+
+
+                string rptFileName = "Inventory/rptStockTransferReport.rpt";
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("@itemId", ItemID);
+                rd.SetParameterValue("@Operator", Operator);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
