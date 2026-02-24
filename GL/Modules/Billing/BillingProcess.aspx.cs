@@ -1330,6 +1330,8 @@ namespace PMS
             newBill.Bill_Department = data.BillDepartment;
             newBill.Bill_Category = data.BillCategory;
             newBill.CGS_Procedure_BOM = Convert.ToDecimal(data.bomTotalValue);
+            newBill.Sales_Tax_ID = data.Sales_Tax_ID;
+            newBill.Sales_Tax_Percentage = data.Sales_Tax_Percentage;
 
             int? userBranchId = null;
             var branchValue = (from bwd in db.Branch_Wise_User_Details
@@ -2587,6 +2589,10 @@ namespace PMS
             public decimal Bank_Cash { get; set; }
             public int? hdn_docid { get; set; }
             public string Main_Department { get; set; }
+
+            public int? Sales_Tax_ID { get; set; }
+
+            public decimal? Sales_Tax_Percentage { get; set; }
             //public string Remarks { get; set; }
             public List<BillingProcessDetails> Details { get; set; }
             public List<DoctorDistributionList> Share { get; set; }
@@ -2695,6 +2701,8 @@ namespace PMS
                             data.Referred_By,
                             data.Bill_Category,
                             data.Bill_Department,
+                            data.Sales_Tax_ID,
+                            data.Sales_Tax_Percentage,
                             Bill_Department_text = db.GetDataValueName("Patient Main Category", data.Bill_Department),
                             Bill_Category_text = db.GetDataValueName("Mode Of Registration", data.Bill_Category),
                             Patient_Discount_Type = (from tbl in db.In_Patients
@@ -4865,9 +4873,23 @@ namespace PMS
 
                 if (!validBranches.Any())
                     return "null";
-
+                
                 return new JavaScriptSerializer().Serialize(validBranches);
             }
+        }
+
+        [WebMethod]
+        public static string GetSalesTaxDefinitions()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var taxList = (from st in db.Sales_Taxes
+                           where st.Active == true && st.IsBilling == true  
+                           select new
+                           {
+                               st.Sales_Tax_ID,
+                               st.Sales_Tax_Perc
+                           }).ToList();
+            return (new JavaScriptSerializer()).Serialize(taxList);
         }
     }
 }
