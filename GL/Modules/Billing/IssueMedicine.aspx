@@ -913,6 +913,9 @@
                         var Patient_id = $('#ddlpat_no').val() || 0;
                         var warehouse = $("#ddl_Warehouse").val();
                         var InvNo = $('#ddlInvoiceNumber option:selected').text() || '';
+                        if (InvNo == "Please Select") {
+                            InvNo = "";
+                        }
                         var TotalPayable = $('#txtSaleReturnTotalPayable').val() || 0;
                         var TotalLineDisc = $('#txtSaleReturnLineDisc').val() || 0;
                         var DisPer = $('#txtSaleReturnDisPer').val() || 0;

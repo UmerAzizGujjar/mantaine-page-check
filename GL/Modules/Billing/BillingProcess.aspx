@@ -1222,6 +1222,11 @@
                     $('#txtcashinhand').val(data[0].Cash_In_Hand);
                     $('#txtbankcash').val(data[0].Bank_Cash);
                     debugger;
+                    LoadSalesTaxDefinitions(
+                        data[0].Sales_Tax_ID,
+                        data[0].Sales_Tax_Percentage
+                    );
+
                     $('#BillDepartment').html(
                         $('<option>', {
                             value: data[0].Bill_Department,
@@ -1688,7 +1693,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val() }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -2874,8 +2879,10 @@
                 }
                 $('#txtTotalPayable').val(TotalAmount.toFixed(0));
                 $('#txtDisAmt').val(TotalDiscountAmount.toFixed());
+                $('#hdnBaseNetPayable').val(TotalNetAmount.toFixed(0));
                 $('#txtNetPayable').val(TotalNetAmount.toFixed(0));
                 var AmtReceived = $('#txtAmountReceived').val();
+                
                 if ($('#txtTotalPayable').val() != '') {
                     if (AmtReceived != '') {
                         $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed(0));
@@ -2886,6 +2893,9 @@
                 else {
                     $('#txtBalances').val(TotalNetAmount.toFixed(0));
                 }
+
+                CalculateSalesTax();
+                
             }
             var isQty = 0;
             var Tmp_ITem = 0;
@@ -3311,31 +3321,60 @@
                 CountBalance()
             }
             debugger;
+            //function CountBalance() {
+            //    debugger;
+            //    var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
+            //    var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
+            //    var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
+            //    var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+            //    debugger;
+            //    var AmtReceived = $('#txtAmountReceived').val();
+            //    if ($('#txtTotalPayable').val() != '') {
+            //        var Totalpayable = (Math.round(parseFloat($('#txtNetPayable').val()))).toFixed(0)
+            //        if (AmtReceived != '') {
+            //            $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
+
+            //            var prebln = (parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid)
+            //            $('#txtPreviousBlnc').val(prebln);
+            //        }
+            //        else
+            //            $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
+            //        var prebln = (parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid)
+            //        $('#txtPreviousBlnc').val(prebln);
+            //    }
+            //    else {
+            //        $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
+            //        var prebln = (parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid)
+            //        $('#txtPreviousBlnc').val(prebln);
+            //    }
+            //}
+
             function CountBalance() {
                 debugger;
                 var PreviousPaid = parseFloat($("#txtprevious_paid").val()) || 0;
                 var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
-                debugger;
                 var AmtReceived = $('#txtAmountReceived').val();
-                if ($('#txtTotalPayable').val() != '') {
-                    var Totalpayable = (Math.round(parseFloat($('#txtNetPayable').val()))).toFixed(0)
-                    if (AmtReceived != '') {
-                        $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
 
-                        var prebln = (parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid)
-                        $('#txtPreviousBlnc').val(prebln);
-                    }
-                    else
-                        $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
-                    var prebln = (parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid)
-                    $('#txtPreviousBlnc').val(prebln);
+                var Totalpayable = 0;
+                var finalAmountVal = $('#txtFinalAmount').val();
+                if (finalAmountVal && finalAmountVal != '0' && finalAmountVal != '' && !isNaN(parseFloat(finalAmountVal))) {
+                    Totalpayable = parseFloat(finalAmountVal).toFixed(0);
+                }
+                else if ($('#txtNetPayable').val() && $('#txtNetPayable').val() != '') {
+                    Totalpayable = parseFloat($('#txtNetPayable').val()).toFixed(0);
+                }
+
+                if (AmtReceived != '' && !isNaN(parseFloat(AmtReceived))) {
+                    var balance = (parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid);
+                    $('#txtBalances').val(balance.toFixed(0));
+                    $('#txtPreviousBlnc').val(balance.toFixed(0));
                 }
                 else {
-                    $('#txtBalances').val((parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid));
-                    var prebln = (parseFloat(Totalpayable) + PreviousAmount) - (parseFloat(AmtReceived) + AdvanceAmount + PreviousPaid)
-                    $('#txtPreviousBlnc').val(prebln);
+                    var balance = (parseFloat(Totalpayable) + PreviousAmount) - (AdvanceAmount + PreviousPaid);
+                    $('#txtBalances').val(balance.toFixed(0));
+                    $('#txtPreviousBlnc').val(balance.toFixed(0));
                 }
             }
             var doctors = '';
@@ -5836,6 +5875,8 @@
                 AllowReceipeRights();
                 loadUserBranch();
                 $('#ddlUserBranch').select2();
+
+                LoadSalesTaxDefinitions();
                 
             });  // document.ready ends
 
@@ -5893,6 +5934,63 @@
                     }
                 });
             }
+
+            
+
+            function LoadSalesTaxDefinitions(selectedID, selectedPerc) {
+
+                var options = '<option value="0">0</option>';
+
+                PageMethods.GetSalesTaxDefinitions(function (Tests) {
+
+                    $.each(JSON.parse(Tests), function (key, value) {
+
+                        options += '<option value="' + value.Sales_Tax_ID + '" data-perc="' + value.Sales_Tax_Perc + '">'
+                            + value.Sales_Tax_Perc +
+                            '</option>';
+                    });
+                    $('#ddlSalesTax').html(options);
+                    if (selectedID) {
+                        $('#ddlSalesTax').val(selectedID).trigger('change');
+
+                        if (selectedPerc) {
+                            $('#hdnSalesTaxPercentage').val(selectedPerc);
+                            CalculateSalesTax();
+                        }
+                    }
+
+                });
+            }
+            function CalculateSalesTax() {
+                debugger;
+                var selectedOption = $('#ddlSalesTax option:selected');
+                var salesTaxID = selectedOption.val();
+                var salesTaxPerc = parseFloat(selectedOption.text()) || 0;
+                $('#hdnSalesTaxID').val(salesTaxID);
+                $('#hdnSalesTaxPercentage').val(salesTaxPerc);
+
+                var baseNetPayable = 0;
+                if ($('#hdnBaseNetPayable').val() && $('#hdnBaseNetPayable').val() != '0' && $('#hdnBaseNetPayable').val() != '') {
+                    baseNetPayable = parseFloat($('#hdnBaseNetPayable').val());
+                } else {
+                    var totalPayable = parseFloat($('#txtTotalPayable').val()) || 0;
+                    var discountAmt = parseFloat($('#txtDisAmt').val()) || 0;
+                    baseNetPayable = totalPayable - discountAmt;
+                    $('#hdnBaseNetPayable').val(baseNetPayable.toFixed(0));
+                }
+
+                if (salesTaxPerc == 0) {
+                    $('#txtNetPayable').val(baseNetPayable.toFixed(0));
+                    $('#txtFinalAmount').val(baseNetPayable.toFixed(0));
+                } else {
+                    var salesTaxAmount = (baseNetPayable * salesTaxPerc) / 100;
+                    var finalAmount = baseNetPayable + salesTaxAmount;
+                    $('#txtNetPayable').val(finalAmount.toFixed(0));
+                    $('#txtFinalAmount').val(finalAmount.toFixed(0));
+                }
+                CountBalance();
+            }
+           
 
         </script>
         <asp:HiddenField runat="server" ID="hdfPatient_ID" ClientIDMode="Static" />
@@ -6251,6 +6349,21 @@
             <label>%</label>
         </div>
         </div>
+                    <div class="row">
+                        <div class="col-lg-5 col-md-4 col-sm-6">
+                            <label class="summary-label">Sales Tax :</label>
+                        </div>
+                        <div class="col-lg-6 col-md-8 col-sm-12 discount-section">
+                            <select id="ddlSalesTax" class="form-control" style="text-align: right; font-size: 19px;" onchange="CalculateSalesTax()">
+                                <option value="0">Select Tax</option>
+                            </select>
+                        </div>
+                    </div>
+
+<input type="hidden" id="hdnSalesTaxID" value="0" />
+<input type="hidden" id="txtFinalAmount" value="0" />
+<input type="hidden" id="hdnBaseNetPayable" value="0" />
+<input type="hidden" id="hdnSalesTaxPercentage" value="0" />
 
     <div class="row">
          <div class="col-lg-5 col-md-4 col-sm-6">

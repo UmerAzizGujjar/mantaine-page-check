@@ -31,7 +31,8 @@
                         'Account_Code_Recvable': $(value).find('td select[name=Account_Code_Recvable] :selected').val(),
                         'Description_Recvable': $(value).find('td input[name=Description_Recvable]').val(),
                         'Activechk': $(value).find('input[name="chk_Active"]').prop('checked'),
-                        'STWH': $(value).find('input[name="chk_STWH"]').prop('checked')
+                        'STWH': $(value).find('input[name="chk_STWH"]').prop('checked'),
+                        'IsBilling': $(value).find('input[name="chk_IsBilling"]').prop('checked')
                     });
                 }
             });
@@ -68,6 +69,7 @@
                     debugger
                     var chk_STWH_checked = value.S_W_H_Tax ? 'checked="checked"' : '';
                     var chk_Active_checked = value.Active ? 'checked="checked"' : '';
+                    var chk_IsBilling_checked = value.IsBilling ? 'checked="checked"' : '';
                     rows += '<tr>' +
                         '<td style="display:none"><input type=text id="Sales_Tax_ID" name="Sales_Tax_ID" value="' + data[key].Sales_Tax_ID + '"/></td>' +
                         '<td><input style="width: 175px !important;" type=text id="Tax_Type' + (key + 1) + '" name="Tax_Type"  value="' + value.Tax_Type + '" readonly="readonly" /></td>' +
@@ -78,7 +80,7 @@
                         '<td><input style="width: 165px !important;" type=text id="Description_Recvable' + (key + 1) + '" readonly="readonly" name="Description_Recvable"  value="' + value.Description_Recvable + '" /></td>' +
                         '<td><input type="checkbox" style="margin-left:-30px" id="chk_STWH' + (key + 1) + '" name="chk_STWH" ' + chk_STWH_checked + ' /></td>' +
                         '<td><input type="checkbox" style="margin-left:-20px" id="chk_Active' + (key + 1) + '" name="chk_Active" ' + chk_Active_checked + ' /></td>' +
-                        '<td><input type="checkbox" style="margin-left:-20px" id="chk_IsBilling' + (key + 1) + '" name="chk_IsBilling" ' + chk_IsBilling_checked + ' /></td>' +
+                        '<td><input type="checkbox" style="margin-left:-20px" id="chk_IsBilling' + (key + 1) + '" name="chk_Active" ' + chk_IsBilling_checked + ' /></td>' +
                         '<td><a href="javascript:void(0)" onclick="EditRow(' + (key + 1) + ')"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i="">'
                     '</td>' +
                '</tr>';
