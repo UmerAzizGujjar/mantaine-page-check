@@ -682,8 +682,9 @@
                     }
                     else if (rptTitle == "Operator_Wise_Billing_Report") {
                         var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var DetailedSummary = document.getElementById('<%= chkAllPatientRecord.ClientID %>').checked;
-                        var url = 'ReportViewer.aspx?ReportName=Operator_Wise_Billing_Report&ReportTitle=Operator Wise Billing Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&AllPatientsRecords=' + DetailedSummary; //+ '&Summary=' + summary ;
+                        var url = 'ReportViewer.aspx?ReportName=Operator_Wise_Billing_Report&ReportTitle=Operator Wise Billing Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&AllPatientsRecords=' + DetailedSummary + '&ExportPDF=' + exporttopdf; //+ '&Summary=' + summary ;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Blood_Bank_Lab_Test_Details") {
@@ -901,7 +902,8 @@
                     }
                     else if (rptTitle == "OPD_Department_Wise_Report") {
                         debugger;
-                     //   var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        //   var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                     var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var startDate = $('#ctl00_MainContent_txtStart_Date').val();
                         var startTime = $('#ctl00_MainContent_txtSTime').val();
                         var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
@@ -919,7 +921,8 @@
                             '&Shift=' + encodeURIComponent(ddlShift) +
                             '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() +
                             '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
-                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0");
+                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0")
+                            + '&ExportPDF=' + exporttopdf;
 
                         window.open(url, '_blank');
                     }
