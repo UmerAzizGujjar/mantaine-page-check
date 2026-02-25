@@ -33,7 +33,7 @@
             var IgpID = '<%= Request.QueryString["IGP_ID"] %>';
             if (IgpID == '') {
                 $('#btn_Print').hide();
-               
+
                 $('#btnPrintInspec').hide();
                 $('#btnInspec').hide();
                 $('#btnUnInspec').hide();
@@ -145,13 +145,13 @@
                 }
                 $('#ddlVendor').attr("disabled", 'disabled');
                 getPONumByVendor(data.Vendor);
-               // getPONumByVendor(data.Vendor, function () {
-                    //setTimeout(function () {
-                    //    $('#ddlPONo').val(data.PO_ID).trigger('change.select2');
-                    //}, 1500);
-                    LoadIGPDetail(IGP_ID);
-               // });
-                
+                // getPONumByVendor(data.Vendor, function () {
+                //setTimeout(function () {
+                //    $('#ddlPONo').val(data.PO_ID).trigger('change.select2');
+                //}, 1500);
+                LoadIGPDetail(IGP_ID);
+                // });
+
             },
                 function (error) {
                     alert(error.get_message());
@@ -179,7 +179,7 @@
                 selectedOptions = data;
                 $.each(data, function (key, value) {
                     debugger;
-                   // $('#ddlPONo').val(value.PO_ID);
+                    // $('#ddlPONo').val(value.PO_ID);
                     if (data[key].Delivery_Date != null) {
                         datetime = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Delivery_Date.substring(6, 19))));
                     }
@@ -216,7 +216,7 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-                         $('#ctl00_MainContent_txtPRNo').tokenInput("clear");
+                        $('#ctl00_MainContent_txtPRNo').tokenInput("clear");
                         return false;
                     }
                     else {
@@ -240,8 +240,8 @@
                             '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="' + value.BounusQty + '" autocomplete="off" id="BounusQty' + (key + 1) + '" name="BounusQty"></input></td>' +
 
 
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + rowlength + '"  value="' + MfgDate + '" readonly="readonly"/></td>' +
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + rowlength + '"  value="' + ExpiryDate + '" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '"  value="' + MfgDate + '" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + (key + 1) + '"  value="' + ExpiryDate + '" readonly="readonly"/></td>' +
                             '<td style="display:none"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0"  id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;color: #f30a0a;position:relative;" i=""></i></a></td>' +
@@ -250,8 +250,18 @@
                 });
                 $('#tblItemDescription tbody').html(rows);
                 BatchValidation2();
-                $('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
-                $('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
+
+                //$('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
+                $(document).on('focus', 'input[name="txtMfgdate"], input[name="Expdate"]', function () {
+                    $(this).datepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "1950:2050",
+                        dateFormat: 'dd M yy'
+                    });
+                });
+
+                //$('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
                 $.each(selectedOptions, function (key, value) {
                     debugger;
                     $("#ddlFed" + (key + 1)).val(value.FedPercent_Id);
@@ -283,7 +293,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                     $(_this).find('td input[name=BatchNo]').val('');
+                    $(_this).find('td input[name=BatchNo]').val('');
                     $(_this).find('td input[name=BatchNo]').prop('readonly', true);
                 }
             }
@@ -343,7 +353,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-                 proceed = false;
+                proceed = false;
             }
             else {
                 $('#tblItemDescription').removeClass('ErrorAlert');
@@ -380,7 +390,7 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-                     }
+                    }
                     if (igpQTy == "") {
                         proceed = false;
 
@@ -396,7 +406,7 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
-                     }
+                    }
                     if (igpQTy > poQty) {
                         proceed = false;
                         Swal.fire({
@@ -428,7 +438,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                         }
+                        }
                         if (!MfgDate) {
                             proceed = false;
                             Swal.fire({
@@ -443,7 +453,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                         }
+                        }
                         if (!ExpDate) {
                             proceed = false;
                             Swal.fire({
@@ -458,7 +468,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                         }
+                        }
                         if (ExpDate && GRNdate > ExpDate) {
                             proceed = false;
                             Swal.fire({
@@ -473,7 +483,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                         }
+                        }
                     }
                     if (Isbatch == "false" || Isbatch == 'null' || Isbatch == null) {
                         debugger;
@@ -515,6 +525,19 @@
                 var Bility_No = $('#txtBility_No').val();
                 var Remarks = $('#txtRemarks').val();
                 var InvOrg = $('#ddlInv_Org').val();
+                if (!InvOrg || InvOrg === "0") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warehouse Required',
+                        text: 'Please select a warehouse.',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return;
+                }
                 var table = $('#tblItemDescriptionDetail');
                 debugger;
                 var Item_list = [];
@@ -539,7 +562,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                     sendFile(res);
+                    sendFile(res);
                     $('#btnSave').val("Update");
                     window.location = "InversionGatePass.aspx?IGP_ID=" + res;
                     $('#btnSave').val("Update");
@@ -677,7 +700,7 @@
                             value.Unit = "";
                         if (value.UnitName == null)
                             value.UnitName = "";
-                       
+
                         if (value.BlncQty == undefined)
                             value.BlncQty = 0
                         if (value.Qty == undefined)
@@ -714,8 +737,8 @@
 
                             '<td style="width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="' + (value.Bonus_Qty != null ? parseFloat(value.Bonus_Qty).toFixed(2) : '0') + '" id="BounusQty' + rowlength + '" name="BounusQty" autocomplete="off" class="bonusQtyField" data-toggle="tooltip" data-placement="top" title="Enter Bounus quantity in Loose" ></input></td>' +
 
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + rowlength + '" value="' + formattedDate + '"/></td>' +
-                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + rowlength + '" value="" readonly="readonly"/></td>' +
+                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="txtMfgdate" id="txtMfgdate' + (key + 1) + '" value="' + formattedDate + '"/></td>' +
+                            '<td><input type="text" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Expdate" id="Expdate' + (key + 1) + '" value="" readonly="readonly"/></td>' +
                             '<td style="display:none"><input type="hidden" style="width:61px !important;text-align:center;font-size:9px;height:21px !important;" name="Isbatch" id="Isbatch' + rowlength + '" value="' + value.IsBatch + '" readonly="readonly"/></td>' +
                             '<td style="display:none;width:50px !important;text-align:right;font-size:9px;height:10px !important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:21px !important;position: relative;" value="0" id="RejQty' + rowlength + '" name="RejQty"></input></td>' +
                             '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size:11px;color: #f30a0a;position:relative;"></i></a> </td>' +
@@ -723,11 +746,20 @@
                     });
                     $('#tblItemDescription').append(rows);
                     BatchValidation2();
-                    $('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
-                    $('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
+                    //$('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
+                    //$('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
+                    $(document).on('focus', 'input[name="txtMfgdate"], input[name="Expdate"]', function () {
+                        $(this).datepicker({
+                            changeMonth: true,
+                            changeYear: true,
+                            yearRange: "1950:2050",
+                            dateFormat: 'dd M yy'
+                        });
+                    });
+                    
                     $('#ddlInv_Org').val(warehouse).trigger('change');
                     //$('#ddlInv_Org').attr('disabled', true);
-                    
+
                 });
             }
             else {
@@ -745,7 +777,7 @@
                     }
                 });
 
-             }
+            }
         }
         function ExcludeFromPayment(anchor) {
             debugger;
@@ -773,7 +805,7 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + id;
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=InwardGatePassList&ReportTitle=Inward Gate Pass List&Igpid=' + id;
             }
             window.open(url, '_blank');
         }
@@ -805,11 +837,11 @@
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Inspection&ReportTitle=Inward Gate Pass List&Igpid=' + id;
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=Inspection&ReportTitle=Inward Gate Pass List&Igpid=' + id;
             }
             window.open(url, '_blank');
         }
-       
+
 
         function ApproveInspecModal() {
             debugger;
@@ -828,7 +860,7 @@
                     }
                 });
 
-                 return;
+                return;
             }
             $('#InspmodalItemDescription tbody').empty();
             debugger;
@@ -872,7 +904,7 @@
                     }
                 });
 
-                 isValid = false;
+                isValid = false;
                 return false;
             } else {
                 $('#InspmodalItemDescription').removeClass('ErrorAlert');
@@ -942,7 +974,7 @@
                                         htmlContainer: 'swal-big-text'
                                     }
                                 });
-                                 location.reload();
+                                location.reload();
                             } else {
                                 if (message == "1") {
                                     Swal.fire({
@@ -957,7 +989,7 @@
                                             htmlContainer: 'swal-big-text'
                                         }
                                     });
-                                     location.reload();
+                                    location.reload();
                                 }
                                 else {
 
@@ -974,7 +1006,7 @@
                                         }
                                     });
 
-                                 }
+                                }
 
                             }
                         });
@@ -993,7 +1025,7 @@
                             }
                         });
 
-                     }
+                    }
                 });
             }
         }
@@ -1049,136 +1081,136 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <form id="item">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label id="LblIGP_Num" class="labelIGP">IGP No</label>
-                    <input type="text" class="form-control" id="IGP_Num" name="IGP_Num" readonly="readonly" />
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label id="Lbl_Date" class="labelIGP">Date</label>
-                    <input type="text" class="form-control" id="txtDate" name="txtDate" />
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12  mb-3">
-                    <label id="lbltxtVendor" class="labelIGP">Vendor <span>*</span></label>
-                    <select class="form-control" id="ddlVendor" name="ddlVendor" onchange="getPONumByVendor(this)">
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label id="lblPO_No" class="labelIGP">Po No</label>
-                    <select class="form-control" id="ddlPONo" name="ddlPONo" onchange="PerformPOSearch()" >
-                    </select>
-                </div>
-                </div>
-                <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label id="lblInvorg" class="labelIGP">Warehouse<span>*</span></label>
-                    <select class="form-control" id="ddlInv_Org"></select>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label id="LblDriverName" class="labelIGP">Driver Name</label>
-                    <input type="text" class="form-control" id="DriverName" name="DriverName" />
-                </div>
-
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label id="Lbl_Vehiclenum" class="labelIGP">Vehicle #</label>
-                    <input type="text" class="form-control" id="txtVehiclenum" name="txtVehiclenum" />
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label id="lblBility_No" class="labelIGP">Bility #</label>
-                    <input type="text" class="form-control" id="txtBility_No" name="txtBility_No" />
-                </div>
-                </div>
-                <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label style="width: 78px !important;" id="lblStatus" class="labelIGP">Status</label>
-                    <input type="text" class="form-control" id="txtStatus" name="txtStatus" readonly="readonly" />
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label style="width: 78px !important;" id="lblStatusinpec" class="labelIGP">Inspec Status</label>
-                    <input type="text" class="form-control" id="txtStatusInspec" name="txtStatusInspec" readonly="readonly" />
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label id="lblRemarks" class="labelIGP">Remarks</label>
-                    <textarea class="form-control" id="txtRemarks " style="height: 33px;"></textarea>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-                    <label id="lblAttachments" class="labelIGP">Attachments</label>
-                    <input type="file" id="fileUpload1" name="fileUpload1" />
-                    <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
-                </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="LblIGP_Num" class="labelIGP">IGP No</label>
+                <input type="text" class="form-control" id="IGP_Num" name="IGP_Num" readonly="readonly" />
             </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="Lbl_Date" class="labelIGP">Date</label>
+                <input type="text" class="form-control" id="txtDate" name="txtDate" />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12  mb-3">
+                <label id="lbltxtVendor" class="labelIGP">Vendor <span>*</span></label>
+                <select class="form-control" id="ddlVendor" name="ddlVendor" onchange="getPONumByVendor(this)">
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="lblPO_No" class="labelIGP">Po No</label>
+                <select class="form-control" id="ddlPONo" name="ddlPONo" onchange="PerformPOSearch()">
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="lblInvorg" class="labelIGP">Warehouse<span>*</span></label>
+                <select class="form-control" id="ddlInv_Org"></select>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="LblDriverName" class="labelIGP">Driver Name</label>
+                <input type="text" class="form-control" id="DriverName" name="DriverName" />
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="Lbl_Vehiclenum" class="labelIGP">Vehicle #</label>
+                <input type="text" class="form-control" id="txtVehiclenum" name="txtVehiclenum" />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="lblBility_No" class="labelIGP">Bility #</label>
+                <input type="text" class="form-control" id="txtBility_No" name="txtBility_No" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label style="width: 78px !important;" id="lblStatus" class="labelIGP">Status</label>
+                <input type="text" class="form-control" id="txtStatus" name="txtStatus" readonly="readonly" />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label style="width: 78px !important;" id="lblStatusinpec" class="labelIGP">Inspec Status</label>
+                <input type="text" class="form-control" id="txtStatusInspec" name="txtStatusInspec" readonly="readonly" />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="lblRemarks" class="labelIGP">Remarks</label>
+                <textarea class="form-control" id="txtRemarks " style="height: 33px;"></textarea>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <label id="lblAttachments" class="labelIGP">Attachments</label>
+                <input type="file" id="fileUpload1" name="fileUpload1" />
+                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+            </div>
+        </div>
 
     </form>
-        <div class="row">
-            <div class="table-responsive">
-                <table class="table" id="tblItemDescription" style="overflow-x: scroll !important;">
-                    <thead>
-                        <tr>
-                            <th style="width: 30px; text-align: center;">Sr No.</th>
-                            <th style="width: 30px; text-align: center;">PO #</th>
-                            <th style="width: 40px; text-align: center; font-size: 10px;">Item Code</th>
-                            <th style="width: 195px; text-align: center;">Item Description</th>
-                            <th style="width: 35px; text-align: center;">UOM_QTY</th>
-                            <th style="width: 35px; text-align: center;">Unit</th>
-                            <th style="width: 40px; text-align: center;">Batch No</th>
-                            <th style="width: 62px; text-align: center;">PO Delivery Date</th>
-                            <th style="width: 40px; text-align: center;">PO Qty</th>
-                            <th style="width: 40px; text-align: center;">Rcv Qty</th>
-                            <th style="width: 40px; text-align: center;">Blnc Qty</th>
-                            <th style="width: 40px; text-align: center;">IGP Qty</th>
-                            <th style="width: 40px; text-align: center;">Insp Qty</th>
-                            <th style="width: 40px; text-align: center;">Bounus Qty</th>
-                            <th style="width: 30px; text-align: center;">Mfg Date</th>
-                            <th style="width: 30px; text-align: center;">Exp Date</th>
-                            <th style="width: 40px; display: none; text-align: center;">Rej Qty</th>
-                            <th style="width: 40px; text-align: center;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tblItemDescriptionDetail" style="height: 25px;">
-                    </tbody>
-                </table>
-            </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table" id="tblItemDescription" style="overflow-x: scroll !important;">
+                <thead>
+                    <tr>
+                        <th style="width: 30px; text-align: center;">Sr No.</th>
+                        <th style="width: 30px; text-align: center;">PO #</th>
+                        <th style="width: 40px; text-align: center; font-size: 10px;">Item Code</th>
+                        <th style="width: 195px; text-align: center;">Item Description</th>
+                        <th style="width: 35px; text-align: center;">UOM_QTY</th>
+                        <th style="width: 35px; text-align: center;">Unit</th>
+                        <th style="width: 40px; text-align: center;">Batch No</th>
+                        <th style="width: 62px; text-align: center;">PO Delivery Date</th>
+                        <th style="width: 40px; text-align: center;">PO Qty</th>
+                        <th style="width: 40px; text-align: center;">Rcv Qty</th>
+                        <th style="width: 40px; text-align: center;">Blnc Qty</th>
+                        <th style="width: 40px; text-align: center;">IGP Qty</th>
+                        <th style="width: 40px; text-align: center;">Insp Qty</th>
+                        <th style="width: 40px; text-align: center;">Bounus Qty</th>
+                        <th style="width: 30px; text-align: center;">Mfg Date</th>
+                        <th style="width: 30px; text-align: center;">Exp Date</th>
+                        <th style="width: 40px; display: none; text-align: center;">Rej Qty</th>
+                        <th style="width: 40px; text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tblItemDescriptionDetail" style="height: 25px;">
+                </tbody>
+            </table>
         </div>
-   
+    </div>
 
-        <div class="row">
-             <div class="col-lg-10">
+
+    <div class="row">
+        <div class="col-lg-10">
             <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-12" id="SaveButtonToBeHidden">
-                <input type="button" class="btn btn-primry" value="Save" id="btnSave"  />
-                &nbsp;
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
-                <input type="button" class="btn btn-primry" value="Print" name="name" onclick="PrintInwardGatePassDetail();" />
-                &nbsp;
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
-                <input type="button" class="btn-gray"  value="List" onclick="window.location = 'InversionGatePassView.aspx'" />
-                &nbsp;
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
-                <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'InversionGatePass.aspx'" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnApproveToBeHidden">
-                <input type="button" class=" btn-primry" style="width: 103px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-            </div>
+                <div class="col-lg-2 col-md-4 col-sm-12" id="SaveButtonToBeHidden">
+                    <input type="button" class="btn btn-primry" value="Save" id="btnSave" />
+                    &nbsp;
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-12">
+                    <input type="button" class="btn btn-primry" value="Print" name="name" onclick="PrintInwardGatePassDetail();" />
+                    &nbsp;
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-12">
+                    <input type="button" class="btn-gray" value="List" onclick="window.location = 'InversionGatePassView.aspx'" />
+                    &nbsp;
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-12">
+                    <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'InversionGatePass.aspx'" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnApproveToBeHidden">
+                    <input type="button" class=" btn-primry" style="width: 103px; display: none" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+                </div>
 
-            <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnInspecToBeHidden">
-                <input type="button"  class="btn-primry" value="Inspec UnApproval" id="btnUnInspec" onclick="UnApproveInspec()" />
-                &nbsp;
-            </div>
+                <div class="col-lg-2 col-md-4 col-sm-12" id="btnUnInspecToBeHidden">
+                    <input type="button" class="btn-primry" value="Inspec UnApproval" id="btnUnInspec" onclick="UnApproveInspec()" />
+                    &nbsp;
+                </div>
 
-            <div class="col-lg-2 col-md-4 col-sm-12" id="btnPrintInspecToBeHidden">
-                <input type="button" class="btn-primry" value="Print Inspec" id="btnPrintInspec" onclick="PrintInspection()" />
-                &nbsp;
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12" id="btnInspecToBeHidden">
-                <input type="button"  class="btn btn-primry" value="Inspec Approval" id="btnInspec" onclick="ApproveInspecModal()" />
-                &nbsp;
-            </div>
+                <div class="col-lg-2 col-md-4 col-sm-12" id="btnPrintInspecToBeHidden">
+                    <input type="button" class="btn-primry" value="Print Inspec" id="btnPrintInspec" onclick="PrintInspection()" />
+                    &nbsp;
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-12" id="btnInspecToBeHidden">
+                    <input type="button" class="btn btn-primry" value="Inspec Approval" id="btnInspec" onclick="ApproveInspecModal()" />
+                    &nbsp;
+                </div>
             </div>
         </div>
-        </div>
+    </div>
 
 
     <div id="inspecModal" class="modal" tabindex="-1" role="dialog">

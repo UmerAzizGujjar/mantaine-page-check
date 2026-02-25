@@ -171,6 +171,7 @@ namespace PMS
                 HttpPostedFile fileUpload = Request.Files[i];
 
                 Test_Image image = new Test_Image();
+                Lab_Test_Detail ltd = new Lab_Test_Detail();
 
                 // SAME OLD IMAGE NO LOGIC
                 int imageNo = Convert.ToInt32(
@@ -193,8 +194,8 @@ namespace PMS
                 {
                     File.Delete(physicalPath);
 
-                    string sql = "DELETE FROM Test_Image WHERE Image_path = '" + image_Path + "'";
-                    DBClass.executeNonQueryWithoutBegin(sql);
+                    //string sql = "DELETE FROM Test_Image WHERE Image_path = '" + image_Path + "'";
+                    //DBClass.executeNonQueryWithoutBegin(sql);
                 }
 
                 // Save file
@@ -203,6 +204,7 @@ namespace PMS
                 // Save DB record
                 image.Image_No = imageNo;
                 image.Image_path = image_Path;
+                ltd.Image_path = image_Path;
                 image.Lab_Test_Detail_ID = Convert.ToInt32(detail_ID);
 
                 db.Test_Images.InsertOnSubmit(image);
@@ -1555,7 +1557,15 @@ namespace PMS
                 pt.Patient_No = Convert.ToInt32(pat.pat_id).ToString();
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
-                pt.Age = pat.Age_years.ToString();
+                if(pat.Age_years == null)
+                {
+                    pt.Age = "";
+                }
+                else
+                {
+                    pt.Age = pat.Age_years.ToString();
+                }
+               
                 if (pat.Created_time.HasValue)
                     pt.Entry_Date = pat.Created_time.ToString();
                

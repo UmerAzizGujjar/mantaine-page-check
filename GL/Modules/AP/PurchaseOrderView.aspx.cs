@@ -79,22 +79,22 @@ namespace PMS
                 using (var _dbContext = new DataBaseDataContext())
                 {
                     string userId = HttpContext.Current.Session["UserId"].ToString();
-                 
+
                     var Total_Order = _dbContext.AP_Purchase_Orders.Count();
                     var PurchaseOreder = from PO in _dbContext.AP_Purchase_Orders
-                                   where
-                                       ((PO.PO_ID.ToString().Contains(searchValue) || PO.PO_No.ToString().Contains(searchValue) || PO.Ref_No.ToString().Contains(searchValue) || (from v in _dbContext.AP_Vendors where PO.Vendor_ID == v.Vendor_ID select new { vendor = v.Vendor_Name }).FirstOrDefault().vendor.ToString().Contains(searchValue) || PO.PO_Amount.ToString().Contains(searchValue) || PO.Status.ToString().Contains(searchValue)))
-                                   select new
-                                   {
-                                       POID = PO.PO_ID,
-                                       PONo = PO.PO_No,
-                                       Date = PO.PO_Date,
-                                       RefNo = PO.Ref_No,
-                                       VendorName = (from v in _dbContext.AP_Vendors where PO.Vendor_ID == v.Vendor_ID select new { vendor = v.Vendor_Name }).FirstOrDefault().vendor.ToString(),
-                                       PO_Amount = PO.PO_Amount,
-                                       Status = PO.Status,
-                                      
-                                   };
+                                         where
+                                             ((PO.PO_ID.ToString().Contains(searchValue) || PO.PO_No.ToString().Contains(searchValue) || PO.Ref_No.ToString().Contains(searchValue) || (from v in _dbContext.AP_Vendors where PO.Vendor_ID == v.Vendor_ID select new { vendor = v.Vendor_Name }).FirstOrDefault().vendor.ToString().Contains(searchValue) || PO.PO_Amount.ToString().Contains(searchValue) || PO.Status.ToString().Contains(searchValue)))
+                                         select new
+                                         {
+                                             POID = PO.PO_ID,
+                                             PONo = PO.PO_No,
+                                             Date = PO.PO_Date,
+                                             RefNo = PO.Ref_No,
+                                             VendorName = (from v in _dbContext.AP_Vendors where PO.Vendor_ID == v.Vendor_ID select new { vendor = v.Vendor_Name }).FirstOrDefault().vendor.ToString(),
+                                             PO_Amount = PO.PO_Amount,
+                                             Status = PO.Status,
+
+                                         };
 
                     var FilteredCount = PurchaseOreder.Count();
                     switch (sortColumn)
@@ -119,6 +119,67 @@ namespace PMS
             catch (Exception ex)
             {
                 throw new Exception("Error fetching Purchase Order list", ex);
+            }
+        }
+
+        [WebMethod]
+        public static string GetUserColumnPreferences()
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "PurchaseOrderView";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var pref = db.UserDataTablePreferences
+                                  .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (pref != null)
+                        return pref.ColumnVisibility;
+                    else
+                        return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        [WebMethod]
+        public static void SaveUserColumnPreferences(string visibilityJson)
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "PurchaseOrderView";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var existing = db.UserDataTablePreferences
+                                     .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (existing != null)
+                    {
+                        existing.ColumnVisibility = visibilityJson;
+                    }
+                    else
+                    {
+                        db.UserDataTablePreferences.InsertOnSubmit(new UserDataTablePreference
+                        {
+                            UserID = userId,
+                            PageName = pageName,
+                            ColumnVisibility = visibilityJson
+                        });
+                    }
+
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }

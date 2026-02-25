@@ -57,29 +57,33 @@
                 },
                 "columns": [
                     { "data": "St_id", "visible": false, "width": "0%" },
-                    { "data": null, "orderable": false, "width": "10%" },
-                    { "data": "Classname", "name": "Classname", "width": "15%", "orderable": true },
-                    { "data": "ProgramName", "name": "ProgramName", "width": "15%", "orderable": true },   // ✅ now sortable
-                    { "data": "WeekName", "name": "WeekName", "width": "15%", "orderable": true },     // ✅ FIXED: was false → now true
+                    { "data": null, "orderable": false, "width": "08%" },
+                    { "data": "Classname", "name": "Classname", "width": "12%", "orderable": true },
+                    { "data": "ProgramName", "name": "ProgramName", "width": "10%", "orderable": true },
+                    { "data": "WeekName", "name": "WeekName", "width": "10%", "orderable": true },
                     {
-                        "data": null,
-                        "name": "DateRange",
+                        "data": "",
+                        "name": "DateRange",  
                         "render": function (data, type, full) {
+                            if (!full.FirstDate || !full.LastDate) return "";
+
                             var firstDate = moment(full.FirstDate).format('DD-MMM-YYYY');
                             var lastDate = moment(full.LastDate).format('DD-MMM-YYYY');
                             return firstDate + ' - ' + lastDate;
                         },
-                        "width": "30%",
-                        "orderable": false
+                        "width": "20%",
+                        "orderable": true
                     },
+                    { "data": "Block", "name": "Block", "width": "10%", "orderable": false },
+                    { "data": "Module", "name": "Module", "width": "10%", "orderable": false }, 
                     {
                         "render": function (data, type, full) {
                             var res = '<a class="editListBtn" href="#" onclick="editOpen(' + full.St_id + ')" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i style="color:white !important;" class="fa fa-pencil"></i></a>';
                             var Del = '<a style="border-radius: 4px;background-color:#ad170c;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.St_id + '" onclick="DeleteData(' + full.St_id + ', \'' + full.St_id + '\')"><i class="fa fa-trash" style="color:white !important;"></i></a>';
                             //var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
-                            return res + Del + print;
+                            return res + Del;
                         },
-                        "width": "15%",
+                        "width": "10%",
                         "orderable": false
                     }
                 ],
@@ -136,7 +140,9 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <table id="example" class="table table-striped table-bordered display">
+    <div class="row">
+    <div class="table-container col-lg-12 col-md-12 col-sm-10">
+    <table id="example" class="table table-hover table-striped table-bordered">
         <thead>
             <tr>
                 <th>St_id</th>
@@ -145,9 +151,13 @@
                 <th>Program</th>
                 <th>Week</th>
                 <th>Date </th>
+                <th>Block </th>
+                <th>Module </th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody></tbody>
     </table> 
+        </div>
+        </div>
 </asp:Content>

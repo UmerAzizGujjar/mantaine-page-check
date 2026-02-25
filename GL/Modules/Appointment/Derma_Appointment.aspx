@@ -1077,8 +1077,19 @@
                                 ? moment(data[i].Helper_End_Time).format('h:mm A')
                                 : '';
 
+                            var machineStart = data[i].Machine_start_time
+                                ? moment(data[i].Machine_start_time).format('h:mm A')
+                                : '';
+
+                            var machineEnd = data[i].Machine_End_Time
+                                ? moment(data[i].Machine_End_Time).format('h:mm A')
+                                : '';
+
                             var technicianTime = (helperStart && helperEnd)
                                 ? helperStart + ' - ' + helperEnd
+                                : 'N/A';
+                            var machineTime = (machineStart && machineEnd)
+                                ? machineEnd + ' - ' + machineEnd
                                 : 'N/A';
 
                             if (cancel) {
@@ -1086,7 +1097,7 @@
                             }
 
                             rows += '<tr>' +
-                                '<td>' + (i + 1) + '</td>' + '<td>' + data[i].Appointment_No + '</td>' + '<td>' + toTitleCase(data[i].Patient_Name.replace("_", " ")) + '</td>' + '<td>' + data[i].emp_name + '</td>' + '<td>' + (data[i].Technician_Name || 'N/A') + '<td>' + technicianTime + '</td>' + '<td>' + (data[i].Procedure_Name || 'N/A') + '</td>' + '<td>' + data[i].Phone + '</td>' + '<td>' + App_Date + '</td>' + '<td name="statusCell">' + status + '</td>' + '<td style="display:none;" name="cancelAppointment">' + data[i].cancelAppointment + '</td>' + '<td style="width: 250px;">' + '<a href="#" onclick="Edit(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px; margin-left: 9px;">Change Schedule</a>' +
+                                '<td>' + (i + 1) + '</td>' + '<td>' + data[i].Appointment_No + '</td>' + '<td>' + toTitleCase(data[i].Patient_Name.replace("_", " ")) + '</td>' + '<td>' + data[i].emp_name + '</td>' + '<td>' + data[i].machine_name + '</td>' + '<td>' + (data[i].Technician_Name || 'N/A') + '<td>' + technicianTime + '</td>' + '<td>' + machineTime + '</td>' + '<td>' + (data[i].Procedure_Name || 'N/A') + '</td>' + '<td>' + data[i].Phone + '</td>' + '<td>' + App_Date + '</td>' + '<td name="statusCell">' + status + '</td>' + '<td style="display:none;" name="cancelAppointment">' + data[i].cancelAppointment + '</td>' + '<td style="width: 250px;">' + '<a href="#" onclick="Edit(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #438eb9 ; color: white; padding: 4px 11px; margin-left: 9px;">Change Schedule</a>' +
                                 '<a href="#" onclick="CancelAppointment(' + data[i].Appointment_ID + ')" style="border-radius: 4px; background-color: #ea0000; color: white; padding: 4px 11px; margin-left: 9px;">Cancel</a>' +
                                 '</td>' +
                                 '</tr>';
@@ -1484,7 +1495,7 @@
             var area_val = $('#txtarea').val();
             var Province = $('#ddl_Province :selected').val();
 
-            if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || houseno == "" || city_val == "0" || area_val == "0")) {
+            if ((PatientName == "" || Mobile == "")) {
 
                 Swal.fire({
                     icon: 'error',
@@ -1568,7 +1579,7 @@
             debugger;
             try {
                 isAdd = true;
-                window.location.href = "Appointment.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
+                window.location.href = "Derma_Appointment.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
 
             } catch (err) {
                 alert(err.message);
@@ -1614,7 +1625,7 @@
 
         function LoadMachine() {
             debugger;
-            var options = '<option value="0">Select Doctor</option>';
+            var options = '<option value="0">Select Machine</option>';
             PageMethods.GetMachine(function (data) {
                 $.each(JSON.parse(data), function (key, value) {
                     if (key >= 0) {
@@ -1622,6 +1633,7 @@
                     }
                 });
                 $('#ddlMachine').html(options).select2();
+                $('#ddlmachine_filter').html(options).select2();
             });
         }
 
@@ -2261,11 +2273,32 @@
             }
 
             $rows.each(function () {
-                var rowProcId = $(this).find('td:eq(6)').text().trim(); 
-                var rowProcName = $(this).find('td:eq(6)').text().trim();
+                var rowProcId = $(this).find('td:eq(8)').text().trim(); 
+                var rowProcName = $(this).find('td:eq(8)').text().trim();
                 var selectedProcName = $('#chk_Procedure option:selected').text();
 
                 if (selectedProcName === "All Procedures" || rowProcName === selectedProcName) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+        function filterByMachine() {
+            var machine_id = $('#ddlmachine_filter').val();
+            var $rows = $('#table_res tbody tr');
+
+            if (!machine_id) {
+                $rows.show();
+                return;
+            }
+
+            $rows.each(function () {
+                var rowmacidId = $(this).find('td:eq(4)').text().trim(); 
+                var rowmcName = $(this).find('td:eq(4)').text().trim();
+                var selectedmachineName = $('#ddlmachine_filter option:selected').text();
+
+                if (selectedmachineName === "Select Machines" || rowmcName === selectedmachineName) {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -2394,11 +2427,11 @@
 
     </div>
     <div class="row ">       
-        <div class="col-lg-2 col-md-3 col-sm-4">
+        <div class="col-lg-1 col-md-3 col-sm-4">
             <label>From</label>
             <input type="text" id="txt_datefrom" />
         </div>
-        <div class="col-lg-2 col-md-3 col-sm-4">
+        <div class="col-lg-1 col-md-3 col-sm-4">
             <label style="margin-left: 15px!important">To</label>
             <input type="text" id="txt_dateto" />
         </div>       
@@ -2417,6 +2450,12 @@
                 <option value="">All Procedures</option>
             </select>
         </div>
+             <div class="col-lg-2 col-md-3 col-sm-4 mg">
+         <label>Machine</label>
+         <select id="ddlmachine_filter" onchange="filterByMachine()">
+             
+         </select>
+     </div>
         <div class="col-lg-1 col-md-3 col-sm-4 mg">
             <label></label>
             <select id="chk_status" onchange="testddlchange()">
@@ -2425,6 +2464,7 @@
                 <option>Booked</option>
             </select>
         </div>
+   
         <div class="col-lg-1 col-md-2 col-sm-3">
             <label></label>
             <input type="button" id="btntoggle" class="btn btn-primry" onclick="toggleCalendar" value="Calendar View" />
@@ -2469,8 +2509,10 @@
                 <th>APPT NO</th>
                 <th>PATIENT NAME</th>
                 <th>DOCTOR NAME</th>
+                <th>Machine Name</th>
                 <th>Technician Name</th>
                 <th>Technician Time</th>
+                <th>Machine Time</th>
                 <th>PROCEDURE</th>
                 <th>PHONE NUMBER</th>
                 <th>DATE</th>

@@ -146,6 +146,11 @@
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.7.0.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.7.0\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -195,6 +200,7 @@
     <Reference Include="Telerik.Web.UI.Skins">
       <HintPath>..\..\..\Users\Irfan\Desktop\Telerik.Web.UI.Skins.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Modules\Accounts\ClinicalFinancial.aspx" />
@@ -209,6 +215,7 @@
     <Content Include="Modules\Administrator\AddDoctor_Packages.aspx" />
     <Content Include="Modules\Administrator\AddHospital.aspx" />
     <Content Include="Modules\Administrator\AddPanel_Packages.aspx" />
+    <Content Include="Modules\Administrator\ApproveGoodsReturn.aspx" />
     <Content Include="Modules\Administrator\Token_List.aspx" />
     <Content Include="Modules\Administrator\API.aspx" />
     <Content Include="Modules\Administrator\AssetDepereciation.aspx" />
@@ -3391,6 +3398,7 @@
     <Content Include="wwwroot\ASsiratTheme\Latest_Datatable\jquery.dataTables.min.css" />
     <Content Include="wwwroot\ASsiratTheme\Latest_Datatable\jquery.dataTables.min.js" />
     <Content Include="wwwroot\ASsiratTheme\Latest_Datatable\jszip.min.js" />
+    <Content Include="wwwroot\ASsiratTheme\Latest_Datatable\LatestDataTableColumns.min.js" />
     <Content Include="wwwroot\ASsiratTheme\Latest_Datatable\pdfmake.min.js" />
     <Content Include="wwwroot\ASsiratTheme\Latest_Datatable\vfs_fonts.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\angular-ui\ui-bootstrap-tpls.js" />
@@ -6836,6 +6844,7 @@
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\jquery.dataTables.min.css" />
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\jquery.dataTables.min.js" />
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\jszip.min.js" />
+    <Content Include="wwwroot\IITH_Theme\Latest_Datatable\LatestDataTableColumns.min.js" />
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\pdfmake.min.js" />
     <Content Include="wwwroot\IITH_Theme\Latest_Datatable\vfs_fonts.js" />
     <Content Include="wwwroot\IITH_Theme\css\MainDashboard.min.css" />
@@ -10391,6 +10400,7 @@
     <Content Include="wwwroot\khurshid\Latest_Datatable\jquery.dataTables.min.css" />
     <Content Include="wwwroot\khurshid\Latest_Datatable\jquery.dataTables.min.js" />
     <Content Include="wwwroot\khurshid\Latest_Datatable\jszip.min.js" />
+    <Content Include="wwwroot\khurshid\Latest_Datatable\LatestDataTableColumns.min.js" />
     <Content Include="wwwroot\khurshid\Latest_Datatable\pdfmake.min.js" />
     <Content Include="wwwroot\khurshid\Latest_Datatable\vfs_fonts.js" />
     <Content Include="wwwroot\khurshid\Scripts\angular-ui\ui-bootstrap-tpls.js" />
@@ -13824,6 +13834,7 @@
     <Content Include="wwwroot\NoorHospitalTheme\Latest_Datatable\jquery.dataTables.min.css" />
     <Content Include="wwwroot\NoorHospitalTheme\Latest_Datatable\jquery.dataTables.min.js" />
     <Content Include="wwwroot\NoorHospitalTheme\Latest_Datatable\jszip.min.js" />
+    <Content Include="wwwroot\NoorHospitalTheme\Latest_Datatable\LatestDataTableColumns.min.js" />
     <Content Include="wwwroot\NoorHospitalTheme\Latest_Datatable\pdfmake.min.js" />
     <Content Include="wwwroot\NoorHospitalTheme\Latest_Datatable\vfs_fonts.js" />
     <Content Include="wwwroot\NoorHospitalTheme\Scripts\angular-ui\ui-bootstrap-tpls.js" />
@@ -17257,6 +17268,7 @@
     <Content Include="wwwroot\Pakred\Latest_Datatable\jquery.dataTables.min.css" />
     <Content Include="wwwroot\Pakred\Latest_Datatable\jquery.dataTables.min.js" />
     <Content Include="wwwroot\Pakred\Latest_Datatable\jszip.min.js" />
+    <Content Include="wwwroot\Pakred\Latest_Datatable\LatestDataTableColumns.min.js" />
     <Content Include="wwwroot\Pakred\Latest_Datatable\pdfmake.min.js" />
     <Content Include="wwwroot\Pakred\Latest_Datatable\vfs_fonts.js" />
     <Content Include="wwwroot\Pakred\Scripts\angular-ui\ui-bootstrap-tpls.js" />
@@ -17706,6 +17718,7 @@
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\logo.PNG" />
     <Content Include="wwwroot\StandardTheme\images\Standard_icons\Logoheader.png" />
     <Content Include="wwwroot\StandardTheme\js\swalalert.js" />
+    <Content Include="wwwroot\StandardTheme\Latest_Datatable\LatestDataTableColumns.min.js" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.css" />
     <Content Include="wwwroot\Tibbit_theme\CssJs\select2.min.js" />
     <Content Include="wwwroot\Tibbit_theme\css\ace-ie.min.css" />
@@ -20517,6 +20530,7 @@
     <Content Include="wwwroot\Tibbit_theme\Latest_Datatable\jquery.dataTables.min.css" />
     <Content Include="wwwroot\Tibbit_theme\Latest_Datatable\jquery.dataTables.min.js" />
     <Content Include="wwwroot\Tibbit_theme\Latest_Datatable\jszip.min.js" />
+    <Content Include="wwwroot\Tibbit_theme\Latest_Datatable\LatestDataTableColumns.min.js" />
     <Content Include="wwwroot\Tibbit_theme\Latest_Datatable\pdfmake.min.js" />
     <Content Include="wwwroot\Tibbit_theme\Latest_Datatable\vfs_fonts.js" />
     <Content Include="wwwroot\Tibbit_theme\newBootstrap\Bootstrap.min.css" />
@@ -25767,6 +25781,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\AddPanel_Packages.aspx.designer.cs">
       <DependentUpon>AddPanel_Packages.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\ApproveGoodsReturn.aspx.cs">
+      <DependentUpon>ApproveGoodsReturn.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\ApproveGoodsReturn.aspx.designer.cs">
+      <DependentUpon>ApproveGoodsReturn.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Administrator\Token_List.aspx.cs">
       <DependentUpon>Token_List.aspx</DependentUpon>

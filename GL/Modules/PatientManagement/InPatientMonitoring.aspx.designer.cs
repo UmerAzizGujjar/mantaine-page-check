@@ -528,6 +528,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtSaturation_Oxygen1;
 
         /// <summary>
+        /// txtHeight control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtHeight;
+
+        /// <summary>
+        /// txtBMI control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBMI;
+
+        /// <summary>
         /// Label3 control.
         /// </summary>
         /// <remarks>

@@ -2225,12 +2225,16 @@ on d.Doctor_Id equals hr.Emp_ID
             }
 
             // Only add categories if no search value (maintain original behavior)
-            if (string.IsNullOrEmpty(searchValue))
-            {
+            //if (string.IsNullOrEmpty(searchValue))
+            //{
                 var GroupCategories = from dv in db.DataValues
                                       join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
                                       where vs.ValueSet_Name == "Test Groups" && dv.Division == "001"
                                       select new { dv.DataValue_Name, dv.DataValue_Description };
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    GroupCategories = GroupCategories.Where(ts => ts.DataValue_Description.Contains(searchValue));
+                }
 
                 foreach (var category in GroupCategories)
                 {
@@ -2243,7 +2247,7 @@ on d.Doctor_Id equals hr.Emp_ID
                     listOfTest.Add(obj);
                     counter++;
                 }
-            }
+          //  }
 
             return (new JavaScriptSerializer()).Serialize(listOfTest);
         }

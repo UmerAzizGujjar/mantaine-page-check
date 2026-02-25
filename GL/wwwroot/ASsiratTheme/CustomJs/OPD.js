@@ -165,6 +165,15 @@ $(document).ready(function () {
         }, 0);
     });
 
+    MaskedInput({
+        elm: document.getElementById('txt_cnic'),
+        format: '_____-_______-_',
+        separator: '-'
+
+    });
+
+    $('#txt_cnic').attr('placeholder', '_____-_______-_');
+
     $('#txt_cnic').on('focus', function () {
         var input = this;
         setTimeout(function () {
@@ -521,12 +530,7 @@ function AddNewPatient() {
         backdrop: 'static'
     });
     $("#ddl_name").focus();
-    MaskedInput({
-        elm: document.getElementById('txt_cnic'),
-        format: '_____-_______-_',
-        separator: '-'
-
-    });
+    
 }
 function clearPatient() {
 
@@ -993,7 +997,7 @@ function SavePatient() {
     var Province = $('#ddl_Province :selected').val();
     var cardfee = $('#txtCardFee').val();
 
-    if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || city_val == "0")) {
+    if ((PatientName == "" || Mobile == "" )) {
         Swal.fire({
             icon: 'error',
             title: 'Error!',

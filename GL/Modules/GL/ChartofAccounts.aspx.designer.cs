@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Salon.GL {
-    
-    
-    public partial class ChartofAccounts {
-        
+namespace Salon.GL
+{
+
+
+    public partial class ChartofAccounts
+    {
+
         /// <summary>
         /// UpChartofAccounts control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpChartofAccounts;
-        
+
         /// <summary>
         /// UpdateProgress1 control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdateProgress UpdateProgress1;
-        
+
         /// <summary>
         /// upRadTreeview control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel upRadTreeview;
-        
+
         /// <summary>
         /// Label5 control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label5;
-        
+
         /// <summary>
         /// Panel1 control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel Panel1;
-        
+
         /// <summary>
         /// RadTreeView1 control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadTreeView RadTreeView1;
-        
+
         /// <summary>
         /// UpAccountInformation control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpAccountInformation;
-        
+
         /// <summary>
         /// Label2 control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label2;
-        
+
         /// <summary>
         /// lblHeading1 control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblHeading1;
-        
+
         /// <summary>
         /// Label1 control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label1;
-        
+
         /// <summary>
         /// txtParent_Code control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtParent_Code;
-        
+
         /// <summary>
         /// txtAccount_Code control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAccount_Code;
-        
+
         /// <summary>
         /// Label4 control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label4;
-        
+
         /// <summary>
         /// txtAccount_Name control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAccount_Name;
-        
+
         /// <summary>
         /// rbtnBank control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButton rbtnBank;
-        
+
         /// <summary>
         /// rbtnCash control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButton rbtnCash;
-        
+
         /// <summary>
         /// btnEditSave control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnEditSave;
-        
+
         /// <summary>
         /// btnEditCancel control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnEditCancel;
-        
+
         /// <summary>
         /// lblMessage control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMessage;
-        
+
         /// <summary>
         /// hdnEditOk control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnEditOk;
-        
+
         /// <summary>
         /// hdnEditCancel control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnEditCancel;
-        
+
         /// <summary>
         /// hdnAddOrEdit control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnAddOrEdit;
-        
+
         /// <summary>
         /// hdnParentId control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnParentId;
-        
+
         /// <summary>
         /// hdnAccountId control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnAccountId;
-        
+
         /// <summary>
         /// hdnLevel control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnLevel;
-        
+
         /// <summary>
         /// upOptions control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel upOptions;
-        
+
         /// <summary>
         /// lblHeading control.
         /// </summary>
@@ -254,7 +256,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblHeading;
-        
+
         /// <summary>
         /// btnAdd control.
         /// </summary>
@@ -263,7 +265,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAdd;
-        
+
         /// <summary>
         /// btnAddChild control.
         /// </summary>
@@ -272,7 +274,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAddChild;
-        
+
         /// <summary>
         /// btnEditAccount control.
         /// </summary>
@@ -281,7 +283,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnEditAccount;
-        
+
         /// <summary>
         /// btnDelete control.
         /// </summary>
@@ -290,7 +292,7 @@ namespace Salon.GL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnDelete;
-        
+
         /// <summary>
         /// btnCancel control.
         /// </summary>

@@ -98,10 +98,25 @@ namespace PMS
         public static string GetItemCodesIPD(int Pat_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+
+            var depAndDoc = (from ip in db.In_Patients
+                             where ip.In_Patient_ID == Pat_Id
+                             select new
+                             {
+                                 ip.Doctor,
+                                 ip.Department
+                             }).FirstOrDefault();
+
             var itemCodes = (from  ip in db.In_Patient_Medicines 
                              where ip.Patient_ID == Pat_Id
                              select ip.Item_Code).ToList();
-            return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+
+            var result = new
+            {
+                DoctorInfo = depAndDoc,
+                ItemCodes = itemCodes
+            };
+            return (new JavaScriptSerializer()).Serialize(result); ;
 
         }
         [WebMethod]
@@ -114,19 +129,51 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 
         }
+        //[WebMethod]
+        //public static string GetItemCodesOPD(int Pat_Id)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+
+        //    var DepAndDoc = (from o in db.Out_Patients 
+        //                     join p in db.Patients on o.Patient_ID equals p.Patient_ID
+        //                     where o.Out_Patient_ID == Pat_Id
+        //                     select new { o.Doctor_ID ,p.Patient_Main_Category}).FirstOrDefault();
+
+        //    var itemCodes = (from  ip in db.In_Patient_Medicines join o in db.Out_Patients on ip.Patient_ID equals o.Out_Patient_ID                       
+        //                     where o.Out_Patient_ID == Pat_Id
+        //                     select ip.Item_Code).ToList();
+        //    return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+
+        //}
         [WebMethod]
         public static string GetItemCodesOPD(int Pat_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var itemCodes = (from  ip in db.In_Patient_Medicines join o in db.Out_Patients on ip.Patient_ID equals o.Out_Patient_ID
+
+            var depAndDoc = (from o in db.Out_Patients
                              join p in db.Patients on o.Patient_ID equals p.Patient_ID
                              where o.Out_Patient_ID == Pat_Id
-                             select ip.Item_Code).ToList();
-            return (new JavaScriptSerializer()).Serialize(itemCodes); ;
+                             select new
+                             {
+                                 Doctor_ID = o.Doctor_ID,
+                                 Patient_Main_Category = p.Patient_Main_Category
+                             }).FirstOrDefault();
 
+            var itemCodes = (from ip in db.In_Patient_Medicines
+                             join o in db.Out_Patients
+                                on ip.Patient_ID equals o.Out_Patient_ID
+                             where o.Out_Patient_ID == Pat_Id
+                             select ip.Item_Code).ToList();
+
+            var result = new
+            {
+                DoctorInfo = depAndDoc,
+                ItemCodes = itemCodes
+            };
+
+            return new JavaScriptSerializer().Serialize(result);
         }
 
- 
         [WebMethod]
         public static string GetinvBatch(int med_id)
         {
@@ -849,19 +896,89 @@ namespace PMS
             }
             return result;
         }
-
         [WebMethod]
-        public static string AllInvoiceNumbers()
+        public static string AllInvoiceNumbers(string searchTerm)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var panel = (from data in db.Ar_Billings
-                         where data.IsPharmacy == true && data.Invoice_No != null && (data.isCancel == false || data.isCancel == null) orderby data.Bill_ID descending
+
+            var query = db.Ar_Billings
+                .Where(data => data.IsPharmacy == true
+                            && data.Invoice_No != null
+                            && (data.isCancel == false || data.isCancel == null));
+
+            // If user is searching
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(x => x.Seq_InvoiceNo.Contains(searchTerm));
+            }
+
+            var result = query
+                .OrderByDescending(x => x.Bill_ID)
+                .Select(x => new
+                {
+                    id = x.Bill_ID,
+                    text = x.Seq_InvoiceNo
+                })
+                .Take(string.IsNullOrEmpty(searchTerm) ? 100 : 200) // 100 default, more if searching
+                .ToList();
+
+            return new JavaScriptSerializer().Serialize(result);
+        }
+        //[WebMethod]
+        //public static string AllInvoiceNumbers()
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+        //    var panel = (from data in db.Ar_Billings
+        //                 where data.IsPharmacy == true && data.Invoice_No != null && (data.isCancel == false || data.isCancel == null) orderby data.Bill_ID descending
+        //                 select new
+        //                 {
+        //                     Bill_ID = data.Bill_ID,
+        //                     Seq_InvoiceNo = data.Seq_InvoiceNo,
+        //                 }).ToList().Take(200);
+        //    return (new JavaScriptSerializer()).Serialize(panel);
+        //}
+        [WebMethod]
+        public static string AllPharmaPatients()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            var panel = (from patient in db.Reg_patients
+                         join billing in db.Ar_Billings
+                         on patient.pat_id equals billing.Patient_ID into billingJoin
+                         from bill in billingJoin.DefaultIfEmpty()  // LEFT JOIN
+                         where bill != null  // Only patients who have billing records
+                            && bill.IsPharmacy == true
+                            && bill.Invoice_No != null
+                            && (bill.isCancel == false || bill.isCancel == null)
+                         orderby bill.Bill_ID descending
                          select new
                          {
-                             Bill_ID = data.Bill_ID,
-                             Seq_InvoiceNo = data.Seq_InvoiceNo,
-                         }).ToList().Take(200);
+                             id = patient.pat_id,           // For TokenInput
+                             mr_no_sequence = patient.mr_no_sequence,              // For TokenInput display
+                           
+                         }).ToList();
+
             return (new JavaScriptSerializer()).Serialize(panel);
+        }
+        [WebMethod]
+        public static List<object> GetInvoiceNoByPatient(int reg_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            var invoicenumber = (
+                from billing in db.Ar_Billings
+                where billing.Patient_ID == reg_id
+                   && billing.IsPharmacy == true
+                   && billing.Invoice_No != null
+                   && (billing.isCancel == false || billing.isCancel == null)
+                orderby billing.Bill_ID descending
+                select new
+                {
+                    bill_id = billing.Bill_ID,
+                    Seq_InvoiceNo = billing.Seq_InvoiceNo
+                }).ToList();
+
+            return invoicenumber.Cast<object>().ToList();  // Return as List<object>
         }
 
         [WebMethod]
@@ -935,6 +1052,7 @@ namespace PMS
             var record = js.Deserialize<SaleReturnMaster>(AllItemDetail);
             Pharmacy_SaleReturn saleReturn = new Pharmacy_SaleReturn();
             saleReturn.Bill_ID = int.Parse(record.BillId);
+            saleReturn.Patient_id = int.Parse(record.Patient_id);
             saleReturn.Seq_InvoiceNo = record.InvNo;
             saleReturn.Return_NO = DBClass.GetNewNumber("Return_NO", "Pharmacy_SaleReturns", "").ToString();
             saleReturn.Disc_Percentage = record.DisPer;
@@ -981,6 +1099,7 @@ namespace PMS
         public class SaleReturnMaster
         {
             public string BillId { get; set; }
+            public string Patient_id { get; set; }
             public string InvNo { get; set; }
             public string warehouse { get; set; }
             public decimal TotalPayable { get; set; }

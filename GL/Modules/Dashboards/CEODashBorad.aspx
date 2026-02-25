@@ -68,6 +68,7 @@
                 dataType: "json",
                 async: false,
                 success: function (data) {
+                    debugger;
                     var parsedData = JSON.parse(data.d);
                     var total = parsedData.TotalPatients || 0;
 
@@ -91,6 +92,7 @@
             });
         }
         function LoadAppointmentsOPDCount(startdate, Enddate) {
+            debugger;
             var txt_sdate = startdate;
             var txt_edate = Enddate;
             $.ajax({
@@ -105,6 +107,7 @@
                 async: false,
                 success: function (data) {
                     var parsedData = JSON.parse(data.d);
+                    debugger;
                     // total comes from DOM
                     var total = parseInt($('#lblTotalPatient').text()) || 0;
                     var deptpats = parseInt($('#lblDepartmentPatient').text()) || 0;
@@ -120,10 +123,6 @@
                     // Update UI
                     $('#lblAppPatient').text(appointments + ' (' + appPct + '%)');
                     $('#lblWalkInPatient').text(walkin + ' (' + walkPct + '%)');
-
-
-
-
                 },
                 error: function (xhr, status, error) {
                     console.error("Error occurred: " + status + " " + error);

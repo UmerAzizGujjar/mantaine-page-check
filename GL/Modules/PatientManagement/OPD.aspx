@@ -74,6 +74,7 @@
 
 
                 $('#ddlPatient_Type').attr('disabled', false);
+                Get_Pat_Info(Reffered_id);
                 //$('#ddlcashier').attr('disabled', true);
             }
             if (refferopd_id != "" && Reffered_id_opd != "") {
@@ -1232,18 +1233,18 @@
         <div class="col-lg-3 col-md-3 col-sm-4 fields">
             <div class="card3">
                 <span style="font-size: 15px;">Total OPD</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat" class="blink" runat="server"></span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat"  runat="server"></span>
 
 
                 <span style="font-size: 15px;">G-31</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg31" class="blink" runat="server"></span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg31"  runat="server"></span>
 
                 <span style="font-size: 15px;">G-30</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg30" class="blink" runat="server"></span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg30"  runat="server"></span>
 
 
                 <span style="font-size: 15px;">G-29</span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg29" class="blink" runat="server"></span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lblg29"  runat="server"></span>
 
                 <div>
                     <span style="font-size: 15px;">Recent Visit</span>

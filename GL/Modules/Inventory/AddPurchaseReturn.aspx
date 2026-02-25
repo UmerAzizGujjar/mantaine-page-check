@@ -459,6 +459,21 @@
                 }
             });
         }
+        function UnApprove() {
+            debugger;
+            elementIsClicked = true;
+            debugger;
+            var PRTId = '<% =Request.QueryString["ID"] %>';
+            PageMethods.UnApprovePurchaseReturn(PRTId, function (Tests) {
+                debugger;
+                var message = JSON.parse(Tests);
+                if (message[0].Column1 != null || message[0].Column1 != "") {
+                    debugger;
+                    alert(message[0].Column1);
+                    window.location = "PurchaseReturnList.aspx";
+                }
+            });
+        }
 
         function UserUnApproveButtonRights() {
             debugger;
@@ -474,8 +489,10 @@
                     if (hasRights) {
                         debugger;
                         $('#btnApprove').show();
+                        $('#btnUnApprove').show();
                     } else {
                         $('#btnApprove').hide();
+                        $('#btnUnApprove').hide();
                     }
                 },
                 failure: function (response) {

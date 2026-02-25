@@ -44,7 +44,9 @@ namespace PMS.Inventory
         public static string getbatchno(string itemid, string warehouse,string transferdate)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var query = db.spGetItemsPending_Batches(Convert.ToInt64(itemid), warehouse, Convert.ToDateTime(transferdate)).ToList();
+            DateTime date = Convert.ToDateTime(transferdate);
+            DateTime endDate = date.Date.AddDays(1).AddMilliseconds(-1);
+            var query = db.spGetItemsPending_Batches(Convert.ToInt64(itemid), warehouse, endDate).ToList();
             return (new JavaScriptSerializer()).Serialize(query);
         }
         [WebMethod]

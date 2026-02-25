@@ -135,6 +135,67 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
+        public static string GetUserColumnPreferences()
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "OPDView";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var pref = db.UserDataTablePreferences
+                                  .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (pref != null)
+                        return pref.ColumnVisibility;
+                    else
+                        return ""; 
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        [WebMethod]
+        public static void SaveUserColumnPreferences(string visibilityJson)
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "OPDView";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var existing = db.UserDataTablePreferences
+                                     .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (existing != null)
+                    {
+                        existing.ColumnVisibility = visibilityJson;
+                    }
+                    else
+                    {
+                        db.UserDataTablePreferences.InsertOnSubmit(new UserDataTablePreference
+                        {
+                            UserID = userId,
+                            PageName = pageName,
+                            ColumnVisibility = visibilityJson
+                        });
+                    }
+
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
             try
@@ -150,7 +211,7 @@ namespace PMS.Modules.PatientManagement
                     var pat = from p in _dbContext.Patients
                               join rg in _dbContext.Reg_patients on p.Reg_PatId equals rg.pat_id
                               where (p.isCancel == false || p.isCancel == null) &&
-                                    (p.Opd_No.ToString().Contains(searchValue) || rg.mr_no_sequence.Contains(searchValue) || rg.Full_Name.Contains(searchValue) || rg.NIC.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category", p.Patient_Main_Category).Contains(searchValue) || _dbContext.GetDataValueName("Patient Type", p.Patient_Type).Contains(searchValue) || (from hr in _dbContext.HR_Employees where hr.Emp_ID == Convert.ToInt32(p.Doctor_ID) select hr.Emp_Name).FirstOrDefault().ToString().Contains(searchValue) || (isDateSearch && p.Created_Time >= searchDate && p.Created_Time < searchDate.AddDays(1)))
+                                    (p.Opd_No.ToString().Contains(searchValue) || rg.mr_no_sequence.Contains(searchValue) || rg.Full_Name.Contains(searchValue) || rg.NIC.Contains(searchValue) || rg.Mobile1.Contains(searchValue) || _dbContext.GetDataValueName("Patient Main Category", p.Patient_Main_Category).Contains(searchValue) || _dbContext.GetDataValueName("Patient Type", p.Patient_Type).Contains(searchValue) || (from hr in _dbContext.HR_Employees where hr.Emp_ID == Convert.ToInt32(p.Doctor_ID) select hr.Emp_Name).FirstOrDefault().ToString().Contains(searchValue) || (isDateSearch && p.Created_Time >= searchDate && p.Created_Time < searchDate.AddDays(1)))
                               select new
                               {
                                   Opd_No = Convert.ToInt32(p.Opd_No),
@@ -163,7 +224,8 @@ namespace PMS.Modules.PatientManagement
                                   Age = p.Age_years,
                                   Doctor_Id = (from hr in _dbContext.HR_Employees where hr.Emp_ID == Convert.ToInt32(p.Doctor_ID) select hr.Emp_Name).FirstOrDefault(),
                                   Department = _dbContext.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
-                                  Patient_Type = _dbContext.GetDataValueName("Patient Type", p.Patient_Type)
+                                  Patient_Type = _dbContext.GetDataValueName("Patient Type", p.Patient_Type),
+                                  Token_No  = p.Doc_Token
                               };
 
 
@@ -204,5 +266,7 @@ namespace PMS.Modules.PatientManagement
                 throw new Exception("Error fetching patient list", ex);
             }
         }
+
+        
     }
 }

@@ -29,10 +29,18 @@ namespace PMS
                     .Select(dept => dept.Department)
                     .ToList();
                 var qry = (from a in db.AP_Purchase_Orders
-                           join apoi in db.AP_Purchase_Order_Items on a.PO_ID equals apoi.PO_ID
-                           join prd in db.Purchase_Requisition_Details on Convert.ToInt32(apoi.PRDetailId) equals prd.PR_Detail_ID
-                           join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
-                           where (a.Status == "Created" || a.Status == "Pending") && a.IsDeleted == false && userDepartments.Contains(pr.Department)
+                           join apoi in db.AP_Purchase_Order_Items
+                                on a.PO_ID equals apoi.PO_ID
+                           join prd in db.Purchase_Requisition_Details
+                                on Convert.ToInt32(apoi.PRDetailId) equals prd.PR_Detail_ID into prdGroup
+                           from prd in prdGroup.DefaultIfEmpty()
+                           join pr in db.Purchase_Requisitions
+                                on prd.PR_ID equals pr.PR_Id into prGroup
+                           from pr in prGroup.DefaultIfEmpty()
+                           where (a.Status == "Created" || a.Status == "Pending")
+                                 && a.IsDeleted == false
+                                 && (pr == null || userDepartments.Contains(pr.Department))
+
                            group new { a, apoi, pr, prd } by new
                            {
                                a.PO_ID,
@@ -41,8 +49,9 @@ namespace PMS
                                a.Status,
                                a.PO_Date,
                                a.Created_By,
-                               Department = pr.Department
+                               Department = pr != null ? pr.Department : null
                            } into g
+
                            select new
                            {
                                g.Key.PO_ID,
@@ -50,29 +59,40 @@ namespace PMS
                                g.Key.Remarks,
                                g.Key.Status,
                                g.Key.PO_Date,
-                               Creator = db.aspnet_Users.Where(x => x.UserId == (g.Key.Created_By ?? Guid.Empty)).Select(x => x.UserName).FirstOrDefault(),
-                               Approve_By = string.Join(", ", (from SAL in db.Sys_Approval_Logs
-                                                               join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
-                                                               from usr in userGroup.DefaultIfEmpty()
-                                                               where g.Key.PO_ID == SAL.Entry_ID && SAL.Form_ID == 3
-                                                               select usr.UserName ?? "").Distinct()),
+
+                               Creator = db.aspnet_Users
+                                   .Where(x => x.UserId == (g.Key.Created_By ?? Guid.Empty))
+                                   .Select(x => x.UserName)
+                                   .FirstOrDefault(),
+
+                               Approve_By = string.Join(", ",
+                                   (from SAL in db.Sys_Approval_Logs
+                                    join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
+                                    from usr in userGroup.DefaultIfEmpty()
+                                    where g.Key.PO_ID == SAL.Entry_ID && SAL.Form_ID == 3
+                                    select usr.UserName ?? "").Distinct()),
+
                                Department = db.GetDataValueName("Department", g.Key.Department),
 
                                TotalPRAmount = (from prd_inner in db.Purchase_Requisition_Details
                                                 join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
                                                 where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
                                                 select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m,
+
                                TotalBudget = (from ba in db.Budget_Accounts
                                               join b in db.Budgets on ba.Budget_ID equals b.Budget_ID
                                               where b.Budget_Status == "Approved" && ba.DepartmentId == g.Key.Department
                                               select (decimal?)ba.DR).Sum() ?? 0m,
+
                                RemainingAmount = ((from ba in db.Budget_Accounts
                                                    join b in db.Budgets on ba.Budget_ID equals b.Budget_ID
                                                    where b.Budget_Status == "Approved" && ba.DepartmentId == g.Key.Department
-                                                   select (decimal?)ba.DR).Sum() ?? 0m) - ((from prd_inner in db.Purchase_Requisition_Details
-                                                                                            join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
-                                                                                            where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
-                                                                                            select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m)
+                                                   select (decimal?)ba.DR).Sum() ?? 0m)
+                                                 -
+                                                 ((from prd_inner in db.Purchase_Requisition_Details
+                                                   join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
+                                                   where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
+                                                   select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m)
                            });
 
                 var formattedQuery = qry.AsEnumerable().Select(x => new

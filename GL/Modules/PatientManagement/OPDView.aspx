@@ -35,7 +35,6 @@
                         } else if (msg === "Allowed") {
                             window.open("OPD.aspx?OPDID=" + id, "_blank");
                         }
-                        // No third condition — so no else needed
                     });
                 }
             });
@@ -64,11 +63,9 @@
                             });
                         }
                         else if (msg == "success") {
-                            // Assuming 'row' is defined in outer scope (e.g., via closure or global)
                             if (typeof row !== 'undefined' && row && typeof row.remove === 'function') {
                                 row.remove();
                             }
-                            // Note: You may want to reload or redirect AFTER success
                             window.location.href = "OPDView.aspx";
                         }
                         else {
@@ -82,25 +79,55 @@
                 }
             });
 
-            // ⚠️ This line runs IMMEDIATELY after showing the alert — likely NOT what you want!
            
         }
         function LoadPage() {
-            $("#tblResult").DataTable({
+            let savedVisibility = null;
+
+            $.ajax({
+                type: "POST",
+                url: "OPDView.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false, 
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                            console.warn("Invalid column visibility JSON");
+                        }
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load column preferences");
+                }
+            });
+            const table = $("#tblResult").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
                 "buttons": [
                     {
-                    text: 'Add',
-                    className: 'dt-button buttons-copy buttons-html5',
-                    action: function () {
-                        window.location = 'OPD.aspx';
+                        text: 'Add',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            window.location = 'OPD.aspx';
+                        }
+                    },
+                    'copy',
+                    'excel',
+                    'pdf',
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fa fa-columns"></i> Columns',
+                        className: 'dt-button buttons-colvis',
+                        collectionLayout: 'fixed two-column',
+                        postfixButtons: ['colvisRestore']
                     }
-                },
-                    'copy', 'excel', 'pdf',
                 ],
+                "columnDefs": savedVisibility ? [] : undefined, 
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -130,18 +157,12 @@
                     });
                 },
                 "columns": [
-                    {
-                        "data": null,
-                        "width": "4%",
-                        "orderable": false,
-                        "render": function (data, type, full, meta) {
-                            return meta.settings._iDisplayStart + meta.row + 1;
-                        }
-                    },
+                    { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                     { "data": "Patient_ID", "visible": false, "width": "0%", "orderable": false },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
                     { "data": "Opd_No", "name": "Opd_No", "width": "5%", "orderable": false },
-                    { "data": "Full_Name", "width": "13%", "orderable": false },
+                    { "data": "Token_No", "name": "Token_No", "width": "5%", "orderable": false },
+                    { "data": "Full_Name", "width": "10%", "orderable": false },
                     { "data": "Patient_Type", "width": "6%", "orderable": false },
                     { "data": "Department", "width": "10%", "orderable": false },
                     { "data": "NIC", "width": "8%", "orderable": false },
@@ -150,16 +171,14 @@
                     { "data": "Doctor_Id", "width": "10%", "orderable": false },
                     {
                         "data": "Created_Time", "name": "Created_Time",
-                        "render": function (data, type, full) {
-                            var date = full.Created_Time;
-                            return moment(date).format('DD-MMM-YYYY');
-                        }, "width": "9%"
+                        "render": (data, type, full) => moment(full.Created_Time).format('DD-MMM-YYYY'),
+                        "width": "9%"
                     },
                     {
-                        "render": function (data, type, full) {
-                            var res = '<a href="#" onclick="editOpen(' + full.Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
-                            var Del = '<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" data-id="' + full.Patient_ID + '" onclick="cancelPatient(' + full.Patient_ID + ', \'' + full.Full_Name + '\')"><i class="fa fa-trash"></i></a>';
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Print(' + full.Patient_ID + ')"><i class="fa fa-print"></i></a>';
+                        "render": (data, type, full) => {
+                            let res = `<a href="#" onclick="editOpen(${full.Patient_ID})" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>`;
+                            let Del = `<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="cancelPatient(${full.Patient_ID}, '${full.Full_Name.replace(/'/g, "\\'")}')"><i class="fa fa-trash"></i></a>`;
+                            let print = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="Print(${full.Patient_ID})"><i class="fa fa-print"></i></a>`;
                             return res + Del + print;
                         },
                         "width": "17%",
@@ -167,6 +186,30 @@
                     }
                 ],
                 "initComplete": function (settings, json) {
+                    const api = this.api();
+                    if (savedVisibility && Array.isArray(savedVisibility)) {
+                        if (savedVisibility.length === api.columns().count()) {
+                            api.columns().every(function (index) {
+                                this.visible(savedVisibility[index]);
+                            });
+                        }
+                    }
+                    api.on('column-visibility.dt', function (e, settings, column, state) {
+                        let currentVis = [];
+                        api.columns().every(function () {
+                            currentVis.push(this.visible());
+                        });
+                        PageMethods.SaveUserColumnPreferences(
+                            JSON.stringify(currentVis),
+                            function () {
+                                console.log("Column preferences saved");
+                            },
+                            function (error) {
+                                console.error("Failed to save preferences:", error);
+                            }
+                        );
+                    });
+
                     var lengthContainer = document.querySelector('#tblResult_length');
                     var lengthDropdown = document.querySelector('#tblResult_length select');
                     var label = document.querySelector('#tblResult_length label');
@@ -183,11 +226,8 @@
                         label.style.marginTop = '17px';
                         label.appendChild(labelText);
                         label.appendChild(lengthDropdown);
-                    } else {
-                        console.log("Length dropdown, label, or container not found");
                     }
                 }
-
             });
         }
     </script>
@@ -200,10 +240,11 @@
                     <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
                   <thead id="ihead">
                     <tr>
-                        <th style="width:2% !important;">Sr#</th>                 <!-- 1st: Sr# -->
-                        <th style="display: none;">Patient ID</th>      <!-- 2nd: Hidden -->
+                        <th style="width:2% !important;">Sr#</th>                
+                        <th style="display: none;">Patient ID</th>    
                         <th style="width: 8%;">MR No.</th>
                         <th style="width: 5%;">OPD</th>
+                        <th style="width: 5%;">Token No</th>
                         <th style="width: 13%;">Name</th>
                         <th style="width: 10%;">Category</th>
                         <th style="width: 10%;">Department</th>

@@ -39,6 +39,23 @@
          }
 
         function LoadPage() {
+            let savedVisibility = null;
+            $.ajax({
+                type: "POST",
+                url: "AppointmentView.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                            console.warn("Invalid column visibility JSON");
+                        }
+                    }
+                }
+            });
             $.ajax({
                 type: "POST",
                 url: "AppointmentView.aspx/GetDoctors",
@@ -46,14 +63,10 @@
                 dataType: "json",
                 success: function (response) {
                     var doctorDropdown = $("#doctorFilter");
-                    $.each(response.d, function (index, doctor) {
-                        doctorDropdown.append($('<option></option>')
-                            .attr('value', doctor.Emp_ID)
-                            .text(doctor.Emp_Name));
+                    doctorDropdown.empty().append($('<option>').val('').text('All Doctors'));
+                    $.each(response.d, function (i, d) {
+                        doctorDropdown.append($('<option>').val(d.Emp_ID).text(d.Emp_Name));
                     });
-                },
-                error: function (xhr, status, error) {
-                    console.error("Failed to load doctors:", xhr.responseText);
                 }
             });
             $.ajax({
@@ -63,18 +76,16 @@
                 dataType: "json",
                 success: function (response) {
                     var deptDropdown = $("#deptFilter");
-                    var departments = response.d; 
-                    $.each(departments, function (index, dept) {
-                        deptDropdown.append($('<option></option>')
-                            .attr('value', dept.DeptId)
-                            .text(dept.DeptName));
+                    deptDropdown.empty().append($('<option>').val('').text('All Departments'));
+                    $.each(response.d, function (i, d) {
+                        deptDropdown.append($('<option>').val(d.DeptId).text(d.DeptName));
                     });
-                },
-                error: function (xhr, status, error) {
-                    console.error("Failed to load departments:", xhr.responseText);
                 }
             });
-            $("#example").DataTable({
+            if ($.fn.DataTable.isDataTable('#example')) {
+                $("#example").DataTable().destroy();
+            }
+            var table = $("#example").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
@@ -87,14 +98,24 @@
                             window.location = 'Appointment.aspx';
                         }
                     },
-                    'copy', 'excel', 'pdf',
+                    'copy',
+                    'excel',
+                    'pdf',
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fa fa-columns"></i> Columns',
+                        className: 'dt-button buttons-colvis',
+                        collectionLayout: 'fixed two-column',
+                        postfixButtons: ['colvisRestore']
+                    }
                 ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     var selectedDoctor = $("#doctorFilter").val() || "";
-                    var selectedDept = $("#deptFilter").val() || ""; 
-                    var selectedStatus = $("#statusFilter").val() || ""; 
-                    var selectedDate = $("#dateFilter").val() || ""
+                    var selectedDept = $("#deptFilter").val() || "";
+                    var selectedStatus = $("#statusFilter").val() || "";
+                    var selectedDate = $("#dateFilter").val() || "";
+
                     $.ajax({
                         type: "POST",
                         url: "AppointmentView.aspx/ViewList",
@@ -109,11 +130,11 @@
                             deptId: selectedDept,
                             status: selectedStatus,
                             appDate: selectedDate
-
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
+                            console.log("Response:", response);
                             callback({
                                 draw: response.d.draw,
                                 recordsTotal: response.d.recordsTotal,
@@ -122,50 +143,77 @@
                             });
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
+                            console.error("AJAX Error:", error);
+                            console.error("Response:", xhr.responseText);
                         }
                     });
                 },
                 "columns": [
                     { "data": "Appointment_ID", "visible": false, "width": "0%" },
-                    { "data": "Appointment_No", "name": "Appointment_No" },
-                    { "data": "Patient_Name", "name": "Patient_Name" },
-                    { "data": "Age", "name": "Age" },
-                    { "data": "Phone", "name": "Phone" },
-                    { "data": "Appointed_Doctor", "name": "Appointed_Doctor" },
-                    { "data": "Department", "name": "Department" },
+                    { "data": "Appointment_No", "name": "Appointment_No", "width": "6%" },
+                    { "data": "Patient_Name", "name": "Patient_Name", "width": "12%" },
+                    { "data": "Age", "name": "Age", "width": "6%" },
+                    { "data": "Phone", "name": "Phone", "width": "10%" },
+                    { "data": "Appointed_Doctor", "name": "Appointed_Doctor", "width": "10%" },
+                    { "data": "Department", "name": "Department", "width": "10%" },
                     {
                         "data": "App_Date",
+                        "name": "App_Date",
+                        "width": "10%",
                         "render": function (data, type, full) {
                             return moment(full.App_Date).format('D-MMM-YYYY');
                         }
                     },
                     {
                         "data": "Start_Time",
+                        "name": "Start_Time",
+                        "width": "8%",
                         "render": function (data, type, full) {
                             return moment(full.Start_Time).format('h:mm a');
                         }
                     },
                     {
                         "data": "Created_Time",
+                        "name": "Created_Time",
+                        "width": "8%",
                         "render": function (data, type, full) {
                             return moment(full.Created_Time).format('D-MMM-YYYY');
                         }
                     },
-                    { "data": "Username", "name": "Username" },
-                    { "data": "Status", "name": "Status" },
+                    { "data": "Username", "name": "Username", "width": "8%" },
+                    { "data": "Status", "name": "Status", "width": "7%" },
                     {
+                        "data": null,
+                        "width": "10%",
+                        "orderable": false,
                         "render": function (data, type, full) {
                             var res = '<a href="#" class="editListBtn" onclick="editOpen(' + full.Appointment_ID + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
-
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="appointmentPatient_Print(' + full.Appointment_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
-                            var result;
-                            result = res + print;
-                            return result;
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="appointmentPatient_Print(' + full.Appointment_ID + ')"><i class="fa fa-print"></i></a>';
+                            return res + print;
                         }
                     }
                 ],
                 "initComplete": function (settings, json) {
+                    const api = this.api();
+                    if (savedVisibility && Array.isArray(savedVisibility)) {
+                        if (savedVisibility.length === api.columns().count()) {
+                            api.columns().every(function (index) {
+                                this.visible(savedVisibility[index]);
+                            });
+                        }
+                    }
+                    api.on('column-visibility.dt', function (e, settings, column, state) {
+                        let currentVis = [];
+                        api.columns().every(function () {
+                            currentVis.push(this.visible());
+                        });
+
+                        PageMethods.SaveUserColumnPreferences(
+                            JSON.stringify(currentVis),
+                            function () { },
+                            function (error) { }
+                        );
+                    });
                     var lengthContainer = document.querySelector('#example_length');
                     var lengthDropdown = document.querySelector('#example_length select');
                     var label = document.querySelector('#example_length label');
@@ -182,13 +230,11 @@
                         label.style.marginTop = '17px';
                         label.appendChild(labelText);
                         label.appendChild(lengthDropdown);
-                    } else {
-                        console.log("Length dropdown, label, or container not found");
                     }
-                },
-            }); 
+                }
+            });
             $("#doctorFilter,#deptFilter,#statusFilter,#dateFilter").on("change", function () {
-                $("#example").DataTable().ajax.reload();
+                table.ajax.reload();
             });
         }
             

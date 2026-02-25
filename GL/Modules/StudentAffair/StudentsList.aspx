@@ -75,11 +75,19 @@
                     {
                         "data": "Student_Id",
                         "orderable": false,
-                        "render": function (data, type, row) {
-                            return '<a class="HRlink" href="#" onclick="editOpen(' + data + ')">Edit</a> | ' +
-                                '<a href="#" onclick="deleteConfirm(this)" data-id="' + data + '">Delete</a>';
+                        "render": function (data, type, row, meta) {
+
+                            var index = meta.row + meta.settings._iDisplayStart + 1;
+
+                            return '<input type="text" ' +
+                                'class="form-control txtStudentId" ' +
+                                'id="txt_Student_Id' + index + '" ' +
+                                'name="txt_Student_Id" ' +
+                                'value="' + data + '" />';
                         }
                     }
+
+
                 ],
                 "initComplete": function (settings, json) {
                     var lengthContainer = document.querySelector('#example_length');
@@ -131,11 +139,12 @@
             });
 
         });
+      
+   
         debugger;
         var userupdate;
         function updatebill() {
             debugger;
-
             $.ajax({
                 type: "POST",
                 url: "StudentsList.aspx/updatebills",
@@ -147,9 +156,9 @@
                     debugger;
                     userupdate = data.d;
 
+
                 },
                 failure: function () {
-
                     alert(bi);
                 }
             });
@@ -200,7 +209,7 @@
 
 
         function UpdateData() {
-
+            debugger;
             if (userupdate == false || userupdate == "False" || userupdate == 'False') {
                 debugger;
                 alert("You Dont Have Rights");
@@ -213,7 +222,7 @@
             }
             debugger;
       
-            var table = $('#tbody');
+            var table = $('#studentsTable tbody');
             var Update_list = [];
             table.find('tr input[type=checkbox]:checked:visible').each(function (key, value) {
 

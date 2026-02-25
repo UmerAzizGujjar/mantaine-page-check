@@ -12,7 +12,7 @@ namespace PMS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+
         }
         [WebMethod]
         public static bool CheckUserRights()
@@ -37,109 +37,169 @@ namespace PMS
         [WebMethod]
         public static string ApproveSelectedGINs(List<int> GINIds)
         {
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            foreach (int id in GINIds)
+            DataBaseDataContext db =
+                new DataBaseDataContext(DBClass.ConnectionString());
+
+            Guid user_id = AppConfig.UserID;
+            int form_id = 6;
+
+            List<string> resultMessages = new List<string>();
+
+            foreach (int ginId in GINIds)
             {
-                var user_id = AppConfig.UserID;
-                var StoreIssue_id = id;
-                var form_id = 6;
 
-                Store_Issue SI = (from tbl in db.Store_Issues
-                                  where tbl.Store_Issue_Id == Convert.ToInt32(StoreIssue_id )
-                                  select tbl).SingleOrDefault();
-                if (SI != null)
+                Store_Issue SI = db.Store_Issues
+                                   .SingleOrDefault(x => x.Store_Issue_Id == ginId);
+
+                if (SI == null)
                 {
-                    var IsFinalApprovals = (from SASD in db.Sys_Approval_Stage_Details
-                                            join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
-                                            join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
-                                            join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
-                                            where SASD.UserId == user_id  && SASM.IsDeleted == false
-                                            select new { SASM.IsFinalApproval, SATF.FormId }).ToList();
-
-                    if (IsFinalApprovals.Any(approval => approval.IsFinalApproval == true && approval.FormId == form_id))
-                    {
-                        var Details = db.spApproveStore_Issue(Convert.ToInt32(SI.Store_Issue_Id), user_id);
-                        db.SubmitChanges();
-
-
-                        Sys_Approval_Stage_Detail SASD = (from tbl in db.Sys_Approval_Stage_Details
-                                                          join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
-                                                          join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
-                                                          join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
-                                                          where tbl.UserId == user_id && SASM.IsFinalApproval == true && SATF.FormId == form_id &&   SASM.IsDeleted == false
-                                                          select tbl).FirstOrDefault();
-                        if (SASD != null)
-                        {
-                            Sys_Approval_Tempelate_Detail_Stage SATDS = (from tbl in db.Sys_Approval_Tempelate_Detail_Stages
-                                                                         join SATF in db.Sys_Approval_Tempelate_Detail_Forms on tbl.Tempelate_ID equals SATF.Tempelate_ID
-                                                                         where tbl.StageId == SASD.Stage_ID && SATF.FormId == form_id
-                                                                         select tbl).FirstOrDefault();
-                            if (SATDS != null)
-                            {
-                                Sys_Approval_Log SAL = new Sys_Approval_Log();
-                                SAL.Approval_Template_ID = SATDS.Tempelate_ID;
-                                SAL.Approval_Stage_ID = SASD.Stage_ID;
-                                SAL.Entry_ID = SI.Store_Issue_Id;
-                                SAL.Form_ID = form_id;
-                                SAL.From_Name = "Goods Issuance Note";
-                                SAL.Company_ID = AppConfig.Company_ID;
-                                SAL.IsFinalAprroval = true;
-                                SAL.Entry_Status = "Approved";
-                                SAL.Approve_By = user_id;
-                                SAL.Approve_Date = DateTime.Now;
-                                SAL.IsRejected = false;
-                                db.Sys_Approval_Logs.InsertOnSubmit(SAL);
-                                db.SubmitChanges();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        SI.Status = "Pending";
-                        SI.Approved_Time = DateTime.Now;
-                        SI.Approved_By = user_id;
-                        db.SubmitChanges();
-
-                        Sys_Approval_Stage_Detail SASD = (from tbl in db.Sys_Approval_Stage_Details
-                                                          join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
-                                                          join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
-                                                          join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
-                                                          where tbl.UserId == user_id && SASM.IsFinalApproval == false && SATF.FormId == form_id && SASM.IsDeleted == false
-                                                          select tbl).FirstOrDefault();
-                        if (SASD != null)
-                        {
-                            Sys_Approval_Tempelate_Detail_Stage SATDS = (from tbl in db.Sys_Approval_Tempelate_Detail_Stages
-                                                                         join SATF in db.Sys_Approval_Tempelate_Detail_Forms on tbl.Tempelate_ID equals SATF.Tempelate_ID
-                                                                         where tbl.StageId == SASD.Stage_ID && SATF.FormId == form_id
-                                                                         select tbl).FirstOrDefault();
-                            if (SATDS != null)
-                            {
-                                Sys_Approval_Log SAL = new Sys_Approval_Log();
-                                SAL.Approval_Template_ID = SATDS.Tempelate_ID;
-                                SAL.Approval_Stage_ID = SASD.Stage_ID;
-                                SAL.Entry_ID = SI.Store_Issue_Id;
-                                SAL.Form_ID = form_id;
-                                SAL.From_Name = "Goods Issuance Note";
-                                SAL.Company_ID = AppConfig.Company_ID;
-                                SAL.IsFinalAprroval = false;
-                                SAL.Entry_Status = "Pending";
-                                SAL.Approve_By = user_id;
-                                SAL.Approve_Date = DateTime.Now;
-                                SAL.IsRejected = false;
-                                db.Sys_Approval_Logs.InsertOnSubmit(SAL);
-                                db.SubmitChanges();
-                            }
-                        }
-                    }
-                    db.SubmitChanges();
+                    resultMessages.Add($"GIN {ginId}: Invalid Store Issue ID");
+                    continue;
                 }
 
+                var spResult = db
+                    .spApproveStore_Issue(SI.Store_Issue_Id, user_id)
+                    .FirstOrDefault();
+
+                string spMessage = spResult?.Message ?? "Unknown error occurred";
+
+                // ❌ stop further approvals if any failure
+                if (spMessage != "Approved Successfully")
+                {
+                    resultMessages.Add($"GIN {ginId}: {spMessage}");
+                    break;
+                }
+
+                var approvalStages = (
+                    from SASD in db.Sys_Approval_Stage_Details
+                    join SASM in db.Sys_Approval_Stage_Masters
+                        on SASD.Stage_ID equals SASM.Stage_ID
+                    join SATD in db.Sys_Approval_Tempelate_Detail_Stages
+                        on SASM.Stage_ID equals SATD.StageId
+                    join SATF in db.Sys_Approval_Tempelate_Detail_Forms
+                        on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                    where SASD.UserId == user_id
+                          && SASM.IsDeleted == false
+                    select new
+                    {
+                        SASM.IsFinalApproval,
+                        SATF.FormId
+                    }
+                ).ToList();
+
+                bool isFinalApproval =
+                    approvalStages.Any(x =>
+                        x.IsFinalApproval == true &&
+                        x.FormId == form_id);
 
 
+                if (isFinalApproval)
+                {
+                    Sys_Approval_Stage_Detail SASD =
+                        (from tbl in db.Sys_Approval_Stage_Details
+                         join SASM in db.Sys_Approval_Stage_Masters
+                             on tbl.Stage_ID equals SASM.Stage_ID
+                         join SATD in db.Sys_Approval_Tempelate_Detail_Stages
+                             on SASM.Stage_ID equals SATD.StageId
+                         join SATF in db.Sys_Approval_Tempelate_Detail_Forms
+                             on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                         where tbl.UserId == user_id
+                               && SASM.IsFinalApproval == true
+                               && SATF.FormId == form_id
+                               && SASM.IsDeleted == false
+                         select tbl).FirstOrDefault();
 
+                    if (SASD != null)
+                    {
+                        Sys_Approval_Tempelate_Detail_Stage SATDS =
+                            (from tbl in db.Sys_Approval_Tempelate_Detail_Stages
+                             join SATF in db.Sys_Approval_Tempelate_Detail_Forms
+                                 on tbl.Tempelate_ID equals SATF.Tempelate_ID
+                             where tbl.StageId == SASD.Stage_ID
+                                   && SATF.FormId == form_id
+                             select tbl).FirstOrDefault();
+
+                        if (SATDS != null)
+                        {
+                            Sys_Approval_Log SAL = new Sys_Approval_Log
+                            {
+                                Approval_Template_ID = SATDS.Tempelate_ID,
+                                Approval_Stage_ID = SASD.Stage_ID,
+                                Entry_ID = SI.Store_Issue_Id,
+                                Form_ID = form_id,
+                                From_Name = "Goods Issuance Note",
+                                Company_ID = AppConfig.Company_ID,
+                                IsFinalAprroval = true,
+                                Entry_Status = "Approved",
+                                Approve_By = user_id,
+                                Approve_Date = DateTime.Now,
+                                IsRejected = false
+                            };
+
+                            db.Sys_Approval_Logs.InsertOnSubmit(SAL);
+                            db.SubmitChanges();
+                        }
+                    }
+                }
+                else
+                {
+                    SI.Status = "Pending";
+                    SI.Approved_By = user_id;
+                    SI.Approved_Time = DateTime.Now;
+
+                    Sys_Approval_Stage_Detail SASD =
+                        (from tbl in db.Sys_Approval_Stage_Details
+                         join SASM in db.Sys_Approval_Stage_Masters
+                             on tbl.Stage_ID equals SASM.Stage_ID
+                         join SATD in db.Sys_Approval_Tempelate_Detail_Stages
+                             on SASM.Stage_ID equals SATD.StageId
+                         join SATF in db.Sys_Approval_Tempelate_Detail_Forms
+                             on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                         where tbl.UserId == user_id
+                               && SASM.IsFinalApproval == false
+                               && SATF.FormId == form_id
+                               && SASM.IsDeleted == false
+                         select tbl).FirstOrDefault();
+
+                    if (SASD != null)
+                    {
+                        Sys_Approval_Tempelate_Detail_Stage SATDS =
+                            (from tbl in db.Sys_Approval_Tempelate_Detail_Stages
+                             join SATF in db.Sys_Approval_Tempelate_Detail_Forms
+                                 on tbl.Tempelate_ID equals SATF.Tempelate_ID
+                             where tbl.StageId == SASD.Stage_ID
+                                   && SATF.FormId == form_id
+                             select tbl).FirstOrDefault();
+
+                        if (SATDS != null)
+                        {
+                            Sys_Approval_Log SAL = new Sys_Approval_Log
+                            {
+                                Approval_Template_ID = SATDS.Tempelate_ID,
+                                Approval_Stage_ID = SASD.Stage_ID,
+                                Entry_ID = SI.Store_Issue_Id,
+                                Form_ID = form_id,
+                                From_Name = "Goods Issuance Note",
+                                Company_ID = AppConfig.Company_ID,
+                                IsFinalAprroval = false,
+                                Entry_Status = "Pending",
+                                Approve_By = user_id,
+                                Approve_Date = DateTime.Now,
+                                IsRejected = false
+                            };
+
+                            db.Sys_Approval_Logs.InsertOnSubmit(SAL);
+                            db.SubmitChanges();
+                        }
+                    }
+                }
+
+                resultMessages.Add($"GIN {ginId}: Approved Successfully");
             }
-            return "1";
+
+            return string.Join("\n", resultMessages);
         }
+
         [WebMethod]
         public static string RejectSelectedGINs(List<int> GINIds)
         {
@@ -147,9 +207,9 @@ namespace PMS
             foreach (int id in GINIds)
             {
                 var user_id = AppConfig.UserID;
-                 var StoreIssue_id = id;
+                var StoreIssue_id = id;
                 var form_id = 6;
-                 Store_Issue SI = (from tbl in db.Store_Issues
+                Store_Issue SI = (from tbl in db.Store_Issues
                                   where tbl.Store_Issue_Id == Convert.ToInt32(StoreIssue_id)
                                   select tbl).SingleOrDefault();
                 if (SI != null)
@@ -246,14 +306,14 @@ namespace PMS
                     {
                         switch (sortColumn)
                         {
-                            
+
                             case "SINO":
                                 formattedQuery = sortColumnDirection == "asc"
                                     ? formattedQuery.OrderBy(x => x.SINO)
                                     : formattedQuery.OrderByDescending(x => x.SINO);
                                 break;
 
-                           
+
                             default:
                                 formattedQuery = formattedQuery.OrderByDescending(x => x.SINO);
                                 break;
@@ -276,7 +336,7 @@ namespace PMS
             }
         }
 
-        
+
 
     }
 }

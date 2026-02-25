@@ -279,23 +279,24 @@ function SavePatient() {
 
     }
 
-    if (Age === "") {
-        $('#age-error').show();
-        valid = false;
+    //if (Age === "") {
+    //    $('#age-error').show();
+    //    valid = false;
 
-    }
+    //}
 
-    if (Relation === "") {
-        $('#relation-error').show();
-        valid = false;
+    //if (Relation === "") {
+    //    $('#relation-error').show();
+    //    valid = false;
 
-    }
-    if (Address === "") {
-        $('#address-error').show();
-        valid = false;
+    //}
+    //if (Address === "") {
+    //    $('#address-error').show();
+    //    valid = false;
 
-    }
-    if ((PatientName == "" || Mobile == "+92__________" || Age == "" || Relation == "0" || Address == "0")) {
+    //}
+    //if ((PatientName == "" || Mobile == "+92__________" || Age == "" || Relation == "0" || Address == "0")) {
+    if ((PatientName == "" || Mobile == "+92__________" )) {
 
         $('#SavePatient_Data').attr('disabled', false);
         return;

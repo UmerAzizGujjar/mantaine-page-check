@@ -260,7 +260,25 @@
                     $('#ddlGroup').attr('disabled', false);
                     $('#ddlBatch').attr('disabled', false)
                 }
+                var batchid = $('#ddlBatch').val();
+                var $rows = $('#tblStutimetable tbody tr');
 
+                if (!ddlBatch) {
+                    $rows.show();
+                    return;
+                }
+
+                $rows.each(function () {
+                    var rowmacidId = $(this).find('td:eq(9) input').val().trim();
+                    var rowmcName = $(this).find('td:eq(9) input').val().trim();
+                    var selectedbatchname = $('#ddlBatch option:selected').text();
+
+                    if (selectedbatchname === "Please Select" || rowmcName === selectedbatchname) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
             });
 
 
@@ -275,20 +293,42 @@
                     $('#txt_WholeClass').attr('disabled', true);
                     $('#ddlBatch').attr('disabled', true);
                 }
-            });
+                var groupid = $('#ddlGroup').val();
+                var $rows = $('#tblStutimetable tbody tr');
 
-
-            $('#ddlGroup').on('change', function () {
-                debugger;
-                var subject1 = $(this).find(':selected').text();
-                if (subject1 == "Select" || subject1 == 'Select') {
-                    debugger;
-                    $('#txt_WholeClass').attr('disabled', false);
-                    $('#ddlGroup').attr('disabled', false);
-                    $('#ddlBatch').attr('disabled', false)
+                if (!groupid) {
+                    $rows.show();
+                    return;
                 }
 
+                $rows.each(function () {
+                    var rowmacidId = $(this).find('td:eq(10) input').val().trim();
+                    var rowmcName = $(this).find('td:eq(10) input').val().trim();
+                    var selectedGroupName = $('#ddlGroup option:selected').text();
+
+                    if (selectedGroupName === "Please Select" || rowmcName === selectedGroupName) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
             });
+        
+
+
+            //$('#ddlGroup').on('change', function () {
+            //    debugger;
+        
+            //    var subject1 = $(this).find(':selected').text();
+            //    if (subject1 == "Select" || subject1 == 'Select') {
+            //        debugger;
+            //        $('#txt_WholeClass').attr('disabled', false);
+            //        $('#ddlGroup').attr('disabled', false);
+            //        $('#ddlBatch').attr('disabled', false)
+            //    }
+               
+
+            //});
 
 
             $('#txt_WholeClass').on('change', function () {
@@ -747,7 +787,7 @@
      
         function Print() {
 
-
+            debugger;
             var date = $("#ddldate").val();
             var dt = new Date(parseInt(date.substr(6)));
             dt = moment(dt).format('L');
@@ -758,13 +798,16 @@
             subvalue = $("#Subject").val();
             var Practical = $("#Practical option:selected").text();
             var Group = $("#ddlGroup ").val();
+            if (Group == "") {
+                Group = "0"
+            }
             var bathc = $("#ddlBatch").val();
             var txt_WholeClass = $('#txt_WholeClass').prop("checked");
             Pracvalue = $("#Practical").val();
 
             debugger;
 
-            window.open('/ReportViewer.aspx?ReportName=AttendanceReport&ReportTitle=Student Attendance Report' + '&FTime=' + FromTime + '&TTime=' + ToTime + '&classs=' + classs + '&program=' + program + '&date=' + dt + '&Group=' + Group + '&bathc=' + bathc + '&txt_WholeClass=' + txt_WholeClass);
+            window.open('../../ReportViewer.aspx?ReportName=AttendanceReport&ReportTitle=Student Attendance Report' + '&FTime=' + FromTime + '&TTime=' + ToTime + '&classs=' + classs + '&program=' + program + '&date=' + dt + '&Group=' + Group + '&bathc=' + bathc + '&txt_WholeClass=' + txt_WholeClass);
         }
 
         function ProcessAttendance() {
