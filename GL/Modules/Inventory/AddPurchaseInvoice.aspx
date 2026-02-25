@@ -1194,12 +1194,15 @@
                 '<td class="headcol_2">' + parseFloat(TotalAmount).toFixed(2) + '</td>' +
                 '<td class="long">' + PONum + '</td>' +
                 '<td class="long">' + PODate + '</td>' +
-                '<td class="long"></td>' +  
-                '<td class="long"></td>' +  
+                '<td class="long"></td>' +
+                '<td class="long"></td>' +
                 '<td class="long"><input type="hidden" id="txtGRNNum' + length + '" name="txtGRNNum" value=""/></td>' +
-                '<td class="long">0.00</td>' + 
-                '<td class="long">0.00</td>' +  
-                '<td class="headcol2_1"><input type="hidden" id="txtQty' + length + '" name="txtQty" value="' + parseFloat(Qty).toFixed(2) + '"/>' + parseFloat(Qty).toFixed(2) + '</td>' +
+                '<td class="long">0.00</td>' +
+                '<td class="long">0.00</td>' +
+                '<td class="headcol2_1">' +
+                '<input type="hidden" id="txtQty' + length + '" name="txtQty" value="' + parseFloat(Qty).toFixed(2) + '"/>' +
+                '<input type="text" style="width:80px;" value="' + parseFloat(Qty).toFixed(2) + '" onchange="updateHiddenQty(this, ' + length + '); CulculateAmonut();" />' +
+                '</td>' +
                 '<td class="headcol2_bonus_qty">0.00<input type="hidden" name="BonusQty" value="0"/></td>' +
                 '<td class="headcol2_2"><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + parseFloat(Rate).toFixed(2) + '"/>' + parseFloat(Rate).toFixed(2) + '</td>' +
                 '<td class="headcol2_3"><input type="hidden" id="txtdiscper' + length + '" name="txtdiscper" value="0"/></td>' +
@@ -1228,6 +1231,9 @@
             CulculateAmonut();
         }
 
+        function updateHiddenQty(visibleInput, index) {
+            $('#txtQty' + index).val($(visibleInput).val());
+        }
 
     </script>
 </asp:Content>
