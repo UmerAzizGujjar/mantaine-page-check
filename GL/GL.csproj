@@ -654,6 +654,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\LabSample.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\login.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\MEdTemplate.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\NewEmergencyCase.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\NewOutPatient.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\OldOutPatients.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\OPD.css" />
@@ -4098,6 +4099,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\MEdTemplate.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\NewEmergencyCase.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\NewEMR.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\NewOutPatient.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\OldOutPatients.css" />
@@ -7657,6 +7659,7 @@
     <Content Include="wwwroot\khurshid\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\MEdTemplate.css" />
+    <Content Include="wwwroot\khurshid\css\CustomCss\NewEmergencyCase.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\NewEMR.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\NewOutPatient.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\OldOutPatients.css" />
@@ -11091,6 +11094,7 @@
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\MEdTemplate.css" />
+    <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\NewEmergencyCase.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\NewEMR.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\NewOutPatient.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\OldOutPatients.css" />
@@ -14504,6 +14508,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Maindashboard.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\NewEmergencyCase.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\NewEMR.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\NewOutPatient.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\OldOutPatients.css" />
@@ -17704,6 +17709,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Maindashboard.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\NewEmergencyCase.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\NewEMR.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\NewOutPatient.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\OldOutPatients.css" />
@@ -17776,6 +17782,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\MEdTemplate.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\NewEmergencyCase.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\NewEMR.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\NewOutPatient.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\OldOutPatients.css" />

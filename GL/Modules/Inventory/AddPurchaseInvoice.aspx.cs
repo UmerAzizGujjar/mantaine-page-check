@@ -288,6 +288,8 @@ namespace PMS.Inventory
                 ltd.Qty = Convert.ToDecimal(Invoiceitem.Qty);
                 ltd.Rate = Convert.ToDecimal(Invoiceitem.Rate);
                 ltd.GRN_detail_Id = Convert.ToInt32(Invoiceitem.GRNDetailId);
+                ltd.Po_Item_Id = Convert.ToInt32(Invoiceitem.PODetailId);
+                ltd.Po_Id = Convert.ToInt32(Invoiceitem.POID);
                 ltd.GRN_ID = Convert.ToInt32(Invoiceitem.GRNId);
                 ltd.Amount = Convert.ToDecimal(Invoiceitem.TotalAmount);
                 ltd.TotalAmount = Convert.ToDecimal(Invoiceitem.Amount);
@@ -466,6 +468,8 @@ namespace PMS.Inventory
             public string AdvTaxAmount { get; set; }
             public string AdvTotalAmount { get; set; }
             public string GRNDetailId { get; set; }
+            public string PODetailId { get; set; }
+            public string POID { get; set; }
             public string PurchAseInvoiceId { get; set; }
             public string Rate { get; set; }
             public string Qty { get; set; }
@@ -524,7 +528,18 @@ namespace PMS.Inventory
                             Description = item.Description,
                             Qty = pod.Qty,
                             Rate = pod.Rate,
-                            TotalAmount = pod.Qty * pod.Rate,
+                            Bonus_qty = pod.Bonus_Qty,
+                            bonus_tax = pod.Bonus_Tax,
+                            Sales_Tax = pod.SalTax_Id,
+                            sale_tax_amt = pod.SalTax_Amount,
+                            advancetax = pod.AdvanceTax_Amount,
+                            advancetaxid = pod.AdvanceTax_ID,
+                            further_tax = pod.FurtherTax_Amount,
+                            further_taxid = pod.FurtherTax_Id,
+                            //TotalAmount = pod.Qty * pod.Rate,
+                            TotalAmountc = pod.Amount,
+                            discount_per = pod.Discount_Percentage,
+                            discount_amount = pod.Discount_Amount,
                             Vendor_Name = vendor.Vendor_Name,
                             PO_Date = po.PO_Date,
                             Delivery_Date = pod.Delivery_Date
