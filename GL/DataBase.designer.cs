@@ -937,12 +937,16 @@ namespace PMS
         partial void UpdateSales_Tax(Sales_Tax instance);
         partial void DeleteSales_Tax(Sales_Tax instance);
         #endregion
-
         public DataBaseDataContext() :
-                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+
+                        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+
         {
+
             OnCreated();
+
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -4294,13 +4298,6 @@ namespace PMS
             return ((ISingleResult<sp_timetable_ListResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetAttendanceDetails")]
-        public ISingleResult<GetAttendanceDetailsResult> GetAttendanceDetails([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "FTime", DbType = "DateTime")] System.Nullable<System.DateTime> fTime, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "TTime", DbType = "DateTime")] System.Nullable<System.DateTime> tTime, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string program, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string classs, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Date")] System.Nullable<System.DateTime> datee, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Group", DbType = "VarChar(50)")] string group, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string bathc, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> txt_WholeClass)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fTime, tTime, program, classs, datee, group, bathc, txt_WholeClass);
-            return ((ISingleResult<GetAttendanceDetailsResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_AttendanceDetails")]
         public ISingleResult<sp_AttendanceDetailsResult> sp_AttendanceDetails([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "FTime", DbType = "DateTime")] System.Nullable<System.DateTime> fTime, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "TTime", DbType = "DateTime")] System.Nullable<System.DateTime> tTime, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string program, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string classs, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Date")] System.Nullable<System.DateTime> datee, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Group", DbType = "VarChar(50)")] string group, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string bathc, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> txt_WholeClass)
         {
@@ -5264,6 +5261,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), invId);
             return ((ISingleResult<sp_LoadPurchaseDetailInvoice_DirectPOResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.GetAttendanceDetails")]
+        public ISingleResult<GetAttendanceDetailsResult> GetAttendanceDetails([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "FTime", DbType = "DateTime")] System.Nullable<System.DateTime> fTime, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "TTime", DbType = "DateTime")] System.Nullable<System.DateTime> tTime, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string program, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string classs, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Date")] System.Nullable<System.DateTime> datee, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Group", DbType = "VarChar(50)")] string group, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(50)")] string bathc, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Bit")] System.Nullable<bool> txt_WholeClass)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fTime, tTime, program, classs, datee, group, bathc, txt_WholeClass);
+            return ((ISingleResult<GetAttendanceDetailsResult>)(result.ReturnValue));
         }
     }
 
@@ -174326,284 +174330,6 @@ namespace PMS
         }
     }
 
-    public partial class GetAttendanceDetailsResult
-    {
-
-        private System.Nullable<int> _Student_Id;
-
-        private string _Full_Name;
-
-        private System.Nullable<int> _Roll_No;
-
-        private string _Group;
-
-        private string _Batch;
-
-        private System.Nullable<System.DateTime> _Date;
-
-        private string _Day_Name;
-
-        private System.Nullable<System.DateTime> _FromTime;
-
-        private System.Nullable<System.DateTime> _ToTime;
-
-        private string _ClassName;
-
-        private string _SubSubject;
-
-        private System.Nullable<bool> _Present;
-
-        private System.Nullable<bool> _Absent;
-
-        private System.Nullable<bool> _Leave;
-
-        private string _isAttendance;
-
-        public GetAttendanceDetailsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Student_Id", DbType = "Int")]
-        public System.Nullable<int> Student_Id
-        {
-            get
-            {
-                return this._Student_Id;
-            }
-            set
-            {
-                if ((this._Student_Id != value))
-                {
-                    this._Student_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "NVarChar(150)")]
-        public string Full_Name
-        {
-            get
-            {
-                return this._Full_Name;
-            }
-            set
-            {
-                if ((this._Full_Name != value))
-                {
-                    this._Full_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Roll_No", DbType = "Int")]
-        public System.Nullable<int> Roll_No
-        {
-            get
-            {
-                return this._Roll_No;
-            }
-            set
-            {
-                if ((this._Roll_No != value))
-                {
-                    this._Roll_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Name = "[Group]", Storage = "_Group", DbType = "VarChar(150)")]
-        public string Group
-        {
-            get
-            {
-                return this._Group;
-            }
-            set
-            {
-                if ((this._Group != value))
-                {
-                    this._Group = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch", DbType = "VarChar(150)")]
-        public string Batch
-        {
-            get
-            {
-                return this._Batch;
-            }
-            set
-            {
-                if ((this._Batch != value))
-                {
-                    this._Batch = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Date
-        {
-            get
-            {
-                return this._Date;
-            }
-            set
-            {
-                if ((this._Date != value))
-                {
-                    this._Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Day_Name", DbType = "NVarChar(150)")]
-        public string Day_Name
-        {
-            get
-            {
-                return this._Day_Name;
-            }
-            set
-            {
-                if ((this._Day_Name != value))
-                {
-                    this._Day_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FromTime", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> FromTime
-        {
-            get
-            {
-                return this._FromTime;
-            }
-            set
-            {
-                if ((this._FromTime != value))
-                {
-                    this._FromTime = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ToTime", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> ToTime
-        {
-            get
-            {
-                return this._ToTime;
-            }
-            set
-            {
-                if ((this._ToTime != value))
-                {
-                    this._ToTime = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ClassName", DbType = "VarChar(150)")]
-        public string ClassName
-        {
-            get
-            {
-                return this._ClassName;
-            }
-            set
-            {
-                if ((this._ClassName != value))
-                {
-                    this._ClassName = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SubSubject", DbType = "VarChar(150)")]
-        public string SubSubject
-        {
-            get
-            {
-                return this._SubSubject;
-            }
-            set
-            {
-                if ((this._SubSubject != value))
-                {
-                    this._SubSubject = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Present", DbType = "Bit")]
-        public System.Nullable<bool> Present
-        {
-            get
-            {
-                return this._Present;
-            }
-            set
-            {
-                if ((this._Present != value))
-                {
-                    this._Present = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Absent", DbType = "Bit")]
-        public System.Nullable<bool> Absent
-        {
-            get
-            {
-                return this._Absent;
-            }
-            set
-            {
-                if ((this._Absent != value))
-                {
-                    this._Absent = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Leave", DbType = "Bit")]
-        public System.Nullable<bool> Leave
-        {
-            get
-            {
-                return this._Leave;
-            }
-            set
-            {
-                if ((this._Leave != value))
-                {
-                    this._Leave = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isAttendance", DbType = "VarChar(10) NOT NULL", CanBeNull = false)]
-        public string isAttendance
-        {
-            get
-            {
-                return this._isAttendance;
-            }
-            set
-            {
-                if ((this._isAttendance != value))
-                {
-                    this._isAttendance = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_AttendanceDetailsResult
     {
 
@@ -213629,6 +213355,284 @@ namespace PMS
                 if ((this._PO_Item_ID != value))
                 {
                     this._PO_Item_ID = value;
+                }
+            }
+        }
+    }
+
+    public partial class GetAttendanceDetailsResult
+    {
+
+        private System.Nullable<int> _Student_Id;
+
+        private string _Full_Name;
+
+        private System.Nullable<int> _Roll_No;
+
+        private string _Group;
+
+        private string _Batch;
+
+        private System.Nullable<System.DateTime> _Date;
+
+        private string _Day_Name;
+
+        private System.Nullable<System.DateTime> _FromTime;
+
+        private System.Nullable<System.DateTime> _ToTime;
+
+        private string _ClassName;
+
+        private string _SubSubject;
+
+        private System.Nullable<bool> _Present;
+
+        private System.Nullable<bool> _Absent;
+
+        private System.Nullable<bool> _Leave;
+
+        private string _isAttendance;
+
+        public GetAttendanceDetailsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Student_Id", DbType = "Int")]
+        public System.Nullable<int> Student_Id
+        {
+            get
+            {
+                return this._Student_Id;
+            }
+            set
+            {
+                if ((this._Student_Id != value))
+                {
+                    this._Student_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "NVarChar(150)")]
+        public string Full_Name
+        {
+            get
+            {
+                return this._Full_Name;
+            }
+            set
+            {
+                if ((this._Full_Name != value))
+                {
+                    this._Full_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Roll_No", DbType = "Int")]
+        public System.Nullable<int> Roll_No
+        {
+            get
+            {
+                return this._Roll_No;
+            }
+            set
+            {
+                if ((this._Roll_No != value))
+                {
+                    this._Roll_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Name = "[Group]", Storage = "_Group", DbType = "VarChar(150)")]
+        public string Group
+        {
+            get
+            {
+                return this._Group;
+            }
+            set
+            {
+                if ((this._Group != value))
+                {
+                    this._Group = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch", DbType = "VarChar(150)")]
+        public string Batch
+        {
+            get
+            {
+                return this._Batch;
+            }
+            set
+            {
+                if ((this._Batch != value))
+                {
+                    this._Batch = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Date
+        {
+            get
+            {
+                return this._Date;
+            }
+            set
+            {
+                if ((this._Date != value))
+                {
+                    this._Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Day_Name", DbType = "NVarChar(150)")]
+        public string Day_Name
+        {
+            get
+            {
+                return this._Day_Name;
+            }
+            set
+            {
+                if ((this._Day_Name != value))
+                {
+                    this._Day_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FromTime", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> FromTime
+        {
+            get
+            {
+                return this._FromTime;
+            }
+            set
+            {
+                if ((this._FromTime != value))
+                {
+                    this._FromTime = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ToTime", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> ToTime
+        {
+            get
+            {
+                return this._ToTime;
+            }
+            set
+            {
+                if ((this._ToTime != value))
+                {
+                    this._ToTime = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ClassName", DbType = "VarChar(150)")]
+        public string ClassName
+        {
+            get
+            {
+                return this._ClassName;
+            }
+            set
+            {
+                if ((this._ClassName != value))
+                {
+                    this._ClassName = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_SubSubject", DbType = "VarChar(150)")]
+        public string SubSubject
+        {
+            get
+            {
+                return this._SubSubject;
+            }
+            set
+            {
+                if ((this._SubSubject != value))
+                {
+                    this._SubSubject = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Present", DbType = "Bit")]
+        public System.Nullable<bool> Present
+        {
+            get
+            {
+                return this._Present;
+            }
+            set
+            {
+                if ((this._Present != value))
+                {
+                    this._Present = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Absent", DbType = "Bit")]
+        public System.Nullable<bool> Absent
+        {
+            get
+            {
+                return this._Absent;
+            }
+            set
+            {
+                if ((this._Absent != value))
+                {
+                    this._Absent = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Leave", DbType = "Bit")]
+        public System.Nullable<bool> Leave
+        {
+            get
+            {
+                return this._Leave;
+            }
+            set
+            {
+                if ((this._Leave != value))
+                {
+                    this._Leave = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isAttendance", DbType = "VarChar(10) NOT NULL", CanBeNull = false)]
+        public string isAttendance
+        {
+            get
+            {
+                return this._isAttendance;
+            }
+            set
+            {
+                if ((this._isAttendance != value))
+                {
+                    this._isAttendance = value;
                 }
             }
         }
