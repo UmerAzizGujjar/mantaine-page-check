@@ -306,6 +306,7 @@ namespace PMS.Inventory
                 ltd.FurtherTax_Amount = string.IsNullOrEmpty(Invoiceitem.FurtherTax_Amount) ? 0 : Convert.ToDecimal(Invoiceitem.FurtherTax_Amount);
                 ltd.Bonus_Qty = string.IsNullOrEmpty(Invoiceitem.Bonus_Qty) ? 0 : Convert.ToDecimal(Invoiceitem.Bonus_Qty);
                 ltd.Bonus_Tax = string.IsNullOrEmpty(Invoiceitem.Bonus_Tax) ? 0 : Convert.ToDecimal(Invoiceitem.Bonus_Tax);
+                ltd.BatchNum = Invoiceitem.BatchNum;
                 db.Purchase_Invoice_Details.InsertOnSubmit(ltd);
                 db.SubmitChanges();
             }
@@ -456,6 +457,7 @@ namespace PMS.Inventory
             public string totaladvanceadjusted { get; set; }
             public string totalnetamount { get; set; }
             public string disc_amount { get; set; }
+            
             public List<InoiceDetailList> ItemList { get; set; }
             public List<InoiceDetailList2> ItemList2 { get; set; }
             public List<InoiceDetailList3> ItemList3 { get; set; }
@@ -484,6 +486,8 @@ namespace PMS.Inventory
             public string FurtherTax_Amount { get; set; }
             public string Bonus_Qty { get; set; }
             public string Bonus_Tax { get; set; }
+
+            public string BatchNum { get; set; }
         }
 
         public class InoiceDetailList2
@@ -542,7 +546,8 @@ namespace PMS.Inventory
                             discount_amount = pod.Discount_Amount,
                             Vendor_Name = vendor.Vendor_Name,
                             PO_Date = po.PO_Date,
-                            Delivery_Date = pod.Delivery_Date
+                            Delivery_Date = pod.Delivery_Date,
+                            IsBatch = item.IsBatch,
                         };
 
             var result = query.ToList();

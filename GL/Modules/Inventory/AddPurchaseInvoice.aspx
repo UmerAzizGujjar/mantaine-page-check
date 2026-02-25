@@ -167,16 +167,7 @@
                 LoadPODetailByVendor(vendorId);
             });
 
-            $(document).on('change', '#checkPOHeader', function () {
-                debugger;
-                var isChecked = $(this).is(':checked');
-                $('.chkPOItem').prop('checked', isChecked);
-                if (isChecked) {
-                    $('.chkPOItem:checked').each(function () {
-                        appendPOItem(this);
-                    });
-                }
-            });
+            
 
             $('#checkPOHeader').on('change', function () {
                 var isChecked = $(this).is(':checked');
@@ -794,6 +785,7 @@
                         'Bonus_Tax': $(value).find('td input[name=BonusTax]').val() || '0',
                         'PODetailId': $(value).find('td input[name = txtPODetailId]').val() || '0',
                         'POID': $(value).find('td input[name = txtPOId]').val() || '0',
+                        'BatchNum': $(value).find('td input[name=txtBatchNum]').val() || '',
 
                     });
                 });
@@ -1148,6 +1140,7 @@
                  <td style="display:none">${item.advancetax}</td>
                  <td style="display:none">${item.advancetaxid}</td>
                  <td style="display:none">${item.further_taxid}</td>
+                 <td style="display:none">${item.IsBatch || 0}</td>
              </tr>`;
                     });
 
@@ -1193,6 +1186,7 @@
             var Advance_tax = $(row).find('td:eq(18)').text().trim();
             var Advance_taxid = $(row).find('td:eq(19)').text().trim();
             var furthertaxid = $(row).find('td:eq(20)').text().trim();
+            var IsBatch = $(row).find('td:eq(21)').text().trim();
 
             var PODate = '';
             if (PODateRaw && PODateRaw.indexOf('/Date(') > -1) {
@@ -1219,6 +1213,9 @@
             }
 
             var length = $("#tblItemDescription tr:gt(0)").length + 1;
+            var batchDisabled = (IsBatch == "true") ? "" : "disabled";
+            var batchPlaceholder = (IsBatch == "true") ? "Enter Batch" : "N/A";
+            var batchValue = (IsBatch == "true") ? "" : "N/A";
 
             var newRow = '<tr>' +
                 '<td class="headcol"><input type="hidden" id="txtItemCode' + length + '" name="txtItemCode" value="' + ItemCode + '"/>' + ItemCode + '</td>' +
@@ -1258,6 +1255,7 @@
                 '<td style="display:none"><input type="hidden" id="AdvTotalAmount' + length + '" name="AdvTotalAmount" value="0"/></td>' +
                 '<td style="display:none"><input type="hidden" id="FurtherTaxId' + length + '" name="FurtherTaxId" value="' + furthertaxid + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="FurtherTaxAmount' + length + '" name="FurtherTaxAmount" value="' + parseFloat(further_tax).toFixed(2) + '"/></td>' +
+                '<td class="headcol_batch"><input type="text" id="txtBatchNum' + length + '" name="txtBatchNum" value="' + batchValue + '" placeholder="' + batchPlaceholder + '" ' + batchDisabled + ' style="width:100px;" /></td>' +
                 '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size:13px;margin-left:16px;color:#f30a0a;"></i></a></td>' +
                 '</tr>';
 
@@ -1435,6 +1433,7 @@
                                         <th>Bonus Tax</th>
                                         <th>Value</th>
                                         <th>Total Amnt</th>
+                                        <th>Batch Num</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
