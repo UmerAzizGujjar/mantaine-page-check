@@ -74,7 +74,13 @@
                 },
                 error: function (error) {
                     console.error("Error loading dialysis data", error);
-                    alert('Error loading dialysis data');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Error loading dialysis data',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
                 }
             });
         }
@@ -228,9 +234,9 @@
 
         function updateButtonTexts() {
             if (isEditMode) {
-                $('#btnSaveStep1').text('Update & Next');
-                $('#btnSaveStep2').text('Update & Next');
-                $('#btnSaveStep3').text('Update');
+                $('#btnSaveStep1').html('<i class="fa fa-save"></i> Update & Next');
+                $('#btnSaveStep2').html('<i class="fa fa-save"></i> Update & Next');
+                $('#btnSaveStep3').html('<i class="fa fa-check"></i> Update');
             }
         }
 
@@ -240,25 +246,15 @@
                 loadPatients();
             });
 
-            $('#txtPatientSearch').on('keyup', function (e) {
-                if (e.keyCode === 13) {
-                    var searchText = $(this).val();
+            $('#txtPatientSearch').on('keyup', function () {
+                var searchText = $(this).val();
+                if (searchText.length >= 2) {
                     searchPatients(searchText);
-                } else {
-                    var searchText = $(this).val();
-                    if (searchText.length >= 2) {
-                        searchPatients(searchText);
-                    } else if (searchText.length === 0) {
-                        loadPatients();
-                    }
+                } else if (searchText.length === 0) {
+                    loadPatients();
                 }
             });
             
-            $('#btnSearchPatient').click(function () {
-                var searchText = $('#txtPatientSearch').val();
-                searchPatients(searchText);
-            });
-
             $('#btnSaveStep1').click(function () {
                 saveStep1();
             });
@@ -377,6 +373,7 @@
                         options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
                     });
                     $('#ddlAdvisedBy').html(options);
+                    $('#ddlPrimingBy').html(options);
                     if (callback) callback();
                 }
             });
@@ -390,11 +387,6 @@
                 dataType: "json",
                 success: function (response) {
                     var data = JSON.parse(response.d);
-                    var options = '<option value="">Nothing selected</option>';
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
-                    });
-                    $('#ddlPrimingBy').html(options);
                     if (callback) callback();
                 }
             });
@@ -454,6 +446,87 @@
             });
         }
 
+        function loadPatients() {
+            $.ajax({
+                type: "POST",
+                url: "DialysisForm.aspx/GetPatients",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+                    bindPatientTable(data);
+                },
+                error: function (error) {
+                    console.error("Error loading patients", error);
+                }
+            });
+        }
+
+        function searchPatients(searchText) {
+            $.ajax({
+                type: "POST",
+                url: "DialysisForm.aspx/SearchPatients",
+                data: JSON.stringify({ searchText: searchText }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+                    bindPatientTable(data);
+                },
+                error: function (error) {
+                    console.error("Error searching patients", error);
+                }
+            });
+        }
+
+        function bindPatientTable(data) {
+            var tbody = $('#iPatientsBody');
+            tbody.empty();
+            
+            if (data.length === 0) {
+                tbody.append('<tr><td colspan="7" style="text-align:center;">No patients found</td></tr>');
+                return;
+            }
+            
+            $.each(data, function (i, item) {
+                var row = '<tr>' +
+                    '<td style="display:none;">' + item.PatientId + '</td>' +
+                    '<td>' + item.MRNo + '</td>' +
+                    '<td>' + item.PatientName + '</td>' +
+                    '<td>' + item.FatherName + '</td>' +
+                    '<td>' + item.CNIC + '</td>' +
+                    '<td>' + item.ContactNo + '</td>' +
+                    '<td><button type="button" class="btn btn-sm btn-primry" onclick="selectPatient(' + item.PatientId + ',\'' +
+                    item.MRNo + '\',\'' + item.PatientName + '\',\'' + item.Age + '\',\'' +
+                    item.Gender + '\',\'' + item.ContactNo + '\')"><i class="fa fa-plus"></i></button></td>' +
+                    '</tr>';
+                tbody.append(row);
+            });
+        }
+
+        function selectPatient(id, mrNo, name, age, gender, contact) {
+            clearFormData();
+            
+            $('#hdfPatientId').val(id);
+            $('#infoMrNo').text(mrNo);
+            $('#infoPatientName').text(name);
+            $('#infoAge').text(age);
+            $('#infoGender').text(gender);
+            $('#infoContact').text(contact);
+            
+            $('#patientInfoBar').show();
+            $('#PatientsSearchModel').modal('hide');
+            
+            $('#hdfStep1Saved').val('false');
+            $('#hdfStep2Saved').val('false');
+            
+            navigateToStep(1);
+        }
+
+        function newForm() {
+            window.location.href = 'DialysisForm.aspx';
+        }
+
         function clearFormData() {
             // Clear Step 1
             $('#ddlVascularAccess, #ddlMachineNo, #ddlDialyzer, #ddlAdvisedBy, #ddlPrimingBy, #ddlHeparin, #ddlDialysisType').val('');
@@ -479,12 +552,24 @@
             var step2Saved = $('#hdfStep2Saved').val() === 'true';
 
             if (stepNumber === 2 && !step1Saved) {
-                alert('Please save Step 1 first');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please save Step 1 first',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
                 return;
             }
 
             if (stepNumber === 3 && !step2Saved) {
-                alert('Please save Step 2 first');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please save Step 2 first',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
                 return;
             }
 
@@ -499,7 +584,13 @@
         function saveStep1() {
             var patientId = $('#hdfPatientId').val();
             if (!patientId) {
-                alert('Please select a patient first');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please select a patient first',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
                 return;
             }
 
@@ -547,17 +638,28 @@
                         $('#hdfStep1Saved').val('true');
                         $('#step1Nav').addClass('completed');
                         $('#step2Nav').removeClass('disabled');
-                        alert(isEditMode ? 'Step 1 updated successfully' : 'Step 1 saved successfully');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: isEditMode ? 'Step 1 updated successfully' : 'Step 1 saved successfully',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
                         navigateToStep(2);
                     } else {
-                        alert('Error saving data: ' + response.d);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Error saving data: ' + response.d,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
                     }
                 }
             });
         }
 
         function addVitalRow() {
-            var rowCount = $('#vitalSignsBody tr').length + 1;
             var row = '<tr>' +
                 '<td><input type="time" class="form-control vital-time" /></td>' +
                 '<td><input type="number" step="0.1" class="form-control vital-temp" placeholder="°F" /></td>' +
@@ -599,7 +701,13 @@
             var vitalsData = getVitalSignsData();
             
             if (vitalsData.length === 0) {
-                alert('Please add at least one vital sign record');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please add at least one vital sign record',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
                 return;
             }
 
@@ -618,10 +726,22 @@
                         $('#hdfStep2Saved').val('true');
                         $('#step2Nav').addClass('completed');
                         $('#step3Nav').removeClass('disabled');
-                        alert(isEditMode ? 'Step 2 updated successfully' : 'Step 2 saved successfully');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: isEditMode ? 'Step 2 updated successfully' : 'Step 2 saved successfully',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
                         navigateToStep(3);
                     } else {
-                        alert('Error saving data: ' + response.d);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Error saving data: ' + response.d,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
                     }
                 }
             });
@@ -672,12 +792,24 @@
                 success: function (response) {
                     if (response.d === 'success') {
                         $('#step3Nav').addClass('completed');
-                        alert(isEditMode ? 'Dialysis form updated successfully' : 'Dialysis form completed successfully');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: isEditMode ? 'Dialysis form updated successfully' : 'Dialysis form completed successfully',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
                         
                         // Optionally redirect or reset form
                         // window.location.href = 'DialysisList.aspx';
                     } else {
-                        alert('Error saving data: ' + response.d);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Error saving data: ' + response.d,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
                     }
                 }
             });
@@ -688,6 +820,14 @@
     #navbar-container{
         background-color:white !important;
     }
+    
+    .dialysis-top-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+    }
+    
     .step-navigation {
         display: flex;
         justify-content: center;
@@ -861,22 +1001,23 @@
         }
     }
 
-    .row {
+    .dialysis-form-row {
         display: flex;
         flex-wrap: wrap;
         margin: 0 -10px 20px -10px;
     }
 
-    .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-6, .col-lg-12 {
+    .dialysis-field {
         padding: 0 10px;
         margin-bottom: 15px;
     }
 
-    .col-lg-2 { width: 20%; }
-    .col-lg-3 { width: 25%; }
-    .col-lg-4 { width: 33.33%; }
-    .col-lg-6 { width: 50%; }
-    .col-lg-12 { width: 100%; }
+    .dialysis-field-20 { width: 20%; }
+    .dialysis-field-25 { width: 25%; }
+    .dialysis-field-33 { width: 33.33%; }
+    .dialysis-field-50 { width: 50%; }
+    .dialysis-field-75 { width: 75%; }
+    .dialysis-field-100 { width: 100%; }
 
     label {
         display: block;
@@ -891,11 +1032,13 @@
         margin-left: 3px;
     }
 
-    input[type="text"],
-    input[type="number"],
-    input[type="time"],
-    select,
-    textarea {
+    #ddlVascularAccess, #txtDialysisNo, #ddlMachineNo, #ddlDialyzer, #ddlAdvisedBy,
+    #ddlPrimingBy, #txtPrimingSol, #ddlHeparin, #txtHeparinInfusion, #txtCurrentWeight,
+    #txtLastWeight, #txtStartTime, #txtFinishTime, #txtWeightDiff, #txtUF,
+    #txtUFRate, #txtTotalDuration, #ddlDialysisType, #txtComplaints, #txtConsciousLevel,
+    #txtEdema, #txtCardRhythm, #txtLungs, #txtOther, #txtRemarks, #txtSpecialInstruction,
+    #txtPostStartTime, #txtPostEndTime, #txtPostDuration, #ddlPostStaff, #txtPostWeight,
+    #txtPostTemp, #txtPostBPSys, #txtPostBPDias, #txtPostPulse, #txtPostComments {
         width: 100%;
         padding: 8px 12px;
         border: 1px solid #ddd;
@@ -904,39 +1047,37 @@
         transition: border-color 0.3s ease;
     }
 
-    input[type="text"]:focus,
-    input[type="number"]:focus,
-    input[type="time"]:focus,
-    select:focus,
-    textarea:focus {
+    #ddlVascularAccess:focus, #txtDialysisNo:focus, #ddlMachineNo:focus, #ddlDialyzer:focus,
+    #ddlAdvisedBy:focus, #ddlPrimingBy:focus, #txtPrimingSol:focus, #ddlHeparin:focus,
+    #txtHeparinInfusion:focus, #txtCurrentWeight:focus, #txtLastWeight:focus, #txtStartTime:focus,
+    #txtFinishTime:focus, #txtWeightDiff:focus, #txtUF:focus, #txtUFRate:focus,
+    #txtTotalDuration:focus, #ddlDialysisType:focus, #txtComplaints:focus, #txtConsciousLevel:focus,
+    #txtEdema:focus, #txtCardRhythm:focus, #txtLungs:focus, #txtOther:focus,
+    #txtRemarks:focus, #txtSpecialInstruction:focus, #txtPostStartTime:focus,
+    #txtPostEndTime:focus, #txtPostDuration:focus, #ddlPostStaff:focus,
+    #txtPostWeight:focus, #txtPostTemp:focus, #txtPostBPSys:focus,
+    #txtPostBPDias:focus, #txtPostPulse:focus, #txtPostComments:focus {
         outline: none;
         border-color: #4A90E2;
     }
 
-    input[readonly] {
+    #txtDialysisNo, #txtPostDuration {
         background-color: #f5f5f5;
         cursor: not-allowed;
     }
 
-    textarea {
+    #txtSpecialInstruction, #txtPostComments {
         resize: vertical;
         min-height: 80px;
     }
 
-    .action-buttons {
+    .dialysis-action-buttons {
         display: flex;
         gap: 15px;
-        justify-content: flex-end;
+        justify-content: flex-start;
         margin-top: 30px;
         padding-top: 20px;
         border-top: 2px solid #e0e0e0;
-    }
-
-    .top-buttons {
-        display: flex;
-        gap: 10px;
-        justify-content: flex-end;
-        margin-bottom: 20px;
     }
 
     .btn {
@@ -949,12 +1090,12 @@
         transition: all 0.3s ease;
     }
 
-    .btn-primary {
+    .btn-primry {
         background-color: #4A90E2;
         color: white;
     }
 
-    .btn-primary:hover {
+    .btn-primry:hover {
         background-color: #357ABD;
     }
 
@@ -985,41 +1126,29 @@
         background-color: #c82333;
     }
 
-    .btn-primry {
-        background-color: #4A90E2;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primry:hover {
-        background-color: #357ABD;
-    }
-
     .btn-primry i {
         margin-right: 5px;
     }
 
-    .table-responsive {
-        overflow-x: auto;
+    /* Patient Search Modal - Vertical Scroll & Round Plus Button */
+    #PatientsSearchModel .modal-body {
+        max-height: 500px;
+        overflow-y: auto;
     }
 
-    table {
+    #tblPatientsResult {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 15px;
     }
 
-    table thead {
+    #tblPatientsResult thead {
         background-color: #f8f9fa;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
-    table th {
+    #tblPatientsResult th {
         padding: 12px;
         text-align: left;
         font-size: 13px;
@@ -1028,14 +1157,66 @@
         border-bottom: 2px solid #dee2e6;
     }
 
-    table td {
+    #tblPatientsResult td {
+        padding: 8px 12px;
+        font-size: 13px;
+        color: #666;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+
+    #tblPatientsResult tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Round Small Plus Button */
+    #tblPatientsResult .btn-primry {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #tblPatientsResult .btn-primry i {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    /* Vital Signs Table - White Headers */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    #tblVitalSigns {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    #tblVitalSigns thead {
+        background-color: white;
+    }
+
+    #tblVitalSigns th {
+        padding: 12px;
+        text-align: left;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    #tblVitalSigns td {
         padding: 12px;
         font-size: 13px;
         color: #666;
         border-bottom: 1px solid #dee2e6;
     }
 
-    table tbody tr:hover {
+    #tblVitalSigns tbody tr:hover {
         background-color: #f8f9fa;
     }
 
@@ -1045,13 +1226,13 @@
     }
 
     @media (max-width: 992px) {
-        .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-6 {
+        .dialysis-field-20, .dialysis-field-25, .dialysis-field-33, .dialysis-field-50 {
             width: 50%;
         }
     }
 
     @media (max-width: 576px) {
-        .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-6 {
+        .dialysis-field-20, .dialysis-field-25, .dialysis-field-33, .dialysis-field-50 {
             width: 100%;
         }
 
@@ -1070,7 +1251,7 @@
          <asp:HiddenField ID="hdfStep1Saved" runat="server" ClientIDMode="Static" Value="false" />
          <asp:HiddenField ID="hdfStep2Saved" runat="server" ClientIDMode="Static" Value="false" />
 
-         <div class="top-buttons">
+         <div class="dialysis-top-buttons">
              <button type="button" class="btn-primry" onclick="newForm()">
                  <i class="fa fa-file"></i> New
              </button>
@@ -1080,17 +1261,17 @@
          </div>
 
          <!-- Patient Card - Compact 2 Column Layout -->
-         <div class="row" id="patientInfoBar" style="display:none;">
-             <div class="col-lg-6">
+         <div class="dialysis-form-row" id="patientInfoBar" style="display:none;">
+             <div class="dialysis-field dialysis-field-50">
                  <div class="cardd">
                      <div class="card-bodyy">
-                         <div class="row">
-                             <div class="col-lg-3 text-center">
+                         <div class="dialysis-form-row">
+                             <div class="dialysis-field dialysis-field-25 text-center">
                                  <div class="image-container">
                                      <img src="../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient" class="patient-image" />
                                  </div>
                              </div>
-                             <div class="col-lg-9">
+                             <div class="dialysis-field dialysis-field-75">
                                  <div class="info-row">
                                      <span class="labels">MR No:</span>
                                      <span class="md" id="infoMrNo">-</span>
@@ -1118,7 +1299,7 @@
              </div>
 
              <!-- Dialysis Progress with Step Navigation -->
-             <div class="col-lg-6">
+             <div class="dialysis-field dialysis-field-50">
                  <div class="step-summary-card">
                      <h6><i class="fa fa-list-check"></i> Dialysis Progress</h6>
                      
@@ -1146,30 +1327,30 @@
 
          <!-- Step 1: Pre Dialysis -->
          <div class="form-section active" id="section1">
-             <div class="row">
-                 <div class="col-lg-2">
+             <div class="dialysis-form-row">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Vascular Access<span class="required">*</span></label>
                      <select id="ddlVascularAccess" class="form-control">
                          <option value="">Select</option>
                      </select>
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Dialysis No.</label>
                      <input type="text" id="txtDialysisNo" class="form-control" placeholder="Dialysis Number" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Machine No.<span class="required">*</span></label>
                      <select id="ddlMachineNo" class="form-control">
                          <option value="">Select</option>
                      </select>
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Dialyzer</label>
                      <select id="ddlDialyzer" class="form-control">
                          <option value="">Select</option>
                      </select>
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Advised by<span class="required">*</span></label>
                      <select id="ddlAdvisedBy" class="form-control">
                          <option value="">Nothing selected</option>
@@ -1177,113 +1358,113 @@
                  </div>
              </div>
 
-             <div class="row">
-                 <div class="col-lg-2">
+             <div class="dialysis-form-row">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Priming By<span class="required">*</span></label>
                      <select id="ddlPrimingBy" class="form-control">
                          <option value="">Nothing selected</option>
                      </select>
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Priming Sol.</label>
                      <input type="text" id="txtPrimingSol" class="form-control" value="Dental Mould for pouring" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Heparin</label>
                      <select id="ddlHeparin" class="form-control">
                          <option value="">Nothing selected</option>
                      </select>
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Heparin Infusion / Hour</label>
                      <input type="text" id="txtHeparinInfusion" class="form-control" placeholder="Heparin Infusion / Hour" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Current Weight (kg)</label>
                      <input type="text" id="txtCurrentWeight" class="form-control" placeholder="Weight" />
                  </div>
              </div>
 
-             <div class="row">
-                 <div class="col-lg-2">
+             <div class="dialysis-form-row">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Last Weight (kg)</label>
                      <input type="text" id="txtLastWeight" class="form-control" placeholder="last weight" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Start Time<span class="required">*</span></label>
                      <input type="time" id="txtStartTime" class="form-control" value="04:00" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Finish Time</label>
                      <input type="time" id="txtFinishTime" class="form-control" value="04:00" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Diff. in Weight (kg)</label>
                      <input type="text" id="txtWeightDiff" class="form-control" placeholder="Weight" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>UF: ml</label>
                      <input type="text" id="txtUF" class="form-control" placeholder="UF" />
                  </div>
              </div>
 
-             <div class="row">
-                 <div class="col-lg-2">
+             <div class="dialysis-form-row">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>UF Rate: ml/hr</label>
                      <input type="text" id="txtUFRate" class="form-control" placeholder="UF rate" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Total Duration</label>
                      <input type="text" id="txtTotalDuration" class="form-control" placeholder="Please enter duration" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Dialysis Type</label>
                      <select id="ddlDialysisType" class="form-control">
                          <option value="">Select</option>
                      </select>
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Complaints</label>
                      <input type="text" id="txtComplaints" class="form-control" placeholder="Please enter complaints">
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Conscious Level</label>
                      <input type="text" id="txtConsciousLevel" class="form-control" placeholder="Please enter conscious level">
                  </div>
              </div>
 
-            <div class="row">
-                <div class="col-lg-2">
+            <div class="dialysis-form-row">
+                <div class="dialysis-field dialysis-field-20">
                     <label>Edema</label>
                     <input type="text" id="txtEdema" class="form-control" placeholder="Please enter edema">
                 </div>
-                <div class="col-lg-2">
+                <div class="dialysis-field dialysis-field-20">
                     <label>Card Rhythm</label>
                     <input type="text" id="txtCardRhythm" class="form-control" placeholder="Please enter card rhythm">
                 </div>
-                <div class="col-lg-2">
+                <div class="dialysis-field dialysis-field-20">
                     <label>Lungs</label>
                     <input type="text" id="txtLungs" class="form-control" placeholder="Please enter lungs">
                 </div>
-                <div class="col-lg-2">
+                <div class="dialysis-field dialysis-field-20">
                     <label>Other</label>
                     <input type="text" id="txtOther" class="form-control" placeholder="Please enter other">
                 </div>
-                <div class="col-lg-2">
+                <div class="dialysis-field dialysis-field-20">
                     <label>Remarks</label>
                     <input type="text" id="txtRemarks" class="form-control" placeholder="Please enter remarks">
                 </div>
             </div>
 
-             <div class="row">
-                 <div class="col-lg-12">
+             <div class="dialysis-form-row">
+                 <div class="dialysis-field dialysis-field-100">
                      <label>Special Instruction</label>
                      <textarea id="txtSpecialInstruction" class="form-control" placeholder="Please enter instruction"></textarea>
                  </div>
              </div>
 
-             <div class="action-buttons">
-                 <button type="button" class="btn btn-primary" id="btnSaveStep1">
+             <div class="dialysis-action-buttons">
+                 <button type="button" class="btn btn-primry" id="btnSaveStep1">
                      <i class="fa fa-save"></i> Save & Next
                  </button>
              </div>
@@ -1291,11 +1472,11 @@
 
          <!-- Step 2: During Dialysis -->
          <div class="form-section" id="section2">
-             <div class="row">
-                 <div class="col-lg-12">
+             <div class="dialysis-form-row">
+                 <div class="dialysis-field dialysis-field-100">
                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                          <label style="margin: 0;">Vital Signs During Dialysis</label>
-                         <button type="button" class="btn btn-primary btn-sm" id="btnAddVitalRow">
+                         <button type="button" class="btn btn-primry btn-sm" id="btnAddVitalRow">
                              <i class="fa fa-plus"></i> Add Row
                          </button>
                      </div>
@@ -1321,11 +1502,11 @@
                  </div>
              </div>
 
-             <div class="action-buttons">
+             <div class="dialysis-action-buttons">
                  <button type="button" class="btn btn-secondary" id="btnBackToStep1">
                      <i class="fa fa-arrow-left"></i> Back
                  </button>
-                 <button type="button" class="btn btn-primary" id="btnSaveStep2">
+                 <button type="button" class="btn btn-primry" id="btnSaveStep2">
                      <i class="fa fa-save"></i> Save & Next
                  </button>
              </div>
@@ -1333,58 +1514,58 @@
 
          <!-- Step 3: Post Dialysis -->
          <div class="form-section" id="section3">
-             <div class="row">
-                 <div class="col-lg-2">
+             <div class="dialysis-form-row">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Start Time<span class="required">*</span></label>
                      <input type="time" id="txtPostStartTime" class="form-control" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>End Time<span class="required">*</span></label>
                      <input type="time" id="txtPostEndTime" class="form-control" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Total Duration</label>
                      <input type="text" id="txtPostDuration" class="form-control" readonly />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Staff<span class="required">*</span></label>
                      <select id="ddlPostStaff" class="form-control">
                          <option value="">Select Staff</option>
                      </select>
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Weight (kg)</label>
                      <input type="number" step="0.1" id="txtPostWeight" class="form-control" placeholder="Weight" />
                  </div>
              </div>
 
-             <div class="row">
-                 <div class="col-lg-2">
+             <div class="dialysis-form-row">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Temperature (°F)</label>
                      <input type="number" step="0.1" id="txtPostTemp" class="form-control" placeholder="Temperature" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>BP-Sys (mmHg)</label>
                      <input type="number" id="txtPostBPSys" class="form-control" placeholder="Systolic" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>BP-Dias (mmHg)</label>
                      <input type="number" id="txtPostBPDias" class="form-control" placeholder="Diastolic" />
                  </div>
-                 <div class="col-lg-2">
+                 <div class="dialysis-field dialysis-field-20">
                      <label>Pulse (bpm)</label>
                      <input type="number" id="txtPostPulse" class="form-control" placeholder="Pulse" />
                  </div>
              </div>
 
-             <div class="row">
-                 <div class="col-lg-12">
+             <div class="dialysis-form-row">
+                 <div class="dialysis-field dialysis-field-100">
                      <label>Comments</label>
                      <textarea id="txtPostComments" class="form-control" placeholder="Enter any additional comments or observations" rows="4"></textarea>
                  </div>
              </div>
 
-             <div class="action-buttons">
+             <div class="dialysis-action-buttons">
                  <button type="button" class="btn btn-secondary" id="btnBackToStep2">
                      <i class="fa fa-arrow-left"></i> Back
                  </button>
@@ -1396,24 +1577,20 @@
      </div>
 
      <!-- Patient Search Modal (Bootstrap) -->
-     <div class="modal fade" id="PatientsSearchModel" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+     <div id="PatientsSearchModel" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
          <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
              <div class="modal-content">
-                 <div class="modal-header">
-                     <h5 class="modal-title">Search Patients</h5>
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                         <span aria-hidden="true">&times;</span>
-                     </button>
-                 </div>
                  <div class="modal-body">
-                     <div class="search-container">
-                         <div class="search-input-group">
-                             <input type="text" id="txtPatientSearch" class="form-control" placeholder="Enter patient name or MR No." />
-                             <button type="button" class="btn btn-primary" id="btnSearchPatient">Search</button>
+                     <fieldset class="form-group">
+                         <div class="form-row">
+                             <div class="col-md-3">
+                                 <h5>Search Your Patients:</h5>
+                                 <input type="text" id="txtPatientSearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+                             </div>
                          </div>
-                     </div>
+                     </fieldset>
                      <div class="table-responsive">
-                         <table id="tblPatients" class="table table-striped">
+                         <table class="table table-hover table-striped table-bordered" id="tblPatientsResult">
                              <thead>
                                  <tr>
                                      <th style="display:none;">Patient ID</th>

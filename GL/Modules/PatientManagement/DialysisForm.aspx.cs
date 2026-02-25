@@ -6,9 +6,6 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Services;
 using Newtonsoft.Json;
-using System.Data;
-using System.Data.SqlClient;
-using System.Configuration;
 using System.Web.Script.Serialization;
 
 namespace PMS.Modules.PatientManagement
@@ -25,25 +22,18 @@ namespace PMS.Modules.PatientManagement
         {
             try
             {
-                string conStr = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
-                string dialysisId = "";
                 string today = DateTime.Now.ToString("yyyyMMdd");
-                
-                using (SqlConnection con = new SqlConnection(conStr))
-                {
-                    con.Open();
-                    string query = "SELECT COUNT(*) FROM Dialysis_PreDialysis WHERE Dialysis_ID LIKE 'DLY-' + @today + '-%'";
-                    
-                    using (SqlCommand cmd = new SqlCommand(query, con))
-                    {
-                        cmd.Parameters.AddWithValue("@today", today);
-                        int count = (int)cmd.ExecuteScalar();
-                        int nextNumber = count + 1;
-                        dialysisId = $"DLY-{today}-{nextNumber.ToString("D4")}";
-                    }
-                }
+                string prefix = $"DLY-{today}-";
 
-                return dialysisId;
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    int count = db.Dialysis_PreDialysis
+                                  .Count(d => d.Dialysis_ID.StartsWith(prefix));
+                    
+                    int nextNumber = count + 1;
+                    string dialysisId = $"{prefix}{nextNumber.ToString("D4")}";
+                    return dialysisId;
+                }
             }
             catch (Exception ex)
             {
@@ -56,43 +46,27 @@ namespace PMS.Modules.PatientManagement
         {
             try
             {
-                string conStr = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
-
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    string preQuery = @"SELECT * FROM Dialysis_PreDialysis WHERE Dialysis_ID = @DialysisId";
-                    using (SqlCommand cmd = new SqlCommand(preQuery, con))
+                    var preDialysis = (from pd in db.Dialysis_PreDialysis
+                                       where pd.Dialysis_ID == dialysisId
+                                       select pd).ToList();
+
+                    var duringDialysis = (from dd in db.Dialysis_DuringDialysis
+                                          where dd.Dialysis_ID == dialysisId
+                                          orderby dd.Vital_Time
+                                          select dd).ToList();
+
+                    var postDialysis = (from pod in db.Dialysis_PostDialysis
+                                        where pod.Dialysis_ID == dialysisId
+                                        select pod).ToList();
+
+                    return JsonConvert.SerializeObject(new
                     {
-                        cmd.Parameters.AddWithValue("@DialysisId", dialysisId);
-                        using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-                        {
-                            DataTable preDt = new DataTable();
-                            sda.Fill(preDt);
-                            
-                            string duringQuery = @"SELECT * FROM Dialysis_DuringDialysis WHERE Dialysis_ID = @DialysisId ORDER BY Vital_Time";
-                            cmd.CommandText = duringQuery;
-                            DataTable duringDt = new DataTable();
-                            using (SqlDataAdapter sda2 = new SqlDataAdapter(cmd))
-                            {
-                                sda2.Fill(duringDt);
-                            }
-
-                            string postQuery = @"SELECT * FROM Dialysis_PostDialysis WHERE Dialysis_ID = @DialysisId";
-                            cmd.CommandText = postQuery;
-                            DataTable postDt = new DataTable();
-                            using (SqlDataAdapter sda3 = new SqlDataAdapter(cmd))
-                            {
-                                sda3.Fill(postDt);
-                            }
-
-                            return JsonConvert.SerializeObject(new
-                            {
-                                PreDialysis = preDt,
-                                DuringDialysis = duringDt,
-                                PostDialysis = postDt
-                            });
-                        }
-                    }
+                        PreDialysis = preDialysis,
+                        DuringDialysis = duringDialysis,
+                        PostDialysis = postDialysis
+                    });
                 }
             }
             catch (Exception ex)
@@ -106,21 +80,26 @@ namespace PMS.Modules.PatientManagement
         {
             try
             {
-                string conStr = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
-                DataTable dt = new DataTable();
-
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 50 pat_id AS PatientId, mr_no_sequence AS MRNo, Full_Name AS PatientName, Father_Name AS FatherName, NIC, Mobile1 AS ContactNo, ISNULL(Age_Years, '') AS Age, ISNULL(Gender, '') AS Gender FROM Reg_patient ORDER BY pat_id DESC", con))
-                    {
-                        using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-                        {
-                            sda.Fill(dt);
-                        }
-                    }
-                }
+                    var patients = (from p in db.Reg_patients
+                                    orderby p.pat_id descending
+                                    select new
+                                    {
+                                        PatientId = p.pat_id,
+                                        MRNo = p.mr_no_sequence ?? "",
+                                        PatientName = p.Full_Name ?? "",
+                                        FatherName = p.Father_Name ?? "",
+                                        NIC = p.NIC ?? "",
+                                        ContactNo = p.Mobile1 ?? "",
+                                        Age = p.Age_years ?? "",
+                                        Gender = p.Gender ?? ""
+                                    })
+                                   .Take(50)
+                                   .ToList();
 
-                return JsonConvert.SerializeObject(dt);
+                    return JsonConvert.SerializeObject(patients);
+                }
             }
             catch (Exception ex)
             {
@@ -133,39 +112,31 @@ namespace PMS.Modules.PatientManagement
         {
             try
             {
-                string conStr = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
-                DataTable dt = new DataTable();
-
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    string query = @"SELECT TOP 50 
-                    pat_id AS PatientId, 
-                    mr_no_sequence AS MRNo, 
-                    Full_Name AS PatientName, 
-                    Father_Name AS FatherName, 
-                    NIC, 
-                    Mobile1 AS ContactNo, 
-                    ISNULL(Age_Years, '') AS Age, 
-                    ISNULL(Gender, '') AS Gender 
-                 FROM Reg_patient 
-                 WHERE Full_Name LIKE @searchText 
-                    OR mr_no_sequence LIKE @searchText 
-                    OR Father_Name LIKE @searchText 
-                    OR NIC LIKE @searchText 
-                    OR Mobile1 LIKE @searchText 
-                 ORDER BY pat_id DESC";
+                    var patients = (from p in db.Reg_patients
+                                    where p.Full_Name.Contains(searchText)
+                                       || p.mr_no_sequence.Contains(searchText)
+                                       || p.Father_Name.Contains(searchText)
+                                       || p.NIC.Contains(searchText)
+                                       || p.Mobile1.Contains(searchText)
+                                    orderby p.pat_id descending
+                                    select new
+                                    {
+                                        PatientId = p.pat_id,
+                                        MRNo = p.mr_no_sequence ?? "",
+                                        PatientName = p.Full_Name ?? "",
+                                        FatherName = p.Father_Name ?? "",
+                                        NIC = p.NIC ?? "",
+                                        ContactNo = p.Mobile1 ?? "",
+                                        Age = p.Age_years ?? "",
+                                        Gender = p.Gender ?? ""
+                                    })
+                                   .Take(50)
+                                   .ToList();
 
-                    using (SqlCommand cmd = new SqlCommand(query, con))
-                    {
-                        cmd.Parameters.AddWithValue("@searchText", "%" + searchText + "%");
-                        using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-                        {
-                            sda.Fill(dt);
-                        }
-                    }
+                    return JsonConvert.SerializeObject(patients);
                 }
-
-                return JsonConvert.SerializeObject(dt);
             }
             catch (Exception ex)
             {
@@ -316,84 +287,29 @@ namespace PMS.Modules.PatientManagement
             try
             {
                 var preDialysisData = JsonConvert.DeserializeObject<PreDialysisData>(data);
-                string conStr = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
                 
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    con.Open();
+                    var existingRecord = db.Dialysis_PreDialysis
+                                           .FirstOrDefault(d => d.Dialysis_ID == preDialysisData.DialysisId);
                     
-                    if (!string.IsNullOrEmpty(preDialysisData.DialysisId))
+                    if (existingRecord != null)
                     {
-                        string checkQuery = "SELECT COUNT(*) FROM Dialysis_PreDialysis WHERE Dialysis_ID = @DialysisId";
-                        using (SqlCommand checkCmd = new SqlCommand(checkQuery, con))
-                        {
-                            checkCmd.Parameters.AddWithValue("@DialysisId", preDialysisData.DialysisId);
-                            int exists = (int)checkCmd.ExecuteScalar();
-                            
-                            if (exists > 0)
-                            {
-                                string updateQuery = @"UPDATE Dialysis_PreDialysis SET 
-                                    Patient_ID = @PatientId, 
-                                    Vascular_Access = @VascularAccess, 
-                                    Dialysis_No = @DialysisNo, 
-                                    Machine_No = @MachineNo, 
-                                    Dialyzer = @Dialyzer, 
-                                    Advised_By_ID = @AdvisedBy, 
-                                    Priming_By_ID = @PrimingBy, 
-                                    Priming_Solution = @PrimingSol, 
-                                    Heparin = @Heparin, 
-                                    Heparin_Infusion_Per_Hour = @HeparinInfusion,
-                                    Current_Weight = @CurrentWeight, 
-                                    Last_Weight = @LastWeight, 
-                                    Start_Time = @StartTime, 
-                                    Finish_Time = @FinishTime, 
-                                    Weight_Difference = @WeightDiff, 
-                                    UF_ML = @UF, 
-                                    UF_Rate = @UFRate, 
-                                    Total_Duration = @TotalDuration, 
-                                    Dialysis_Type = @DialysisType, 
-                                    Special_Instruction = @SpecialInstruction,
-                                    Complaints = @Complaints, 
-                                    Conscious_Level = @ConsciousLevel, 
-                                    Edema = @Edema, 
-                                    Card_Rhythm = @CardRhythm, 
-                                    Lungs = @Lungs, 
-                                    Other = @Other, 
-                                    Remarks = @Remarks,
-                                    Modified_Date = GETDATE(), 
-                                    Modified_By = @UserId
-                                    WHERE Dialysis_ID = @DialysisId";
-
-                                using (SqlCommand cmd = new SqlCommand(updateQuery, con))
-                                {
-                                    AddPreDialysisParameters(cmd, preDialysisData);
-                                    cmd.ExecuteNonQuery();
-                                }
-                                
-                                return preDialysisData.DialysisId;
-                            }
-                        }
+                        UpdatePreDialysisRecord(existingRecord, preDialysisData);
+                        existingRecord.Modified_Date = DateTime.Now;
+                        existingRecord.Modified_By = HttpContext.Current.Session["UserID"]?.ToString();
+                        db.SubmitChanges();
                     }
-                    
-                    string query = @"INSERT INTO Dialysis_PreDialysis 
-                                    (Dialysis_ID, Patient_ID, Vascular_Access, Dialysis_No, Machine_No, Dialyzer, 
-                                     Advised_By_ID, Priming_By_ID, Priming_Solution, Heparin, Heparin_Infusion_Per_Hour,
-                                     Current_Weight, Last_Weight, Start_Time, Finish_Time, Weight_Difference, 
-                                     UF_ML, UF_Rate, Total_Duration, Dialysis_Type, Special_Instruction,
-                                     Complaints, Conscious_Level, Edema, Card_Rhythm, Lungs, Other, Remarks, 
-                                     Created_Date, Created_By)
-                                    VALUES 
-                                    (@DialysisId, @PatientId, @VascularAccess, @DialysisNo, @MachineNo, @Dialyzer, 
-                                     @AdvisedBy, @PrimingBy, @PrimingSol, @Heparin, @HeparinInfusion,
-                                     @CurrentWeight, @LastWeight, @StartTime, @FinishTime, @WeightDiff, 
-                                     @UF, @UFRate, @TotalDuration, @DialysisType, @SpecialInstruction,
-                                     @Complaints, @ConsciousLevel, @Edema, @CardRhythm, @Lungs, @Other, @Remarks,
-                                     GETDATE(), @UserId)";
-
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    else
                     {
-                        AddPreDialysisParameters(cmd, preDialysisData);
-                        cmd.ExecuteNonQuery();
+                        var newRecord = new Dialysis_PreDialysi();
+                        UpdatePreDialysisRecord(newRecord, preDialysisData);
+                        newRecord.Dialysis_ID = preDialysisData.DialysisId;
+                        newRecord.Created_Date = DateTime.Now;
+                        newRecord.Created_By = HttpContext.Current.Session["UserID"]?.ToString();
+                        
+                        db.Dialysis_PreDialysis.InsertOnSubmit(newRecord);
+                        db.SubmitChanges();
                     }
                 }
 
@@ -405,37 +321,87 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-        private static void AddPreDialysisParameters(SqlCommand cmd, PreDialysisData data)
+        private static void UpdatePreDialysisRecord(Dialysis_PreDialysi record, PreDialysisData data)
         {
-            cmd.Parameters.AddWithValue("@DialysisId", data.DialysisId);
-            cmd.Parameters.AddWithValue("@PatientId", string.IsNullOrEmpty(data.PatientId) ? (object)DBNull.Value : data.PatientId);
-            cmd.Parameters.AddWithValue("@VascularAccess", string.IsNullOrEmpty(data.VascularAccess) ? (object)DBNull.Value : data.VascularAccess);
-            cmd.Parameters.AddWithValue("@DialysisNo", string.IsNullOrEmpty(data.DialysisNo) ? (object)DBNull.Value : data.DialysisNo);
-            cmd.Parameters.AddWithValue("@MachineNo", string.IsNullOrEmpty(data.MachineNo) ? (object)DBNull.Value : data.MachineNo);
-            cmd.Parameters.AddWithValue("@Dialyzer", string.IsNullOrEmpty(data.Dialyzer) ? (object)DBNull.Value : data.Dialyzer);
-            cmd.Parameters.AddWithValue("@AdvisedBy", string.IsNullOrEmpty(data.AdvisedBy) ? (object)DBNull.Value : data.AdvisedBy);
-            cmd.Parameters.AddWithValue("@PrimingBy", string.IsNullOrEmpty(data.PrimingBy) ? (object)DBNull.Value : data.PrimingBy);
-            cmd.Parameters.AddWithValue("@PrimingSol", string.IsNullOrEmpty(data.PrimingSol) ? (object)DBNull.Value : data.PrimingSol);
-            cmd.Parameters.AddWithValue("@Heparin", string.IsNullOrEmpty(data.Heparin) ? (object)DBNull.Value : data.Heparin);
-            cmd.Parameters.AddWithValue("@HeparinInfusion", string.IsNullOrEmpty(data.HeparinInfusion) ? (object)DBNull.Value : data.HeparinInfusion);
-            cmd.Parameters.AddWithValue("@CurrentWeight", string.IsNullOrEmpty(data.CurrentWeight) ? (object)DBNull.Value : data.CurrentWeight);
-            cmd.Parameters.AddWithValue("@LastWeight", string.IsNullOrEmpty(data.LastWeight) ? (object)DBNull.Value : data.LastWeight);
-            cmd.Parameters.AddWithValue("@StartTime", string.IsNullOrEmpty(data.StartTime) ? (object)DBNull.Value : data.StartTime);
-            cmd.Parameters.AddWithValue("@FinishTime", string.IsNullOrEmpty(data.FinishTime) ? (object)DBNull.Value : data.FinishTime);
-            cmd.Parameters.AddWithValue("@WeightDiff", string.IsNullOrEmpty(data.WeightDiff) ? (object)DBNull.Value : data.WeightDiff);
-            cmd.Parameters.AddWithValue("@UF", string.IsNullOrEmpty(data.UF) ? (object)DBNull.Value : data.UF);
-            cmd.Parameters.AddWithValue("@UFRate", string.IsNullOrEmpty(data.UFRate) ? (object)DBNull.Value : data.UFRate);
-            cmd.Parameters.AddWithValue("@TotalDuration", string.IsNullOrEmpty(data.TotalDuration) ? (object)DBNull.Value : data.TotalDuration);
-            cmd.Parameters.AddWithValue("@DialysisType", string.IsNullOrEmpty(data.DialysisType) ? (object)DBNull.Value : data.DialysisType);
-            cmd.Parameters.AddWithValue("@SpecialInstruction", string.IsNullOrEmpty(data.SpecialInstruction) ? (object)DBNull.Value : data.SpecialInstruction);
-            cmd.Parameters.AddWithValue("@Complaints", string.IsNullOrEmpty(data.Complaints) ? (object)DBNull.Value : data.Complaints);
-            cmd.Parameters.AddWithValue("@ConsciousLevel", string.IsNullOrEmpty(data.ConsciousLevel) ? (object)DBNull.Value : data.ConsciousLevel);
-            cmd.Parameters.AddWithValue("@Edema", string.IsNullOrEmpty(data.Edema) ? (object)DBNull.Value : data.Edema);
-            cmd.Parameters.AddWithValue("@CardRhythm", string.IsNullOrEmpty(data.CardRhythm) ? (object)DBNull.Value : data.CardRhythm);
-            cmd.Parameters.AddWithValue("@Lungs", string.IsNullOrEmpty(data.Lungs) ? (object)DBNull.Value : data.Lungs);
-            cmd.Parameters.AddWithValue("@Other", string.IsNullOrEmpty(data.Other) ? (object)DBNull.Value : data.Other);
-            cmd.Parameters.AddWithValue("@Remarks", string.IsNullOrEmpty(data.Remarks) ? (object)DBNull.Value : data.Remarks);
-            cmd.Parameters.AddWithValue("@UserId", HttpContext.Current.Session["UserID"] ?? DBNull.Value);
+            if (!string.IsNullOrEmpty(data.PatientId))
+                record.Patient_ID = int.Parse(data.PatientId);
+            
+            record.Vascular_Access = data.VascularAccess;
+            record.Dialysis_No = data.DialysisNo;
+            record.Machine_No = data.MachineNo;
+            record.Dialyzer = data.Dialyzer;
+            
+            // Convert string to int?
+            if (!string.IsNullOrEmpty(data.AdvisedBy))
+            {
+                if (int.TryParse(data.AdvisedBy, out int advisedById))
+                    record.Advised_By_ID = advisedById;
+            }
+            
+            if (!string.IsNullOrEmpty(data.PrimingBy))
+            {
+                if (int.TryParse(data.PrimingBy, out int primingById))
+                    record.Priming_By_ID = primingById;
+            }
+            
+            record.Priming_Solution = data.PrimingSol;
+            record.Heparin = data.Heparin;
+            record.Heparin_Infusion_Per_Hour = data.HeparinInfusion;
+            
+            // Convert string to decimal?
+            if (!string.IsNullOrEmpty(data.CurrentWeight))
+            {
+                if (decimal.TryParse(data.CurrentWeight, out decimal currentWeight))
+                    record.Current_Weight = currentWeight;
+            }
+            
+            if (!string.IsNullOrEmpty(data.LastWeight))
+            {
+                if (decimal.TryParse(data.LastWeight, out decimal lastWeight))
+                    record.Last_Weight = lastWeight;
+            }
+            
+            // Convert string to TimeSpan?
+            if (!string.IsNullOrEmpty(data.StartTime))
+            {
+                if (TimeSpan.TryParse(data.StartTime, out TimeSpan startTime))
+                    record.Start_Time = startTime;
+            }
+            
+            if (!string.IsNullOrEmpty(data.FinishTime))
+            {
+                if (TimeSpan.TryParse(data.FinishTime, out TimeSpan finishTime))
+                    record.Finish_Time = finishTime;
+            }
+            
+            if (!string.IsNullOrEmpty(data.WeightDiff))
+            {
+                if (decimal.TryParse(data.WeightDiff, out decimal weightDiff))
+                    record.Weight_Difference = weightDiff;
+            }
+            
+            if (!string.IsNullOrEmpty(data.UF))
+            {
+                if (decimal.TryParse(data.UF, out decimal uf))
+                    record.UF_ML = uf;
+            }
+            
+            if (!string.IsNullOrEmpty(data.UFRate))
+            {
+                if (decimal.TryParse(data.UFRate, out decimal ufRate))
+                    record.UF_Rate = ufRate;
+            }
+            
+            record.Total_Duration = data.TotalDuration;
+            record.Dialysis_Type = data.DialysisType;
+            record.Special_Instruction = data.SpecialInstruction;
+            record.Complaints = data.Complaints;
+            record.Conscious_Level = data.ConsciousLevel;
+            record.Edema = data.Edema;
+            record.Card_Rhythm = data.CardRhythm;
+            record.Lungs = data.Lungs;
+            record.Other = data.Other;
+            record.Remarks = data.Remarks;
         }
 
         [WebMethod]
@@ -443,46 +409,77 @@ namespace PMS.Modules.PatientManagement
         {
             try
             {
-                string conStr = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
                 var vitals = JsonConvert.DeserializeObject<List<VitalSign>>(VitalSigns);
 
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    con.Open();
+                    var existingVitals = db.Dialysis_DuringDialysis
+                                           .Where(d => d.Dialysis_ID == DialysisId)
+                                           .ToList();
                     
-                    string deleteQuery = "DELETE FROM Dialysis_DuringDialysis WHERE Dialysis_ID = @DialysisId";
-                    using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, con))
+                    if (existingVitals.Any())
                     {
-                        deleteCmd.Parameters.AddWithValue("@DialysisId", DialysisId);
-                        deleteCmd.ExecuteNonQuery();
+                        db.Dialysis_DuringDialysis.DeleteAllOnSubmit(existingVitals);
                     }
                     
-                    foreach (var vital in vitals)
-                    {
-                        string query = @"INSERT INTO Dialysis_DuringDialysis 
-                                        (Dialysis_ID, Patient_ID, Vital_Time, Temperature, BP_Systolic, BP_Diastolic, Pulse, 
-                                         Dialysis_Flow_Rate, Venous_Pressure, Blood_Flow, Created_Date, Created_By)
-                                        VALUES 
-                                        (@DialysisId, @PatientId, @Time, @Temperature, @BPSys, @BPDias, @Pulse, 
-                                         @DialysisFlowRate, @VenousPressure, @BloodFlow, GETDATE(), @UserId)";
-
-                        using (SqlCommand cmd = new SqlCommand(query, con))
+                    var newVitals = vitals.Select(v => {
+                        var vital = new Dialysis_DuringDialysi
                         {
-                            cmd.Parameters.AddWithValue("@DialysisId", DialysisId);
-                            cmd.Parameters.AddWithValue("@PatientId", PatientId);
-                            cmd.Parameters.AddWithValue("@Time", string.IsNullOrEmpty(vital.Time) ? (object)DBNull.Value : vital.Time);
-                            cmd.Parameters.AddWithValue("@Temperature", string.IsNullOrEmpty(vital.Temperature) ? (object)DBNull.Value : vital.Temperature);
-                            cmd.Parameters.AddWithValue("@BPSys", string.IsNullOrEmpty(vital.BPSys) ? (object)DBNull.Value : vital.BPSys);
-                            cmd.Parameters.AddWithValue("@BPDias", string.IsNullOrEmpty(vital.BPDias) ? (object)DBNull.Value : vital.BPDias);
-                            cmd.Parameters.AddWithValue("@Pulse", string.IsNullOrEmpty(vital.Pulse) ? (object)DBNull.Value : vital.Pulse);
-                            cmd.Parameters.AddWithValue("@DialysisFlowRate", string.IsNullOrEmpty(vital.DialysisFlowRate) ? (object)DBNull.Value : vital.DialysisFlowRate);
-                            cmd.Parameters.AddWithValue("@VenousPressure", string.IsNullOrEmpty(vital.VenousPressure) ? (object)DBNull.Value : vital.VenousPressure);
-                            cmd.Parameters.AddWithValue("@BloodFlow", string.IsNullOrEmpty(vital.BloodFlow) ? (object)DBNull.Value : vital.BloodFlow);
-                            cmd.Parameters.AddWithValue("@UserId", HttpContext.Current.Session["UserID"] ?? DBNull.Value);
-
-                            cmd.ExecuteNonQuery();
+                            Dialysis_ID = DialysisId,
+                            Patient_ID = int.Parse(PatientId),
+                            Vital_Time = string.IsNullOrEmpty(v.Time) ? (TimeSpan?)null : TimeSpan.Parse(v.Time),
+                            Created_Date = DateTime.Now,
+                            Created_By = HttpContext.Current.Session["UserID"]?.ToString()
+                        };
+                        
+                        // Convert string to decimal?
+                        if (!string.IsNullOrEmpty(v.Temperature))
+                        {
+                            if (decimal.TryParse(v.Temperature, out decimal temp))
+                                vital.Temperature = temp;
                         }
-                    }
+                        
+                        if (!string.IsNullOrEmpty(v.BPSys))
+                        {
+                            if (int.TryParse(v.BPSys, out int bpSys))
+                                vital.BP_Systolic = bpSys;
+                        }
+                        
+                        if (!string.IsNullOrEmpty(v.BPDias))
+                        {
+                            if (int.TryParse(v.BPDias, out int bpDias))
+                                vital.BP_Diastolic = bpDias;
+                        }
+                        
+                        if (!string.IsNullOrEmpty(v.Pulse))
+                        {
+                            if (int.TryParse(v.Pulse, out int pulse))
+                                vital.Pulse = pulse;
+                        }
+                        
+                        if (!string.IsNullOrEmpty(v.DialysisFlowRate))
+                        {
+                            if (decimal.TryParse(v.DialysisFlowRate, out decimal flowRate))
+                                vital.Dialysis_Flow_Rate = flowRate;
+                        }
+                        
+                        if (!string.IsNullOrEmpty(v.VenousPressure))
+                        {
+                            if (decimal.TryParse(v.VenousPressure, out decimal venousPressure))
+                                vital.Venous_Pressure = (int)venousPressure;
+                        }
+                        
+                        if (!string.IsNullOrEmpty(v.BloodFlow))
+                        {
+                            if (decimal.TryParse(v.BloodFlow, out decimal bloodFlow))
+                                vital.Blood_Flow = bloodFlow;
+                        }
+                        
+                        return vital;
+                    }).ToList();
+                    
+                    db.Dialysis_DuringDialysis.InsertAllOnSubmit(newVitals);
+                    db.SubmitChanges();
                 }
 
                 return "success";
@@ -499,62 +496,29 @@ namespace PMS.Modules.PatientManagement
             try
             {
                 var postDialysisData = JsonConvert.DeserializeObject<PostDialysisData>(data);
-                string conStr = ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString;
 
-                using (SqlConnection con = new SqlConnection(conStr))
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    con.Open();
+                    var existingRecord = db.Dialysis_PostDialysis
+                                           .FirstOrDefault(d => d.Dialysis_ID == postDialysisData.DialysisId);
                     
-                    if (!string.IsNullOrEmpty(postDialysisData.DialysisId))
+                    if (existingRecord != null)
                     {
-                        string checkQuery = "SELECT COUNT(*) FROM Dialysis_PostDialysis WHERE Dialysis_ID = @DialysisId";
-                        using (SqlCommand checkCmd = new SqlCommand(checkQuery, con))
-                        {
-                            checkCmd.Parameters.AddWithValue("@DialysisId", postDialysisData.DialysisId);
-                            int exists = (int)checkCmd.ExecuteScalar();
-                            
-                            if (exists > 0)
-                            {
-                                string updateQuery = @"UPDATE Dialysis_PostDialysis SET 
-                                    Patient_ID = @PatientId,
-                                    Start_Time = @StartTime, 
-                                    End_Time = @EndTime, 
-                                    Duration = @Duration, 
-                                    Staff_ID = @StaffId, 
-                                    Weight = @Weight, 
-                                    Temperature = @Temperature, 
-                                    BP_Systolic = @BPSys, 
-                                    BP_Diastolic = @BPDias, 
-                                    Pulse = @Pulse, 
-                                    Comments = @Comments,
-                                    Modified_Date = GETDATE(), 
-                                    Modified_By = @UserId
-                                    WHERE Dialysis_ID = @DialysisId";
-
-                                using (SqlCommand cmd = new SqlCommand(updateQuery, con))
-                                {
-                                    AddPostDialysisParameters(cmd, postDialysisData);
-                                    cmd.ExecuteNonQuery();
-                                }
-                                
-                                return "success";
-                            }
-                        }
+                        UpdatePostDialysisRecord(existingRecord, postDialysisData);
+                        existingRecord.Modified_Date = DateTime.Now;
+                        existingRecord.Modified_By = HttpContext.Current.Session["UserID"]?.ToString();
+                        db.SubmitChanges();
                     }
-                    
-                    string query = @"INSERT INTO Dialysis_PostDialysis 
-                                    (Dialysis_ID, Patient_ID, Start_Time, End_Time, Duration, Staff_ID, Weight, 
-                                     Temperature, BP_Systolic, BP_Diastolic, Pulse, Comments, 
-                                     Created_Date, Created_By)
-                                    VALUES 
-                                    (@DialysisId, @PatientId, @StartTime, @EndTime, @Duration, @StaffId, @Weight, 
-                                     @Temperature, @BPSys, @BPDias, @Pulse, @Comments, 
-                                     GETDATE(), @UserId)";
-
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    else
                     {
-                        AddPostDialysisParameters(cmd, postDialysisData);
-                        cmd.ExecuteNonQuery();
+                        var newRecord = new Dialysis_PostDialysi();
+                        UpdatePostDialysisRecord(newRecord, postDialysisData);
+                        newRecord.Dialysis_ID = postDialysisData.DialysisId;
+                        newRecord.Created_Date = DateTime.Now;
+                        newRecord.Created_By = HttpContext.Current.Session["UserID"]?.ToString();
+                        
+                        db.Dialysis_PostDialysis.InsertOnSubmit(newRecord);
+                        db.SubmitChanges();
                     }
                 }
 
@@ -566,21 +530,65 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-        private static void AddPostDialysisParameters(SqlCommand cmd, PostDialysisData data)
+        private static void UpdatePostDialysisRecord(Dialysis_PostDialysi record, PostDialysisData data)
         {
-            cmd.Parameters.AddWithValue("@DialysisId", data.DialysisId);
-            cmd.Parameters.AddWithValue("@PatientId", string.IsNullOrEmpty(data.PatientId) ? (object)DBNull.Value : data.PatientId);
-            cmd.Parameters.AddWithValue("@StartTime", string.IsNullOrEmpty(data.StartTime) ? (object)DBNull.Value : data.StartTime);
-            cmd.Parameters.AddWithValue("@EndTime", string.IsNullOrEmpty(data.EndTime) ? (object)DBNull.Value : data.EndTime);
-            cmd.Parameters.AddWithValue("@Duration", string.IsNullOrEmpty(data.Duration) ? (object)DBNull.Value : data.Duration);
-            cmd.Parameters.AddWithValue("@StaffId", string.IsNullOrEmpty(data.StaffId) ? (object)DBNull.Value : data.StaffId);
-            cmd.Parameters.AddWithValue("@Weight", string.IsNullOrEmpty(data.Weight) ? (object)DBNull.Value : data.Weight);
-            cmd.Parameters.AddWithValue("@Temperature", string.IsNullOrEmpty(data.Temperature) ? (object)DBNull.Value : data.Temperature);
-            cmd.Parameters.AddWithValue("@BPSys", string.IsNullOrEmpty(data.BPSys) ? (object)DBNull.Value : data.BPSys);
-            cmd.Parameters.AddWithValue("@BPDias", string.IsNullOrEmpty(data.BPDias) ? (object)DBNull.Value : data.BPDias);
-            cmd.Parameters.AddWithValue("@Pulse", string.IsNullOrEmpty(data.Pulse) ? (object)DBNull.Value : data.Pulse);
-            cmd.Parameters.AddWithValue("@Comments", string.IsNullOrEmpty(data.Comments) ? (object)DBNull.Value : data.Comments);
-            cmd.Parameters.AddWithValue("@UserId", HttpContext.Current.Session["UserID"] ?? DBNull.Value);
+            if (!string.IsNullOrEmpty(data.PatientId))
+                record.Patient_ID = int.Parse(data.PatientId);
+            
+            // Convert string to TimeSpan?
+            if (!string.IsNullOrEmpty(data.StartTime))
+            {
+                if (TimeSpan.TryParse(data.StartTime, out TimeSpan startTime))
+                    record.Start_Time = startTime;
+            }
+            
+            if (!string.IsNullOrEmpty(data.EndTime))
+            {
+                if (TimeSpan.TryParse(data.EndTime, out TimeSpan endTime))
+                    record.End_Time = endTime;
+            }
+            
+            record.Duration = data.Duration;
+            
+            // Convert string to int?
+            if (!string.IsNullOrEmpty(data.StaffId))
+            {
+                if (int.TryParse(data.StaffId, out int staffId))
+                    record.Staff_ID = staffId;
+            }
+            
+            // Convert string to decimal?
+            if (!string.IsNullOrEmpty(data.Weight))
+            {
+                if (decimal.TryParse(data.Weight, out decimal weight))
+                    record.Weight = weight;
+            }
+            
+            if (!string.IsNullOrEmpty(data.Temperature))
+            {
+                if (decimal.TryParse(data.Temperature, out decimal temp))
+                    record.Temperature = temp;
+            }
+            
+            if (!string.IsNullOrEmpty(data.BPSys))
+            {
+                if (int.TryParse(data.BPSys, out int bpSys))
+                    record.BP_Systolic = bpSys;
+            }
+            
+            if (!string.IsNullOrEmpty(data.BPDias))
+            {
+                if (int.TryParse(data.BPDias, out int bpDias))
+                    record.BP_Diastolic = bpDias;
+            }
+            
+            if (!string.IsNullOrEmpty(data.Pulse))
+            {
+                if (int.TryParse(data.Pulse, out int pulse))
+                    record.Pulse = pulse;
+            }
+            
+            record.Comments = data.Comments;
         }
 
         public class PreDialysisData
