@@ -8549,33 +8549,6 @@
       <Column Name="LastDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.GetAttendanceDetails" Method="GetAttendanceDetails">
-    <Parameter Name="FTime" Parameter="fTime" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="TTime" Parameter="tTime" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="program" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="classs" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="datee" Type="System.DateTime" DbType="Date" />
-    <Parameter Name="Group" Parameter="group" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="bathc" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="txt_WholeClass" Type="System.Boolean" DbType="Bit" />
-    <ElementType Name="GetAttendanceDetailsResult">
-      <Column Name="Student_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Roll_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="[Group]" Member="Group" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Batch" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Day_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="FromTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ToTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ClassName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="SubSubject" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Present" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Absent" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Leave" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="isAttendance" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_AttendanceDetails" Method="sp_AttendanceDetails">
     <Parameter Name="FTime" Parameter="fTime" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="TTime" Parameter="tTime" Type="System.DateTime" DbType="DateTime" />
@@ -11449,6 +11422,33 @@
       <Column Name="PO_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="PO_Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
       <Column Name="PO_Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetAttendanceDetails" Method="GetAttendanceDetails">
+    <Parameter Name="FTime" Parameter="fTime" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="TTime" Parameter="tTime" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="program" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="classs" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="datee" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="Group" Parameter="group" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="bathc" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="txt_WholeClass" Type="System.Boolean" DbType="Bit" />
+    <ElementType Name="GetAttendanceDetailsResult">
+      <Column Name="Student_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Roll_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="[Group]" Member="Group" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Batch" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Day_Name" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="FromTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ToTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ClassName" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="SubSubject" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Present" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Absent" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Leave" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="isAttendance" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>
