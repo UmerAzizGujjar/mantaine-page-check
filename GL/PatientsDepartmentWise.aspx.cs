@@ -162,6 +162,7 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
                     tr_Summary.Visible = false;      // changed
+                    tr_Export.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
                     object valusets;
@@ -1525,6 +1526,18 @@ namespace PMS
 
                     lblPatientType.Visible = false;
                     ddlPatientType.Visible = false;
+
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
 
                 }
                 if (this.PageTitle == "Stock_Transfer_Report")
@@ -5097,7 +5110,7 @@ namespace PMS
                     lbShift.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     ddlPatientType.Visible = true;
                     lblMultiSelect.Visible = false;
                     GetLabTests();
