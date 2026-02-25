@@ -345,6 +345,8 @@
     <Content Include="Modules\Administrator\DoctorPayableView.aspx" />
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
     <Content Include="Modules\PatientManagement\DialysisForm.aspx" />
+    <Content Include="Modules\PatientManagement\DialysisForm_Migration.sql" />
+    <Content Include="Modules\PatientManagement\DialysisForm_ValueSets_Setup.sql" />
     <Content Include="Modules\PatientManagement\NewEmergencyCase.aspx" />
     <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OldOutPatient.aspx" />
@@ -3829,6 +3831,10 @@
     <Content Include="upload\UploadEmergency.ashx" />
     <Content Include="upload\UploadVoucherFiles.ashx" />
     <Content Include="Reports\Student\rptAttendanceDetails.rpt" />
+    <Content Include="Modules\PatientManagement\DialysisForm_Database_Schema.md" />
+    <Content Include="Modules\PatientManagement\DialysisForm_Implementation_Summary.md" />
+    <Content Include="Modules\PatientManagement\DialysisForm_Usage_Examples.md" />
+    <Content Include="Modules\PatientManagement\DialysisForm_DatabaseDriven_Implementation.md" />
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />
