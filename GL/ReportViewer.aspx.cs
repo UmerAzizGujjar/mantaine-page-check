@@ -1776,6 +1776,23 @@ namespace PMS
                 rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
+            else if (reportName == "GRN_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                var warehouse = Request.QueryString["WareHouse"].ToString();
+                string rptFileName = "Pharmacy/rptGRN_Report.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@warehouse", warehouse);
+            }
             else if (reportName == "VendorPerson")
             {
                 if (Request.QueryString["ID"] != null)

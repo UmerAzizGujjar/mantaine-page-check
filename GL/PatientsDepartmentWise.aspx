@@ -7,25 +7,7 @@
 
 
     <script type="text/javascript">
-        function populateYears() {
-            var currentYear = 2025;
-            var yearSelect = $('#<%= ddlYear.ClientID %>');
-
-    // Clear existing options (keep "Select Year")
-    yearSelect.find('option').not(':first').remove();
-
-    // Add years (2025 + 10 previous years)
-    for (var year = currentYear; year >= currentYear - 10; year--) {
-        yearSelect.append($('<option></option>')
-            .attr('value', year)
-            .text(year));
-    }
-
-    // Set 2025 as selected
-    yearSelect.val('2025');
-
-    console.log("Years populated successfully: 2015-2025");
-}
+ 
         function FillAnalysisTests() {
             var options = '<option value="All">All</option>';
             PageMethods.GetLabTestsForAnalysis(function (data) {
@@ -37,6 +19,20 @@
                 $('#ctl00_MainContent_ddlDepartments').select2(); // Reinitialize select2 if needed
             });
         }
+
+        function populateYears() {
+            debugger;
+            var currentYear = new Date().getFullYear();
+            var yearSelect = $('#<%= ddlYear.ClientID %>');
+                   yearSelect.find('option').not(':first').remove();
+                   for (var year = currentYear; year >= currentYear - 10; year--) {
+                       yearSelect.append($('<option></option>')
+                           .attr('value', year)
+                           .text(year));
+                   }
+                   yearSelect.val(currentYear);
+                   $('#ctl00_MainContent_ddlYear').select2();
+               }
 
         function FillCardioTests() {
 
@@ -1505,6 +1501,11 @@ var Item = $("#ctl00_MainContent_ddlMainDepartment").val();
                     if (rptTitle == "Bonus_Medicine_Detail_Report") {
 
                         var url = 'ReportViewer.aspx?ReportName=Bonus_Medicine_Detail_Report&ReportTitle=Bonus Medicine Detail From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        window.open(url, '_blanks');
+                    }
+                    if (rptTitle == "GRN_Report") {
+
+                        var url = 'ReportViewer.aspx?ReportName=GRN_Report&ReportTitle=GRN Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blanks');
                     }
                      if (rptTitle == "VendorWiseLedger") {

@@ -345,8 +345,6 @@
     <Content Include="Modules\Administrator\DoctorPayableView.aspx" />
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
     <Content Include="Modules\PatientManagement\DialysisForm.aspx" />
-    <Content Include="Modules\PatientManagement\DialysisForm_Migration.sql" />
-    <Content Include="Modules\PatientManagement\DialysisForm_ValueSets_Setup.sql" />
     <Content Include="Modules\PatientManagement\NewEmergencyCase.aspx" />
     <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OldOutPatient.aspx" />
@@ -3831,10 +3829,6 @@
     <Content Include="upload\UploadEmergency.ashx" />
     <Content Include="upload\UploadVoucherFiles.ashx" />
     <Content Include="Reports\Student\rptAttendanceDetails.rpt" />
-    <Content Include="Modules\PatientManagement\DialysisForm_Database_Schema.md" />
-    <Content Include="Modules\PatientManagement\DialysisForm_Implementation_Summary.md" />
-    <Content Include="Modules\PatientManagement\DialysisForm_Usage_Examples.md" />
-    <Content Include="Modules\PatientManagement\DialysisForm_DatabaseDriven_Implementation.md" />
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />
@@ -7604,6 +7598,16 @@
     <Content Include="wwwroot\IITH_Theme\table-style\jszip.min.js" />
     <Content Include="wwwroot\IITH_Theme\table-style\pdfmake.min.js" />
     <Content Include="wwwroot\IITH_Theme\table-style\vfs_fonts.js" />
+    <Content Include="wwwroot\images\LabTestImg\1-2830781.png" />
+    <Content Include="wwwroot\images\LabTestImg\1-2851068.png" />
+    <Content Include="wwwroot\images\LabTestImg\1-2861586.png" />
+    <Content Include="wwwroot\images\LabTestImg\1-2861588.png" />
+    <Content Include="wwwroot\images\LabTestImg\2-2851068.png" />
+    <Content Include="wwwroot\images\LabTestImg\2-2861588.png" />
+    <Content Include="wwwroot\images\LabTestImg\3-2851068.png" />
+    <Content Include="wwwroot\images\LabTestImg\4-2851068.png" />
+    <Content Include="wwwroot\images\StudentImages\101.jpg" />
+    <Content Include="wwwroot\images\StudentImages\447.jpg" />
     <Content Include="wwwroot\khurshid\CssJs\select2.min.css" />
     <Content Include="wwwroot\khurshid\CssJs\select2.min.js" />
     <Content Include="wwwroot\khurshid\css\ace-ie.min.css" />
@@ -28689,6 +28693,7 @@
     <Folder Include="upload\UploadPRFilesImages\" />
     <Folder Include="upload\UploadRFQFilesImages\" />
     <Folder Include="upload\UploadVouchers\" />
+    <Folder Include="wwwroot\images\RadiologyTestImg\" />
     <Folder Include="wwwroot\StandardTheme\images\email\" />
     <Folder Include="wwwroot\StandardTheme\images\placeholder\" />
     <Folder Include="wwwroot\Tibbit_theme\images\TibbIT_icons\" />

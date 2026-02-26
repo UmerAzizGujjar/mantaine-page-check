@@ -559,7 +559,7 @@
                                 '<td><input type="text" name="txtRnet" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td><select id="txtRBatch_Nos' + (rowIndex + 1) + '" name="txtRBatch_Nos" onchange="updateReturnStock(this)" ></select></td>' +
                                 '<td style="display:none;"><input type="text"  id="txtRBatch_No' + (rowIndex + 1) + '" name="txtRBatch_No"  value=""/> </td>' +
-                                '<td  style="display:none;"><input type="hidden"  name="txtRCGSRate" alue="' + data[0].CGSRate + '" id="txtRCGSRate' + (rowIndex + 1) + '"></td>' +
+                                '<td  style="display:none;"><input type="hidden"  name="txtRCGSRate" value="' + data[0].CGSRate + '" id="txtRCGSRate' + (rowIndex + 1) + '"></td>' +
                                 '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
                                 //'<td><input type="text" name="txtRBatch_No" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
