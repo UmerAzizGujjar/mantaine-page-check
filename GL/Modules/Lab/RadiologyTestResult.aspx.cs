@@ -84,7 +84,7 @@ namespace PMS.Modules.Lab
                 return;
 
             // New root folder
-            string dirFullPath = Server.MapPath("~/wwwroot/images/LabTestImg/");
+            string dirFullPath = Server.MapPath("~/wwwroot/images/RadiologyTestImg/");
 
             // Create directory if not exists
             if (!Directory.Exists(dirFullPath))
@@ -113,7 +113,7 @@ namespace PMS.Modules.Lab
                 string physicalPath = Path.Combine(dirFullPath, fileName);
 
                 // DB path (SAME STRUCTURE IDEA)
-                string image_Path = "~../../../../wwwroot/images/LabTestImg/" + fileName;
+                string image_Path = "~../../../../wwwroot/images/RadiologyTestImg/" + fileName;
 
                 // SAME OLD DELETE LOGIC
                 if (File.Exists(physicalPath))
