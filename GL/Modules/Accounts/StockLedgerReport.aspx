@@ -28,8 +28,8 @@
      <script type="text/javascript">
          $(document).ready(function () {
 
-             $("#txtsDate").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
-             $("#txteDate").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
+             $("#txtsDate").datepicker({ dateFormat: 'mm/dd/yy' });
+             $("#txteDate").datepicker({ dateFormat: 'mm/dd/yy' });
              $('select').select2();
              GetDepartments();
              loadItemList();
