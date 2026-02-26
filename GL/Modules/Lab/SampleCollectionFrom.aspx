@@ -1218,7 +1218,7 @@
             debugger;
             if (acknowlagment == '01') {
                 debugger;
-                SavelabTest(id)
+                SavelabTest(id);
             }
              
          }
