@@ -85,7 +85,7 @@
                 $.each(JSON.parse(data), function (key, value) {
                     options += '<option value="' + value.Item_ID + '">' + value.Description + '</option>';
                 });
-                $('# ').html(options);
+                $('#ctl00_MainContent_ddlItemName').html(options);
             });
 
             return options;

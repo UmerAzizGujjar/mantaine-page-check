@@ -44,6 +44,7 @@ namespace PMS
 
                 var PUR_id = id;
                 var form_id = 10;
+                 
                 Purchase_Invoice_Master PIM = (from tbl in db.Purchase_Invoice_Masters
                                                where tbl.PurchaseInvoiceId == Convert.ToInt32(PUR_id)
                                                select tbl).SingleOrDefault();
@@ -58,7 +59,20 @@ namespace PMS
 
                     if (IsFinalApprovals.Any(approval => approval.IsFinalApproval == true && approval.FormId == form_id))
                     {
-                        var Details = db.spApprovePurchase(Convert.ToInt32(PIM.PurchaseInvoiceId), user_id);
+                        var PICondition = (from sys in db.sys_Parms
+                                           where sys.Name == "Direct PO ON Purchase Invoice"
+                                           select sys.Code).FirstOrDefault();
+
+                        if (PICondition == "01")
+                        {
+                            var Details = db.spApprovePurchase(Convert.ToInt32(PIM.PurchaseInvoiceId), user_id);
+                        }
+                        else
+                        {
+                            var Details = db.spApprovePurchase(Convert.ToInt32(PIM.PurchaseInvoiceId), user_id);
+                        }
+                            
+
                         db.SubmitChanges();
                         Sys_Approval_Stage_Detail SASD = (from tbl in db.Sys_Approval_Stage_Details
                                                           join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
