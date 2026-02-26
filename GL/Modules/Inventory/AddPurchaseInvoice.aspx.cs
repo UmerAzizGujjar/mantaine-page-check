@@ -169,6 +169,20 @@ namespace PMS.Inventory
 
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+
+        [WebMethod]
+        public static string GetPOType()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var code = db.sys_Parms
+                         .Where(x => x.Name == "Direct PO ON Purchase Invoice")
+                         .Select(x => x.Code)
+                         .FirstOrDefault();
+
+            return code;
+        }
+
         [WebMethod]
         public static string getGRNDetailByVendorId(string vendorId)
         {

@@ -1435,6 +1435,15 @@
             var rate = $(row).find('td:eq(5)').text().trim() || '0';
             var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
             var isChecked = $(anchor).prop('checked');
+            if (!isChecked) {
+                $('#tblItemDescription tbody tr').each(function () {
+                    if ($(this).find('input[name=txtItemCode]').val() === item_code) {
+                        $(this).remove();
+                    }
+                });
+                return;
+            }
+
             var exists = false;
             $('#tblItemDescription tbody tr').each(function () {
                 if ($(this).find('input[name=txtItemCode]').val() === item_code) {
@@ -1451,6 +1460,8 @@
                     timer: 2000,
                     showConfirmButton: false
                 });
+
+                $(anchor).prop('checked', false);
                 return;
             }
 

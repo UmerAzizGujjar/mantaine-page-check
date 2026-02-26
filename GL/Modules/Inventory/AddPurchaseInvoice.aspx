@@ -188,6 +188,7 @@
                 debugger;
                 appendPOItem($(this));
             });
+            AllowButtonsVisibility();
         });
 
 
@@ -1188,6 +1189,17 @@
             var furthertaxid = $(row).find('td:eq(20)').text().trim();
             var IsBatch = $(row).find('td:eq(21)').text().trim();
 
+            var isChecked = $(anchor).is(':checked');
+
+            if (!isChecked) {
+                $('#tblItemDescription tbody tr').each(function () {
+                    if ($(this).find('input[name=txtItemCode]').val() === ItemCode) {
+                        $(this).remove();
+                    }
+                });
+                return false;
+            }
+
             var PODate = '';
             if (PODateRaw && PODateRaw.indexOf('/Date(') > -1) {
                 PODate = $.datepicker.formatDate('dd M yy', new Date(parseInt(PODateRaw.substring(6, 19))));
@@ -1268,6 +1280,29 @@
             $('#txtQty' + index).val($(visibleInput).val());
         }
 
+        function AllowButtonsVisibility() {
+            $.ajax({
+                type: "POST",
+                url: "AddPurchaseInvoice.aspx/GetPOType",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+
+                    var code = res.d;
+
+                    if (code === "01") {
+                        $("#btn_GetFromPO").show();
+                        $("#btn_GRN").hide();
+                    }
+                    else {
+                        $("#btn_GRN").show();
+                        $("#btn_GetFromPO").hide();
+                    }
+                }
+            });
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -1313,10 +1348,10 @@
                 </select>
             </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
-                <input class="btn btn-primry" type="button" value="GRN" id="btn_GRN" style="margin-top: 26px" />
+                <input class="btn btn-primry" type="button" value="GRN" id="btn_GRN" style="margin-top: 26px;display:none" />
             </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
-                <input class="btn btn-primry" type="button" value="Get from PO" id="btn_GetFromPO" style="margin-top: 26px" />
+                <input class="btn btn-primry" type="button" value="Get from PO" id="btn_GetFromPO" style="margin-top: 26px;display:none;" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label id="lb_currency">Currency</label>
