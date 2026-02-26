@@ -162,6 +162,7 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = true;
                     tr_Summary.Visible = false;      // changed
+                    tr_Export.Visible = true;
                     lblMultiSelect.Visible = false;
                     lblPatientType.Text = "Operators";
                     object valusets;
@@ -1471,6 +1472,137 @@ namespace PMS
 
                     lblPatientType.Visible = true;
                     ddlPatientType.Visible = true;
+
+                }
+                if (this.PageTitle == "IGP_Report")
+                {
+                    string x = "Gate Pass Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    Time_Row.Visible = true;  // could be problematic
+                    DateDiv.Visible = true;
+                    trSearch1.Visible = true;
+                    
+                    op_FilterClinic.Visible = false;
+                    lblMultiSelect.Visible = false;
+
+                    trSearch1.Visible = true;
+                
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+                }
+                if (this.PageTitle == "Stock_Transfer_Report")
+                {
+                    string x = "Stock Transfer Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    optRw.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    Time_Row.Visible = true;  // could be problematic
+                    DateDiv.Visible = true;
+                   
+                    op_FilterClinic.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+                    trSearch1.Visible = true;
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    object valusetss = from d in db.aspnet_Users
+                                       select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusetss;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+                    Stock_Movement.Visible = false;
+                    trProcedure1.Visible = false;
+                    ddlProcedure.Visible = false;
+
+
+                    ddlwareHouse.Visible = false;
+                    lblWarehouse.Visible = false;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                    // ✅ ADD THIS CODE TO POPULATE ITEM DROPDOWN:
+                    td11.Text = "Item Name";
+                    td11.Visible = true;
+                    ddlItemName.Visible = true;
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
 
                 }
                 if (this.PageTitle == "PurchaseReturnReport")
@@ -2813,6 +2945,73 @@ namespace PMS
                     Time_Row.Visible = true;
                     SetDepartent();
                     dpROw.Visible = false;
+
+                }
+                if (this.PageTitle == "Item_Wise_Gross_Profit_Report")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+                    // ✅ ADD THIS CODE TO POPULATE ITEM DROPDOWN:
+                    td11.Text = "Item Name";
+                    td11.Visible = true;
+                    ddlItemName.Visible = true;
+                    trSearch1.Visible = true;
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+                }
+                if (this.PageTitle == "Category_Wise_Profitability_Report")
+                {
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = true;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+                    MainDeptDiv.Visible = true;
+                    lblMainDepartment.Text = "Category";
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Item Group");
+                    ddlMainDepartment.DataSource = valusets;
+                    ddlMainDepartment.DataTextField = "DataValue_Description";
+                    ddlMainDepartment.DataValueField = "DataValue_Name";
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
 
                 }
                 if (this.PageTitle == "Fast_Slow_Non_Moving_Stock")
@@ -4911,7 +5110,7 @@ namespace PMS
                     lbShift.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
-                    tr_Export.Visible = false;
+                    tr_Export.Visible = true;
                     ddlPatientType.Visible = true;
                     lblMultiSelect.Visible = false;
                     GetLabTests();
@@ -5371,6 +5570,7 @@ namespace PMS
                         ddlPatientType.DataTextField = "Description";
                         ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                         ddlPatientType.DataBind();
+                        tr_Export.Visible = true;
                     }
                     trDoctor.Visible = false;
 
@@ -6127,7 +6327,7 @@ namespace PMS
                 }
                 if (this.PageTitle == "Stock_In_Hand_Detail")
                 {
-                    string x = "Stokc in Hand Detail";
+                    string x = "Stock in Hand Detail";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     lblMultiSelect.Visible = false;

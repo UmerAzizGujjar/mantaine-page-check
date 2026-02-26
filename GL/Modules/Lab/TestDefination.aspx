@@ -951,7 +951,10 @@
                         <option value="10">10-Blood Bank Report</option>
                         <option value="11">11-Fixed,Patient Value and Result Report</option>
                         <option value="12">12-Histopathology Report</option>
-                        <option value="13">13-Echocardiography Report</option>
+                        <option value="13">13-X-Ray Radiology Report</option>
+                        <option value="14">14-Ct Scan Radiology Report</option>
+                        <option value="15">15-MRI Radiology Report</option>
+                        <option value="16">16-ECG Cardiology Report</option>
 
                     </select>
                 </div>

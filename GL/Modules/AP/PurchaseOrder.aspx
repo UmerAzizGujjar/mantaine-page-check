@@ -395,6 +395,36 @@
                     $('#btnUnApprove').hide();
                 }
             }, 2500);
+
+            $('#txtItem').tokenInput("../../json.aspx?Table=INV_ItemsForPR",
+                {
+                    tokenLimit: 1,
+                    onAdd: function (item) {
+                        debugger
+                        try {
+                            $("#hditemID").val(item.id);
+                            append();
+                            $('#btnGIR').attr('disabled', true);
+                            $('#btnGIR').css('pointer-events', 'none');
+                            $('#ctl00_MainContent_ddlGIR').css('pointer-events', 'none');
+                            $('#ctl00_MainContent_ddlGIR').attr('disabled', true);
+                        }
+                        catch (err) {
+                            alert(err.message);
+                        }
+                    }
+                });
+            $('#txtItem').focus();
+
+            $('#btnGetAllItems').on('click', function () {
+                LoadAllitem('');
+            });
+
+            // Bind the search input keyup
+            $('#searchInput').on('keyup', function () {
+                var searchText = $(this).val().trim();
+                LoadAllitem(searchText);
+            });
         });
 
 
@@ -676,6 +706,10 @@
                 }
             });
         }
+
+
+
+
     </script>
     <script type="text/javascript">
         function HideItemPopup() {
@@ -1357,6 +1391,116 @@
             }
         }
 
+        // Load items from INV_Items table into search modal
+        function LoadAllitem(searchText) {
+            debugger;        
+            $.ajax({
+                type: "POST",
+                url: "PurchaseOrder.aspx/GetAllitem",
+                data: JSON.stringify({ searchText: searchText }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var items = JSON.parse(response.d);
+                    var tableBody = $('#itemsTableBody');
+                    tableBody.empty();
+                    $.each(items, function (index, item) {
+                        var row = '<tr>' +
+                            '<td><input type="checkbox" class="itemCheckbox" onclick="appendSearchItem(this)"></td>' +
+                            '<td style="display:none;">' + item.Item_ID + '</td>' +
+                            '<td>' + item.Item_Code + '</td>' +
+                            '<td>' + item.Description + '</td>' +
+                            '<td>' + item.Unit + '</td>' +
+                            '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
+                            '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
+                            '</tr>';
+                        tableBody.append(row);
+                    });
+                    $('#itemsModal').modal('show');
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load items.' });
+                }
+            });
+        }
+
+        function appendSearchItem(anchor) {
+            debugger;
+            var row = $(anchor).closest('tr');
+            var item_id = $(row).find('td:eq(1)').text().trim();
+            var item_code = $(row).find('td:eq(2)').text().trim();
+            var item_name = $(row).find('td:eq(3)').text().trim();
+            var unit = $(row).find('td:eq(4)').text().trim();
+            var rate = $(row).find('td:eq(5)').text().trim() || '0';
+            var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
+            var isChecked = $(anchor).prop('checked');
+            if (!isChecked) {
+                $('#tblItemDescription tbody tr').each(function () {
+                    if ($(this).find('input[name=txtItemCode]').val() === item_code) {
+                        $(this).remove();
+                    }
+                });
+                return;
+            }
+
+            var exists = false;
+            $('#tblItemDescription tbody tr').each(function () {
+                if ($(this).find('input[name=txtItemCode]').val() === item_code) {
+                    exists = true;
+                    return false;
+                }
+            });
+
+            if (exists) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Item already added!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                $(anchor).prop('checked', false);
+                return;
+            }
+
+            var length = $("#tblItemDescription tr:gt(0)").length + 1;
+            var newRow = '<tr>' +
+                '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="0" />' + length + '</td>' +
+                '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="" /> </td>' +
+                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" /></td>' +
+                '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + item_code + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + item_code + ' </td>' +
+                '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + ' </td>' +
+                '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + ' </td>' +
+                '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="1"/></td>' +
+                '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + uom_qty + '" /></td>' +
+                '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
+                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + rate + '" /></td>' +
+                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +
+                '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
+                '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="duplicate ddlSTAX" ><option value="0">0</option></select></td>' +
+                '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
+                '<td><select id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlFurtherTax"><option value="0">0</option></select></td>' +
+                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +
+                '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"></select></td>' +
+                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
+                '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;" class="duplicate"><option value="0">0</option></select></td>' +
+                '<td style="padding-top: 7px!important;display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
+                '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
+                '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
+                '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
+                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a> </td></tr>';
+
+            $('#tblItemDescription tbody').append(newRow);
+            populateTaxddl(length);
+            populateAdvanceTaxddl(length);
+            populateFurtherTaxddl(length);
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#txtddate' + length).datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+            CulculateAmonutWithQty(length);
+            calcTotal();
+        }
 
     </script>
     <style>
@@ -1406,12 +1550,15 @@
             </div>
 
 
-            <div class="col-lg-3 col-md-6 col-sm-4">
+            <div class="col-lg-2 col-md-6 col-sm-4">
                 <asp:Label ID="lblPrNo" runat="server" Text="Pr.No"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlPrNo" class="form-control"></asp:DropDownList>
             </div>
             <div class="col-lg-1 col-md-2 col-sm-4">
                 <input type="button" value="Add" id="btnPRSave" class="btn btn-primry" style="margin-top: 16px;" />
+            </div>
+            <div class="col-lg-1 col-md-2 col-sm-4">
+                <input type="button" value="Items" id="btnGetAllItems" class="btn btn-gray" style="margin-top: 16px;" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6" id ="warehouse">
                 <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
@@ -1471,16 +1618,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="col-lg-9 col-md-12 col-sm-12">
                 <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
                 <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
             </div>
         </div>
     </form>
-    <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />
-   
-
-        <div class="row" style=" height: 276px !important; height: auto; margin-top: -10px;overflow:scroll">
+    <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />   
+        <div class="row" style=" height: 276px !important; height: auto;overflow:scroll">
         <table class="table responstable table-bordered" id="tblItemDescription" style="font-size: 9px !important; overflow: scroll; height: auto;">
             <thead>
                 <tr style="position: sticky; top: 0px; z-index: 10;">
@@ -1772,4 +1917,45 @@
                 </div>
             </div>
         </div>
+        </div>
+
+        <!-- Add this NEW modal for Item Search -->
+<div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-bordered table-striped table-responsive-md table-responsive-lg">
+                        <thead>
+                            <tr>
+                                <th>Select</th>          <!-- td:eq(0) -->
+                                <th style="display:none;">Item ID</th>  <!-- td:eq(1) -->
+                                <th>Item Code</th>       <!-- td:eq(2) -->
+                                <th>Description</th>     <!-- td:eq(3) -->
+                                <th>Unit</th>            <!-- td:eq(4) -->
+                                <th style="display:none;">Rate</th>      <!-- td:eq(5) -->
+                                <th style="display:none;">UOM Qty</th>   <!-- td:eq(6) -->
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-10 col-md-10 col-sm-10"> </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 float-end">
+                    <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </asp:Content>

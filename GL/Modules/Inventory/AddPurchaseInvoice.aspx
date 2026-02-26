@@ -150,6 +150,45 @@
                     }
                 }
             });
+
+            $('#btn_GetFromPO').on('click', function () {
+                debugger;
+                var vendorId = $("#ddl_Vendor").val();
+                if (!vendorId || vendorId === "0" || vendorId === "Please Select") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Please select a vendor first!',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    return;
+                }
+                LoadPODetailByVendor(vendorId);
+            });
+
+            
+
+            $('#checkPOHeader').on('change', function () {
+                var isChecked = $(this).is(':checked');
+
+                $('#PO_Modal tbody tr').each(function () {
+                    var rowCheckbox = $(this).find('.chkPOItem');
+
+                    if (isChecked && !rowCheckbox.is(':checked')) {
+                        rowCheckbox.prop('checked', true);
+                        appendPOItem(rowCheckbox);  
+                    } else if (!isChecked && rowCheckbox.is(':checked')) {
+                        rowCheckbox.prop('checked', false);
+                    }
+                });
+            });
+
+            $(document).on('change', '.chkPOItem', function () {
+                debugger;
+                appendPOItem($(this));
+            });
+            AllowButtonsVisibility();
         });
 
 
@@ -513,6 +552,7 @@
         }
 
         function LoadInvoiceData(Inv_ID) {
+            debugger;
             PageMethods.LoadInvoiceHeaderDetail(Inv_ID, function (resp) {
                 var data = JSON.parse(resp);
 
@@ -561,93 +601,108 @@
         debugger;
         function LoadInvocieDetail(Inv_ID) {
             debugger;
+            $("#tblItemDescription tbody").empty();
+
             PageMethods.LoadInvocieDetail(Inv_ID, function (resp) {
                 debugger;
-                var data = (JSON.parse(resp));
+                var data = JSON.parse(resp);
+
+                if (!data || data.length === 0) {
+                    console.warn("No details found for this invoice.");
+                    return;
+                }
+
                 var rows = '';
-                var Value = 0;
-                var PO_Date = '';
-                var Igp_date = '';
-                var AdvPo;
-                selectedOptions = data;
-                debugger;
+                var startIndex = $("#tblItemDescription tr").length;
+
                 $.each(data, function (key, value) {
                     debugger;
-                    Value = value.Qty * value.Rate;
-                    AdvPo = value.Adv_Po_ID;
-                    if (AdvPo == "" || AdvPo == 0 || AdvPo == null || AdvPo == "0") {
-                        $('#btnAdvVoucher').attr("disabled", false);
+                    var currentIndex = startIndex + key;
+
+                    var PO_Date = '';
+                    var Igp_date = '';
+
+                    if (value.PO_Date && value.PO_Date.indexOf('/Date(') > -1) {
+                        try {
+                            PO_Date = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.PO_Date.substring(6, 19))));
+                        } catch (e) { PO_Date = ''; }
                     }
-                    else {
-                        $('#btnAdvVoucher').attr("disabled", false);
-                    }
-                    PO_Date = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.PO_Date.substring(6, 19))));
-                    Igp_date = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.Igp_date.substring(6, 19))))
+
+                    var grnNum = value.GRN_Num || '';
+                    var grnQty = parseFloat(value.GRNQty || 0).toFixed(2);
+                    var irnQty = parseFloat(value.IRNQty || 0).toFixed(2);
+                    var igpNum = value.Igp_num || '';
+                    var desc = value.Description || 'No Description';
+                    var itemCode = value.Item_Code || 'N/A';
+                    var poNo = value.PO_No || '-';
+                    debugger;
                     rows += '<tr>' +
-                        '<td class="headcol"><input type="hidden" id="txtItemCode' + length + '" name="txtItemCode" value="' + value.Item_Code + '"/>' + value.Item_Code + '</td>' +
-                        '<td class="headcol_1" style="white-space:normal;overflow:auto;">' + value.Description + '</td> ' +
-                        '<td class="headcol_2">' + parseFloat(value.Amount).toFixed() + '</td> ' +
-                        '<td class="long">' + value.PO_No + '</td>' +
+                        '<td class="headcol"><input type="hidden" id="txtItemCode' + currentIndex + '" name="txtItemCode" value="' + itemCode + '"/>' + itemCode + '</td>' +
+                        '<td class="headcol_1" style="white-space:normal;overflow:auto;">' + desc + '</td>' +
+                        '<td class="headcol_2">' + parseFloat(value.Amount || 0).toFixed() + '</td>' +
+                        '<td class="long">' + poNo + '</td>' +
                         '<td class="long">' + PO_Date + '</td>' +
-                        '<td class="long">' + value.Igp_num + '</td>' +
+                        '<td class="long">' + igpNum + '</td>' +
                         '<td class="long">' + Igp_date + '</td>' +
-                        '<td class="long">' + value.GRN_Num + '</td>' +
-                        '<td class="long">' + parseFloat(value.GRNQty).toFixed(2) + '</td>' +
-                        '<td class="long">' + parseFloat(value.IRNQty).toFixed(2) + '</td>' +
-                        '<td class="headcol2_1"><input type="hidden" id="txtQty' + (key + 1) + '" name="txtQty" value="' + parseFloat(value.Qty).toFixed(2) + '"/>' + parseFloat(value.Qty).toFixed(2) + '</td>' +
+                        '<td class="long"><input type="hidden" id="txtGRNNum' + currentIndex + '" name="txtGRNNum" value="' + grnNum + '"/>' + grnNum + '</td>' +
+                        '<td class="long">' + grnQty + '</td>' +
+                        '<td class="long">' + irnQty + '</td>' +
+                        '<td class="headcol2_1"><input type="hidden" id="txtQty' + currentIndex + '" name="txtQty" value="' + parseFloat(value.Qty || 0).toFixed(2) + '"/>' + parseFloat(value.Qty || 0).toFixed(2) + '</td>' +
                         '<td class="headcol2_bonus_qty">' + parseFloat(value.Bonus_Qty || 0).toFixed(2) +
                         '<input type="hidden" name="BonusQty" value="' + parseFloat(value.Bonus_Qty || 0).toFixed(2) + '" />' +
                         '</td>' +
-                        '<td class="headcol2_2"><input type="hidden" id="txtRate' + (key + 1) + '" name="txtRate" value="' + parseFloat(value.Rate).toFixed(2) + '"/>' + parseFloat(value.Rate).toFixed(2) + '</td>' +
-                        '<td class="headcol2_3"><input type="hidden" id="txtdiscper' + (key + 1) + '" name="txtdiscper" value="' + parseFloat(value.DiscPer).toFixed(2) + '"/>' + parseFloat(value.DiscPer).toFixed(2) + '</td>' +
-                        '<td class="headcol2_4"><input type="hidden" id="txtdiscamt' + (key + 1) + '" name="txtdiscamt" value="' + parseFloat(value.DiscAmt).toFixed(2) + '"/>' + parseFloat(value.DiscAmt).toFixed(2) + '</td>' +
-                        '<td class="headcol2_5"><select style="position: relative;top:-6px;width: 90px !important;" disabled onchange="CulculateAmonut()" id="Staxddl' + (key + 1) + '" name="Staxddl"><option value="0">Please Select</option>' + _gloabal + '</select>' + '</td>' +
-                        '<td class="headcol2_6"><input type="hidden" id="staxamou' + (key + 1) + '" name="staxamou" value="' + value.Stax_Perc + '"/>' + value.Stax_Perc + '</td>' +
-                        '<td class="headcol2_adv_tax">' + parseFloat(value.AdvTax_Amount || 0).toFixed(2) + '</td>' + 
+                        '<td class="headcol2_2"><input type="hidden" id="txtRate' + currentIndex + '" name="txtRate" value="' + parseFloat(value.Rate || 0).toFixed(2) + '"/>' + parseFloat(value.Rate || 0).toFixed(2) + '</td>' +
+                        '<td class="headcol2_3"><input type="hidden" id="txtdiscper' + currentIndex + '" name="txtdiscper" value="' + parseFloat(value.DiscPer || 0).toFixed(2) + '"/>' + parseFloat(value.DiscPer || 0).toFixed(2) + '</td>' +
+                        '<td class="headcol2_4"><input type="hidden" id="txtdiscamt' + currentIndex + '" name="txtdiscamt" value="' + parseFloat(value.DiscAmt || 0).toFixed(2) + '"/>' + parseFloat(value.DiscAmt || 0).toFixed(2) + '</td>' +
+                        '<td class="headcol2_5" style="display:none;"><select style="position: relative;top:-6px;width: 90px !important;" disabled onchange="CulculateAmonut()" id="Staxddl' + currentIndex + '" name="Staxddl"><option value="0">Please Select</option>' + _gloabal + '</select></td>' +
+                        '<td class="headcol2_6"><input type="hidden" id="staxamou' + currentIndex + '" name="staxamou" value="' + (value.Stax_Amount || 0) + '"/>' + (value.Stax_Amount || 0) + '</td>' +
+                        '<td class="headcol2_adv_tax">' + parseFloat(value.AdvTax_Amount || 0).toFixed(2) + '</td>' +
                         '<td class="headcol2_further_tax">' + parseFloat(value.FurtherTax_Amount || 0).toFixed(2) + '</td>' +
                         '<td class="headcol2_bonus_tax">' + parseFloat(value.Bonus_Tax || 0).toFixed(2) +
                         '<input type="hidden" name="BonusTax" value="' + parseFloat(value.Bonus_Tax || 0).toFixed(2) + '" />' +
                         '</td>' +
-                        '<td class="headcol2_7">' + Value + '</td>' +                     
-                        '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount" value="' + parseFloat(value.Amount).toFixed() + '"/>' + parseFloat(value.Amount).toFixed() + '</td>' +
-                        '<td style="display:none"><input type="hidden" id="txtGRNId' + (key + 1) + '" name="txtGRNId" value="' + value.GRN_ID + '"/></td>' +
-                        '<td style="display:none"><input type="hidden" id="txtGRNDetailId' + (key + 1) + '" name="txtGRNDetailId" value="' + value.GRN_detail_Id + '"/></td>' +
-                        '<td style="display:none"><input type="hidden" id="txtItemId' + (key + 1) + '" name="txtItemId" value="' + value.ItemId + '"/></td>' +
-                        '<td style="display:none"><input type="hidden" id="AdvigpagainstPo' + (key + 1) + '" name="AdvigpagainstPo" value="' + value.Adv_Po_ID + '"/></td>' +
+                        '<td class="headcol2_7">' + parseFloat((value.Qty || 0) * (value.Rate || 0)).toFixed(2) + '</td>' +
+                        '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + currentIndex + '" name="txtTotalAmount" value="' + parseFloat(value.TotalAmount || 0).toFixed() + '"/>' + parseFloat(value.TotalAmount || 0).toFixed() + '</td>' +
+                        '<td style="display:none"><input type="hidden" id="txtGRNId' + currentIndex + '" name="txtGRNId" value="' + (value.GRN_ID || 0) + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" id="txtGRNDetailId' + currentIndex + '" name="txtGRNDetailId" value="' + (value.GRN_detail_Id || 0) + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" id="txtItemId' + currentIndex + '" name="txtItemId" value="' + (value.ItemId || 0) + '"/></td>' +
+                        '<td style="display:none"><input type="hidden" id="AdvigpagainstPo' + currentIndex + '" name="AdvigpagainstPo" value="' + (value.Adv_Po_ID || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="AdvTaxId" value="' + (value.AdvTax_ID || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="AdvTaxAmount" value="' + (value.AdvTax_Amount || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="AdvTotalAmount" value="' + (value.AdvanceTotalAmount || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="FurtherTaxId" value="' + (value.FurtherTax_Id || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="FurtherTaxAmount" value="' + (value.FurtherTax_Amount || 0) + '"/></td>' +
                         '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;  margin-left: 16px; color: #f30a0a;"></i></a></td>' +
-                        '</tr>'
-                    length++;
+                        '</tr>';
                 });
-                $("#tblItemDescription").append(rows);
-                setTimeout(function () {
-                    $.each(selectedOptions, function (key, value) {
-                        debugger;
-                        if (value.Stax_ID == null) {
-                            value.Stax_ID = 0;
-                        }
-                        $("#Staxddl" + (key + 1)).val(value.Stax_ID);
-                    });
-                }, 4500);
+                $("#tblItemDescription tbody").append(rows);
+
+                $.each(data, function (key, value) {
+                    var currentIndex = startIndex + key;
+                    var staxId = value.Stax_ID || 0;
+                    var $dropdown = $("#Staxddl" + currentIndex);
+
+                    if ($dropdown.length > 0) {
+                        $dropdown.val(staxId);
+                    }
+                });
+
+                CulculateAmonut();
                 $('#btnSave').val('Update');
                 loadadvacedetail();
-                setTimeout(function () {
-                    Loadadvancepaymentdetail(Inv_ID);
-                }, 4000);
-            },
-                function (error) {
-                    alert(error.get_message());
-                })
+                Loadadvancepaymentdetail(Inv_ID);
+
+            }, function (error) {
+                console.error("Error loading details:", error);
+                alert("Error loading invoice details: " + error.get_message());
+            });
         }
         debugger;
         function CulculateAmonut() {
             debugger;
             var tbl = document.getElementById('tblItemDescription');
             for (var i = 1; i < tbl.rows.length; i++) {
+                debugger;
                 var qty = parseFloat($('#txtQty' + i).val() || 0);
                 var rate = parseFloat($('#txtRate' + i).val() || 0);
                 var discpercentage = parseFloat($('#txtdiscper' + i).val() || 0);
@@ -656,11 +711,11 @@
                 var DisAmt = (discpercentage / 100) * Amount;
                 var amountwithdiscount = Amount - DisAmt;
 
-                var STpercent = 0;
-                if ($("#Staxddl" + i + " option:selected").text() !== "Please Select") {
-                    STpercent = parseFloat($("#Staxddl" + i + " option:selected").text() || 0);
-                }
-                var STAmount = (STpercent / 100) * amountwithdiscount;
+                //var STpercent = 0;
+                //if ($("#Staxddl" + i + " option:selected").text() !== "Please Select") {
+                //    STpercent = parseFloat($("#Staxddl" + i + " option:selected").text() || 0);
+                //}
+                //var STAmount = (STpercent / 100) * amountwithdiscount;
 
                 var cleanNumber = function (str) {
                     if (!str) return 0;
@@ -671,11 +726,12 @@
                 var FurtherTax = cleanNumber($(tbl.rows[i]).find('td.headcol2_further_tax').text());
                 var BonusTax = cleanNumber($(tbl.rows[i]).find('td.headcol2_bonus_tax').text());
                 var AdvanceTax = cleanNumber($(tbl.rows[i]).find('td.headcol2_9').text()); 
+                var STAmount = cleanNumber($(tbl.rows[i]).find('td.headcol2_6').text()); 
 
                 var NetAmount = amountwithdiscount + STAmount + FurtherTax + BonusTax + AdvanceTax;
 
                 // Update UI cells
-                tbl.rows[i].cells[13].innerText = DisAmt.toFixed(2); 
+                tbl.rows[i].cells[14].innerText = DisAmt.toFixed(2); 
                 tbl.rows[i].cells[16].innerText = STAmount.toFixed(2); 
                 tbl.rows[i].cells[20].innerText = amountwithdiscount.toFixed(2); 
                 tbl.rows[i].cells[21].innerText = NetAmount.toFixed(2); 
@@ -727,7 +783,11 @@
                         'AdvTaxAmount': $(value).find('td input[name=AdvTaxAmount]').val() || '0', 'AdvTotalAmount': $(value).find('td input[name=AdvTotalAmount]').val() || '0',
                         'FurtherTax_Id': $(value).find('td input[name=FurtherTaxId]').val() || '0', 'FurtherTax_Amount': $(value).find('td input[name=FurtherTaxAmount]').val() || '0',
                         'Bonus_Qty': $(value).find('td input[name=BonusQty]').val() || '0',
-                        'Bonus_Tax': $(value).find('td input[name=BonusTax]').val() || '0'
+                        'Bonus_Tax': $(value).find('td input[name=BonusTax]').val() || '0',
+                        'PODetailId': $(value).find('td input[name = txtPODetailId]').val() || '0',
+                        'POID': $(value).find('td input[name = txtPOId]').val() || '0',
+                        'BatchNum': $(value).find('td input[name=txtBatchNum]').val() || '',
+
                     });
                 });
                 table2.find('tr').each(function (key, value) {
@@ -1036,6 +1096,213 @@
                 });
             }
         }
+
+   
+
+        function formatDateFromJSON(jsonDate) {
+            if (!jsonDate) return '';
+            try {
+                var date = new Date(parseInt(jsonDate.substring(6, 19)));
+                return $.datepicker.formatDate('dd M yy', date);
+            } catch (e) { return ''; }
+        }
+        function LoadPODetailByVendor(vendorId) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "AddPurchaseInvoice.aspx/getPODetailByVendorId",
+                data: JSON.stringify({ vendorId: vendorId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var poData = JSON.parse(response.d);
+                    var html = '';
+
+                    poData.forEach(function (item, index) {
+                        html += `<tr>
+                 <td><input type="checkbox" class="chkPOItem" /></td>
+                 <td>${item.PO_No}</td>
+                 <td>${item.Description}</td>
+                 <td>${item.Qty}</td>
+                 <td>${item.Bonus_qty}</td>
+                 <td>${item.bonus_tax}</td>
+                 <td>${item.sale_tax_amt}</td>
+                 <td>${item.further_tax}</td>
+                 <td>${item.discount_per}</td>
+                 <td>${item.Rate}</td>
+                 <td>${item.TotalAmountc}</td>
+                 <td style="display:none" id="poid">${item.PO_ID}</td>
+                 <td style="display:none" id="Podetailid">${item.PO_Detail_ID}</td>
+                 <td style="display:none">${item.Item_Code}</td>
+                 <td style="display:none">${item.Vendor_Name}</td>
+                 <td style="display:none">${item.PO_Date}</td>
+                 <td style="display:none">${item.Sales_Tax}</td>
+                 <td style="display:none">${item.discount_amount}</td>
+                 <td style="display:none">${item.advancetax}</td>
+                 <td style="display:none">${item.advancetaxid}</td>
+                 <td style="display:none">${item.further_taxid}</td>
+                 <td style="display:none">${item.IsBatch || 0}</td>
+             </tr>`;
+                    });
+
+                    $('#PO_Modal tbody').html(html);
+
+                    $('#PO_Modal').modal('show');
+                },
+                error: function (err) {
+                    console.error("Error fetching PO details:", err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to load PO details.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+        function appendPOItem(anchor) {
+            debugger;
+
+            var row = $(anchor).closest('tr');
+
+            var POId = $(row).find('td:eq(11)').text().trim();
+            var PODetailId = $(row).find('td:eq(12)').text().trim();
+            var ItemCode = $(row).find('td:eq(13)').text().trim();
+            var PONum = $(row).find('td:eq(1)').text().trim();
+            var Description = $(row).find('td:eq(2)').text().trim();
+            var Qty = $(row).find('td:eq(3)').text().trim();
+            var Bonus_qty = $(row).find('td:eq(4)').text().trim();
+            var bonus_tax = $(row).find('td:eq(5)').text().trim();
+            var sale_tax_amt = $(row).find('td:eq(6)').text().trim();
+            var further_tax = $(row).find('td:eq(7)').text().trim();
+            var discount_percentage = $(row).find('td:eq(8)').text().trim();
+
+            var Rate = $(row).find('td:eq(9)').text().trim();
+            var TotalAmount = $(row).find('td:eq(10)').text().trim();
+            var VendorName = $(row).find('td:eq(14)').text().trim();
+            var PODateRaw = $(row).find('td:eq(15)').text().trim();
+            var Saletaxid = $(row).find('td:eq(16)').text().trim();
+            var Discount_amount = $(row).find('td:eq(17)').text().trim();
+            var Advance_tax = $(row).find('td:eq(18)').text().trim();
+            var Advance_taxid = $(row).find('td:eq(19)').text().trim();
+            var furthertaxid = $(row).find('td:eq(20)').text().trim();
+            var IsBatch = $(row).find('td:eq(21)').text().trim();
+
+            var isChecked = $(anchor).is(':checked');
+
+            if (!isChecked) {
+                $('#tblItemDescription tbody tr').each(function () {
+                    if ($(this).find('input[name=txtItemCode]').val() === ItemCode) {
+                        $(this).remove();
+                    }
+                });
+                return false;
+            }
+
+            var PODate = '';
+            if (PODateRaw && PODateRaw.indexOf('/Date(') > -1) {
+                PODate = $.datepicker.formatDate('dd M yy', new Date(parseInt(PODateRaw.substring(6, 19))));
+            } else if (PODateRaw) {
+                PODate = PODateRaw;
+            }
+
+            var exists = $('#tblItemDescription').find('input[name=txtItemCode][value="' + ItemCode + '"]').length > 0;
+            if (exists) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Item already added!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                $(anchor).prop('checked', false);
+                return false;
+            }
+
+            if (!$(anchor).is(':checked')) {
+                return false;
+            }
+
+            var length = $("#tblItemDescription tr:gt(0)").length + 1;
+            var batchDisabled = (IsBatch == "true") ? "" : "disabled";
+            var batchPlaceholder = (IsBatch == "true") ? "Enter Batch" : "N/A";
+            var batchValue = (IsBatch == "true") ? "" : "N/A";
+
+            var newRow = '<tr>' +
+                '<td class="headcol"><input type="hidden" id="txtItemCode' + length + '" name="txtItemCode" value="' + ItemCode + '"/>' + ItemCode + '</td>' +
+                '<td class="headcol_1" style="white-space:normal;">' + Description + '</td>' +
+                '<td class="headcol_2">' + parseFloat(TotalAmount).toFixed(2) + '</td>' +
+                '<td class="long">' + PONum + '</td>' +
+                '<td class="long">' + PODate + '</td>' +
+                '<td class="long"></td>' +
+                '<td class="long"></td>' +
+                '<td class="long"><input type="hidden" id="txtGRNNum' + length + '" name="txtGRNNum" value=""/></td>' +
+                '<td class="long">0.00</td>' +
+                '<td class="long">0.00</td>' +
+                '<td class="headcol2_1">' +
+                '<input type="hidden" id="txtQty' + length + '" name="txtQty" value="' + parseFloat(Qty).toFixed(2) + '"/>' +
+                '<input type="text" style="width:80px;" value="' + parseFloat(Qty).toFixed(2) + '" onchange="updateHiddenQty(this, ' + length + '); CulculateAmonut();" />' +
+                '</td>' +
+                '<td class="headcol2_bonus_qty"> ' + parseFloat(Bonus_qty).toFixed(2) + '<input type="hidden" name="BonusQty" value="' + parseFloat(Bonus_qty).toFixed(2) + '"/></td>' +
+                '<td class="headcol2_2"><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + parseFloat(Rate).toFixed(2) + '"/>' + parseFloat(Rate).toFixed(2) + '</td>' +
+                '<td class="headcol2_3"> ' + parseFloat(discount_percentage).toFixed(2) +
+                '<input type="hidden" id="txtdiscper' + length + '" name="txtdiscper" value="' + parseFloat(discount_percentage).toFixed(2) + '"/></td>' +
+                '<td class="headcol2_4">' + Discount_amount + '<input type="hidden" id="txtdiscamt' + length + '" name="txtdiscamt"   value="' + parseFloat(Discount_amount).toFixed(2) + '" /></td>' +
+                '<td class="headcol2_5" style ="display:none;"><select style="width:90px!important;margin-top:-6px;" disabled onchange="CulculateAmonut()" id="Staxddl' + length + '" name="Staxddl"><option value="0">Please Select</option>' + _gloabal + '</select></td>' +
+                '<td class="headcol2_6"><input type="hidden" id="staxamou' + length + '" name="staxamou" value="' + parseFloat(sale_tax_amt).toFixed(2) + '"/>' + parseFloat(sale_tax_amt).toFixed(2) + '</td>' +
+
+                '<td class="headcol2_9">' + Advance_tax + '</td>' +
+                '<td class="headcol2_further_tax">' + further_tax + '</td>' +
+                '<td class="headcol2_bonus_tax">' + bonus_tax + '<input type="hidden" name="BonusTax" value="' + parseFloat(TotalAmount).toFixed(2) + '"/></td>' +
+                '<td class="headcol2_7">' + parseFloat(Qty * Rate).toFixed(2) + '</td>' +
+                '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + length + '" name="txtTotalAmount" value="' + parseFloat(TotalAmount).toFixed(2) + '"/>' + parseFloat(TotalAmount).toFixed(2) + '</td>' +
+                '<td style="display:none"><input type="hidden" id="txtPOId' + length + '" name="txtPOId" value="' + POId + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="txtPODetailId' + length + '" name="txtPODetailId" value="' + PODetailId + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="txtItemId' + length + '" name="txtItemId" value="' + ItemCode + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="AdvigpagainstPo' + length + '" name="AdvigpagainstPo" value="0"/></td>' +
+                '<td style="display:none"><input type="hidden" id="AdvTaxAmount' + length + '" name="AdvTaxAmount" value="' + parseFloat(Advance_tax).toFixed(2) + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="AdvTaxId' + length + '" name="AdvTaxId"  value="' + Advance_taxid + '"/></td>' +
+
+                '<td style="display:none"><input type="hidden" id="AdvTotalAmount' + length + '" name="AdvTotalAmount" value="0"/></td>' +
+                '<td style="display:none"><input type="hidden" id="FurtherTaxId' + length + '" name="FurtherTaxId" value="' + furthertaxid + '"/></td>' +
+                '<td style="display:none"><input type="hidden" id="FurtherTaxAmount' + length + '" name="FurtherTaxAmount" value="' + parseFloat(further_tax).toFixed(2) + '"/></td>' +
+                '<td class="headcol_batch"><input type="text" id="txtBatchNum' + length + '" name="txtBatchNum" value="' + batchValue + '" placeholder="' + batchPlaceholder + '" ' + batchDisabled + ' style="width:100px;" /></td>' +
+                '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size:13px;margin-left:16px;color:#f30a0a;"></i></a></td>' +
+                '</tr>';
+
+            $('#tblItemDescription tbody').append(newRow);
+            $('#Staxddl' + length).select2();
+            CulculateAmonut();
+        }
+
+        function updateHiddenQty(visibleInput, index) {
+            $('#txtQty' + index).val($(visibleInput).val());
+        }
+
+        function AllowButtonsVisibility() {
+            $.ajax({
+                type: "POST",
+                url: "AddPurchaseInvoice.aspx/GetPOType",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+
+                    var code = res.d;
+
+                    if (code === "01") {
+                        $("#btn_GetFromPO").show();
+                        $("#btn_GRN").hide();
+                    }
+                    else {
+                        $("#btn_GRN").show();
+                        $("#btn_GetFromPO").hide();
+                    }
+                }
+            });
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -1081,9 +1348,12 @@
                 </select>
             </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
-                <input class="btn btn-primry" type="button" value="GRN" id="btn_GRN" style="margin-top: 26px" />
+                <input class="btn btn-primry" type="button" value="GRN" id="btn_GRN" style="margin-top: 26px;display:none" />
             </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
+                <input class="btn btn-primry" type="button" value="Get from PO" id="btn_GetFromPO" style="margin-top: 26px;display:none;" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <label id="lb_currency">Currency</label>
                 <select id="ddl_currency" class="form-control">
                     <option></option>
@@ -1098,18 +1368,62 @@
                 <label id="lb_exDate">Ex Date</label>
                 <input type="text" name="txt_exDate" id="txt_exDate" class="form-control" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6">
-                <label id="lb_attachments">Attachments</label>
-                <input type="file" name="txt_attachments" id="txt_attachments" />
-                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
-            </div>
         </div>
         <div class="row">
             <div class="col-lg-4 col-md-3 col-sm-4">
                 <label id="lb_remarks">Remarks</label>
                 <input type="text" name="txt_Remarks" id="txt_Remarks"  />
             </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label id="lb_attachments">Attachments</label>
+                <input type="file" name="txt_attachments" id="txt_attachments" />
+                <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
+            </div>
         </div>
+
+        <div class="modal fade" id="PO_Modal" tabindex="-1" role="dialog" aria-labelledby="PO_ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="PO_ModalLabel">PO Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="checkPOHeader" /></th>
+                                    <th>PO No</th>
+                                    <th>Description</th>
+                                    <th>Qty</th>
+                                    <th>Bonus_qty</th>
+                                    <th>bonus_tax</th>
+                                    <th>sale_tax_amt</th>
+                                    <th>further_tax</th>
+                                    <th>discount_per</th>
+                                  
+                                    <th>Rate</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-lg-10 col-md-10 col-sm-10"></div>
+                         <div class="col-lg-2 col-md-2 col-sm-2 float-end">
+                        <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                             </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </form>
     <br />
     <div class="row">
@@ -1147,13 +1461,14 @@
                                         <th>Rate</th>
                                         <th>Disc%</th>
                                         <th>Disc Amnt</th>
-                                        <th>S.Tax%</th>
+                                        <%--<th>S.Tax%</th>--%>
                                         <th>S.Tax Amnt</th>
                                         <th>Total Advance</th>
                                         <th>Further Tax</th>
                                         <th>Bonus Tax</th>
                                         <th>Value</th>
                                         <th>Total Amnt</th>
+                                        <th>Batch Num</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -1282,4 +1597,7 @@
             </div>
         </div>
     </div>
+
+
+
 </asp:Content>

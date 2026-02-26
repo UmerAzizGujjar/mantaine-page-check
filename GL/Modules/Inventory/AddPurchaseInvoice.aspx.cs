@@ -156,9 +156,33 @@ namespace PMS.Inventory
         public static string getVendorDDLlist()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var listItems = db.sp_LoadVendorPurchase();
+            var code = db.sys_Parms.Where(x => x.Name == "Direct PO ON Purchase Invoice").Select(x => x.Code).FirstOrDefault();
+            object listItems;
+            if (code == "01")
+            {
+                listItems = db.sp_LoadVendorPurchaseOrders();
+            }
+            else
+            {
+                listItems = db.sp_LoadVendorPurchase();
+            }
+
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+
+        [WebMethod]
+        public static string GetPOType()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var code = db.sys_Parms
+                         .Where(x => x.Name == "Direct PO ON Purchase Invoice")
+                         .Select(x => x.Code)
+                         .FirstOrDefault();
+
+            return code;
+        }
+
         [WebMethod]
         public static string getGRNDetailByVendorId(string vendorId)
         {
@@ -278,13 +302,16 @@ namespace PMS.Inventory
                 ltd.Qty = Convert.ToDecimal(Invoiceitem.Qty);
                 ltd.Rate = Convert.ToDecimal(Invoiceitem.Rate);
                 ltd.GRN_detail_Id = Convert.ToInt32(Invoiceitem.GRNDetailId);
+                ltd.Po_Item_Id = Convert.ToInt32(Invoiceitem.PODetailId);
+                ltd.Po_Id = Convert.ToInt32(Invoiceitem.POID);
                 ltd.GRN_ID = Convert.ToInt32(Invoiceitem.GRNId);
                 ltd.Amount = Convert.ToDecimal(Invoiceitem.TotalAmount);
                 ltd.TotalAmount = Convert.ToDecimal(Invoiceitem.Amount);
                 ltd.Stax_ID = Convert.ToInt32(Invoiceitem.staxid);
                 ltd.Stax_Amount = Convert.ToDecimal(Invoiceitem.staxperc);
                 ltd.DiscPer = Convert.ToDecimal(Invoiceitem.DiscPer);
-                ltd.DiscAmt = Convert.ToDecimal(Invoiceitem.DiscAmt);
+                //ltd.DiscAmt = Convert.ToDecimal(Invoiceitem.DiscAmt);
+                ltd.DiscAmt = string.IsNullOrEmpty(Invoiceitem.DiscAmt) ? 0 : Convert.ToDecimal(Invoiceitem.DiscAmt);
                 ltd.Adv_Po_ID = Invoiceitem.AdvigpagainstPo;
                 ltd.AdvTax_Id = string.IsNullOrEmpty(Invoiceitem.AdvTaxId) ? 0 : Convert.ToInt32(Invoiceitem.AdvTaxId);
                 ltd.AdvTax_Amount = string.IsNullOrEmpty(Invoiceitem.AdvTaxAmount) ? 0 : Convert.ToDecimal(Invoiceitem.AdvTaxAmount);
@@ -293,6 +320,7 @@ namespace PMS.Inventory
                 ltd.FurtherTax_Amount = string.IsNullOrEmpty(Invoiceitem.FurtherTax_Amount) ? 0 : Convert.ToDecimal(Invoiceitem.FurtherTax_Amount);
                 ltd.Bonus_Qty = string.IsNullOrEmpty(Invoiceitem.Bonus_Qty) ? 0 : Convert.ToDecimal(Invoiceitem.Bonus_Qty);
                 ltd.Bonus_Tax = string.IsNullOrEmpty(Invoiceitem.Bonus_Tax) ? 0 : Convert.ToDecimal(Invoiceitem.Bonus_Tax);
+                ltd.BatchNum = Invoiceitem.BatchNum;
                 db.Purchase_Invoice_Details.InsertOnSubmit(ltd);
                 db.SubmitChanges();
             }
@@ -390,7 +418,20 @@ namespace PMS.Inventory
         public static string LoadInvocieDetail(int Inv_ID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = db.sp_LoadPurchaseDetailInvoice(Inv_ID);
+
+            var code = db.sys_Parms.Where(x => x.Name == "Direct PO ON Purchase Invoice").Select(x => x.Code).FirstOrDefault();
+
+            object Details;
+
+            if (code == "01")
+            {
+                Details = db.sp_LoadPurchaseDetailInvoice_DirectPO(Inv_ID).ToList();
+            }
+            else
+            {
+                Details = db.sp_LoadPurchaseDetailInvoice(Inv_ID).ToList();
+            }
+
             return (new JavaScriptSerializer()).Serialize(Details);
         }
         [WebMethod]
@@ -430,6 +471,7 @@ namespace PMS.Inventory
             public string totaladvanceadjusted { get; set; }
             public string totalnetamount { get; set; }
             public string disc_amount { get; set; }
+            
             public List<InoiceDetailList> ItemList { get; set; }
             public List<InoiceDetailList2> ItemList2 { get; set; }
             public List<InoiceDetailList3> ItemList3 { get; set; }
@@ -442,6 +484,8 @@ namespace PMS.Inventory
             public string AdvTaxAmount { get; set; }
             public string AdvTotalAmount { get; set; }
             public string GRNDetailId { get; set; }
+            public string PODetailId { get; set; }
+            public string POID { get; set; }
             public string PurchAseInvoiceId { get; set; }
             public string Rate { get; set; }
             public string Qty { get; set; }
@@ -456,6 +500,8 @@ namespace PMS.Inventory
             public string FurtherTax_Amount { get; set; }
             public string Bonus_Qty { get; set; }
             public string Bonus_Tax { get; set; }
+
+            public string BatchNum { get; set; }
         }
 
         public class InoiceDetailList2
@@ -472,6 +518,54 @@ namespace PMS.Inventory
             public string accounting_qty { get; set; }
             public string accounting_rate { get; set; }
             public string accounting_amount { get; set; }
+        }
+
+        [WebMethod]
+        public static string getPODetailByVendorId(string vendorId)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            int vendorIdInt = Convert.ToInt32(vendorId);
+
+            var query = from po in db.AP_Purchase_Orders
+                        join pod in db.AP_Purchase_Order_Items
+                            on po.PO_ID equals pod.PO_ID
+                        join item in db.INV_Items
+                            on pod.Item_Code.ToString() equals item.Item_Code.ToString()
+                        join vendor in db.AP_Vendors
+                            on po.Vendor_ID equals vendor.Vendor_ID
+                        where po.Vendor_ID == vendorIdInt
+                        && po.Status == "Approved"
+                        && po.IsDeleted == false
+                        && pod.Qty > 0
+                        select new
+                        {
+                            PO_ID = po.PO_ID,
+                            PO_Detail_ID = pod.PO_Item_ID,
+                            PO_No = po.PO_No,
+                            Item_Code = pod.Item_Code,
+                            Description = item.Description,
+                            Qty = pod.Qty,
+                            Rate = pod.Rate,
+                            Bonus_qty = pod.Bonus_Qty,
+                            bonus_tax = pod.Bonus_Tax,
+                            Sales_Tax = pod.SalTax_Id,
+                            sale_tax_amt = pod.SalTax_Amount,
+                            advancetax = pod.AdvanceTax_Amount,
+                            advancetaxid = pod.AdvanceTax_ID,
+                            further_tax = pod.FurtherTax_Amount,
+                            further_taxid = pod.FurtherTax_Id,
+                            //TotalAmount = pod.Qty * pod.Rate,
+                            TotalAmountc = pod.Amount,
+                            discount_per = pod.Discount_Percentage,
+                            discount_amount = pod.Discount_Amount,
+                            Vendor_Name = vendor.Vendor_Name,
+                            PO_Date = po.PO_Date,
+                            Delivery_Date = pod.Delivery_Date,
+                            IsBatch = item.IsBatch,
+                        };
+
+            var result = query.ToList();
+            return (new JavaScriptSerializer()).Serialize(result);
         }
     }
 }
