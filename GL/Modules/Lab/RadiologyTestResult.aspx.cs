@@ -471,7 +471,7 @@ namespace PMS.Modules.Lab
                         where td.Lab_Test_Detail_ID == int.Parse(TestDetailID)
                         select new
                         {
-                            Image_path = td.Image_path.Replace("~/", string.Empty).Contains("LabTestImg") == true ? td.Image_path.Replace("~/", string.Empty) : "LabTestImg/" + td.Image_path.Replace("~/", string.Empty),
+                            Image_path = td.Image_path.Replace("~/", string.Empty).Contains("RadiologyTestImg") == true ? td.Image_path.Replace("~/", string.Empty) : "RadiologyTestImg/" + td.Image_path.Replace("~/", string.Empty),
                             td.Lab_Test_Detail_ID,
                             Single = single
                         }).ToList();
