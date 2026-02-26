@@ -952,6 +952,7 @@ namespace PMS
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -5297,6 +5298,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fTime, tTime, program, classs, datee, group, bathc, txt_WholeClass);
             return ((ISingleResult<GetAttendanceDetailsResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spApprovePurchaseInvoice_DirectFromPO")]
+        public ISingleResult<spApprovePurchaseInvoice_DirectFromPOResult> spApprovePurchaseInvoice_DirectFromPO([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> purchaseID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), purchaseID, user_id);
+            return ((ISingleResult<spApprovePurchaseInvoice_DirectFromPOResult>)(result.ReturnValue));
         }
     }
 
@@ -215360,6 +215368,32 @@ namespace PMS
                 if ((this._isAttendance != value))
                 {
                     this._isAttendance = value;
+                }
+            }
+        }
+    }
+
+    public partial class spApprovePurchaseInvoice_DirectFromPOResult
+    {
+
+        private string _Message;
+
+        public spApprovePurchaseInvoice_DirectFromPOResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(500)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
                 }
             }
         }

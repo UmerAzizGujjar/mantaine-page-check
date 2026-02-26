@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DialysisCase.aspx.cs" Inherits="PMS.DialysisCase" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <script type="text/javascript" src="../Scripts/jquery.tokeninput.js"></script>
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -18,7 +18,7 @@
             var hdFile_ID = $("#hdfPatient_ID").val();
             if (hdFile_ID != "(New)") {
                 var Patient_ID = document.getElementById('<%= txtPatient_ID.ClientID%>').value;
-                var tokendata = httpGet("../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
+                var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
                 loadtokenInputs(JSON.parse(tokendata));
             }
             else {
@@ -35,14 +35,14 @@
         }
 
         function loadtokenInputsDefault() {
-            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../json.aspx?Table=Patients",
+            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
              {
                  tokenLimit: 1,
              });
         }
 
         function loadtokenInputs(data) {
-            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../json.aspx?Table=Patients",
+            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
                 {
                     prePopulate: data,
                     tokenLimit: 1,
