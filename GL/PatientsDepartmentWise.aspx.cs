@@ -2422,7 +2422,7 @@ namespace PMS
                     tr_Summary.Visible = false;
                     tr_Export.Visible = false;
                     DateDiv.Visible = true;
-                    Time_Row.Visible = false;
+                    Time_Row.Visible = true;
                     lblMultiSelect.Visible = false;
                     trDoctor.Visible = false;
                     AllowPatientRecord = false;
@@ -2452,6 +2452,48 @@ namespace PMS
                     ddlDepartments.Items.Clear();
                     ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
                     ddlDepartments.DataBind();
+                }
+                else if (this.PageTitle == "GRN_Report")
+                {
+                    string x = "GRN Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+
+                    Stock_Movement.Visible = true;
+
+                    ddlItemCategory.Visible = false;
+                    lbItemCategory.Visible =  false;
+                    lblItemCode.Visible = false;
+                    txtItemCode.Visible = false;
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
                 }
                 else if (this.PageTitle == "VPDR")
                 {
