@@ -9,7 +9,7 @@
             setTimeout(function () {
                 $("#loader").fadeOut();
             }, 4000);
-
+            LoadYears();
             var date = '<%= DateTime.Now%>';
             $("#startDate").datepicker({
                 dateFormat: 'MM d,yy',
@@ -182,6 +182,17 @@
                 $('#ddlyears').select2();
             });
         }
+
+        function LoadYears() {
+
+    var currentYear = new Date().getFullYear();
+    var options = '<option value="0">Please Select</option>';
+    for (var year = currentYear; year >= currentYear - 10; year--) {
+        options += '<option value="' + year + '">' + year + '</option>';
+    }
+    $('#ddlyears').html(options);
+    $('#ddlyears').select2();
+}
         function LoadPatientsCount(startdate, Enddate) {
             var txt_sdate = startdate;
             var txt_edate = Enddate;
