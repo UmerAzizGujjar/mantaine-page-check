@@ -169,6 +169,20 @@ namespace PMS.Inventory
 
             return (new JavaScriptSerializer()).Serialize(listItems);
         }
+
+        [WebMethod]
+        public static string GetPOType()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var code = db.sys_Parms
+                         .Where(x => x.Name == "Direct PO ON Purchase Invoice")
+                         .Select(x => x.Code)
+                         .FirstOrDefault();
+
+            return code;
+        }
+
         [WebMethod]
         public static string getGRNDetailByVendorId(string vendorId)
         {
@@ -288,6 +302,8 @@ namespace PMS.Inventory
                 ltd.Qty = Convert.ToDecimal(Invoiceitem.Qty);
                 ltd.Rate = Convert.ToDecimal(Invoiceitem.Rate);
                 ltd.GRN_detail_Id = Convert.ToInt32(Invoiceitem.GRNDetailId);
+                ltd.Po_Item_Id = Convert.ToInt32(Invoiceitem.PODetailId);
+                ltd.Po_Id = Convert.ToInt32(Invoiceitem.POID);
                 ltd.GRN_ID = Convert.ToInt32(Invoiceitem.GRNId);
                 ltd.Amount = Convert.ToDecimal(Invoiceitem.TotalAmount);
                 ltd.TotalAmount = Convert.ToDecimal(Invoiceitem.Amount);
@@ -304,6 +320,7 @@ namespace PMS.Inventory
                 ltd.FurtherTax_Amount = string.IsNullOrEmpty(Invoiceitem.FurtherTax_Amount) ? 0 : Convert.ToDecimal(Invoiceitem.FurtherTax_Amount);
                 ltd.Bonus_Qty = string.IsNullOrEmpty(Invoiceitem.Bonus_Qty) ? 0 : Convert.ToDecimal(Invoiceitem.Bonus_Qty);
                 ltd.Bonus_Tax = string.IsNullOrEmpty(Invoiceitem.Bonus_Tax) ? 0 : Convert.ToDecimal(Invoiceitem.Bonus_Tax);
+                ltd.BatchNum = Invoiceitem.BatchNum;
                 db.Purchase_Invoice_Details.InsertOnSubmit(ltd);
                 db.SubmitChanges();
             }
@@ -454,6 +471,7 @@ namespace PMS.Inventory
             public string totaladvanceadjusted { get; set; }
             public string totalnetamount { get; set; }
             public string disc_amount { get; set; }
+            
             public List<InoiceDetailList> ItemList { get; set; }
             public List<InoiceDetailList2> ItemList2 { get; set; }
             public List<InoiceDetailList3> ItemList3 { get; set; }
@@ -466,6 +484,8 @@ namespace PMS.Inventory
             public string AdvTaxAmount { get; set; }
             public string AdvTotalAmount { get; set; }
             public string GRNDetailId { get; set; }
+            public string PODetailId { get; set; }
+            public string POID { get; set; }
             public string PurchAseInvoiceId { get; set; }
             public string Rate { get; set; }
             public string Qty { get; set; }
@@ -480,6 +500,8 @@ namespace PMS.Inventory
             public string FurtherTax_Amount { get; set; }
             public string Bonus_Qty { get; set; }
             public string Bonus_Tax { get; set; }
+
+            public string BatchNum { get; set; }
         }
 
         public class InoiceDetailList2
@@ -524,10 +546,22 @@ namespace PMS.Inventory
                             Description = item.Description,
                             Qty = pod.Qty,
                             Rate = pod.Rate,
-                            TotalAmount = pod.Qty * pod.Rate,
+                            Bonus_qty = pod.Bonus_Qty,
+                            bonus_tax = pod.Bonus_Tax,
+                            Sales_Tax = pod.SalTax_Id,
+                            sale_tax_amt = pod.SalTax_Amount,
+                            advancetax = pod.AdvanceTax_Amount,
+                            advancetaxid = pod.AdvanceTax_ID,
+                            further_tax = pod.FurtherTax_Amount,
+                            further_taxid = pod.FurtherTax_Id,
+                            //TotalAmount = pod.Qty * pod.Rate,
+                            TotalAmountc = pod.Amount,
+                            discount_per = pod.Discount_Percentage,
+                            discount_amount = pod.Discount_Amount,
                             Vendor_Name = vendor.Vendor_Name,
                             PO_Date = po.PO_Date,
-                            Delivery_Date = pod.Delivery_Date
+                            Delivery_Date = pod.Delivery_Date,
+                            IsBatch = item.IsBatch,
                         };
 
             var result = query.ToList();

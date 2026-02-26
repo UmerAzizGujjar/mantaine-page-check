@@ -6404,37 +6404,6 @@
       <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Purchase_Invoice_Detail" Member="Purchase_Invoice_Details">
-    <Type Name="Purchase_Invoice_Detail">
-      <Column Name="PurchaseInvoiceDetailId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="ItemId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GRN_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Stax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="AdvancePayment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AdvancePayment_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Adv_Po_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DiscPer" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="DiscAmt" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Po_Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Po_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AdvTax_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AdvTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="AdvTotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="FurtherTax_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="FurtherTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.IPD_Doctor_Distribution_Detail" Member="IPD_Doctor_Distribution_Details">
     <Type Name="IPD_Doctor_Distribution_Detail">
       <Column Name="Doctor_Distribution_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7283,6 +7252,115 @@
       <Column Name="S_W_H_Tax" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="IsBilling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Purchase_Invoice_Detail" Member="Purchase_Invoice_Details">
+    <Type Name="Purchase_Invoice_Detail">
+      <Column Name="PurchaseInvoiceDetailId" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PurchaseInvoiceId" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="TotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="ItemId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Stax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Stax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="AdvancePayment_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AdvancePayment_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Advance_Adjusted" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Adv_Po_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DiscPer" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="DiscAmt" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Po_Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Po_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AdvTax_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AdvTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="AdvTotalAmount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="FurtherTax_Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="FurtherTax_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Bonus_Tax" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="BatchNum" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Dialysis_PreDialysis" Member="Dialysis_PreDialysis">
+    <Type Name="Dialysis_PreDialysi">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Dialysis_ID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Vascular_Access" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Dialysis_No" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Machine_No" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Dialyzer" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Advised_By_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Priming_By_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Priming_Solution" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Heparin" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Heparin_Infusion_Per_Hour" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Current_Weight" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="Last_Weight" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Finish_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Weight_Difference" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="UF_ML" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="UF_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="Total_Duration" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Dialysis_Type" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Special_Instruction" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Complaints" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Conscious_Level" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Edema" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Card_Rhythm" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Lungs" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Other" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Modified_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Modified_By" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Dialysis_PostDialysis" Member="Dialysis_PostDialysis">
+    <Type Name="Dialysis_PostDialysi">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Dialysis_ID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Start_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="End_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Duration" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Staff_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Weight" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+      <Column Name="BP_Systolic" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BP_Diastolic" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Pulse" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Comments" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Modified_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Modified_By" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Dialysis_DuringDialysis" Member="Dialysis_DuringDialysis">
+    <Type Name="Dialysis_DuringDialysi">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Dialysis_ID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Vital_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+      <Column Name="BP_Systolic" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BP_Diastolic" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Pulse" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Dialysis_Flow_Rate" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="Venous_Pressure" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Blood_Flow" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Modified_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Modified_By" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
