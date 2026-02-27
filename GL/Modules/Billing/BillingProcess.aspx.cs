@@ -1220,7 +1220,6 @@ namespace PMS
 
             if (data.Bill_ID == 0)
             {
-                // New Bill
                 newBill = new Ar_Billing();
                 newBill.Created_By = AppConfig.UserID;
                 newBill.Creation_Date = DateTime.Now;
@@ -1228,7 +1227,6 @@ namespace PMS
             }
             else
             {
-                // Existing Bill – Load FULL current state for logging
                 newBill = db.Ar_Billings
                     .Where(b => b.Bill_ID == data.Bill_ID)
                     .FirstOrDefault();
@@ -1258,9 +1256,6 @@ namespace PMS
                         newBill.Main_Department,
                         newBill.BillType,
                         newBill.In_Patient_ID,
-                        //newBill.Approved_By,
-                        //Approved_Time = newBill.Approved_Time ?? DateTime.MinValue,
-                        //newBill.Blood_No
                     },
                     Details = new
                     {
@@ -1277,7 +1272,7 @@ namespace PMS
                             d.Item_Type,
                             d.Doctor_id,
                             d.Doctor_Share,
-                            d.Hospital_Share  // Fixed casing to match your model
+                            d.Hospital_Share
                         }).ToList()
                     }
                 };
@@ -1295,21 +1290,18 @@ namespace PMS
                 };
 
                 db.Ar_Billing_Logs.InsertOnSubmit(billLog);
-                // >>>>>>>>>>>>>>>>>> END LOGGING <<<<<<<<<<<<<<<<<<<<
 
-                // Now safe to update audit fields
                 newBill.Updated_By = AppConfig.UserID;
                 newBill.Updation_Date = DateTime.Now;
             }
 
-            // Common fields (applies to both insert & update)
             newBill.Company_ID = AppConfig.Company_ID;
             newBill.Patient_ID = data.Patient_ID;
             newBill.Opd_Id = data.Opd_id;
             newBill.Bill_Date = DateTime.Now;
             newBill.Remarks = data.Remarks;
             var opd_proc = data.opd_procedure;
-           
+
 
             newBill.Discount_Percentage = data.Discount_Percentage;
             newBill.Discount_Amount = data.Discount_Amount;
@@ -1345,7 +1337,6 @@ namespace PMS
 
             newBill.Branch_Id = userBranchId;
 
-            // Handle In-Patient logic
             var patient_no = DBClass.getField("select Patient_No from Reg_patient where pat_id=" + data.Patient_ID);
             var ipdid = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID=" + data.Patient_ID + " order by Created_Time desc");
 
@@ -1367,7 +1358,7 @@ namespace PMS
             }
             else
             {
-                newBill.Doc_token = null; // or = 0 if column is non-nullable int
+                newBill.Doc_token = null;
             }
 
 
@@ -1375,11 +1366,11 @@ namespace PMS
             {
                 newBill.In_Patient_ID = Convert.ToInt32(ipdid);
                 var Ipd = (from ipd in db.In_Patients
-                                 where ipd.In_Patient_ID == Convert.ToInt32(ipdid)
-                                 orderby ipd.Created_Time descending
-                                 select ipd
+                           where ipd.In_Patient_ID == Convert.ToInt32(ipdid)
+                           orderby ipd.Created_Time descending
+                           select ipd
                                 ).FirstOrDefault();
-                // Ipd.ispackagebilling = true;
+
                 if (Ipd.Discharge_Request == true)
                 {
                     newBill.Package_Type = data.PackageType;
@@ -1411,28 +1402,23 @@ namespace PMS
                     }
                     Ipd.Final_Bill = true;
                 }
-                               
+
             }
             else
             {
                 newBill.In_Patient_ID = 0;
             }
 
-            // Save Bill Header
-           
-            // >>>>>>>>>>>>>>>>>> ✅ SIMPLE STOCK VALIDATION (as requested) <<<<<<<<<<<<<<<<<<<<
             if (data.bomItems != null && data.bomItems.Count > 0)
             {
                 foreach (var item in data.bomItems)
                 {
                     if (item.ItemID <= 0 || item.Qty == null) continue;
 
-                    // Use a FIXED org (e.g., "MAIN") — no frontend dependency
                     decimal availableStock = db.GetInventoryItemTotalStock_BaseUnit(item.ItemID, "002") ?? 0;
 
                     if (item.Qty > availableStock)
                     {
-                        // Return early with simple message → Swal on frontend
                         return (new JavaScriptSerializer()).Serialize(new
                         {
                             success = false,
@@ -1441,21 +1427,17 @@ namespace PMS
                     }
                 }
             }
+
             if (data.Bill_ID == 0)
             {
                 db.Ar_Billings.InsertOnSubmit(newBill);
-                db.SubmitChanges(); // Needed to get new Bill_ID for details
+                db.SubmitChanges();
                 if (opd_proc == "1")
                 {
-                    DBClass.executeNonQueryWithoutBegin("Update patients SET Is_billed ='1' WHERE patient_id=" + data.Opd_id  );
-                }
-                else
-                {
-
+                    DBClass.executeNonQueryWithoutBegin("Update patients SET Is_billed ='1' WHERE patient_id=" + data.Opd_id);
                 }
             }
 
-            // >>>>>>>>>>>>>>>>>> ✅ SAVE BOM CONSUMPTION (ADDED SECTION) <<<<<<<<<<<<<<<<<<<<
             if (data.bomItems != null && data.bomItems.Count > 0)
             {
                 var bomConsumptions = data.bomItems.Select(i => new Bill_BOM_Consumption
@@ -1477,10 +1459,7 @@ namespace PMS
                 db.Bill_BOM_Consumptions.InsertAllOnSubmit(bomConsumptions);
                 db.SubmitChanges();
             }
-      
-            // ▲▲▲ END BOM SAVE ▲▲▲
 
-            // Prepare Bill Details
             List<Ar_Billing_Detail> ListOfDetails = new List<Ar_Billing_Detail>();
             List<Ar_Billing_Detail> ListOfDetails_Previous = db.Ar_Billing_Details.Where(b => b.Bill_ID == data.Bill_ID).ToList();
 
@@ -1513,7 +1492,6 @@ namespace PMS
                     Issue_Date = dtls.Test_CreatedDate
                 };
 
-                // Accumulate consumed amounts
                 if (dtls.MainDepartment == "001") sum = Convert.ToDecimal(dtls.Consumed_Lab);
                 else if (dtls.MainDepartment == "002") sum_ultra = Convert.ToDecimal(dtls.Consumed_Ultra_Sound);
                 else if (dtls.MainDepartment == "003") sum_Xray = Convert.ToDecimal(dtls.Consumed_Xray);
@@ -1534,8 +1512,6 @@ namespace PMS
                 ListOfDetails.Add(newBillDetails);
             }
 
-         
-            // Prepare Doctor Shares
             List<AR_Billing_Detail_Doctor_Share> ListOfshare = new List<AR_Billing_Detail_Doctor_Share>();
             foreach (DoctorDistributionList doc in data.Share)
             {
@@ -1548,35 +1524,74 @@ namespace PMS
                 });
             }
 
-            // >>>>>>>>>>>>>>>>>> UPDATE LOGIC (Edit Mode) <<<<<<<<<<<<<<<<<<<<
             if (data.Bill_ID != 0)
             {
-                // Sync ParentTrans_ID for existing items
+                var itemsToUpdate = new List<Ar_Billing_Detail>();
+                var itemsToInsert = new List<Ar_Billing_Detail>();
+                var itemsToDelete = new List<Ar_Billing_Detail>();
+
                 foreach (var newItem in ListOfDetails)
                 {
-                    var match = ListOfDetails_Previous.FirstOrDefault(p => p.Item_ID == newItem.Item_ID);
-                    if (match != null)
-                        newItem.ParentTrans_ID = match.ParentTrans_ID;
-                }
+                    var existing = ListOfDetails_Previous.FirstOrDefault(p =>
+                        p.Item_ID == newItem.Item_ID &&
+                        p.ParentTrans_ID == newItem.ParentTrans_ID);
 
-                // Delete old details
-                if (ListOfDetails_Previous.Any())
-                {
-                    db.Ar_Billing_Details.DeleteAllOnSubmit(ListOfDetails_Previous);
-                    var deletedTests = (from old in ListOfDetails_Previous
-                                        where !(from n in ListOfDetails select n.ParentTrans_ID).Contains(old.ParentTrans_ID)
-                                              && old.Item_Type == "Test"
-                                        select old.ParentTrans_ID).ToList();
-
-                    foreach (var item in deletedTests)
+                    if (existing != null)
                     {
-                        MarkTestAsExcludedFromPayment((int)item);
-                        MarkTestAsUnBilled((int)item);
+                        existing.Amount = newItem.Amount;
+                        existing.Discount_Percentage = newItem.Discount_Percentage;
+                        existing.Discount_Amount = newItem.Discount_Amount;
+                        existing.Net_Amount = newItem.Net_Amount;
+                        existing.Qty = newItem.Qty;
+                        existing.Remarks = newItem.Remarks;
+                        existing.Doctor_Share = newItem.Doctor_Share;
+                        existing.Hospital_Share = newItem.Hospital_Share;
+                        existing.Doctor_id = newItem.Doctor_id;
+                        existing.Category_ID = newItem.Category_ID;
+                        existing.Test_Main_Department = newItem.Test_Main_Department;
+                        existing.Service_Date = newItem.Service_Date;
+                        existing.Issue_Date = newItem.Issue_Date;
+                        existing.ParentTrans_Name = newItem.ParentTrans_Name;
+                        existing.ParentTrans_Type = newItem.ParentTrans_Type;
+                        existing.Item_Name = newItem.Item_Name;
+                        existing.Item_Type = newItem.Item_Type;
+                        existing.RecommendedByDoctor = newItem.RecommendedByDoctor;
+                        existing.Is_Group_Category = newItem.Is_Group_Category;
+
+                        itemsToUpdate.Add(existing);
+                    }
+                    else
+                    {
+                        newItem.Bill_ID = newBill.Bill_ID;
+                        itemsToInsert.Add(newItem);
                     }
                 }
 
-                // Handle new group tests (Front Desk)
-                var newGroups = (from t in ListOfDetails
+                foreach (var oldItem in ListOfDetails_Previous)
+                {
+                    var stillExists = ListOfDetails.Any(n =>
+                        n.Item_ID == oldItem.Item_ID &&
+                        n.ParentTrans_ID == oldItem.ParentTrans_ID);
+
+                    if (!stillExists)
+                    {
+                        itemsToDelete.Add(oldItem);
+
+                        if (oldItem.Item_Type == "Test")
+                        {
+                            MarkTestAsExcludedFromPayment((int)oldItem.ParentTrans_ID);
+                            MarkTestAsUnBilled((int)oldItem.ParentTrans_ID);
+                        }
+                    }
+                }
+
+                if (itemsToDelete.Any())
+                    db.Ar_Billing_Details.DeleteAllOnSubmit(itemsToDelete);
+
+                if (itemsToInsert.Any())
+                    db.Ar_Billing_Details.InsertAllOnSubmit(itemsToInsert);
+
+                var newGroups = (from t in itemsToInsert
                                  where t.Item_Type == "Test"
                                        && t.RecommendedByDoctor == false
                                        && t.ParentTrans_Type == "Test Group Category"
@@ -1613,10 +1628,9 @@ namespace PMS
                     grpHeader.Parent_Transaction_Type_ID = grpdtl.Lab_Test_Detail_ID;
                     db.SubmitChanges();
 
-                    // Update ParentTrans_ID in ListOfDetails
                     foreach (var test in categoryTests)
                     {
-                        var detail = ListOfDetails.FirstOrDefault(d =>
+                        var detail = itemsToInsert.FirstOrDefault(d =>
                             d.Category_ID == catId &&
                             d.Item_Type == "Test" &&
                             d.RecommendedByDoctor == false &&
@@ -1626,8 +1640,7 @@ namespace PMS
                     }
                 }
 
-                // Handle new individual tests (Front Desk)
-                var NewTests = (from t in ListOfDetails
+                var NewTests = (from t in itemsToInsert
                                 where t.Item_Type == "Test"
                                       && t.RecommendedByDoctor == false
                                       && t.ParentTrans_Type != "Test Group Category"
@@ -1659,7 +1672,7 @@ namespace PMS
                         db.Lab_Test_Details.InsertOnSubmit(ltd);
                         db.SubmitChanges();
 
-                        var detail = ListOfDetails.FirstOrDefault(d =>
+                        var detail = itemsToInsert.FirstOrDefault(d =>
                             d.Item_ID == test.Item_ID &&
                             d.Item_Type == "Test" &&
                             d.RecommendedByDoctor == false &&
@@ -1673,13 +1686,11 @@ namespace PMS
             // >>>>>>>>>>>>>>>>>> INSERT LOGIC (New Bill) <<<<<<<<<<<<<<<<<<<<
             else
             {
-                // Mark OPD-recommended tests as billed
                 foreach (var item in ListOfDetails.Where(t => t.Item_Type == "Test"))
                 {
                     MarkTestAsBilled((int)item.ParentTrans_ID);
                 }
 
-                // Group tests from OPD
                 var opdGroups = (from t in ListOfDetails
                                  where t.Item_Type == "Test"
                                        && t.RecommendedByDoctor == true
@@ -1727,7 +1738,6 @@ namespace PMS
                     }
                 }
 
-                // Front Desk Group Tests (New Bill)
                 var fdGroups = (from t in ListOfDetails
                                 where t.Item_Type == "Test"
                                       && t.RecommendedByDoctor == false
@@ -1771,7 +1781,6 @@ namespace PMS
                         detail.ParentTrans_ID = grpdtl.Lab_Test_Detail_ID;
                 }
 
-                // Front Desk Individual Tests & Services
                 foreach (var item in ListOfDetails.Where(t => t.Item_Type == "Test"))
                 {
                     MarkTestAsBilled((int)item.ParentTrans_ID);
@@ -1785,7 +1794,6 @@ namespace PMS
 
                 var NewServices = (from t in ListOfDetails where t.Item_Type == "Service" select t).ToList();
 
-                // Mark services as billed
                 foreach (var serv in NewServices)
                 {
                     var ipdservices = db.InPatientServices
@@ -1833,12 +1841,16 @@ namespace PMS
                 }
             }
 
-            // Save all new details and shares
-            db.Ar_Billing_Details.InsertAllOnSubmit(ListOfDetails);
+            // >>>>>>>>>>>>>>>>>> ✅ SAVE DETAILS & SHARES <<<<<<<<<<<<<<<<<<<<
+            if (data.Bill_ID == 0)
+            {
+                // New Bill: Insert all details
+                db.Ar_Billing_Details.InsertAllOnSubmit(ListOfDetails);
+            }
+
             db.AR_Billing_Detail_Doctor_Shares.InsertAllOnSubmit(ListOfshare);
             db.SubmitChanges();
 
-            // Update BillDetailID in Lab_Test_Detail
             var Bill_Detail_List = db.Ar_Billing_Details
                 .Where(abd => abd.Bill_ID == newBill.Bill_ID && abd.ParentTrans_Type == "Test")
                 .ToList();
@@ -1850,7 +1862,6 @@ namespace PMS
 
                 foreach (var billDetail in Bill_Detail_Lists)
                 {
-                    // Parse the IDs
                     int? testId = null;
                     int? categoryId = null;
 
@@ -1860,19 +1871,16 @@ namespace PMS
                     if (billDetail.Category_ID != null && int.TryParse(billDetail.Category_ID.ToString(), out int parsedCategoryId))
                         categoryId = parsedCategoryId;
 
-                    // Build the query - FIXED: Declare sql only once
                     string sqls = $@"
-                        UPDATE Lab_Test_Detail 
-                        SET BillDetailID = {billDetail.Bill_Details_ID} 
-                        WHERE Actual_Patient_ID = {(newBill.Patient_ID.HasValue ? newBill.Patient_ID.Value.ToString() : "NULL")}";
+                UPDATE Lab_Test_Detail 
+                SET BillDetailID = {billDetail.Bill_Details_ID} 
+                WHERE Actual_Patient_ID = {(newBill.Patient_ID.HasValue ? newBill.Patient_ID.Value.ToString() : "NULL")}";
 
-                    // Add Test_ID condition
                     if (testId.HasValue)
                         sqls += $" AND Test_ID = {testId.Value}";
                     else
                         sqls += " AND Test_ID IS NULL";
 
-                    // Add Category_ID condition
                     if (categoryId.HasValue)
                         sqls += $" AND Catagory_ID = {categoryId.Value}";
                     else
