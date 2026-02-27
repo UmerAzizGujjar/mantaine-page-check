@@ -4116,7 +4116,8 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     tr_Summary.Visible = false;
-                    AllowPatientRecord = false;
+                    AllowPatientRecord = false; 
+                    ddlMedicalSubsidy.Items.Clear();
                     ddlMedicalSubsidy.Items.Add("Monthly");
                     ddlMedicalSubsidy.Items.Add("Annually");
 
