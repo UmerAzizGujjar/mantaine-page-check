@@ -526,6 +526,9 @@
         function newForm() {
             window.location.href = 'DialysisForm.aspx';
         }
+         function viewList() {
+     window.location.href = 'DialysisView.aspx';
+ }
 
         function clearFormData() {
             // Clear Step 1
@@ -817,9 +820,7 @@
     </script>
     <style>
     /* Step Navigation */
-    #navbar-container{
-        background-color:white !important;
-    }
+  
     
     .dialysis-top-buttons {
         display: flex;
@@ -1252,11 +1253,9 @@
          <asp:HiddenField ID="hdfStep2Saved" runat="server" ClientIDMode="Static" Value="false" />
 
          <div class="dialysis-top-buttons">
-             <button type="button" class="btn-primry" onclick="newForm()">
-                 <i class="fa fa-file"></i> New
-             </button>
+             
              <button type="button" class="btn-primry" id="btnAddPatient">
-                 <i class="fa fa-user-plus"></i> Add Patient
+                  Add Patient
              </button>
          </div>
 
@@ -1464,9 +1463,16 @@
              </div>
 
              <div class="dialysis-action-buttons">
+
                  <button type="button" class="btn btn-primry" id="btnSaveStep1">
-                     <i class="fa fa-save"></i> Save & Next
+                     Save & Next
                  </button>
+                 <button type="button" class="btn-primry" onclick="newForm()">
+      New
+</button>
+                 <button type="button" class="btn-primry" onclick="viewList()">
+      List
+</button>
              </div>
          </div>
 
