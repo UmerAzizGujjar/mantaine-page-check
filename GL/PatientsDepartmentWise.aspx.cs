@@ -4116,7 +4116,8 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     tr_Summary.Visible = false;
-                    AllowPatientRecord = false;
+                    AllowPatientRecord = false; 
+                    ddlMedicalSubsidy.Items.Clear();
                     ddlMedicalSubsidy.Items.Add("Monthly");
                     ddlMedicalSubsidy.Items.Add("Annually");
 
@@ -6139,6 +6140,17 @@ namespace PMS
                     Time_Row.Visible = true;
                     tr1MedicalSubsidy.Visible = false;
                     ddlMedicalSubsidy.Visible = false;
+                    optRw.Visible = true;
+                    object valuesets;
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valuesets = from d in db.aspnet_Users
+                                select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valuesets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
 
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Type");
@@ -6148,8 +6160,8 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
                     ddlPatientType.DataBind();
 
-                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                    valusets = (from p in db.DataValues where p.ValueSet_ID == 9 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    DataBaseDataContext dc = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in dc.DataValues where p.ValueSet_ID == 9 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
                     ddlDepartments.DataSource = valusets;
                     ddlDepartments.DataTextField = "DataValue_Description";
                     ddlDepartments.DataValueField = "DataValue_Name";
