@@ -750,7 +750,7 @@
                         }
                         image_holder.show();
                         reader.readAsDataURL($(input)[0].files[i]);
-                        '<a href="#" style="display:none" onclick="deleteImage(this)">Delete</a>'
+                        '<a href="#" onclick="deleteImage(this)">Delete</a>'
                     }
                 } else {
                     Swal.fire({
@@ -808,7 +808,7 @@
                         }
                         // image_holder.show();
                         reader.readAsDataURL($(input)[0].files[i]);
-                        '<a href="#" style="display:none" onclick="deleteImage(this)">Delete</a>'
+                        '<a href="#" onclick="deleteImage(this)">Delete</a>'
                     }
                 } else {
                     Swal.fire({
@@ -1483,7 +1483,7 @@
                     // var img = $("<img onclick='window.open(this.src)' />");
 
 
-                    var img = $('<img onclick="window.open(this.src)" src=""/><a href="#" style="display:none" onclick="deleteImage(this)">Delete</a>');
+                    var img = $('<img onclick="window.open(this.src)" src=""/>');
                     img.attr("style", "height:82px;width: 82px");
                     var dd = value.Image_path;
 

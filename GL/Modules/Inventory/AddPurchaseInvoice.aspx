@@ -635,6 +635,13 @@
                     var desc = value.Description || 'No Description';
                     var itemCode = value.Item_Code || 'N/A';
                     var poNo = value.PO_No || '-';
+                    var batchNum = value.BatchNum || '';
+
+                    var isBatch = value.IsBatch === true || value.IsBatch === "true" || value.IsBatch === 1;
+                    var batchDisabled = isBatch ? "" : "disabled";
+                    var batchPlaceholder = isBatch ? "Enter Batch" : "N/A";
+                    var batchValue = isBatch ? (batchNum || '') : 'N/A';
+
                     debugger;
                     rows += '<tr>' +
                         '<td class="headcol"><input type="hidden" id="txtItemCode' + currentIndex + '" name="txtItemCode" value="' + itemCode + '"/>' + itemCode + '</td>' +
@@ -663,6 +670,7 @@
                         '</td>' +
                         '<td class="headcol2_7">' + parseFloat((value.Qty || 0) * (value.Rate || 0)).toFixed(2) + '</td>' +
                         '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + currentIndex + '" name="txtTotalAmount" value="' + parseFloat(value.TotalAmount || 0).toFixed() + '"/>' + parseFloat(value.TotalAmount || 0).toFixed() + '</td>' +
+                        '<td class="headcol_batch">' + '<input type="text" id="txtBatchNum' + currentIndex + '" ' + 'name="txtBatchNum" ' + 'value="' + batchValue + '" ' + 'placeholder="' + batchPlaceholder + '" ' + batchDisabled + ' ' +  'style="width:100px;" />' + '</td>' +
                         '<td style="display:none"><input type="hidden" id="txtGRNId' + currentIndex + '" name="txtGRNId" value="' + (value.GRN_ID || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtGRNDetailId' + currentIndex + '" name="txtGRNDetailId" value="' + (value.GRN_detail_Id || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtItemId' + currentIndex + '" name="txtItemId" value="' + (value.ItemId || 0) + '"/></td>' +
