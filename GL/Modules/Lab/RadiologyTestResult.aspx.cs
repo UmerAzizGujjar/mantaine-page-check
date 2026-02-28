@@ -164,6 +164,11 @@ namespace PMS.Modules.Lab
                     labtest.Created_Time = DateTime.Now;
                     labtest.Test_Performed_By = testPerformby;
                     labtest.Test_Status = "Created";
+                    if (!string.IsNullOrEmpty(item.Refer_Doc_id))
+                    {
+                        labtest.Refer_Doctor = item.Refer_Doc_id; 
+                    }
+
                     db.SubmitChanges();
                 }
                 return "Successfull";
@@ -190,9 +195,11 @@ namespace PMS.Modules.Lab
             public string OrganismType { get; set; }
             public string Master_Remarks { get; set; }
             public int BillDetailID { get; set; }
+
+            public string Refer_Doc_id { get; set; }
         }
         [WebMethod]
-        public static string SaveTestDetail(string valuetype, string valueofTemplate, string Lab_ID, string testDetailID, string CatID, string resultVal, string GrowthType, string GrowthTypeInfo, string OrganismType, string Master_Remarks, string Levels)
+        public static string SaveTestDetail(string valuetype, string valueofTemplate, string Lab_ID, string testDetailID, string CatID, string resultVal, string GrowthType, string GrowthTypeInfo, string OrganismType, string Master_Remarks, string Levels, string referDocId)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Lab_Test_Detail test = (from t in db.Lab_Test_Details
@@ -210,6 +217,11 @@ namespace PMS.Modules.Lab
             test.Levels = Levels;
             test.Created_Time = DateTime.Now;
             test.Test_Performed_By = AppConfig.UserName;
+            if (!string.IsNullOrEmpty(referDocId))
+            {
+                test.Refer_Doctor = referDocId; 
+            }
+
             db.SubmitChanges();
 
             return "Successfull";
@@ -558,6 +570,7 @@ namespace PMS.Modules.Lab
                             td.Levels,
                             t.Result_Type_Image,
                             Is_Approve = td.isApproved == null ? false : true,
+                            td.Refer_Doctor,
 
 
                         }).ToList();
@@ -600,6 +613,7 @@ namespace PMS.Modules.Lab
             listObj.Add(data[0].Levels);
             listObj.Add(data[0].Result_Type_Image.ToString());
             listObj.Add(data[0].Is_Result.ToString()); //28
+            listObj.Add(data[0].Refer_Doctor ?? "");
             return (new JavaScriptSerializer().Serialize(listObj));
         }
 
@@ -1691,6 +1705,68 @@ namespace PMS.Modules.Lab
             ).ToList();
 
             return serl.Serialize(testDetails_Billing_Sample);
+        }
+
+        [WebMethod]
+        public static string GetRadiologyResultsReady()  
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            db.CommandTimeout = 180;
+            JavaScriptSerializer serl = new JavaScriptSerializer();
+            serl.MaxJsonLength = 2147483647;
+
+            DateTime startDate = System.DateTime.Now.AddMonths(-2);
+
+            var resultsReadyList = (
+                from pat in db.Reg_patients
+                join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+                join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+                join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
+                join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
+                where labtest_detail.Is_Result == true &&   
+                      (labtest_detail.isApproved == false || labtest_detail.isApproved == null) && 
+                      bill_details.Test_Main_Department != "001" &&
+                      (bill.isCancel == false || bill.isCancel == null) &&
+                      bill.Bill_Date >= startDate
+                orderby bill.Bill_Date descending
+                select new
+                {
+                    bill.Bill_Date,
+                    bill.Bill_No,
+                    bill.Bill_ID,
+                    bill_details.Category_ID,
+                    bill_details.Item_Name,
+                    pat.Patient_No,
+                    pat.pat_id,
+                    pat.Full_Name,
+                    bill_details.Bill_Details_ID,
+                    bill.Remarks,
+                    Doctor = (from hr in db.HR_Employees where hr.Emp_ID == Convert.ToInt32(labtest_detail.Refer_Doctor ?? "0") select hr.Emp_Name).FirstOrDefault(),
+                }
+            ).ToList();
+
+            return serl.Serialize(resultsReadyList);
+        }
+
+        [WebMethod]
+        public static string GetDoctors()
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                var doctors = (from emp in db.HR_Employees
+                               where emp.IsDoctor == true
+                               select new
+                               {
+                                   id = emp.Emp_ID, 
+                                   text = emp.Emp_Name
+                               }).ToList();
+                return (new JavaScriptSerializer()).Serialize(doctors);
+            }
+            catch (Exception ex)
+            {
+                return "[]";
+            }
         }
     }
 }
