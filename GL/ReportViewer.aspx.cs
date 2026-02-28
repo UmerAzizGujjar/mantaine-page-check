@@ -6364,32 +6364,30 @@ namespace PMS
                 }
                 else if (reportName == "ProcedureTimeLineDetail")
                 {
-                    string rptFileName = "rptProcedureTimeLineDetail.rpt";
 
-                    string stDate = Request.QueryString["StartDate"].ToString();
-                    string stTime = Request.QueryString["StartTime"].ToString();
+                    string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                    string EndDateTime = Request.QueryString["EndDateTime"].ToString();
 
-                    string endDate = Request.QueryString["EndDate"].ToString();
-                    string endTime = Request.QueryString["EndTime"].ToString();
+                    string ProcedureName = Request.QueryString["ProcedureName"].ToString();
+                    string PatientType = Request.QueryString["PatientType"].ToString();
+                    string departmentID = Request.QueryString["Department"].ToString();
+                    //string OpdIpdDepartment = Request.QueryString["MainDepartment"].ToString();
+                    string ProcedureType = Request.QueryString["ProcedureType"].ToString();
 
-                    string parameterStDate = string.Empty;
-                    string parameterEndDate = string.Empty;
-
-                    this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
-                    this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                    string rptFileName = "Hospital/rptProcedureTimeLineDetail.rpt";
 
                     reportPath += rptFileName;
                     rd.Load(reportPath);
-                    rd.SetParameterValue("@FromDate", parameterStDate);
-                    rd.SetParameterValue("@ToDate", parameterEndDate);
+                    rd.SetParameterValue("@FromDate", StartDateTime);
+                    rd.SetParameterValue("@ToDate", EndDateTime);
                     rd.SetParameterValue("Title", reportTitle);
-                    string ProcedureName = Request.QueryString["ProcedureName"].ToString();
                     rd.SetParameterValue("@ProcedureName", ProcedureName);
-                    string PatientType = Request.QueryString["PatientType"].ToString();
                     rd.SetParameterValue("@PatientType", PatientType);
-                    string departmentID = Request.QueryString["Department"].ToString();
                     rd.SetParameterValue("@DepartmentID", departmentID);
+                    //rd.SetParameterValue("@MainDepartment", OpdIpdDepartment);
+                    rd.SetParameterValue("@ProcedureType", ProcedureType);
                 }
+ 
                 else if (reportName == "ServiceChargesDetail")
                 {
                     string rptFileName = "TransactionalDetails/rptAdmissionCharges.rpt";

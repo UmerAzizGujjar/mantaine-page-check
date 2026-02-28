@@ -3232,14 +3232,7 @@ namespace PMS
 
                     // ADDING NEW WAREHOUSE
 
-                    object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
-                    ddlwareHouse.Items.Clear();
-                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlwareHouse.DataBind();
+                 
                     Stock_Movement.Visible = true;
 
 
@@ -4120,6 +4113,67 @@ namespace PMS
                     ddlMedicalSubsidy.Items.Clear();
                     ddlMedicalSubsidy.Items.Add("Monthly");
                     ddlMedicalSubsidy.Items.Add("Annually");
+
+                }
+                if (this.PageTitle == "Procedure_Time_Line_Detail")
+                {
+                    dpROw.Visible = false;
+                    trProcedure1.Visible = true;
+
+                    tr1MedicalSubsidy.Visible = false;
+                    tr_Export.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    tr_Summary.Visible = false;
+                    optRw.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    tr_Summary.Visible = false;
+                    AllowPatientRecord = false;
+
+                    lblPatientType.Text = "Patient Type";
+                    object valusetS;
+                    valusetS = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusetS;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Clear();
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                    SetDepartent();
+                    trSearch1.Visible = true;
+                    lblPatientType.Visible = true;
+                    ddlPatientType.Visible = true;
+
+                    DataTable dt = DBClass.getDataTable("select * from inv_items");
+                    ddlItemName.DataSource = dt;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+                    td11.Text = "Procedure Name";
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Procedure Types");
+                    ddlProcedure.DataSource = valuset;
+                    ddlProcedure.DataTextField = "DataValue_Description";
+                    ddlProcedure.DataValueField = "DataValue_Name";
+                    ddlProcedure.Items.Clear();
+                    ddlProcedure.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlProcedure.DataBind();
+
+                    lbProcedure.Text = "Procedure Type";
+
+                    // appending the OPD IPD 
+                    //trDepartmentType.Visible = true;
+                    //ddOPDIPDdiv.Visible = true;
+                    //lblDepartmentDiv.Visible = true;
+
 
                 }
                 if (this.PageTitle == "AverageLengthOfStay")
@@ -6227,43 +6281,56 @@ namespace PMS
 
                     //----- end update
                 }
-                if (this.PageTitle == "Procedure_Time_Line_Detail")
-                {
-                    string x = "Procedure Time Line Detail";
-                    Master.Label2.Text = x;
-                    Master.GetMenuName();
-                    lblMainDepartment.Visible = false;
-                    ddlDepartments.Visible = false;
-                    lblPatientType.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    ddlPatientType.Visible = false;
-                    optRw.Visible = false;
-                    trDoctor.Visible = false;
-                    tr1MedicalSubsidy.Visible = true;
-                    tr_Summary.Visible = false;
+                //if (this.PageTitle == "Procedure_Time_Line_Detail")
+                //{
+                //    string x = "Procedure Time Line Detail";
+                //    Master.Label2.Text = x;
+                //    Master.GetMenuName();
+                //    lblMainDepartment.Visible = false;
+                //    Time_Row.Visible = true;
+                //    DateDiv.Visible = true;
+                //    trProcedure1.Visible = true;
+                //    ddlDepartments.Visible = false;
+                //    lblPatientType.Visible = false;
+                //    lblMultiSelect.Visible = false;
+                //    ddlPatientType.Visible = false;
+                //    optRw.Visible = false;
+                //    trDoctor.Visible = false;
+                //    tr1MedicalSubsidy.Visible = true;
+                //    tr_Summary.Visible = false;
 
-                    AllowPatientRecord = false;
+                //    AllowPatientRecord = false;
 
-                    lblMedical.Text = "Patient Type";
-                    ddlMedicalSubsidy.Items.Clear();
-                    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "All", Value = "All" });
-                    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "General", Value = "1" });
-                    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "Private", Value = "2" });
-                    ddlMedicalSubsidy.DataBind();
-                    SetDepartent();
-                    trProcedure1.Visible = true;
-                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                    var serviceList = (from sl in db.INV_Items
-                                       where
-                                       sl.Procedure_types.Length > 1
-                                       select new { sl.Item_ID, sl.Description }).ToList();
+                //    lblMedical.Text = "Patient Type";
+                //    ddlMedicalSubsidy.Items.Clear();
+                //    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                //    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "General", Value = "1" });
+                //    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "Private", Value = "2" });
+                //    ddlMedicalSubsidy.DataBind();
+                //    SetDepartent();
+                //    trSearch1.Visible = true;
 
-                    ddlProcedure.DataSource = serviceList;
-                    ddlProcedure.DataValueField = "Item_ID";
-                    ddlProcedure.DataTextField = "Description";
-                    ddlProcedure.Items.Add(new ListItem() { Text = "All", Value = "All" });
-                    ddlProcedure.DataBind();
-                }
+                //    DataTable dt = DBClass.getDataTable("select * from inv_items");
+                //    ddlItemName.DataSource = dt;
+                //    ddlItemName.DataValueField = "Item_ID";
+                //    ddlItemName.DataTextField = "Description";
+                //    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                //    ddlItemName.DataBind();
+
+                //    object valuset;
+                //    valuset = DBClass.GetValueSet("Procedure Types");
+                //    ddlProcedure.DataSource = valuset;
+                //    ddlProcedure.DataTextField = "DataValue_Description";
+                //    ddlProcedure.DataValueField = "DataValue_Name";
+                //    ddlProcedure.Items.Clear();
+                //    ddlProcedure.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                //    ddlProcedure.DataBind();
+
+                //    // appending the OPD IPD 
+                //    ddOPDIPDdiv.Visible = true;
+
+
+                //}
                 if (this.PageTitle == "PrivateAdmition_Detail")
                 {
                     string x = "Private Admition Detail";
