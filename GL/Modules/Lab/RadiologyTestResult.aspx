@@ -510,6 +510,7 @@
                         array.OrganismType = OrganismType;
                         array.Master_Remarks = Master_Remarks;
                         array.BillDetailID = GetBillDetailID;
+                        array.Refer_Doc_id = $("#ddlReferDoctor").val();
                         test_list.push(array);
 
 
@@ -605,7 +606,8 @@
                         "GrowthTypeInfo": GrowthType_Info,
                         "OrganismType": OrganismType,
                         "Master_Remarks": Master_Remarks,
-                        "Levels": level
+                        "Levels": level,
+                        "referDocId": $("#ddlReferDoctor").val() 
                     });
 
                     $.ajax({
@@ -705,12 +707,38 @@
                 }
             });
 
+            
+
+            $("#ddlReferDoctor").select2({
+                placeholder: "Select Doctor",
+                allowClear: true,
+                width: '100%'
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/GetDoctors",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                    var options = '<option value=""></option>';
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.id + '">' + value.text + '</option>';
+                    });
+                    $("#ddlReferDoctor").html(options);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading doctors", error);
+                }
+            });
 
             FillGrowthType();
             FillOrganismType();
             FillGrowthInfo();
             GetTestDepartment();
             LoadRadiologyPatientsList();
+            LoadRadiologyResultsReadyList();
         });
         function GetTestDepartment() {
             var options = '<option value="">Select Department</option>';
@@ -1749,6 +1777,17 @@
                             var is_Result = data[27];
                             var is_Approved = data[24];
 
+                            var existingDoctorId = data[28]; 
+                            if (existingDoctorId && existingDoctorId != "" && existingDoctorId != "null") {
+                                setTimeout(function () {
+                                    $("#ddlReferDoctor").val(existingDoctorId).trigger('change');
+                                }, 100);
+                            } else {
+                                setTimeout(function () {
+                                    $("#ddlReferDoctor").val(null).trigger('change'); 
+                                }, 100);
+                            }
+
                             var MainDept = data[2];
 
                             if (CheckLevel == "True") {
@@ -2118,7 +2157,7 @@
 
                     });
 
-
+                    
 
                 }
 
@@ -2307,6 +2346,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    debugger;
                     var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
                     var tbody = $('#tbl_tbody_radiology');
                     tbody.empty();
@@ -2344,6 +2384,7 @@
 
         function selectRadiologyPatient(Bill_ID, Bill_Details_ID) {
             // Store both IDs
+            debugger;
             isSingleTestMode = true;
             $("#hdBill_id").val(Bill_ID);
             $("#hdBillDetailId").val(Bill_Details_ID);
@@ -2368,25 +2409,69 @@
                         });
 
                         $('#<%= vlblPatients_Name.ClientID %>').text(data.d.Name);
-                $('#<%= vLbl_Age.ClientID %>').text(data.d.Age);
-                $('#<%= vLbl_Gender.ClientID %>').text(data.d.Gender);
-                $('#<%= vLbl_RegDate.ClientID %>').text(dateR);
-                $('#<%= vLbl_Location.ClientID %>').text(data.d.Location || '');
-                $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile || '');
-                $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category || '');
-                $('#<%= vLbl_Department.ClientID %>').text(data.d.Department || '');
+                        $('#<%= vLbl_Age.ClientID %>').text(data.d.Age);
+                        $('#<%= vLbl_Gender.ClientID %>').text(data.d.Gender);
+                        $('#<%= vLbl_RegDate.ClientID %>').text(dateR);
+                        $('#<%= vLbl_Location.ClientID %>').text(data.d.Location || '');
+                        $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile || '');
+                        $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category || '');
+                        $('#<%= vLbl_Department.ClientID %>').text(data.d.Department || '');
 
-                // Now load ONLY the specific test
-                //GetSingleLabTestByBillDetailId(Bill_Details_ID);
-            } else {
-                Swal.fire("No patient data found.");
-            }
-        },
-        error: function () {
-            Swal.fire("Failed to load patient details.");
+                        // Now load ONLY the specific test
+                        //GetSingleLabTestByBillDetailId(Bill_Details_ID);
+                    } else {
+                        Swal.fire("No patient data found.");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Failed to load patient details.");
+                }
+            });
         }
-    });
-}
+
+
+        function LoadRadiologyResultsReadyList() {
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/GetRadiologyResultsReady", 
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                    var tbody = $('#tbl_tbody_radiology_results'); 
+                    tbody.empty();
+
+                    if (data && data.length > 0) {
+                        $.each(data, function (index, item) {
+                            var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
+                            var formattedDate = billDate.toLocaleDateString();
+
+                            var row = '<tr>' +
+                                '<td>' + formattedDate + '</td>' +
+                                '<td>' + item.Bill_No + '</td>' +
+                                '<td>' + item.Full_Name + '</td>' +
+                                '<td>' + item.Item_Name + '</td>' +
+                                '<td>' + (item.Doctor || '') + '</td>' +
+                                '<td><button type="button" class="btn btn-sm btn-success" ' +  
+                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ')">Select</button></td>' +
+                                '</tr>';
+                            tbody.append(row);
+                        });
+                    } else {
+                        tbody.append('<tr><td colspan="5" class="text-center">No results ready for approval.</td></tr>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading results-ready list:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to load results-ready patients.',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        }
 
 
 function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
@@ -2786,6 +2871,12 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
                 </div>
 
                 <div class="modal-footer">
+                    <div class="row" style="width: 100%; margin-bottom: 10px;">
+                        <div class="col-lg-3">
+                            <label style="display: block; text-align: left;">Refer Doctor:</label>
+                            <select id="ddlReferDoctor"  class="form-control"></select>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input class="btn btn-yellow" data-toggle="modal" data-target="#myInnerModal1" style="color: white !important; border-radius: 5px; height: 35px;" value="Remarks" />
@@ -2823,6 +2914,25 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
                         </tr>
                     </thead>
                     <tbody id="tbl_tbody_radiology">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-3 sm-6">
+            <h1>Results Ready - Pending Approval</h1>
+            <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+                <table class="table test-table" id="tblradilogy_results">
+                    <thead style="position: sticky; top: 0; background-color: white; z-index: 10;">
+                        <tr>
+                            <th>Bill Date</th>
+                            <th>Bill No</th>
+                            <th>Name</th>
+                            <th>Test Name</th>
+                            <th>Doctor</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbl_tbody_radiology_results">
                     </tbody>
                 </table>
             </div>
