@@ -3089,8 +3089,8 @@ namespace PMS
             else if (reportName == "DoctorShare_Report")
             {
                 //  var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
-                string operatorID = "0";
                 string rptFileName = "TransactionalDetails/AllDoctorShareDetail.rpt";
+                string Operator = Request.QueryString["Operator"].ToString();
 
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string CheckSummary = Request.QueryString["Summary"].ToString();
@@ -3109,7 +3109,7 @@ namespace PMS
                         "&StartTime=" + Request.QueryString["StartTime"] +
                         "&EndTime=" + Request.QueryString["EndTime"] +
                         "&DoctorID=" + Request.QueryString["DoctorID"] +
-                        "&Operator=" + (Request.QueryString["Operator"] ?? "0") +
+                        "&Operator=" + Operator +
                         "&Department=" + (Request.QueryString["Department"] ?? "0") +
                         "&PatientType=" + Request.QueryString["PatientType"];
                 }
@@ -3130,12 +3130,7 @@ namespace PMS
                 string parameterEndDate = string.Empty;
 
                 this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
-                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
-
-                if (Request.QueryString["Operator"].ToString().Trim() != "0")
-                {
-                    operatorID = Request.QueryString["Operator"].ToString();
-                }
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);             
 
                 rd.SetParameterValue("@stDate", parameterStDate);
                 rd.SetParameterValue("@endDate", parameterEndDate);
@@ -3145,7 +3140,7 @@ namespace PMS
                 rd.SetParameterValue("@DoctorID", doctorID);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
-                rd.SetParameterValue("@Operator", operatorID);
+                rd.SetParameterValue("@Operator", Operator);
             }
 
             else if (reportName == "AdvanceDetail")
