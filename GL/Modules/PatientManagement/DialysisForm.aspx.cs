@@ -282,6 +282,126 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
+        public static string GetGenders()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Gender"
+                              select new
+                              {
+                                  Value = dv.DataValue_Name,
+                                  Text = dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetMaritalStatus()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Marital Status"
+                              select new
+                              {
+                                  Value = dv.DataValue_Name,
+                                  Text = dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetCountries()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Country"
+                              select new
+                              {
+                                  Value = dv.DataValue_Name,
+                                  Text = dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetProvinces(string countryId)
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Province"
+                              select new
+                              {
+                                  Value = dv.DataValue_Name,
+                                  Text = dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetCities(string provinceId)
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "City"
+                              select new
+                              {
+                                  Value = dv.DataValue_Name,
+                                  Text = dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetAreas(string cityId)
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Area"
+                              select new
+                              {
+                                  Value = dv.DataValue_Name,
+                                  Text = dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
         public static string SavePreDialysis(string data)
         {
             try
@@ -590,7 +710,197 @@ namespace PMS.Modules.PatientManagement
             
             record.Comments = data.Comments;
         }
+        [WebMethod]
+        public static string SaveNewPatient(string patientData)
+        {
+            try
+            {
+                var data = JsonConvert.DeserializeObject<PatientRegistrationData>(patientData);
 
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    // Generate MR No
+                    var mrNo = GenerateMRNo(db);
+
+                    // Create new patient record
+                    var newPatient = new Reg_patient
+                    {
+                        mr_no_sequence = mrNo,
+                        Full_Name = data.Title + " " + data.Name,
+                        Father_Name = data.RelationName,
+                        Age_years = data.Age,
+                        Gender = data.Gender,
+                        NIC = data.CNIC,
+                        Mobile1 = data.Mobile,
+                        Martial_Status = data.MaritalStatus,
+                        Country = data.Country ?? "",
+                        Province = data.Province ?? "",
+                        city = data.City ?? "",
+                        area = data.Area ?? "",
+                        Permanent_Address = data.Address ?? "",
+                        Created_time = DateTime.Now,
+                        Created_by = (Guid?)HttpContext.Current.Session["UserID"]
+                    };
+
+                    db.Reg_patients.InsertOnSubmit(newPatient);
+                    db.SubmitChanges();
+
+                    return JsonConvert.SerializeObject(new
+                    {
+                        success = true,
+                        patientId = newPatient.pat_id,
+                        mrNo = mrNo,
+                        patientName = newPatient.Full_Name,
+                        age = data.Age,
+                        gender = data.Gender,
+                        mobile = data.Mobile
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
+
+        [WebMethod]
+        public static string Getmr()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            Reg_patient pat = null;
+            int? maxPatNo = db.Reg_patients.Max(p => (int?)p.Patient_No);
+            int newPatNo = (maxPatNo.HasValue ? maxPatNo.Value : 0) + 1;
+            return newPatNo.ToString();
+        }
+
+        [WebMethod]
+        public static string SavePatientDetail(
+            string Full_Name, string RelationType, string Relation, string Gender,
+            string Mobile, string Date_Of_Birth, string CNIC, string Address,
+            string PatientID, string martail_status, string Age,
+            string stno, string city, string area,
+            string city_val, string area_val, string Province, string Country, string cardfee)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            Reg_patient pat = null;
+            if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)") {
+                pat = db.Reg_patients.FirstOrDefault(w => w.pat_id == Convert.ToInt32(PatientID));
+                if (pat != null)
+                {
+                    pat.Relation_prefix = RelationType;
+                    pat.Full_Name = Full_Name;
+                    pat.Father_Name = Relation;
+                    pat.Gender = Gender;
+                    pat.Mobile1 = Mobile;
+                    pat.Age_years = Age;
+                    if (Date_Of_Birth == "")
+                    {
+                        pat.DOB = null;
+                    }
+                    else
+                    {
+                        pat.DOB = Convert.ToDateTime(Date_Of_Birth);
+                    }
+                   
+                    pat.NIC = CNIC;
+                    pat.Permanent_Address = Address;
+                    pat.Martial_Status = martail_status;
+                   
+                    pat.stno_mno = stno;
+                    pat.city = city;
+                    pat.area = area;
+                    pat.val_city = city_val;
+                    pat.val_area = area_val;
+                    pat.Country = Country;
+                    pat.Province = Province;
+                    db.SubmitChanges();
+                }
+            }
+            else
+            {
+                pat = new Reg_patient();
+                string PatientNumber = DBClass.getMaxEntry_No("Reg_patient", "Patient_No").ToString();
+                pat.Patient_No = Convert.ToInt32(PatientNumber);
+                pat.Full_Name = Full_Name;
+                pat.walkin = false;
+                pat.Father_Name = Relation;
+                pat.Relation_prefix = RelationType;
+                pat.Gender = Gender;
+                pat.Mobile1 = Mobile;
+                pat.Age_years = Age;
+                if (Date_Of_Birth == "")
+                {
+                    pat.DOB = null;
+                }
+                else
+                {
+                    pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                }
+                   
+                pat.NIC = CNIC;
+                pat.Permanent_Address = Address;
+              
+                pat.stno_mno = stno;
+                pat.city = city;
+                pat.area = area;
+                pat.val_city = city_val;
+                pat.val_area = area_val;
+                pat.Created_time = DateTime.Now;
+                pat.Created_by = (Guid?)HttpContext.Current.Session["UserID"];
+                pat.iscancel = false;
+                pat.Martial_Status = martail_status;
+                pat.Country = Country;
+                pat.Province = Province;
+
+                var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
+                string companyCode = company?.CompanyCode ?? "HOSP";
+                pat.mr_no_sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";
+                pat.Card_fee = Convert.ToDecimal(cardfee);
+
+                db.Reg_patients.InsertOnSubmit(pat);
+                db.SubmitChanges();
+            }
+            return pat?.pat_id.ToString() ?? "0";
+
+        }
+
+        private static string GenerateMRNo(DataBaseDataContext db)
+        {
+            var lastMRNo = db.Reg_patients
+                .OrderByDescending(p => p.pat_id)
+                .Select(p => p.mr_no_sequence)
+                .FirstOrDefault();
+
+            if (string.IsNullOrEmpty(lastMRNo))
+                return "MR-0001";
+
+            var numPart = int.Parse(lastMRNo.Replace("MR-", ""));
+            return $"MR-{(numPart + 1).ToString("D4")}";
+        }
+
+        public class PatientRegistrationData
+        {
+            public string Title { get; set; }
+            public string Name { get; set; }
+            public string Relation { get; set; }
+            public string RelationName { get; set; }
+            public string AgePrefix { get; set; }
+            public string DOB { get; set; }
+            public string Age { get; set; }
+            public string Gender { get; set; }
+            public string CNIC { get; set; }
+            public string Mobile { get; set; }
+            public string MaritalStatus { get; set; }
+            public string Country { get; set; }
+            public string Province { get; set; }
+            public string City { get; set; }
+            public string Area { get; set; }
+            public string Address { get; set; }
+        }
         public class PreDialysisData
         {
             public string DialysisId { get; set; }
