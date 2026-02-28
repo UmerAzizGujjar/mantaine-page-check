@@ -162954,6 +162954,10 @@ namespace PMS
 
         private string _Refer_Doctor;
 
+        private string _History;
+
+        private System.Nullable<int> _DoctorID;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -163084,6 +163088,10 @@ namespace PMS
         partial void OnVoucher_IdChanged();
         partial void OnRefer_DoctorChanging(string value);
         partial void OnRefer_DoctorChanged();
+        partial void OnHistoryChanging(string value);
+        partial void OnHistoryChanged();
+        partial void OnDoctorIDChanging(System.Nullable<int> value);
+        partial void OnDoctorIDChanged();
         #endregion
 
         public Lab_Test_Detail()
@@ -164347,6 +164355,46 @@ namespace PMS
                     this._Refer_Doctor = value;
                     this.SendPropertyChanged("Refer_Doctor");
                     this.OnRefer_DoctorChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_History", DbType = "VarChar(MAX)")]
+        public string History
+        {
+            get
+            {
+                return this._History;
+            }
+            set
+            {
+                if ((this._History != value))
+                {
+                    this.OnHistoryChanging(value);
+                    this.SendPropertyChanging();
+                    this._History = value;
+                    this.SendPropertyChanged("History");
+                    this.OnHistoryChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DoctorID", DbType = "Int")]
+        public System.Nullable<int> DoctorID
+        {
+            get
+            {
+                return this._DoctorID;
+            }
+            set
+            {
+                if ((this._DoctorID != value))
+                {
+                    this.OnDoctorIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._DoctorID = value;
+                    this.SendPropertyChanged("DoctorID");
+                    this.OnDoctorIDChanged();
                 }
             }
         }

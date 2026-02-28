@@ -1997,10 +1997,10 @@
         <elementListCompartment Id="da7dc928-c569-4a4f-a37a-987202664990" absoluteBounds="9.515, 4.335, 1.9700000000000002, 3.1339111328125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="0fa43b7a-05df-43dd-a616-19402c22e2d6" absoluteBounds="59.5, 18.375, 2, 12.9243798828125">
+    <classShape Id="8f70dace-fa61-4926-9bc2-8fdf95332ea5" absoluteBounds="60, 18.625, 2, 13.308982747395833">
       <DataClassMoniker Name="/DataBaseDataContext/Lab_Test_Detail" />
       <nestedChildShapes>
-        <elementListCompartment Id="ee7b45a5-6a2b-48a6-995c-74653335dcf1" absoluteBounds="59.515, 18.835, 1.9700000000000002, 12.3643798828125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="8ae7590c-fb23-4570-a02c-d0d5869e5a38" absoluteBounds="60.015, 19.085, 1.9700000000000002, 12.748982747395832" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

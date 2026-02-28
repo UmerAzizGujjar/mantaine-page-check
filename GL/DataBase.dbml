@@ -7363,6 +7363,8 @@
       <Column Name="Acknowledged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Voucher_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Refer_Doctor" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="History" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="DoctorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
