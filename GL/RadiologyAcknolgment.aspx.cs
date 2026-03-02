@@ -61,20 +61,19 @@ namespace PMS
                         join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
                         join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
                         where lbt.System_Generated == true
-                              && (labtest_detail.isApproved == false || labtest_detail.isApproved == null)
                               && bill_details.Test_Main_Department != "001"
                               && (bill.isCancel == false || bill.isCancel == null)
                         let dept = (from ipd in db.In_Patients
                                     where ipd.Patient_ID == pat.pat_id
                                     orderby ipd.In_Patient_ID descending
                                     select ipd.Department).FirstOrDefault()
-                              ?? (from emg in db.Emergency_Patients
-                                  where emg.Patient_ID == pat.pat_id
-                                  orderby emg.Emergency_ID descending
-                                  select emg.Department).FirstOrDefault()
-                              ?? (from p2 in db.Patients
-                                  where p2.Patient_ID == pat.pat_id
-                                  select p2.Patient_Main_Category).FirstOrDefault()
+                                  ?? (from emg in db.Emergency_Patients
+                                      where emg.Patient_ID == pat.pat_id
+                                      orderby emg.Emergency_ID descending
+                                      select emg.Department).FirstOrDefault()
+                                  ?? (from p2 in db.Patients
+                                      where p2.Patient_ID == pat.pat_id
+                                      select p2.Patient_Main_Category).FirstOrDefault()
                         select new
                         {
                             bill.Bill_Date,
@@ -89,8 +88,10 @@ namespace PMS
                             DoctorID = labtest_detail.DoctorID ?? (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
                             LabTest_DoctorID = labtest_detail.DoctorID ?? 0,
                             Billing_DoctorID = (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
-                            labtest_detail.IsAcknowledge,
-                            labtest_detail.History
+                            IsAcknowledge = labtest_detail.IsAcknowledge ?? false,
+                            IsApproved = labtest_detail.isApproved ?? false,
+                            History = labtest_detail.History,
+                            Priorities = labtest_detail.Priorities
                         };
 
             var queryList = query.ToList();
@@ -104,11 +105,15 @@ namespace PMS
             {
                 if (statusFilter == "Approved")
                 {
-                    queryList = queryList.Where(x => x.IsAcknowledge == true).ToList();
+                    queryList = queryList.Where(x => x.IsApproved == true).ToList();
                 }
                 else if (statusFilter == "NotApproved")
                 {
-                    queryList = queryList.Where(x => x.IsAcknowledge == false || x.IsAcknowledge == null).ToList();
+                    queryList = queryList.Where(x => x.IsApproved == false || x.IsApproved == null).ToList();
+                }
+                else if (statusFilter == "Acknowledged")
+                {
+                    queryList = queryList.Where(x => x.IsAcknowledge == true && (x.IsApproved == false || x.IsApproved == null)).ToList();
                 }
             }
 
@@ -141,7 +146,6 @@ namespace PMS
             }
 
             int totalRecords = queryList.Count();
-
             var finalList = queryList.Skip(start).Take(length).ToList();
 
             return new
