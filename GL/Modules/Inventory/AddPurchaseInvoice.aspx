@@ -339,6 +339,7 @@
                         '<td style="display:none">' + (Test[i].FurtherTax_Id || 0) + '</td>' +
                         '<td style="display:none">' + parseFloat(Test[i].Bonus_Qty || 0).toFixed(2) + '</td>' + 
                         '<td style="display:none">' + parseFloat(Test[i].Bonus_Tax || 0).toFixed(2) + '</td>' + 
+                        '<td style="display:none">' + (Test[i].IsBatch || false) + '</td>' +
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                     global = rows;
@@ -422,6 +423,11 @@
             var FurtherTaxId = $($(row).find('td')[28]).text();
             var BonusQty = $($(row).find('td')[29]).text(); 
             var BonusTax = $($(row).find('td')[30]).text();
+            var IsBatch = $($(row).find('td')[31]).text().trim(); 
+
+            var batchDisabled = (IsBatch == "true" || IsBatch == "1") ? "" : "disabled";
+            var batchPlaceholder = (IsBatch == "true" || IsBatch == "1") ? "Enter Batch" : "N/A";
+            var batchValue = (IsBatch == "true" || IsBatch == "1") ? "" : "N/A";
 
             var length = $("#tblItemDescription tr:gt(0)").length;
             if (length > 0) {
@@ -468,7 +474,7 @@
                 '<td class="headcol2_2"><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + parseFloat(Rate).toFixed(2) + '"/>' + parseFloat(Rate).toFixed(2) + '</td>' +
                 '<td class="headcol2_3"><input type="hidden" id="txtdiscper' + length + '" name="txtdiscper" value="' + parseFloat(DiscPer).toFixed(2) + '"/>' + parseFloat(DiscPer).toFixed(2) + '</td>' +
                 '<td class="headcol2_4"><input type="hidden" id="txtdiscamt' + length + '" name="txtdiscamt" value="' + parseFloat(DiscAmt).toFixed(2) + '"/>' + parseFloat(DiscAmt).toFixed(2) + '</td>' +
-                '<td class="headcol2_5"><select style="width: 90px !important;margin-top:-6px;" disabled onchange="CulculateAmonut()" id="Staxddl' + length + '" name="Staxddl"><option value="0">Please Select</option>' + _gloabal + '</select>' + '</td>' +
+                '<td class="headcol2_5" style="display:none;"><select style="width: 90px !important;margin-top:-6px;" disabled onchange="CulculateAmonut()" id="Staxddl' + length + '" name="Staxddl"><option value="0">Please Select</option>' + _gloabal + '</select>' + '</td>' +
                 '<td class="headcol2_6"><input type="text" readonly="readonly" id="staxamou' + length + '" name="staxamou" value="' + parseFloat(staxAmt).toFixed(2) + '" /></td>' +
                 '<td class="headcol2_9">' + parseFloat(TotalAdvAmt || 0).toFixed(2) + '</td>' +
                 '<td class="headcol2_further_tax">' + parseFloat(FurtherTaxAmount || 0).toFixed(2) + '</td>' +
@@ -485,6 +491,8 @@
                 '<td style="display:none"><input type="hidden" id="AdvTotalAmount' + length + '" name="AdvTotalAmount" value="' + AdvTotalAmount.toFixed(2) + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="FurtherTaxId' + length + '" name="FurtherTaxId" value="' + (FurtherTaxId || 0) + '"/></td>' +
                 '<td style="display:none"><input type="hidden" id="FurtherTaxAmount' + length + '" name="FurtherTaxAmount" value="' + (FurtherTaxAmount || 0) + '"/></td>' +
+                '<td class="headcol_batch">' +
+                '<input type="text" id="txtBatchNum' + length + '" ' + 'name="txtBatchNum" ' + 'value="' + batchValue + '" ' + 'placeholder="' + batchPlaceholder + '" ' + batchDisabled + ' ' + 'style="width:100px;" />' +'</td>' +
                 '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                 '</tr>'
             debugger;
@@ -635,6 +643,13 @@
                     var desc = value.Description || 'No Description';
                     var itemCode = value.Item_Code || 'N/A';
                     var poNo = value.PO_No || '-';
+                    var batchNum = value.BatchNum || '';
+
+                    var isBatch = value.IsBatch === true || value.IsBatch === "true" || value.IsBatch === 1;
+                    var batchDisabled = isBatch ? "" : "disabled";
+                    var batchPlaceholder = isBatch ? "Enter Batch" : "N/A";
+                    var batchValue = isBatch ? (batchNum || '') : 'N/A';
+
                     debugger;
                     rows += '<tr>' +
                         '<td class="headcol"><input type="hidden" id="txtItemCode' + currentIndex + '" name="txtItemCode" value="' + itemCode + '"/>' + itemCode + '</td>' +
@@ -672,6 +687,7 @@
                         '<td style="display:none"><input type="hidden" name="AdvTotalAmount" value="' + (value.AdvanceTotalAmount || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="FurtherTaxId" value="' + (value.FurtherTax_Id || 0) + '"/></td>' +
                         '<td style="display:none"><input type="hidden" name="FurtherTaxAmount" value="' + (value.FurtherTax_Amount || 0) + '"/></td>' +
+                        '<td class="headcol_batch">' + '<input type="text" id="txtBatchNum' + currentIndex + '" ' + 'name="txtBatchNum" ' + 'value="' + batchValue + '" ' + 'placeholder="' + batchPlaceholder + '" ' + batchDisabled + ' ' + 'style="width:100px;" />' + '</td>' +
                         '<td class="headcol2_10 long"><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;  margin-left: 16px; color: #f30a0a;"></i></a></td>' +
                         '</tr>';
                 });
@@ -1254,7 +1270,7 @@
 
                 '<td class="headcol2_9">' + Advance_tax + '</td>' +
                 '<td class="headcol2_further_tax">' + further_tax + '</td>' +
-                '<td class="headcol2_bonus_tax">' + bonus_tax + '<input type="hidden" name="BonusTax" value="' + parseFloat(TotalAmount).toFixed(2) + '"/></td>' +
+                '<td class="headcol2_bonus_tax">' + bonus_tax + '<input type="hidden" name="BonusTax" value="' + parseFloat(bonus_tax).toFixed(2) + '"/></td>' +
                 '<td class="headcol2_7">' + parseFloat(Qty * Rate).toFixed(2) + '</td>' +
                 '<td class="headcol2_8"><input type="hidden" id="txtTotalAmount' + length + '" name="txtTotalAmount" value="' + parseFloat(TotalAmount).toFixed(2) + '"/>' + parseFloat(TotalAmount).toFixed(2) + '</td>' +
                 '<td style="display:none"><input type="hidden" id="txtPOId' + length + '" name="txtPOId" value="' + POId + '"/></td>' +

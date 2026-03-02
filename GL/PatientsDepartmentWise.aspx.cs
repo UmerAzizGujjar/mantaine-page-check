@@ -2495,6 +2495,48 @@ namespace PMS
                     ddlDepartments.DataBind();
 
                 }
+                else if (this.PageTitle == "GRN_PO_Reconciliation_Report")
+                {
+                    string x = "GRN vs PO Reconciliation Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+
+                    Stock_Movement.Visible = true;
+
+                    ddlItemCategory.Visible = false;
+                    lbItemCategory.Visible =  false;
+                    lblItemCode.Visible = false;
+                    txtItemCode.Visible = false;
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+                }
                 else if (this.PageTitle == "VPDR")
                 {
                     tr_Summary.Visible = false;
@@ -4074,7 +4116,8 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     tr_Summary.Visible = false;
-                    AllowPatientRecord = false;
+                    AllowPatientRecord = false; 
+                    ddlMedicalSubsidy.Items.Clear();
                     ddlMedicalSubsidy.Items.Add("Monthly");
                     ddlMedicalSubsidy.Items.Add("Annually");
 
@@ -6097,6 +6140,17 @@ namespace PMS
                     Time_Row.Visible = true;
                     tr1MedicalSubsidy.Visible = false;
                     ddlMedicalSubsidy.Visible = false;
+                    optRw.Visible = true;
+                    object valuesets;
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valuesets = from d in db.aspnet_Users
+                                select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valuesets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
 
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Type");
@@ -6106,8 +6160,8 @@ namespace PMS
                     ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
                     ddlPatientType.DataBind();
 
-                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                    valusets = (from p in db.DataValues where p.ValueSet_ID == 9 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    DataBaseDataContext dc = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in dc.DataValues where p.ValueSet_ID == 9 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
                     ddlDepartments.DataSource = valusets;
                     ddlDepartments.DataTextField = "DataValue_Description";
                     ddlDepartments.DataValueField = "DataValue_Name";

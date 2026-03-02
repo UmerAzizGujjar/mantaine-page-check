@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace PMS
@@ -17,7 +15,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object GetRadiologyAcknowledgment(int draw, int start, int length, string sortColumn, string sortDirection, string searchValue)
+        public static object GetRadiologyAcknowledgment(int draw, int start, int length, string sortColumn, string sortDirection, string searchValue, string mainDepartmentFilter, string statusFilter)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
@@ -66,7 +64,6 @@ namespace PMS
                               && (labtest_detail.isApproved == false || labtest_detail.isApproved == null)
                               && bill_details.Test_Main_Department != "001"
                               && (bill.isCancel == false || bill.isCancel == null)
-                              && (labtest_detail.IsAcknowledge == false || labtest_detail.IsAcknowledge == null)
                         let dept = (from ipd in db.In_Patients
                                     where ipd.Patient_ID == pat.pat_id
                                     orderby ipd.In_Patient_ID descending
@@ -87,40 +84,65 @@ namespace PMS
                             pat.Full_Name,
                             bill_details.Bill_Details_ID,
                             labtest_detail.Lab_Test_Detail_ID,
-                            Department = db.GetDataValueName("Patient Main Category", dept)
+                            Department = db.GetDataValueName("Patient Main Category", dept),
+                            bill_details.ParentTrans_Name,
+                            DoctorID = labtest_detail.DoctorID ?? (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
+                            LabTest_DoctorID = labtest_detail.DoctorID ?? 0,
+                            Billing_DoctorID = (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
+                            labtest_detail.IsAcknowledge,
+                            labtest_detail.History
                         };
+
+            var queryList = query.ToList();
+
+            if (!string.IsNullOrEmpty(mainDepartmentFilter) && mainDepartmentFilter != "All")
+            {
+                queryList = queryList.Where(x => x.ParentTrans_Name == mainDepartmentFilter || (string.IsNullOrEmpty(x.ParentTrans_Name) && mainDepartmentFilter == "WalkIn")).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(statusFilter) && statusFilter != "All")
+            {
+                if (statusFilter == "Approved")
+                {
+                    queryList = queryList.Where(x => x.IsAcknowledge == true).ToList();
+                }
+                else if (statusFilter == "NotApproved")
+                {
+                    queryList = queryList.Where(x => x.IsAcknowledge == false || x.IsAcknowledge == null).ToList();
+                }
+            }
 
             if (!string.IsNullOrEmpty(searchValue))
             {
-                query = query.Where(x =>
+                queryList = queryList.Where(x =>
                     x.Full_Name.Contains(searchValue) ||
                     x.Bill_No.Contains(searchValue) ||
                     x.Item_Name.Contains(searchValue)
-                );
+                ).ToList();
             }
 
             switch (sortColumn)
             {
                 case "Bill_No":
-                    query = sortDirection == "asc" ? query.OrderBy(x => x.Bill_No) : query.OrderByDescending(x => x.Bill_No);
+                    queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Bill_No).ToList() : queryList.OrderByDescending(x => x.Bill_No).ToList();
                     break;
                 case "Full_Name":
-                    query = sortDirection == "asc" ? query.OrderBy(x => x.Full_Name) : query.OrderByDescending(x => x.Full_Name);
+                    queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Full_Name).ToList() : queryList.OrderByDescending(x => x.Full_Name).ToList();
                     break;
                 case "Bill_Date":
-                    query = sortDirection == "asc" ? query.OrderBy(x => x.Bill_Date) : query.OrderByDescending(x => x.Bill_Date);
+                    queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Bill_Date).ToList() : queryList.OrderByDescending(x => x.Bill_Date).ToList();
                     break;
                 case "Department":
-                    query = sortDirection == "asc" ? query.OrderBy(x => x.Department) : query.OrderByDescending(x => x.Department);
+                    queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Department).ToList() : queryList.OrderByDescending(x => x.Department).ToList();
                     break;
                 default:
-                    query = query.OrderByDescending(x => x.Bill_Date);
+                    queryList = queryList.OrderByDescending(x => x.Bill_Date).ToList();
                     break;
             }
 
-            int totalRecords = query.Count();
+            int totalRecords = queryList.Count();
 
-            var finalList = query.Skip(start).Take(length).ToList();
+            var finalList = queryList.Skip(start).Take(length).ToList();
 
             return new
             {
@@ -131,12 +153,24 @@ namespace PMS
             };
         }
 
-
+        [WebMethod]
+        public static string GetDoctors()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var doctorList = (from emp in db.HR_Employees
+                                  where emp.Resign_Date == null && emp.IsDoctor == true
+                                  select new { emp.Emp_ID, emp.Emp_Name }).ToList();
+                return (new JavaScriptSerializer()).Serialize(doctorList);
+            }
+        }
 
         public class Testlist
         {
             public string status { get; set; }
             public string Lab_Test_Detail_ID { get; set; }
+            public int Doctor_ID { get; set; }
+            public string History { get; set; }
         }
 
         [WebMethod]
@@ -157,6 +191,8 @@ namespace PMS
                         record.IsAcknowledge = true;
                         record.Acknowledged_By = AppConfig.UserID;
                         record.Acknowledged_Time = DateTime.Now;
+                        record.DoctorID = item.Doctor_ID;
+                        record.History = item.History;
                     }
                 }
                 db.SubmitChanges();

@@ -1793,6 +1793,24 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@warehouse", warehouse);
             }
+            
+            else if (reportName == "GRN_PO_Reconciliation_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                var warehouse = Request.QueryString["WareHouse"].ToString();
+                string rptFileName = "Pharmacy/rptGRNvsPO_Report.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@warehouse", warehouse);
+            }
             else if (reportName == "VendorPerson")
             {
                 if (Request.QueryString["ID"] != null)
@@ -3071,8 +3089,8 @@ namespace PMS
             else if (reportName == "DoctorShare_Report")
             {
                 //  var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
-                string operatorID = "0";
                 string rptFileName = "TransactionalDetails/AllDoctorShareDetail.rpt";
+                string Operator = Request.QueryString["Operator"].ToString();
 
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string CheckSummary = Request.QueryString["Summary"].ToString();
@@ -3091,7 +3109,7 @@ namespace PMS
                         "&StartTime=" + Request.QueryString["StartTime"] +
                         "&EndTime=" + Request.QueryString["EndTime"] +
                         "&DoctorID=" + Request.QueryString["DoctorID"] +
-                        "&Operator=" + (Request.QueryString["Operator"] ?? "0") +
+                        "&Operator=" + Operator +
                         "&Department=" + (Request.QueryString["Department"] ?? "0") +
                         "&PatientType=" + Request.QueryString["PatientType"];
                 }
@@ -3112,12 +3130,7 @@ namespace PMS
                 string parameterEndDate = string.Empty;
 
                 this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
-                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
-
-                if (Request.QueryString["Operator"].ToString().Trim() != "0")
-                {
-                    operatorID = Request.QueryString["Operator"].ToString();
-                }
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);             
 
                 rd.SetParameterValue("@stDate", parameterStDate);
                 rd.SetParameterValue("@endDate", parameterEndDate);
@@ -3127,7 +3140,7 @@ namespace PMS
                 rd.SetParameterValue("@DoctorID", doctorID);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", reportTitle);
-                rd.SetParameterValue("@Operator", operatorID);
+                rd.SetParameterValue("@Operator", Operator);
             }
 
             else if (reportName == "AdvanceDetail")

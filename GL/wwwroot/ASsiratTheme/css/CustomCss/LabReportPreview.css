@@ -1,4 +1,11 @@
-﻿.modal-body input[type="text"] {
+﻿.select2-selection__rendered {
+    text-align: left !important;
+    direction: ltr !important;
+}
+
+
+
+.modal-body input[type="text"] {
     height: 25px;
 }
 

@@ -1778,7 +1778,7 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
                         '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
 
@@ -2651,7 +2651,7 @@
                             '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
                             '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
                             '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
-                            '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                            '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
                             '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
                             '<td style="text-align: right;" ><input type="text" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
                         '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
