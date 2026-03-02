@@ -65,7 +65,7 @@ namespace PMS
 
                         if (PICondition == "01")
                         {
-                            var Details = db.spApprovePurchase(Convert.ToInt32(PIM.PurchaseInvoiceId), user_id);
+                            var Details = db.spApprovePurchaseInvoice_DirectFromPO(Convert.ToInt32(PIM.PurchaseInvoiceId), user_id);
                         }
                         else
                         {
