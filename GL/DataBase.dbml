@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬Pakred_Live" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -1654,44 +1654,6 @@
       <Column Name="Is_Group_Category" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Test_Main_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Service_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Lab_Tests" Member="Lab_Tests">
-    <Type Name="Lab_Test">
-      <Column Name="Test_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Test_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Main_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Group_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Note" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Value_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Fixed_Value" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
-      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Group_Category" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Group_Header_L0" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Genre" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Out_Source_Lab_ID" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="Reporting_Time" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Test_Designation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Group_Header_L1" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Result_Type_Value" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Result_Type_Fixed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Result_Type_List" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Result_Type_Image" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Group_Order" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Is_Cultural" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Report_Colum" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Altrasound_Level" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Chk_Levels" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Reporting_Day" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Payment" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Special_Test" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Discount_Definition" Member="Discount_Definitions">
@@ -7365,6 +7327,46 @@
       <Column Name="Refer_Doctor" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="History" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="DoctorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Lab_Tests" Member="Lab_Tests">
+    <Type Name="Lab_Test">
+      <Column Name="Test_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Test_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Main_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Group_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Note" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Value_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Fixed_Value" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Group_Category" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Group_Header_L0" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Genre" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Out_Source_Lab_ID" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Reporting_Time" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Test_Designation" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Group_Header_L1" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Result_Type_Value" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Result_Type_Fixed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Result_Type_List" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Result_Type_Image" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Group_Order" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Is_Cultural" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Report_Colum" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Altrasound_Level" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Chk_Levels" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reporting_Day" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Payment" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Special_Test" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="StandardName" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="WaitingTime" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
