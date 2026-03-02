@@ -130,11 +130,15 @@
                     {
                         "data": "IsAcknowledge",
                         "name": "IsAcknowledge",
-                        "render": function (data) {
-                            if (data == 1 || data == true) {
-                                return "Approved";
-                            } else {
-                                return "Not Approved";
+                        "render": function (data, type, row) {
+                            if (row.IsApproved === true) {
+                                return 'Approved';
+                            }
+                            else if (row.IsAcknowledge === true) {
+                                return 'Acknowledged';
+                            }
+                            else {
+                                return 'Not Approved';
                             }
                         }
                     },
@@ -248,6 +252,7 @@
                         <select id="statusFilter" class="form-control">
                             <option value="All">All</option>
                             <option value="Approved">Approved</option>
+                             <option value="Acknowledged">Acknowledged</option>
                             <option value="NotApproved">Not Approved</option>
                         </select>
                     </div>
