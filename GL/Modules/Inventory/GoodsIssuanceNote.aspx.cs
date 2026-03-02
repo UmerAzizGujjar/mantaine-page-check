@@ -125,24 +125,45 @@ namespace PMS.Inventory
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var grnResult = (from dv in db.INV_Items
+                var PICondition = (from sys in db.sys_Parms
+                                   where sys.Name == "Direct PO ON Purchase Invoice"
+                                   select sys.Code).FirstOrDefault();
+
+                // ✅ Declare outside
+                List<dynamic> grnResult;
+
+                if (PICondition == "01")
+                {
+                    grnResult = (from dv in db.INV_Items
+                                 join ds in db.Purchase_Invoice_Details
+                                 on dv.Item_ID equals ds.ItemId
+                                 where ds.ItemId == Convert.ToInt32(itemcode)
+                                 select new
+                                 {
+                                     BatchNum = ds.BatchNum ?? string.Empty
+                                 }).ToList<dynamic>();
+                }
+                else
+                {
+                    grnResult = (from dv in db.INV_Items
                                  join ds in db.GRN_Details
                                  on dv.Item_ID equals ds.Item_Id
                                  where ds.ItemCode == itemcode
                                  select new
                                  {
                                      BatchNum = ds.BatchNum ?? string.Empty
-                                 }).ToList();
+                                 }).ToList<dynamic>();
+                }
 
                 var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
-                                             where inv.Item_Code == Convert.ToString(itemcode)
-                                              && inv.Status == "Approved"
+                                             where inv.Item_Code == itemcode
+                                                   && inv.Status == "Approved"
                                              orderby inv.Creation_Time ascending
                                              select new
                                              {
                                                  BatchNum = inv.Batch_No ?? string.Empty
                                              }).ToList();
-                
+
                 if (!grnResult.Any() && !stockAdjustmentResult.Any())
                 {
                     grnResult.Add(new { BatchNum = string.Empty });

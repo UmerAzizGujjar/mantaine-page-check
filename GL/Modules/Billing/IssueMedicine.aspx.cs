@@ -251,22 +251,45 @@ namespace PMS
             {
                 HashSet<string> batchSet = new HashSet<string>();
 
-                //var warehouse = (from sys in db.sys_Parms where sys.Name == "Pharmacy WareHouse" select sys.Code).FirstOrDefault();
+                var PICondition = (from sys in db.sys_Parms where sys.Name == "Direct PO ON Purchase Invoice" select sys.Code).FirstOrDefault();
 
-                var grnBatches = (from ds in db.GRN_Details
-                                  join grn in db.GRN_Masters on ds.GRNId equals grn.GRN_ID
-                                  where ds.Item_Id == med_id && grn.InvOrgId == warehouse
-                                  select ds.BatchNum).ToList();
-
-                foreach (var batch in grnBatches)
+                if (PICondition == "01")
                 {
-                    int stock = Convert.ToInt32(
-                        db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
-                    );
+                    var grnBatches = (from ds in db.Purchase_Invoice_Details
+                                      join grn in db.Purchase_Invoice_Masters on ds.PurchaseInvoiceId equals grn.PurchaseInvoiceId
+                                      where ds.ItemId == med_id 
+                                      select ds.BatchNum).ToList();
 
-                    if (stock > 0)
-                        batchSet.Add(batch);
+                    foreach (var batch in grnBatches)
+                    {
+                        int stock = Convert.ToInt32(
+                            db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
+                        );
+
+                        if (stock > 0)
+                            batchSet.Add(batch);
+                    }
+
                 }
+                else
+                {
+                    var grnBatches = (from ds in db.GRN_Details
+                                      join grn in db.GRN_Masters on ds.GRNId equals grn.GRN_ID
+                                      where ds.Item_Id == med_id && grn.InvOrgId == warehouse
+                                      select ds.BatchNum).ToList();
+
+                    foreach (var batch in grnBatches)
+                    {
+                        int stock = Convert.ToInt32(
+                            db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
+                        );
+
+                        if (stock > 0)
+                            batchSet.Add(batch);
+                    }
+
+                }
+
 
                 // ---------- Stock Adjustment Batches ----------
                 var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
@@ -305,20 +328,45 @@ namespace PMS
 
                 //var warehouse = (from sys in db.sys_Parms where sys.Name == "Pharmacy WareHouse" select sys.Code).FirstOrDefault();
 
-                var grnBatches = (from ds in db.GRN_Details 
-                                  join grn in db.GRN_Masters on ds.GRNId equals grn.GRN_ID
-                                  where ds.Item_Id == itemId && grn.InvOrgId == warehouse
-                                  select ds.BatchNum).ToList();
+                var PICondition = (from sys in db.sys_Parms where sys.Name == "Direct PO ON Purchase Invoice" select sys.Code).FirstOrDefault();
 
-                foreach (var batch in grnBatches)
+                if (PICondition == "01")
                 {
-                    int stock = Convert.ToInt32(
-                        db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
-                    );
+                    var grnBatches = (from ds in db.Purchase_Invoice_Details
+                                      join grn in db.Purchase_Invoice_Masters on ds.PurchaseInvoiceId equals grn.PurchaseInvoiceId
+                                      where ds.ItemId == itemId
+                                      select ds.BatchNum).ToList();
 
-                    if (stock > 0)
-                        batchSet.Add(batch);
+                    foreach (var batch in grnBatches)
+                    {
+                        int stock = Convert.ToInt32(
+                            db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
+                        );
+
+                        if (stock > 0)
+                            batchSet.Add(batch);
+                    }
+
                 }
+                else
+                {
+                    var grnBatches = (from ds in db.GRN_Details
+                                      join grn in db.GRN_Masters on ds.GRNId equals grn.GRN_ID
+                                      where ds.Item_Id == itemId && grn.InvOrgId == warehouse
+                                      select ds.BatchNum).ToList();
+
+                    foreach (var batch in grnBatches)
+                    {
+                        int stock = Convert.ToInt32(
+                            db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
+                        );
+
+                        if (stock > 0)
+                            batchSet.Add(batch);
+                    }
+
+                }
+
 
                 // ---------- Stock Adjustment Batches ----------
                 var stockAdjBatches = (from inv in db.INV_Stock_Adjustments
