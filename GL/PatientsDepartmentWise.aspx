@@ -194,8 +194,6 @@
         $('#<%= DateDiv.ClientID %>').hide();
         $('#<%= Time_Row.ClientID %>').hide();
 
-        // 👉 PLACE THE CODE RIGHT HERE 👈
-        // ✅ Populate years AFTER DOM is ready
         setTimeout(function () {
             populateYears();
         }, 100);
@@ -764,12 +762,12 @@
                         var ddlDoctor = ((typeof ($("#ctl00_MainContent_ddlDoctor").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDoctor").val() : "0");
                         var Procedure = ((typeof ($("#ctl00_MainContent_oprators").val()) != 'undefined') ? $("#ctl00_MainContent_oprators").val() : "0");
 
-                        var sDate = new Date($("#ctl00_MainContent_txtsDate").val());
-                        var eDate = new Date($("#ctl00_MainContent_txteDate").val());
-                        var sSDate = weekday[sDate.getDay()];
-                        var eEDate = weekday[eDate.getDay()];
+                        //var sDate = new Date($("#ctl00_MainContent_txtsDate").val());
+                        //var eDate = new Date($("#ctl00_MainContent_txteDate").val());
+                        //var sSDate = weekday[sDate.getDay()];
+                        //var eEDate = weekday[eDate.getDay()];
 
-                        var url = 'ReportViewer.aspx?ReportName=DischargeReceived&ReportTitle= Discharge Received Report from ' + $('#ctl00_MainContent_txtsDate').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' ' + sSDate + ' to ' + $('#ctl00_MainContent_txteDate').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + ' ' + eEDate + '&StartDateTime=' + $('#ctl00_MainContent_txtsDate').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txteDate').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Shift=' + ddlShift + '&Doctor=' + ddlDoctor + '&Procedure=' + Procedure;
+                        var url = 'ReportViewer.aspx?ReportName=DischargeReceived&ReportTitle= Discharge Received Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Shift=' + ddlShift + '&Doctor=' + ddlDoctor + '&Procedure=' + Procedure;
                         window.open(url, '_blank');
 
                     }
@@ -1527,6 +1525,11 @@
                     if (rptTitle == "GRN_PO_Reconciliation_Report") {
 
                         var url = 'ReportViewer.aspx?ReportName=GRN_PO_Reconciliation_Report&ReportTitle=GRN Vs PO Reconciliation Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        window.open(url, '_blank');
+                    }
+                    if (rptTitle == "Purchase_Order_Report") {
+
+                        var url = 'ReportViewer.aspx?ReportName=Purchase_Order_Report&ReportTitle=Purchase Order Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                      if (rptTitle == "VendorWiseLedger") {

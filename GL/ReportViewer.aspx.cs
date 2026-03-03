@@ -1811,6 +1811,23 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@warehouse", warehouse);
             }
+            else if (reportName == "Purchase_Order_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                var warehouse = Request.QueryString["WareHouse"].ToString();
+                string rptFileName = "Inventory/rptPurchase_Order_Report.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@warehouse", warehouse);
+            }
             else if (reportName == "VendorPerson")
             {
                 if (Request.QueryString["ID"] != null)
@@ -2995,8 +3012,7 @@ namespace PMS
             }
             else if (reportName == "DischargeReceived")
             {
-                if (Request.QueryString["StartDateTime"] != null && Request.QueryString["EndDateTime"] != null)
-                {
+                                    
                     string StartDateTime = Request.QueryString["StartDateTime"];
                     string EndDateTime = Request.QueryString["EndDateTime"];
 
@@ -3006,7 +3022,7 @@ namespace PMS
 
                     reportPath += "GeneralPatientsReport/rptDischarge_Received.rpt";
                     rd.Load(reportPath);
-                    rd.SummaryInfo.ReportTitle = reportTitle;
+                    //rd.SummaryInfo.ReportTitle = reportTitle;
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
                     rd.SetParameterValue("Title", reportTitle);
@@ -3031,7 +3047,7 @@ namespace PMS
                     rd.SetParameterValue("@ToDate", EndDateTime, rd.Subreports[1].Name.ToString());
                     rd.SetParameterValue("Shift_Id", Shift_Id, rd.Subreports[1].Name.ToString());
                     rd.SetParameterValue("@Doctor", Doctor, rd.Subreports[1].Name.ToString());
-                }
+                
             }
             else if (reportName == "Discharge_Detail")
             {                                       // pat type 
