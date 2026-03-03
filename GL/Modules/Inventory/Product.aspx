@@ -410,9 +410,9 @@
         }
         function getbatchfrom_grn(id) {
             debugger;
-
+            var warehouse = $('#ddlwareHouse').val();
             var item_id = id
-            PageMethods.Getbatch_grn(item_id, function (data) {
+            PageMethods.Getbatch_grn(item_id, warehouse, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
                 debugger;
