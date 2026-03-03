@@ -1596,5 +1596,98 @@ namespace PMS
                         select pkg.Package_Name).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(data);
         }
+
+        [WebMethod]
+        public static decimal GetTotalBillingsAmount()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime today = DateTime.Now.Date;
+            decimal totalAmount = db.Ar_Billings
+                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
+                .Sum(b => (decimal?)b.Total_Amount) ?? 0;
+
+            return totalAmount;
+        }
+
+        [WebMethod]
+        public static decimal GetTotalDiscountAmount()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime today = DateTime.Now.Date;
+            decimal totalAmount = db.Ar_Billings
+                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
+                .Sum(b => (decimal?)b.Discount_Amount) ?? 0;
+
+            return totalAmount;
+        }
+
+        [WebMethod]
+        public static decimal GetTotalNetAmount()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime today = DateTime.Now.Date;
+            decimal totalAmount = db.Ar_Billings
+                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
+                .Sum(b => (decimal?)b.Received_Amount) ?? 0;
+
+            return totalAmount;
+        }
+
+        [WebMethod]
+        public static decimal GetTotalCashPaid()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime today = DateTime.Now.Date;
+            decimal totalAmount = db.Receipts
+                .Where(b => b.Receipt_Date.HasValue && b.Receipt_Date.Value.Date == today)
+                .Sum(b => (decimal?)b.Receipt_Amount) ?? 0;
+
+            return totalAmount;
+        }
+
+        [WebMethod]
+        public static decimal GetTotalAdvance()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime today = DateTime.Now.Date;
+            decimal totalAmount = db.AR_Advances
+                .Where(b => b.Advance_Date.HasValue && b.Advance_Date.Value.Date == today)
+                .Sum(b => (decimal?)b.Advance_Amount) ?? 0;
+
+            return totalAmount;
+        }
+
+        [WebMethod]
+        public static decimal GetTotalRefund()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime today = DateTime.Now.Date;
+            decimal totalAmount = db.Refunds
+                .Where(b => b.Refund_Date.HasValue && b.Refund_Date.Value.Date == today)
+                .Sum(b => (decimal?)b.Refund_Amount) ?? 0;
+
+            return totalAmount;
+        }
+
+        [WebMethod]
+        public static decimal GetTotalActual()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            DateTime today = DateTime.Now.Date;
+
+            decimal totalReceived = db.Ar_Billings
+                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
+                .Sum(b => (decimal?)b.Received_Amount) ?? 0;
+
+            decimal totalRefund = db.Ar_Billings
+                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
+                .Sum(b => (decimal?)b.Received_Amount) ?? 0;
+
+            decimal actualAmount = totalReceived - totalRefund;
+
+            return actualAmount;
+        }
+
     }
 }
