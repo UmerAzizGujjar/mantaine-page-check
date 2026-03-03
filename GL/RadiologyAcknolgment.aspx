@@ -3,9 +3,31 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">     
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
+        var doctorsList = [];
+
         $(document).ready(function () {
+            loadDoctors();
             loadRadiologyAcknowledgment();
+
+            $('#mainDepartmentFilter, #statusFilter').on('change', function () {
+                $('#tblradilogy').DataTable().ajax.reload();
+            });
         });
+
+        function loadDoctors() {
+            $.ajax({
+                type: "POST",
+                url: "RadiologyAcknolgment.aspx/GetDoctors",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    doctorsList = JSON.parse(response.d);
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
         function loadRadiologyAcknowledgment() {
 
             var table = $("#tblradilogy").DataTable({
@@ -32,7 +54,9 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            mainDepartmentFilter: $('#mainDepartmentFilter').val() || 'All',
+                            statusFilter: $('#statusFilter').val() || 'All'
                         }),
                         contentType: "application/json; charset=utf-8",
                         success: function (response) {
@@ -67,6 +91,57 @@
                     { "data": "Bill_No", "name": "Bill_No" },
                     { "data": "Full_Name" },
                     { "data": "Item_Name" },
+                    {
+                        "data": "ParentTrans_Name",
+                        "name": "ParentTrans_Name",
+                        "render": function (data) {
+                            if (!data || data === "") {
+                                return "Walk In";
+                            } else if (data === "OutPatient") {
+                                return "Out Patient";
+                            } else if (data === "InPatient") {
+                                return "In Patient";
+                            } else if (data === "Emergency") {
+                                return "Emergency";
+                            } else {
+                                return "Walk In";
+                            }
+                        }
+                    },
+                    {
+                        "data": "DoctorID",
+                        "name": "DoctorID",
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            var labTestDoctorId = row.LabTest_DoctorID || 0;
+                            var billingDoctorId = row.Billing_DoctorID || 0;
+                            
+                            var selectedDoctorId = labTestDoctorId !== 0 ? labTestDoctorId : billingDoctorId;
+                            var disabled = (labTestDoctorId !== 0 || billingDoctorId !== 0) ? 'disabled' : '';
+                            
+                            var options = '<option value="0">Select Doctor</option>';
+                            doctorsList.forEach(function (doctor) {
+                                var selected = (selectedDoctorId == doctor.Emp_ID) ? 'selected' : '';
+                                options += `<option value="${doctor.Emp_ID}" ${selected}>${doctor.Emp_Name}</option>`;
+                            });
+                            return `<select class="form-control doctor-select" name="doctor" ${disabled}>${options}</select>`;
+                        }
+                    },
+                    {
+                        "data": "IsAcknowledge",
+                        "name": "IsAcknowledge",
+                        "render": function (data, type, row) {
+                            if (row.IsApproved === true) {
+                                return 'Approved';
+                            }
+                            else if (row.IsAcknowledge === true) {
+                                return 'Acknowledged';
+                            }
+                            else {
+                                return 'Not Approved';
+                            }
+                        }
+                    },
                     { "data": "Department" },
                     {
                         "data": null,
@@ -78,6 +153,14 @@
                             <option value="High">High</option>
                         </select>
                     `;
+                        }
+                    },
+                    {
+                        "data": null,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            return `<button type="button" class="btn btn-sm btn-info history-btn" data-history="${row.History || ''}">History</button>
+                                    <input type="hidden" class="history-value" value="${row.History || ''}">`;
                         }
                     },
                     { "data": "Lab_Test_Detail_ID", "name": "Lab_Test_Detail_ID","visible": false }
@@ -100,10 +183,14 @@
 
                 var status = row.find('select[name=status]').val();
                 var Lab_Test_Detail_ID = rowData.Lab_Test_Detail_ID;
+                var Doctor_ID = row.find('select[name=doctor]').val() || 0;
+                var History = row.find('.history-value').val() || '';
 
                 Testlist.push({
                     'status': status,
-                    'Lab_Test_Detail_ID': Lab_Test_Detail_ID
+                    'Lab_Test_Detail_ID': Lab_Test_Detail_ID,
+                    'Doctor_ID': parseInt(Doctor_ID),
+                    'History': History
                 });
             });
 
@@ -123,12 +210,54 @@
             });
         }
 
+        $(document).on('click', '.history-btn', function () {
+            var currentHistory = $(this).data('history') || '';
+            var row = $(this).closest('tr');
+            
+            $('#historyText').val(currentHistory);
+            $('#historyModal').data('currentRow', row);
+            $('#historyModal').modal('show');
+        });
+
+        function saveHistory() {
+            var row = $('#historyModal').data('currentRow');
+            var historyValue = $('#historyText').val();
+            
+            row.find('.history-value').val(historyValue);
+            row.find('.history-btn').data('history', historyValue);
+            
+            $('#historyModal').modal('hide');
+        }
+
 
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
         <div class="row">
          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div style="margin-bottom: 15px;">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Main Department:</label>
+                        <select id="mainDepartmentFilter" class="form-control">
+                            <option value="All">All</option>
+                            <option value="WalkIn">Walk In</option>
+                            <option value="OutPatient">Out Patient</option>
+                            <option value="InPatient">In Patient</option>
+                            <option value="Emergency">Emergency</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Status:</label>
+                        <select id="statusFilter" class="form-control">
+                            <option value="All">All</option>
+                            <option value="Approved">Approved</option>
+                             <option value="Acknowledged">Acknowledged</option>
+                            <option value="NotApproved">Not Approved</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
     <table style="width: 100%;">
         <tr>
             <td>
@@ -142,8 +271,12 @@
                                     <th>Bill No</th>
                                     <th>Name</th>
                                     <th>Test Name</th>
+                                    <th>Main Department</th>
+                                    <th>Doctor</th>
+                                    <th>Status</th>
                                     <th>Department</th>
                                     <th>Priority</th>
+                                    <th>History</th>
                                     <th style='display: none;'>Lab Test Detail Id</th>
 
                                 </tr>
@@ -158,4 +291,27 @@
     </table>
         </div>
         </div>
+
+    <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historyModalLabel">History</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="historyText">History:</label>
+                        <textarea class="form-control" id="historyText" rows="5"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveHistory()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>

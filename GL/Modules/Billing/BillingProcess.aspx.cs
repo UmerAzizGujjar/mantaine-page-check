@@ -1127,6 +1127,25 @@ namespace PMS
             return data;
         }
         [WebMethod]
+        public static string GetPanel()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+              
+                    var result = (from gl in db.Panels
+                                
+                                  select new
+                                  {
+                                      gl.Panel_ID,
+                                      gl.Company_Name,
+                                  }).ToList();
+                    data = new JavaScriptSerializer().Serialize(result);
+                
+            }
+            return data;
+        }
+        [WebMethod]
         public static string GetCasher()
         {
             string data = string.Empty;
@@ -1324,6 +1343,7 @@ namespace PMS
             newBill.CGS_Procedure_BOM = Convert.ToDecimal(data.bomTotalValue);
             newBill.Sales_Tax_ID = data.Sales_Tax_ID;
             newBill.Sales_Tax_Percentage = data.Sales_Tax_Percentage;
+            newBill.Panel_Id = Convert.ToInt32(data.Panel_Id);
 
             int? userBranchId = null;
             var branchValue = (from bwd in db.Branch_Wise_User_Details
@@ -2571,6 +2591,7 @@ namespace PMS
             public string SelectedBranchId { get; set; }
             public int Opd_id { get; set; }
             public string opd_procedure { get; set; }
+            public string Panel_Id { get; set; }
             public string referred_by_doctor { get; set; }
             public string PackageName { get; set; }
             public string BillDepartment { get; set; }
@@ -2668,6 +2689,60 @@ namespace PMS
             }
             return "";
         }
+        
+        [WebMethod]
+        public static string GetpanelServiceRate(int Panel_Id ,string Item_Id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var PanelRate = (from p in db.Panels
+                                      join pd in db.Panel_Detail_Services
+                                      on p.Panel_ID equals pd.Panel_ID
+                                      where p.Panel_ID == Panel_Id && pd.Item_ID == Item_Id
+                                      select new
+                                      {
+                                          pd.Rate,
+                                      }).FirstOrDefault();
+                return (new JavaScriptSerializer()).Serialize(PanelRate);
+            }
+            return "";
+        }
+        
+        [WebMethod]
+        public static string GetpanelTestRate(int Panel_Id ,string Test_Id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var PanelRate = (from p in db.Panels
+                                      join pd in db.Panel_Detail_Services
+                                      on p.Panel_ID equals pd.Panel_ID
+                                      where p.Panel_ID == Panel_Id && pd.Test_ID == Test_Id
+                                 select new
+                                      {
+                                          pd.Rate,
+                                      }).FirstOrDefault();
+                return (new JavaScriptSerializer()).Serialize(PanelRate);
+            }
+            return "";
+        }
+        
+        [WebMethod]
+        public static string GetpanelGroupTestRate(int Panel_Id ,string Test_Id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var PanelRate = (from p in db.Panels
+                                      join pd in db.Panel_Detail_Services
+                                      on p.Panel_ID equals pd.Panel_ID
+                                      where p.Panel_ID == Panel_Id && pd.Test_ID == Test_Id && pd.GroupCategory == Test_Id
+                                 select new
+                                      {
+                                          pd.Rate,
+                                      }).FirstOrDefault();
+                return (new JavaScriptSerializer()).Serialize(PanelRate);
+            }
+            return "";
+        }
 
         [WebMethod]
         public static string LoadBillHeader(int Bill_ID)
@@ -2706,6 +2781,7 @@ namespace PMS
                             data.Status,
                             data.Voucher_ID,
                             data.In_Patient_ID,
+                            data.Panel_Id,
                             data.Referred_By,
                             data.Bill_Category,
                             data.Bill_Department,

@@ -19,7 +19,7 @@
             window.open(url, 'Image', 'width=largeImage.stylewidth,height=largeImage.style.height,resizable=1');
         }
 
-
+        
         $(function () {
             $("#FileUpload1").change(function () {
                 if (typeof (FileReader) != "undefined") {

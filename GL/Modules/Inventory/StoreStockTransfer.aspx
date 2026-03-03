@@ -301,7 +301,7 @@
         }
         $(document).ready(function () {
             debugger;
-            UserRights();
+            //UserRights();
             $("#lblstatus").hide();
             $("#txtstatus_trnsfer").hide();
             $("#ctl00_MainContent_Select_wareHouseFrom option").each(function () {
@@ -993,6 +993,7 @@
             $('#POItemsModel').modal('hide');
         }
         function getFillStock(stID) {
+            debugger;
             $("#btnSave").hide();
             $("#btnUpdate").show();
             $(".actionClm").show();
@@ -1089,7 +1090,7 @@
             
                 <label for="BatchNo">Batch No:</label>
             
-                <select id="batchnoddl" name="batchnoddl"></select>
+                <select id="batchnoddl" name="batchnoddl" onchange="getstockdetailnum();"></select>
             
         </div>
 
@@ -1116,7 +1117,7 @@
        <div class="col-lg-8 col-md-12 col-sm-12">
             <label for="Remarks">Remarks :</label>
             <input class="form-control" type="text" id="Remarks" />
-            <input id="btnUpdate" type="button" value="Update" />
+            
         </div>
         
     </div>
@@ -1149,6 +1150,7 @@
              <div class="row">
                  <div class="col-lg-2 col-md-4 col-sm-12">
                      <input id="btnSave" class="btn btn-primry" type="button" value="Save" />
+                     <input id="btnUpdate" class="btn btn-primry" type="button" value="Update" />
                  </div>
                  <div class="col-lg-2 col-md-4 col-sm-12">
                      <input type="button" class="btn btn-yellow" value="New" onclick="window.open('StoreStockTransfer.aspx')" />
