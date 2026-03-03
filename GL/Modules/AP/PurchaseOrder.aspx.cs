@@ -808,7 +808,9 @@ namespace PMS.AP
                                 || x.Item_Code.Contains(searchText)
                                 || x.Description.Contains(searchText))
                              
-                             && x.Active == true)
+                             && x.Active == true
+                             && x.Services != true
+                         )
                     .OrderBy(x => x.Item_Code) 
                     .Take(200)
                     .Select(x => new
