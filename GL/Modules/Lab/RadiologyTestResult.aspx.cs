@@ -1683,6 +1683,7 @@ namespace PMS.Modules.Lab
                 join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
                 join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
                 where  (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
+                 (labtest_detail.Is_Result == false || labtest_detail.Is_Result == null) &&
                  bill_details.Test_Main_Department != "001" &&
                       (bill.isCancel == false || bill.isCancel == null) &&
                       bill.Bill_Date >= startDate

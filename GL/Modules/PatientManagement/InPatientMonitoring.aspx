@@ -2761,7 +2761,7 @@
                 $("#hdnipd_id").val(data.d.in_patient_id);
                 console.log(data.d.in_patient_id);
 
-                LoadHistory();
+               
 
             }
         }

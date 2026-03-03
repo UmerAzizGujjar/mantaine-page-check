@@ -274,6 +274,7 @@
     <Content Include="Modules\Inventory\ServiceView.aspx" />
     <Content Include="Modules\Lab\RadiologyTestResult.aspx" />
     <Content Include="Modules\Lab\SampleView.aspx" />
+    <Content Include="Modules\Lab\WaitingList.aspx" />
     <Content Include="Modules\Others\About.aspx" />
     <Content Include="Modules\Others\CustomError.aspx" />
     <Content Include="Modules\OT\AbsentOnOperationDay.aspx" />
@@ -26206,6 +26207,13 @@
     </Compile>
     <Compile Include="Modules\Lab\SampleView.aspx.designer.cs">
       <DependentUpon>SampleView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\WaitingList.aspx.cs">
+      <DependentUpon>WaitingList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\WaitingList.aspx.designer.cs">
+      <DependentUpon>WaitingList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Others\About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
