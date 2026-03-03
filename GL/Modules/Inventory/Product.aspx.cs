@@ -216,7 +216,7 @@ namespace PMS.Inventory
             return max;
         }
         [WebMethod]
-        public static string Getbatch_grn(int item_id)
+        public static string Getbatch_grn(int item_id,string warehouse)
         {
             string data = string.Empty;
             var batchStockListgrn = new List<BatchStock>();
@@ -224,41 +224,73 @@ namespace PMS.Inventory
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var grnResult = (from dv in db.INV_Items
-                                 join ds in db.GRN_Details
-                                 on dv.Item_ID equals ds.Item_Id
-                                 where ds.Item_Id == item_id
+                var PICondition = (from sys in db.sys_Parms where sys.Name == "Direct PO ON Purchase Invoice" select sys.Code).FirstOrDefault();
 
-                                 select new
-                                 {
-                                     BatchNum = ds.BatchNum,
-                                     uomqty = ds.UOM_Qty,
-                                 }).ToList();
-                foreach (var batchNum in grnResult)
+                if (PICondition == "01")
                 {
-                    var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
-                    int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, PharmacyCodes, batchNum.BatchNum));
-                    if (stock > 0)
-                    {
-                        batchStockListgrn.Add(new BatchStock
-                        {
-                            BatchNum = batchNum.BatchNum,
-                            uomqty = batchNum.uomqty,
+                    var grnResult = (from dv in db.INV_Items
+                                     join ds in db.Purchase_Invoice_Details
+                                     on dv.Item_ID equals ds.ItemId
+                                     where ds.ItemId == item_id
 
-                        });
+                                     select new
+                                     {
+                                         BatchNum = ds.BatchNum,
+                                         uomqty = Convert.ToInt32(dv.UOM_Qty),
+                                     }).ToList();
+                    foreach (var batchNum in grnResult)
+                    {
+                        var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
+                        int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, warehouse, batchNum.BatchNum));
+                        if (stock > 0)
+                        {
+                            batchStockListgrn.Add(new BatchStock
+                            {
+                                BatchNum = batchNum.BatchNum,
+                                uomqty = batchNum.uomqty,
+
+                            });
+                        }
                     }
                 }
-                var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
-                                             where inv.Item_Id == Convert.ToString(item_id)
-                                              && inv.Status == "Approved"
-                                             orderby inv.Creation_Time descending
-                                             select new
-                                             {
-                                                 BatchNum = inv.Batch_No
-                                             }).ToList();
+                else
+                {
+                    var grnResult = (from dv in db.INV_Items
+                                     join ds in db.GRN_Details
+                                     on dv.Item_ID equals ds.Item_Id
+                                     where ds.Item_Id == item_id
+
+                                     select new
+                                     {
+                                         BatchNum = ds.BatchNum,
+                                         uomqty = ds.UOM_Qty,
+                                     }).ToList();
+                    foreach (var batchNum in grnResult)
+                    {
+                        var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
+                        int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, warehouse, batchNum.BatchNum));
+                        if (stock > 0)
+                        {
+                            batchStockListgrn.Add(new BatchStock
+                            {
+                                BatchNum = batchNum.BatchNum,
+                                uomqty = batchNum.uomqty,
+
+                            });
+                        }
+                    }
+                }
+                    var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
+                                                 where inv.Item_Id == Convert.ToString(item_id)
+                                                  && inv.Status == "Approved"
+                                                 orderby inv.Creation_Time descending
+                                                 select new
+                                                 {
+                                                     BatchNum = inv.Batch_No
+                                                 }).ToList();
                 foreach (var batchNum in stockAdjustmentResult)
                 {
-                    int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, "008", batchNum.BatchNum));
+                    int stock = Convert.ToInt32(db.GetPharmcyItemUomTotalStock(item_id, warehouse, batchNum.BatchNum));
                     if (stock > 0)
                     {
                         batchStockListst.Add(new BatchStock
@@ -574,7 +606,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                         db.SubmitChanges();
                     }
 
-                    if (PatientTypeList != null)
+                    if (PatientTypeList != null && PatientTypeList.Count > 0)
                     {
                         var submittedRateIds = new List<int>();
                         foreach (var ptr in PatientTypeList)
@@ -625,7 +657,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                     }
 
                     db.SubmitChanges();
-                    Id = obj.Item_ID.ToString();
+                    Id = itemId.ToString();
                     return "Update-" + Id;
                 }
 
