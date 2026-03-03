@@ -739,6 +739,17 @@
                                 }
                             });
                         }, 500);
+                   
+                        var panel = $("#ddlpanel").val();
+                        if (panel != 0 || panel != "0") {
+                            if (value.Test_ID != 0) {
+                                GetpanelTestRate(panel, value.Test_ID);
+                            }
+                            else {
+                                GetpanelGroupTestRate(panel,value.Group_Category);
+                            }
+                        }
+
                     });
                 }, function (err) { });
             }
@@ -873,6 +884,10 @@
                                 }
                             });
                         }, 500);
+                        var panel = $("#ddlpanel").val();
+                        if (panel != 0 || panel != "0") {
+                            GetpanelTestRate(panel, test);
+                        }
 
                     },
                     failure: function (response) {
@@ -1252,6 +1267,10 @@
                     }
 
                     setTimeout(function () {
+                        $('#ddlpanel').val(data[0].Panel_Id).trigger('change');
+                    }, 1000)
+
+                    setTimeout(function () {
                         $('#ddlCashInHand').val(data[0].Cash_In_Hand_Account).trigger('change');
                     }, 1000)
                     setTimeout(function () {
@@ -1473,6 +1492,7 @@
                         var BillCategory = $('#BillCategory').val();
                         var bomTotalValue = $('#bomTotalValue').val();
                         var selectedBranchId = $('#ddlUserBranch').val();
+                        var Panel_Id = $('#ddlpanel').val();
                         if (bomTotalValue == undefined || bomTotalValue == null || bomTotalValue == "") {
                             bomTotalValue=0.00
                         }
@@ -1693,7 +1713,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val() }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -3650,7 +3670,13 @@
                     $('#tblDetails tbody').append(rows);
                     $('.ddlDoctor').select2();
 
-                     loadBOMDetails(localStorage.SelectedItemID)
+                    loadBOMDetails(localStorage.SelectedItemID)
+
+                    var panel = $("#ddlpanel").val();
+                    if (panel != 0 || panel != "0") {
+                        GetpanelServiceRate(panel, localStorage.SelectedItemID);
+                    }
+
          
                     debugger;
                     if (Alloweditrate == "true") {
@@ -3783,7 +3809,68 @@
 
 
             }
+            function GetpanelServiceRate(Panel_Id , Item_Id) {
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetpanelServiceRate",
+                    data: JSON.stringify({ "Panel_Id": Panel_Id, "Item_Id": Item_Id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
 
+                    success: function (response) {
+                        var data = JSON.parse(response.d);
+                        var newRate = parseFloat(data.Rate || 0);
+                        var $lastRow = $("#tblDetails tbody tr:last");
+                        $lastRow.find('input[name="txtActualAmount"]').val(newRate);
+                        $lastRow.find('input[name="hdnNet_Amount"]').val(newRate);
+                        $lastRow.find('td[id^="amnt"]').text(newRate.toFixed(2));
+                        var rowIndex = $lastRow.index();
+                        CalculateSummarieDiscountPerWise(rowIndex);
+                    },
+                    });
+            }
+
+            function GetpanelTestRate(Panel_Id, Test_Id) {
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetpanelTestRate",
+                    data: JSON.stringify({ "Panel_Id": Panel_Id, "Test_Id": Test_Id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    success: function (response) {
+                        var data = JSON.parse(response.d);
+                        var newRate = parseFloat(data.Rate || 0);
+                        var $lastRow = $("#tblDetails tbody tr:last");
+                        $lastRow.find('input[name="txtActualAmount"]').val(newRate);
+                        $lastRow.find('input[name="hdnNet_Amount"]').val(newRate);
+                        $lastRow.find('td[id^="amnt"]').text(newRate.toFixed(2));
+                        var rowIndex = $lastRow.index();
+                        CalculateSummarieDiscountPerWise(rowIndex);
+                    },
+                });
+            }
+
+            function GetpanelGroupTestRate(Panel_Id, Test_Id) {
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetpanelGroupTestRate",
+                    data: JSON.stringify({ "Panel_Id": Panel_Id, "Test_Id": Test_Id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    success: function (response) {
+                        var data = JSON.parse(response.d);
+                        var newRate = parseFloat(data.Rate || 0);
+                        var $lastRow = $("#tblDetails tbody tr:last");
+                        $lastRow.find('input[name="txtActualAmount"]').val(newRate);
+                        $lastRow.find('input[name="hdnNet_Amount"]').val(newRate);
+                        $lastRow.find('td[id^="amnt"]').text(newRate.toFixed(2));
+                        var rowIndex = $lastRow.index();
+                        CalculateSummarieDiscountPerWise(rowIndex);
+                    },
+                });
+            }
             function getbomprocedure() {
                 var Pat_id = $('#hdfPatient_ID').val();
                 if (!Pat_id || Pat_id <= 0) {
@@ -5529,6 +5616,28 @@
 
                 return options;
             }
+
+
+            function fillPanel() {
+                var options = '<option value="0">Please Select</option>';
+
+                $.ajax({
+                    url: 'BillingProcess.aspx/GetPanel',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (response) {
+                        var data = response.d ? JSON.parse(response.d) : response;
+                        $.each(data, function (key, value) {
+                            options += '<option value="' + value.Panel_ID + '">' + value.Company_Name + '</option>';
+                        });
+                        $('#ddlpanel').html(options);
+                        $('#ddlpanel').select2();
+                    }
+                });
+
+                return options;
+            }
             function fillgender() {
                 var options = '<option value="0">Please Select</option>';
                 PageMethods.GetGender(function (data) {
@@ -5763,7 +5872,7 @@
                 $("#btnPrint").hide();
                 debugger;
                 fillCasher();
-
+                fillPanel();
                 TotalAmountToday();
                 $("#txtSearch").keypress(function (event) {
 
@@ -6163,14 +6272,14 @@
 
     <!-- Eighth Row -->
     <div class="row mb-2 align-items-center">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label for="ddlChargePolicy">Charge Policy: *</label>
              <select id="ddlChargePolicy" class="form-select">
                 <option>Cash Patient</option>
                 <!-- Other options -->
             </select>
         </div>
-           <div class="col-md-3">
+           <div class="col-md-2">
             <label for="ddlReffered_By">Referred By:</label>
                <select id="ddlReffered_By" class="form-select">
                 <!-- Doctor options -->
@@ -6192,6 +6301,13 @@
             <label>Procedure Description:</label>
             <asp:DropDownList ID="ddlpro_dis" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
             <%--a--%>
+        </div>
+                <div class="col-md-2">
+        <label for="ddlpanel">Panel:</label>
+              <select id="ddlpanel" class="form-select">
+                <%--<option>Please Select</option>--%>
+                <!-- Other options -->
+            </select>
         </div>
     </div>
     
