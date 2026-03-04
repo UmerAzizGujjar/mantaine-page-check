@@ -1990,16 +1990,16 @@
         <elementListCompartment Id="59ca3c34-f0f8-4222-9f4e-4d043d87b7dd" absoluteBounds="39.515, 47.585, 1.9700000000000002, 7.1722412109375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="7276242b-d89f-4e89-b2bf-bba71d2380fc" absoluteBounds="18.375, 64.5, 2, 15.039695638020833">
+    <classShape Id="d06e9b6f-d0a4-4b79-8929-e26f29b29829" absoluteBounds="16, 69.125, 2, 15.424298502604165">
       <DataClassMoniker Name="/DataBaseDataContext/Ar_Billing" />
       <nestedChildShapes>
-        <elementListCompartment Id="0349db7a-64bd-44bb-8fc5-286deb289cdf" absoluteBounds="18.39, 64.96, 1.9700000000000002, 14.479695638020832" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="ef8a4f7d-f2f5-4ca1-9452-6845270eab5a" absoluteBounds="16.015, 69.585, 1.9700000000000002, 14.864298502604166" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(18.5 : 64.5); (18.5 : 63.2539697265625); (15.125 : 63.2539697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(16.15625 : 69.125); (16.15625 : 60.8212711588542); (15.125 : 60.8212711588542)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/DataBaseDataContext/Ar_Billing/Ar_Billing_Ar_Billing_Detail" />
       <nodes>
-        <classShapeMoniker Id="7276242b-d89f-4e89-b2bf-bba71d2380fc" />
+        <classShapeMoniker Id="d06e9b6f-d0a4-4b79-8929-e26f29b29829" />
         <classShapeMoniker Id="e3373c97-e7cf-4a6f-9b2a-e075d5d40dab" />
       </nodes>
     </associationConnector>
