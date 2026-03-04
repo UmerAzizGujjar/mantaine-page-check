@@ -947,15 +947,10 @@ namespace PMS
         partial void DeleteAr_Billing(Ar_Billing instance);
         #endregion
         public DataBaseDataContext() :
-
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
-
         {
-
             OnCreated();
-
         }
-
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -162808,6 +162803,10 @@ namespace PMS
 
         private System.Nullable<int> _Panel_Id;
 
+        private System.Nullable<int> _Appointment_id;
+
+        private string _Appointment_type;
+
         private EntitySet<Ar_Billing_Detail> _Ar_Billing_Details;
 
         #region Extensibility Method Definitions
@@ -162962,6 +162961,10 @@ namespace PMS
         partial void OnSales_Tax_PercentageChanged();
         partial void OnPanel_IdChanging(System.Nullable<int> value);
         partial void OnPanel_IdChanged();
+        partial void OnAppointment_idChanging(System.Nullable<int> value);
+        partial void OnAppointment_idChanged();
+        partial void OnAppointment_typeChanging(string value);
+        partial void OnAppointment_typeChanged();
         #endregion
 
         public Ar_Billing()
@@ -164446,6 +164449,46 @@ namespace PMS
                     this._Panel_Id = value;
                     this.SendPropertyChanged("Panel_Id");
                     this.OnPanel_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Appointment_id", DbType = "Int")]
+        public System.Nullable<int> Appointment_id
+        {
+            get
+            {
+                return this._Appointment_id;
+            }
+            set
+            {
+                if ((this._Appointment_id != value))
+                {
+                    this.OnAppointment_idChanging(value);
+                    this.SendPropertyChanging();
+                    this._Appointment_id = value;
+                    this.SendPropertyChanged("Appointment_id");
+                    this.OnAppointment_idChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Appointment_type", DbType = "NVarChar(150)")]
+        public string Appointment_type
+        {
+            get
+            {
+                return this._Appointment_type;
+            }
+            set
+            {
+                if ((this._Appointment_type != value))
+                {
+                    this.OnAppointment_typeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Appointment_type = value;
+                    this.SendPropertyChanged("Appointment_type");
+                    this.OnAppointment_typeChanged();
                 }
             }
         }
