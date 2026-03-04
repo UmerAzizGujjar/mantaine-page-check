@@ -7367,6 +7367,8 @@
       <Column Name="Sales_Tax_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Sales_Tax_Percentage" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Panel_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Appointment_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Appointment_type" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
     </Type>
   </Table>
