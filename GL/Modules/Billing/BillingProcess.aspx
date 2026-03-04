@@ -6826,7 +6826,7 @@
             <div class="col-lg-8 mtop">
                 <div class="row">
                     <div class="col-lg-2">
-                        <input type="button" class="btn-primry" value="Save & Print" onclick="SaveRecord()" id="btnSave" />
+                        <input type="button" class="btn-primry" value="Save & Print" onclick="SaveRecord()" id="bddlSalesTaxtnSave" />
                     </div>
                     <div class="col-lg-2">
                         <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'BillingProcess.aspx'" />
