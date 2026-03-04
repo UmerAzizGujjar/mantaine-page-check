@@ -75,6 +75,16 @@ namespace PMS.Modules.Lab
         //}
 
 
+        [WebMethod]
+        public static string CheckRadiologylistRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Radiology_result).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
         public void buttonimageuploadNotes_Click(object sender, EventArgs e)
         {
             DataBaseDataContext db = new DataBaseDataContext();

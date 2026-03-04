@@ -147,7 +147,7 @@ namespace PMS
                                      
                                      Patient_Type_Name = (from d in db.DataValues join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID where v.ValueSet_Name == "Test Patient Types" && d.DataValue_Name == tv.Patient_Type select d.DataValue_Description).FirstOrDefault(), 
                                      tv.Start_Range, 
-                                     tv.End_Range,
+                                     tv.End_Range
                                      
                                  }).ToList(), 
                             IPDTestRate = (from rate in db.Test_Defination_Detail_Rates
@@ -350,6 +350,7 @@ namespace PMS
             public bool chk_Payment { get; set; }
 
             public bool Special_Test { get; set; }
+            public string WaitingTime { get; set; }
             public List<TestValue> TestValues { get; set; }
             public List<IPDTestRate> IPDTestRates { get; set; }
             public List<OPDTestRate> OPDTestRates { get; set; }
@@ -485,6 +486,7 @@ namespace PMS
                 test.Reporting_Day = record.reportDays;
                 test.Group_Order = record.GroupOrder;
                 test.Fixed_Value = record.FixedValue;
+                test.WaitingTime = int.TryParse(record.WaitingTime, out var temp) ? temp : (int?)0;
                 db.Lab_Tests.InsertOnSubmit(test);
                 db.SubmitChanges();
                 var id = test.Test_ID;
@@ -577,6 +579,7 @@ namespace PMS
                 }
               
                 test.Fixed_Value = record.FixedValue;
+                test.WaitingTime = int.TryParse(record.WaitingTime, out var temp) ? temp : (int?)0;
                 db.SubmitChanges();
 
                 db.Test_Values.DeleteAllOnSubmit(

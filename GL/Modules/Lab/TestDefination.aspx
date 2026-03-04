@@ -355,6 +355,13 @@
                 $('#Rpt_Day').val(data.Reporting_Day);
 
                 $('#txtOrder').val(data.Group_Order);
+                
+                // Set waiting time
+                if (data.WaitingTime != null && data.WaitingTime != '') {
+                    $('#waiting_time').val(data.WaitingTime);
+                } else {
+                    $('#waiting_time').val('0');
+                }
 
                 GetMainDepartments(data.Main_Department);
                 GetGroupDepartments(data.Group_Department);
@@ -511,6 +518,7 @@
             fixed_value = $('#fixed_value');
             test_active = $('#test_active');
             test_rate = $('#test_rate');
+            waiting_time = $('#waiting_time');
             SelectedDepartment = $('#ddlTestDpt').val();
             var SelectedDepartment = $('#ddlTestDpt').find('option:selected').val();
             var SelectedDepartmentID = $('#ddlTestDpt').find('option:selected').text();
@@ -531,6 +539,10 @@
             var GroupOrder = $("#txtOrder").val();
             if ($(txtOrder).val() == '')
                 GroupOrder = 0;
+            
+            var waitingTimeValue = $(waiting_time).val();
+            if (waitingTimeValue == '' || waitingTimeValue == null)
+                waitingTimeValue = "0";
 
             if (SelectedDepartmentID == "Radialogy") {
                 if ($(main_departments).val() == '' && $(test_rate).val() == '') {
@@ -593,7 +605,7 @@
                 test_extra_values.push(arr);
             });
 
-            var labTest = { 'ID': $(test_id).val(), 'Name': $(test_name).val(), 'MainDepartment': $(main_departments).val(), 'GroupDepartment': $(group_departments).val(), 'Group': $(groups).val(), 'Unit': $(units).val(), 'Note': $(test_note).val(), 'ValueType': $(value_type).val(), 'Rate': $(test_rate).val(), 'Active': $(test_active)[0].checked, 'cultural': $(Test_cultural)[0].checked, 'reportColums': $("#ddlrptColumns").val(), 'FixedValue': valueofTemplate, 'TestValues': test_values, 'IPDTestRates': IPD_Test_Rates, 'OPDTestRates': OPD_Test_Rates, 'SelectedDepartment': SelectedDepartment, 'out_source_lab_id': out_source_lab_id, 'reporthour': reporthour, 'reportDays': reportDays, 'GroupOrder': GroupOrder, 'Genre': $(genre).val(), 'Qty': $(qty).val(), 'Designation': $(Designation).val(), 'Group_Header_L1': Group_Header_L1, 'Altrasound_Level': Altrasound_Level, 'chk_value': chk_value, 'chk_template': chk_template, 'chk_listchooseresult': chk_listchooseresult, 'chk_resultTypeImage': chk_resultTypeImage, 'UltraValues': Ultra_value, 'chk_Levels': chk_Levels, 'chk_Payment': chk_Payment, 'Special_Test': Special_Test };
+            var labTest = { 'ID': $(test_id).val(), 'Name': $(test_name).val(), 'MainDepartment': $(main_departments).val(), 'GroupDepartment': $(group_departments).val(), 'Group': $(groups).val(), 'Unit': $(units).val(), 'Note': $(test_note).val(), 'ValueType': $(value_type).val(), 'Rate': $(test_rate).val(), 'Active': $(test_active)[0].checked, 'cultural': $(Test_cultural)[0].checked, 'reportColums': $("#ddlrptColumns").val(), 'FixedValue': valueofTemplate, 'TestValues': test_values, 'IPDTestRates': IPD_Test_Rates, 'OPDTestRates': OPD_Test_Rates, 'SelectedDepartment': SelectedDepartment, 'out_source_lab_id': out_source_lab_id, 'reporthour': reporthour, 'reportDays': reportDays, 'GroupOrder': GroupOrder, 'Genre': $(genre).val(), 'Qty': $(qty).val(), 'Designation': $(Designation).val(), 'Group_Header_L1': Group_Header_L1, 'Altrasound_Level': Altrasound_Level, 'chk_value': chk_value, 'chk_template': chk_template, 'chk_listchooseresult': chk_listchooseresult, 'chk_resultTypeImage': chk_resultTypeImage, 'UltraValues': Ultra_value, 'chk_Levels': chk_Levels, 'chk_Payment': chk_Payment, 'Special_Test': Special_Test, 'WaitingTime': waitingTimeValue };
             PageMethods.SaveTest(JSON.stringify(labTest), test_extra_values,
                 function (res) {
                     Swal.fire({
@@ -991,6 +1003,10 @@
                         <label>Group Header L1</label>
                         <select id="ddlGroupHeader" class="form-control"></select>
                     </div>
+                     <div class="col-md-2 col-lg-1">
+      <label>Waiting Time(min.)</label>
+ <input type="number" step="1" min="1" id="waiting_time" class="form-control" />
+ </div>
                     <div class="col-md-2 col-lg-1">
                         <input type="checkbox" id="test_active" checked="checked" name="test_active" />
                         <label for="test_active">Active</label>
