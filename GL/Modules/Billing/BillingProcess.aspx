@@ -4953,7 +4953,11 @@
                         }
                         else {
                             if (id == '') {
-                                FetchRecommendedDetails();
+                                var urlParams = new URLSearchParams(window.location.search);
+                                var appointmentId = urlParams.get('Appointment_ID');
+                                if (!appointmentId || appointmentId == '0' || appointmentId == '') {
+                                    FetchRecommendedDetails();
+                                }
                             }
                         }
                     }
@@ -6247,17 +6251,12 @@
                         if (result.success === true && result.service) {
                             var service = result.service;
                             var appointment = result.appointment;
-
-                            // Set doctor from appointment
                             if (appointment.Doctor_Id) {
                                 $('#hdn_docid').val(appointment.Doctor_Id);
-                                // Select doctor in dropdown if exists
                                 setTimeout(function () {
                                     $('.ddlDoctor').val(appointment.Doctor_Id).trigger('change');
                                 }, 500);
                             }
-
-                            // Add service to billing table
                             AddServiceFromAppointment(service, appointment);
                         }
                     },
@@ -6269,63 +6268,66 @@
 
             function AddServiceFromAppointment(service, appointment) {
                 debugger;
+
+                var existingRow = $('#tblDetails tbody tr').find('input[name="hdnItemID"][value="' + service.Item_ID + '"]');
+                if (existingRow.length > 0) {
+                    console.log('Service already exists in table, skipping...');
+                    return; 
+                }
+
                 var rowIndex = parseInt($('#tblDetails tbody tr').length);
                 var dateValue = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
+               var itemtype = service.Services === true ? 'Service' : 'Item';
+               var isMajorMinors = (service.Procedure_types == null || service.Procedure_types == 0) ? "" : service.Procedure_types;
+               var remarks = appointment.Appointment_No ? "Appointment: " + appointment.Appointment_No : "";
 
-                // Determine item type
-                var itemtype = service.Services === true ? 'Service' : 'Item';
-                var isMajorMinors = (service.Procedure_types == null || service.Procedure_types == 0) ? "" : service.Procedure_types;
+               var row = '<tr>' +
+                   '<td style="text-align:left;">' + (rowIndex + 1) + '</td>' +
+                   '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
+                   '<td style="text-align:left;">' +
+                   '<input type="hidden" name="hdnParentTrans_ID" value="0" />' +
+                   '<input type="hidden" name="hdnParentTrans_Name" value="DermaAppointment" />' +
+                   '<input type="hidden" name="hdnParentTrans_Type" value="Appointment" />' +
+                   '<input type="hidden" name="hdnItemID" value="' + service.Item_ID + '" />' +
+                   '<input type="hidden" name="hdnItemName" value="' + (service.Description || '').replace(/"/g, '&quot;') + '" />' +
+                   '<input type="hidden" name="hdnProcedure" value="' + (isMajorMinors || '').replace(/"/g, '&quot;') + '" />' +
+                   '<input type="hidden" name="hdnDisPer" value="0" />' +
+                   '<input type="hidden" name="hdnDisAmount" value="0.00" />' +
+                   '<input type="hidden" name="hdnNet_Amount" value="' + (service.Sale_Rate || 0) + '" />' +
+                   '<input type="hidden" name="hdnItemType" value="' + itemtype + '" />' +
+                   '<input type="hidden" name="hdnRecommendedByDoctor" value="true" />' +
+                   '<input type="hidden" name="Main_Department" value="007" />' +
+                   (service.Description || '') +
+                   '</td>' +
+                   '<td>' + remarks.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</td>' +
+                   '<td>' +
+                   '<input type="text" name="txtQty" value="1" style="width: 45px !important;" ' +
+                   'onkeyup="CulculateAmonutWithQty(this, true, false)"/>' +
+                   '<input type="hidden" name="txtActualAmount" value="' + (service.Sale_Rate || 0) + '" />' +
+                   '</td>' +
+                   '<td style="text-align:right;" id="amnt' + rowIndex + '" name="amnt">' + (service.Sale_Rate || 0).toFixed(2) + '</td>' +
+                   '<td><input type="text" name="DisPer" value="0" style="width: 37px !important;" ' +
+                   'onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/></td>' +
+                   '<td><input type="text" name="DisAmount" value="0.00" style="width: 75px !important;" disabled ' +
+                   'onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/></td>' +
+                   '<td style="text-align:right;">' + (service.Sale_Rate || 0).toFixed(2) + '</td>' +
+                   '<td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="0" ' +
+                   'style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                   '<td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="0" ' +
+                   'style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                   '<td><select id="ddldoctor' + (rowIndex + 1) + '" name="ddlDoctor" class="ddlDoctor">' +
+                   (typeof doctors !== 'undefined' ? doctors : '') + '</select></td>' +
+                   '<td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + '</td>' +
+                   '</tr>';
 
-                var remarks = appointment.Appointment_No ? "Appointment: " + appointment.Appointment_No : "";
+               $('#tblDetails tbody').append(row);
+               $('.ddlDoctor').select2();
 
-                var row = '<tr>' +
-                    '<td style="text-align:left;">' + (rowIndex + 1) + '</td>' +
-                    '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
-                    '<td style="text-align:left;">' +
-                    '<input type="hidden" name="hdnParentTrans_ID" value="0" />' +
-                    '<input type="hidden" name="hdnParentTrans_Name" value="DermaAppointment" />' +
-                    '<input type="hidden" name="hdnParentTrans_Type" value="Appointment" />' +
-                    '<input type="hidden" name="hdnItemID" value="' + service.Item_ID + '" />' +
-                    '<input type="hidden" name="hdnItemName" value="' + (service.Description || '').replace(/"/g, '&quot;') + '" />' +
-                    '<input type="hidden" name="hdnProcedure" value="' + (isMajorMinors || '').replace(/"/g, '&quot;') + '" />' +
-                    '<input type="hidden" name="hdnDisPer" value="0" />' +
-                    '<input type="hidden" name="hdnDisAmount" value="0.00" />' +
-                    '<input type="hidden" name="hdnNet_Amount" value="' + (service.Sale_Rate || 0) + '" />' +
-                    '<input type="hidden" name="hdnItemType" value="' + itemtype + '" />' +
-                    '<input type="hidden" name="hdnRecommendedByDoctor" value="true" />' +
-                    '<input type="hidden" name="Main_Department" value="007" />' +
-                    (service.Description || '') +
-                    '</td>' +
-                    '<td>' + remarks.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</td>' +
-                    '<td>' +
-                    '<input type="text" name="txtQty" value="1" style="width: 45px !important;" ' +
-                    'onkeyup="CulculateAmonutWithQty(this, true, false)"/>' +
-                    '<input type="hidden" name="txtActualAmount" value="' + (service.Sale_Rate || 0) + '" />' +
-                    '</td>' +
-                    '<td style="text-align:right;" id="amnt' + rowIndex + '" name="amnt">' + (service.Sale_Rate || 0).toFixed(2) + '</td>' +
-                    '<td><input type="text" name="DisPer" value="0" style="width: 37px !important;" ' +
-                    'onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/></td>' +
-                    '<td><input type="text" name="DisAmount" value="0.00" style="width: 75px !important;" disabled ' +
-                    'onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/></td>' +
-                    '<td style="text-align:right;">' + (service.Sale_Rate || 0).toFixed(2) + '</td>' +
-                    '<td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="0" ' +
-                    'style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
-                    '<td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="0" ' +
-                    'style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
-                    '<td><select id="ddldoctor' + (rowIndex + 1) + '" name="ddlDoctor" class="ddlDoctor">' +
-                    (typeof doctors !== 'undefined' ? doctors : '') + '</select></td>' +
-                    '<td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + '</td>' +
-                    '</tr>';
-
-                $('#tblDetails tbody').append(row);
-                $('.ddlDoctor').select2();
-
-                // Calculate totals
-                setTimeout(function () {
-                    CalculateSummarieDiscountPerWise(rowIndex);
-                    CalculateSummariesMaster(false);
-                }, 500);
-            }
+               setTimeout(function () {
+                   CalculateSummarieDiscountPerWise(rowIndex);
+                   CalculateSummariesMaster(false);
+               }, 500);
+           }
 
 
         </script>
