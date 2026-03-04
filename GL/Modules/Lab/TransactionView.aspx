@@ -380,7 +380,16 @@
         function PrintSample(Sample_ID) {
             debugger;
             var sampleID = Sample_ID;
-            window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + sampleID);
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                window.open('../../ReportViewer.aspx?ReportName=LabBarcodeSlip&ReportTitle=Department Of Pathology&Sample_ID=' + sampleID);
+            }
+            else {
+                window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + sampleID);
+            }
+
+           
         }
     </script>
 

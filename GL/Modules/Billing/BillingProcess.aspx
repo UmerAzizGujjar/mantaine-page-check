@@ -41,6 +41,7 @@
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
                 var locationInfo = window.location;
+
                 var user_name = '<% =AppConfig.Company_Name %>';
                 if (user_name == 'As-Siraat Serving Humanity') {
                     reportPath = '../../ReportViewer.aspx';
@@ -52,7 +53,7 @@
                     var urlInfo = window.location.href.split('/');
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
-                    url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;   // add ../../ for assiraat
+                    url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + id;
                 }
                 window.open(url, '_blank');
 
