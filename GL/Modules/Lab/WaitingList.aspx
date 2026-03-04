@@ -3,7 +3,7 @@
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         var departmentsList = [];
-        var doctorsList = [];
+        var doctorsList = []; 
 
         $(document).ready(function () {
             loadDepartments();
