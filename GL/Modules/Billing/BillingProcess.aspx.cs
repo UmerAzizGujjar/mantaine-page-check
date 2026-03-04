@@ -4975,5 +4975,176 @@ namespace PMS
                            }).ToList();
             return (new JavaScriptSerializer()).Serialize(taxList);
         }
+
+        [WebMethod]
+        public static List<Search_App> SearchAppointment(string SearchString)
+        {
+            string safeSearch = SearchString?.Replace("'", "''").Trim() ?? "";
+
+            string opdQuery = @"
+    SELECT 
+        CAST(a.Appointment_ID AS VARCHAR) AS Appointment_ID,
+        ISNULL(CAST(a.Appointment_No AS VARCHAR), '') AS Appointment_No,
+        CONVERT(VARCHAR(11), a.App_Date, 106) AS App_Date,
+        ISNULL(a.Patient_Name, '') AS Patient_Name,
+        ISNULL(a.Consultant_ID, '') AS Consultant_ID,
+        ISNULL(a.Age, '') AS Age,
+        ISNULL(a.Phone, '') AS Phone,
+        ISNULL((SELECT TOP 1 e.Emp_Name FROM HR_Employees e WHERE e.Emp_ID = a.Consultant_ID), '') AS Emp_name,
+        ISNULL(CAST(a.Reg_id AS VARCHAR), '') AS pat_id,
+        a.Appointment_ID AS SortOrderID
+    FROM Appointment_Form a
+    INNER JOIN Reg_patient r ON r.pat_id = a.Reg_id
+    WHERE a.Appointment_No <> 0 
+      AND a.Appointment_No IS NOT NULL 
+      AND a.Status = 'Booked'";
+
+            string dermaQuery = @"
+    SELECT 
+        CAST(d.Derma_Appointment_Id AS VARCHAR) AS Appointment_ID,
+        ISNULL(CAST(d.Appointment_No AS VARCHAR), '') AS Appointment_No,
+        CONVERT(VARCHAR(11), d.Appointment_Date, 106) AS App_Date,
+        ISNULL(r.Full_Name, '') AS Patient_Name,
+        ISNULL(d.Doctor_Id, '') AS Consultant_ID,
+        ISNULL(CAST(r.Age_years AS VARCHAR), '') AS Age,
+        ISNULL(r.Mobile1, '') AS Phone,
+        ISNULL((SELECT TOP 1 e.Emp_Name FROM HR_Employees e WHERE e.Emp_ID = d.Doctor_Id), '') AS Emp_name,
+        ISNULL(CAST(d.Patient_Id AS VARCHAR), '') AS pat_id,
+        d.Derma_Appointment_Id AS SortOrderID
+    FROM Derma_Appointment d
+    INNER JOIN Reg_patient r ON r.pat_id = d.Patient_Id
+    WHERE d.Status = 'Booked'";
+
+            string unionQuery = $"({opdQuery}) UNION ALL ({dermaQuery})";
+
+            string whereClause = "1=1";
+            if (!string.IsNullOrEmpty(safeSearch))
+            {
+                whereClause += $@"
+        AND (
+            LTRIM(RTRIM(Appointment_No)) LIKE '%{safeSearch}%' OR
+            LTRIM(RTRIM(Patient_Name)) LIKE '%{safeSearch}%' OR
+            LTRIM(RTRIM(Consultant_ID)) LIKE '%{safeSearch}%' OR
+            LTRIM(RTRIM(Age)) LIKE '%{safeSearch}%' OR
+            LTRIM(RTRIM(Phone)) LIKE '%{safeSearch}%' OR
+            Consultant_ID = ISNULL((SELECT TOP 1 Emp_ID FROM HR_Employees WHERE Emp_Name LIKE '%{safeSearch}%'), '0')
+        )";
+            }
+
+            string finalQuery = $@"
+    SELECT TOP 100
+        Appointment_ID, Appointment_No, App_Date, Patient_Name, Consultant_ID, 
+        Age, Phone, Emp_name, pat_id
+    FROM (
+        {unionQuery}
+    ) AS Combined
+    WHERE {whereClause}
+    ORDER BY SortOrderID DESC";
+
+            try
+            {
+                DataTable dt = DBClass.getDataTable(finalQuery);
+                var list = new List<Search_App>();
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    list.Add(new Search_App
+                    {
+                        Appointment_ID = dr["Appointment_ID"]?.ToString() ?? "",
+                        Appointment_No = dr["Appointment_No"]?.ToString() ?? "",
+                        App_Date = dr["App_Date"]?.ToString() ?? "",
+                        Patient_Name = dr["Patient_Name"]?.ToString() ?? "",
+                        Consultant_ID = dr["Consultant_ID"]?.ToString() ?? "",
+                        Age = dr["Age"]?.ToString() ?? "",
+                        Phone = dr["Phone"]?.ToString() ?? "",
+                        Emp_name = dr["Emp_name"]?.ToString() ?? "",
+                        pat_id = dr["pat_id"]?.ToString() ?? ""
+                    });
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Search Error: " + ex.Message);
+                return new List<Search_App>();
+            }
+        }
+
+        public class Search_App
+        {
+            public string Appointment_ID { get; set; }
+            public string Appointment_No { get; set; }
+            public string App_Date { get; set; }
+            public string Patient_Name { get; set; }
+            public string Consultant_ID { get; set; }
+            public string Age { get; set; }
+            public string Phone { get; set; }
+            public string Emp_name { get; set; }
+            public string pat_id { get; set; }
+        }
+
+        [WebMethod]
+        public static string GetDermaAppointmentServices(int Appointment_ID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var appointmentData = (from da in db.Derma_Appointments
+                                           where da.Derma_Appointment_Id == Appointment_ID
+                                           select new
+                                           {
+                                               da.Derma_Appointment_Id,
+                                               da.Appointment_No,
+                                               da.Patient_Id,
+                                               da.Procedure_Id,
+                                               da.Doctor_Id,
+                                               da.Appointment_Date,
+                                               da.Status,
+                                               Doctor_Name = (from e in db.HR_Employees
+                                                              where (e.Emp_ID == Convert.ToInt32(da.Doctor_Id))
+                                                              select e.Emp_Name).FirstOrDefault()
+                                           }).FirstOrDefault();
+
+                    int procedureId = 0;
+
+                    if (!int.TryParse(appointmentData.Procedure_Id, out procedureId))
+                    {
+                        procedureId = 0;
+                    }
+
+                    var serviceDetails = (from item in db.INV_Items
+                                          where item.Item_ID == Convert.ToInt32(appointmentData.Procedure_Id)
+                                          select new
+                                          {
+                                              item.Item_ID,
+                                              item.Item_Code,
+                                              item.Description,
+                                              item.Sale_Rate,
+                                              item.Services,
+                                              item.Procedure_types,
+                                              Unit = db.GetDataValueName("UOM", item.Unit)
+                                          }).FirstOrDefault();
+
+                    if (serviceDetails == null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new { success = false, message = "No service found for this procedure" });
+                    }
+
+                    var result = new
+                    {
+                        success = true,
+                        appointment = appointmentData,
+                        service = serviceDetails
+                    };
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { success = false, message = ex.Message });
+            }
+        }
     }
 }

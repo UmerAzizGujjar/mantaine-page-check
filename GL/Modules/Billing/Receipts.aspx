@@ -1434,8 +1434,8 @@
         <div class="row mb-3">
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <i class="fa fa-money"></i>Total Sale
+                    <div class="card-header text-white">
+                        <i class=""></i>Total Sale
                     </div>
                     <div class="card-body text-center">
                         <h4 class="card-title text-primary" id="lblTotalBillingSum">0.00</h4>
@@ -1444,8 +1444,8 @@
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <i class="fa fa-money"></i>Discount
+                    <div class="card-header text-white">
+                        <i class=""></i>Discount
                     </div>
                     <div class="card-body text-center">
                         <h4 class="card-title text-primary" id="lblTotalDiscount">0.00</h4>
@@ -1454,8 +1454,8 @@
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <i class="fa fa-money"></i>Net Sale
+                    <div class="card-header  text-white">
+                        <i class=""></i>Net Sale
                     </div>
                     <div class="card-body text-center">
                         <h4 class="card-title text-primary" id="lblTotalAmount">0.00</h4>
@@ -1465,8 +1465,8 @@
 
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <i class="fa fa-money"></i>Cash Paid
+                    <div class="card-header  text-white">
+                        <i class=""></i>Cash Paid
                     </div>
                     <div class="card-body text-center">
                         <h4 class="card-title text-primary" id="lblTotalCashPaid">0.00</h4>
@@ -1476,8 +1476,8 @@
 
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <i class="fa fa-money"></i>Advances
+                    <div class="card-header  text-white">
+                        <i class=""></i>Advances
                     </div>
                     <div class="card-body text-center">
                         <h4 class="card-title text-primary" id="lblTotalAdvance">0.00</h4>
@@ -1487,8 +1487,8 @@
 
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <i class="fa fa-money"></i>Services Refund
+                    <div class="card-header  text-white">
+                        <i class=""></i>Services Refund
                     </div>
                     <div class="card-body text-center">
                         <h4 class="card-title text-primary" id="lblTotalRefund">0.00</h4>
@@ -1498,8 +1498,8 @@
 
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <i class="fa fa-money"></i>Actual Cash
+                    <div class="card-header  text-white">
+                        <i class=""></i>Actual Cash
                     </div>
                     <div class="card-body text-center">
                         <h4 class="card-title text-primary" id="lblActualCash">0.00</h4>
