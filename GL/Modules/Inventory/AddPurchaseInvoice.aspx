@@ -189,6 +189,23 @@
                 appendPOItem($(this));
             });
             AllowButtonsVisibility();
+
+            $(document).on('keyup', '#searchPONo', function () {
+                var value = $(this).val().toLowerCase();
+
+                $("#PO_Modal tbody tr").each(function () {
+                    var poNo = $(this).attr('data-po-no');
+                    if (poNo && poNo.toLowerCase().indexOf(value) > -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+            $('#PO_Modal').on('shown.bs.modal', function () {
+                $('#searchPONo').focus();
+            });
         });
 
 
@@ -1135,33 +1152,36 @@
                     var html = '';
 
                     poData.forEach(function (item, index) {
-                        html += `<tr>
-                 <td><input type="checkbox" class="chkPOItem" /></td>
-                 <td>${item.PO_No}</td>
-                 <td>${item.Description}</td>
-                 <td>${item.Qty}</td>
-                 <td>${item.Bonus_qty}</td>
-                 <td>${item.bonus_tax}</td>
-                 <td>${item.sale_tax_amt}</td>
-                 <td>${item.further_tax}</td>
-                 <td>${item.discount_per}</td>
-                 <td>${item.Rate}</td>
-                 <td>${item.TotalAmountc}</td>
-                 <td style="display:none" id="poid">${item.PO_ID}</td>
-                 <td style="display:none" id="Podetailid">${item.PO_Detail_ID}</td>
-                 <td style="display:none">${item.Item_Code}</td>
-                 <td style="display:none">${item.Vendor_Name}</td>
-                 <td style="display:none">${item.PO_Date}</td>
-                 <td style="display:none">${item.Sales_Tax}</td>
-                 <td style="display:none">${item.discount_amount}</td>
-                 <td style="display:none">${item.advancetax}</td>
-                 <td style="display:none">${item.advancetaxid}</td>
-                 <td style="display:none">${item.further_taxid}</td>
-                 <td style="display:none">${item.IsBatch || 0}</td>
-             </tr>`;
+                        var poNo = item.PO_No || '';
+                        html += `<tr data-po-no="${poNo}">
+                <td><input type="checkbox" class="chkPOItem" /></td>
+                <td>${poNo}</td>
+                <td>${item.Description}</td>
+                <td>${item.Qty}</td>
+                <td>${item.Bonus_qty}</td>
+                <td>${item.bonus_tax}</td>
+                <td>${item.sale_tax_amt}</td>
+                <td>${item.further_tax}</td>
+                <td>${item.discount_per}</td>
+                <td>${item.Rate}</td>
+                <td>${item.TotalAmountc}</td>
+                <td style="display:none">${item.PO_ID}</td>
+                <td style="display:none">${item.PO_Detail_ID}</td>
+                <td style="display:none">${item.Item_Code}</td>
+                <td style="display:none">${item.Vendor_Name}</td>
+                <td style="display:none">${item.PO_Date}</td>
+                <td style="display:none">${item.Sales_Tax}</td>
+                <td style="display:none">${item.discount_amount}</td>
+                <td style="display:none">${item.advancetax}</td>
+                <td style="display:none">${item.advancetaxid}</td>
+                <td style="display:none">${item.further_taxid}</td>
+                <td style="display:none">${item.IsBatch || 0}</td>
+                </tr>`;
                     });
 
                     $('#PO_Modal tbody').html(html);
+                    $('#searchPONo').val('');
+                    $('#PO_Modal tbody tr').show();
 
                     $('#PO_Modal').modal('show');
                 },
@@ -1402,6 +1422,9 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
+                        <div class="input-group" style="width: 40%;">
+                            <input type="text" id="searchPONo" class="form-control" placeholder="Search by PO No..." />
+                        </div>
                         <h5 class="modal-title" id="PO_ModalLabel">PO Details</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -1424,8 +1447,6 @@
                                     <th>Total Amount</th>
                                 </tr>
                             </thead>
-
-
                             <tbody>
                             </tbody>
                         </table>

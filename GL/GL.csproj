@@ -250,6 +250,7 @@
     <Content Include="Modules\Dashboards\Biodatadashboard.aspx" />
     <Content Include="Modules\Dashboards\CEODashboardNew.aspx" />
     <Content Include="Modules\Dashboards\CEODashBorad.aspx" />
+    <Content Include="Modules\Dashboards\Chief_Executive_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\DashPatientsCount.aspx" />
     <Content Include="Modules\Dashboards\DashPatientsCountertoClinic.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
@@ -26039,6 +26040,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\CEODashBorad.aspx.designer.cs">
       <DependentUpon>CEODashBorad.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\Chief_Executive_Dashboard.aspx.cs">
+      <DependentUpon>Chief_Executive_Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\Chief_Executive_Dashboard.aspx.designer.cs">
+      <DependentUpon>Chief_Executive_Dashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\DashPatientsCount.aspx.cs">
       <DependentUpon>DashPatientsCount.aspx</DependentUpon>

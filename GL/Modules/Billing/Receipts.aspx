@@ -1307,6 +1307,7 @@
             $("#txtDateTo").val($.datepicker.formatDate('dd M yy', new Date()));
             $("#txtReceiptDate").val($.datepicker.formatDate('dd M yy', new Date()));
 
+
             var RcptID = '<%= Request.QueryString["Receipt_ID"]%>';
 
             if (RcptID != "") {
@@ -1320,6 +1321,16 @@
                     return false;
                 });
             });
+
+
+            LoadTotalBillingSum(); 
+            LoadTotalDiscount();
+            LoadTotalNetAmount();
+            LoadCashPaid();
+            LoadAdvances();
+            LoadRefund();
+            LoadActual();
+
         });
         function PrinAllReceiptDetail() {
             var MrNo = $('#txtMRNo').val();
@@ -1361,9 +1372,142 @@
             });
         }
 
+        function LoadTotalBillingSum() {
+            PageMethods.GetTotalBillingsAmount(function (data) {
+                $('#lblTotalBillingSum').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
+        function LoadTotalDiscount() {
+            PageMethods.GetTotalDiscountAmount(function (data) {
+                $('#lblTotalDiscount').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
+        function LoadTotalNetAmount() {
+            PageMethods.GetTotalNetAmount(function (data) {
+                $('#lblTotalAmount').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
+        function LoadCashPaid() {
+            PageMethods.GetTotalCashPaid(function (data) {
+                $('#lblTotalCashPaid').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
+        function LoadAdvances() {
+            PageMethods.GetTotalAdvance(function (data) {
+                $('#lblTotalAdvance').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
+        function LoadRefund() {
+            PageMethods.GetTotalRefund(function (data) {
+                $('#lblTotalAdvance').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
+        function LoadActual() {
+            PageMethods.GetTotalActual(function (data) {
+                $('#lblActualCash').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
     </script>
     <div class="row">
         <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
+        <div class="row mb-3">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header text-white">
+                        <i class=""></i>Total Sale
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblTotalBillingSum">0.00</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header text-white">
+                        <i class=""></i>Discount
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblTotalDiscount">0.00</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header  text-white">
+                        <i class=""></i>Net Sale
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblTotalAmount">0.00</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header  text-white">
+                        <i class=""></i>Cash Paid
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblTotalCashPaid">0.00</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header  text-white">
+                        <i class=""></i>Advances
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblTotalAdvance">0.00</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header  text-white">
+                        <i class=""></i>Services Refund
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblTotalRefund">0.00</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header  text-white">
+                        <i class=""></i>Actual Cash
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblActualCash">0.00</h4>
+                    </div>
+                </div>
+            </div>
+
+        </div>
         <!-- Left Card -->
         <div class="col-lg-4 col-md-5 col-sm-12">
             <div class="card">
