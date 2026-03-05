@@ -1235,6 +1235,39 @@ namespace PMS
             JavaScriptSerializer JSS = new JavaScriptSerializer();
             var data = JSS.Deserialize<Billings>(Parameters);
 
+            // >>>>>>>>>>>>>>>>>> DETERMINE APPOINTMENT TYPE <<<<<<<<<<<<<<<<<<<<
+            string appointmentType = null;
+
+            if (data.Appointment_ID.HasValue && data.Appointment_ID.Value > 0)
+            {
+                var opdApt = db.Appointment_Forms.FirstOrDefault(a => a.Appointment_ID == data.Appointment_ID.Value);
+                if (opdApt != null)
+                {
+                    appointmentType = "OPD";
+
+                    if (data.hdn_docid == null || data.hdn_docid == 0)
+                    {
+                        data.hdn_docid = Convert.ToInt32(opdApt.Consultant_ID);
+                    }
+                }
+                else
+                {
+                    var dermApt = db.Derma_Appointments.FirstOrDefault(a => a.Derma_Appointment_Id == data.Appointment_ID.Value);
+                    if (dermApt != null)
+                    {
+                        appointmentType = "Derma";
+                        if (data.hdn_docid == null || data.hdn_docid == 0 && !string.IsNullOrEmpty(dermApt.Doctor_Id))
+                        {
+                            if (int.TryParse(dermApt.Doctor_Id, out int dermaDocId))
+                            {
+                                data.hdn_docid = dermaDocId;
+                            }
+                        }
+                    }
+                }
+            }
+            // >>>>>>>>>>>>>>>>>> END APPOINTMENT TYPE LOGIC <<<<<<<<<<<<<<<<<<<<
+
             Ar_Billing newBill;
 
             if (data.Bill_ID == 0)
@@ -1320,6 +1353,10 @@ namespace PMS
             newBill.Bill_Date = DateTime.Now;
             newBill.Remarks = data.Remarks;
             var opd_proc = data.opd_procedure;
+
+            newBill.Appointment_id = data.Appointment_ID;
+            newBill.Appointment_type = appointmentType;
+
 
 
             newBill.Discount_Percentage = data.Discount_Percentage;
@@ -1969,6 +2006,28 @@ namespace PMS
             }
 
             DBClass.executeNonQueryWithoutBegin("exec spAutoGenerateLabTestEntry");
+
+            if (data.Appointment_ID.HasValue && data.Appointment_ID.Value > 0 && !string.IsNullOrEmpty(appointmentType))
+            {
+                try
+                {
+                    if (appointmentType == "OPD")
+                    {
+                        DBClass.executeNonQueryWithoutBegin(
+                            "UPDATE Appointment_Form SET Status='Visited' WHERE Appointment_ID=" + data.Appointment_ID.Value);
+                    }
+                    else if (appointmentType == "Derma")
+                    {
+                        DBClass.executeNonQueryWithoutBegin(
+                            "UPDATE Derma_Appointment SET Status='Visited' WHERE Derma_Appointment_Id=" + data.Appointment_ID.Value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log error but don't fail the bill save
+                    System.Diagnostics.Debug.WriteLine("Appointment status update failed: " + ex.Message);
+                }
+            }
 
             return newBill.Bill_ID.ToString();
         }
@@ -2620,6 +2679,9 @@ namespace PMS
             public string Main_Department { get; set; }
 
             public int? Sales_Tax_ID { get; set; }
+
+            public int? Appointment_ID { get; set; }
+            public string Appointment_Type { get; set; }
 
             public decimal? Sales_Tax_Percentage { get; set; }
             //public string Remarks { get; set; }
