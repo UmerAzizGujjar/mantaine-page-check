@@ -289,6 +289,12 @@ namespace PMS
             db.Refund_Detail_Services.InsertAllOnSubmit(ListOfshare);
             db.Refund_Detail_Doctor_Shares.InsertAllOnSubmit(ListOfRefund);
             db.SubmitChanges();
+
+            if (!string.IsNullOrEmpty(BillID))
+            {
+                DBClass.executeNonQueryWithoutBegin("UPDATE Ar_Billings SET Is_Refund = 1 WHERE Bill_ID = " + BillID);
+            }
+
             return value;
         }
     }

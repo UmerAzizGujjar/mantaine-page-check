@@ -182,6 +182,19 @@
                 success: function (response) {
                     debugger;
                     var parse = JSON.parse(response.d);
+
+                    if (parse && parse.length > 0) {
+                        if (parse[0].Is_Refund == true || parse[0].Is_Refund == 1) {
+                            Swal.fire({
+                                title: "Already Refunded",
+                                text: "This bill is already refund",
+                                icon: "warning",
+                                confirmButtonText: "OK"
+                            });
+                            return;
+                        }
+                    }
+
                     var length = parse.length;
                     var rows;
                     debugger;
