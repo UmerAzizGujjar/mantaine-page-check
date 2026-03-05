@@ -6109,12 +6109,13 @@ namespace PMS
                     reportPath += rptFileName;
                     rd.Load(reportPath);
 
+                    string TestName = Request.QueryString["testName"].ToString();
+
                     string stDate = Request.QueryString["sDate"].ToString();
                     string stTime = Request.QueryString["STime"].ToString();
 
                     string endDate = Request.QueryString["eDate"].ToString();
                     string endTime = Request.QueryString["ETime"].ToString();
-                    string TestName = Request.QueryString["testName"].ToString();
 
                     string parameterStDate = string.Empty;
                     string parameterEndDate = string.Empty;
@@ -6153,13 +6154,24 @@ namespace PMS
                     rd.SetParameterValue("@Procedure_types", Request.QueryString["Procedure_Type"]);
 
                 }
-                else if (reportName == "AdmitPatientList")
-                {
-                    reportPath += "InPatient/rptAdmitPatientList.rpt";
-                    rd.Load(reportPath);
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                }
-                else if (reportName == "TestResultStatus")
+            else if (reportName == "AdmitPatientList")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string PatType = Request.QueryString["PatientType"].ToString();
+
+                string rptFileName = "InPatient/rptAdmitPatientList.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@PatientType", PatType);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "TestResultStatus")
                 {
                     reportPath += "rptTest_Result_Status.rpt";
                     rd.Load(reportPath);
@@ -6679,7 +6691,7 @@ namespace PMS
                 }
                 else if (reportName == "BedAllocationReport")
                 {
-                    reportPath += "rptBedAllocationReport.rpt";
+                    reportPath += "Hospital/rptBedAllocationReport.rpt";
                     string endDate = Request.QueryString["EndDate"].ToString();
                     rd.Load(reportPath);
 
