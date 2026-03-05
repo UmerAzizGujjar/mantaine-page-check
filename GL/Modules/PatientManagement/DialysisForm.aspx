@@ -512,7 +512,8 @@
         }
 
         function selectPatient(id, mrNo, name, age, gender, contact) {
-            clearFormData();
+            debugger;
+            //clearFormData();
             
             $('#hdfPatientId').val(id);
             $('#infoMrNo').text(mrNo);
