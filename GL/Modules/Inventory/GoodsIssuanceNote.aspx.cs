@@ -30,6 +30,41 @@ namespace PMS.Inventory
             }
         }
         [WebMethod]
+        public static string GetAllitem(string searchText)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                var Details = db.INV_Items
+                    .Where(x => (string.IsNullOrEmpty(searchText)
+                                || x.Item_Code.Contains(searchText)
+                                || x.Description.Contains(searchText))
+
+                             && x.Active == true
+                             && x.Services != true
+                         )
+                    .OrderBy(x => x.Item_Code)
+                    .Take(200)
+                    .Select(x => new
+                    {
+                        Item_ID = x.Item_ID,
+                        Item_Code = x.Item_Code,
+                        Description = x.Description,
+                        Unit = db.GetDataValueName("UOM", x.Unit) ?? "",
+                        Purchase_Rate = x.Purchase_Rate != null ? x.Purchase_Rate : 0,
+                        UOM_Qty = x.UOM_Qty != null ? x.UOM_Qty : 1
+                    })
+                    .ToList();
+
+                return (new JavaScriptSerializer()).Serialize(Details);
+            }
+            catch (Exception)
+            {
+                return (new JavaScriptSerializer()).Serialize(new List<object>());
+            }
+        }
+        [WebMethod]
         public static string GetWareHouseCondition()
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
