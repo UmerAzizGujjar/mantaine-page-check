@@ -1391,7 +1391,7 @@ namespace PMS.Modules.PatientManagement
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
                     if (data.Emergency_Patient_ID == 0)
-                        data.Emergency_Patient_ID = Convert.ToInt32(DBClass.getField("select (isnull(max(Emergency_ID),0)+1) from Emergency_Patient").ToString());
+                        data.Emergency_Patient_ID = data.OutPatientID;
 
                     int couterNewRecords = 0;
                     List<Sysmtopm> SysmtopmList = db.Sysmtopms.Where(p => p.EmergencyID == data.Emergency_Patient_ID).ToList();
@@ -1427,6 +1427,8 @@ namespace PMS.Modules.PatientManagement
         }
         public class Symtom
         {
+            
+                public int OutPatientID { get; set; }
             public int Emergency_Patient_ID { get; set; }
             public List<SymtomsList> SymtomsList { get; set; }
         }
