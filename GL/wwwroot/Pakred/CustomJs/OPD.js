@@ -1832,20 +1832,27 @@ function AddReferPatientDetail(reg_id, OPDID) {
 }
 
 // OPD.js
-function OPD_Print(OPD_ID) {
+function OPD_Print(OPD_ID, company_name) {
     if (!OPD_ID) {
         console.error("OPD_ID is missing");
         return;
     }
 
     var locationInfo = window.location;
+
+    if (company_name == 'As-Siraat Serving Humanity') {
+        reportPath = '../../ReportViewer.aspx';
+    } else {
+        reportPath = 'ReportViewer.aspx'; // same folder
+    }
+
     var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
 
     if (locationInfo.hostname !== "localhost") {
         var urlInfo = window.location.href.split('/');
         var ip = urlInfo[2];
         var foldername = urlInfo[3];
-        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=' + OPD_ID;
     }
 
     window.open(url, '_blank');

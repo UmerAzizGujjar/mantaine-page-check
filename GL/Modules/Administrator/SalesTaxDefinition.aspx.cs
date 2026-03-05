@@ -59,7 +59,7 @@ namespace PMS
                     ltd.Description_Recvable = acc.Description_Recvable;
                     ltd.Active = Convert.ToBoolean(acc.Activechk);
                     ltd.S_W_H_Tax = Convert.ToBoolean(acc.STWH);
-                    //ltd.IsBilling = Convert.ToBoolean(acc.IsBilling);
+                    ltd.IsBilling = Convert.ToBoolean(acc.IsBilling);
                     db.Sales_Taxes.InsertOnSubmit(ltd);
                     db.SubmitChanges();
                 }
@@ -73,7 +73,7 @@ namespace PMS
                                  ",Description_Recvable = '" + acc.Description_Recvable + "'" +
                                  ",Active = '" + Convert.ToBoolean(acc.Activechk) + "'" +
                                  ",S_W_H_Tax = '" + Convert.ToBoolean(acc.STWH) + "'" +
-                                  ",IsBilling = '" + Convert.ToBoolean(acc.IsBilling) + "'" +
+                                  ",IsBilling = " + (Convert.ToBoolean(acc.IsBilling) ? 1 : 0) +
                                  " where Sales_Tax_ID = " + acc.Sales_Tax_ID + "";
                     DBClass.executeNonQueryWithoutBegin(sql);
                 }
@@ -95,7 +95,7 @@ namespace PMS
                               a.Description_Payable,
                               a.Description_Recvable,                              
                               a.S_W_H_Tax,
-                              //a.IsBilling,
+                              a.IsBilling,
                               a.Active,
                           }).ToList();
             return (new JavaScriptSerializer()).Serialize(Header);

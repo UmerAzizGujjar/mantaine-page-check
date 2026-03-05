@@ -52,7 +52,7 @@ namespace PMS.Modules.PatientManagement
                                     pat.Province,
                                     pat.Profession,
                                     pat.Doctor_ID,
-                                    pat.Doctor_Amount,
+                                    pat.doc_share,
                                     pat.Hospital_share,
                                     pat.Actual_amount,
                                     Department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category),
@@ -79,7 +79,7 @@ namespace PMS.Modules.PatientManagement
                         p.Province,
                         p.Profession,
                         p.Doctor_ID,
-                        Doctor_Amount = p.Doctor_Amount?.ToString("0.00") ?? "0.00",
+                        Doctor_Amount = p.doc_share ?? "0.00",
                         Hospital_share = p.Hospital_share?.ToString("0.00") ?? "0.00",
                         Actual_amount = p.Actual_amount?.ToString("0.00") ?? "0.00",
                         Creation_Date = p.Created_Time.HasValue

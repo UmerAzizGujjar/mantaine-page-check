@@ -43,6 +43,9 @@ namespace PMS
                 }
                 else if (PageTitle == "Consultant_Day_Wise_report")
                 {
+                    string x = "Consultant Day Wise Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     optRw.Visible = false;
                     Time_Row.Visible = true;
                     DateDiv.Visible = true;
@@ -271,6 +274,9 @@ namespace PMS
                 //}
                 if (PageTitle == "PCRS")
                 {
+                    string x = "PCRS";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
@@ -329,7 +335,9 @@ namespace PMS
 
                 if (PageTitle == "PCRS")
                 {
-
+                    string x = "PCRS";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     tr1MedicalSubsidy.Visible = true;
@@ -548,7 +556,9 @@ namespace PMS
 
                 if (this.PageTitle == "DepartmentWiseReport")
                 {
-
+                    string x = "Department Wise Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     //lblMainDepartment.Visible = true;
                     lblPatientType.Visible = true;
@@ -747,6 +757,9 @@ namespace PMS
                 //Active Patient List
                 if (this.PageTitle == "APL")
                 {
+                    string x = "APL";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     Time_Row.Visible = true;
                     DateDiv.Visible = true;
                     tr1MedicalSubsidy.Visible = true;
@@ -785,6 +798,9 @@ namespace PMS
                 //Active Patient List Summary
                 if (this.PageTitle == "APLS")
                 {
+                    string x = "APLS";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     Time_Row.Visible = true;
                     DateDiv.Visible = true;
                     tr1MedicalSubsidy.Visible = true;
@@ -827,6 +843,7 @@ namespace PMS
                 //Appointment List
                 if (this.PageTitle == "AL")
                 {
+
                     string x = "Appointment List";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
@@ -869,6 +886,9 @@ namespace PMS
                 //Patient Ledger
                 if (this.PageTitle == "PatientLedger")
                 {
+                    string x = "Patient Ledger Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = true;
                     Time_Row.Visible = true;
@@ -916,6 +936,9 @@ namespace PMS
 
                 if (this.PageTitle == "SinglePatientLedger")
                 {
+                    string x = "Single Patient Ledger Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
                     dpROw.Visible = false;
                     MRDiv.Visible = true;
@@ -963,7 +986,9 @@ namespace PMS
 
                 if (this.PageTitle == "SinglePatientLedger1")
                 {
-
+                    string x = "Single Patient Ledger1 Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
                     PatientDiv.Visible = true;
 
@@ -1370,7 +1395,7 @@ namespace PMS
                     Time_Row.Visible = true;  // could be problematic
                     DateDiv.Visible = true;
                     trSearch1.Visible = true;
-                    
+
                     op_FilterClinic.Visible = false;
                     lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -1423,12 +1448,12 @@ namespace PMS
                     Time_Row.Visible = true;  // could be problematic
                     DateDiv.Visible = true;
                     trSearch1.Visible = true;
-                    
+
                     op_FilterClinic.Visible = false;
                     lblMultiSelect.Visible = false;
 
                     trSearch1.Visible = true;
-                
+
 
                     lblDepartment.Text = "Vendor";
                     DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
@@ -1488,12 +1513,12 @@ namespace PMS
                     Time_Row.Visible = true;  // could be problematic
                     DateDiv.Visible = true;
                     trSearch1.Visible = true;
-                    
+
                     op_FilterClinic.Visible = false;
                     lblMultiSelect.Visible = false;
 
                     trSearch1.Visible = true;
-                
+
 
                     lblDepartment.Text = "Vendor";
                     DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
@@ -1554,7 +1579,7 @@ namespace PMS
                     tr_Summary.Visible = false;
                     Time_Row.Visible = true;  // could be problematic
                     DateDiv.Visible = true;
-                   
+
                     op_FilterClinic.Visible = false;
                     lblMultiSelect.Visible = false;
                     ddlShift.Visible = false;
@@ -1619,12 +1644,12 @@ namespace PMS
                     Time_Row.Visible = true;  // could be problematic
                     DateDiv.Visible = true;
                     trSearch1.Visible = true;
-                    
+
                     op_FilterClinic.Visible = false;
                     lblMultiSelect.Visible = false;
 
                     trSearch1.Visible = true;
-                
+
 
                     lblDepartment.Text = "Vendor";
                     DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
@@ -1657,7 +1682,7 @@ namespace PMS
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
 
-                    
+
                 }
                 #endregion
                 #region General Patient Modules
@@ -1954,6 +1979,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "Dischare_Revd")
                 {
+                    string x = "Discharge Received Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     trDoctor.Visible = true;
                     tr1MedicalSubsidy.Visible = false;
                     dpROw.Visible = false;
@@ -2041,7 +2069,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "IWPOS")
                 {
-
+                    string x = "Inventory Wise Purchase Order Summary Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = false;
 
@@ -2472,7 +2502,7 @@ namespace PMS
                     Stock_Movement.Visible = true;
 
                     ddlItemCategory.Visible = false;
-                    lbItemCategory.Visible =  false;
+                    lbItemCategory.Visible = false;
                     lblItemCode.Visible = false;
                     txtItemCode.Visible = false;
 
@@ -2514,7 +2544,7 @@ namespace PMS
                     Stock_Movement.Visible = true;
 
                     ddlItemCategory.Visible = false;
-                    lbItemCategory.Visible =  false;
+                    lbItemCategory.Visible = false;
                     lblItemCode.Visible = false;
                     txtItemCode.Visible = false;
 
@@ -2537,8 +2567,144 @@ namespace PMS
                     ddlDepartments.DataBind();
 
                 }
+                else if (this.PageTitle == "Purchase_Order_Report")
+                {
+                    string x = "Purchase Order Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+
+                    Stock_Movement.Visible = true;
+
+                    ddlItemCategory.Visible = false;
+                    lbItemCategory.Visible = false;
+                    lblItemCode.Visible = false;
+                    txtItemCode.Visible = false;
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+                }
+                else if (this.PageTitle == "Payment_to_Supplier_Report")
+                {
+                    string x = "Payment to Supplier Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+
+                    Stock_Movement.Visible = false;
+
+                    ddlItemCategory.Visible = false;
+                    lbItemCategory.Visible = false;
+                    lblItemCode.Visible = false;
+                    txtItemCode.Visible = false;
+
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+                }
+                else if (this.PageTitle == "Purchase_Register_Report")
+                {
+                    string x = "Purchase Register Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+
+                    Stock_Movement.Visible = false;
+
+                    ddlItemCategory.Visible = false;
+                    lbItemCategory.Visible = false;
+                    lblItemCode.Visible = false;
+                    txtItemCode.Visible = false;
+
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+                }
+                else if (this.PageTitle == "Pending_Payment_Request_Report")
+                {
+                    string x = "Pending Payment Request Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = false;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+
+                    Stock_Movement.Visible = false;
+
+                    ddlItemCategory.Visible = false;
+                    lbItemCategory.Visible = false;
+                    lblItemCode.Visible = false;
+                    txtItemCode.Visible = false;
+                }
                 else if (this.PageTitle == "VPDR")
                 {
+                    string x = "VPDR";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr_Export.Visible = false;
                     DateDiv.Visible = false;
@@ -2585,6 +2751,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "VendorWiseLedger")
                 {
+                    string x = "Vendor Wise Ledger Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     DateDiv.Visible = true;
                     sttDate.Visible = true;
@@ -3159,7 +3328,7 @@ namespace PMS
                     dpROw.Visible = false;
                     MRDiv.Visible = true;
                     lblMRNo.Visible = true;
-                    txtMRNo.Visible = true; 
+                    txtMRNo.Visible = true;
                 }
                 if (this.PageTitle == "PharmacyStockDetail")
                 {
@@ -3232,14 +3401,7 @@ namespace PMS
 
                     // ADDING NEW WAREHOUSE
 
-                    object valuset;
-                    valuset = DBClass.GetValueSet("Ware house");
-                    ddlwareHouse.DataSource = valuset;
-                    ddlwareHouse.DataTextField = "DataValue_Description";
-                    ddlwareHouse.DataValueField = "DataValue_Name";
-                    ddlwareHouse.Items.Clear();
-                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlwareHouse.DataBind();
+
                     Stock_Movement.Visible = true;
 
 
@@ -3289,7 +3451,7 @@ namespace PMS
                     ddlMainDepartment.DataBind();
 
 
-                   DataBaseDataContext dbb = new DataBaseDataContext(DBClass.ConnectionString());
+                    DataBaseDataContext dbb = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in dbb.DataValues
                                where d.ValueSet_ID == 3187
                                select new { d.DataValue_Description, d.DataValue_Name };
@@ -3414,7 +3576,7 @@ namespace PMS
                     ddlMainDepartment.DataBind();
 
 
-                   DataBaseDataContext dbb = new DataBaseDataContext(DBClass.ConnectionString());
+                    DataBaseDataContext dbb = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in dbb.DataValues
                                where d.ValueSet_ID == 3187
                                select new { d.DataValue_Description, d.DataValue_Name };
@@ -3539,7 +3701,7 @@ namespace PMS
                     ddlMainDepartment.DataBind();
 
 
-                   DataBaseDataContext dbb = new DataBaseDataContext(DBClass.ConnectionString());
+                    DataBaseDataContext dbb = new DataBaseDataContext(DBClass.ConnectionString());
                     valusets = from d in dbb.DataValues
                                where d.ValueSet_ID == 3187
                                select new { d.DataValue_Description, d.DataValue_Name };
@@ -3731,7 +3893,7 @@ namespace PMS
                 }
                 if (this.PageTitle == "YearlyPharmacyOverallSummary")
                 {
-                    
+
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -3995,7 +4157,7 @@ namespace PMS
                     lbShift.Visible = false;
 
                 }
-            
+
                 if (this.PageTitle == "Sale_Return_Report")
                 {
                     string x = "Sale Return Report";
@@ -4116,10 +4278,70 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     tr_Summary.Visible = false;
-                    AllowPatientRecord = false; 
+                    AllowPatientRecord = false;
                     ddlMedicalSubsidy.Items.Clear();
                     ddlMedicalSubsidy.Items.Add("Monthly");
                     ddlMedicalSubsidy.Items.Add("Annually");
+
+                }
+                if (this.PageTitle == "Procedure_Time_Line_Detail")
+                {
+                    dpROw.Visible = false;
+                    trProcedure1.Visible = true;
+
+                    tr1MedicalSubsidy.Visible = false;
+                    tr_Export.Visible = true;
+                    lblMultiSelect.Visible = false;
+
+                    tr_Summary.Visible = false;
+                    optRw.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    Time_Row.Visible = true;
+                    DateDiv.Visible = true;
+                    tr_Summary.Visible = false;
+                    AllowPatientRecord = false;
+
+                    lblPatientType.Text = "Patient Type";
+                    object valusetS;
+                    valusetS = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusetS;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Clear();
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+
+                    trSearch1.Visible = true;
+                    lblDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+
+                    DataTable dt = DBClass.getDataTable("select * from inv_items");
+                    ddlItemName.DataSource = dt;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+                    td11.Text = "Procedure Name";
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Procedure Types");
+                    ddlProcedure.DataSource = valuset;
+                    ddlProcedure.DataTextField = "DataValue_Description";
+                    ddlProcedure.DataValueField = "DataValue_Name";
+                    ddlProcedure.Items.Clear();
+                    ddlProcedure.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlProcedure.DataBind();
+
+                    lbProcedure.Text = "Procedure Type";
+
+                    // appending the OPD IPD 
+                    //trDepartmentType.Visible = true;
+                    //ddOPDIPDdiv.Visible = true;
+                    //lblDepartmentDiv.Visible = true;
+
 
                 }
                 if (this.PageTitle == "AverageLengthOfStay")
@@ -4358,7 +4580,7 @@ namespace PMS
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                 }
-                else if (this.PageTitle == "OPD_Time_Line" || this.PageTitle == "IPD_Time_Line" || this.PageTitle == "Discharge_Time_Line" || this.PageTitle == "Ward_Allocation_Time_Line" ||  this.PageTitle == "DepartmentWiseProcedureTimeLine")
+                else if (this.PageTitle == "OPD_Time_Line" || this.PageTitle == "IPD_Time_Line" || this.PageTitle == "Discharge_Time_Line" || this.PageTitle == "Ward_Allocation_Time_Line" || this.PageTitle == "DepartmentWiseProcedureTimeLine")
                 {
                     dpROw.Visible = false;
 
@@ -5489,9 +5711,47 @@ namespace PMS
                     ddlMedicalSubsidy.DataBind();
 
                 }
+
                 else if (PageTitle == "AdmitPatientList")
                 {
-                    Response.Redirect("ReportViewer.aspx?ReportName=AdmitPatientList");
+
+                    string x = "Admit Patient List";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+
+                    dpROw.Visible = true;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblDepartment.Visible = false;
+                    lblPatientType.Visible = true;
+                    ddlPatientType.Visible = true;
+                    lblMultiSelect.Visible = false;
+
+                    Stock_Movement.Visible = false;
+
+                    ddlItemCategory.Visible = false;
+                    lbItemCategory.Visible = false;
+                    lblItemCode.Visible = false;
+                    txtItemCode.Visible = false;
+
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlPatientType.DataBind();
+
+
+
+                    //Response.Redirect("ReportViewer.aspx?ReportName=AdmitPatientList");
                 }
                 else if (this.PageTitle == "Daily_Revenue" || this.PageTitle == "Service_Charges_Detail" || this.PageTitle == "Department_Wise_Cash_Summary")
                 {
@@ -5969,10 +6229,14 @@ namespace PMS
                     optRw.Visible = false;
                     trDoctor.Visible = false;
                     tr_Summary.Visible = false;
+                    tr_Export.Visible = true;
 
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
-                    DateDiv.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = false;
+                    txtStart_Date.Visible = false;
+                    sttDate.Visible = false;
                     Time_Row.Visible = false;
                 }
                 if (this.PageTitle == "OutSourceTestDetail")
@@ -6227,43 +6491,56 @@ namespace PMS
 
                     //----- end update
                 }
-                if (this.PageTitle == "Procedure_Time_Line_Detail")
-                {
-                    string x = "Procedure Time Line Detail";
-                    Master.Label2.Text = x;
-                    Master.GetMenuName();
-                    lblMainDepartment.Visible = false;
-                    ddlDepartments.Visible = false;
-                    lblPatientType.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    ddlPatientType.Visible = false;
-                    optRw.Visible = false;
-                    trDoctor.Visible = false;
-                    tr1MedicalSubsidy.Visible = true;
-                    tr_Summary.Visible = false;
+                //if (this.PageTitle == "Procedure_Time_Line_Detail")
+                //{
+                //    string x = "Procedure Time Line Detail";
+                //    Master.Label2.Text = x;
+                //    Master.GetMenuName();
+                //    lblMainDepartment.Visible = false;
+                //    Time_Row.Visible = true;
+                //    DateDiv.Visible = true;
+                //    trProcedure1.Visible = true;
+                //    ddlDepartments.Visible = false;
+                //    lblPatientType.Visible = false;
+                //    lblMultiSelect.Visible = false;
+                //    ddlPatientType.Visible = false;
+                //    optRw.Visible = false;
+                //    trDoctor.Visible = false;
+                //    tr1MedicalSubsidy.Visible = true;
+                //    tr_Summary.Visible = false;
 
-                    AllowPatientRecord = false;
+                //    AllowPatientRecord = false;
 
-                    lblMedical.Text = "Patient Type";
-                    ddlMedicalSubsidy.Items.Clear();
-                    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "All", Value = "All" });
-                    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "General", Value = "1" });
-                    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "Private", Value = "2" });
-                    ddlMedicalSubsidy.DataBind();
-                    SetDepartent();
-                    trProcedure1.Visible = true;
-                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                    var serviceList = (from sl in db.INV_Items
-                                       where
-                                       sl.Procedure_types.Length > 1
-                                       select new { sl.Item_ID, sl.Description }).ToList();
+                //    lblMedical.Text = "Patient Type";
+                //    ddlMedicalSubsidy.Items.Clear();
+                //    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "All", Value = "All" });
+                //    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "General", Value = "1" });
+                //    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "Private", Value = "2" });
+                //    ddlMedicalSubsidy.DataBind();
+                //    SetDepartent();
+                //    trSearch1.Visible = true;
 
-                    ddlProcedure.DataSource = serviceList;
-                    ddlProcedure.DataValueField = "Item_ID";
-                    ddlProcedure.DataTextField = "Description";
-                    ddlProcedure.Items.Add(new ListItem() { Text = "All", Value = "All" });
-                    ddlProcedure.DataBind();
-                }
+                //    DataTable dt = DBClass.getDataTable("select * from inv_items");
+                //    ddlItemName.DataSource = dt;
+                //    ddlItemName.DataValueField = "Item_ID";
+                //    ddlItemName.DataTextField = "Description";
+                //    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                //    ddlItemName.DataBind();
+
+                //    object valuset;
+                //    valuset = DBClass.GetValueSet("Procedure Types");
+                //    ddlProcedure.DataSource = valuset;
+                //    ddlProcedure.DataTextField = "DataValue_Description";
+                //    ddlProcedure.DataValueField = "DataValue_Name";
+                //    ddlProcedure.Items.Clear();
+                //    ddlProcedure.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                //    ddlProcedure.DataBind();
+
+                //    // appending the OPD IPD 
+                //    ddOPDIPDdiv.Visible = true;
+
+
+                //}
                 if (this.PageTitle == "PrivateAdmition_Detail")
                 {
                     string x = "Private Admition Detail";

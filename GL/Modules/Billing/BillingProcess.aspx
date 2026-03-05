@@ -40,59 +40,91 @@
             function PrintCRV() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
-                 var locationInfo = window.location;
-                 var url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
-                 if (!locationInfo.origin.includes('localhost')) {
-                     var urlInfo = window.location.href.split('/');
-                     var ip = urlInfo[2];
-                     var foldername = urlInfo[3];
-                     url = 'http://' + ip + '/' + foldername + "../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
-                 }
-                 window.open(url, '_blank');
+                var locationInfo = window.location;
 
-             }
+                var user_name = '<% =AppConfig.Company_Name %>';
+                if (user_name == 'As-Siraat Serving Humanity') {
+                    reportPath = '../../ReportViewer.aspx';
+                } else {
+                    reportPath = 'ReportViewer.aspx'; // same folder
+                }
+                var url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
+                if (!locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + id;
+                }
+                window.open(url, '_blank');
+
+            }
             function ApproveBill() {
                 debugger;
                 var BillId = '<% =Request.QueryString["Bill_ID"] %>';
-                            PageMethods.approve_Bill(BillId, function (Tests) {
-                                debugger
-                                var result = JSON.parse(Tests);
+                PageMethods.approve_Bill(BillId, function (Tests) {
+                    debugger
+                    var result = JSON.parse(Tests);
 
-                                if (result.Success === true) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Success!',
-                                        text: result.Message,
-                                        showConfirmButton: false,
-                                        timer: 2500,
-                                        customClass: {
-                                            popup: 'swal-big-popup',
-                                            title: 'swal-big-title',
-                                            htmlContainer: 'swal-big-text'
-                                        }
-                                    });
+                    if (result.Success === true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: result.Message,
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
 
-                                    setTimeout(function () {
-                                        location.reload();
-                                    }, 2500);
-                                }
-                                else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error!',
-                                        text: result.Message
-                                    });
-                                }
-                            },
-                                function (error) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error!',
-                                        text: error.get_message()
-                                    });
-                                });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2500);
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: result.Message
+                        });
+                    }
+                },
+                    function (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.get_message()
+                        });
+                    });
+            }
+
+            var Appointment;
+            function CheckAppointmentAllow() {
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/RightAppointmentBilling",
+                    data: JSON.stringify({}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        Appointment = JSON.parse(response.d);
+                        if (Appointment == '01') {
+                            $('#btnAppointment').show();
                         }
-
+                        else {
+                            $('#btnAppointment').hide();
+                            //getprNoBy();
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching items", error);
+                    }
+                });
+            }
 
 
             function BackToPrintPatient() {
@@ -482,16 +514,16 @@
             function PrintVoucher() {
                 debugger;
                 var id = '<%=Request.QueryString["Bill_ID"]%>';
-            var locationInfo = window.location;
+                var locationInfo = window.location;
                 var url = 'ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
-            if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
-                var urlInfo = window.location.href.split('/');
-                var ip = urlInfo[2];
-                var foldername = urlInfo[3];
-                url = 'http://' + ip + '/'+ foldername +'/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
+                if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=OPD Voucher&TransID=' + id + '&TransType=BIJV';
+                }
+                window.open(url, '_blank');
             }
-            window.open(url, '_blank');
-        }
             function PrintHospital() {
                 window.open('/ReportViewer.aspx?ReportName=PrintHospital&ReportTitle=Hospital Print' + '&Bill_ID=' + '<%= Request.QueryString["Bill_ID"]%>');
             }
@@ -739,14 +771,14 @@
                                 }
                             });
                         }, 500);
-                   
+
                         var panel = $("#ddlpanel").val();
                         if (panel != 0 || panel != "0") {
                             if (value.Test_ID != 0) {
                                 GetpanelTestRate(panel, value.Test_ID);
                             }
                             else {
-                                GetpanelGroupTestRate(panel,value.Group_Category);
+                                GetpanelGroupTestRate(panel, value.Group_Category);
                             }
                         }
 
@@ -850,7 +882,7 @@
                         if (globalTestRate == 0 || globalTestRate == "" || globalTestRate == null) {
                             globalTestRate = Rate;
                         }
-                        var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnDisPer" value="' + DisAmt + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + globalTestRate + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + ',' + Rotation_Name + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" disabled style="width: 45px !important;"  onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td id="amnt' + rowIndex + '" name="amnt" style="text-align:Right;"onkeypress="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + globalTestRate + ' </td><td> <input type="text" name="DisPer" value="' + DisAmt + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">  </td><input type="text" name="DocShare" value="' + 0 + '"  style="width: 75px !important;"/></td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" onchange="GetDocAgreementValuess(this)" name="ddlDoctor" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + date + '"/>' + date +' </td> </tr>'
+                        var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnDisPer" value="' + DisAmt + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + globalTestRate + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + ',' + Rotation_Name + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" disabled style="width: 45px !important;"  onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td id="amnt' + rowIndex + '" name="amnt" style="text-align:Right;"onkeypress="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + globalTestRate + ' </td><td> <input type="text" name="DisPer" value="' + DisAmt + '"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">  </td><input type="text" name="DocShare" value="' + 0 + '"  style="width: 75px !important;"/></td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" onchange="GetDocAgreementValuess(this)" name="ddlDoctor" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + date + '"/>' + date + ' </td> </tr>'
                         var rowstbl = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + '.' + Rotation_Name + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" disabled=disabled onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td>' + globalTestRate + '</td><input type="text" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td></tr>'
                         debugger;
                         $('#tblDetails tbody').append(rows);
@@ -918,7 +950,7 @@
                         Rate = (Test_Rate != 0) ? Test_Rate : Rate;
                         if (Rate == null || Rate == "")
                             Rate = 0;
-                        var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnDisPer" value="0"/><input type="hidden" name="hdnDisAmount" / value="0.00" ><input type="hidden" name="hdnNet_Amount" value=' + Rate + ' /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + '</td><td>' + remarks + '</td><td><input type="text" disabled name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + Rate + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + Rate + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue +' </td> </tr>'
+                        var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnDisPer" value="0"/><input type="hidden" name="hdnDisAmount" / value="0.00" ><input type="hidden" name="hdnNet_Amount" value=' + Rate + ' /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + '</td><td>' + remarks + '</td><td><input type="text" disabled name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + Rate + '" /></td><td  id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"> ' + Rate + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + ' </td> </tr>'
                         var rowstbl = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + test + '" /> <input type="hidden" name="hdnItemName" value="' + TestName + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + Category_ID + '" /> <input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + TestName + '</td><td  id="amnt' + rowIndex + '" name"amnt">' + Rate + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td></tr>'
                         var test_array = $('#tblDetails').find('input[name=hdnItemID][value="' + test + '"]');
                         if (test_array.length > 0) {
@@ -1713,16 +1745,16 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
                         }
                         PageMethods.CheckReceipts(Bill_ID, function (receipts) {
                             if (receipts == '') {
-                                // ✅ Proceed to save — only ONE CheckReceipts call
+                                // ? Proceed to save — only ONE CheckReceipts call
                                 PageMethods.SaveBillRecord(JSON.stringify(Parameters), function (resp) {
-                                    // 🔹 Parse response safely
+                                    // ?? Parse response safely
                                     let result;
                                     try {
                                         result = JSON.parse(resp);
@@ -1734,7 +1766,7 @@
                                         }
                                     }
 
-                                    // 🔹 Handle error
+                                    // ?? Handle error
                                     if (result.success === false) {
                                         Swal.fire({
                                             icon: 'error',
@@ -1753,7 +1785,7 @@
                                         return;
                                     }
 
-                                    // 🔹 Success path
+                                    // ?? Success path
                                     const billId = (result.billId || result || '').toString().trim();
                                     if (!billId || isNaN(billId)) {
                                         Swal.fire('Error!', 'Invalid Bill ID returned: ' + billId, 'error').then(() => {
@@ -1869,21 +1901,21 @@
                     var hos_share = parseFloat(result["hos_share"]) || 0;
                     var doc_share = parseFloat(result["doc_share"]) || 0;
 
-                    // 🔍 Find the <tr> from 'rows'
+                    // ?? Find the <tr> from 'rows'
                     var $row = $(rows).closest('tr');
 
-                    // ✅ Read DisPer from *this row* (not 'value')
+                    // ? Read DisPer from *this row* (not 'value')
                     var disPerStr = $row.find('input[name="DisPer"]').val();
                     var disPerNum = parseFloat(disPerStr) || 0;
 
-                    // 🔧 Apply discount % to hospital & doctor shares (if > 0)
+                    // ?? Apply discount % to hospital & doctor shares (if > 0)
                     if (disPerNum > 0) {
-                        var factor = disPerNum / 100; // e.g. 20 → 0.2
+                        var factor = disPerNum / 100; // e.g. 20 ? 0.2
                         hos_share = hos_share * (1 - factor);
                         doc_share = doc_share * (1 - factor);
                     }
 
-                    // ✅ Set final (discounted) values back
+                    // ? Set final (discounted) values back
                     $row.find('input[name="HocShare"]').val(hos_share.toFixed(2));
                         $row.find('input[name="DocShare"]').val(doc_share.toFixed(2));
 
@@ -2088,7 +2120,7 @@
 
                         //// --- Apply discount % to hospital & doctor shares (localized change) ---
                         //if (DisPer && !isNaN(DisPer)) {
-                        //    var disPerNum = parseFloat(DisPer) / 100; // e.g. 20% → 0.2
+                        //    var disPerNum = parseFloat(DisPer) / 100; // e.g. 20% ? 0.2
                         //    var disAmtHosp = parseFloat(hospital_share || 0) * disPerNum;
                         //    var disAmtDoc  = parseFloat(doctor_share  || 0) * disPerNum;
 
@@ -3438,9 +3470,9 @@
                         var data = JSON.parse(resp.d);
                         var rowIndex = $('#tblDetails tbody tr').length;
 
-                        // 🔍 Ensure doctors is valid
+                        // ?? Ensure doctors is valid
                         if (typeof doctors === 'undefined' || !doctors) {
-                            console.error("❌ 'doctors' variable is not defined or empty!");
+                            console.error("? 'doctors' variable is not defined or empty!");
                             return;
                         }
 
@@ -3448,7 +3480,7 @@
                             var disc = "0.00";
                             var itemanme = value.Item_Name || value.GroupName;
 
-                            // ✅ Safely get Share_type
+                            // ? Safely get Share_type
                             var shareType = null;
                             if (value.m && value.m.Share_type !== undefined) {
                                 shareType = value.m.Share_type;
@@ -3458,7 +3490,7 @@
                                 shareType = '';
                             }
                             var TestDate = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
-                            // ✅ Build select safely
+                            // ? Build select safely
                             var disabledAttr = (shareType === '002') ? ' disabled' : '';
                             var doctorSelect =
                                 '<select id="ddldoctor' + (rowIndex + 1) + '" ' +
@@ -3469,7 +3501,7 @@
                                 doctors +
                                 '</select>';
 
-                            // ✅ Build row
+                            // ? Build row
                             var row = '<tr>' +
                                 '<td style="text-align:center;">' + (rowIndex + 1) + '</td>' +
                                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
@@ -3964,7 +3996,7 @@
                 debugger;
                 procedureId = parseInt(procedureId);
                 if (!procedureId || procedureId <= 0) {
-                    console.warn("⚠️ Invalid procedureId:", procedureId);
+                    console.warn("?? Invalid procedureId:", procedureId);
                     return;
                 }
                 
@@ -4029,15 +4061,15 @@
 
                        //$('#bomSection').show();
 
-                        console.log('✅ Loaded ' + data.items.length + ' BOM item(s). Total runtime cost: ' + totalRuntime.toFixed(2));
+                        console.log('? Loaded ' + data.items.length + ' BOM item(s). Total runtime cost: ' + totalRuntime.toFixed(2));
                     },
                     error: function (xhr, status, error) {
-                        console.error('❌ BOM Load Error:', error);
+                        console.error('? BOM Load Error:', error);
                         try {
                             var err = JSON.parse(xhr.responseText);
                             console.error('Server:', err.Message || err);
                         } catch (e) { }
-                        $('#tblBOM tbody').html('<tr><td colspan="9" class="text-danger text-center">⚠️ Failed to load BOM</td></tr>');
+                        $('#tblBOM tbody').html('<tr><td colspan="9" class="text-danger text-center">?? Failed to load BOM</td></tr>');
                         //$('#bomSection').hide();
                         //$('#bomTotal').hide();
                     }
@@ -4953,7 +4985,11 @@
                         }
                         else {
                             if (id == '') {
-                                FetchRecommendedDetails();
+                                var urlParams = new URLSearchParams(window.location.search);
+                                var appointmentId = urlParams.get('Appointment_ID');
+                                if (!appointmentId || appointmentId == '0' || appointmentId == '') {
+                                    FetchRecommendedDetails();
+                                }
                             }
                         }
                     }
@@ -5051,6 +5087,18 @@
                     else {
 
                     }
+                }
+
+
+                var urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('isAdd') === 'true' && urlParams.get('Appointment_ID')) {
+                    
+                }
+
+                if (appointmentId && appointmentId != '0' && appointmentId != '') {
+                    setTimeout(function () {
+                        LoadDermaAppointmentServices(parseInt(appointmentId));
+                    }, 1000);
                 }
 
             }
@@ -5902,7 +5950,7 @@
                 });
                 fillmartial();
                 fillgender();
-
+                CheckAppointmentAllow();
 
                 jQuery(function ($) {
                     MaskedInput({
@@ -5986,7 +6034,32 @@
                 $('#ddlUserBranch').select2();
 
                 LoadSalesTaxDefinitions();
-                
+
+                $("#txtAppointmentSearch").keypress(function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault();
+                        SearchAppointments();
+                    }
+                });
+
+                var urlParams = new URLSearchParams(window.location.search);
+                var appointmentId = urlParams.get('Appointment_ID');
+
+                if (appointmentId && appointmentId != '0' && appointmentId != '') {
+                    $('#hdnAppointment_ID').val(appointmentId);
+                }
+
+                if (appointmentId && appointmentId != '0' && appointmentId != '') {
+                    $('#hdnAppointment_ID').val(appointmentId);
+                    setTimeout(function () {
+                        var patientId = $('#hdfPatient_ID').val();
+                        if (patientId && patientId != '') {
+                            LoadDermaAppointmentServices(parseInt(appointmentId));
+                        }
+                    }, 1500); 
+                }
+
+
             });  // document.ready ends
 
             var editrights;
@@ -6044,7 +6117,7 @@
                 });
             }
 
-            
+
 
             function LoadSalesTaxDefinitions(selectedID, selectedPerc) {
 
@@ -6099,7 +6172,195 @@
                 }
                 CountBalance();
             }
-           
+
+            function OpenAppointmentModal() {
+                debugger;
+                $('#AppointmentSearchModel').modal({
+                    backdrop: 'static'
+                });
+                LoadAllAppointments();
+                $('#srchapt').text("Search Appointments:");
+                $('#txtAppointmentSearch').val('');
+            }
+
+            function LoadAllAppointments() {
+                debugger;
+                PageMethods.SearchAppointment('', OnFilterAppointments, OnFailAppointments);
+            }
+
+            function SearchAppointments() {
+                var text = $('#txtAppointmentSearch').val();
+                PageMethods.SearchAppointment(text, OnFilterAppointments, OnFailAppointments);
+            }
+
+            function OnFilterAppointments(data) {
+                ClearAppointmentResults();
+                for (var i = 0; i < data.length; i++) {
+                    AddAppointmentResult(
+                        data[i].Appointment_ID,
+                        data[i].Appointment_No,
+                        data[i].App_Date,
+                        data[i].Patient_Name,
+                        data[i].Emp_name,
+                        data[i].Age,
+                        data[i].Phone,
+                        data[i].pat_id
+                    );
+                }
+            }
+
+            function AddAppointmentResult(Appointment_ID, Appointment_No, App_Date, Patient_Name, Emp_name, Age, Phone, pat_id) {
+                debugger;
+                var tblLength = tblAppointmentResult.rows.length;
+                var row = iAppointmentBody.insertRow(-1);
+                var cell;
+                cell = row.insertCell(-1);
+                cell.innerHTML = '<span spnAptID' + tblLength + '>' + Appointment_ID + '</span>';
+                cell.className = "hide";
+                cell = row.insertCell(-1);
+                cell.innerHTML = '<span class="HRcontent">' + Appointment_No + '</span>';
+                cell = row.insertCell(-1);
+                cell.innerHTML = '<span class="HRcontent">' + App_Date + '</span>';
+                cell = row.insertCell(-1);
+                cell.innerHTML = '<span class="HRcontent">' + Patient_Name + '</span>';
+                cell = row.insertCell(-1);
+                cell.innerHTML = '<span class="HRcontent">' + Emp_name + '</span>';
+                cell = row.insertCell(-1);
+                cell.innerHTML = '<span class="HRcontent">' + Age + '</span>';
+                cell = row.insertCell(-1);
+                cell.innerHTML = '<span class="HRcontent">' + Phone + '</span>';
+                cell = row.insertCell(-1);
+                var actions = '';
+                actions += '<a style="color:#EFA63E;font-size:20px;margin-left: 30px !important;border-radius:5px;text-decoration:none;" ' +
+                    'href="#" onclick="AddAppointmentDetail(' + Appointment_ID + ',' + pat_id + ')">' +
+                    '<i class="fa fa-plus-circle"></i></a>';
+               
+                cell.innerHTML = actions;
+            }
+
+            function ClearAppointmentResults() {
+                while (tblAppointmentResult.rows.length > 1) {
+                    tblAppointmentResult.deleteRow(1);
+                }
+            }
+
+            var isAdd = false;
+
+            function AddAppointmentDetail(Appointment_ID, pat_id) {
+                debugger;
+                try {
+                    isAdd = true;
+                    window.location.href = "BillingProcess.aspx?Reg_ID=" + pat_id + "&isAdd=" + isAdd + "&Appointment_ID=" + Appointment_ID;
+
+                    sessionStorage.setItem('Appointment_ID', Appointment_ID);
+                } catch (err) {
+                    alert(err.message);
+                }
+            }
+
+            function ViewAppointmentDetail(Appointment_ID) {
+                debugger;
+                alert('View Appointment: ' + Appointment_ID);
+            }
+
+            function OnFailAppointments(exc) {
+                alert(exc.get_message());
+            }
+
+            function LoadDermaAppointmentServices(Appointment_ID) {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetDermaAppointmentServices",
+                    data: JSON.stringify({ "Appointment_ID": Appointment_ID }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var data = response.d;
+                        var result = JSON.parse(data);
+
+                        if (result.success === true && result.service) {
+                            var service = result.service;
+                            var appointment = result.appointment;
+                            if (appointment.Doctor_Id) {
+                                $('#hdn_docid').val(appointment.Doctor_Id);
+                                setTimeout(function () {
+                                    $('.ddlDoctor').val(appointment.Doctor_Id).trigger('change');
+                                }, 500);
+                            }
+                            AddServiceFromAppointment(service, appointment);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error loading appointment services:", error);
+                    }
+                });
+            }
+
+            function AddServiceFromAppointment(service, appointment) {
+                debugger;
+
+                var existingRow = $('#tblDetails tbody tr').find('input[name="hdnItemID"][value="' + service.Item_ID + '"]');
+                if (existingRow.length > 0) {
+                    console.log('Service already exists in table, skipping...');
+                    return; 
+                }
+
+                var rowIndex = parseInt($('#tblDetails tbody tr').length);
+                var dateValue = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
+               var itemtype = service.Services === true ? 'Service' : 'Item';
+               var isMajorMinors = (service.Procedure_types == null || service.Procedure_types == 0) ? "" : service.Procedure_types;
+               var remarks = appointment.Appointment_No ? "Appointment: " + appointment.Appointment_No : "";
+
+               var row = '<tr>' +
+                   '<td style="text-align:left;">' + (rowIndex + 1) + '</td>' +
+                   '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
+                   '<td style="text-align:left;">' +
+                   '<input type="hidden" name="hdnParentTrans_ID" value="0" />' +
+                   '<input type="hidden" name="hdnParentTrans_Name" value="DermaAppointment" />' +
+                   '<input type="hidden" name="hdnParentTrans_Type" value="Appointment" />' +
+                   '<input type="hidden" name="hdnItemID" value="' + service.Item_ID + '" />' +
+                   '<input type="hidden" name="hdnItemName" value="' + (service.Description || '').replace(/"/g, '&quot;') + '" />' +
+                   '<input type="hidden" name="hdnProcedure" value="' + (isMajorMinors || '').replace(/"/g, '&quot;') + '" />' +
+                   '<input type="hidden" name="hdnDisPer" value="0" />' +
+                   '<input type="hidden" name="hdnDisAmount" value="0.00" />' +
+                   '<input type="hidden" name="hdnNet_Amount" value="' + (service.Sale_Rate || 0) + '" />' +
+                   '<input type="hidden" name="hdnItemType" value="' + itemtype + '" />' +
+                   '<input type="hidden" name="hdnRecommendedByDoctor" value="true" />' +
+                   '<input type="hidden" name="Main_Department" value="007" />' +
+                   (service.Description || '') +
+                   '</td>' +
+                   '<td>' + remarks.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</td>' +
+                   '<td>' +
+                   '<input type="text" name="txtQty" value="1" style="width: 45px !important;" ' +
+                   'onkeyup="CulculateAmonutWithQty(this, true, false)"/>' +
+                   '<input type="hidden" name="txtActualAmount" value="' + (service.Sale_Rate || 0) + '" />' +
+                   '</td>' +
+                   '<td style="text-align:right;" id="amnt' + rowIndex + '" name="amnt">' + (service.Sale_Rate || 0).toFixed(2) + '</td>' +
+                   '<td><input type="text" name="DisPer" value="0" style="width: 37px !important;" ' +
+                   'onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/></td>' +
+                   '<td><input type="text" name="DisAmount" value="0.00" style="width: 75px !important;" disabled ' +
+                   'onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/></td>' +
+                   '<td style="text-align:right;">' + (service.Sale_Rate || 0).toFixed(2) + '</td>' +
+                   '<td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="0" ' +
+                   'style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                   '<td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="0" ' +
+                   'style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                   '<td><select id="ddldoctor' + (rowIndex + 1) + '" name="ddlDoctor" class="ddlDoctor">' +
+                   (typeof doctors !== 'undefined' ? doctors : '') + '</select></td>' +
+                   '<td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + '</td>' +
+                   '</tr>';
+
+               $('#tblDetails tbody').append(row);
+               $('.ddlDoctor').select2();
+
+               setTimeout(function () {
+                   CalculateSummarieDiscountPerWise(rowIndex);
+                   CalculateSummariesMaster(false);
+               }, 500);
+           }
+
 
         </script>
         <asp:HiddenField runat="server" ID="hdfPatient_ID" ClientIDMode="Static" />
@@ -6112,6 +6373,7 @@
          <input type="hidden" name="hdn_InPatienttype" value="0" id="hdn_InPatienttype" />
          <input type="hidden" name="hdn_opd_procedure" value="0" id="hdn_opd_procedure" />
          <input type="hidden" name="hdn_docid" value="0" id="hdn_docid" />
+        <input type="hidden" name="hdnAppointment_ID" value="0" id="hdnAppointment_ID" />
        <div class="row">
            <div class="col-md-2 text-end">
             <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" style="border-radius: 28px; width: 100%;" />
@@ -6119,6 +6381,10 @@
            <div class="col-md-2 text-end">
                <input type="button" class="btn-primry" value="Queue" onclick="openQueue()" />
         </div>
+           <div class="col-md-2 text-end">
+    <input type="button" value="Appointment" id="btnAppointment" onclick="OpenAppointmentModal()" 
+           class="btn-primry" style="border-radius: 28px; width: 100%;" />
+</div>
        </div>
 
 <div class="row">
@@ -6129,7 +6395,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                         <div class="image-container">
-                            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/billing2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                            <img src="~../../../../wwwroot/ASsiratTheme/images/dashboard_Icons/billing2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-6">
@@ -7315,4 +7581,49 @@
         </table>
     </div>
 
+    <%--Appointment Search Modal--%>
+<div id="AppointmentSearchModel" data-backdrop="static" class="modal fade-in" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -306px; height: 604px; position: relative;">
+            <fieldset style="padding-top: 20px; padding-left: 14px;">
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label id="srchapt">Search Appointments: </label>
+                    <input type="text" id="txtAppointmentSearch" style="margin-left: 2px;" autocomplete="off" 
+                           placeholder="Appointment No / Patient Name / Doctor / Phone" 
+                           onkeyup="SearchAppointments()" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label></label>
+                    <input type="button" class="btn btn-primry" id="btnRefreshAppointment" 
+                           onclick="LoadAllAppointments()" style="display:none" value="Refresh" />
+                </div>
+            </fieldset>
+            <div style="overflow: scroll; height: 460px; padding: 10px;">
+                <table class="table table-hover table-striped table-bordered" id="tblAppointmentResult" 
+                       style="overflow: scroll; height: auto;">
+                    <thead id="AppointmentThead">
+                        <tr>
+                            <th style="display: none;">Appointment ID</th>
+                            <th>Appointment No</th>
+                            <th>Date</th>
+                            <th>Patient Name</th>
+                            <th>Doctor</th>
+                            <th>Age</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="iAppointmentBody">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input type="button" style="width:13% !important" id="CloseAppointmentSearchModel" 
+                       class="btn-gray" name="saveENT" value="Close" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
+
 </asp:Content>
+
