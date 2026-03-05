@@ -73,7 +73,7 @@ namespace PMS
                                  ",Description_Recvable = '" + acc.Description_Recvable + "'" +
                                  ",Active = '" + Convert.ToBoolean(acc.Activechk) + "'" +
                                  ",S_W_H_Tax = '" + Convert.ToBoolean(acc.STWH) + "'" +
-                                  ",IsBilling = '" + Convert.ToBoolean(acc.IsBilling) + "'" +
+                                  ",IsBilling = " + (Convert.ToBoolean(acc.IsBilling) ? 1 : 0) +
                                  " where Sales_Tax_ID = " + acc.Sales_Tax_ID + "";
                     DBClass.executeNonQueryWithoutBegin(sql);
                 }
