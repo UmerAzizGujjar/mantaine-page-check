@@ -80,7 +80,7 @@
                         '<td><input style="width: 165px !important;" type=text id="Description_Recvable' + (key + 1) + '" readonly="readonly" name="Description_Recvable"  value="' + value.Description_Recvable + '" /></td>' +
                         '<td><input type="checkbox" style="margin-left:-30px" id="chk_STWH' + (key + 1) + '" name="chk_STWH" ' + chk_STWH_checked + ' /></td>' +
                         '<td><input type="checkbox" style="margin-left:-20px" id="chk_Active' + (key + 1) + '" name="chk_Active" ' + chk_Active_checked + ' /></td>' +
-                        '<td><input type="checkbox" style="margin-left:-20px" id="chk_IsBilling' + (key + 1) + '" name="chk_Active" ' + chk_IsBilling_checked + ' /></td>' +
+                        '<td><input type="checkbox" style="margin-left:-20px" id="chk_IsBilling' + (key + 1) + '" name="chk_IsBilling" ' + chk_IsBilling_checked + ' /></td>' +
                         '<td><a href="javascript:void(0)" onclick="EditRow(' + (key + 1) + ')"><i class="glyphicon glyphicon-edit" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i="">'
                     '</td>' +
                '</tr>';

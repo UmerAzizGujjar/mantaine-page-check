@@ -415,7 +415,7 @@
 
         <div class="row">
             <div class="col-lg-2 col-md-6 col-sm-12">
-                <label>Doctor Amount</label>
+                <label>Doctor Share</label>
                 <input type="text" id="txtDoctorAmount" class="form-control text-right" disabled="disabled" />
             </div>
             <div class="col-lg-2 col-md-6 col-sm-12">

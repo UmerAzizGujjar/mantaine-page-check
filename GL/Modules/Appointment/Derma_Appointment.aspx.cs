@@ -110,7 +110,7 @@ namespace PMS
 
 
 
-                                 }).ToList().OrderBy(x => x.Machine_start_time);
+                                 }).ToList().OrderByDescending(x => x.Machine_start_time);
 
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
@@ -151,7 +151,7 @@ namespace PMS
                                      Helper_End_Time = a.Helper_End_Time.Value,
                                      Machine_start_time = a.Machine_Start_Time,
                                      Machine_End_Time = a.Machine_End_Time
-                                 }).ToList().OrderByDescending(x => x.created_time);
+                                 }).ToList().OrderByDescending(x => x.Machine_start_time);
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
             }
