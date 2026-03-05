@@ -133,6 +133,11 @@
                         "width": "15%"
                     },
                     { 
+                        "data": "testtime", 
+                        "name": "testtime",
+                        "width": "15%"
+                    },
+                    { 
                         "data": "DoctorName", 
                         "name": "DoctorName",
                         "width": "15%"
@@ -179,6 +184,7 @@
                             <th>Bill Date</th>
                             <th>Test Name</th>
                             <th>Department</th>
+                            <th>Waiting Time</th>
                             <th>Doctor</th>
                         </tr>
                     </thead>

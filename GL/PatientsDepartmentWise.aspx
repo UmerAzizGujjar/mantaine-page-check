@@ -603,7 +603,9 @@
                         window.location.href = 'ReportViewer.aspx?ReportName=AdvanceReport&ReportTitle=Advance Payment Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '';
                     }
                     else if (rptTitle == 'RefundReport') {
-                        window.location.href = 'ReportViewer.aspx?ReportName=RefundReport&ReportTitle=Refund Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '';
+
+                        var url = 'ReportViewer.aspx?ReportName=RefundReport&ReportTitle=Refund Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartTime=' + $('#ctl00_MainContent_txtSTime').val() + '&EndTime=' + $('#ctl00_MainContent_txtETime').val() + '';
+                        window.open(url, '_blank');
                     }
             <%--        else if (rptTitle == 'Discharge_Time_Line') {
                         debugger;
@@ -1529,7 +1531,12 @@
                     }
                     if (rptTitle == "Purchase_Register_Report") {
 
-                        var url = 'ReportViewer.aspx?ReportName=Purchase_Register_Report&ReportTitle=Purchase Register Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        var url = 'ReportViewer.aspx?ReportName=Purchase_Register_Report&ReportTitle=Purchase Register Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&PatientType=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        window.open(url, '_blank');
+                    }
+                    if (rptTitle == "AdmitPatientList") {
+
+                        var url = 'ReportViewer.aspx?ReportName=AdmitPatientList&ReportTitle=Admit Patient List From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&PatientType=' + $("#ctl00_MainContent_ddlPatientType").val();
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "Purchase_Order_Report") {
@@ -1548,7 +1555,7 @@
                         window.open(url, '_blank');
                     }
                      if (rptTitle == "VendorWiseLedger") {
-                        var url = 'ReportViewer.aspx?ReportName=VendorWiseLedger&ReportTitle=Vendor Ledger From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() ;
+                         var url = 'ReportViewer.aspx?ReportName=VendorWiseLedger&ReportTitle=Vendor Ledger From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&PatientType=' + $('#ctl00_MainContent_ddlDepartments').val() ;
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "VPDR") {

@@ -29,6 +29,8 @@ namespace PMS.Modules.Lab
                               && bill_details.Test_Main_Department != "001"
                               && (bill.isCancel == false || bill.isCancel == null)
                               && bill.Bill_Date.HasValue && bill.Bill_Date.Value.Date == DateTime.Now.Date
+                              && (labtest_detail.IsAcknowledge != true
+                              || labtest_detail.IsAcknowledge == null)
                         orderby bill.Bill_Date ascending
                         let test = (from t in db.Lab_Tests where t.Test_ID == labtest_detail.Test_ID select t).FirstOrDefault()
                         let doctorId = bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : (int?)null
@@ -41,8 +43,9 @@ namespace PMS.Modules.Lab
                             BillDate = bill.Bill_Date,
                             TestName = bill_details.Item_Name,
                             Main_Department = test.Main_Department,
-                            Department = db.GetDataValueName("Test Main Department", test.Main_Department),
+                            Department = db.GetDataValueName("Main Test Departments", bill_details.Test_Main_Department),
                             DoctorID = doctorId,
+                            testtime = test.WaitingTime,
                             DoctorName = doctorName ?? "No Assigned Doctor",
                             bill_details.Bill_Details_ID,
                             labtest_detail.Lab_Test_Detail_ID,
@@ -168,8 +171,8 @@ namespace PMS.Modules.Lab
             {
                 var departments = (from dv in db.DataValues
                                   join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
-                                  where vs.ValueSet_Name == "Test Main Department"
-                                  select new { dv.DataValue_Name, dv.DataValue_Description }).ToList();
+                                  where vs.ValueSet_Name == "Main Test Departments"
+                                   select new { dv.DataValue_Name, dv.DataValue_Description }).ToList();
                 return (new JavaScriptSerializer()).Serialize(departments);
             }
         }

@@ -281,6 +281,21 @@
             if (PatientID != "") {
                 fillTokenInput(PatientID);
             }
+
+            PageMethods.CheckRadiologylistRights(function (response) {
+                var hasRights = JSON.parse(response);
+
+                if (hasRights === true) {
+                    $('#Radiologylist').show();
+                    $('#PendingRadiologylist').show();
+                    //UltraSoundTestDetail();
+                } else {
+                    $('#Radiologylist').hide();
+                    $('#PendingRadiologylist').hide();
+                }
+            }, function (error) {
+                alert('Error checking rights: ' + error.get_message());
+            });
             bindControls();
             $('#ddlTestDepartment').change(function (e) {
                 debugger;
@@ -2900,7 +2915,7 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
 
     </div>
     <div class="row">
-        <div class="col-lg-6 col-md-3 sm-6">
+        <div class="col-lg-6 col-md-3 sm-6" id="Radiologylist">
             <h1>Radiology Patients List</h1>
             <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
                 <table class="table test-table" id="tblradilogy">
@@ -2918,7 +2933,7 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
                 </table>
             </div>
         </div>
-        <div class="col-lg-6 col-md-3 sm-6">
+        <div class="col-lg-6 col-md-3 sm-6" id="PendingRadiologylist">
             <h1>Results Ready - Pending Approval</h1>
             <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
                 <table class="table test-table" id="tblradilogy_results">

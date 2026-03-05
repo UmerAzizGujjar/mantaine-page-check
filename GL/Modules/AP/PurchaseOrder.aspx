@@ -417,8 +417,11 @@
             $('#txtItem').focus();
 
             $('#btnGetAllItems').on('click', function () {
+                $('#ctl00_MainContent_ddlPrNo').prop('disabled', true);
                 LoadAllitem('');
             });
+
+            
 
             // Bind the search input keyup
             $('#searchInput').on('keyup', function () {

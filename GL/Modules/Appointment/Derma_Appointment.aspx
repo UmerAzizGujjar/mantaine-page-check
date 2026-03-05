@@ -1102,23 +1102,28 @@
                                 '</td>' +
                                 '</tr>';
                         });
-
+                        debugger;
                         $('#t_body').html(rows);
-
-                        $('#table_res tbody:eq(1) tr').each(function (key, value) {
+                        debugger;
+                        $('#t_body tr').each(function (key, value) {
                             debugger;
                             var $statusCell = $(this).find('td[name="statusCell"]');
                             var status = $statusCell.text();
+                            // Adjusted index to ensure we get the right date cell if structure changes
                             var app_date = $(this).find('td:eq(5)').text();
                             var cancel = $(this).find('td[name="cancelAppointment"]').text();
                             var currentDate = moment().format('LL');
-
+                            debugger;
 
                             if (status === "Visited") {
                                 $statusCell.css('background-color', '#77f577');
                                 $(this).find('td:last a').hide();
-                            } else if (status === "Booked") {
+                            }
+                            else if (status === "Booked") {
                                 $statusCell.css('background-color', '#ffdc86');
+
+                                // FIX 2: Added this line to hide buttons when status is Booked
+                                $(this).find('td:last a').show();
                             }
 
                             if (cancel === "true") {

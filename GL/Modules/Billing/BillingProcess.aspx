@@ -41,12 +41,19 @@
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
                 var locationInfo = window.location;
+
+                var user_name = '<% =AppConfig.Company_Name %>';
+                if (user_name == 'As-Siraat Serving Humanity') {
+                    reportPath = '../../ReportViewer.aspx';
+                } else {
+                    reportPath = 'ReportViewer.aspx'; // same folder
+                }
                 var url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
                 if (!locationInfo.origin.includes('localhost')) {
                     var urlInfo = window.location.href.split('/');
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
-                    url = 'http://' + ip + '/' + foldername + "../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
+                    url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + id;
                 }
                 window.open(url, '_blank');
 
@@ -93,6 +100,31 @@
                     });
             }
 
+            var Appointment;
+            function CheckAppointmentAllow() {
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/RightAppointmentBilling",
+                    data: JSON.stringify({}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        Appointment = JSON.parse(response.d);
+                        if (Appointment == '01') {
+                            $('#btnAppointment').show();
+                        }
+                        else {
+                            $('#btnAppointment').hide();
+                            //getprNoBy();
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching items", error);
+                    }
+                });
+            }
 
 
             function BackToPrintPatient() {
@@ -1713,7 +1745,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -5918,7 +5950,7 @@
                 });
                 fillmartial();
                 fillgender();
-
+                CheckAppointmentAllow();
 
                 jQuery(function ($) {
                     MaskedInput({
@@ -6826,7 +6858,7 @@
             <div class="col-lg-8 mtop">
                 <div class="row">
                     <div class="col-lg-2">
-                        <input type="button" class="btn-primry" value="Save & Print" onclick="SaveRecord()" id="bddlSalesTaxtnSave" />
+                        <input type="button" class="btn-primry" value="Save & Print" onclick="SaveRecord()" id="btnSave" />
                     </div>
                     <div class="col-lg-2">
                         <input type="button" class="btn btn-yellow" value="New" onclick="window.location = 'BillingProcess.aspx'" />
