@@ -52,6 +52,19 @@ namespace PMS
             return data;
         }
         [WebMethod]
+        public static string RightAppointmentBilling()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Appointment Billing"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
+
+        [WebMethod]
         public static string GetCardioTests()
         {
 

@@ -100,6 +100,31 @@
                     });
             }
 
+            var Appointment;
+            function CheckAppointmentAllow() {
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/RightAppointmentBilling",
+                    data: JSON.stringify({}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        Appointment = JSON.parse(response.d);
+                        if (Appointment == '01') {
+                            $('#btnAppointment').show();
+                        }
+                        else {
+                            $('#btnAppointment').hide();
+                            //getprNoBy();
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching items", error);
+                    }
+                });
+            }
 
 
             function BackToPrintPatient() {
@@ -5925,7 +5950,7 @@
                 });
                 fillmartial();
                 fillgender();
-
+                CheckAppointmentAllow();
 
                 jQuery(function ($) {
                     MaskedInput({
