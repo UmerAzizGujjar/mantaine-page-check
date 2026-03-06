@@ -11,7 +11,15 @@
             GetWareHouseCondition();   
             LoadDepartments();
             
-            
+            $('#btnGetAllItems').on('click', function () {
+                $('#btnAdd').prop('disabled', true);
+                LoadAllitem('');
+            });
+            // Bind the search input keyup
+            $('#searchInput').on('keyup', function () {
+                var searchText = $(this).val().trim();
+                LoadAllitem(searchText);
+            });
             UserRights();  
             $('#ddlInventoryOrg').change(function () {
                 if (warehouseCond == "01") {
@@ -168,7 +176,7 @@
                      if ((StoreStock == "" || StoreStock == 0 || StoreStock < 0) && btnSave == "Save") {
                          status = false;
                      }
-                     else if (((IssueQty == "" || IssueQty == 0 || IssueQty < 0) || (parseInt(MIRQty) < parseInt(IssueQty))) && btnSave == "Save") {
+                     else if (((IssueQty == "" || IssueQty == 0 || IssueQty < 0) || (parseInt(MIRQty) != 0 && parseInt(MIRQty) < parseInt(IssueQty))) && btnSave == "Save") {
                          status = "error";
                      }
                      else {
@@ -364,7 +372,128 @@
             });
         }
 
-        
+        // Load items from INV_Items table into search modal
+        function LoadAllitem(searchText) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "GoodsIssuanceNote.aspx/GetAllitem",
+                data: JSON.stringify({ searchText: searchText }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var items = JSON.parse(response.d);
+                    var tableBody = $('#itemsTableBody');
+                    tableBody.empty();
+                    $.each(items, function (index, item) {
+                        var row = '<tr>' +
+                            '<td><input type="checkbox" class="itemCheckbox" onclick="appendSearchItem(this)"></td>' +
+                            '<td style="display:none;">' + item.Item_ID + '</td>' +
+                            '<td>' + item.Item_Code + '</td>' +
+                            '<td>' + item.Description + '</td>' +
+                            '<td>' + item.Unit + '</td>' +
+                            '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
+                            '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
+                            '</tr>';
+                        tableBody.append(row);
+                    });
+                    $('#itemsModal').modal('show');
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load items.' });
+                }
+            });
+        }
+
+        function appendSearchItem(anchor) {
+            debugger;
+            var row = $(anchor).closest('tr');
+            var item_id = $(row).find('td:eq(1)').text().trim();
+            var item_code = $(row).find('td:eq(2)').text().trim();
+            var item_name = $(row).find('td:eq(3)').text().trim();
+            var unit = $(row).find('td:eq(4)').text().trim();
+            var rate = $(row).find('td:eq(5)').text().trim() || '0';
+            var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
+            var isChecked = $(anchor).prop('checked');
+
+            if (!isChecked) {
+                $('#tblStoreIssueBote tbody tr').each(function () {
+                    if ($(this).find('input[name=txtItemCode]').val() === item_code) {
+                        $(this).remove();
+                    }
+                });
+                return;
+            }
+
+            var test_array = $('#tblStoreIssueBote').find('input[name=txtItemCode][value=' + item_code + ']');
+            if (test_array.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'This Item already added',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                $(anchor).prop('checked', false);
+                return false;
+            }
+
+            var length = $("#tblStoreIssueBote tr:gt(0)").length;
+            if (length > 0) {
+                length = length + 1;
+            }
+            else {
+                length = 1;
+            }
+
+            var mir_detail_id = '0';
+            var mir_id = '0';
+            var department = '';
+            var Stock = 0;
+            var Qty = 0;
+            var balance = 0;
+            var CGSRate = 0;
+            var IsBatch = 'false';
+
+            if (unit == "null" || unit == null)
+                unit = "";
+            if (Qty == "null" || Qty == null) {
+                Qty = 0;
+            }
+            if (Stock == null || Stock == 0) {
+                Stock = 0;
+            }
+
+            getbatchsAgainstItem(item_code, length);
+
+            var rows = '<tr>' +
+                '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + mir_detail_id + ' </td>' +
+                '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + mir_id + ' </td>' +
+                '<td  style="padding-top: 2px;height: 27px !important;"><input type="text" style="  font-size: 10px;width: 75px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left:4px;" id="txtmirdate' + length + '" name="txtmirdate" value="" disabled/></td>' +
+                '<td style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + department + '</td>' +
+                '<td  style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + item_code + '<input type="text" name="txtItemCode" value=' + item_code + ' style="display:none;"/></td>' +
+                '<td style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + item_name + '</td>' +
+                '<td style="padding-top: 9px;text-align: center;padding-top: 6px !important;"> ' + unit + '</td>' +
+                '<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this),GetCGSRate(this)" style="width: 75px !IMPORTANT;" ></select></td>' +
+                '<td style="padding-top: 9px;text-align: center;padding-top: 2px !important;"  ><input type="text" id="txtStoreStock' + length + '" name="txtStoreStock" readonly=true value="' + Stock + '" style="height: 22px!important;width: 70px !important;" ></td>' +
+                '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px;  width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtmirQty' + length + '" name="txtmirQty" value="' + Qty + '" disabled/></td>' +
+                '<td style="paddin g-top: 2px;"><input type="text" style=" font-size: 10px; width: 64px!important;                                        height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + length + '" name="txtIssueQty" value="0"/></td>' +
+                '<td style="padding-top: 2px;"> <input disabled type="text" value="0" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBlncQty' + length + '" name="txtBlncQty" readonly="readonly"/></td>' +
+                '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + length + '" name="txtRemarks" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;"/> </td>' +
+                '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + item_id + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtItemId' + length + '" name="txtItemId"/></td>' +
+                '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSRate' + length + '" name="txtCGSRate" value="' + CGSRate + '"/></td>' +
+                '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSAmount' + length + '" name="txtCGSAmount"/></td>' +
+                '<td style="padding-top: 2px;display:none;"><input type="hidden" value="' + IsBatch + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBatch' + length + '" name="txtBatch"/></td>'
+                + '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td></tr>';
+
+            $("#tblStoreIssueBote tbody").append(rows);
+        }
         function append(anchor) {
             debugger;
             count = 0;
@@ -798,13 +927,16 @@
             <div class="col-lg-1 col-md-2 col-sm-6">
                 <input type="button" value="Add" id="btnAdd" class="btn btn-primry" style="margin-top: 20px;" />
             </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <label class="">MR #</label>
-                <select id="ddlMRNo" class="form-control">
-                </select>
-            </div>
+            <div class="col-lg-1 col-md-2 col-sm-4">
+     <input type="button" value="Items" id="btnGetAllItems" class="btn btn-gray" style="margin-top: 16px;" />
+ </div>
             </div>
             <div class="row">
+                 <div class="col-lg-2 col-md-6 col-sm-12">
+     <label class="">MR #</label>
+     <select id="ddlMRNo" class="form-control">
+     </select>
+ </div>
             <div class="col-lg-2 col-md-6 col-sm-12">
                 <label>Status</label>
                 <input type="text" id="txtStatus" class="form-control" name="txtStatus" readonly="readonly" />
@@ -908,4 +1040,43 @@
             </div>
         </div>
     </div>
+            <!-- Add this NEW modal for Item Search -->
+<div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-bordered table-striped table-responsive-md table-responsive-lg">
+                        <thead>
+                            <tr>
+                                <th>Select</th>          <!-- td:eq(0) -->
+                                <th style="display:none;">Item ID</th>  <!-- td:eq(1) -->
+                                <th>Item Code</th>       <!-- td:eq(2) -->
+                                <th>Description</th>     <!-- td:eq(3) -->
+                                <th>Unit</th>            <!-- td:eq(4) -->
+                                <th style="display:none;">Rate</th>      <!-- td:eq(5) -->
+                                <th style="display:none;">UOM Qty</th>   <!-- td:eq(6) -->
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-10 col-md-10 col-sm-10"> </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 float-end">
+                    <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </asp:Content>
