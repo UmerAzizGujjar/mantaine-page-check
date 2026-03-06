@@ -3601,7 +3601,7 @@
             });
 
             var SymtomsList = {
-                OutPatientID: ($('#ctl00_MainContent_txtEmergency_Patient_ID').val() != "(New)" || $('#ctl00_MainContent_txtEmergency_Patient_ID').val() != "0") ? $('#ctl00_MainContent_txtEmergency_Patient_ID').val() : "0",
+                OutPatientID: ($('#ctl00_MainContent_txtEmergency_Patient_ID').val() != "(New)" && $('#ctl00_MainContent_txtEmergency_Patient_ID').val() != "0") ? $('#ctl00_MainContent_txtEmergency_Patient_ID').val() : "0",
                 SymtomsList: SymtomsList
             }
             console.log(SymtomsList);

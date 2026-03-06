@@ -726,8 +726,8 @@
             }
             var discountAmount = (qty * saleRate * disPer) / 100;
             var netAmount = (qty * saleRate) - discountAmount;
-            $row.find('input[name="txtRDisAmount"]').val(discountAmount.toFixed(2));
-            $row.find('input[name="txtRnet"]').val(netAmount.toFixed(2));
+            $row.find('input[name="txtRDisAmount"]').val(discountAmount.toFixed(0));
+            $row.find('input[name="txtRnet"]').val(netAmount.toFixed(0));
             CalculateSaleReturnHeader();
             CalCulateReturnDisc();
             CalculateSaleReturnAdj();
@@ -746,7 +746,7 @@
                 totalDiscount += disAmount;
             });
             $('#txtSaleReturnTotalPayable').val(totalPayable.toFixed());
-            $('#txtSaleReturnLineDisc').val(totalDiscount.toFixed(2));
+            $('#txtSaleReturnLineDisc').val(totalDiscount.toFixed(0));
         }
 
 
@@ -756,7 +756,7 @@
             var linedisamt = $('#txtSaleReturnLineDisc').val() || 0;
             var disper = $('#txtSaleReturnDisPer').val() || 0;
             var disamt = ((total - linedisamt) * disper) / 100;
-            $('#txtSaleReturnDisAmt').val(disamt.toFixed(2));
+            $('#txtSaleReturnDisAmt').val(disamt.toFixed(0));
             var adjustamt = $('#txtSaleReturnFlatDisc').val() || 0;
             var net = parseFloat(total - disamt - linedisamt - adjustamt).toFixed();
             if (net > -1) {
@@ -1118,7 +1118,8 @@
             if (Qty <= 0) {
                 NegQty = true;
             }
-            var totalamount = (CalAmount) * (Qty)
+            //var totalamount = (CalAmount) * (Qty)
+            var totalamount = (CalAmount * Qty).toFixed(0);
             $($(row).find('td')[11]).text(totalamount);
             var getrowindex = row.rowIndex;
             var excatrowindex = parseInt(getrowindex) - parseInt(1);
@@ -1445,9 +1446,9 @@
                     DisAmt = Qty * Amount * DisPer / 100;
                     var NtAmt = (Amount * Qty);
                     TDis = DisAmt;
-                    $(value).find('input[name="DisAmount"]').val(DisAmt.toFixed(2));
+                    $(value).find('input[name="DisAmount"]').val(DisAmt.toFixed(0));
                     NetAmount = (Amount * Qty) - DisAmt;
-                    $($(value).find('td')[11]).text(NetAmount.toFixed(2));
+                    $($(value).find('td')[11]).text(NetAmount.toFixed(0));
                 }
                 if (parseInt(TDis) >= NtAmt && NegQty == false) {
                     isMax = 1;

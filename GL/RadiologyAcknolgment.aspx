@@ -7,9 +7,10 @@
 
         $(document).ready(function () {
             loadDoctors();
+            loadDoctorsforFilter();
             loadRadiologyAcknowledgment();
 
-            $('#mainDepartmentFilter, #statusFilter').on('change', function () {
+            $('#mainDepartmentFilter, #statusFilter, #ddlDoctorFilter').on('change', function () {
                 $('#tblradilogy').DataTable().ajax.reload();
             });
         });
@@ -56,7 +57,8 @@
                             sortDirection: data.order[0].dir,
                             searchValue: data.search.value,
                             mainDepartmentFilter: $('#mainDepartmentFilter').val() || 'All',
-                            statusFilter: $('#statusFilter').val() || 'All'
+                            statusFilter: $('#statusFilter').val() || 'All',
+                            ddlDoctorFilter: $('#ddlDoctorFilter').val() || '0'
                         }),
                         contentType: "application/json; charset=utf-8",
                         success: function (response) {
@@ -89,6 +91,7 @@
                         }
                     },
                     { "data": "Bill_No", "name": "Bill_No" },
+                    { "data": "mr_no_sequence", "name": "mr_no_sequence" },
                     { "data": "Full_Name" },
                     { "data": "Item_Name" },
                     {
@@ -167,6 +170,21 @@
                 ]
             });
 
+        }
+        function loadDoctorsforFilter() {
+
+            PageMethods.loadDoctorsforFilter(function (data) {
+                var options = '<option value="0" >Please Select</option>';
+                $.each(JSON.parse(data), function (key, value) {
+
+                    options += '<option value="' + value.Emp_ID + '" >' + value.name + '</option>';
+                });
+                $('#ddlDoctorFilter').html(options);
+                $('#ddlDoctorFilter').select2();
+            },
+                function (error) {
+                    alert(error.get_message());
+                });
         }
         function SaveData() {
             debugger;
@@ -256,6 +274,11 @@
                             <option value="NotApproved">Not Approved</option>
                         </select>
                     </div>
+                    <div class="col-md-3">
+                        <label>Doctor:</label>
+                        <select id="ddlDoctorFilter" class="form-control">                          
+                        </select>
+                    </div>
                 </div>
             </div>
     <table style="width: 100%;">
@@ -269,6 +292,7 @@
                                     <th>Check</th>
                                     <th>Bill Date</th>
                                     <th>Bill No</th>
+                                    <th>MR No</th>
                                     <th>Name</th>
                                     <th>Test Name</th>
                                     <th>Main Department</th>

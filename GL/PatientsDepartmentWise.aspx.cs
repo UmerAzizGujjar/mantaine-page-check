@@ -4292,13 +4292,12 @@ namespace PMS
                     tr1MedicalSubsidy.Visible = false;
                     tr_Export.Visible = true;
                     lblMultiSelect.Visible = false;
-                    lblPatientType.Visible = false;
+
                     tr_Summary.Visible = false;
                     optRw.Visible = false;
                     AllowPatientRecord = false;
                     dpROw.Visible = true;
                     lblMultiSelect.Visible = false;
-                    lblPatientType.Visible = false;
                     Time_Row.Visible = true;
                     DateDiv.Visible = true;
                     tr_Summary.Visible = false;
@@ -4313,10 +4312,10 @@ namespace PMS
                     ddlPatientType.Items.Clear();
                     ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlPatientType.DataBind();
-                    SetDepartent();
+
                     trSearch1.Visible = true;
-                    lblPatientType.Visible = true;
-                    ddlPatientType.Visible = true;
+                    lblDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
 
                     DataTable dt = DBClass.getDataTable("select * from inv_items");
                     ddlItemName.DataSource = dt;

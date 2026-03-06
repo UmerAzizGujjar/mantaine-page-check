@@ -2377,7 +2377,7 @@
                                 '<td>' + item.Full_Name + '</td>' +
                                 '<td>' + item.Item_Name + '</td>' +
                                 '<td><button type="button" class="btn btn-sm btn-primary" ' +
-                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ')">Select</button></td>' +
+                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
                                 '</tr>';
                             tbody.append(row);
                         });
@@ -2397,7 +2397,7 @@
             });
         }
 
-        function selectRadiologyPatient(Bill_ID, Bill_Details_ID) {
+        function selectRadiologyPatient(Bill_ID, Bill_Details_ID, Bill_No) {
             // Store both IDs
             debugger;
             isSingleTestMode = true;
@@ -2417,11 +2417,17 @@
                         var mydate = new Date(Date.parse(data.d.Entry_Date));
                         var dateR = mydate.toLocaleDateString();
 
-                        var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + data.d.Patient_No);
-                        $('#ctl00_MainContent_txtPatient_ID').tokenInput("add", {
-                            id: JSON.parse(tokendata)[0].id,
-                            name: JSON.parse(tokendata)[0].name
-                        });
+                        var tokenData = httpGet("../../json.aspx?Table=Billing&q=" + Bill_No);
+
+
+                        $('#ctl00_MainContent_txtBilling').tokenInput("add", { id: JSON.parse(tokenData)[0].id, name: JSON.parse(tokenData)[0].name });
+
+                        //var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + data.d.Patient_No);
+                        //$('#ctl00_MainContent_txtPatient_ID').tokenInput("add", {
+                        //    id: JSON.parse(tokendata)[0].id,
+                        //    name: JSON.parse(tokendata)[0].name
+                        //});
+                       // GetLabDetailAgainstBill();
 
                         $('#<%= vlblPatients_Name.ClientID %>').text(data.d.Name);
                         $('#<%= vLbl_Age.ClientID %>').text(data.d.Age);
@@ -2468,7 +2474,7 @@
                                 '<td>' + item.Item_Name + '</td>' +
                                 '<td>' + (item.Doctor || '') + '</td>' +
                                 '<td><button type="button" class="btn btn-sm btn-success" ' +  
-                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ')">Select</button></td>' +
+                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
                                 '</tr>';
                             tbody.append(row);
                         });
