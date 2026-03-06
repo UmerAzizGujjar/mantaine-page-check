@@ -117,7 +117,7 @@
 
                 $.each(data, function (key, value) {
                     debugger;
-                    rows = '<tr></td> ' + value.Item_Name + '</td><td>' + value.Item_Name + '</td><td>' + value.Doctor_Share + '</td><td>' + value.Net_Amount + '  </td><td>' + value.Refund_Amount + '  </td><td>' + value.Hospital_Refund + '  </td></tr>'
+                    rows = '<tr></td> ' + value.Item_Name + '</td><td>' + value.Item_Name + '</td><td>' + value.Doctor_Share + '</td><td>' + value.Net_Amount + '  </td><td>' + value.Doctor_Refund + '  </td><td>' + value.Hospital_Refund + '  </td></tr>'
 
 
                     $('#tblDetails tbody').append(rows);
