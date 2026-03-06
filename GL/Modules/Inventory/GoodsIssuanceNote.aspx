@@ -483,7 +483,7 @@
                 '<td><select id="ddlBatchNum' + length + '" name="ddlBatchNum" onChange="CheckBatch(this),GetCGSRate(this)" style="width: 75px !IMPORTANT;" ></select></td>' +
                 '<td style="padding-top: 9px;text-align: center;padding-top: 2px !important;"  ><input type="text" id="txtStoreStock' + length + '" name="txtStoreStock" readonly=true value="' + Stock + '" style="height: 22px!important;width: 70px !important;" ></td>' +
                 '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px;  width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtmirQty' + length + '" name="txtmirQty" value="' + Qty + '" disabled/></td>' +
-                '<td style="paddin g-top: 2px;"><input type="text" style=" font-size: 10px; width: 64px!important;                                        height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + length + '" name="txtIssueQty" value="0"/></td>' +
+                '<td style="paddin g-top: 2px;"><input type="text" style=" font-size: 10px; width: 64px!important;  height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + length + '" name="txtIssueQty" value="0"/></td>' +
                 '<td style="padding-top: 2px;"> <input disabled type="text" value="0" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBlncQty' + length + '" name="txtBlncQty" readonly="readonly"/></td>' +
                 '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + length + '" name="txtRemarks" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;"/> </td>' +
                 '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + item_id + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtItemId' + length + '" name="txtItemId"/></td>' +
@@ -493,6 +493,9 @@
                 + '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td></tr>';
 
             $("#tblStoreIssueBote tbody").append(rows);
+            if ($('#txtBlncQty' + length).val() == 0) {
+                $('#txtIssueQty' + length).prop('disabled', true);
+            }
         }
         function append(anchor) {
             debugger;
@@ -578,6 +581,9 @@
                     '<td style="padding-top: 2px;display:none;"><input type="hidden" value="' + IsBatch + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBatch' + length + '" name="txtBatch"/></td>'
                     + '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td></tr>';
                 $("#tblStoreIssueBote tbody").append(rows);
+                if ($('#txtBlncQty' + length).val() == 0) {
+                    $('#txtIssueQty' + length).prop('disabled', true);
+                }
                 length++;
             }
         }
