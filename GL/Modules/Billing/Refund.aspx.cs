@@ -65,7 +65,7 @@ namespace PMS
               dt.Item_Name,
               dt.Doctor_Share,
               Net_Amount = dt.Net_Amount - (dt.Doctor_Share == null ? 0 : dt.Doctor_Share),
-              rds.Refund_Amount,
+              rds.Doctor_Refund,
               rds.Hospital_Refund,
               }).ToList();
              return (new JavaScriptSerializer()).Serialize(shareDetail);
@@ -273,7 +273,7 @@ namespace PMS
                 Service.Refund_ID = Convert.ToInt32(Refund_ID);
                 Service.Bill_Detail_ID = dtls.Bill_Detial_ID;
                 Service.Item_ID = dtls.Item_ID;
-                Service.Refund_Amount = dtls.Doctor_Refund;
+                Service.Doctor_Refund = dtls.Doctor_Refund;
                 Service.Hospital_Refund = dtls.Hos_Refund;
                 totalRefund += Convert.ToDecimal(dtls.Doctor_Refund);
                 totalRefund += Convert.ToDecimal(dtls.Hos_Refund);

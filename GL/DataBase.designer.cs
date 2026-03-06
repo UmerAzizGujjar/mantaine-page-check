@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬National_Hospital")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "⁬NoorHospital")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -672,9 +672,6 @@ namespace PMS
         partial void InsertRefund_Detail_Doctor_Share(Refund_Detail_Doctor_Share instance);
         partial void UpdateRefund_Detail_Doctor_Share(Refund_Detail_Doctor_Share instance);
         partial void DeleteRefund_Detail_Doctor_Share(Refund_Detail_Doctor_Share instance);
-        partial void InsertRefund_Detail_Service(Refund_Detail_Service instance);
-        partial void UpdateRefund_Detail_Service(Refund_Detail_Service instance);
-        partial void DeleteRefund_Detail_Service(Refund_Detail_Service instance);
         partial void InsertAR_Advance(AR_Advance instance);
         partial void UpdateAR_Advance(AR_Advance instance);
         partial void DeleteAR_Advance(AR_Advance instance);
@@ -948,12 +945,17 @@ namespace PMS
         partial void InsertEmergency(Emergency instance);
         partial void UpdateEmergency(Emergency instance);
         partial void DeleteEmergency(Emergency instance);
+        partial void InsertRefund_Detail_Service(Refund_Detail_Service instance);
+        partial void UpdateRefund_Detail_Service(Refund_Detail_Service instance);
+        partial void DeleteRefund_Detail_Service(Refund_Detail_Service instance);
         #endregion
+
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -2722,14 +2724,6 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<Refund_Detail_Service> Refund_Detail_Services
-        {
-            get
-            {
-                return this.GetTable<Refund_Detail_Service>();
-            }
-        }
-
         public System.Data.Linq.Table<AR_Advance> AR_Advances
         {
             get
@@ -3455,6 +3449,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Emergency>();
+            }
+        }
+
+        public System.Data.Linq.Table<Refund_Detail_Service> Refund_Detail_Services
+        {
+            get
+            {
+                return this.GetTable<Refund_Detail_Service>();
             }
         }
 
@@ -84901,260 +84903,6 @@ namespace PMS
         }
     }
 
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Refund_Detail_Services")]
-    public partial class Refund_Detail_Service : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _ID;
-
-        private System.Nullable<int> _Bill_Detail_ID;
-
-        private System.Nullable<decimal> _Refund_Amount;
-
-        private System.Nullable<int> _Item_ID;
-
-        private System.Nullable<long> _Refund_ID;
-
-        private System.Nullable<decimal> _Hospital_Refund;
-
-        private System.Nullable<bool> _isCancelled;
-
-        private System.Nullable<System.Guid> _CancelledBy;
-
-        private System.Nullable<System.DateTime> _CancelledTime;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnIDChanging(int value);
-        partial void OnIDChanged();
-        partial void OnBill_Detail_IDChanging(System.Nullable<int> value);
-        partial void OnBill_Detail_IDChanged();
-        partial void OnRefund_AmountChanging(System.Nullable<decimal> value);
-        partial void OnRefund_AmountChanged();
-        partial void OnItem_IDChanging(System.Nullable<int> value);
-        partial void OnItem_IDChanged();
-        partial void OnRefund_IDChanging(System.Nullable<long> value);
-        partial void OnRefund_IDChanged();
-        partial void OnHospital_RefundChanging(System.Nullable<decimal> value);
-        partial void OnHospital_RefundChanged();
-        partial void OnisCancelledChanging(System.Nullable<bool> value);
-        partial void OnisCancelledChanged();
-        partial void OnCancelledByChanging(System.Nullable<System.Guid> value);
-        partial void OnCancelledByChanged();
-        partial void OnCancelledTimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnCancelledTimeChanged();
-        #endregion
-
-        public Refund_Detail_Service()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int ID
-        {
-            get
-            {
-                return this._ID;
-            }
-            set
-            {
-                if ((this._ID != value))
-                {
-                    this.OnIDChanging(value);
-                    this.SendPropertyChanging();
-                    this._ID = value;
-                    this.SendPropertyChanged("ID");
-                    this.OnIDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_Detail_ID", DbType = "Int")]
-        public System.Nullable<int> Bill_Detail_ID
-        {
-            get
-            {
-                return this._Bill_Detail_ID;
-            }
-            set
-            {
-                if ((this._Bill_Detail_ID != value))
-                {
-                    this.OnBill_Detail_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Bill_Detail_ID = value;
-                    this.SendPropertyChanged("Bill_Detail_ID");
-                    this.OnBill_Detail_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Refund_Amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Refund_Amount
-        {
-            get
-            {
-                return this._Refund_Amount;
-            }
-            set
-            {
-                if ((this._Refund_Amount != value))
-                {
-                    this.OnRefund_AmountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Refund_Amount = value;
-                    this.SendPropertyChanged("Refund_Amount");
-                    this.OnRefund_AmountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int")]
-        public System.Nullable<int> Item_ID
-        {
-            get
-            {
-                return this._Item_ID;
-            }
-            set
-            {
-                if ((this._Item_ID != value))
-                {
-                    this.OnItem_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Item_ID = value;
-                    this.SendPropertyChanged("Item_ID");
-                    this.OnItem_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Refund_ID", DbType = "BigInt")]
-        public System.Nullable<long> Refund_ID
-        {
-            get
-            {
-                return this._Refund_ID;
-            }
-            set
-            {
-                if ((this._Refund_ID != value))
-                {
-                    this.OnRefund_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Refund_ID = value;
-                    this.SendPropertyChanged("Refund_ID");
-                    this.OnRefund_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Hospital_Refund", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Hospital_Refund
-        {
-            get
-            {
-                return this._Hospital_Refund;
-            }
-            set
-            {
-                if ((this._Hospital_Refund != value))
-                {
-                    this.OnHospital_RefundChanging(value);
-                    this.SendPropertyChanging();
-                    this._Hospital_Refund = value;
-                    this.SendPropertyChanged("Hospital_Refund");
-                    this.OnHospital_RefundChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isCancelled", DbType = "Bit")]
-        public System.Nullable<bool> isCancelled
-        {
-            get
-            {
-                return this._isCancelled;
-            }
-            set
-            {
-                if ((this._isCancelled != value))
-                {
-                    this.OnisCancelledChanging(value);
-                    this.SendPropertyChanging();
-                    this._isCancelled = value;
-                    this.SendPropertyChanged("isCancelled");
-                    this.OnisCancelledChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CancelledBy", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> CancelledBy
-        {
-            get
-            {
-                return this._CancelledBy;
-            }
-            set
-            {
-                if ((this._CancelledBy != value))
-                {
-                    this.OnCancelledByChanging(value);
-                    this.SendPropertyChanging();
-                    this._CancelledBy = value;
-                    this.SendPropertyChanged("CancelledBy");
-                    this.OnCancelledByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CancelledTime", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> CancelledTime
-        {
-            get
-            {
-                return this._CancelledTime;
-            }
-            set
-            {
-                if ((this._CancelledTime != value))
-                {
-                    this.OnCancelledTimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._CancelledTime = value;
-                    this.SendPropertyChanged("CancelledTime");
-                    this.OnCancelledTimeChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.AR_Advances")]
     public partial class AR_Advance : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -165955,6 +165703,260 @@ namespace PMS
                     this._Remarks = value;
                     this.SendPropertyChanged("Remarks");
                     this.OnRemarksChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Refund_Detail_Services")]
+    public partial class Refund_Detail_Service : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _ID;
+
+        private System.Nullable<int> _Bill_Detail_ID;
+
+        private System.Nullable<decimal> _Doctor_Refund;
+
+        private System.Nullable<int> _Item_ID;
+
+        private System.Nullable<long> _Refund_ID;
+
+        private System.Nullable<decimal> _Hospital_Refund;
+
+        private System.Nullable<bool> _isCancelled;
+
+        private string _CancelledBy;
+
+        private System.Nullable<System.DateTime> _CancelledTime;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnIDChanging(int value);
+        partial void OnIDChanged();
+        partial void OnBill_Detail_IDChanging(System.Nullable<int> value);
+        partial void OnBill_Detail_IDChanged();
+        partial void OnDoctor_RefundChanging(System.Nullable<decimal> value);
+        partial void OnDoctor_RefundChanged();
+        partial void OnItem_IDChanging(System.Nullable<int> value);
+        partial void OnItem_IDChanged();
+        partial void OnRefund_IDChanging(System.Nullable<long> value);
+        partial void OnRefund_IDChanged();
+        partial void OnHospital_RefundChanging(System.Nullable<decimal> value);
+        partial void OnHospital_RefundChanged();
+        partial void OnisCancelledChanging(System.Nullable<bool> value);
+        partial void OnisCancelledChanged();
+        partial void OnCancelledByChanging(string value);
+        partial void OnCancelledByChanged();
+        partial void OnCancelledTimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCancelledTimeChanged();
+        #endregion
+
+        public Refund_Detail_Service()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                if ((this._ID != value))
+                {
+                    this.OnIDChanging(value);
+                    this.SendPropertyChanging();
+                    this._ID = value;
+                    this.SendPropertyChanged("ID");
+                    this.OnIDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bill_Detail_ID", DbType = "Int")]
+        public System.Nullable<int> Bill_Detail_ID
+        {
+            get
+            {
+                return this._Bill_Detail_ID;
+            }
+            set
+            {
+                if ((this._Bill_Detail_ID != value))
+                {
+                    this.OnBill_Detail_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Bill_Detail_ID = value;
+                    this.SendPropertyChanged("Bill_Detail_ID");
+                    this.OnBill_Detail_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Refund", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Doctor_Refund
+        {
+            get
+            {
+                return this._Doctor_Refund;
+            }
+            set
+            {
+                if ((this._Doctor_Refund != value))
+                {
+                    this.OnDoctor_RefundChanging(value);
+                    this.SendPropertyChanging();
+                    this._Doctor_Refund = value;
+                    this.SendPropertyChanged("Doctor_Refund");
+                    this.OnDoctor_RefundChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int")]
+        public System.Nullable<int> Item_ID
+        {
+            get
+            {
+                return this._Item_ID;
+            }
+            set
+            {
+                if ((this._Item_ID != value))
+                {
+                    this.OnItem_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Item_ID = value;
+                    this.SendPropertyChanged("Item_ID");
+                    this.OnItem_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Refund_ID", DbType = "BigInt")]
+        public System.Nullable<long> Refund_ID
+        {
+            get
+            {
+                return this._Refund_ID;
+            }
+            set
+            {
+                if ((this._Refund_ID != value))
+                {
+                    this.OnRefund_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Refund_ID = value;
+                    this.SendPropertyChanged("Refund_ID");
+                    this.OnRefund_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Hospital_Refund", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Hospital_Refund
+        {
+            get
+            {
+                return this._Hospital_Refund;
+            }
+            set
+            {
+                if ((this._Hospital_Refund != value))
+                {
+                    this.OnHospital_RefundChanging(value);
+                    this.SendPropertyChanging();
+                    this._Hospital_Refund = value;
+                    this.SendPropertyChanged("Hospital_Refund");
+                    this.OnHospital_RefundChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isCancelled", DbType = "Bit")]
+        public System.Nullable<bool> isCancelled
+        {
+            get
+            {
+                return this._isCancelled;
+            }
+            set
+            {
+                if ((this._isCancelled != value))
+                {
+                    this.OnisCancelledChanging(value);
+                    this.SendPropertyChanging();
+                    this._isCancelled = value;
+                    this.SendPropertyChanged("isCancelled");
+                    this.OnisCancelledChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CancelledBy", DbType = "NVarChar(50)")]
+        public string CancelledBy
+        {
+            get
+            {
+                return this._CancelledBy;
+            }
+            set
+            {
+                if ((this._CancelledBy != value))
+                {
+                    this.OnCancelledByChanging(value);
+                    this.SendPropertyChanging();
+                    this._CancelledBy = value;
+                    this.SendPropertyChanged("CancelledBy");
+                    this.OnCancelledByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CancelledTime", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> CancelledTime
+        {
+            get
+            {
+                return this._CancelledTime;
+            }
+            set
+            {
+                if ((this._CancelledTime != value))
+                {
+                    this.OnCancelledTimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._CancelledTime = value;
+                    this.SendPropertyChanged("CancelledTime");
+                    this.OnCancelledTimeChanged();
                 }
             }
         }
