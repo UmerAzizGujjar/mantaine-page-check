@@ -15,7 +15,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object GetRadiologyAcknowledgment(int draw, int start, int length, string sortColumn, string sortDirection, string searchValue, string mainDepartmentFilter, string statusFilter)
+        public static object GetRadiologyAcknowledgment(int draw, int start, int length, string sortColumn, string sortDirection, string searchValue, string mainDepartmentFilter, string statusFilter, string ddlDoctorFilter)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
@@ -82,6 +82,7 @@ namespace PMS
                             bill.Bill_ID,
                             bill_details.Item_Name,
                             pat.Full_Name,
+                            pat.mr_no_sequence,
                             bill_details.Bill_Details_ID,
                             labtest_detail.Lab_Test_Detail_ID,
                             Department = db.GetDataValueName("Patient Main Category", dept),
@@ -96,6 +97,11 @@ namespace PMS
                         };
 
             var queryList = query.ToList();
+
+            if (!string.IsNullOrEmpty(ddlDoctorFilter) && ddlDoctorFilter != "0")
+            {
+                queryList = queryList.Where(x => x.Billing_DoctorID == Convert.ToInt32(ddlDoctorFilter)).ToList();
+            }
 
             if (!string.IsNullOrEmpty(mainDepartmentFilter) && mainDepartmentFilter != "All")
             {
@@ -135,6 +141,9 @@ namespace PMS
                 case "Full_Name":
                     queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Full_Name).ToList() : queryList.OrderByDescending(x => x.Full_Name).ToList();
                     break;
+                case "mr_no_sequence":
+                    queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.mr_no_sequence).ToList() : queryList.OrderByDescending(x => x.mr_no_sequence).ToList();
+                    break;
                 case "Bill_Date":
                     queryList = sortDirection == "asc" ? queryList.OrderBy(x => x.Bill_Date).ToList() : queryList.OrderByDescending(x => x.Bill_Date).ToList();
                     break;
@@ -169,7 +178,18 @@ namespace PMS
                 return (new JavaScriptSerializer()).Serialize(doctorList);
             }
         }
-
+        [WebMethod]
+        public static string loadDoctorsforFilter()
+        {
+            string result = string.Empty;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var itemsList = (from i in db.HR_Employees select new { i.Emp_ID, name = i.Emp_Name.ToString() }).ToList();
+            if (itemsList != null)
+            {
+                result = (new JavaScriptSerializer()).Serialize(itemsList);
+            }
+            return result;
+        }
         public class Testlist
         {
             public string status { get; set; }
