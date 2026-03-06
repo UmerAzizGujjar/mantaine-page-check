@@ -251,43 +251,59 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
             JavaScriptSerializer JSS = new JavaScriptSerializer();
             var dt = JSS.Deserialize<Detial>(data);
+
             string value = string.Empty;
             var BillID = string.Empty;
+
             Refund Ref = new Refund();
             var Refund_ID = DBClass.GetNewNumber("Refund_ID", "Refund", "").ToString();
+
             Ref.Patient_ID = dt.Patient_ID;
-            Ref._Refund_Date = dt.advanceDate; ;
+            Ref._Refund_Date = dt.advanceDate;
             Ref.Remarks = dt.remarks;
-            
+
+            decimal totalRefund = 0;
+
             List<Refund_Detail_Service> ListOfshare = new List<Refund_Detail_Service>();
+
             foreach (DoctorRefund dtls in dt.ServiceRefund)
             {
                 Refund_Detail_Service Service = new Refund_Detail_Service();
+
                 Service.Refund_ID = Convert.ToInt32(Refund_ID);
                 Service.Bill_Detail_ID = dtls.Bill_Detial_ID;
                 Service.Item_ID = dtls.Item_ID;
                 Service.Refund_Amount = dtls.Doctor_Refund;
                 Service.Hospital_Refund = dtls.Hos_Refund;
-                BillID = DBClass.getField("select Bill_ID from Ar_Billing_Details where bill_Details_ID=" +dtls.Bill_Detial_ID);
+                totalRefund += Convert.ToDecimal(dtls.Doctor_Refund);
+                totalRefund += Convert.ToDecimal(dtls.Hos_Refund);
+
+                BillID = DBClass.getField("select Bill_ID from Ar_Billing_Details where bill_Details_ID=" + dtls.Bill_Detial_ID);
+
                 ListOfshare.Add(Service);
             }
-        
+
+
             List<Refund_Detail_Doctor_Share> ListOfRefund = new List<Refund_Detail_Doctor_Share>();
             foreach (RefundDistribution dts in dt.ShareRefund)
             {
                 Refund_Detail_Doctor_Share Doctor = new Refund_Detail_Doctor_Share();
+
                 Doctor.Refund_ID = Convert.ToInt32(Refund_ID);
                 Doctor.Emp_ID = dts.Emp_ID;
-                Doctor.Refund_Amount = dts.Record_Id;
                 Doctor.Refund_Amount = dts.Refund_Amount;
+                totalRefund += Convert.ToDecimal(dts.Refund_Amount);
+
                 ListOfRefund.Add(Doctor);
-               
-                
             }
+
             Ref.Bill_ID = Convert.ToInt32(BillID);
+            Ref.Refund_Amount = Convert.ToInt32(totalRefund);
+
             db.Refunds.InsertOnSubmit(Ref);
             db.Refund_Detail_Services.InsertAllOnSubmit(ListOfshare);
             db.Refund_Detail_Doctor_Shares.InsertAllOnSubmit(ListOfRefund);
+
             db.SubmitChanges();
 
             if (!string.IsNullOrEmpty(BillID))
