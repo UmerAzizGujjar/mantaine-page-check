@@ -56,7 +56,8 @@ namespace PMS.Modules.PatientManagement
                                     pat.Hospital_share,
                                     pat.Actual_amount,
                                     Department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category),
-                                    Patient_Type = db.GetDataValueName("Patient Type", pat.Patient_Type)
+                                    Patient_Type = db.GetDataValueName("Patient Type", pat.Patient_Type),
+                                    pat.Is_Refund
                                 };
 
                     var list = query.ToList();
@@ -86,7 +87,8 @@ namespace PMS.Modules.PatientManagement
                             ? p.Created_Time.Value.ToString("dd-MMM-yyyy")
                             : "",
                         p.Department,
-                        p.Patient_Type
+                        p.Patient_Type,
+                        p.Is_Refund
                     }).ToList();
 
                     return new JavaScriptSerializer().Serialize(result);
@@ -135,7 +137,14 @@ namespace PMS.Modules.PatientManagement
                             Created_By = AppConfig.UserID,
                             Creation_Date = DateTime.Now
                         };
+
+                        var patient = db.Patients.FirstOrDefault(p => p.Patient_ID == patientID);
+                        if (patient != null)
+                        {
+                            patient.Is_Refund = true;
+                        }
                         db.OPD_Refunds.InsertOnSubmit(refund);
+
                         db.SubmitChanges();
 
                         Guid userId = AppConfig.UserID;
