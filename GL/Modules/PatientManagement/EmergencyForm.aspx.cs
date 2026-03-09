@@ -17,7 +17,7 @@ using static PMS.WebForm9;
 
 namespace PMS.Modules.PatientManagement
 {
-    public partial class Emergency : System.Web.UI.Page
+    public partial class EmergencyForm : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -1249,11 +1249,10 @@ namespace PMS.Modules.PatientManagement
                         pat = new Emergency
                         {
                             // ✅ Only set fields we have data for
-                            Emergency = DBClass.getMaxEntry_No("Patients", "Opd_No"),
+                            Emergency_No = DBClass.getMaxEntry_No("Emergency", "Emergency_No"),
                             Reg_PatId = data.regid,
                             Created_By = Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId) ? userId : Guid.Empty,
                             Created_Time = DateTime.Now,
-                            Entry_Date = DateTime.Now,
                             Company_ID = AppConfig.Company_ID,
                             Book_ID = AppConfig.Book_ID,
                             isCancel = false,
@@ -1263,22 +1262,17 @@ namespace PMS.Modules.PatientManagement
                             // ⚠️ Minimal defaults for required DB fields (not sent from frontend)
                             Patient_Main_Category = data.hdnDepartment,
                             Doctor_ID = "0",
-                            Service_id = 0,
                             PanelCompany = 0,
                             RollNo = 0,
                             Class = 0,
                             Section = 0,
-                            Card_Issued = false,
                             free_check = false,
-                            Doc_Token = 0,
-                            tokenNo = db.Patients.Count(p =>
-                                p.Created_Time.HasValue &&
-                                p.Created_Time.Value.Date == DateTime.Now.Date &&
-                                p.Patient_Main_Category == data.hdnDepartment) + 1
+                            tokenNo = db.Emergencies.Count(p =>
+                               p.Created_Time.HasValue &&
+                               p.Created_Time.Value.Date == DateTime.Now.Date &&
+                               p.Patient_Main_Category == data.hdnDepartment) + 1
                         };
 
-                        if (!string.IsNullOrEmpty(data.appid) && int.TryParse(data.appid, out int aptId))
-                            pat.appointment_id = aptId;
                     }
 
                     // ✏️ Update ONLY fields that come from frontend
@@ -1293,7 +1287,8 @@ namespace PMS.Modules.PatientManagement
 
                     // 💰 Fee & Discount
                     if (data.Fees >= 0)
-                        pat.Receipt_Amount = data.Fees;
+                    { pat.Receipt_Amount = data.Fees;
+                    pat.Emergency_Charges = data.Fees; }
 
                     if (!string.IsNullOrEmpty(data.discount) && decimal.TryParse(data.discount, out decimal disc))
                         pat.discount_amt = disc;
@@ -1311,7 +1306,7 @@ namespace PMS.Modules.PatientManagement
                         pat.doc_share = Math.Round((netAmount * data.Doc_Share) / 100, 2).ToString("F2");
                     }
 
-                    pat.Share_Transfered = (data.pat_category == "02");
+                    //pat.Share_Transfered = (data.pat_category == "02");
 
                     // 📋 Other numeric fields
                     if (!string.IsNullOrEmpty(data.rollno) && int.TryParse(data.rollno, out int roll))
@@ -1325,10 +1320,10 @@ namespace PMS.Modules.PatientManagement
 
                     // ➕ Insert if new
                     if (isNew)
-                        db.Patients.InsertOnSubmit(pat);
+                        db.Emergencies.InsertOnSubmit(pat);
 
                     db.SubmitChanges();
-                    return pat.Patient_ID.ToString();
+                    return pat.Emer_id.ToString();
                 }
             }
             catch (Exception ex)
@@ -1991,31 +1986,33 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
+       
         [WebMethod]
-        public static string GetPatientDetail(int OPDID)
+        public static string GetPatientDetail(int EMERID)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var patient = db.Patients.FirstOrDefault(p => p.Patient_ID == OPDID);
+                var patient = db.Emergencies.FirstOrDefault(p => p.Emer_id == EMERID);
+              
                 if (patient == null) return "null";
-
+                var patdetails = db.Reg_patients.FirstOrDefault(p => p.pat_id == patient.Reg_PatId);
                 string Encode(string input) => string.IsNullOrEmpty(input) ? "" : HttpUtility.HtmlEncode(input);
 
                 var result = new
                 {
                     mr_no_sequence = Encode(patient.mr_no_sequence),
-                    Opd_No = patient.Opd_No,
-                    Name = Encode(patient.Full_Name),
+                    Opd_No = patient.Emergency_No,
+                    Name = Encode(patdetails.Full_Name),
                     StudentName = Encode(patient.Student_Name),
-                    Father_Name = Encode(patient.Father_Name),
+                    Father_Name = Encode(patdetails.Father_Name),
                     Mode_Of_Registration = Encode(patient.Mode_Of_Registration),
                     Patient_Type = Encode(patient.Patient_Type),
-                    Age_years = patient.Age_years,
-                    Gender_text = Encode(db.GetDataValueName("Gender", patient.Gender)),
-                    Mobile1 = MaskMobile(patient.Mobile1),
-                    CNIC_Masked = MaskCNIC(patient.NIC),
-                    MaritalStatus_text = Encode(db.GetDataValueName("Marital Status", patient.Marital_Status)),
-                    Permanent_Address = Encode(patient.Permanent_Address),
+                    Age_years = patdetails.Age_years,
+                    Gender_text = Encode(db.GetDataValueName("Gender", patdetails.Gender)),
+                    Mobile1 = MaskMobile(patdetails.Mobile1),
+                    CNIC_Masked = MaskCNIC(patdetails.NIC),
+                    MaritalStatus_text = Encode(db.GetDataValueName("Marital Status", patdetails.Martial_Status)),
+                    Permanent_Address = Encode(patdetails.Permanent_Address),
                     Remarks = Encode(patient.Remarks),
                     Receipt_Amount = patient.Receipt_Amount,
                     Actual_amount = patient.Actual_amount,
@@ -2043,7 +2040,7 @@ namespace PMS.Modules.PatientManagement
                                 .Select(e => e.Emp_Name)
                                 .FirstOrDefault() ?? ""
                     ),
-                    Refference_No = Encode(patient.Refference_No),
+                    Refference_No = "",
                     Employee_Name = Encode(patient.Employee_Name),
                     discount_amt = patient.discount_amt,
                     Dependent = Encode(patient.Dependent),
@@ -2051,18 +2048,11 @@ namespace PMS.Modules.PatientManagement
                     Class = patient.Class,
                     Section = patient.Section,
                     Casher = Encode(patient.Casher),
-                    Card_Issued = patient.Card_Issued,
-                    free_check = patient.free_check,
-                    opdid = patient.Patient_ID,
+                     free_check = patient.free_check,
+                    opdid = patient.Emer_id,
                     status = Encode(patient.Status),
                     account_id = patient.AccountID,
-                    Clinic_text = Encode(db.GetDataValueName("Filter Clinic", patient.filter_clinic)),
-                    Service_text = Encode(
-                        db.INV_Items
-                            .Where(i => i.Item_ID == patient.Service_id)
-                            .Select(i => i.Description)
-                            .FirstOrDefault() ?? ""
-                    )
+                  
                 };
                 return new JavaScriptSerializer().Serialize(result);
             }
