@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace PMS.Modules.PatientManagement
 {
-    public partial class Emergency : System.Web.UI.Page
+    public partial class Emergency_View : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

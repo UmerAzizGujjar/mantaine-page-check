@@ -136,8 +136,17 @@
                         alert("No patient found.");
                         return;
                     }
-
                     var p = patients[0];
+
+                    if (p.Is_Refund == 1 || p.Is_Refund == true) {
+                        Swal.fire({
+                            title: "Already Refunded",
+                            text: "This patient OPD is already refunded",
+                            icon: "warning",
+                            button: "OK"
+                        });
+                        return;
+                    }
                     $('#hdPatientID').text(p.Patient_ID);
                     $('#hdRegPatId').val(p.Reg_PatId);
                     $('#lblMRNo').text(p.Patient_No);
