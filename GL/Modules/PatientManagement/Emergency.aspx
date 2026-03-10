@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmergencyFormForm.aspx.cs" Inherits="PMS.Modules.PatientManagement.EmergencyForm" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Emergency.aspx.cs" Inherits="PMS.Modules.PatientManagement.Emergency" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
         <link href="../../wwwroot/Tibbit_theme/css/CustomCss/OPD.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
@@ -7,30 +7,6 @@
         $(document).ready(function () {
             debugger;
             showhide();
-            $('#btnsearchpatlist').click(function () {
-                $("#PatientsSearchModel").modal('show');
-                FillPatientsList();
-            });
-            $("#txtSearch").keypress(function (event) {
-                debugger;
-                var SearchString = $('#txtSearch').val();
-                if (event.which == 13) {
-                    {
-
-                        event.preventDefault();
-
-                        if (SearchString != '') {
-
-                            PageMethods.SearchPatients((Number(SearchString) ? parseInt(SearchString).toString() : SearchString), OnFilterPatients, OnFailPatients);
-                        }
-                    }
-                    if (SearchString === '') {
-                        FillPatientsList();
-                    }
-                }
-            });
-
-
             FillModePresentation();
             FillUserAccount();
             $('#ddlPatient_Type').off('change').on('change', function () {
@@ -38,15 +14,6 @@
             });
             var reg_id = '<%= Request.QueryString["ID"] %>';
             var added = '<%= Request.QueryString["isAdd"] %>';
-            var EMERID = '<%= Request.QueryString["EMERID"] %>'
-            debugger;
-            $("#hdn_EmergencyFormId").val(EMERID);
-            if (EMERID != "") {
-
-                loadPatientDetail(EMERID);
-         
-
-            }
             if (reg_id != "" && added == "true") {
                 debugger;
                 Get_Pat_Info(reg_id);
@@ -129,233 +96,11 @@
 
             });
         });
-        function AllowOPdEdit() {
-            debugger;
-            $.ajax({
-                type: "POST",
-                url: "EmergencyForm.aspx/checlkeditRights",
-                data: "",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    debugger;
-                    editrights = data.d;
-
-                    if (editrights == "true") {
-                        console.log(editrights);
-                        $('#btnsave').attr('disabled', false);
-                    }
-                    else {
-                        $('#btnsave').attr('disabled', false);
-                    }
-
-                },
-                failure: function () {
-                    alert("Error");
-                }
-            });
-
-
-        }
-        function loadPatientDetail(EMERID) {
-            debugger;
-            $('#btnsave').val('Update');
-            $('#btnsave').attr('disabled', true);
-            AllowOPdEdit();
-            $.ajax({
-                type: "POST",
-                url: "EmergencyForm.aspx/GetPatientDetail",
-                data: JSON.stringify({ EMERID: EMERID }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (resp) {
-                    debugger;
-                    var data = JSON.parse(resp.d);
-                    var stat = data.status;
-                    if (stat == "Approved") {
-                        $('#divapprove').hide();
-                        $('#divvoucher').show();
-                    }
-                    console.log(data);
-                    $('#txtPatientNo').val(data.mr_no_sequence).attr('disabled', true);
-                    $('#hdn_opdId').val(data.opdid);
-                    $('#txt_opd_no').val(data.Opd_No).attr('disabled', true);
-                    $('#txt_patname').val(data.Name).attr('disabled', true);
-                    $('#txt_F_Name').val(data.Father_Name).attr('disabled', true);
-                    $('#ddlMode_Of_Registration').val(data.Mode_Of_Registration).attr('disabled', true);
-                    $('#txtage').val(data.Age_years).attr('disabled', true);
-
-                    $('#txtnic').val(data.CNIC_Masked).attr('disabled', true);
-                    $('#EmpDept').val(data.EmployeeDept).attr('disabled', true);
-                    $('#txtmobile').val(data.Mobile1).attr('disabled', true);
-                    $('#txtStdName').val(data.StudentName).attr('disabled', true);
-
-                    $('#txtAdrress').val(data.Permanent_Address).attr('disabled', true);
-                     $('#chckfreecheck').prop('checked', data.free_check).attr('disabled', true);
-                    $('#txtdiscount').val(data.discount_amt).attr('disabled', true);
-                    $('#txtdependent').val(data.Dependent).attr('disabled', true);
-                    $('#txtemployee').val(data.Employee_Name).attr('disabled', true);
-                    $('#txtreferenceno').val(data.Refference_No).attr('disabled', true);
-                    $('#txtremarks').val(data.Remarks).attr('disabled', true);
-
-
-
-
-
-
-
-                    $('#ddlmartialstatus').html(
-                        $('<option>', {
-                            value: data.MaritalStatus,
-                            text: data.MaritalStatus_text
-                        })
-                    ).attr('disabled', true);
-
-                    $('#ddlGender').html(
-                        $('<option>', {
-                            value: data.Gender,
-                            text: data.Gender_text
-                        })
-                    ).attr('disabled', true);
-
-                    
-
-                 
-
-                    $('#ddlPatient_Type').html(
-                        $('<option>', {
-                            value: data.Patient_Type,
-                            text: data.Type_text
-                        })
-                    ).attr('disabled', true);
-
-                    $('#ddlPatient_Type').off('change').on('change', function () {
-                        loaddata();
-                    });
-
-
-                    loaddata();
-                    $('#ddlDepartment').html(
-                        $('<option>', {
-                            value: data.Patient_Main_Category,
-                            text: data.Category_text
-                        })
-                    ).attr('disabled', true);
-                    $('#ddldoctor').html(
-                        $('<option>', {
-                            value: data.PanelCompany,
-                            text: data.Doc_text
-                        })
-                    ).attr('disabled', true);
-                    $('#ddlpanel').html(
-                        $('<option>', {
-                            value: data.PanelCompany,
-                            text: data.PanelCompany_text
-                        })
-                    ).attr('disabled', true);
-
-                    $('#Employe_id').html(
-                        $('<option>', {
-                            value: data.employee_ID,
-                            text: data.employee_text
-                        })
-                    ).attr('disabled', true);
-                    $('#ddlrollno').val(data.RollNo).trigger('change').attr('disabled', true);
-                    $('#ddlclass').val(data.Class).trigger('change').attr('disabled', true);
-                    $('#ddlsection').val(data.Section).trigger('change').attr('disabled', true);
-                    $('#ddlCashInHand').val(data.account_id).trigger('change').attr('disabled', true);
-
-
-
-
-                    $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);
-                    $('#txtactualfee').val(data.Actual_amount);
-                    debugger;
-                    if (stat != "Approved") {
-                        $('#divapprove').show();
-                        $('#divvoucher').hide();
-                    }
-                    //if (data.Patient_Type != "01") {
-                    //    $('#field_Clinic').hide();
-                    //}
-
-                },
-                error: function (response) {
-                    alert("Error: " + response.responseText);
-                    console.error("AJAX Error: ", response);
-                }
-            });
-        }
-        function AddPatientDetail(reg_id) {
-            debugger;
-            try {
-                isAdd = true;
-                window.location.href = "EmergencyForm.aspx?ID=" + reg_id + "&isAdd=" + isAdd;
-
-            } catch (err) {
-                alert(err.message);
-            }
-
-        }
-        function OnFailPatients(exc) {
-            alert(exc.get_message());
-        }
-        function FillPatientsList() {
-            debugger;
-            $('#tblPatientsResult tbody').empty();
-
-            var SearchString = '';
-
-            PageMethods.SearchPatients(SearchString, OnFilterPatients, OnFailPatients);
-        }
-        function ClearPatientResults() {
-            while (tblPatientsResult.rows.length > 1) {
-                tblPatientsResult.deleteRow(1);
-            }
-        }
-        function OnFilterPatients(data) {
-
-            ClearPatientResults();
-
-            for (var i = 0; i < data.length; i++) {
-                AddPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Full_Name, data[i].NIC, data[i].Mobile1, data[i].Father_Name);
-            }
-        }
-        function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
-            tblLength = tblPatientsResult.rows.length;
-
-            var row = iPatientsBody.insertRow(-1);
-            var cell;
-
-            cell = row.insertCell(-1);
-            cell.innerHTML = '<span spnPatID' + tblLength + '>' + Reg_Patient_ID + '</span>';
-            cell.className = "hide";
-
-            cell = row.insertCell(-1);
-            cell.innerHTML = '<span class="HRcontent">' + Patient_No + '</span>';
-            cell = row.insertCell(-1);
-            cell.innerHTML = '<span class="HRcontent">' + Full_Name + '</span>';
-            cell = row.insertCell(-1);
-            cell.innerHTML = '<span class="HRcontent">' + Father_Name + '</span>';
-            cell = row.insertCell(-1);
-            cell.innerHTML = '<span class="HRcontent">' + NIC + '</span>';
-            cell = row.insertCell(-1);
-            cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
-            cell = row.insertCell(-1);
-            var actions = '';
-            actions += '<a class="tooltips" style="color:#438eb9 ;font-size:16px;display:flex;justify-content:center;" href="#" onclick=AddPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-plus-circle"></i><span class="tooltiptxt">Add</span></a>';
-            actions += '<a class="tooltips" style="color:#FDC303;font-size:16px;display:none" href="#" onclick=EditPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-pencil-square-o"></i><span class="tooltiptxt">Edit</span></a>';
-            cell.innerHTML = actions;
-
-
-        }
-
         function Get_Pat_Info(reg_id) {
 
             $.ajax({
                 type: "POST",
-                url: "EmergencyForm.aspx/GetBasicInfo",
+                url: "Emergency.aspx/GetBasicInfo",
                 data: JSON.stringify({ reg_id: reg_id }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -402,7 +147,7 @@
             var options = '<option value="0">Please Select</option>';
 
             $.ajax({
-                url: 'EmergencyForm.aspx/ModePresentation',
+                url: 'Emergency.aspx/ModePresentation',
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -443,7 +188,7 @@
             }
 
             $.ajax({
-                url: 'EmergencyForm.aspx/GetFees',
+                url: 'Emergency.aspx/GetFees',
                 type: 'POST',
                 data: JSON.stringify({ Department_id: Department_id }),
                 contentType: 'application/json; charset=utf-8',
@@ -557,7 +302,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "EmergencyForm.aspx/" + methodName,
+                url: "Emergency.aspx/" + methodName,
                 data: '{}',
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -635,7 +380,7 @@
             var options;
 
             $.ajax({
-                url: 'EmergencyForm.aspx/GetUserAccount',
+                url: 'Emergency.aspx/GetUserAccount',
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -701,7 +446,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "EmergencyForm.aspx/Getmr",
+                url: "Emergency.aspx/Getmr",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -781,7 +526,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "EmergencyForm.aspx/SavePatientDetail",
+                url: "Emergency.aspx/SavePatientDetail",
                 data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -826,7 +571,7 @@
             debugger;
             try {
                 isAdd = true;
-                window.location.href = "EmergencyForm.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
+                window.location.href = "Emergency.aspx?ID=" + ini_patientID + "&isAdd=" + isAdd;
 
             } catch (err) {
                 alert(err.message);
@@ -877,11 +622,11 @@
             // ✅ Collect ONLY defined variables
             var regid = $('#hdn_regid').val();
             var appid = $('#hdn_aptid').val();
-            var emer_id = $('#hdn_EmergencyFormId').val();
+            var emer_id = $('#hdn_emergencyId').val();
             var patient_no = $('#txtPatientNo').val();
             var modeof_presentation = $('#ddlMode_Of_Registration').val();
             var pat_category = $('#ddlPatient_Type').val();
-            var hdnDepartment = $('#ddlDepartment').val(); // ✅ Use this, not "Department"
+            var hdnDepartment = $("#hdn_dep_id").val(); // ✅ Use this, not "Department"
             var employee = $('#txtemployee').val();
             var employee_id_raw = $('#Employe_id').val();
             var employee_id = employee_id_raw === "" || !employee_id_raw ? null : parseInt(employee_id_raw);
@@ -915,7 +660,7 @@
                 });
                 return;
             }
-            debugger;
+
             if (!patient_no || patient_no === "0") {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a Patient.', showConfirmButton: false, timer: 2000 });
                 return;
@@ -938,7 +683,7 @@
             var data = {
                 regid: regid,
                 appid: appid,
-                emer_id: emer_id,               // ✅ Included (was missing earlier)
+                opdid: opdid,               // ✅ Included (was missing earlier)
                 patient_no: patient_no,
                 modeof_presentation: modeof_presentation,
                 pat_category: pat_category,
@@ -963,8 +708,8 @@
 
             $.ajax({
                 type: "POST",
-                url: "EmergencyForm.aspx/SaveEmergencyData",
-                data: JSON.stringify({ data: data, emer_id: emer_id}),
+                url: "Emergency.aspx/SaveEmergencyData",
+                data: JSON.stringify({ data: data, opdid: opdid }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -1013,7 +758,7 @@
     <input type="hidden" id="hfAntiForgery" runat="server" />
     <input type="text " id="hdfPatient_ID" style="display: none;" />
     <input type="text" id="hdn_regid" style="display: none;" />
-    <input type="text" id="hdn_EmergencyFormId" style="display: none;" />
+    <input type="text" id="hdn_emergencyId" style="display: none;" />
     <input type="text" id="hdnDocshare" style="display: none;" />
     <input type="text" id="hdnhospShare" style="display: none;" />
     <input type="text" id="hdn_emer_reffered" style="display: none;" />
@@ -1111,7 +856,7 @@
                         <input type="text" id="txt_F_Name" readonly="readonly" />
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_OPD_No">
-                        <label>EmergencyForm No *</label>
+                        <label>Emergency No *</label>
                         <input type="text" id="txt_opd_no" value="New" readonly="readonly" />
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Mode_Reg">
@@ -1269,7 +1014,7 @@
                     <input type="button" class="btn-primry " id="btnsave" value="Save&Print" onclick="SaveData()" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-4">
-                    <input type="button" class="btn btn-yellow " id="btnNew" value="New" onclick="window.location = 'EmergencyForm.aspx'" />
+                    <input type="button" class="btn btn-yellow " id="btnNew" value="New" onclick="window.location = 'Emergency.aspx'" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input type="button" class="btn btn-gray " id="btnView" value="View" onclick="window.location = 'OPDView.aspx'" />
@@ -1507,7 +1252,7 @@
         </div>
     </div>
 
-    <div id="SearchEmergencyFormPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
+    <div id="SearchEmergencyPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-body">
@@ -1515,12 +1260,12 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <h5>Search Your Patients:</h5>
-                                <input type="text" id="txtEmergencyFormSearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+                                <input type="text" id="txtEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
                             </div>
                         </div>
                     </fieldset>
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped table-bordered" id="tblEmergencyFormResult">
+                        <table class="table table-hover table-striped table-bordered" id="tblEmergencyResult">
                             <thead>
                                 <tr>
                                     <th style="display: none;">Patient ID</th>
@@ -1532,7 +1277,7 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="EmergencyFormPatientsBody">
+                            <tbody id="EmergencyPatientsBody">
                             </tbody>
                         </table>
                     </div>
@@ -1552,12 +1297,12 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <h5>Search Your Patients:</h5>
-                                <input type="text" id="txtReferEmergencyFormSearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+                                <input type="text" id="txtReferEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
                             </div>
                         </div>
                     </fieldset>
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped table-bordered" id="ReferEmergencyFormResult">
+                        <table class="table table-hover table-striped table-bordered" id="ReferEmergencyResult">
                             <thead>
                                 <tr>
                                     <th style="display: none;">Patient ID</th>

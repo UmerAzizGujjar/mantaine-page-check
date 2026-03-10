@@ -11,7 +11,7 @@ namespace PMS.Modules.PatientManagement
 {
 
 
-    public partial class EmergencyForm
+    public partial class Emergency
     {
 
         /// <summary>
