@@ -2936,6 +2936,9 @@ namespace PMS
                 #endregion
                 else if (PageTitle == "SehatSahulatWise")
                 {
+                    string x = "Sehat Sahulat Wise Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     dpROw.Visible = true;
                     lblPatientType.Visible = false;
@@ -2961,6 +2964,9 @@ namespace PMS
 
                 else if (this.PageTitle == "PARLR")
                 {
+                    string x = "Par and ReOrder Level Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     MainDeptDiv.Visible = true;
                     trTestResult1.Visible = true;
                     ddlPatientType.Visible = false;
@@ -3021,6 +3027,9 @@ namespace PMS
                 }
                 else if (PageTitle == "SIH")
                 {
+                    string x = "Stock In Hand";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
@@ -3043,6 +3052,10 @@ namespace PMS
                 }
                 else if (PageTitle == "Stock_Consumption_Details")
                 {
+
+                    string x = "Stock Consumption Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
 
                     dpROw.Visible = false;
@@ -3066,6 +3079,9 @@ namespace PMS
                 }
                 else if (PageTitle == "SAR")
                 {
+                    string x = "Stock Adjustment Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = true;
                     Time_Row.Visible = false;
                     DateDiv.Visible = true;
@@ -3097,6 +3113,9 @@ namespace PMS
                 }
                 else if (PageTitle == "SehatSahulatWiseExpensive")
                 {
+                    string x = "Sehat Sahulat Wise Expense";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     dpROw.Visible = true;
                     lblPatientType.Visible = false;
@@ -3121,6 +3140,9 @@ namespace PMS
                 }
                 else if (PageTitle == "Patient_Trans_Detail_Type")
                 {
+                    string x = "Patient Trans Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     //tblParameters.Visible = false;
                     lblMRNo.Visible = true;
                     txtMRNo.Visible = true;
@@ -3140,7 +3162,9 @@ namespace PMS
 
                 if (this.PageTitle == "Total_Income")
                 {
-
+                    string x = "Total Income";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -3160,7 +3184,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "TimeAndMotion")
                 {
-
+                    string x = "Time and Motion Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -3181,7 +3207,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "DailySaleSummary")
                 {
-
+                    string x = "Daily Sale Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName(); 
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -3202,7 +3230,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "Item_Wise_Gross_Profit_Report")
                 {
-
+                    string x = "Item Wise Gross Profit Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -3240,7 +3270,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "Category_Wise_Profitability_Report")
                 {
-
+                    string x = "Category Wise Profitability";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = true;
@@ -3309,6 +3341,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "Patient_Trans_Detail")
                 {
+                    string x = "Patient Transaction Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
@@ -3414,7 +3449,9 @@ namespace PMS
                 }
                 else if (PageTitle == "StudentAttendanceList")
                 {
-
+                    string x = "Student Attendance List";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
 
@@ -3539,7 +3576,9 @@ namespace PMS
                 }
                 else if (PageTitle == "SubjectWiseAttendance")
                 {
-
+                    string x = "Subject Wise Attendance";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
 
@@ -3664,6 +3703,9 @@ namespace PMS
                 }
                 else if (PageTitle == "AttendancePercentage")
                 {
+                    string x = "Attendance Percentage";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
@@ -3790,6 +3832,10 @@ namespace PMS
 
                 if (this.PageTitle == "Physiotherapy_Cash_Collection")
                 {
+                    string x = "Physiotherapy Cash Collection";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
 
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
@@ -3811,7 +3857,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "Item_Wise_Margin_Report")
                 {
-
+                    string x = "Item Wise Margin Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -3853,6 +3901,9 @@ namespace PMS
                 if (this.PageTitle == "Item_Wise_Purchase_Report")
                 {
 
+                    string x = "Item Wise Purchase Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -3893,6 +3944,10 @@ namespace PMS
                 }
                 if (this.PageTitle == "YearlyPharmacyOverallSummary")
                 {
+
+                    string x = "Yearly Overall Pharmacy Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
@@ -3983,6 +4038,9 @@ namespace PMS
 
                 if (this.PageTitle == "RadiologyReport")
                 {
+                    string x = "Radiology Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
@@ -4067,6 +4125,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "AnalysisReport")
                 {
+                    string x = "Analysis Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
@@ -4225,6 +4286,9 @@ namespace PMS
 
                 if (this.PageTitle == "Bed_Occupancy")
                 {
+                    string x = "Bed Occupancy Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
 
                     tr1MedicalSubsidy.Visible = true;
@@ -4257,6 +4321,10 @@ namespace PMS
                 }
                 if (this.PageTitle == "Procedure_Time_Line")
                 {
+
+                    string x = "Procedure Time Line";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
 
                     tr1MedicalSubsidy.Visible = true;
@@ -4286,6 +4354,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "Procedure_Time_Line_Detail")
                 {
+                    string x = "Procedure Time Line Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     trProcedure1.Visible = true;
 
@@ -4346,6 +4417,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "AverageLengthOfStay")
                 {
+                    string x = "Average Length Of Stay";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
 
                     tr1MedicalSubsidy.Visible = true;
@@ -4442,7 +4516,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "Pharmacy_Profit_and_Loss_Report")
                 {
-
+                    string x = "Pharmacy Profit and Loss Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4483,7 +4559,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "Head_Wise_Discount_Report")
                 {
-
+                    string x = "Head Wise Discount Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -4504,6 +4582,9 @@ namespace PMS
 
                 else if (PageTitle == "PatientsTypesDetails")
                 {
+                    string x = "Patient Types Details";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Main Category");
                     ddlDepartments.DataSource = valusets;
@@ -4549,6 +4630,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "OutPatientsINP")
                 {
+                    string x = "Out Patient";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -4564,6 +4648,9 @@ namespace PMS
                 }
                 else if (PageTitle == "Patient_Trans_SehatSahulatCard")
                 {
+                    string x = "Patient Transaction";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     //tblParameters.Visible = false;
                     lblMRNo.Visible = true;
                     txtMRNo.Visible = true;
@@ -4582,8 +4669,6 @@ namespace PMS
                 }
                 else if (this.PageTitle == "OPD_Time_Line" || this.PageTitle == "IPD_Time_Line" || this.PageTitle == "Discharge_Time_Line" || this.PageTitle == "Ward_Allocation_Time_Line" || this.PageTitle == "DepartmentWiseProcedureTimeLine")
                 {
-                    dpROw.Visible = false;
-
                     tr1MedicalSubsidy.Visible = true;
                     lblMedical.Text = "Time Line";
 
@@ -4612,6 +4697,30 @@ namespace PMS
                     }
                     ddlMedicalSubsidy.Items.Add("Monthly");
                     ddlMedicalSubsidy.Items.Add("Annually");
+                    if (this.PageTitle == "OPD_Time_Line")
+                    {
+                        string x = "OPD Time Line";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
+                    }
+                    if (this.PageTitle == "IPD_Time_Line")
+                    {
+                        string x = "IPD Time Line";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
+                    }
+                    if (this.PageTitle == "Discharge_Time_Line")
+                    {
+                        string x = "Discharge Time Line";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
+                    }
+                    if (this.PageTitle == "Ward_Allocation_Time_Line")
+                    {
+                        string x = "Ward Allocation Time Line";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
+                    }
 
 
                     //if (this.PageTitle == "AverageLengthOfStay")
@@ -4645,6 +4754,9 @@ namespace PMS
 
                 else if (this.PageTitle == "TestWiseMonthly")
                 {
+                    string x = "Test Wise Monthly";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -4659,6 +4771,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "BloodBankStockLedger")
                 {
+                    string x = "Blood Bank Stock Ledger";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -4678,6 +4793,9 @@ namespace PMS
 
                 else if (this.PageTitle == "ComponentBloodBankStockLedger")
                 {
+                    string x = "Blood Bank";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -4709,7 +4827,9 @@ namespace PMS
 
                 else if (this.PageTitle == "CBloodBankStockLedger")
                 {
-
+                    string x = "Blood";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
@@ -4740,6 +4860,9 @@ namespace PMS
                 }
                 else if (PageTitle == "GroupTestsRateList")
                 {
+                    string x = "Group Test Rate List";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     lblMainDepartment.Visible = false;
                     tr_Export.Visible = true;
@@ -4781,6 +4904,9 @@ namespace PMS
                 }
                 else if (PageTitle == "TestsRateList")
                 {
+                    string x = "Tests Rate List";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     lblMainDepartment.Visible = false;
                     tr_Export.Visible = true;
@@ -4821,6 +4947,9 @@ namespace PMS
                 }
                 else if (PageTitle == "Patient_Wise_Panel")
                 {
+                    string x = "Patient Wise Panel";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     dpROw.Visible = true;
                     lblPatientType.Visible = false;
@@ -4858,6 +4987,9 @@ namespace PMS
                 else if (PageTitle == "BloodResultPending")
                 {
 
+                    string x = "Blood Result Pending";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -4880,6 +5012,9 @@ namespace PMS
                 }
                 else if (PageTitle == "Procedure_Service_List")
                 {
+                    string x = "Procedure Service List";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     //stDate.Visible = false;
                     //enDate.Visible = true;
                     //object valusets;
@@ -4936,6 +5071,9 @@ namespace PMS
                 }
                 else if (PageTitle == "Services_List")
                 {
+                    string x = "Services List";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -4966,6 +5104,10 @@ namespace PMS
                 }
                 else if (this.PageTitle == "Blood_Bank_Lab_Test_Details")
                 {
+                    string x = "Blood Bank Test Details";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
                     dpROw.Visible = false;
                     ddlPatientType.Visible = false;
 
@@ -5010,6 +5152,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "Blood_Bank_Cash_Collection_Details")
                 {
+                    string x = "Blood Bank Cash Collection";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = true;
@@ -5049,6 +5194,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "Non_Cash_Blood_Bank_Revenue")
                 {
+                    string x = "Blood";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = false;
@@ -5121,6 +5269,9 @@ namespace PMS
                 //}
                 else if (PageTitle == "Blood_Bank_Cash_Collection")
                 {
+                    string x = "Blood Bank Cash Collection";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = true;
@@ -5154,6 +5305,9 @@ namespace PMS
                 }
                 else if (PageTitle == "LabResultPending")
                 {
+                    string x = "Lab Result Pending";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = true;
@@ -5473,6 +5627,9 @@ namespace PMS
                 //}
                 else if (this.PageTitle == "BloodIssuance")
                 {
+                    string x = "Blood Issuance";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -5490,6 +5647,9 @@ namespace PMS
 
                 else if (this.PageTitle == "ComponentBloodStockLedger")
                 {
+                    string x = "Blood";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
 
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -5518,6 +5678,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "WholeBloodStockLedger")
                 {
+                    string x = "Blood";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -5643,6 +5806,9 @@ namespace PMS
 
                 else if (this.PageTitle == "Lab_Department_Wise_Summary")
                 {
+                    string x = "Lab Department Wise Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = false;
@@ -5669,6 +5835,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "Test_Result_Status")
                 {
+                    string x = "Test Result Status";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = false;
@@ -5677,7 +5846,9 @@ namespace PMS
                 }
                 else if (PageTitle == "Procedure_List")
                 {
-
+                    string x = "Procedure List";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -5768,6 +5939,9 @@ namespace PMS
                     lblMultiSelect.Visible = true;
                     if (this.PageTitle == "Service_Charges_Detail")
                     {
+                        string x = "Service Charges Detail";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
                         tr1MedicalSubsidy.Visible = true;
                         lblMainDepartment.Visible = true;
                         ddlDepartments.Visible = true;
@@ -5797,6 +5971,9 @@ namespace PMS
                     }
                     if (this.PageTitle == "Daily_Revenue")
                     {
+                        string x = "Daily Revenue";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
                         tr_Summary.Visible = false;
                     }
                     lblMainDepartment.Visible = false;
@@ -5827,6 +6004,9 @@ namespace PMS
 
                     if (this.PageTitle == "Department_Wise_Cash_Summary")
                     {
+                        string x = "Department Wise Cash Summary";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
                         tr_Summary.Visible = false;
                     }
                     lblMainDepartment.Visible = false;
@@ -5924,6 +6104,9 @@ namespace PMS
                 }
                 else if (PageTitle == "AdvanceReport")
                 {
+                    string x = "Advance Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -5943,25 +6126,59 @@ namespace PMS
 
                 else if (PageTitle == "RefundReport")
                 {
+                    string x = "Refund Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
                     ddlPatientType.Visible = false;
-                    optRw.Visible = false;
-                    trDoctor.Visible = false;
+                    trDoctor.Visible = true;
                     tr_Summary.Visible = false;
+                    ddlReportType.Visible = false;
+                    lbservieType.Visible = false;
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                     AllowPatientRecord = false;
+                    optRw.Visible = true;
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
+
+                    tr1MedicalSubsidy.Visible = true;
+                    lblMedical.Text = "Department";
+                    ddlMedicalSubsidy.Items.Clear();
+                    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMedicalSubsidy.Items.Add("OPD");
+                    ddlMedicalSubsidy.Items.Add("Billing");
+
+                    object valusets;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+
                 }
 
                 else if (PageTitle == "CancelBill")
                 {
+                    string x = "Cancel Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -5981,6 +6198,9 @@ namespace PMS
 
                 else if (PageTitle == "ReceiptCollectionReport")
                 {
+                    string x = "Receipt Colletion Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -6067,6 +6287,9 @@ namespace PMS
 
                 else if (this.PageTitle == "ChargePolicyWiseSummary")
                 {
+                    string x = "Charge Policy Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     //lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -6094,6 +6317,9 @@ namespace PMS
                 }
                 else if (PageTitle == "ConsolidateMedicalSubsidy")
                 {
+                    string x = "Consolidate Medical Subsidy";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
                     lblMedical.Visible = true;
                     ddlMedicalSubsidy.Visible = true;
@@ -6221,6 +6447,9 @@ namespace PMS
 
                 if (this.PageTitle == "Bed_Allocation_Report")
                 {
+                    string x = "Bed Allocation Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
                     lblPatientType.Visible = false;
@@ -6241,6 +6470,9 @@ namespace PMS
                 }
                 if (this.PageTitle == "OutSourceTestDetail")
                 {
+                    string x = "Outsource Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     lblMainDepartment.Text = "Out Source Labs";
                     ddlTestName.Visible = false;
@@ -6353,6 +6585,9 @@ namespace PMS
 
                     else if (this.PageTitle == "Discharge_Time_Line_Detail")
                     {
+                        string x = "Discharge TimeLine";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
                         tr1MedicalSubsidy.Visible = false;
                         optRw.Visible = false;
                         tr_Summary.Visible = false;
@@ -6386,7 +6621,7 @@ namespace PMS
                 }
                 if (this.PageTitle == "DoctorShare_Report")
                 {
-                    string x = "Doctor Share ";
+                    string x = "Doctor Share Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
@@ -6445,6 +6680,9 @@ namespace PMS
 
                 if (this.PageTitle == "Package_Detail")
                 {
+                    string x = "Package Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr1MedicalSubsidy.Visible = true;
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
@@ -6486,6 +6724,9 @@ namespace PMS
                     }
                     if (this.PageTitle == "Procedure_Detail")
                     {
+                        string x = "Procedure Detail";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
                         tr1MedicalSubsidy.Visible = true;
                     }
 
@@ -6665,7 +6906,7 @@ namespace PMS
                 }
                 if (this.PageTitle == "TestWiseMonthlyLabTestDepartment")
                 {
-                    string x = "Advance Detail";
+                    string x = "Test Wise Monthly Department Detail";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     lblMultiSelect.Visible = false;
@@ -6786,7 +7027,7 @@ namespace PMS
 
                 if (PageTitle == "VandorWise_Report")
                 {
-                    string x = "Receiving Item Report";
+                    string x = "Vendor Wise Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
@@ -6798,7 +7039,7 @@ namespace PMS
                 }
                 if (PageTitle == "StockBalnce_Report")
                 {
-                    string x = "Item Wise Stock Balance Report";
+                    string x = "Stock Balance Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
@@ -6810,6 +7051,9 @@ namespace PMS
                 }
                 if (PageTitle == "Oppening_Report")
                 {
+                    string x = "Opening Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     Time_Row.Visible = false;
                     dpROw.Visible = false;
@@ -6917,7 +7161,6 @@ namespace PMS
                     string x = "All Cash Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
-                    object valusets;
                     dpROw.Visible = false;
                     lblMultiSelect.Visible = false;
                     trDoctor.Visible = false;
@@ -7109,6 +7352,9 @@ namespace PMS
                 }
                 else if (PageTitle == "InPatients_Detail")
                 {
+                    string x = "In Patient Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     valusets = DBClass.GetValueSet("Main Test Departments");
                     ddlMainDepartment.DataSource = valusets;
@@ -7204,6 +7450,9 @@ namespace PMS
                 }
                 else if (PageTitle == "GOP_Patient_Detail")
                 {
+                    string x = "GOP Patient Detail";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     Time_Row.Visible = false;
                     tr_Summary.Visible = false;
@@ -7228,6 +7477,9 @@ namespace PMS
                 }
                 else if (PageTitle == "GOP_Patient_Summary")
                 {
+                    string x = "GOP Patient Summary";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     Time_Row.Visible = false;
                     tr_Summary.Visible = false;
@@ -7251,6 +7503,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "Department_Conversion")
                 {
+                    string x = "Department Conversion";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     object valusets;
                     //dpROw.Visible = false;
 
@@ -7270,6 +7525,9 @@ namespace PMS
                 }
                 else if (this.PageTitle == "Lab_Cash_Receiving_Collection")
                 {
+                    string x = "Lab Cash Receiving";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
                     dpROw.Visible = false;
                     ddlPatientType.Visible = false;
                     tr_Summary.Visible = true;
@@ -7350,6 +7608,19 @@ namespace PMS
             ddlDepartments.DataValueField = "DataValue_Name";
             ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "All" });
             ddlDepartments.DataBind();
+        }
+        private void SetWarehouse()
+        {
+            Stock_Movement.Visible = true;
+            ddlwareHouse.Visible = true;
+            object valuset;
+            valuset = DBClass.GetValueSet("Ware house");
+            ddlwareHouse.DataSource = valuset;
+            ddlwareHouse.DataTextField = "DataValue_Description";
+            ddlwareHouse.DataValueField = "DataValue_Name";
+            ddlwareHouse.Items.Clear();
+            ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+            ddlwareHouse.DataBind();
         }
         private void LoadForm()
         {
