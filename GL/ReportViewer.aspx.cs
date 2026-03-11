@@ -1774,6 +1774,7 @@ namespace PMS
                 rd.SetParameterValue("@StartDate", Convert.ToDateTime(Request.QueryString["sDate"]));
                 rd.SetParameterValue("@EndDate", Convert.ToDateTime(Request.QueryString["eDate"]));
                 rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "GRN_Report")
@@ -1816,6 +1817,7 @@ namespace PMS
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
                 var warehouse = Request.QueryString["WareHouse"].ToString();
+                var status = Request.QueryString["Status"].ToString();
                 string rptFileName = "Inventory/rptPurchase_Order_Report.rpt";
                 reportPath += rptFileName;
                 rd.Load(reportPath);
@@ -1827,6 +1829,7 @@ namespace PMS
                 rd.SetParameterValue("@VendorId", (Request.QueryString["Vendor"]).ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@warehouse", warehouse);
+                rd.SetParameterValue("Status", status);
             }
             else if (reportName == "Payment_to_Supplier_Report")
             {
@@ -3615,6 +3618,7 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@StartDate", StartDateTime);
                 rd.SetParameterValue("@EndDate", EndDateTime);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "Item_Wise_Gross_Profit")
@@ -3690,6 +3694,7 @@ namespace PMS
                 rd.SetParameterValue("@Item_ID", ItemID);
                 rd.SetParameterValue("@Movement_Type", Movement_Type);
                 rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
             }
             else if (reportName == "PCR")
             {

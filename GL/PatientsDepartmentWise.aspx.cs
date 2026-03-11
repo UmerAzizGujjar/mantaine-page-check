@@ -2482,6 +2482,26 @@ namespace PMS
                     ddlDepartments.Items.Clear();
                     ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
                     ddlDepartments.DataBind();
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
                 }
                 else if (this.PageTitle == "GRN_Report")
                 {
@@ -2582,6 +2602,7 @@ namespace PMS
                     dpROw.Visible = true;
                     ddlPatientType.Visible = false;
                     lblPatientType.Visible = false;
+                    trStatus.Visible = true;
 
                     Stock_Movement.Visible = true;
 
@@ -2608,6 +2629,14 @@ namespace PMS
                     ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
                     ddlDepartments.DataBind();
 
+                    lblStatus.Text = "Status";
+                    ddlStatus.Visible = true;
+                    ddlStatus.Items.Clear();
+                    ddlStatus.Items.Add(new ListItem() { Text = "All ", Value = "All" });
+                    ddlStatus.Items.Add(new ListItem() { Text = "Complete", Value = "Complete" });
+                    ddlStatus.Items.Add(new ListItem() { Text = "Partial", Value = "Partial" });
+                    ddlStatus.Items.Add(new ListItem() { Text = "Pending", Value = "Pending" });
+                    ddlStatus.DataBind();
                 }
                 else if (this.PageTitle == "Payment_to_Supplier_Report")
                 {
@@ -2741,13 +2770,7 @@ namespace PMS
                     ddlDepartments.DataBind();
                     lbShift.Visible = false;
                     ddlShift.Visible = false;
-                    lboperator.Text = "Status";
-                    ddloprators.Visible = true;
-                    ddloprators.Items.Clear();
-                    ddloprators.Items.Add(new ListItem() { Text = "All ", Value = "2" });
-                    ddloprators.Items.Add(new ListItem() { Text = "Active", Value = "1" });
-                    ddloprators.Items.Add(new ListItem() { Text = "In Active", Value = "0" });
-                    ddloprators.DataBind();
+ccc
                 }
                 else if (this.PageTitle == "VendorWiseLedger")
                 {
@@ -3227,6 +3250,25 @@ namespace PMS
                     SetDepartent();
                     dpROw.Visible = false;
 
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
                 }
                 if (this.PageTitle == "Item_Wise_Gross_Profit_Report")
                 {
@@ -3337,6 +3379,26 @@ namespace PMS
                     ddlMainDepartment.DataBind();
 
                     trMovementType.Visible = true;
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
 
                 }
                 if (this.PageTitle == "Patient_Trans_Detail")
