@@ -2173,6 +2173,10 @@ namespace PMS
                             p.Age_years,
                             p.Patient_Type,
                             p.Doctor_ID,
+                            BP = (from op in db.Out_Patients
+                                  where op.Patient_ID == p.Patient_ID
+                                  && op.BP_mm_Hg != null
+                                  select op.BP_mm_Hg).FirstOrDefault(),
                             Checked = ((from op in db.Out_Patients
                                         where op.Patient_ID == p.Patient_ID
                                         && op.Doctor_ID != null && op.Doctor_ID != ""
