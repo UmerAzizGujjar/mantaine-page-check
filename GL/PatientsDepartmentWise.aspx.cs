@@ -2770,7 +2770,13 @@ namespace PMS
                     ddlDepartments.DataBind();
                     lbShift.Visible = false;
                     ddlShift.Visible = false;
-ccc
+                    lboperator.Text = "Status";
+                    ddloprators.Visible = true;
+                    ddloprators.Items.Clear();
+                    ddloprators.Items.Add(new ListItem() { Text = "All ", Value = "2" });
+                    ddloprators.Items.Add(new ListItem() { Text = "Active", Value = "1" });
+                    ddloprators.Items.Add(new ListItem() { Text = "In Active", Value = "0" });
+                    ddloprators.DataBind();
                 }
                 else if (this.PageTitle == "VendorWiseLedger")
                 {

@@ -231,6 +231,7 @@
             $('#ctl00_MainContent_ddlActive').select2();
             $('#ctl00_MainContent_ddlcashier').select2();
             $('#ctl00_MainContent_ddlProcedure').select2();
+            $('#ctl00_MainContent_ddlStatus').select2();
 
             $('#btnReset').click(function () {
 
@@ -1874,6 +1875,7 @@
             <asp:ListItem Text="Inactive" Value="2"></asp:ListItem>
         </asp:DropDownList>
     </div>
+</div>
 
     <div class="col-lg-3 col-md-4 col-sm-12" id="trItemFilter" runat="server" visible="false">
         <asp:Label ID="lblItemFilter" Text="Item Filter" runat="server"></asp:Label>
@@ -1883,7 +1885,6 @@
             <asp:ListItem Text="Hospital" Value="2"></asp:ListItem>
         </asp:DropDownList>
     </div>
-</div>
 
         <div class="row mb-3">
             <div class="col-lg-3 col-md-4 col-sm-12" id="tr_Summary" runat="server" visible="false">
