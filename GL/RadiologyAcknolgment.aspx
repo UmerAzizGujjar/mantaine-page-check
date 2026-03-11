@@ -9,8 +9,9 @@
             loadDoctors();
             loadDoctorsforFilter();
             loadRadiologyAcknowledgment();
+            FillMainTestDepartment();
 
-            $('#mainDepartmentFilter, #statusFilter, #ddlDoctorFilter').on('change', function () {
+            $('#mainDepartmentFilter, #statusFilter, #ddlDoctorFilter, #ddlMainTestDepartment').on('change', function () {
                 $('#tblradilogy').DataTable().ajax.reload();
             });
         });
@@ -58,7 +59,8 @@
                             searchValue: data.search.value,
                             mainDepartmentFilter: $('#mainDepartmentFilter').val() || 'All',
                             statusFilter: $('#statusFilter').val() || 'All',
-                            ddlDoctorFilter: $('#ddlDoctorFilter').val() || '0'
+                            ddlDoctorFilter: $('#ddlDoctorFilter').val() || '0',
+                            mainTestDepartmentFilter: $('#ddlMainTestDepartment').val() || 'All'
                         }),
                         contentType: "application/json; charset=utf-8",
                         success: function (response) {
@@ -94,6 +96,9 @@
                     { "data": "mr_no_sequence", "name": "mr_no_sequence" },
                     { "data": "Full_Name" },
                     { "data": "Item_Name" },
+                    { "data": "Main_Test_Departments" },
+                    { "data": "WardName" },
+                    { "data": "BedNo" },
                     {
                         "data": "ParentTrans_Name",
                         "name": "ParentTrans_Name",
@@ -145,7 +150,7 @@
                             }
                         }
                     },
-                    { "data": "Department" },
+                    { "data": "Department" },              
                     {
                         "data": null,
                         "render": function () {
@@ -157,7 +162,7 @@
                         </select>
                     `;
                         }
-                    },
+                    },  
                     {
                         "data": null,
                         "orderable": false,
@@ -247,6 +252,19 @@
             $('#historyModal').modal('hide');
         }
 
+        function FillMainTestDepartment() {
+            var options = '<option value="All" >All</option>';
+            PageMethods.FillTestMainDepartment(function (Tests) {
+                $.each(JSON.parse(Tests), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddlMainTestDepartment').html(options);
+            },
+                function (error) {
+                    console.log(error);
+                });
+        }
+
 
     </script>
 </asp:Content>
@@ -279,6 +297,12 @@
                         <select id="ddlDoctorFilter" class="form-control">                          
                         </select>
                     </div>
+                    <div class="col-md-3">
+                        <label>Main Test Department:</label>
+                        <select id="ddlMainTestDepartment" class="form-control">
+                            <option value="All">All</option>
+                        </select>
+                    </div>
                 </div>
             </div>
     <table style="width: 100%;">
@@ -294,7 +318,10 @@
                                     <th>Bill No</th>
                                     <th>MR No</th>
                                     <th>Name</th>
-                                    <th>Test Name</th>
+                                    <th>Test Name</th>                                   
+                                    <th>Main Test Department</th>
+                                    <th>Ward No</th>
+                                    <th>Bed No</th>
                                     <th>Main Department</th>
                                     <th>Doctor</th>
                                     <th>Status</th>
