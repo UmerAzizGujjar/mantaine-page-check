@@ -173,10 +173,10 @@
                     debugger;
                     var data = JSON.parse(resp.d);
                     var stat = data.status;
-                    if (stat == "Approved") {
-                        $('#divapprove').hide();
-                        $('#divvoucher').show();
-                    }
+                    //if (stat == "Approved") {
+                    //    $('#divapprove').hide();
+                    //    $('#divvoucher').show();
+                    //}
                     console.log(data);
                     $('#txtPatientNo').val(data.mr_no_sequence).attr('disabled', true);
                     $('#hdn_opdId').val(data.opdid);
@@ -272,10 +272,10 @@
                     $('#txtfees').val(data.Receipt_Amount).attr('disabled', true);
                     $('#txtactualfee').val(data.Actual_amount);
                     debugger;
-                    if (stat != "Approved") {
-                        $('#divapprove').show();
-                        $('#divvoucher').hide();
-                    }
+                    //if (stat != "Approved") {
+                    //    $('#divapprove').show();
+                    //    $('#divvoucher').hide();
+                    //}
                     //if (data.Patient_Type != "01") {
                     //    $('#field_Clinic').hide();
                     //}
