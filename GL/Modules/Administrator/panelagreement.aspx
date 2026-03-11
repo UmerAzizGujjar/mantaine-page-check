@@ -18,7 +18,7 @@
                 ajaxCall("panelagreement.aspx/loadData", JSON.stringify({ "panelID": id }), getResponseData);
             }
             $('#btnNew').on('click', function () {
-                
+
                 window.location.href = "panelagreement.aspx";
             });
             $('#btnList').on('click', function () {
@@ -26,7 +26,7 @@
                 window.location.href = "PanelView.aspx";
             })
             $('#btnSave').on('click', function () {
-               
+
                 var id = '<% =Request.QueryString["ID"] %>';
                 if (id != "") {
 
@@ -42,7 +42,7 @@
                 var contact_no = $("#txtContactNo").val();
                 var address = $("#txtAddress").val();
                 var discount = $("#txtDiscount").val();
-             
+
                 var cmp_nameV = $("#txtCompanyName");
                 var panelrate = $("#txtpanelrate").val();
                 var no_of_empV = $("#txtEmpNo");
@@ -51,7 +51,7 @@
                 var contact_noV = $("#txtContactNo");
                 var addressV = $("#txtAddress");
                 var discountV = $("#txtDiscount");
-                
+
                 if (cmp_name == "") {
                     valid = false;
                     Swal.fire({
@@ -95,7 +95,7 @@
                 if (!$("#txtCompanyName").hasClass('ErrorAlert') && !$("#txtEmail").hasClass('ErrorAlert') && !$("#txtAddress").hasClass('ErrorAlert') && !$("#txtContactNo").hasClass('ErrorAlert') && !$("#txtDiscount").hasClass('ErrorAlert') && !$("#txtEmpNo").hasClass('ErrorAlert')) {
 
 
-                
+
                     var servicesList = new Array();
                     var list = document.getElementById('tblItemDescription');
                     for (var i = 1; i < list.rows.length; i++) {
@@ -169,7 +169,7 @@
         }
 
         function ajaxCall(url, data, getResposeParam) {
-       
+
             var call = '';
             $.ajax({
                 type: "POST",
@@ -178,7 +178,7 @@
                 data: data,
                 async: true,
                 success: function (resp) {
-           
+
                     //call = resp.d;
                     getResposeParam(resp.d);
                 },
@@ -205,7 +205,9 @@
                         $("#txtAddress").val(parsed_Data.Address || '');
                         $("#txtDiscount").val(parsed_Data.Discount || '');
                         $("#txtpanelrate").val(parsed_Data.Panel_Rate || '');
-                        $('#ddlGlAccount').val(parsed_Data.gl_account || '0').trigger('change');
+                        setTimeout(() => {
+                            $('#ddlGlAccount').val(parsed_Data.gl_account || '0').trigger('change');
+                        }, 1000);
                     }
                 },
                 error: function () {
@@ -215,15 +217,15 @@
         }
 
         function loadItemList() {
-      
+
             var optionsitem = '';
             $('#ddltble_Services').select2();
 
             PageMethods.loadItemtList(function (resp) {
-       
+
                 optionsitem = '<option value="0">Please Select</option>';
                 $.each(JSON.parse(resp), function (key, value) {
-      
+
                     optionsitem += '<option value="' + value.Item_ID + '" >' + value.name + '</option>';
                 });
 
@@ -321,7 +323,7 @@
             }
         }
         function ExcludeFromPayment(anchor) {
-  
+
             var a = confirm("Are you sure You want to delete");
             if (a == true) {
                 console.clear();
@@ -341,7 +343,7 @@
             });
         }
         function FillMainTestDepartment() {
-      
+
             var options = '<option value="0" >Select Main Department</option>';
             PageMethods.FillTestMainDepartment(function (Tests) {
                 $.each(JSON.parse(Tests), function (key, value) {
@@ -428,7 +430,7 @@
                 });
             }
             PageMethods.FillTestsByCategory(CategoryID, function (Tests) {
- 
+
                 var options = '<option value="0" >Please Select</option>';
                 $.each(JSON.parse(Tests), function (key, value) {
                     options += '<option  testID="' + value.Test_ID + '" groupCat="' + value.Group_Category + '">' + value.Test_Name + '</option>';
@@ -438,9 +440,114 @@
             });
         }
         function onSelection() {
-       
+
 
         }
+
+
+        function AddAllrow() {
+            PageMethods.loadItemtList(function (resp) {
+                var parsedData = JSON.parse(resp);
+                $.each(parsedData, function (key, index) {
+                    var itemID = parsedData[key].Item_ID;
+                    var itemName = parsedData[key].name;
+                    var Rate = parsedData[key].Rate || "0";
+                    appendRowHtml(itemID, itemName, Rate, "", itemID);
+                });
+            },
+                function (error) {
+                    alert(error.get_message());
+                });
+        }
+        function AddallTest() {
+            var maindpt = $('#ddlMainTestDepartment').val();
+
+            if (maindpt == "0" || maindpt == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please Select a Department First.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return false;
+            }
+
+            if (maindpt == "001") {
+                loadlabtest();
+            }
+            else if (maindpt == "002") {
+                loadUltrasound('002');
+            }
+            else if (maindpt == "003") {
+                loadUltrasound('003');
+            }
+            else if (maindpt == "004") {
+                loadUltrasound('004');
+            }
+            else if (maindpt == "005") {
+                loadProc("005");
+            }
+            else if (maindpt == "006") {
+                loadProc("006");
+            }
+            else if (maindpt == "007") {
+                loadProc("007");
+            }
+        }
+
+        function loadlabtest() {
+            PageMethods.GetLabTests(function (resp) {
+                var parsedData = JSON.parse(resp);
+                $.each(parsedData, function (key, index) {
+                    var testID = parsedData[key].TestID;
+                    var testName = parsedData[key].TestName;
+                    var groupCat = parsedData[key].GroupCategory || "";
+                    var Rate = parsedData[key].Rate || "0";
+                    appendRowHtml(testID, testName, Rate, groupCat, testID);
+                });
+            },
+                function (error) {
+                    alert(error.get_message());
+                });
+        }
+
+        function loadUltrasound(CategoryID) {
+            PageMethods.FillTestsByCategory(CategoryID, function (resp) {
+                var parsedData = JSON.parse(resp);
+                $.each(parsedData, function (key, index) {
+                    var testID = parsedData[key].Test_ID;
+                    var testName = parsedData[key].Test_Name;
+                    var groupCat = parsedData[key].Group_Category || "";
+                    var Rate = parsedData[key].Rate || "0";
+                    appendRowHtml(testID, testName, Rate, groupCat, testID);
+                });
+            },
+                function (error) {
+                    alert(error.get_message());
+                });
+        }
+
+        function loadProc(deptID) {
+            PageMethods.GetProcedure(deptID, function (resp) {
+                var parsedData = JSON.parse(resp);
+                $.each(parsedData, function (key, index) {
+                    var testID = parsedData[key].TestID;
+                    var testName = parsedData[key].TestName;
+                    var Rate = parsedData[key].Rate || "0";
+                    appendRowHtml(testID, testName, Rate, "", testID);
+                });
+            },
+                function (error) {
+                    alert(error.get_message());
+                });
+        }
+
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -503,7 +610,10 @@
             <label></label>
             <input type="button" onclick="Addrow()" class="btn btn-primry" value="Add" id="AddAccount" />
         </div>
-
+        <div class="col-lg-2 col-md-3 col-sm-4">
+            <label></label>
+            <input type="button" onclick="AddAllrow()" class="btn btn-primry" value="Add All Services" id="AddallAccount" />
+        </div>
         <div class="col-lg-2 col-md-3 col-sm-4">
             <label>Test Department</label>
             <select id="ddlMainTestDepartment" onchange="LoadTestByDepartment()">
@@ -515,11 +625,14 @@
             <label id="test">Test</label>
             <select id="ddlTestList">
             </select>
-
+        </div>
+        <div class="col-lg-1 col-md-3 col-sm-4">
+            <label></label>
+            <input type="button" onclick="AddTestRow()" class="btn btn-primry" value="Add Test" id="AddTests" />
         </div>
         <div class="col-lg-2 col-md-3 col-sm-4">
             <label></label>
-            <input type="button" onclick="AddTestRow()" class="btn btn-primry" value="Add Test" id="AddTests" />
+            <input type="button" onclick="AddallTest()" class="btn btn-primry" value="Add All Test" id="AddallTests" />
         </div>
     </div>
     <div class="row">
@@ -551,6 +664,7 @@
             <input type="button" class="btn-gray" id="btnList" value="view" />
         </div>
     </div>
+
 
 
 
