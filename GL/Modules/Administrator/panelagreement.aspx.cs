@@ -21,7 +21,7 @@ namespace PMS
         {
             string data = string.Empty;
             DataBaseDataContext db = new DataBaseDataContext();
-            List<PanelDetailServ> listObj = new List<PanelDetailServ>(); 
+            List<PanelDetailServ> listObj = new List<PanelDetailServ>();
 
             var result = (from pds in db.Panel_Detail_Services
                           where pds.Panel_ID == panelID
@@ -43,7 +43,7 @@ namespace PMS
                     listObj.Add(obj);
                     counter++;
                 }
-                else if(res.Test_ID != null)
+                else if (res.Test_ID != null)
                 {
                     PanelDetailServ obj = new PanelDetailServ();
                     obj.PanelID = res.Panel_ID.ToString();
@@ -68,7 +68,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string Save(string cmp_name, string no_of_emp, string email, string contact_no,string Glcode, string address, string discount,decimal panelrate, string btnValue, string id, string[][] rateDetail)
+        public static string Save(string cmp_name, string no_of_emp, string email, string contact_no, string Glcode, string address, string discount, decimal panelrate, string btnValue, string id, string[][] rateDetail)
         {
             int lstid = 0;
             Panel panel;
@@ -76,16 +76,25 @@ namespace PMS
             if (btnValue == "Save")
             {
                 panel = new Panel();
+                panel.Created_By = AppConfig.UserID;
+                panel.Created_Time = DateTime.Now;
+                db.Panels.InsertOnSubmit(panel);
             }
             else
             {
                 panel = (from tbl in db.Panels
                          where tbl.Panel_ID == Convert.ToInt32(id)
                          select tbl).FirstOrDefault();
+
+                if (panel == null) return "Error: Panel not found";
+
                 panel.Updated_By = AppConfig.UserID;
                 panel.Updated_Time = DateTime.Now;
 
+                string sql = "Delete from Panel_Detail_Services where Panel_ID = " + panel.Panel_ID.ToString();
+                DBClass.executeNonQueryWithoutBegin(sql);
             }
+
             panel.Address = address;
             panel.Company_Name = cmp_name;
             panel.gl_account = Convert.ToInt32(Glcode);
@@ -94,53 +103,52 @@ namespace PMS
             panel.Email = email;
             panel.Panel_Rate = panelrate;
             panel.No_Of_Employees = Convert.ToInt32(no_of_emp);
-            panel.Created_Time = DateTime.Now;
-            panel.Created_By = AppConfig.UserID;
+
             if (btnValue == "Save")
             {
-                panel.Created_By = AppConfig.UserID;
-                panel.Created_Time = DateTime.Now;
-                db.Panels.InsertOnSubmit(panel);
-                db.SubmitChanges();
-            }
-            else
-            {
-                string sql = "Delete from Panel_Detail_Services where Panel_ID = " + panel.Panel_ID.ToString() + "";
-                DBClass.executeNonQueryWithoutBegin(sql);
-            }
-            for (int i = 1; i < rateDetail.Length; i++)
-            {
-                if (rateDetail[i][2].ToString().Trim() == "null" || rateDetail[i][2].ToString().Trim() == "undefined")
-                {
-                    Panel_Detail_Service pds = new Panel_Detail_Service();
-                    pds.Panel_ID = panel.Panel_ID;
-                    pds.Item_ID = rateDetail[i][0].ToString();
-                    pds.Item_Code = Convert.ToInt32(DBClass.getField("Select Item_Code from inv_items i where i.item_ID = " + pds.Item_ID + ""));
-                    pds.Rate = Convert.ToInt32(rateDetail[i][1]);
-                    db.Panel_Detail_Services.InsertOnSubmit(pds);
-                }
-                else if (rateDetail[i][2].ToString().Trim() != null)
-                {
-                    Panel_Detail_Service pds = new Panel_Detail_Service();
-                    pds.Panel_ID = panel.Panel_ID;
-                
-                    pds.Item_Code = 0;
-                    pds.Rate = Convert.ToInt32(rateDetail[i][1]);
-                    pds.GroupCategory = rateDetail[i][2];
-                    pds.Test_ID = rateDetail[i][3];
-                    db.Panel_Detail_Services.InsertOnSubmit(pds);
-                }
-            }
-            db.SubmitChanges();
-            if (btnValue == "Save")
-            {
-                lstid = panel.Panel_ID;
-            }
-            else
-            {
-                lstid = Convert.ToInt32(id);
+                db.SubmitChanges(); 
             }
 
+            for (int i = 1; i < rateDetail.Length; i++)
+            {
+                if (rateDetail[i].Length < 2) continue;
+
+                string itemIDVal = rateDetail[i][0].ToString().Trim();
+                string rateVal = rateDetail[i][1].ToString().Trim();
+                string groupCatVal = rateDetail[i].Length > 2 ? rateDetail[i][2].ToString().Trim() : "";
+                string testIDVal = rateDetail[i].Length > 3 ? rateDetail[i][3].ToString().Trim() : "";
+                if (!string.IsNullOrEmpty(itemIDVal) && itemIDVal != "0")
+                {
+                    Panel_Detail_Service pds = new Panel_Detail_Service();
+                    pds.Panel_ID = panel.Panel_ID;
+                    pds.Item_ID = itemIDVal;
+                    string query = "Select Item_Code from inv_items i where i.item_ID = " + pds.Item_ID;
+                    object codeObj = DBClass.getField(query);
+                    pds.Item_Code = codeObj != null ? Convert.ToInt32(codeObj) : 0;
+
+                    pds.Rate = string.IsNullOrEmpty(rateVal) ? 0 : Convert.ToInt32(rateVal);
+                    pds.GroupCategory = null;
+                    pds.Test_ID = null;      
+
+                    db.Panel_Detail_Services.InsertOnSubmit(pds);
+                }
+                else if (!string.IsNullOrEmpty(groupCatVal) || !string.IsNullOrEmpty(testIDVal))
+                {
+                    Panel_Detail_Service pds = new Panel_Detail_Service();
+                    pds.Panel_ID = panel.Panel_ID;
+                    pds.Item_ID = null;      
+                    pds.Item_Code = 0;  
+                    pds.Rate = string.IsNullOrEmpty(rateVal) ? 0 : Convert.ToInt32(rateVal);
+                    pds.GroupCategory = groupCatVal;
+                    pds.Test_ID = testIDVal;
+
+                    db.Panel_Detail_Services.InsertOnSubmit(pds);
+                }
+            }
+
+            db.SubmitChanges();
+
+            lstid = panel.Panel_ID;
             return lstid.ToString();
         }
         [WebMethod]
@@ -177,11 +185,12 @@ namespace PMS
         {
             string result = string.Empty;
             DataBaseDataContext db = new DataBaseDataContext();
-            var itemsList = (from i in db.INV_Items 
+            var itemsList = (from i in db.INV_Items
                              where (i.Services == true || i.Hospital_Services == true || i.IsBill_Item == true || i.Procedure_types != "0")
                              select new
-                             {   i.Item_ID, 
-                                 name = i.Item_Code.ToString() 
+                             {
+                                 i.Item_ID,
+                                 name = i.Item_Code.ToString()
                                  + '-' + i.Description
                              }).ToList();
             if (itemsList != null)
@@ -221,7 +230,7 @@ namespace PMS
         public static string GetLabTests()
         {
 
-         
+
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var tests = from t in db.Lab_Tests
                         where t.Main_Department == "001" && t.Active == true
@@ -233,10 +242,10 @@ namespace PMS
                 TestIDsAndGroupCategory obj = new TestIDsAndGroupCategory();
                 obj.TestID = test.Test_ID.ToString();
                 obj.TestName = test.Test_Name.ToString();
-            
+
                 obj.SerialNo = counter.ToString();
                 obj.IsGroupCategory = false;
-                obj.GroupCategory = test.Group_Category; 
+                obj.GroupCategory = test.Group_Category;
                 listOfTest.Add(obj);
                 counter++;
             }
