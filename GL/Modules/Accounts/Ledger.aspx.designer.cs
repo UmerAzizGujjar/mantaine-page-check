@@ -132,6 +132,33 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlStock;
 
         /// <summary>
+        /// warehouseDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl warehouseDiv;
+
+        /// <summary>
+        /// lblWarehouse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblWarehouse;
+
+        /// <summary>
+        /// ddlWarehouse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlWarehouse;
+
+        /// <summary>
         /// DateDiv control.
         /// </summary>
         /// <remarks>

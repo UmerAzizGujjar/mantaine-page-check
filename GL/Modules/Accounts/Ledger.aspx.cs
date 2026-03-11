@@ -156,6 +156,15 @@ namespace PMS
                         stockDiv.Visible = true;
                         accountDiv.Visible = false;
                         DateDiv.Visible = false;
+                        warehouseDiv.Visible = true;
+
+                        object valuset = DBClass.GetValueSet("Ware house");
+                        ddlWarehouse.DataSource = valuset;
+                        ddlWarehouse.DataTextField = "DataValue_Description";
+                        ddlWarehouse.DataValueField = "DataValue_Name";
+                        ddlWarehouse.DataBind();
+                        ddlWarehouse.Items.Insert(0, new ListItem("All", "0"));
+
                         break;
                     //case "Ledger":
                     //    vendorDiv.Visible = true;
@@ -233,7 +242,7 @@ namespace PMS
                     query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + "";
                     break;
                 case "SIHBW":
-                    query = "ReportName=PharmacyStockBatchWise&ReportTitle=Stock In Hand  From" + "&Stock=" + ddlStock.SelectedValue + "";   //  excluded + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text 
+                    query = "ReportName=PharmacyStockBatchWise&ReportTitle=Stock In Hand  From" + "&Stock=" + ddlStock.SelectedValue + "" + "&WareHouse=" + ddlWarehouse.SelectedValue;   //  excluded + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text 
                     break;
                 //case "Ledger":
                 //    query = "ReportName=Ledger1&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue;
