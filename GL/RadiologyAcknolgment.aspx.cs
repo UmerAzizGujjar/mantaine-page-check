@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI.WebControls;
+using static PMS.DonorReceivingForm;
 
 namespace PMS
 {
@@ -15,7 +16,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object GetRadiologyAcknowledgment(int draw, int start, int length, string sortColumn, string sortDirection, string searchValue, string mainDepartmentFilter, string statusFilter, string ddlDoctorFilter)
+        public static object GetRadiologyAcknowledgment(int draw, int start, int length, string sortColumn, string sortDirection, string searchValue, string mainDepartmentFilter, string statusFilter, string ddlDoctorFilter, string mainTestDepartmentFilter)
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
@@ -75,6 +76,18 @@ namespace PMS
                                   ?? (from p2 in db.Patients
                                       where p2.Patient_ID == pat.pat_id
                                       select p2.Patient_Main_Category).FirstOrDefault()
+
+                        let emergencyRec = (from emg in db.Emergency_Patients
+                                            where emg.Patient_ID == pat.pat_id
+                                            orderby emg.Emergency_ID descending
+                                            select emg).FirstOrDefault()
+                        let inPatientRec = (from ipd in db.In_Patients
+                                            where ipd.Patient_ID == pat.pat_id
+                                            orderby ipd.In_Patient_ID descending
+                                            select ipd).FirstOrDefault()
+                        let activeWardId = (emergencyRec != null ? (int?)emergencyRec.Ward_ID : (inPatientRec != null ? (int?)inPatientRec.Ward_ID : null))
+                        let activeBedNo = (emergencyRec != null ? (int?)emergencyRec.Bed_No : (inPatientRec != null ? (int?)inPatientRec.Bed_No : null))
+                        let wardName = (activeWardId != null ? (from w in db.Ward_Definitions where w.Ward_ID == activeWardId select w.Ward_Type).FirstOrDefault() : null)
                         select new
                         {
                             bill.Bill_Date,
@@ -84,6 +97,7 @@ namespace PMS
                             pat.Full_Name,
                             pat.mr_no_sequence,
                             bill_details.Bill_Details_ID,
+                            Main_Test_Departments = db.GetDataValueName("Main Test Departments", bill_details.Test_Main_Department),
                             labtest_detail.Lab_Test_Detail_ID,
                             Department = db.GetDataValueName("Patient Main Category", dept),
                             bill_details.ParentTrans_Name,
@@ -93,7 +107,10 @@ namespace PMS
                             IsAcknowledge = labtest_detail.IsAcknowledge ?? false,
                             IsApproved = labtest_detail.isApproved ?? false,
                             History = labtest_detail.History,
-                            Priorities = labtest_detail.Priorities
+                            Priorities = labtest_detail.Priorities,
+                            WardName = wardName ?? "",
+                            BedNo = (activeBedNo != null ? activeBedNo.Value.ToString() : ""),
+                            RawTestDeptCode = bill_details.Test_Main_Department
                         };
 
             var queryList = query.ToList();
@@ -122,6 +139,11 @@ namespace PMS
                 {
                     queryList = queryList.Where(x => x.IsAcknowledge == true && (x.IsApproved == false || x.IsApproved == null)).ToList();
                 }
+            }
+
+            if (!string.IsNullOrEmpty(mainTestDepartmentFilter) && mainTestDepartmentFilter != "All")
+            {
+                queryList = queryList.Where(x => x.RawTestDeptCode == mainTestDepartmentFilter).ToList();
             }
 
             if (!string.IsNullOrEmpty(searchValue))
@@ -227,6 +249,24 @@ namespace PMS
             {
                 return "Error: " + ex.Message;
             }
+        }
+
+        [WebMethod]
+        public static string FillTestMainDepartment()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Main Test Departments"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
         }
     }
 }

@@ -754,6 +754,11 @@
             GetTestDepartment();
             LoadRadiologyPatientsList();
             LoadRadiologyResultsReadyList();
+
+            $('#ddlDepartment').on('change', function () {
+                LoadRadiologyPatientsList(); 
+            });
+
         });
         function GetTestDepartment() {
             var options = '<option value="">Select Department</option>';
@@ -2355,9 +2360,12 @@
         }
 
         function LoadRadiologyPatientsList() {
+            var deptFilter = $('#ddlDepartment').val(); 
+
             $.ajax({
                 type: "POST",
                 url: "RadiologyTestResult.aspx/AllUltraSoundTest",
+                data: JSON.stringify({ departmentCode: deptFilter }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -2368,21 +2376,25 @@
 
                     if (data && data.length > 0) {
                         $.each(data, function (index, item) {
-                            var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
-                            var formattedDate = billDate.toLocaleDateString();
+                            var formattedDate = '';
+                            if (item.Bill_Date) {
+                                var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
+                                formattedDate = billDate.toLocaleDateString();
+                            }
 
                             var row = '<tr>' +
                                 '<td>' + formattedDate + '</td>' +
                                 '<td>' + item.Bill_No + '</td>' +
                                 '<td>' + item.Full_Name + '</td>' +
                                 '<td>' + item.Item_Name + '</td>' +
+                                '<td>' + item.Test_Main_Department + '</td>' +
                                 '<td><button type="button" class="btn btn-sm btn-primary" ' +
-                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
+                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ')">Select</button></td>' +
                                 '</tr>';
                             tbody.append(row);
                         });
                     } else {
-                        tbody.append('<tr><td colspan="5" class="text-center">No pending radiology tests found.</td></tr>');
+                        tbody.append('<tr><td colspan="6" class="text-center">No pending radiology tests found for this department.</td></tr>');
                     }
                 },
                 error: function (xhr, status, error) {
@@ -2454,33 +2466,64 @@
         function LoadRadiologyResultsReadyList() {
             $.ajax({
                 type: "POST",
-                url: "RadiologyTestResult.aspx/GetRadiologyResultsReady", 
+                url: "RadiologyTestResult.aspx/GetRadiologyResultsReady",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
                     var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
-                    var tbody = $('#tbl_tbody_radiology_results'); 
-                    tbody.empty();
+                    var tbody = $('#tbl_tbody_radiology_results');
+                    var ddlFilter = $('#ddlFilterDoctor');
 
+                    tbody.empty();
+                    var doctors = [];
                     if (data && data.length > 0) {
                         $.each(data, function (index, item) {
-                            var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
-                            var formattedDate = billDate.toLocaleDateString();
-
-                            var row = '<tr>' +
-                                '<td>' + formattedDate + '</td>' +
-                                '<td>' + item.Bill_No + '</td>' +
-                                '<td>' + item.Full_Name + '</td>' +
-                                '<td>' + item.Item_Name + '</td>' +
-                                '<td>' + (item.Doctor || '') + '</td>' +
-                                '<td><button type="button" class="btn btn-sm btn-success" ' +  
-                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
-                                '</tr>';
-                            tbody.append(row);
+                            if (item.Doctor && doctors.indexOf(item.Doctor) === -1) {
+                                doctors.push(item.Doctor);
+                            }
                         });
-                    } else {
-                        tbody.append('<tr><td colspan="5" class="text-center">No results ready for approval.</td></tr>');
+                        doctors.sort();
+                        ddlFilter.find('option:not(:first)').remove();
+                        $.each(doctors, function (i, doctorName) {
+                            ddlFilter.append('<option value="' + doctorName + '">' + doctorName + '</option>');
+                        });
                     }
+
+                    function renderRows(filterValue) {
+                        tbody.empty();
+                        var hasData = false;
+
+                        if (data && data.length > 0) {
+                            $.each(data, function (index, item) {
+                                if (filterValue !== "" && item.Doctor !== filterValue) {
+                                    return; 
+                                }
+
+                                hasData = true;
+                                var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
+                                var formattedDate = billDate.toLocaleDateString();
+                                var row = '<tr>' +
+                                    '<td>' + formattedDate + '</td>' +
+                                    '<td>' + item.Bill_No + '</td>' +
+                                    '<td>' + item.Full_Name + '</td>' +
+                                    '<td>' + item.Item_Name + '</td>' +
+                                    '<td>' + (item.Doctor || '') + '</td>' +
+                                    '<td><button type="button" class="btn btn-sm btn-success" ' +
+                                    'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
+                                    '</tr>';
+                                tbody.append(row);
+                            });
+                        }
+
+                        if (!hasData) {
+                            tbody.append('<tr><td colspan="6" class="text-center">No results found.</td></tr>');
+                        }
+                    }
+                    renderRows("");
+                    ddlFilter.off('change').on('change', function () {
+                        var selectedDoctor = $(this).val();
+                        renderRows(selectedDoctor);
+                    });
                 },
                 error: function (xhr, status, error) {
                     console.error("Error loading results-ready list:", error);
@@ -2540,6 +2583,7 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
         $(".tdemergency").hide();
     });
 }
+
 
     </script>
 
@@ -2922,25 +2966,49 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
     </div>
     <div class="row">
         <div class="col-lg-6 col-md-3 sm-6" id="Radiologylist">
-            <h1>Radiology Patients List</h1>
-            <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
-                <table class="table test-table" id="tblradilogy">
-                    <thead style="position: sticky; top: 0; background-color: white; z-index: 10;">
-                        <tr>
-                            <th>Bill Date</th>
-                            <th>Bill No</th>
-                            <th>Name</th>
-                            <th>Test Name</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbl_tbody_radiology">
-                    </tbody>
-                </table>
-            </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center;margin-bottom:24px;margin-top:23px">
+            <h1 style="margin:0;">Radiology Patients List</h1>
+
+            <select id="ddlDepartment" class="form-control" style="width:200px;">
+                <option value="">All Departments</option>
+                <option value="002">Ultrasound</option>
+                <option value="003">X-Ray</option>
+                <option value="004">CTScan</option>
+                <option value="005">Physiotherapy</option>
+                <option value="006">MRI</option>
+                <option value="008">Cardiology</option>
+            </select>
         </div>
+
+        <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+            <table class="table test-table" id="tblradilogy">
+                <thead style="position: sticky; top: 0; background-color: white; z-index: 10;">
+                    <tr>
+                        <th>Bill Date</th>
+                        <th>Bill No</th>
+                        <th>Name</th>
+                        <th>Test Name</th>
+                        <th>Test Main Department</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbl_tbody_radiology">
+                </tbody>
+            </table>
+        </div>
+    </div>
         <div class="col-lg-6 col-md-3 sm-6" id="PendingRadiologylist">
-            <h1>Results Ready - Pending Approval</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h1>Results Ready - Pending Approval</h1>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label>Doctor:</label>
+                    <select id="ddlFilterDoctor" class="form-control">
+                        <option value="">All Doctors</option>
+                    </select>
+                </div>
+            </div>
+
             <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
                 <table class="table test-table" id="tblradilogy_results">
                     <thead style="position: sticky; top: 0; background-color: white; z-index: 10;">
@@ -2957,6 +3025,7 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
     <div class="row">

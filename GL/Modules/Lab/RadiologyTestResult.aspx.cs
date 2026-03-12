@@ -1676,7 +1676,7 @@ namespace PMS.Modules.Lab
 
 
         [WebMethod]
-        public static string AllUltraSoundTest()
+        public static string AllUltraSoundTest(string departmentCode = "")
         {
             DataBaseDataContext db = new DataBaseDataContext();
             db.CommandTimeout = 180;
@@ -1684,17 +1684,17 @@ namespace PMS.Modules.Lab
             serl.MaxJsonLength = 2147483647;
 
             DateTime startDate = System.DateTime.Now.AddMonths(-2);
-            DateTime endData = System.DateTime.Now.Date;
+            DateTime endDate = System.DateTime.Now.Date;
 
-            var testDetails_Billing_Sample = (
+            var query = (
                 from pat in db.Reg_patients
                 join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
                 join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
                 join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
                 join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
-                where  (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
-                 (labtest_detail.Is_Result == false || labtest_detail.Is_Result == null) &&
-                 bill_details.Test_Main_Department != "001" &&
+                where (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
+                      (labtest_detail.Is_Result == false || labtest_detail.Is_Result == null) &&
+                      bill_details.Test_Main_Department != "001" &&
                       (bill.isCancel == false || bill.isCancel == null) &&
                       bill.Bill_Date >= startDate
                 orderby bill.Bill_Date descending
@@ -1705,15 +1705,22 @@ namespace PMS.Modules.Lab
                     bill.Bill_ID,
                     bill_details.Category_ID,
                     bill_details.Item_Name,
+                    Test_Main_Department = db.GetDataValueName("Main Test Departments", bill_details.Test_Main_Department),
                     pat.Patient_No,
                     pat.Created_time,
                     pat.pat_id,
                     pat.Full_Name,
                     bill_details.Bill_Details_ID,
                     bill.Remarks,
-
+                    RawDeptCode = bill_details.Test_Main_Department
                 }
-            ).ToList();
+            );
+            if (!string.IsNullOrEmpty(departmentCode))
+            {
+                query = query.Where(x => x.RawDeptCode == departmentCode);
+            }
+
+            var testDetails_Billing_Sample = query.ToList();
 
             return serl.Serialize(testDetails_Billing_Sample);
         }

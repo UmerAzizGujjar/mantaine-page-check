@@ -2619,11 +2619,13 @@
                     var status = '';
                     var FilterClinic = (value.FilterClinic === null || value.FilterClinic === '' || value.FilterClinic === 'Please Select') ? '' : value.FilterClinic;
                     var DoctorName = value.DoctorName ?? '';
-                    if (value.Checked == null) {
+                    var rowColorStyle = '';
+
+                    if (value.BP == null || value.BP == '') {
                         status = 'Un Checked';
-                    }
-                    if (value.Checked != null) {
-                            var rowColorStyle = (status = 'Checked') ? 'style="background-color: #aeffae;"' : '';
+                    } else {
+                        status = 'Checked';
+                        rowColorStyle = 'style="background-color: #aeffae;"';
                     }
 
                     rows += '<tr ' + rowColorStyle + '> <td>' + value.Patient_No + '</td> <td> ' + value.Token_No + ' </td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Department + '<td>' + FilterClinic + '</td> ' + '<td>' + DoctorName + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=select(' + value.Patient_ID + ')><i class="fa fa-upload" ></i></a> </td> </tr>';
