@@ -363,30 +363,84 @@
             });
 
         });
-        // Function to load Sale Return Inovice Items Data
+
+        //function loadInvoiceNumbers() {
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "IssueMedicine.aspx/AllInvoiceNumbers",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        data: JSON.stringify({ searchTerm: "" }),
+
+        //        success: function (response) {
+
+        //            var data = JSON.parse(response.d);
+
+        //            $('#ddlInvoiceNumber').select2({
+        //                placeholder: "Please Select",
+        //                data: data
+        //            });
+
+        //        },
+
+        //        error: function (xhr) {
+        //            console.log(xhr.responseText);
+        //        }
+        //    });
+
+        //}
         function loadInvoiceNumbers() {
-            $('#ddlInvoiceNumber').select2({
-                placeholder: "Please Select",
-                minimumInputLength: 0, // allow dropdown open without typing
-                ajax: {
-                    url: 'IssueMedicine.aspx/AllInvoiceNumbers',
-                    type: 'POST',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    delay: 250,
-                    data: function (params) {
-                        return JSON.stringify({
-                            searchTerm: params.term || ""
-                        });
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: JSON.parse(data.d)
-                        };
-                    }
+
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/AllInvoiceNumbers",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ searchTerm: "" }),
+
+                success: function (response) {
+
+                    var data = JSON.parse(response.d);
+
+                    // Clear and add empty option for placeholder
+                    $('#ddlInvoiceNumber').empty();
+                    $('#ddlInvoiceNumber').append('<option></option>');
+
+                    $('#ddlInvoiceNumber').select2({
+                        placeholder: "Please Select",
+                        allowClear: true,
+                        data: data
+                    });
+
                 }
             });
         }
+
+        // Function to load Sale Return Inovice Items Data
+        //function loadInvoiceNumbers() {
+        //    $('#ddlInvoiceNumber').select2({
+        //        placeholder: "Please Select",
+        //        minimumInputLength: 0, // allow dropdown open without typing
+        //        ajax: {
+        //            url: 'IssueMedicine.aspx/AllInvoiceNumbers',
+        //            type: 'POST',
+        //            contentType: "application/json; charset=utf-8",
+        //            dataType: "json",
+        //            delay: 250,
+        //            data: function (params) {
+        //                return JSON.stringify({
+        //                    searchTerm: params.term || ""
+        //                });
+        //            },
+        //            processResults: function (data) {
+        //                return {
+        //                    results: JSON.parse(data.d)
+        //                };
+        //            }
+        //        }
+        //    });
+        //}
         // Function to load Sale Return Inovice Items Data
         //function loadInvoiceNumbers() {
         //    var optionInv = '';
@@ -2887,7 +2941,7 @@
                     dataType: "json",
                     success: function (response) {
                         console.log("Response:", response.d);  // Check this in console
-
+                        debugger;
                         // Clear existing options
                         $('#ddlInvoiceNumber').empty();
                         $('#ddlInvoiceNumber').append('<option value="">--Select Invoice--</option>');
@@ -2895,8 +2949,11 @@
                         // Populate invoice dropdown
                         if (response.d && response.d.length > 0) {
                             $.each(response.d, function (index, item) {
-                                console.log("Item:", item);  // Debug: check property names
+                                console.log("Item:", item);
+                                // Debug: check property names
+                                debugger;
                                 $('#ddlInvoiceNumber').append(
+                                  
                                     '<option value="' + item.bill_id + '">' + 
                                     item.Seq_InvoiceNo + '</option>'
                                 );
@@ -2913,7 +2970,47 @@
                 });
             }
 
+        //function getInvoiceNo_PatWise() {
 
+        //    var reg_id = $('#ddlpat_no').val();
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "IssueMedicine.aspx/GetInvoiceNoByPatient",
+        //        data: JSON.stringify({ reg_id: parseInt(reg_id) }),
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+
+        //        success: function (response) {
+
+        //            debugger;
+
+        //            $('#ddlInvoiceNumber').empty();
+        //            $('#ddlInvoiceNumber').append('<option value="">--Select Invoice--</option>');
+
+        //            if (response.d && response.d.length > 0) {
+
+        //                $.each(response.d, function (index, item) {
+
+        //                    $('#ddlInvoiceNumber').append(
+        //                        '<option value="' + item.bill_id + '">' +
+        //                        item.Seq_InvoiceNo +
+        //                        '</option>'
+        //                    );
+
+        //                });
+        //                $('#ddlInvoiceNumber').trigger('change');
+        //            } else {
+
+        //                $('#ddlInvoiceNumber').append('<option value="">No Invoices Found</option>');
+        //            }
+        //        },
+
+        //        error: function (xhr) {
+        //            console.log(xhr.responseText);
+        //        }
+        //    });
+        //}
 
     </script>
 </asp:Content>
