@@ -165,6 +165,27 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
+        public static string GetMaritalStatus()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Marital Status"
+                              select new
+                              {
+                                  Value = dv.DataValue_Name,
+                                  Text = dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+       
+        [WebMethod]
         public static string GetMachines()
         {
             string data = string.Empty;
@@ -301,25 +322,7 @@ namespace PMS.Modules.PatientManagement
             return data;
         }
 
-        [WebMethod]
-        public static string GetMaritalStatus()
-        {
-            string data = string.Empty;
-            using (DataBaseDataContext db = new DataBaseDataContext())
-            {
-                var result = (from dv in db.DataValues
-                              join ds in db.ValueSets
-                              on dv.ValueSet_ID equals ds.ValueSet_ID
-                              where ds.ValueSet_Name == "Marital Status"
-                              select new
-                              {
-                                  Value = dv.DataValue_Name,
-                                  Text = dv.DataValue_Description
-                              }).ToList();
-                data = new JavaScriptSerializer().Serialize(result);
-            }
-            return data;
-        }
+       
 
         [WebMethod]
         public static string GetCountries()
@@ -850,7 +853,7 @@ namespace PMS.Modules.PatientManagement
                 pat.val_city = city_val;
                 pat.val_area = area_val;
                 pat.Created_time = DateTime.Now;
-                pat.Created_by = (Guid?)HttpContext.Current.Session["UserID"];
+                pat.Created_by = AppConfig.UserID;
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
                 pat.Country = Country;
@@ -882,6 +885,106 @@ namespace PMS.Modules.PatientManagement
             return $"MR-{(numPart + 1).ToString("D4")}";
         }
 
+        [WebMethod]
+        public static string GetMartailStatus()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Marital Status"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetCountry()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Country"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetProvince()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Province"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetCity()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "City"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetArea()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Area"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         public class PatientRegistrationData
         {
             public string Title { get; set; }

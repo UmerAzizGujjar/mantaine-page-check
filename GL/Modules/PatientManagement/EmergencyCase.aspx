@@ -92,14 +92,30 @@
 
 
             jQuery(function ($) {
+
                 MaskedInput({
                     elm: document.getElementById('txtSearch'),
                     format: '+92__________',
                     separator: '-'
                 });
+
                 var phoneInput = document.getElementById('txtSearch');
-                var cursorPosition = 3;
-                phoneInput.setSelectionRange(cursorPosition, cursorPosition);
+                phoneInput.addEventListener("focus", function () {
+                    if (!this.value.startsWith("+92")) {
+                        this.value = "+92";
+                    }
+                    this.setSelectionRange(3, 3);
+                });
+
+                phoneInput.addEventListener("keydown", function (e) {
+                    if (this.selectionStart <= 3 && (e.key === "Backspace" || e.key === "Delete")) {
+                        e.preventDefault();
+                    }
+                    if (this.selectionStart < 3) {
+                        this.setSelectionRange(3, 3);
+                    }
+                });
+
             });
 
             $("#txtSearch").keyup(function (event) {
@@ -225,6 +241,15 @@
                 }
             }, 1500);
             LoadCategory();
+
+            $("#txtSearch").keyup(function (event) {
+
+                var SearchString = $('#txtSearch').val();
+                event.preventDefault();
+
+                PageMethods.AddPatient(SearchString, OnFilterPatients, OnFailPatients);
+
+            });
 
         });
 
@@ -5948,6 +5973,10 @@
         }
 
 
+        function NewEMR() {
+            window.location.href = "/Modules/Dashboards/NewEMR.aspx";
+        }
+        
 
 
     </script>
@@ -8706,7 +8735,7 @@
                    </div>
                 </div>
                 <div style="padding-top: 20px;">
-                    <div class =" col-lg-8">
+                    <div class =" col-lg-9">
                     <div class="row">
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <input type="button" class="btn-primry"  onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" /> 
@@ -8717,10 +8746,13 @@
                         <div class="col-lg-2 col-md-4 col-sm-6">                            
                         <input type="button" class="btn-gray" id="btnBackList" value="View" onclick="BackToList()" />
                         </div>
-                        <div class="col-lg-1 col-md-4 col-sm-6">
-                         
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn-primry" id="btnNewEMR" value="EMR" onclick="NewEMR()" />
+                        </div>
+                        <div class="col-lg-1 col-md-4 col-sm-6">                   
                              <input type="button" class="btn-primry" value="Prescription" name="name" onclick="PrintoutPatient();" style="width: 200px !important" />
                         </div>
+                        
                     </div>
                         </div>
                     <table>
