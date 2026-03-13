@@ -4,7 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
      <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <script>
+    <script type="text/javascript">
         var currentDialysisId = '';
         var isEditMode = false;
 
@@ -12,6 +12,7 @@
             initializeForm();
             loadDropdowns();
             checkEditMode();
+            
             //loadPatientModalDropdowns();
         });
 
@@ -290,6 +291,12 @@
             $('#txtPostStartTime, #txtPostEndTime').on('change', function () {
                 calculateDuration();
             });
+            fillArea();
+            fillCountry();
+            fillProvince();
+            fillCity();
+            fillGender();
+            fillmartial();
         }
 
         function loadDropdowns() {
@@ -311,6 +318,45 @@
             loadHeparin(checkAllLoaded);
             loadDialysisTypes(checkAllLoaded);
             loadStaff(checkAllLoaded);
+        }
+
+        function CalculateDateOfBirth() {
+            var Numbers = $('#PrefixAge').val();
+            var CalDob = $('#txt_dob').val();
+
+            if (!CalDob || isNaN(CalDob) || CalDob <= 0) {
+                $('#txtAge_yearss').val('');
+                return;
+            }
+
+            var now = moment();
+            var dob;
+
+            if (Numbers === "Year") {
+                dob = now.subtract(CalDob, 'years');
+            } else if (Numbers === "Month") {
+                dob = now.subtract(CalDob, 'months');
+            } else if (Numbers === "Day") {
+                dob = now.subtract(CalDob, 'days');
+            } else {
+                $('#txtAge_yearss').val('');
+                return;
+            }
+
+            var finalDate = dob.format("DD/MM/YYYY");
+
+            var $datepicker = $('#txtAge_yearss');
+            if (!$datepicker.hasClass('hasDatepicker')) {
+                $datepicker.datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+0",
+                    dateFormat: "dd/mm/yy"
+                });
+            }
+
+            $datepicker.datepicker('setDate', dob.toDate());
+
         }
 
         function loadVascularAccess(callback) {
@@ -873,6 +919,86 @@
                 }
             });
         }
+
+        function viewList() {
+            window.location.href = "DialysisView.aspx";
+        }
+
+        function newForm() {
+            window.location.href = "DialysisForm.aspx";
+        }
+
+        function fillGender() {
+            $.ajax({
+                type: "POST",
+                url: "DialysisForm.aspx/GetGenders",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+                    var options = '<option value="0">Select Gender</option>';
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.Value + '">' + value.Text + '</option>';
+                    });
+                    $('#ddl_Gender').html(options);
+                }
+            });
+        }
+
+        function fillmartial() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetMartailStatus(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddl_status').html(options);
+            });
+            return options;
+        }
+
+        function fillCountry() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetCountry(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddlCountry').html(options);
+            });
+            return options;
+        }
+
+        function fillProvince() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetProvince(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddl_Province').html(options);
+            });
+            return options;
+        }
+
+        function fillCity() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetCity(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#txtcity').html(options);
+            });
+            return options;
+        }
+        function fillArea() {
+            var options = '<option value="0">Please Select</option>';
+            PageMethods.GetArea(function (data) {
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#txtarea').html(options);
+            });
+            return options;
+        }
+        
     </script>
     <style>
     /* Step Navigation */
@@ -1819,13 +1945,13 @@
                         </div>
                         <div class="col-lg-2 colmd-4 col-sm-6">
                             <label>Country</label>
-                            <select id="ddlCountry" class="form-control" onchange="loadProvinces(this.value)">
+                            <select id="ddlCountry" class="form-control">
                                 <option value="0">Select Country</option>
                             </select>
                         </div>
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label>Province</label>
-                            <select id="ddl_Province" class="form-control" onchange="loadCities(this.value)">
+                            <select id="ddl_Province" class="form-control" >
                                 <option value="0">Select Province</option>
                             </select>
                         </div>
@@ -1834,7 +1960,7 @@
                     <div class="row">
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label for="txtcity">City</label>
-                            <select id="txtcity" class="form-control" onchange="loadAreas(this.value)">
+                            <select id="txtcity" class="form-control" >
                                 <option value="0">Select City</option>
                             </select>
                         </div>
