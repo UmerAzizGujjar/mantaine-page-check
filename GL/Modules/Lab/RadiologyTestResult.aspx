@@ -2389,7 +2389,7 @@
                                 '<td>' + item.Item_Name + '</td>' +
                                 '<td>' + item.Test_Main_Department + '</td>' +
                                 '<td><button type="button" class="btn btn-sm btn-primary" ' +
-                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ')">Select</button></td>' +
+                                'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
                                 '</tr>';
                             tbody.append(row);
                         });
