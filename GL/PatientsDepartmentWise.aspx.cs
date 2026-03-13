@@ -1565,6 +1565,67 @@ namespace PMS
                     ddlItemName.DataBind();
 
                 }
+                if (this.PageTitle == "Asset_Register_Report")
+                {
+                    string x = "Asset Register Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    Time_Row.Visible = true;  // could be problematic
+                    DateDiv.Visible = true;
+                    trSearch1.Visible = false;
+                    trProcedure1.Visible = true;
+                    op_FilterClinic.Visible = false;
+                    lblMultiSelect.Visible = false;
+
+                    lblDepartment.Text = "Department";
+                    DataTable dtPanel = DBClass.getDataTable("select Datavalue_name,datavalue_description from datavalues where valueset_id = 18");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "datavalue_description";
+                    ddlDepartments.DataValueField = "Datavalue_name";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("All", "0"));
+                    ddlDepartments.DataBind();
+
+                    DataTable dbPanel = DBClass.getDataTable("select Asset_Category_Id, Asset_Cat_Name from Asset_Category");
+                    ddlwareHouse.DataSource = dbPanel;
+                    ddlwareHouse.DataTextField = "Asset_Cat_Name";
+                    ddlwareHouse.DataValueField = "Asset_Category_Id";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+                    lblWarehouse.Text = "Cateogory";
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                    lbProcedure.Text = "Asset Name";
+                    DataTable dsPanel = DBClass.getDataTable(
+                    "SELECT asset_definition_id, " +
+                    "ISNULL(item_serial, '') + ' - ' + ISNULL(item_description, '') AS item_display, " +
+                    "item_serial " +
+                    "FROM Asset_Definition " +
+                    "ORDER BY item_serial" );
+                    ddlProcedure.DataSource = dsPanel;
+                    ddlProcedure.DataTextField = "item_display";        // Shows: "ASDAS-FF-GF-MS-125 - MS Storage Rack"
+                    ddlProcedure.DataValueField = "asset_definition_id"; // Passes asset_definition_id to backend
+                    ddlProcedure.Items.Clear();
+                    ddlProcedure.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlProcedure.DataBind();
+
+                }
                 if (this.PageTitle == "Stock_Transfer_Report")
                 {
                     string x = "Stock Transfer Report";
@@ -3505,12 +3566,21 @@ namespace PMS
                     // ADDING NEW WAREHOUSE
 
 
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
                     Stock_Movement.Visible = true;
 
 
                     ddlwareHouse.Visible = true;
                     lblWarehouse.Visible = true;
-
 
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;

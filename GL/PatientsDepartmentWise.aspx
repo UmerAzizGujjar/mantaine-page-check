@@ -1313,6 +1313,12 @@
                         var url = 'ReportViewer.aspx?ReportName=Inward_Gate_Pass_Report&ReportTitle=Inward Gate Pass Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val() + '&warehouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "Asset_Register_Report") {
+                        debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Asset_Register_Report&ReportTitle=Fixed Asset Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&AssetName=' + ($("#ctl00_MainContent_ddlProcedure").val() || "0") + '&Department=' + $('#ctl00_MainContent_ddlDepartments').val() + '&Category=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
+                        window.open(url, '_blank');
+                    }
                     else if (rptTitle == "Stock_Transfer_Report") {
                         debugger;
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;

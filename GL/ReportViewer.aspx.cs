@@ -2145,6 +2145,29 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
+            else if (reportName == "Asset_Register_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string Asset_Name = Request.QueryString["AssetName"].ToString();
+                string Category = Request.QueryString["Category"].ToString();
+                string Department = Request.QueryString["Department"].ToString();
+
+                string rptFileName = "Fixed-Assets/rptAssetRegisterReport.rpt";
+
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+
+                rd.SetParameterValue("@AssetName", Asset_Name);
+                rd.SetParameterValue("@Category", Category);
+                rd.SetParameterValue("@Department", Department);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+            }
             else if (reportName == "Stock_Transfer_Report")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
