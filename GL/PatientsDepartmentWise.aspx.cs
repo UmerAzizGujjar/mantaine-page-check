@@ -1626,6 +1626,69 @@ namespace PMS
                     ddlProcedure.DataBind();
 
                 }
+                if (this.PageTitle == "Asset_Depreciation_Report")
+                {
+                    string x = "Asset Depreciation Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = false;
+                    Time_Row.Visible = true;  // could be problematic
+                    DateDiv.Visible = true;
+                    trSearch1.Visible = false;
+                    trProcedure1.Visible = true;
+                    op_FilterClinic.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblDepartment.Visible = false;
+
+                    //lblDepartment.Text = "Department";
+                    //DataTable dtPanel = DBClass.getDataTable("select Datavalue_name,datavalue_description from datavalues where valueset_id = 18");
+                    //ddlDepartments.DataSource = dtPanel;
+                    //ddlDepartments.DataTextField = "datavalue_description";
+                    //ddlDepartments.DataValueField = "Datavalue_name";
+                    //ddlDepartments.Items.Clear();
+                    //ddlDepartments.Items.Add(new ListItem("All", "0"));
+                    //ddlDepartments.DataBind();
+
+                    DataTable dbPanel = DBClass.getDataTable("select Asset_Category_Id, Asset_Cat_Name from Asset_Category");
+                    ddlwareHouse.DataSource = dbPanel;
+                    ddlwareHouse.DataTextField = "Asset_Cat_Name";
+                    ddlwareHouse.DataValueField = "Asset_Category_Id";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+                    lblWarehouse.Text = "Cateogory";
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+                    lblPatientType.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                    lbProcedure.Text = "Asset Name";
+                    DataTable dsPanel = DBClass.getDataTable(
+                    "SELECT asset_definition_id, " +
+                    "ISNULL(item_serial, '') + ' - ' + ISNULL(item_description, '') AS item_display, " +
+                    "item_serial " +
+                    "FROM Asset_Definition " +
+                    "ORDER BY item_serial" );
+                    ddlProcedure.DataSource = dsPanel;
+                    ddlProcedure.DataTextField = "item_display";        // Shows: "ASDAS-FF-GF-MS-125 - MS Storage Rack"
+                    ddlProcedure.DataValueField = "asset_definition_id"; // Passes asset_definition_id to backend
+                    ddlProcedure.Items.Clear();
+                    ddlProcedure.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlProcedure.DataBind();
+
+                }
                 if (this.PageTitle == "Stock_Transfer_Report")
                 {
                     string x = "Stock Transfer Report";
@@ -4255,6 +4318,197 @@ namespace PMS
                     ddloprators.Visible = true;
                     lblDepartment.Visible = false;
                     ddlDepartments.Visible = false;
+
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+
+                }
+                if (this.PageTitle == "Extended_RadiologyReport")
+                {
+                    string x = "Radiology Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+
+                    MainDeptDiv.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Text = "Radiology Name";
+                    ddlMainDepartment.Visible = true;
+                    ddlMainDepartment.Items.Clear();
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Main Test Departments");
+                    ddlMainDepartment.DataSource = valuset;
+                    ddlMainDepartment.DataTextField = "DataValue_Description";
+                    ddlMainDepartment.DataValueField = "DataValue_Name";
+                    ddlMainDepartment.Items.Clear();
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+
+
+                    DataTable Tests = DBClass.getDataTable("select Test_id ,Test_Name from Lab_Tests where main_department in ('002','003','006','004','009','010')");
+                    DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
+
+                    foreach (DataRow dr in TestCategories.Rows)
+                    {
+                        DataRow newdr = Tests.NewRow();
+                        newdr["Test_ID"] = dr["DataValue_Name"].ToString();
+                        newdr["Test_Name"] = dr["DataValue_Description"].ToString();
+                        Tests.Rows.Add(newdr);
+                        Tests.AcceptChanges();
+                    }
+                    trTestResult1.Visible = true;
+                    ddlTestName.DataSource = Tests;
+                    ddlTestName.DataTextField = "Test_Name";
+                    ddlTestName.DataValueField = "Test_Name";
+                    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlTestName.DataBind();
+
+                    lblPatientType.Visible = true;
+                    ddlPatientType.Visible = true;
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                    SetDepartent();
+
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+
+                    lblMainDepartment.Visible = true;
+                    ddlMainDepartment.Visible = true;
+                    lboperator.Visible = true;
+                    ddloprators.Visible = true;
+                    lblDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+
+
+                }
+                if (this.PageTitle == "Extended_RadiologyReport_Panel")
+                {
+                    string x = "Radiology Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = true;
+
+
+
+                    MainDeptDiv.Visible = true;
+                    lblMainDepartment.Visible = true;
+                    lblMainDepartment.Text = "Radiology Name";
+                    ddlMainDepartment.Visible = true;
+                    ddlMainDepartment.Items.Clear();
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Main Test Departments");
+                    ddlMainDepartment.DataSource = valuset;
+                    ddlMainDepartment.DataTextField = "DataValue_Description";
+                    ddlMainDepartment.DataValueField = "DataValue_Name";
+                    ddlMainDepartment.Items.Clear();
+                    ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlMainDepartment.DataBind();
+
+
+
+                    DataTable Tests = DBClass.getDataTable("select Test_id ,Test_Name from Lab_Tests where main_department in ('002','003','006','004','009','010')");
+                    DataTable TestCategories = (DataTable)DBClass.getDataTable("select dv.DataValue_Name,dv.DataValue_Description from ValueSet vs,DataValues dv where vs.ValueSet_ID=dv.ValueSet_ID and vs.ValueSet_Name='Test Groups'");
+
+                    foreach (DataRow dr in TestCategories.Rows)
+                    {
+                        DataRow newdr = Tests.NewRow();
+                        newdr["Test_ID"] = dr["DataValue_Name"].ToString();
+                        newdr["Test_Name"] = dr["DataValue_Description"].ToString();
+                        Tests.Rows.Add(newdr);
+                        Tests.AcceptChanges();
+                    }
+                    trTestResult1.Visible = true;
+                    ddlTestName.DataSource = Tests;
+                    ddlTestName.DataTextField = "Test_Name";
+                    ddlTestName.DataValueField = "Test_Name";
+                    ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlTestName.DataBind();
+
+                    lblPatientType.Visible = true;
+                    ddlPatientType.Visible = true;
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                    SetDepartent();
+
+
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+
+
+                    lblMainDepartment.Visible = true;
+                    ddlMainDepartment.Visible = true;
+                    lboperator.Visible = true;
+                    ddloprators.Visible = true;
+                    lblDepartment.Text = "Panel";
+                    DataTable dtPanel = DBClass.getDataTable("select panel_id,Company_Name from Panel");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Company_Name";
+                    ddlDepartments.DataValueField = "panel_id";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
 
                     ddlShift.Visible = false;
                     lbShift.Visible = false;
