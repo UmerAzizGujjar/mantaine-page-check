@@ -728,7 +728,7 @@ namespace PMS
                 }
                 if(dtls.Itemid==0 && dtls.hdnItemid==0)
                 {
-                    Item_Id = (from inv in db.INV_Items where inv.Description == dtls.ItemName && inv.Is_Active == true && (inv.IsCancel == null || inv.IsCancel == false) select inv.Item_ID).FirstOrDefault();
+                    Item_Id = (from inv in db.INV_Items where inv.Description == dtls.ItemName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
                 }
 
                 Ar_Billing_Detail newBillDetails = new Ar_Billing_Detail();

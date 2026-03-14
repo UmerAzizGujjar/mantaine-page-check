@@ -2168,12 +2168,52 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
+            else if (reportName == "Asset_Ageing_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string Asset_Name = Request.QueryString["AssetName"].ToString();
+                string Category = Request.QueryString["Category"].ToString();
+                string status = Request.QueryString["Status"].ToString();
+
+                string rptFileName = "Fixed-Assets/rptAssetAgeingReport.rpt";
+
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+
+                rd.SetParameterValue("@AssetName", Asset_Name);
+                rd.SetParameterValue("@Category", Category);
+                rd.SetParameterValue("Status", status);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+            }
             else if (reportName == "Asset_Depreciation_Report")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string Asset_Name = Request.QueryString["AssetName"].ToString();
                 string Category = Request.QueryString["Category"].ToString();
                 string rptFileName = "Fixed-Assets/rptAssetDepreciationReport.rpt";
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startDate", Convert.ToDateTime(Request.QueryString["sDate"]));
+                rd.SetParameterValue("@endDate", Convert.ToDateTime(Request.QueryString["eDate"]));
+                rd.SetParameterValue("@AssetName", Asset_Name);
+                rd.SetParameterValue("@Category", Category);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+
+            }
+            else if (reportName == "Asset_Acquisition_Report")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string Asset_Name = Request.QueryString["AssetName"].ToString();
+                string Category = Request.QueryString["Category"].ToString();
+                string rptFileName = "Fixed-Assets/rptAssetAcquisitionReport.rpt";
                 reportPath += rptFileName;
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
