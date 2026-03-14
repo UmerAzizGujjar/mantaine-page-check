@@ -53,7 +53,7 @@ namespace PMS
                         ddlVendorType.AppendDataBoundItems = true;
                         ddlVendorType.Items.Clear();
                         ddlVendorType.Items.Add(new ListItem("All", "0"));
-
+                        warehouseDiv.Visible = false;
                         ddlVendorType.DataBind();
                         break;
                     case "VWP":
@@ -85,7 +85,7 @@ namespace PMS
                         ddlVendorType.Items.Add(new ListItem("All", "0"));
 
                         ddlVendorType.DataBind();
-
+                        warehouseDiv.Visible = false;
                         break;
                     case "GRNS":
                         vendorDiv.Visible = true;
@@ -140,6 +140,7 @@ namespace PMS
                         ddlVendor.Items.Add(new ListItem() { Text = "All", Value = "0" });
                         ddlVendor.AppendDataBoundItems = true;
                         ddlVendor.DataBind();
+                        warehouseDiv.Visible = false;
                         break;
 
                     case "Stock_Consumption_Details":

@@ -200,8 +200,10 @@
                     '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount"></input></td>' +
                     '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="duplicate ddlSTAX" ><option value="0">0</option></select></td>' +
                     '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
-                    '<td><select id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlFurtherTax"><option value="0">0</option></select></td>' +
-                    '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +
+                /*'<td><select id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlFurtherTax"><option value="0">0</option></select></td>' +*/
+                    '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="0" /></td>'+
+                /*'<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +*/
+                    '<td><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount" onkeyup="calcFurtherTaxFromAmount(this)" data-manual="false"></td>' +
                     '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"></select></td>' +
                     '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
                     '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;" class="duplicate"><option value="0">0</option>' + (typeof optionsList !== 'undefined' ? optionsList : "") + '</select></td>' +
@@ -590,7 +592,8 @@
                         '<td style="text-align:right;padding-top: 7px!important;"><input type="text"  onkeyup="calcTotal()" value="' + value.Discount_Amount + '" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + (key + 1) + '" name="txtDisAmount" ></input></td>' +
                         '<td><select id="ddlSTAX' + (key + 1) + '" name="ddlSTAX" class="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"></select></td>' +
                         '<td style="padding-top: 7px!important;"><input type="text" style="text-align:right!important;width:50px !important;font-size:9px;height:20px;" readonly="readonly" value="' + value.SalTax_Amount + '"  id="txtSalAmount' + (key + 1) + '" name="txtSalAmount" ></input></td>' +
-                        '<td><select id="ddlFurtherTax' + (key + 1) + '" name="ddlFurtherTax" class="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
+                    /*'<td><select id="ddlFurtherTax' + (key + 1) + '" name="ddlFurtherTax" class="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +*/
+                        '<td><input type="text" id="ddlFurtherTax' + (key + 1) + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="' + (value.FurtherTax_Percentage != null ? value.FurtherTax_Percentage : '0') + '" /></td>' +
                         '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + (value.FurtherTax_Amount !== null && value.FurtherTax_Amount !== undefined ? value.FurtherTax_Amount : '0') + '" id="txtFurtherTaxAmount' + (key + 1) + '" name="txtFurtherTaxAmount"></td>' +
                         '<td style="display:none;"><select id="ddlFed' + (key + 1) + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option>' + optionFed + '</select></td>' +
                         '<td><select id="ddlAdvanceTax' + (key + 1) + '" name="ddlAdvanceTax" class="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;">' +
@@ -612,7 +615,8 @@
                     $.each(selectedOptions, function (key, value) {
                         debugger;
                         $('#ddlSTAX' + (key + 1)).val(value.SalTax_Id).trigger('change');
-                        $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Id).trigger('change');
+                        // $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Id).trigger('change');
+                        $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Percentage != null ? value.FurtherTax_Percentage : '0');
                         $('#ddlAdvanceTax' + (key + 1)).val(value.AdvanceTax_ID).trigger('change');
                         $("#ddlFed" + (key + 1)).val(value.FedPercent_Id);
                         calcTotal();
@@ -924,12 +928,37 @@
                 var selectedAdvTax = $($(value).find('td select[name=ddlAdvanceTax] :selected')[0]).text();
                 var AdvPercent = selectedAdvTax ? parseFloat(selectedAdvTax) || 0 : 0;
 
-                var selectedFurtherTax = $($(value).find('td select[name=ddlFurtherTax] :selected')[0]).text();
-                FurtherPercent = selectedFurtherTax ? parseFloat(selectedFurtherTax) || 0 : 0;
+                //var selectedFurtherTax = $($(value).find('td select[name=ddlFurtherTax] :selected')[0]).text();
+                //FurtherPercent = selectedFurtherTax ? parseFloat(selectedFurtherTax) || 0 : 0;
 
-                FurtherAmount = parseFloat((FurtherPercent / 100) * (amountExclusiveTaxes - DiscAmount));
-                $($(value).find('td input[name=txtFurtherTaxAmount]')[0]).val(FurtherAmount.toFixed(2));
+                //var selectedFurtherTax = $($(value).find('td input[name=ddlFurtherTax]')[0]).val() || 0;
+                //FurtherPercent = parseFloat(selectedFurtherTax) || 0;
+
+                //FurtherAmount = parseFloat((FurtherPercent / 100) * (amountExclusiveTaxes - DiscAmount));
+                //$($(value).find('td input[name=txtFurtherTaxAmount]')[0]).val(FurtherAmount.toFixed(2));
+                //totalFurtherAmount += FurtherAmount;
+
+
+
+                var selectedFurtherTax = $($(value).find('td input[name=ddlFurtherTax]')[0]).val() || 0;
+                FurtherPercent = parseFloat(selectedFurtherTax) || 0;
+
+                var furtherAmountField = $($(value).find('td input[name=txtFurtherTaxAmount]')[0]);
+                var currentFieldValue = furtherAmountField.val();
+                var calculatedAmount = parseFloat((FurtherPercent / 100) * (amountExclusiveTaxes - DiscAmount));
+
+                if (FurtherPercent > 0 && (currentFieldValue === '' || currentFieldValue === '0' || currentFieldValue === '0.00')) {
+                    furtherAmountField.val(calculatedAmount.toFixed(2));
+                    FurtherAmount = calculatedAmount;
+                } else if (FurtherPercent === 0) {
+                    FurtherAmount = 0;
+                } else {
+                    FurtherAmount = parseFloat(currentFieldValue) || calculatedAmount;
+                }
+
                 totalFurtherAmount += FurtherAmount;
+
+
 
                 AdvAmount = parseFloat((AdvPercent / 100) * (amountExclusiveTaxes - DiscAmount));
                 $($(value).find('td input[name=txtAdvanceTaxAmount]')[0]).val(AdvAmount.toFixed(2));
@@ -939,12 +968,13 @@
 
                 var BonusQty = parseFloat($($(value).find('td input[name=txtBonusQty]')[0]).val()) || 0;
                 var bonusTaxTotal = 0;
-                if (BonusQty > 0) {
+                var isByDefault = $('#chkByDefault').is(':checked');
+                if (BonusQty > 0 && !isByDefault) {
                     var bonusBase = BonusQty * Rate;
                     var bonusST = (STpercent / 100) * bonusBase;
                     var bonusAdv = (AdvPercent / 100) * bonusBase;
-                    var bonusFurther = (FurtherPercent / 100) * bonusBase;
-                    bonusTaxTotal = bonusST + bonusAdv + bonusFurther;
+                  //  var bonusFurther = (FurtherPercent / 100) * bonusBase;
+                    bonusTaxTotal = bonusST + bonusAdv/* + bonusFurther*/;
                 }
                 $($(value).find('td input[name=txtBonusAmount]')[0]).val(bonusTaxTotal.toFixed(2));
                 totalBonusTax += bonusTaxTotal;
@@ -973,6 +1003,29 @@
             $('#ctl00_MainContent_txtTotalDiscAmt').val(TotalDiscAmount.toFixed(2));
             $('#txtTotalDiscAmt').val(TotalDiscAmount.toFixed(2));
             $('#txtfreight_charges').val(freightTotal);
+        }
+
+        function calcFurtherTaxFromAmount(anchor) {
+            debugger;
+            var row = $(anchor).parents('tr')[0];
+            $(anchor).attr('data-manual', 'true');
+
+            var Rate = parseFloat($(row).find('input[name=txtRate]').val()) || 0;
+            var Qty = parseFloat($(row).find('input[name=txtQty]').val()) || 0;
+            var DiscAmount = parseFloat($(row).find('input[name=txtDisAmount]').val()) || 0;
+            var enteredAmount = parseFloat($(anchor).val()) || 0;
+
+            var base = (Qty * Rate) - DiscAmount;
+            var calculatedPercent = 0;
+
+            if (base > 0 && enteredAmount >= 0) {
+                calculatedPercent = parseFloat((enteredAmount / base) * 100).toFixed(2);
+            }
+
+            $(row).find('input[name=ddlFurtherTax]').val(calculatedPercent);
+            $(row).find('input[name=txtFurtherTaxAmount]').attr('data-manual', 'false');
+
+            calcTotal();
         }
 
         function CulculateAmonutWithQty(anchor) {
@@ -1238,7 +1291,7 @@
                     }
                     else {
                         Item_list.push({
-                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'BonusQty': $(value).find('td input[name=txtBonusQty]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'UOM_Qty': $(value).find('td input[name=txtUOMQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val(), 'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(), 'AdvanceTax_Amount': $(value).find('td input[name=txtAdvanceTaxAmount]').val(), 'FurtherTax_Id': $("#ddlFurtherTax" + (key + 1) + " option:selected").val(), 'BonusTax': $(value).find('td input[name=txtBonusAmount]').val(),
+                            'PRDetailId': $(value).find('td input[name=txtPRDId]').val(), 'ItemCode': $(value).find('td input[name=txtItemCode]').val(), 'ItemName': $(value).find('td input[name=txtItemName]').val(), 'Unit': $(value).find('td input[name=txtUnit]').val(), 'BonusQty': $(value).find('td input[name=txtBonusQty]').val(), 'Qty': $(value).find('td input[name=txtQty]').val(), 'UOM_Qty': $(value).find('td input[name=txtUOMQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'DisPer': $(value).find('td input[name=txtDisPer]').val(), 'DisAmount': $(value).find('td input[name=txtDisAmount]').val(), 'Amount': $(value).find('td input[name=txtTotalAmount]').val(), 'FedPercentId': $("#ddlFed" + (key + 1) + " option:selected").val(), 'Fed_Percentage': $($(value).find('td')[11]).text(), 'SalTax_Id': $("#ddlSTAX" + (key + 1) + " option:selected").val(), 'AdvanceTax_ID': $("#ddlAdvanceTax" + (key + 1) + " option:selected").val(), 'SalTax_Amount': $(value).find('td input[name=txtSalAmount]').val(), 'DateTime': $(value).find('td input[name=txtddate]').val(), 'AdvanceTax_Amount': $(value).find('td input[name=txtAdvanceTaxAmount]').val(), 'FurtherTax_Id': 0, 'FurtherTax_Percentage': $($(value).find('td input[name=ddlFurtherTax]')[0]).val() || 0, 'BonusTax': $(value).find('td input[name=txtBonusAmount]').val(),
                             'FurtherTax_Amount': $(value).find('td input[name=txtFurtherTaxAmount]').val(),
 
                         });
@@ -1484,7 +1537,8 @@
                 '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
                 '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="duplicate ddlSTAX" ><option value="0">0</option></select></td>' +
                 '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
-                '<td><select id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlFurtherTax"><option value="0">0</option></select></td>' +
+            /*'<td><select id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlFurtherTax"><option value="0">0</option></select></td>' +*/
+                '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="0" /></td>' +
                 '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +
                 '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"></select></td>' +
                 '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
