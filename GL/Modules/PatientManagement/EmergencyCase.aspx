@@ -5974,7 +5974,12 @@
 
 
         function NewEMR() {
-            window.location.href = "/Modules/Dashboards/NewEMR.aspx";
+            var regId = $('#<%= hdfPatient_ID.ClientID %>').val();
+            var url = "/Modules/Dashboards/NewEMR.aspx";
+            if (regId && regId != '(New)' && regId != '') {
+                url += "?RegID=" + regId;
+            }
+            window.open(url, '_blank');
         }
         
 
