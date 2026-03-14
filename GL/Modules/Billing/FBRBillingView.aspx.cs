@@ -15,6 +15,7 @@ using System.Drawing;
 using System.IO;
 using System.Web.Hosting;
 using QRCoder;
+using System.Globalization;
 
 namespace PMS
 {
@@ -69,7 +70,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string startDate, string endDate)
         {
             try
             {
@@ -82,12 +83,12 @@ namespace PMS
                                   join u in _dbContext.aspnet_Users on b.Created_By equals u.UserId
                                   where (b.Total_Amount != null || b.Discount_Amount != null)
                                         && (b.isCancel == null || b.isCancel == false)
-                                        && (b.IsPharmacy == null || b.IsPharmacy == false)
                                   select new
                                   {
                                       Bill_No = b.Bill_No,
                                       Bill_Date = b.Creation_Date,
                                       Remarks = b.Remarks,
+                                      BillType = b.IsPharmacy == true ? "Pharmacy" : "Basic",
                                       Total_Amount = b.Total_Amount,
                                       Discount_Amount = b.Discount_Amount,
                                       Discount_Percentage = b.Total_Amount.HasValue && b.Total_Amount.Value > 0
@@ -99,8 +100,25 @@ namespace PMS
                                       MrNo = p.mr_no_sequence,
                                       Full_Name = p.Full_Name,
                                       Bill_ID = b.Bill_ID,
-                                      Operator = u.UserName
+                                      Operator = u.UserName,
+                                      FBR_No = b.FBR_No,
+                                      QrCode_path = b.QrCode_path,
+                                      IsPosted = b.FBR_No != null && b.FBR_No != ""
                                   };
+
+                    DateTime parsedStartDate;
+                    DateTime parsedEndDate;
+                    var formats = new[] { "yyyy-MM-ddTHH:mm", "yyyy-MM-ddTHH:mm:ss", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd" };
+
+                    if (!string.IsNullOrWhiteSpace(startDate) && DateTime.TryParseExact(startDate, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedStartDate))
+                    {
+                        Billing = Billing.Where(x => x.Bill_Date.HasValue && x.Bill_Date.Value >= parsedStartDate);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(endDate) && DateTime.TryParseExact(endDate, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedEndDate))
+                    {
+                        Billing = Billing.Where(x => x.Bill_Date.HasValue && x.Bill_Date.Value <= parsedEndDate);
+                    }
 
                     var Total_Billing = Billing.Count();
 
@@ -109,6 +127,7 @@ namespace PMS
                         searchValue = searchValue.Trim();
                         Billing = Billing.Where(x =>
                             x.Bill_No.ToString().Contains(searchValue) ||
+                            (x.BillType != null && x.BillType.Contains(searchValue)) ||
                             (x.Full_Name != null && x.Full_Name.Contains(searchValue)) ||
                             (x.MrNo != null && x.MrNo.Contains(searchValue)) ||
                             (x.Operator != null && x.Operator.Contains(searchValue))
@@ -143,19 +162,33 @@ namespace PMS
             {
                 using (var db = new DataBaseDataContext())
                 {
-                    var details = (from bd in db.Ar_Billing_Details
-                                   where bd.Bill_ID == billId
-                                   select bd).ToList();
+                    var billDetails = db.Ar_Billing_Details
+                        .Where(bd => bd.Bill_ID == billId)
+                        .ToList();
 
-                    var mappedDetails = details.Select((bd, index) => new
+                    var itemIds = billDetails
+                        .Where(x => x.Item_ID.HasValue)
+                        .Select(x => x.Item_ID.Value)
+                        .Distinct()
+                        .ToList();
+
+                    var isFbrLookup = db.INV_Items
+                        .Where(i => itemIds.Contains(i.Item_ID))
+                        .Select(i => new { i.Item_ID, Is_Fbr = i.Is_Fbr == true })
+                        .ToDictionary(i => i.Item_ID, i => i.Is_Fbr);
+
+                    var mappedDetails = billDetails.Select(bd => new
                     {
-                        Bill_Detail_ID = index,
+                        Bill_Detail_ID = bd.Bill_Details_ID,
                         Item_Type = bd.Item_Type,
                         Item_Name = bd.Item_Name,
                         Amount = bd.Amount,
                         Discount_Amount = bd.Discount_Amount,
                         Net_Amount = bd.Net_Amount,
-                        Test_Main_Department = bd.Test_Main_Department
+                        Test_Main_Department = bd.Test_Main_Department,
+                        Is_Fbr = bd.Item_ID.HasValue
+                            && isFbrLookup.ContainsKey(bd.Item_ID.Value)
+                            && isFbrLookup[bd.Item_ID.Value]
                     }).ToList();
 
                     return JsonConvert.SerializeObject(mappedDetails);
@@ -180,16 +213,28 @@ namespace PMS
                         return JsonConvert.SerializeObject(new { success = false, message = "Bill not found" });
                     }
 
+                    if (!string.IsNullOrWhiteSpace(billing.FBR_No))
+                    {
+                        return JsonConvert.SerializeObject(new { success = false, message = "Bill already posted to FBR" });
+                    }
+
                     var billDetails = db.Ar_Billing_Details
                         .Where(bd => bd.Bill_ID == billId)
                         .ToList();
 
-                    if (billDetails.Count == 0 || selectedDetailIds.Count == 0)
+                    if (billDetails.Count == 0 || selectedDetailIds == null || selectedDetailIds.Count == 0)
                     {
                         return JsonConvert.SerializeObject(new { success = false, message = "No items selected" });
                     }
 
-                    var selectedDetails = billDetails.Where((bd, index) => selectedDetailIds.Contains(index)).ToList();
+                    var selectedDetails = billDetails
+                        .Where(bd => selectedDetailIds.Contains(bd.Bill_Details_ID))
+                        .ToList();
+
+                    if (selectedDetails.Count == 0)
+                    {
+                        return JsonConvert.SerializeObject(new { success = false, message = "No valid bill items selected" });
+                    }
 
                     FBRInvoiceMaster objInv = new FBRInvoiceMaster();
                     
@@ -215,7 +260,7 @@ namespace PMS
                     objInv.PaymentMode = 1;
                     objInv.RefUSIN = "";
                     objInv.InvoiceType = 1;
-                    objInv.Items = BuildFBRItems(selectedDetails);
+                    objInv.Items = BuildFBRItems(selectedDetails, db);
 
                     HttpClient client = new HttpClient();
                     string Token = "";
@@ -270,13 +315,33 @@ namespace PMS
             }
         }
 
-        private static List<FBRInvoiceDetail> BuildFBRItems(List<Ar_Billing_Detail> billDetails)
+        private static List<FBRInvoiceDetail> BuildFBRItems(List<Ar_Billing_Detail> billDetails, DataBaseDataContext db)
         {
             List<FBRInvoiceDetail> items = new List<FBRInvoiceDetail>();
+
+            var itemIds = billDetails
+                .Where(x => x.Item_ID.HasValue)
+                .Select(x => x.Item_ID.Value)
+                .Distinct()
+                .ToList();
+
+            var itemCodeLookup = db.INV_Items
+                .Where(i => itemIds.Contains(i.Item_ID))
+                .Select(i => new { i.Item_ID, i.FBR_Code })
+                .ToDictionary(i => i.Item_ID, i => i.FBR_Code);
 
             foreach (var detail in billDetails)
             {
                 string hsCode = GetHsCodeByItemType(detail.Item_Type, detail.Test_Main_Department);
+                var normalizedType = (detail.Item_Type ?? string.Empty).Trim().ToLower();
+
+                if ((normalizedType == "service" || normalizedType == "services")
+                    && detail.Item_ID.HasValue
+                    && itemCodeLookup.ContainsKey(detail.Item_ID.Value)
+                    && !string.IsNullOrWhiteSpace(itemCodeLookup[detail.Item_ID.Value]))
+                {
+                    hsCode = itemCodeLookup[detail.Item_ID.Value];
+                }
                 
                 items.Add(new FBRInvoiceDetail
                 {
@@ -357,9 +422,8 @@ namespace PMS
                     var billing = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == billId);
                     if (billing != null)
                     {
-                        string fbrInfo = string.Format("FBR Invoice: {0}, QR Path: ~/wwwroot/QRCode/{1}, Posted: {2}", 
-                            fbrInvoiceNo, fileName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                        billing.Remarks = (billing.Remarks ?? "") + " | " + fbrInfo;
+                        billing.FBR_No = fbrInvoiceNo;
+                        billing.QrCode_path = string.Format("~/wwwroot/QRCode/{0}", fileName);
                         db.SubmitChanges();
                     }
                 }
