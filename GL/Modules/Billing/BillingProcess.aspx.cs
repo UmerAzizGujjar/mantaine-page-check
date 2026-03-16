@@ -4027,7 +4027,7 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var tests = (from t in db.Lab_Tests
-                         where t.Main_Department == "005"
+                         where t.Main_Department == deptID
                          select new
                          {
                              t.Test_ID,
