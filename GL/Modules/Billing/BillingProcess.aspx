@@ -1085,6 +1085,16 @@
                     $('#divRotation').hide();
                     category = "007";
                 }
+                else if (maindpt == "010") {
+                    FillProcedure("010");
+                    $('#divRotation').hide();
+                    category = "010";
+                }
+                else if (maindpt == "009") {
+                    FillProcedure("009");
+                    $('#divRotation').hide();
+                    category = "009";
+                }
                 else if (maindpt == "008") {
                     GetCardioTests();
                     $('#divRotation').hide();
@@ -5985,7 +5995,7 @@
                 localStorage.removeItem('Total_Disc_Amt');
                 localStorage.Disc_Pro = "0.00";
   
-                GetPanelRateAndDiscountComplete();
+                //GetPanelRateAndDiscountComplete();
                 $("#txtDateFrom").datepicker({ dateFormat: 'mm/dd/yy' });
                 $("#txtDateTo").datepicker({ dateFormat: 'mm/dd/yy' });
                 $("#txtBillDate").datepicker({ dateFormat: 'mm/dd/yy' });
@@ -6059,6 +6069,15 @@
                     }, 1500); 
                 }
 
+                $("#ddl_name").change(function () {
+                    var map = {
+                        "Mr.": "S/O",
+                        "Mrs.": "W/O",
+                        "Ms.": "D/O"
+                    };
+
+                    $("#ddlRelation").val(map[$(this).val()]);
+                });
 
             });  // document.ready ends
 

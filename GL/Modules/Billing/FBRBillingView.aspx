@@ -3,6 +3,20 @@
          <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
       <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
     <style>
+        .filter-container {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .filter-container label {
+            margin-bottom: 0;
+            font-weight: 600;
+        }
+        .table-container {
+            overflow-x: hidden  !important;
+        }
         .detail-row {
             background-color: #f9f9f9;
             border-left: 3px solid #007bff;
@@ -43,6 +57,9 @@
         }
         .clickable-row:hover {
             background-color: #f0f8ff;
+        }
+        .posted-row {
+            background-color: #d4edda !important;
         }
     </style>
     <script type="text/javascript">
@@ -94,6 +111,9 @@
                 ],
                 "filter": true,
                 "ajax": function (data, callback, settings) {
+                    var startDate = $('#txtStartDate').val();
+                    var endDate = $('#txtEndDate').val();
+
                     $.ajax({
                         type: "POST",
                         url: "FBRBillingView.aspx/ViewList",
@@ -103,7 +123,9 @@
                             length: data.length,
                             sortColumn: data.columns[data.order[0].column].name,
                             sortColumnDirection: data.order[0].dir,
-                            searchValue: data.search.value
+                            searchValue: data.search.value,
+                            startDate: startDate,
+                            endDate: endDate
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -123,27 +145,31 @@
                 "columns": [
                     { "data": "Bill_ID", "visible": false, "width": "0%" },
                     { "data": "Bill_No", "name": "Bill_No", "width": "5%", "orderable": true },
+                    { "data": "BillType", "name": "BillType", "width": "8%", "orderable": false },
                     {
                         "data": "Bill_Date", "name": "Bill_Date",
                         "render": function (data, type, full) {
                             var date = full.Bill_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
-                        }, "width": "10%", "orderable": true
+                        }, "width": "7%", "orderable": true
                     },
-                    { "data": "MrNo", "name": "MrNo", "width": "10%", "orderable": true },
+                    { "data": "MrNo", "name": "MrNo", "width": "7%", "orderable": true },
                     { "data": "Full_Name", "width": "15%", "orderable": false },
                     { "data": "Total_Amount", "width": "10%", "orderable": false },
                     { "data": "Discount_Percentage", "width": "10%", "orderable": false },
                     { "data": "Discount_Amount", "width": "10%", "orderable": false },
-                    { "data": "Net_Amount", "width": "10%", "orderable": false },
+                    { "data": "Net_Amount", "width": "8%", "orderable": false },
                     { "data": "Received_Amount", "name": "Received_Amount", "width": "10%", "orderable": false },
-                    { "data": "Balance_Amount", "width": "10%", "orderable": false },
+                    { "data": "Balance_Amount", "width": "8%", "orderable": false },
                     { "data": "Operator", "visible": false, "width": "8%", "orderable": false }
                 ],
                 "createdRow": function (row, data, dataIndex) {
                     $(row).addClass('clickable-row');
                     $(row).attr('data-bill-id', data.Bill_ID);
+                    if (data.IsPosted) {
+                        $(row).addClass('posted-row');
+                    }
                 },
                 "initComplete": function (settings, json) {
                     const api = this.api();
@@ -194,7 +220,9 @@
             $('#tbloutPatients tbody').on('click', 'tr.clickable-row', function () {
                 var tr = $(this);
                 var row = table.row(tr);
+                var rowData = row.data();
                 var billId = tr.attr('data-bill-id');
+                var isPosted = rowData && rowData.IsPosted;
 
                 if (row.child.isShown()) {
                     row.child.hide();
@@ -213,12 +241,17 @@
                     tr.addClass('shown');
 
                     // Load bill details
-                    LoadBillDetails(billId, row, tr);
+                    var qrPath = rowData && rowData.QrCode_path ? rowData.QrCode_path : '';
+                    LoadBillDetails(billId, row, tr, isPosted, qrPath);
                 }
+            });
+
+            $('#btnApplyDateFilter').on('click', function () {
+                table.ajax.reload();
             });
         }
 
-        function LoadBillDetails(billId, row, tr) {
+        function LoadBillDetails(billId, row, tr, isPosted, qrPath) {
             $.ajax({
                 type: "POST",
                 url: "FBRBillingView.aspx/GetBillDetails",
@@ -228,7 +261,7 @@
                 success: function (response) {
                     if (response.d) {
                         var details = JSON.parse(response.d);
-                        var html = BuildDetailsHTML(details, billId);
+                        var html = BuildDetailsHTML(details, billId, isPosted, qrPath);
                         row.child(html).show();
                     }
                 },
@@ -239,7 +272,7 @@
             });
         }
 
-        function BuildDetailsHTML(details, billId) {
+        function BuildDetailsHTML(details, billId, isPosted, qrPath) {
             var html = '<div class="detail-container">';
 
             // Group by category
@@ -301,7 +334,8 @@
                         var net = (item.Net_Amount || 0).toFixed(2);
 
                         html += '<tr class="item-row" style="border-bottom: 1px solid #eee;">';
-                        html += '<td style="padding: 10px;"><input type="checkbox" class="item-checkbox" checked data-detail-id="' + item.Bill_Detail_ID + '" /></td>';
+                        var isChecked = item.Is_Fbr ? 'checked' : '';
+                        html += '<td style="padding: 10px;"><input type="checkbox" class="item-checkbox" ' + isChecked + ' data-detail-id="' + item.Bill_Detail_ID + '" /></td>';
                         html += '<td style="padding: 10px;">' + itemName + '</td>';
                         html += '<td style="padding: 10px;">' + amount + '</td>';
                         html += '<td style="padding: 10px;">' + discount + '</td>';
@@ -315,15 +349,22 @@
             html += '</table>';
 
             // Button Container (Aligned to the right)
-            html += '<div style="text-align: right; margin-top: 15px; padding-top: 10px;">';
-            html += '<button class="post-fbr-btn" onclick="PostToFBR(' + billId + ')" style="padding: 8px 16px; cursor: pointer;">Post to FBR</button>';
-            html += '</div>';
+            if (!isPosted) {
+                html += '<div style="text-align: right; margin-top: 15px; padding-top: 10px;">';
+                html += '<button class="post-fbr-btn" onclick="PostToFBR(' + billId + ', this)" style="padding: 8px 16px; cursor: pointer;">Post to FBR</button>';
+                html += '</div>';
+            } else if (qrPath) {
+                var normalizedQrPath = qrPath.replace('~', '');
+                html += '<div style="text-align: right; margin-top: 15px; padding-top: 10px;">';
+                html += '<img src="' + normalizedQrPath + '" alt="QR Code" style="width: 120px; height: 120px; border: 1px solid #ddd; padding: 4px; background: #fff;" />';
+                html += '</div>';
+            }
 
             html += '</div>'; // End detail-container
 
             return html;
         }
-        function PostToFBR(billId) {
+        function PostToFBR(billId, btn) {
             if (!confirm('Are you sure you want to post this bill to FBR?')) {
                 return;
             }
@@ -340,7 +381,6 @@
             }
 
             // Show loading
-            var btn = event.target;
             $(btn).prop('disabled', true).text('Processing...');
 
             $.ajax({
@@ -376,12 +416,20 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
       <div class="row">
+     <div class="filter-container">
+         <label for="txtStartDate">Start Date Time</label>
+         <input type="datetime-local" id="txtStartDate" class="form-control" style="max-width:220px;" />
+         <label for="txtEndDate">End Date Time</label>
+         <input type="datetime-local" id="txtEndDate" class="form-control" style="max-width:220px;" />
+         <button type="button" id="btnApplyDateFilter" class="btn btn-primary">Apply</button>
+     </div>
      <div class="table-container">
          <table class="table table-hover table-striped table-bordered" id="tbloutPatients">
              <thead id="ihead">
                  <tr>
                      <th class="hide">Bill ID</th>
                      <th>Bill No</th>
+                     <th>Bill Type</th>
                      <th>Bill Date</th>
                      <th>MR No</th>
                      <th>Name</th>

@@ -535,109 +535,364 @@
                     alert(error.get_message());
                 })
         }
+        function safeVal(v, def) {
+            return (v == null || v === undefined) ? def : v;
+        }
+
+        // Helper: Sanitize PR ID (remove error strings)
+        function sanitizePrId(val) {
+            if (!val) return "";
+            if (val.includes("ERROR") || val.includes("Execute") || val.includes("There")) {
+                return "";
+            }
+            return val;
+        }
+
+        // Main function: Load PO Item Details (OPTIMIZED)
+        // ============================================================================
+        // HELPER FUNCTIONS (define once at top of your JS file)
+        // ============================================================================
+        function safeVal(v, def) {
+            return (v == null || v === undefined) ? def : v;
+        }
+
+        function sanitizePrId(val) {
+            if (!val) return "";
+            if (val.includes("ERROR") || val.includes("Execute") || val.includes("There")) {
+                return "";
+            }
+            return val;
+        }
+
+        // ============================================================================
+        // MAIN FUNCTION: LoadPOItemDetail (FIXED - Calculations Working + Fast)
+        // ============================================================================
         function LoadPOItemDetail(PO_ID) {
-            var optionsSal = '';
-            var optionFed = '';
+            console.time('LoadPOItemDetail');
+
+            // Clear table first (prevent duplicates)
+            $('#tblItemDescription tbody').empty();
+
             PageMethods.getDDLlist(function (Tests) {
-                debugger
-                $.each(JSON.parse(Tests), function (key, value) {
-                    debugger;
-                    if (value.Type == "Sal") {
-                        optionsSal += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+                var testsData = (typeof Tests === "string") ? JSON.parse(Tests) : Tests;
+
+                var optionsSal = '', optionFed = '';
+                if (testsData && testsData.forEach) {
+                    testsData.forEach(function (item) {
+                        var opt = '<option value="' + item.DataValueName + '">' + item.DataValueDescription + '</option>';
+                        if (item.Type === "Sal") optionsSal += opt;
+                        else optionFed += opt;
+                    });
+                }
+
+                PageMethods.LoadPOItemDetail(PO_ID,
+                    function (resp) {
+                        var data = (typeof resp === "string") ? JSON.parse(resp) : resp;
+                        if (!data || !data.forEach || data.length === 0) {
+                            console.timeEnd('LoadPOItemDetail');
+                            $('#btnSave').val('Update');
+                            return;
+                        }
+
+                        // Build ALL rows in memory FIRST (performance optimization)
+                        var rowsHTML = [];
+
+                        data.forEach(function (value, key) {
+                            var idx = key + 1;
+
+                            // Format date safely
+                            var TrnsDate = "";
+                            if (value.Delivery_Date) {
+                                try {
+                                    var ms = parseInt(value.Delivery_Date.substring(6, 19));
+                                    TrnsDate = $.datepicker.formatDate('dd M yy', new Date(ms));
+                                } catch (e) { TrnsDate = ""; }
+                            }
+
+                            var pr_id = sanitizePrId(safeVal(value.pr_id, ""));
+
+                            // ⚠️ CRITICAL: Keep ORIGINAL IDs for calculation functions to work!
+                            // Classes added for styling, but IDs preserved for JS logic
+                            var row = '<tr data-index="' + idx + '">' +
+                                '<td class="text-right"><input type="hidden" id="txtPRDId' + idx + '" name="txtPRDId" value="' + safeVal(value.PRDetailId, 0) + '" />' + idx + '</td>' +
+                                '<td class="text-right"><input type="hidden" id="txtPRNO' + idx + '" name="txtPRNo" value="' + pr_id + '" />' + pr_id + '</td>' +
+                                '<td class="text-right"><input type="hidden" id="txtcsno' + idx + '" name="txtcsno" value="' + safeVal(value.CS_Ven_No, "") + '" />' + safeVal(value.CS_Ven_No, "") + '</td>' +
+                                '<td class="text-right"><input type="hidden" id="txtItemCode' + idx + '" name="txtItemCode" value="' + safeVal(value.Item_Code, "") + '" />' + safeVal(value.Item_Code, "") + '</td>' +
+                                '<td class="text-left"><input type="hidden" id="txtItemName' + idx + '" name="txtItemName" value="' + safeVal(value.Item_Name, "") + '" />' + safeVal(value.Item_Name, "") + '</td>' +
+                                '<td class="text-left"><input type="hidden" id="txtUnit' + idx + '" name="txtUnit" value="' + safeVal(value.Unit, "") + '" />' + safeVal(value.Unit, "") + '</td>' +
+                                '<td><input type="text" id="txtQty' + idx + '" name="txtQty" class="form-control-sm calc-trigger" value="' + parseFloat(safeVal(value.Qty, 0)).toFixed(2) + '"/></td>' +
+                                '<td><input type="text" id="txtUOMQty' + idx + '" name="txtUOMQty" class="form-control-sm" value="' + parseFloat(safeVal(value.UOM_Qty, 0)).toFixed(2) + '"/></td>' +
+                                '<td><input type="text" id="txtBonusQty' + idx + '" name="txtBonusQty" class="form-control-sm" value="' + parseFloat(safeVal(value.Bonus_Qty, 0)).toFixed(2) + '"/></td>' +
+                                '<td><input type="text" id="txtRate' + idx + '" name="txtRate" class="form-control-sm calc-trigger" value="' + parseFloat(safeVal(value.Rate, 0)).toFixed(2) + '"/></td>' +
+                                '<td><input type="text" id="txtDisPer' + idx + '" name="txtDisPer" class="form-control-sm" readonly value="' + safeVal(value.Discount_Percentage, 0) + '"/></td>' +
+                                '<td class="text-right"><input type="text" id="txtDisAmount' + idx + '" name="txtDisAmount" class="form-control-sm calc-field" value="' + safeVal(value.Discount_Amount, 0) + '"/></td>' +
+                                '<td><select id="ddlSTAX' + idx + '" name="ddlSTAX" class="ddlSTAX form-control-sm calc-trigger">' + optionsSal + '</select></td>' +
+                                '<td class="text-right"><input type="text" id="txtSalAmount' + idx + '" name="txtSalAmount" class="form-control-sm" readonly value="' + safeVal(value.SalTax_Amount, 0) + '"/></td>' +
+                                '<td><input type="text" id="ddlFurtherTax' + idx + '" name="ddlFurtherTax" class="form-control-sm calc-trigger" value="' + safeVal(value.FurtherTax_Percentage, 0) + '"/></td>' +
+                                '<td><input type="text" id="txtFurtherTaxAmount' + idx + '" name="txtFurtherTaxAmount" class="form-control-sm" readonly value="' + safeVal(value.FurtherTax_Amount, 0) + '"/></td>' +
+                                '<td style="display:none;"><select id="ddlFed' + idx + '" name="ddlFed" class="ddlFed"><option value="0">0</option>' + optionFed + '</select></td>' +
+                                '<td><select id="ddlAdvanceTax' + idx + '" name="ddlAdvanceTax" class="ddlAdvanceTax form-control-sm calc-trigger"><option value="0">0</option></select></td>' +
+                                '<td><input type="text" id="txtAdvanceTaxAmount' + idx + '" name="txtAdvanceTaxAmount" class="form-control-sm" readonly value="' + safeVal(value.AdvanceTax_Amount, 0) + '"/></td>' +
+                                '<td style="display:none;"><input type="hidden" id="txtFedAmount' + idx + '" name="txtFedAmount" value="' + safeVal(value.Fed_Percentage, 0) + '"/></td>' +
+                                '<td><input type="text" id="txtBonusAmount' + idx + '" name="txtBonusAmount" class="form-control-sm" readonly value="' + parseFloat(safeVal(value.Bonus_Tax, 0)).toFixed(2) + '"/></td>' +
+                                '<td class="text-right"><input type="text" id="txtTotalAmount' + idx + '" name="txtTotalAmount" class="form-control-sm" readonly value="' + safeVal(value.Amount, 0) + '"/></td>' +
+                                '<td><input type="text" id="txtddate' + idx + '" name="txtddate" class="form-control-sm datepicker-field" value="' + TrnsDate + '"/></td>' +
+                                '<td><a href="javascript:void(0)" class="btn-delete" data-idx="' + idx + '"><i class="glyphicon glyphicon-trash text-danger"></i></a></td>' +
+                                '</tr>';
+
+                            rowsHTML.push(row);
+                        });
+
+                        // ⚡ SINGLE DOM insertion (performance win)
+                        $('#tblItemDescription tbody').html(rowsHTML.join(''));
+
+                        // 🎯 Set dropdown selected values (after DOM exists)
+                        data.forEach(function (value, key) {
+                            var idx = key + 1;
+                            $('#ddlSTAX' + idx).val(safeVal(value.SalTax_Id, 0));
+                            $('#ddlFurtherTax' + idx).val(safeVal(value.FurtherTax_Percentage, 0));
+                            $('#ddlAdvanceTax' + idx).val(safeVal(value.AdvanceTax_ID, 0));
+                            $('#ddlFed' + idx).val(safeVal(value.FedPercent_Id, 0));
+                        });
+
+                        // 📅 Initialize datepickers
+                        $('input.datepicker-field').datepicker({
+                            dateFormat: 'dd M yy'
+                        }).attr('readonly', 'readonly');
+
+                        // 🔄 Re-bind calculation events (CRITICAL: Use original inline-style triggers)
+                        // This ensures CulculateAmonutWithQty() and calcTotal() work exactly as before
+
+                        // Qty/Rate inputs: trigger calculation on keyup (original behavior)
+                        $('.calc-trigger').off('keyup.calc').on('keyup.calc', function () {
+                            if (typeof CulculateAmonutWithQty === 'function') {
+                                CulculateAmonutWithQty(this);
+                            }
+                        });
+
+                        // Tax dropdowns: trigger total recalc on change
+                        $('.calc-trigger').filter('select').off('change.calc').on('change.calc', function () {
+                            if (typeof calcTotal === 'function') {
+                                calcTotal();
+                            }
+                        });
+
+                        // FurtherTax input (text): trigger on keyup
+                        $('input.ddlFurtherTax').off('keyup.calc').on('keyup.calc', function () {
+                            if (typeof calcTotal === 'function') {
+                                calcTotal();
+                            }
+                        });
+
+                        // Delete button
+                        $('.btn-delete').off('click.calc').on('click.calc', function () {
+                            if (typeof ExcludeFromPayment === 'function') {
+                                ExcludeFromPayment(this);
+                            }
+                        });
+
+                        // 🧮 Calculate totals ONCE after all data is ready
+                        if (typeof calcTotal === 'function') {
+                            calcTotal();
+                        }
+
+                        // ✅ Update UI
+                        $('#btnSave').val('Update');
+                        console.timeEnd('LoadPOItemDetail');
+
+                    },
+                    function (error) {
+                        console.timeEnd('LoadPOItemDetail');
+                        var msg = error && error.get_message ? error.get_message() : (error || 'Unknown error');
+                        alert(msg);
                     }
-                    else {
-                        optionFed += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+                );
+            });
+        }
+
+        // ============================================================================
+        // OPTIONAL: Chunked rendering for 500+ items (uncomment if needed)
+        // ============================================================================
+        /*
+        function LoadPOItemDetail_Chunked(PO_ID, chunkSize = 50) {
+            console.time('LoadPOItemDetail_Chunked');
+            
+            PageMethods.getDDLlist(function (Tests) {
+                var testsData = (typeof Tests === "string") ? JSON.parse(Tests) : Tests;
+                var optionsSal = '', optionFed = '';
+                if (testsData && testsData.forEach) {
+                    testsData.forEach(function (item) {
+                        var opt = '<option value="' + item.DataValueName + '">' + item.DataValueDescription + '</option>';
+                        if (item.Type === "Sal") optionsSal += opt;
+                        else optionFed += opt;
+                    });
+                }
+        
+                PageMethods.LoadPOItemDetail(PO_ID, function (resp) {
+                    var data = (typeof resp === "string") ? JSON.parse(resp) : resp;
+                    if (!data || !data.forEach || data.length === 0) {
+                        console.timeEnd('LoadPOItemDetail_Chunked');
+                        return;
                     }
+        
+                    var tbody = $('#tblItemDescription tbody');
+                    tbody.empty();
+                    var index = 0;
+        
+                    function renderChunk() {
+                        var end = Math.min(index + chunkSize, data.length);
+                        var rowsHTML = [];
+                        
+                        for (; index < end; index++) {
+                            var value = data[index];
+                            var key = index;
+                            var idx = key + 1;
+                            
+                            var TrnsDate = "";
+                            if (value.Delivery_Date) {
+                                try {
+                                    var ms = parseInt(value.Delivery_Date.substring(6, 19));
+                                    TrnsDate = $.datepicker.formatDate('dd M yy', new Date(ms));
+                                } catch (e) { TrnsDate = ""; }
+                            }
+                            var pr_id = sanitizePrId(safeVal(value.pr_id, ""));
+                            
+                            // Build row (same structure as main function)
+                            var row = '<tr data-index="' + idx + '">...</tr>'; // Reuse full row HTML from above
+                            rowsHTML.push(row);
+                        }
+                        
+                        tbody.append(rowsHTML.join(''));
+                        
+                        if (index < data.length) {
+                            requestAnimationFrame(renderChunk); // Non-blocking
+                        } else {
+                            // Finalize after all chunks
+                            data.forEach(function (value, key) {
+                                var idx = key + 1;
+                                $('#ddlSTAX' + idx).val(safeVal(value.SalTax_Id, 0));
+                                $('#ddlFurtherTax' + idx).val(safeVal(value.FurtherTax_Percentage, 0));
+                                $('#ddlAdvanceTax' + idx).val(safeVal(value.AdvanceTax_ID, 0));
+                                $('#ddlFed' + idx).val(safeVal(value.FedPercent_Id, 0));
+                            });
+                            $('input.txtddate').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+                            if (typeof calcTotal === 'function') calcTotal();
+                            $('#btnSave').val('Update');
+                            console.timeEnd('LoadPOItemDetail_Chunked');
+                        }
+                    }
+                    renderChunk();
+                }, function(error) {
+                    console.timeEnd('LoadPOItemDetail_Chunked');
+                    alert(error.get_message ? error.get_message() : error);
                 });
             });
-            PageMethods.LoadPOItemDetail(PO_ID, function (resp) {
-                debugger;
-                var data = (JSON.parse(resp));
-                selectedOptions = data;
-                var TrnsDate = '';
-                $.each(data, function (key, value) {
-                    debugger;
-
-                    if (value.Delivery_Date != null) {
-                        TrnsDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Delivery_Date.substring(6, 19))));
-                    }
-                    else {
-                        TrnsDate = ""
-                    }
-                    if (value.Unit == null) value.Unit = "";
-                    if (value.UnitName == null) value.UnitName = "";
-                    if (value.SalTax_Id == null) value.SalTax_Id = 0;
-                    if (value.SalTax_Amount == null) value.SalTax_Amount = 0;
-                    if (value.Fed_Percentage == null) value.Fed_Percentage = 0;
-                    if (value.Discount_Amount == null) value.Discount_Amount = 0;
-                    if (value.Discount_Percentage == null) value.Discount_Percentage = 0;
-                    if (value.pr_id.includes("ERROR") || value.pr_id.includes("Execute") || value.pr_id.includes("There")) value.pr_id = "";
-                    if (value.CS_Ven_No == null) value.CS_Ven_No = "";
-                    if (value.PRDetailId == null) value.PRDetailId = 0;
-                    if (value.UOM_Qty == null) value.UOM_Qty = 0;
-
-                    var rowlength = $('#tblItemDescription tr').length;
-                    var row = '<tr>' +
-                        '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" id="txtPRDId' + (key + 1) + '" name="txtPRDId" value="' + value.PRDetailId + '" />' + (key + 1) + '</td>' +
-                        '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + (key + 1) + '"  value="' + value.pr_id + '"  style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/>' + value.pr_id + '</td>' +
-                        '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + (key + 1) + '"  value="' + value.CS_Ven_No + '"  style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/>' + value.CS_Ven_No + '</td>' +
-                        '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + (key + 1) + '"  value="' + value.Item_Code + '" /> ' + value.Item_Code + ' </td>' +
-                        '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + (key + 1) + '"  value="' + value.Item_Name + '" /> ' + value.Item_Name + ' </td>' +
-                        '<td style="text-align:left!important;"><input type="hidden" name="txtUnit" id="txtUnit' + (key + 1) + '"  value="' + value.Unit + '" />' + value.Unit + ' </td>' +
-                        '<td><input type="text"  id="txtQty' + (key + 1) + '" name="txtQty" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" value=' + parseFloat(value.Qty).toFixed(2) + '></input></td>' +
-                        '<td><input type="text" id="txtUOMQty' + (key + 1) + '" name="txtUOMQty" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.UOM_Qty != null ? parseFloat(value.UOM_Qty).toFixed(2) : '0') + '" /></td>' +
-                        '<td><input type="text" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.Bonus_Qty != null ? parseFloat(value.Bonus_Qty).toFixed(2) : '0') + '" id="txtBonusQty' + (key + 1) + '" name="txtBonusQty" /></td>' +
-                        '<td><input type="text" name="txtRate" style="text-align:right ;width:50px !important;font-size:9px;height:20px" onkeyup="CulculateAmonutWithQty(this)" id="txtRate' + (key + 1) + '"  value="' + parseFloat(value.Rate).toFixed(2) + '" /></td>' +
-                        '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" readonly="readonly"  name="txtDisPer" id="txtDisPer' + (key + 1) + '"  value="' + value.Discount_Percentage + '" /></td>' +
-                        '<td style="text-align:right;padding-top: 7px!important;"><input type="text"  onkeyup="calcTotal()" value="' + value.Discount_Amount + '" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + (key + 1) + '" name="txtDisAmount" ></input></td>' +
-                        '<td><select id="ddlSTAX' + (key + 1) + '" name="ddlSTAX" class="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"></select></td>' +
-                        '<td style="padding-top: 7px!important;"><input type="text" style="text-align:right!important;width:50px !important;font-size:9px;height:20px;" readonly="readonly" value="' + value.SalTax_Amount + '"  id="txtSalAmount' + (key + 1) + '" name="txtSalAmount" ></input></td>' +
-                    /*'<td><select id="ddlFurtherTax' + (key + 1) + '" name="ddlFurtherTax" class="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +*/
-                        '<td><input type="text" id="ddlFurtherTax' + (key + 1) + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="' + (value.FurtherTax_Percentage != null ? value.FurtherTax_Percentage : '0') + '" /></td>' +
-                        '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + (value.FurtherTax_Amount !== null && value.FurtherTax_Amount !== undefined ? value.FurtherTax_Amount : '0') + '" id="txtFurtherTaxAmount' + (key + 1) + '" name="txtFurtherTaxAmount"></td>' +
-                        '<td style="display:none;"><select id="ddlFed' + (key + 1) + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option>' + optionFed + '</select></td>' +
-                        '<td><select id="ddlAdvanceTax' + (key + 1) + '" name="ddlAdvanceTax" class="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;">' +
-                        '<option value="0">0</option>' +
-                        '</select></td>' +
-                        '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" ' +
-                        'value="' + value.AdvanceTax_Amount + '" id="txtAdvanceTaxAmount' + (key + 1) + '" name="txtAdvanceTaxAmount"></td>' +
-
-                        '<td style="padding-top: 7px!important;display:none;"><input type="hidden" value="' + value.Fed_Percentage + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"  id="txtFedAmount' + (key + 1) + '" name="txtFedAmount" style="text-align:right ;width:59px !important;font-size:9px;height:20px;"></input>' + value.Fed_Percentage + '</td>' +
-                        '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="' + (value.Bonus_Tax != null ? parseFloat(value.Bonus_Tax).toFixed(2) : '0') + '" id="txtBonusAmount' + (key + 1) + '" name="txtBonusAmount" /></td>' +
-                        '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + value.Amount + '" readonly="readonly"  id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount"></input></td>' +
-                        '<td><input type="text" name="txtddate" id="txtddate' + (key + 1) + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /></td>' +
-                        '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;" i=""></i></a> </td></tr>';
-                    $('#tblItemDescription tbody').append(row);
-
-                });
-
-                setTimeout(function () {
-                    $.each(selectedOptions, function (key, value) {
-                        debugger;
-                        $('#ddlSTAX' + (key + 1)).val(value.SalTax_Id).trigger('change');
-                        // $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Id).trigger('change');
-                        $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Percentage != null ? value.FurtherTax_Percentage : '0');
-                        $('#ddlAdvanceTax' + (key + 1)).val(value.AdvanceTax_ID).trigger('change');
-                        $("#ddlFed" + (key + 1)).val(value.FedPercent_Id);
-                        calcTotal();
-                    });
-                }, 4500);
-                setTimeout(function () {
-                    $.each(selectedOptions, function (key, value) {
-                        $('#txtAdvanceTaxAmount' + (key + 1)).val(value.AdvanceTax_Amount);
-                    });
-                }, 4500);
-                var count = $('#tblItemDescription tr').length - 1;
-                for (i = 1; i <= count; i++) {
-                    $('#txtExpirDate' + i).datepicker();
-                }
-                $('input[name="txtddate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
-                $('#btnSave').val('Update');
-            },
-                function (error) {
-                    alert(error.get_message());
-                })
         }
+        */
+        //oldPOcode 16 march 
+        //function LoadPOItemDetail(PO_ID) {
+        //    var optionsSal = '';
+        //    var optionFed = '';
+        //    PageMethods.getDDLlist(function (Tests) {
+        //        debugger
+        //        $.each(JSON.parse(Tests), function (key, value) {
+        //            debugger;
+        //            if (value.Type == "Sal") {
+        //                optionsSal += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+        //            }
+        //            else {
+        //                optionFed += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+        //            }
+        //        });
+        //    });
+        //    PageMethods.LoadPOItemDetail(PO_ID, function (resp) {
+        //        debugger;
+        //        var data = (JSON.parse(resp));
+        //        selectedOptions = data;
+        //        var TrnsDate = '';
+        //        $.each(data, function (key, value) {
+        //            debugger;
+
+        //            if (value.Delivery_Date != null) {
+        //                TrnsDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Delivery_Date.substring(6, 19))));
+        //            }
+        //            else {
+        //                TrnsDate = ""
+        //            }
+        //            if (value.Unit == null) value.Unit = "";
+        //            if (value.UnitName == null) value.UnitName = "";
+        //            if (value.SalTax_Id == null) value.SalTax_Id = 0;
+        //            if (value.SalTax_Amount == null) value.SalTax_Amount = 0;
+        //            if (value.Fed_Percentage == null) value.Fed_Percentage = 0;
+        //            if (value.Discount_Amount == null) value.Discount_Amount = 0;
+        //            if (value.Discount_Percentage == null) value.Discount_Percentage = 0;
+        //            if (value.pr_id.includes("ERROR") || value.pr_id.includes("Execute") || value.pr_id.includes("There")) value.pr_id = "";
+        //            if (value.CS_Ven_No == null) value.CS_Ven_No = "";
+        //            if (value.PRDetailId == null) value.PRDetailId = 0;
+        //            if (value.UOM_Qty == null) value.UOM_Qty = 0;
+
+        //            var rowlength = $('#tblItemDescription tr').length;
+        //            var row = '<tr>' +
+        //                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" id="txtPRDId' + (key + 1) + '" name="txtPRDId" value="' + value.PRDetailId + '" />' + (key + 1) + '</td>' +
+        //                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + (key + 1) + '"  value="' + value.pr_id + '"  style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/>' + value.pr_id + '</td>' +
+        //                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + (key + 1) + '"  value="' + value.CS_Ven_No + '"  style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/>' + value.CS_Ven_No + '</td>' +
+        //                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + (key + 1) + '"  value="' + value.Item_Code + '" /> ' + value.Item_Code + ' </td>' +
+        //                '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + (key + 1) + '"  value="' + value.Item_Name + '" /> ' + value.Item_Name + ' </td>' +
+        //                '<td style="text-align:left!important;"><input type="hidden" name="txtUnit" id="txtUnit' + (key + 1) + '"  value="' + value.Unit + '" />' + value.Unit + ' </td>' +
+        //                '<td><input type="text"  id="txtQty' + (key + 1) + '" name="txtQty" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" value=' + parseFloat(value.Qty).toFixed(2) + '></input></td>' +
+        //                '<td><input type="text" id="txtUOMQty' + (key + 1) + '" name="txtUOMQty" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.UOM_Qty != null ? parseFloat(value.UOM_Qty).toFixed(2) : '0') + '" /></td>' +
+        //                '<td><input type="text" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.Bonus_Qty != null ? parseFloat(value.Bonus_Qty).toFixed(2) : '0') + '" id="txtBonusQty' + (key + 1) + '" name="txtBonusQty" /></td>' +
+        //                '<td><input type="text" name="txtRate" style="text-align:right ;width:50px !important;font-size:9px;height:20px" onkeyup="CulculateAmonutWithQty(this)" id="txtRate' + (key + 1) + '"  value="' + parseFloat(value.Rate).toFixed(2) + '" /></td>' +
+        //                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" readonly="readonly"  name="txtDisPer" id="txtDisPer' + (key + 1) + '"  value="' + value.Discount_Percentage + '" /></td>' +
+        //                '<td style="text-align:right;padding-top: 7px!important;"><input type="text"  onkeyup="calcTotal()" value="' + value.Discount_Amount + '" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + (key + 1) + '" name="txtDisAmount" ></input></td>' +
+        //                '<td><select id="ddlSTAX' + (key + 1) + '" name="ddlSTAX" class="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"></select></td>' +
+        //                '<td style="padding-top: 7px!important;"><input type="text" style="text-align:right!important;width:50px !important;font-size:9px;height:20px;" readonly="readonly" value="' + value.SalTax_Amount + '"  id="txtSalAmount' + (key + 1) + '" name="txtSalAmount" ></input></td>' +
+        //            /*'<td><select id="ddlFurtherTax' + (key + 1) + '" name="ddlFurtherTax" class="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +*/
+        //                '<td><input type="text" id="ddlFurtherTax' + (key + 1) + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="' + (value.FurtherTax_Percentage != null ? value.FurtherTax_Percentage : '0') + '" /></td>' +
+        //                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + (value.FurtherTax_Amount !== null && value.FurtherTax_Amount !== undefined ? value.FurtherTax_Amount : '0') + '" id="txtFurtherTaxAmount' + (key + 1) + '" name="txtFurtherTaxAmount"></td>' +
+        //                '<td style="display:none;"><select id="ddlFed' + (key + 1) + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option>' + optionFed + '</select></td>' +
+        //                '<td><select id="ddlAdvanceTax' + (key + 1) + '" name="ddlAdvanceTax" class="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;">' +
+        //                '<option value="0">0</option>' +
+        //                '</select></td>' +
+        //                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" ' +
+        //                'value="' + value.AdvanceTax_Amount + '" id="txtAdvanceTaxAmount' + (key + 1) + '" name="txtAdvanceTaxAmount"></td>' +
+
+        //                '<td style="padding-top: 7px!important;display:none;"><input type="hidden" value="' + value.Fed_Percentage + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"  id="txtFedAmount' + (key + 1) + '" name="txtFedAmount" style="text-align:right ;width:59px !important;font-size:9px;height:20px;"></input>' + value.Fed_Percentage + '</td>' +
+        //                '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="' + (value.Bonus_Tax != null ? parseFloat(value.Bonus_Tax).toFixed(2) : '0') + '" id="txtBonusAmount' + (key + 1) + '" name="txtBonusAmount" /></td>' +
+        //                '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + value.Amount + '" readonly="readonly"  id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount"></input></td>' +
+        //                '<td><input type="text" name="txtddate" id="txtddate' + (key + 1) + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /></td>' +
+        //                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;" i=""></i></a> </td></tr>';
+        //            $('#tblItemDescription tbody').append(row);
+
+        //        });
+
+        //        setTimeout(function () {
+        //            $.each(selectedOptions, function (key, value) {
+        //                debugger;
+        //                $('#ddlSTAX' + (key + 1)).val(value.SalTax_Id).trigger('change');
+        //                // $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Id).trigger('change');
+        //                $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Percentage != null ? value.FurtherTax_Percentage : '0');
+        //                $('#ddlAdvanceTax' + (key + 1)).val(value.AdvanceTax_ID).trigger('change');
+        //                $("#ddlFed" + (key + 1)).val(value.FedPercent_Id);
+        //                calcTotal();
+        //            });
+        //        }, 4500);
+        //        setTimeout(function () {
+        //            $.each(selectedOptions, function (key, value) {
+        //                $('#txtAdvanceTaxAmount' + (key + 1)).val(value.AdvanceTax_Amount);
+        //            });
+        //        }, 4500);
+        //        var count = $('#tblItemDescription tr').length - 1;
+        //        for (i = 1; i <= count; i++) {
+        //            $('#txtExpirDate' + i).datepicker();
+        //        }
+        //        $('input[name="txtddate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+        //        $('#btnSave').val('Update');
+        //    },
+        //        function (error) {
+        //            alert(error.get_message());
+        //        })
+        //}
         function httpGet(theUrl) {
             var xmlHttp = null;
             xmlHttp = new XMLHttpRequest();

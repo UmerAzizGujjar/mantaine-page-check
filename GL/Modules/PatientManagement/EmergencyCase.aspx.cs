@@ -278,6 +278,9 @@ namespace PMS
             public string Patient_No;
             public string Mobile1;
             public string Father_Name;
+            public string Emer_id;
+            public string Emergency_No;
+            public string Admitted_Status;
 
         }
         [WebMethod]
@@ -296,9 +299,9 @@ namespace PMS
 
             string SearchSql = "";
             if (SearchString == "")
-                SearchSql = "SELECT top 10 pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 order by pat_id desc";
+                SearchSql = "SELECT pat_id,isnull(r.mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name ,isnull(e.Admitted_Status,'')Admitted_Status,e.Emergency_No,e.Emer_id FROM reg_patient r join Emergency e on r.pat_id = e.Reg_PatId  where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(r.isCancel,0)!=1  order by pat_id desc";
             else
-                SearchSql = "SELECT pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 and (LTRIM(RTRIM(patient_no)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
+                SearchSql = "SELECT pat_id,isnull(r.mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name ,isnull(e.Admitted_Status,'')Admitted_Status,e.Emergency_No,e.Emer_id FROM reg_patient r join Emergency e on r.pat_id = e.Reg_PatId  where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(r.isCancel,0)!=1 and (LTRIM(RTRIM(patient_no)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
 
             DataTable dt = DBClass.getDataTable(SearchSql);
 
@@ -308,12 +311,15 @@ namespace PMS
             {
                 PatientsResult rslt = new PatientsResult()
                 {
-                    Reg_Patient_ID = dr[0] == DBNull.Value ? "" : (string)dr[0].ToString(),
+                    Reg_Patient_ID = dr[0] == DBNull.Value ? "" : (string)dr[0].ToString(),                  
                     Patient_No = dr[1] == DBNull.Value ? "" : (string)dr[1].ToString(),
                     Full_Name = dr[2] == DBNull.Value ? "" : (string)dr[2],
                     NIC = dr[3] == DBNull.Value ? "" : (string)dr[3],
                     Mobile1 = dr[4] == DBNull.Value ? "" : (string)dr[4],
                     Father_Name = dr[5] == DBNull.Value ? "" : (string)dr[5],
+                    Admitted_Status = dr[6] == DBNull.Value ? "" : (string)dr[6],
+                    Emergency_No = dr[7] == DBNull.Value ? "" : (string)dr[7].ToString(),
+                    Emer_id = dr[8] == DBNull.Value ? "" : (string)dr[8].ToString(),
                 };
                 list.Add(rslt);
                 int number;
@@ -1702,8 +1708,8 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string SaveRecord(int Patient_ID, string btnsave, string txtAdmission_Date, string ddlDepartment, string ddlDoctor, string ddlCallToDoctor, string txtHealth_Complaints, string ddlIssuance_Of, string ddlWard_No, string txtBed_No, string RateBeats,  string BP_mm_Hg, string Temp_C, string Respiration_Min, string txtRN_Special_Instruction, string txtReceiving_Date, string Provisional_Diagnosis, string Reffer_To, string HistoryOfPeresentIllness, string HistoryOfFamily, string HistoryOfPastIllness, string SocioEconomicHistory, string Birth_History, string Reffer_No, string Drug_History, string Personal_History, string ObstetricHistory, string AllergiesHistory, string TreatmentHistory, string VaccinationHistory, string AnyOtherHistory, string ENT_Throat_IDL, string ENT_Throat_Nose, string ENT_Ear_Right, string Ent_Ear_Left, bool ENT_Rinnes_Right_PosNeg, bool ENT_Rinnes_Lft_PosNeg, bool ENT_Rinnes_Right_FalseNeg, bool ENT_Rinnes_Lft_FalseNeg, bool ENT_Webber_Central, bool ENT_Webber_Lateralized, bool ENT_Investigation_PTA, bool ENT_Investigation_Tympanometry, bool ENT_Rinnes_Right_Neg, bool ENT_Rinnes_Lft_Neg, bool ENT_Rinnes_Right_FNeg, bool ENT_Rinnes_Lft_FNeg, string txtInformant, string txtSourceOfReferral, bool chkNeckHolding, bool chkWalking, bool chkTalking, bool chkOthers, string txtMenarche, string txtMenstrual, string txtAttachmentSeparationfromParents, string txtHealth, bool chkNailBiting, bool chkTemperTantrums, bool chkBedWetting, string txtAcademics, string txtPeerRelationship, string txtBehaviour, string txtOccupationalHistory, string txtMaritalRelationshipSexualHistory, string txtSubstanceUse, string txtForensicUse, string txtRelationship, string txtLeisureActivities, string txtAttitudetoSelfandStandards, string txtPrevallingMood, string txtReactionPattrentoStress, string txtReligiousPracticesAttitute, string txtFather, string txtMother, string txtSiblings, string txtHomeAtmosphererelationshipsocialclass, string txtFamilialIllness, string txtActualandapparentage, string txtRace, string txtTattoosbodypiercingandscars, string txtBodyHabitus, string txttxtDress, string txtHygiene, string txtPsychomotorActivity, string txtInvoluntarymovements, string txtDystoniaEPS, string txtTardivedyskinesia, string txtTics, string txtTremors, string txtAttentivenesstointerview, string txtEyeContact, string txtLevelofConsciousness, string txtRate, string txtRhythm, string txtVolume, string txtTone, string txtModulationvar, string txtDepressed, string txtElated, string txtIrritable, string txtLabile, string txtIncongruent, string txtbluntingflatteningapathy, string txtThinkingPremeditation, string txtPlans,
-            string txtActions, string txtPreservative, string txtLoosAssociation, string txtTangentiaility, string txtCircumstantiality, string txtFlightofIdeas, string txtThoughtInsertion, string txtThoughtWithdrawal, string txtThoughBroadcasting, string txtThoughControl, string txtDellusion, string txtovervaluedideas, string txtDepresonalization, string txtDerealization, string txtthrougObsession, string txtthrougPhobies, string txtthrougHomocidialIdeas, string txtillusion, string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, string txtorientationtime, string txtplace, string txtperson, string txtAttentionConcentrationSerial7Test, string txtOrDaysOfWeekReverseOrder, string txtImmediatememory, string txtshorttermrecentevents, string txtadressrecallafter2minutes, string txtlongtermremoteevents, string txtadressrecallafter5minues, string txtgeneralknowledgequestion, string txtsimplearthemeticcalculation, string txtabstrationconcertethinking, string txtinsight, string DermaFace, string DermaNeck, string DermaTrunk, string DermaUpperLimb, string DermaLowerLimb, string DermaFlexures, string DermaGenitalias, string DermaHair, string DermaNail, string DermaMucousMembrane, string DermaEyes, string DermaEars, string DermaNose, string DermaLips, string HBM_Problem, string HBM_Caused, string HBM_Started, string HBM_Course, string HBM_Treatment, string HBM_Effects, string PE_Pluse, string PE_BP, string PE_Temperature, string PE_Weight, string PE_RespiratoryRate, string PE_Jaundice, string PE_Anemia, string PE_Cyanosis, string PE_Clubbing, string PE_JVP, string PE_LymphNodes, string PE_Edema, string PE_Respiratory, string PE_Cardiovascular, string PE_Gastro_Intestinal, string PE_Observation, string PE_Cranial_Nerves, string PE_Limb_Strength, string PE_Spasticity, string PE_Position, string PE_Vibration, string PE_Stereognosis, string PE_Pain, string PE_Biceps, string PE_Triceps, string PE_Brachioradialis, string PE_Quadriceps, string PE_Patellar, string PE_Achilles, string PE_Extensor, string PE_Frontal, string PE_Finger, string PE_Heel, string PE_Movements, string PE_Gait, bool PE_Neck_Rigidity, bool PE_Kerning_Sign, bool PE_Brudzinki_Sign, string For_Summary, string For_Diagnosis, string For_AxisI, string For_AxisII, string For_AxisIII, string For_AxisIV, string For_AxisV, string For_PredisposingFactors, string For_PrecipitatingFactors, string For_PrepetuatingFactors, string For_Investigation, string For_Medical, string For_Psychological, string For_Major_Issues, string For_Strengths, string For_Goals, string For_Strategies, string txtPeads_weight, string txtPeads_Length, string txtPeads_HC, string txtPeads_General_Appearance, bool chkPeads_Cyanosis, bool chkPeads_Jaundice, bool chkPeads_Lethargy, bool chkPeads_Rash, string txtPeads_Others, bool chkPeads_Caput, bool chkPeads_Cephalhematoma, bool rdbPeads_Anterioropen, bool rdbPeads_AnteriorClose, bool chkPeads_Dextrocardia, bool chkPeads_Bulging, bool chkPeads_Murmur, string txtPeads_HeartSound, bool chkPeads_Nasal, bool chkPeads_Recessions, string txtPeads_AddedSounds, bool rdbPeads_Flat, bool rdbPeads_Distended, bool rdbPeads_Scaphoid, bool chkPeads_Liver, bool chkPeads_Spleen, string txtPeads_GITOthers, bool chkPeads_Sucking, bool chkPeads_Rooting, bool chkPeads_Moro, string txtPeads_CNSOthers, bool chkPeads_FullTerm, bool chkPeads_PreTerm, DateTime txtPeads_DateOfDelivery, string txtPeads_TimeOfDelivery, bool rdbPeads_Booked, bool rdbPeads_UnBooked, bool chkPeads_DAIHandling, bool chkPeads_ANTURash, bool chkPeads_PIH, bool chkPeads_GDM, bool chkPeads_Vacinated, string txtPeads_ANTOthers, bool rdbPeads_SVD, bool rdbPeads_LSCS, bool rdbPeads_Emergency, bool rdbPeads_Elective, string txtPeads_PlaceOfDelivery, string txtPeads_IndicationForLSCS, string Peads_apgerScore1min, string Peads_apgerScore5min, bool chkPeads_Resuscitation, string txtPeads_NatalOthers, bool chkPeads_Moaning, bool chkPeads_RespDistress, bool chkPeads_PostNATALCyanosis, bool chkPeads_Fits, bool chkPeads_ReluctanceToFeed, string txtPeads_PostNatalOthers, string txtDischarge_On, string ddlDischarge_By, string txtNext_Visit, string ddlPatientCondition, string txtAdvice, bool chkdischarge, string patienttype, string Saturation, string OthersRN, string DischargeStatus, string ddlEmrgRhythm, string ddlEmrgVolume, string Procedure_Recommended, string IdentificationMarks, string Diagnosis, string DateOfDeath, string TimeOfDeath, string PlaceOfDeath, string CauseOfDeath, string IssuingOfficerName, string DeathCertifiedby1, string DeathCertifiedby2, string BodyHandedOverTo, string FamilyPersonName, string CNIC, string RelationWithDeceased, string CMO_Police, string TreatmentGiven, string PhysicalFinding, string GeneralPhysicalExamination, string ClinicalSummary, string TreatmentAtDischarge, string FollowUpPlanInstructions, string CauseOfReferral, string ReferredTo, string TreatmentTime, string CallingDoctorDepartment, string CallingDoctorMobile, string O2_Saturation_Oxygen1, string O2_Saturation_Oxygen2, bool? HMFIntact, bool? CranialNerves, bool? SignsOfMeningism, bool? HeartSound, bool? Arrhythmias, bool? Murmur, bool? AnyOtherAddedSound, bool? AnyOtherFindings, bool? NVB_Right, bool? NVB_Left, bool? Crepitation_Right, bool? Crepitation_Left, bool? Wheeze, bool? Ranchi, bool? AnyOtherSound, bool? AbdomenSoft, bool? Tenderness, bool? Guarding, bool? BowelSound, bool? Distention, bool? FluidThrill, bool? ShiftingDullness, bool? EpigastriaDiscomfort, bool? RetrosternalBurning, bool? Jondus, bool? Pallor, bool? Dehydration, bool? GCSOrientation, bool? ConsciousOrientely, string FurtherExplanation, string ID, string TextBoxCns, string TextBoxCvs, string TextBoxResp, string TextBoxGit, string TextBoxGpe, string eye_response, string motor_response, string verbal_Response, string accumulated_response, string PulseRate, string BPDischarge, string Rhythmdischarge, string Tempdisch, string volumedisc, string RespRateDesc, string Oxygen2_desc, string saturationDis, string Oxygen1, string otherecdesc, string Special_Instruction_Desc, string Receiving_DateDesc,string remrks_call_to_doc,bool ReferToOPD,string Discount,string patientcateg,string Remarks)
+        public static string SaveRecord(int Patient_ID, string btnsave, /*string txtAdmission_Date, string ddlDepartment, string ddlDoctor,*/ string ddlCallToDoctor, string txtHealth_Complaints,/* string ddlIssuance_Of, string ddlWard_No, string txtBed_No,*/ string RateBeats,  string BP_mm_Hg, string Temp_C, string Respiration_Min, string txtRN_Special_Instruction, string txtReceiving_Date, string Provisional_Diagnosis, string Reffer_To, string HistoryOfPeresentIllness, string HistoryOfFamily, string HistoryOfPastIllness, string SocioEconomicHistory, string Birth_History, string Reffer_No, string Drug_History, string Personal_History, string ObstetricHistory, string AllergiesHistory, string TreatmentHistory, string VaccinationHistory, string AnyOtherHistory, string ENT_Throat_IDL, string ENT_Throat_Nose, string ENT_Ear_Right, string Ent_Ear_Left, bool ENT_Rinnes_Right_PosNeg, bool ENT_Rinnes_Lft_PosNeg, bool ENT_Rinnes_Right_FalseNeg, bool ENT_Rinnes_Lft_FalseNeg, bool ENT_Webber_Central, bool ENT_Webber_Lateralized, bool ENT_Investigation_PTA, bool ENT_Investigation_Tympanometry, bool ENT_Rinnes_Right_Neg, bool ENT_Rinnes_Lft_Neg, bool ENT_Rinnes_Right_FNeg, bool ENT_Rinnes_Lft_FNeg, string txtInformant, string txtSourceOfReferral, bool chkNeckHolding, bool chkWalking, bool chkTalking, bool chkOthers, string txtMenarche, string txtMenstrual, string txtAttachmentSeparationfromParents, string txtHealth, bool chkNailBiting, bool chkTemperTantrums, bool chkBedWetting, string txtAcademics, string txtPeerRelationship, string txtBehaviour, string txtOccupationalHistory, string txtMaritalRelationshipSexualHistory, string txtSubstanceUse, string txtForensicUse, string txtRelationship, string txtLeisureActivities, string txtAttitudetoSelfandStandards, string txtPrevallingMood, string txtReactionPattrentoStress, string txtReligiousPracticesAttitute, string txtFather, string txtMother, string txtSiblings, string txtHomeAtmosphererelationshipsocialclass, string txtFamilialIllness, string txtActualandapparentage, string txtRace, string txtTattoosbodypiercingandscars, string txtBodyHabitus, string txttxtDress, string txtHygiene, string txtPsychomotorActivity, string txtInvoluntarymovements, string txtDystoniaEPS, string txtTardivedyskinesia, string txtTics, string txtTremors, string txtAttentivenesstointerview, string txtEyeContact, string txtLevelofConsciousness, string txtRate, string txtRhythm, string txtVolume, string txtTone, string txtModulationvar, string txtDepressed, string txtElated, string txtIrritable, string txtLabile, string txtIncongruent, string txtbluntingflatteningapathy, string txtThinkingPremeditation, string txtPlans,
+            string txtActions, string txtPreservative, string txtLoosAssociation, string txtTangentiaility, string txtCircumstantiality, string txtFlightofIdeas, string txtThoughtInsertion, string txtThoughtWithdrawal, string txtThoughBroadcasting, string txtThoughControl, string txtDellusion, string txtovervaluedideas, string txtDepresonalization, string txtDerealization, string txtthrougObsession, string txtthrougPhobies, string txtthrougHomocidialIdeas, string txtillusion, string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, string txtorientationtime, string txtplace, string txtperson, string txtAttentionConcentrationSerial7Test, string txtOrDaysOfWeekReverseOrder, string txtImmediatememory, string txtshorttermrecentevents, string txtadressrecallafter2minutes, string txtlongtermremoteevents, string txtadressrecallafter5minues, string txtgeneralknowledgequestion, string txtsimplearthemeticcalculation, string txtabstrationconcertethinking, string txtinsight, string DermaFace, string DermaNeck, string DermaTrunk, string DermaUpperLimb, string DermaLowerLimb, string DermaFlexures, string DermaGenitalias, string DermaHair, string DermaNail, string DermaMucousMembrane, string DermaEyes, string DermaEars, string DermaNose, string DermaLips, string HBM_Problem, string HBM_Caused, string HBM_Started, string HBM_Course, string HBM_Treatment, string HBM_Effects, string PE_Pluse, string PE_BP, string PE_Temperature, string PE_Weight, string PE_RespiratoryRate, string PE_Jaundice, string PE_Anemia, string PE_Cyanosis, string PE_Clubbing, string PE_JVP, string PE_LymphNodes, string PE_Edema, string PE_Respiratory, string PE_Cardiovascular, string PE_Gastro_Intestinal, string PE_Observation, string PE_Cranial_Nerves, string PE_Limb_Strength, string PE_Spasticity, string PE_Position, string PE_Vibration, string PE_Stereognosis, string PE_Pain, string PE_Biceps, string PE_Triceps, string PE_Brachioradialis, string PE_Quadriceps, string PE_Patellar, string PE_Achilles, string PE_Extensor, string PE_Frontal, string PE_Finger, string PE_Heel, string PE_Movements, string PE_Gait, bool PE_Neck_Rigidity, bool PE_Kerning_Sign, bool PE_Brudzinki_Sign, string For_Summary, string For_Diagnosis, string For_AxisI, string For_AxisII, string For_AxisIII, string For_AxisIV, string For_AxisV, string For_PredisposingFactors, string For_PrecipitatingFactors, string For_PrepetuatingFactors, string For_Investigation, string For_Medical, string For_Psychological, string For_Major_Issues, string For_Strengths, string For_Goals, string For_Strategies, string txtPeads_weight, string txtPeads_Length, string txtPeads_HC, string txtPeads_General_Appearance, bool chkPeads_Cyanosis, bool chkPeads_Jaundice, bool chkPeads_Lethargy, bool chkPeads_Rash, string txtPeads_Others, bool chkPeads_Caput, bool chkPeads_Cephalhematoma, bool rdbPeads_Anterioropen, bool rdbPeads_AnteriorClose, bool chkPeads_Dextrocardia, bool chkPeads_Bulging, bool chkPeads_Murmur, string txtPeads_HeartSound, bool chkPeads_Nasal, bool chkPeads_Recessions, string txtPeads_AddedSounds, bool rdbPeads_Flat, bool rdbPeads_Distended, bool rdbPeads_Scaphoid, bool chkPeads_Liver, bool chkPeads_Spleen, string txtPeads_GITOthers, bool chkPeads_Sucking, bool chkPeads_Rooting, bool chkPeads_Moro, string txtPeads_CNSOthers, bool chkPeads_FullTerm, bool chkPeads_PreTerm, DateTime txtPeads_DateOfDelivery, string txtPeads_TimeOfDelivery, bool rdbPeads_Booked, bool rdbPeads_UnBooked, bool chkPeads_DAIHandling, bool chkPeads_ANTURash, bool chkPeads_PIH, bool chkPeads_GDM, bool chkPeads_Vacinated, string txtPeads_ANTOthers, bool rdbPeads_SVD, bool rdbPeads_LSCS, bool rdbPeads_Emergency, bool rdbPeads_Elective, string txtPeads_PlaceOfDelivery, string txtPeads_IndicationForLSCS, string Peads_apgerScore1min, string Peads_apgerScore5min, bool chkPeads_Resuscitation, string txtPeads_NatalOthers, bool chkPeads_Moaning, bool chkPeads_RespDistress, bool chkPeads_PostNATALCyanosis, bool chkPeads_Fits, bool chkPeads_ReluctanceToFeed, string txtPeads_PostNatalOthers, string txtDischarge_On, string ddlDischarge_By, string txtNext_Visit, /*string ddlPatientCondition,*/ string txtAdvice, bool chkdischarge, string patienttype, string Saturation, string OthersRN, string DischargeStatus, string ddlEmrgRhythm, string ddlEmrgVolume, string Procedure_Recommended, string IdentificationMarks, string Diagnosis, string DateOfDeath, string TimeOfDeath, string PlaceOfDeath, string CauseOfDeath, string IssuingOfficerName, string DeathCertifiedby1, string DeathCertifiedby2, string BodyHandedOverTo, string FamilyPersonName, string CNIC, string RelationWithDeceased, string CMO_Police, string TreatmentGiven, string PhysicalFinding, string GeneralPhysicalExamination, string ClinicalSummary, string TreatmentAtDischarge, string FollowUpPlanInstructions, string CauseOfReferral, string ReferredTo,/* string TreatmentTime,*/ string CallingDoctorDepartment, string CallingDoctorMobile, string O2_Saturation_Oxygen1, string O2_Saturation_Oxygen2, bool? HMFIntact, bool? CranialNerves, bool? SignsOfMeningism, bool? HeartSound, bool? Arrhythmias, bool? Murmur, bool? AnyOtherAddedSound, bool? AnyOtherFindings, bool? NVB_Right, bool? NVB_Left, bool? Crepitation_Right, bool? Crepitation_Left, bool? Wheeze, bool? Ranchi, bool? AnyOtherSound, bool? AbdomenSoft, bool? Tenderness, bool? Guarding, bool? BowelSound, bool? Distention, bool? FluidThrill, bool? ShiftingDullness, bool? EpigastriaDiscomfort, bool? RetrosternalBurning, bool? Jondus, bool? Pallor, bool? Dehydration, bool? GCSOrientation, bool? ConsciousOrientely, string FurtherExplanation, string ID, string TextBoxCns, string TextBoxCvs, string TextBoxResp, string TextBoxGit, string TextBoxGpe, string eye_response, string motor_response, string verbal_Response, string accumulated_response, string PulseRate, string BPDischarge, string Rhythmdischarge, string Tempdisch, string volumedisc, string RespRateDesc, string Oxygen2_desc, string saturationDis, string Oxygen1, string otherecdesc, string Special_Instruction_Desc, string Receiving_DateDesc,string remrks_call_to_doc,bool ReferToOPD/*,string Discount,string patientcateg,string Remarks*/)
         {
             try
             {
@@ -1714,7 +1720,7 @@ namespace PMS
                     {
                         OPD = new Emergency_Patient();
                         OPD.Patient_ID = Convert.ToInt32(Patient_ID);
-                        OPD.Admission_Date = Convert.ToDateTime(txtAdmission_Date);
+                       // OPD.Admission_Date = Convert.ToDateTime(txtAdmission_Date);
 
                     }
                     else
@@ -1731,39 +1737,39 @@ namespace PMS
                         fee = "0";
                    
                         OPD.Admission_Fees = int.Parse(fee);
-                    if (!string.IsNullOrWhiteSpace(Discount))
-                    {
-                        OPD.Discount = Convert.ToDecimal(Discount);
-                    }
-                    else
-                    {
-                        OPD.Discount = 0; // or whatever default value makes sense (e.g.,
-                    }
+                    //if (!string.IsNullOrWhiteSpace(Discount))
+                    //{
+                    //    OPD.Discount = Convert.ToDecimal(Discount);
+                    //}
+                    //else
+                    //{
+                    //    OPD.Discount = 0; // or whatever default value makes sense (e.g.,
+                    //}
 
-                        OPD.Department = ddlDepartment;
-                    OPD.remarks = Remarks ?? string.Empty;
+                    //    OPD.Department = ddlDepartment;
+                    //OPD.remarks = Remarks ?? string.Empty;
                     #region old Code don't delete
 
                     #endregion
 
                     OPD.isReferred = false;
-                    if (ddlIssuance_Of == "001")
-                    {
-                        OPD.Ward_ID = Convert.ToInt32(ddlWard_No);
-                        if (string.IsNullOrWhiteSpace(txtBed_No))
-                        {
-                            OPD.Bed_No = 0; // or null if nullable
-                        }
-                        else if (int.TryParse(txtBed_No, out int bedNo))
-                        {
-                            OPD.Bed_No = bedNo;
-                        }
+                    //if (ddlIssuance_Of == "001")
+                    //{
+                    //    OPD.Ward_ID = Convert.ToInt32(ddlWard_No);
+                    //    if (string.IsNullOrWhiteSpace(txtBed_No))
+                    //    {
+                    //        OPD.Bed_No = 0; // or null if nullable
+                    //    }
+                    //    else if (int.TryParse(txtBed_No, out int bedNo))
+                    //    {
+                    //        OPD.Bed_No = bedNo;
+                    //    }
 
-                    }
-                    else
-                    {
+                    //}
+                    //else
+                    //{
                   
-                    }
+                    //}
                     if (ReferToOPD == null)
                     {
                         OPD.Refer_To_OPD = Convert.ToBoolean(0);
@@ -1774,11 +1780,11 @@ namespace PMS
                     }
                     //OPD.Refer_To_OPD = ReferToOPD;
                     OPD.Health_Complaints = txtHealth_Complaints;
-                    OPD.Patient_Category = patientcateg;
-                    OPD.Doctor = ddlDoctor;
-                    OPD.Emergency_Pat_Condition = ddlPatientCondition;
+                    //OPD.Patient_Category = patientcateg;
+                    //OPD.Doctor = ddlDoctor;
+                   // OPD.Emergency_Pat_Condition = ddlPatientCondition;
                     
-                    OPD.Issuance_Of = ddlIssuance_Of;
+                    //OPD.Issuance_Of = ddlIssuance_Of;
                     
                     OPD.Discharge_Status = DischargeStatus;
                     OPD.Emergency_Rhythm = ddlEmrgRhythm;
@@ -1846,16 +1852,16 @@ namespace PMS
                     OPD.FollowUpPlanInstructions = FollowUpPlanInstructions;
                     OPD.CauseOfReferral = CauseOfReferral;
                     OPD.ReferredTo = ReferredTo;
-                    DateTime parsedTime;
-                    if (DateTime.TryParse(TreatmentTime, out parsedTime))
-                    {
-                        OPD.TreatmentTime = parsedTime;
-                    }
-                    else
-                    {
+                    //DateTime parsedTime;
+                    //if (DateTime.TryParse(TreatmentTime, out parsedTime))
+                    //{
+                    //    OPD.TreatmentTime = parsedTime;
+                    //}
+                    //else
+                    //{
                         
-                        OPD.TreatmentTime = DateTime.Now; 
-                    }
+                    //    OPD.TreatmentTime = DateTime.Now; 
+                    //}
                     //OPD.TreatmentTime = Convert.ToDateTime(TreatmentTime);
                     OPD.CNS_Value = TextBoxCns;
                     OPD.CVS_Value = TextBoxCvs;
@@ -2165,10 +2171,10 @@ namespace PMS
                         OPD.Company_ID = AppConfig.Company_ID;
                         db.Emergency_Patients.InsertOnSubmit(OPD);
                   
-                        string ward = Convert.ToString((from tbl in db.Ward_Definitions
-                                       where tbl.Ward_ID == Convert.ToInt32(ddlWard_No)
-                                       select tbl.Ward_No).FirstOrDefault());
-                        string SMS_Contant = "عارف میموریل ہسپتال پراعتماد کرنےکا شکریہ۔ آپکاداخلہ '" + ward + "' میں تجویز ہوا ہے-شکایات کیصورت میں اس نمبر پر رابطہ کریں۔ 03138458018";
+                        //string ward = Convert.ToString((from tbl in db.Ward_Definitions
+                        //               where tbl.Ward_ID == Convert.ToInt32(ddlWard_No)
+                        //               select tbl.Ward_No).FirstOrDefault());
+                        string SMS_Contant = "عارف میموریل ہسپتال پراعتماد کرنےکا شکریہ۔ آپکاداخلہ  میں تجویز ہوا ہے-شکایات کیصورت میں اس نمبر پر رابطہ کریں۔ 03138458018";
                         string msg = "";
 
                         string CellNumber = (from tbl in db.Reg_patients
@@ -2192,22 +2198,22 @@ namespace PMS
                         db.SubmitChanges();
                     }
 
-                    if (ddlIssuance_Of == "001")
-                    {
-                        List<Ward_Allocation> wlist = db.Ward_Allocations.Where(p => p.InPatient_ID == "0").ToList();
-                        foreach (Ward_Allocation med in wlist)
-                        {
-                            med.InPatient_ID = OPD.Emergency_ID.ToString();
-                        }
-                    }
-                    else
-                    {
-                        List<Room_Allocation> kklist = db.Room_Allocations.Where(p => p.In_Patient_ID == 0).ToList();
-                        foreach (Room_Allocation med in kklist)
-                        {
-                            med.In_Patient_ID = OPD.Emergency_ID;
-                        }
-                    }
+                    //if (ddlIssuance_Of == "001")
+                    //{
+                    //    List<Ward_Allocation> wlist = db.Ward_Allocations.Where(p => p.InPatient_ID == "0").ToList();
+                    //    foreach (Ward_Allocation med in wlist)
+                    //    {
+                    //        med.InPatient_ID = OPD.Emergency_ID.ToString();
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    List<Room_Allocation> kklist = db.Room_Allocations.Where(p => p.In_Patient_ID == 0).ToList();
+                    //    foreach (Room_Allocation med in kklist)
+                    //    {
+                    //        med.In_Patient_ID = OPD.Emergency_ID;
+                    //    }
+                    //}
                     List<In_Patient_Medicine> list = db.In_Patient_Medicines.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "Emergency Patient").ToList();
                     foreach (In_Patient_Medicine med in list)
                     {
@@ -3386,17 +3392,127 @@ namespace PMS
             public string DermaLips;
         }
 
+        //[WebMethod]
+        //public static string LoadDermaHistory(int PatientID)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+        //    int Patien_No = DBClass.GetMRNOBy_RegID(Convert.ToInt32(PatientID));
+
+        //    var InPatCase = (from op in db.Emergency_Patients
+        //                     join p in db.Reg_patients
+        //                     on op.Patient_ID equals p.pat_id
+        //                     where p.Patient_No == Patien_No
+
+        //                     select new
+        //                     {
+        //                         op.DermaFace,
+        //                         op.DermaNeck,
+        //                         op.DermaTrunk,
+        //                         op.DermaUpperLimb,
+        //                         op.DermaLowerLimb,
+        //                         op.DermaFlexures,
+        //                         op.DermaGenitalias,
+        //                         op.DermaHair,
+        //                         op.DermaNail,
+        //                         op.DermaMucousMembrane,
+        //                         op.DermaEyes,
+        //                         op.DermaEars,
+        //                         op.DermaNose,
+        //                         op.DermaLips,
+        //                         op.Created_Time
+        //                     }).ToList();
+
+
+        //    var OutPatCase = (from op in db.Out_Patients
+        //                      join p in db.Reg_patients
+        //                      on op.Patient_ID equals p.pat_id
+        //                      where p.Patient_No == Patien_No
+
+        //                      select new
+        //                      {
+        //                          op.DermaFace,
+        //                          op.DermaNeck,
+        //                          op.DermaTrunk,
+        //                          op.DermaUpperLimb,
+        //                          op.DermaLowerLimb,
+        //                          op.DermaFlexures,
+        //                          op.DermaGenitalias,
+        //                          op.DermaHair,
+        //                          op.DermaNail,
+        //                          op.DermaMucousMembrane,
+        //                          op.DermaEyes,
+        //                          op.DermaEars,
+        //                          op.DermaNose,
+        //                          op.DermaLips,
+        //                          op.Created_Time
+        //                      }).ToList();
+        //    List<DermaDetailClass> list = new List<DermaDetailClass>();
+
+        //    foreach (var item in InPatCase)
+        //    {
+        //        DermaDetailClass obj = new DermaDetailClass();
+
+        //        obj.DermaFace = item.DermaFace;
+        //        obj.DermaNeck = item.DermaNeck;
+
+        //        obj.DermaTrunk = item.DermaTrunk;
+        //        obj.DermaUpperLimb = item.DermaUpperLimb;
+        //        obj.DermaLowerLimb = item.DermaLowerLimb.ToString();
+        //        obj.DermaFlexures = item.DermaFlexures.ToString();
+
+        //        obj.DermaGenitalias = item.DermaGenitalias.ToString();
+        //        obj.DermaHair = item.DermaHair.ToString();
+        //        obj.DermaNail = item.DermaNail.ToString();
+        //        obj.DermaMucousMembrane = item.DermaMucousMembrane.ToString();
+        //        obj.DermaEyes = item.DermaEyes.ToString();
+        //        obj.DermaEars = item.DermaEars.ToString();
+        //        obj.DermaNose = item.DermaNose.ToString();
+        //        obj.Created_Time = Convert.ToDateTime(item.Created_Time);
+
+        //        obj.DermaLips = item.DermaLips.ToString();
+        //        obj.Status = "Emergency Patient";
+        //        list.Add(obj);
+        //    }
+        //    foreach (var item in OutPatCase)
+        //    {
+        //        DermaDetailClass obj = new DermaDetailClass();
+        //        obj.DermaFace = item.DermaFace;
+        //        obj.DermaNeck = item.DermaNeck;
+        //        obj.DermaTrunk = item.DermaTrunk;
+        //        obj.DermaUpperLimb = item.DermaUpperLimb;
+        //        obj.DermaLowerLimb = item.DermaLowerLimb.ToString();
+        //        obj.DermaFlexures = item.DermaFlexures.ToString();
+        //        obj.DermaGenitalias = item.DermaGenitalias.ToString();
+        //        obj.DermaHair = item.DermaHair.ToString();
+        //        obj.DermaNail = item.DermaNail.ToString();
+        //        obj.DermaMucousMembrane = item.DermaMucousMembrane.ToString();
+        //        obj.DermaEyes = item.DermaEyes.ToString();
+        //        obj.DermaEars = item.DermaEars.ToString();
+        //        obj.DermaNose = item.DermaNose.ToString();
+        //        obj.DermaLips = item.DermaLips.ToString();
+        //        obj.Created_Time = Convert.ToDateTime(item.Created_Time);
+        //        obj.Status = "OutPatient";
+        //        list.Add(obj);
+        //    }
+        //    return ((new JavaScriptSerializer()).Serialize(list));
+        //}
         [WebMethod]
         public static string LoadDermaHistory(int PatientID)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             int Patien_No = DBClass.GetMRNOBy_RegID(Convert.ToInt32(PatientID));
 
+            // Helper function to handle nulls safely
+            // If value is null, returns empty string, otherwise returns the string value
+            Func<string, string> GetSafeString = (val) => val ?? "";
+
+            // Helper for nullable objects (in case DB types are not strictly strings)
+            Func<object, string> GetSafeObjectString = (val) => (val == null) ? "" : val.ToString();
+
             var InPatCase = (from op in db.Emergency_Patients
                              join p in db.Reg_patients
                              on op.Patient_ID equals p.pat_id
                              where p.Patient_No == Patien_No
-
                              select new
                              {
                                  op.DermaFace,
@@ -3421,7 +3537,6 @@ namespace PMS
                               join p in db.Reg_patients
                               on op.Patient_ID equals p.pat_id
                               where p.Patient_No == Patien_No
-
                               select new
                               {
                                   op.DermaFace,
@@ -3440,54 +3555,65 @@ namespace PMS
                                   op.DermaLips,
                                   op.Created_Time
                               }).ToList();
+
             List<DermaDetailClass> list = new List<DermaDetailClass>();
 
             foreach (var item in InPatCase)
             {
                 DermaDetailClass obj = new DermaDetailClass();
 
-                obj.DermaFace = item.DermaFace;
-                obj.DermaNeck = item.DermaNeck;
+                // Use ?? "" to ensure null becomes empty string
+                // Use GetSafeObjectString for fields that previously used .ToString() to handle potential nulls safely
+                obj.DermaFace = GetSafeString(item.DermaFace);
+                obj.DermaNeck = GetSafeString(item.DermaNeck);
+                obj.DermaTrunk = GetSafeString(item.DermaTrunk);
+                obj.DermaUpperLimb = GetSafeString(item.DermaUpperLimb);
 
-                obj.DermaTrunk = item.DermaTrunk;
-                obj.DermaUpperLimb = item.DermaUpperLimb;
-                obj.DermaLowerLimb = item.DermaLowerLimb.ToString();
-                obj.DermaFlexures = item.DermaFlexures.ToString();
+                // Replaced .ToString() with safe check to prevent crash on null
+                obj.DermaLowerLimb = GetSafeObjectString(item.DermaLowerLimb);
+                obj.DermaFlexures = GetSafeObjectString(item.DermaFlexures);
+                obj.DermaGenitalias = GetSafeObjectString(item.DermaGenitalias);
+                obj.DermaHair = GetSafeObjectString(item.DermaHair);
+                obj.DermaNail = GetSafeObjectString(item.DermaNail);
+                obj.DermaMucousMembrane = GetSafeObjectString(item.DermaMucousMembrane);
+                obj.DermaEyes = GetSafeObjectString(item.DermaEyes);
+                obj.DermaEars = GetSafeObjectString(item.DermaEars);
+                obj.DermaNose = GetSafeObjectString(item.DermaNose);
+                obj.DermaLips = GetSafeObjectString(item.DermaLips);
 
-                obj.DermaGenitalias = item.DermaGenitalias.ToString();
-                obj.DermaHair = item.DermaHair.ToString();
-                obj.DermaNail = item.DermaNail.ToString();
-                obj.DermaMucousMembrane = item.DermaMucousMembrane.ToString();
-                obj.DermaEyes = item.DermaEyes.ToString();
-                obj.DermaEars = item.DermaEars.ToString();
-                obj.DermaNose = item.DermaNose.ToString();
-                obj.Created_Time = Convert.ToDateTime(item.Created_Time);
+                // Handle Date safely
+                obj.Created_Time = (item.Created_Time != null) ? Convert.ToDateTime(item.Created_Time) : DateTime.MinValue;
 
-                obj.DermaLips = item.DermaLips.ToString();
                 obj.Status = "Emergency Patient";
                 list.Add(obj);
             }
+
             foreach (var item in OutPatCase)
             {
                 DermaDetailClass obj = new DermaDetailClass();
-                obj.DermaFace = item.DermaFace;
-                obj.DermaNeck = item.DermaNeck;
-                obj.DermaTrunk = item.DermaTrunk;
-                obj.DermaUpperLimb = item.DermaUpperLimb;
-                obj.DermaLowerLimb = item.DermaLowerLimb.ToString();
-                obj.DermaFlexures = item.DermaFlexures.ToString();
-                obj.DermaGenitalias = item.DermaGenitalias.ToString();
-                obj.DermaHair = item.DermaHair.ToString();
-                obj.DermaNail = item.DermaNail.ToString();
-                obj.DermaMucousMembrane = item.DermaMucousMembrane.ToString();
-                obj.DermaEyes = item.DermaEyes.ToString();
-                obj.DermaEars = item.DermaEars.ToString();
-                obj.DermaNose = item.DermaNose.ToString();
-                obj.DermaLips = item.DermaLips.ToString();
-                obj.Created_Time = Convert.ToDateTime(item.Created_Time);
+
+                obj.DermaFace = GetSafeString(item.DermaFace);
+                obj.DermaNeck = GetSafeString(item.DermaNeck);
+                obj.DermaTrunk = GetSafeString(item.DermaTrunk);
+                obj.DermaUpperLimb = GetSafeString(item.DermaUpperLimb);
+                obj.DermaLowerLimb = GetSafeObjectString(item.DermaLowerLimb);
+                obj.DermaFlexures = GetSafeObjectString(item.DermaFlexures);
+                obj.DermaGenitalias = GetSafeObjectString(item.DermaGenitalias);
+                obj.DermaHair = GetSafeObjectString(item.DermaHair);
+                obj.DermaNail = GetSafeObjectString(item.DermaNail);
+                obj.DermaMucousMembrane = GetSafeObjectString(item.DermaMucousMembrane);
+                obj.DermaEyes = GetSafeObjectString(item.DermaEyes);
+                obj.DermaEars = GetSafeObjectString(item.DermaEars);
+                obj.DermaNose = GetSafeObjectString(item.DermaNose);
+                obj.DermaLips = GetSafeObjectString(item.DermaLips);
+
+                // Handle Date safely
+                obj.Created_Time = (item.Created_Time != null) ? Convert.ToDateTime(item.Created_Time) : DateTime.MinValue;
+
                 obj.Status = "OutPatient";
                 list.Add(obj);
             }
+
             return ((new JavaScriptSerializer()).Serialize(list));
         }
         [WebMethod]
