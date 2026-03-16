@@ -793,10 +793,12 @@ function sanitizePrId(val) {
 // ============================================================================
 // MAIN: LoadPOItemDetail - FIXED for dropdown timing + calculations
 // ============================================================================
+// ============================================================================
+// MAIN: LoadPOItemDetail - FIXED for Advance Tax loading in Edit Mode
+// ============================================================================
 function LoadPOItemDetail(PO_ID) {
     console.time('LoadPOItemDetail');
     $('#tblItemDescription tbody').empty();
-
     PageMethods.LoadPOItemDetail(PO_ID,
         function (resp) {
             var data = (typeof resp === "string") ? JSON.parse(resp) : resp;
@@ -805,15 +807,11 @@ function LoadPOItemDetail(PO_ID) {
                 $('#btnSave').val('Update');
                 return;
             }
-
             console.log('Loading ' + data.length + ' PO items...');
-
             // Build ALL rows in memory FIRST
             var rowsHTML = [];
-            
             data.forEach(function (value, key) {
                 var idx = key + 1;
-                
                 // Format date
                 var TrnsDate = "";
                 if (value.Delivery_Date) {
@@ -822,9 +820,7 @@ function LoadPOItemDetail(PO_ID) {
                         TrnsDate = $.datepicker.formatDate('dd M yy', new Date(ms));
                     } catch (e) { TrnsDate = ""; }
                 }
-
                 var pr_id = sanitizePrId(safeVal(value.pr_id, ""));
-
                 // Build row with ORIGINAL IDs (critical for calcTotal)
                 var row = '<tr data-index="' + idx + '">' +
                     '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + idx + '" name="txtPRDId" value="' + safeVal(value.PRDetailId, 0) + '" />' + idx + '</td>' +
@@ -856,23 +852,36 @@ function LoadPOItemDetail(PO_ID) {
                     '<td><input type="text" name="txtddate" id="txtddate' + idx + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /></td>' +
                     '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a> </td>' +
                     '</tr>';
-                
                 rowsHTML.push(row);
             });
-
             // ⚡ SINGLE DOM insertion (performance)
             $('#tblItemDescription tbody').html(rowsHTML.join(''));
             console.log('DOM rendered, populating dropdowns...');
-
             // 🎯 Populate dropdowns for each row + set values
             data.forEach(function (value, key) {
                 var idx = key + 1;
-                
-                // Populate dropdowns (they call PageMethods internally)
+                // Populate Sales Tax
                 populateTaxddl(idx);
-                populateAdvanceTaxddl(idx);
                 
-                // Set values AFTER dropdowns populated (with delay)
+                // Populate Advance Tax WITH CALLBACK to ensure value sets after options load
+                populateAdvanceTaxddl(idx, function() {
+                    // AdvanceTax Value Setting (Inside Callback for reliability)
+                    var advTaxId = safeVal(value.AdvanceTax_ID, "0") + "";
+                    var $ddlAdv = $('#ddlAdvanceTax' + idx);
+                    if ($ddlAdv.find('option[value="' + advTaxId + '"]').length > 0) {
+                        $ddlAdv.val(advTaxId);
+                        $('#txtAdvanceTaxAmount' + idx).val(safeVal(value.AdvanceTax_Amount, 0));
+                    } else {
+                        $ddlAdv.val("0");
+                        $('#txtAdvanceTaxAmount' + idx).val("0");
+                    }
+                    // Trigger change for calculations (only if non-zero)
+                    if (advTaxId != "0" && $ddlAdv.val() == advTaxId) {
+                        setTimeout(function() { $ddlAdv.trigger('change'); }, 50);
+                    }
+                });
+
+                // Set values AFTER dropdowns populated (with delay) - For Sales Tax & Others
                 setTimeout(function() {
                     // SalTax
                     var salTaxId = safeVal(value.SalTax_Id, "0") + "";
@@ -885,43 +894,24 @@ function LoadPOItemDetail(PO_ID) {
                         $('#txtSalAmount' + idx).val("0");
                     }
                     
-                    // AdvanceTax
-                    var advTaxId = safeVal(value.AdvanceTax_ID, "0") + "";
-                    var $ddlAdv = $('#ddlAdvanceTax' + idx);
-                    if ($ddlAdv.find('option[value="' + advTaxId + '"]').length > 0) {
-                        $ddlAdv.val(advTaxId);
-                        $('#txtAdvanceTaxAmount' + idx).val(safeVal(value.AdvanceTax_Amount, 0));
-                    } else {
-                        $ddlAdv.val("0");
-                        $('#txtAdvanceTaxAmount' + idx).val("0");
-                    }
-                    
                     // FurtherTax (text)
                     $('#ddlFurtherTax' + idx).val(safeVal(value.FurtherTax_Percentage, 0));
                     $('#txtFurtherTaxAmount' + idx).val(safeVal(value.FurtherTax_Amount, 0));
-                    
                     // Fed (hidden)
                     $('#ddlFed' + idx).val(safeVal(value.FedPercent_Id, 0));
-                    
                     // Other amounts
                     $('#txtBonusAmount' + idx).val(parseFloat(safeVal(value.Bonus_Tax, 0)).toFixed(2));
                     $('#txtTotalAmount' + idx).val(safeVal(value.Amount, 0));
-                    
-                    // Trigger change for calculations (only if non-zero)
+                    // Trigger change for Sales Tax (only if non-zero)
                     if (salTaxId != "0" && $ddlSTAX.val() == salTaxId) {
                         setTimeout(function() { $ddlSTAX.trigger('change'); }, 50);
                     }
-                    if (advTaxId != "0" && $ddlAdv.val() == advTaxId) {
-                        setTimeout(function() { $ddlAdv.trigger('change'); }, 50);
-                    }
-                }, 150);
+                }, 1000);
             });
-
             // 📅 Initialize datepickers
-            $('input[name="txtddate"]').datepicker({ 
+            $('input[name="txtddate"]').datepicker({
                 dateFormat: 'dd M yy'
             }).attr('readonly', 'readonly');
-
             // 🧮 Final calculation after all async operations
             setTimeout(function() {
                 if (typeof calcTotal === 'function') {
@@ -929,11 +919,9 @@ function LoadPOItemDetail(PO_ID) {
                     calcTotal();
                 }
             }, 300);
-
             $('#btnSave').val('Update');
             console.timeEnd('LoadPOItemDetail');
-            
-        }, 
+        },
         function (error) {
             console.timeEnd('LoadPOItemDetail');
             alert(error.get_message ? error.get_message() : error);
