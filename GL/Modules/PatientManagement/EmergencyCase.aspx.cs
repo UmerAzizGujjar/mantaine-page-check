@@ -64,11 +64,11 @@ namespace PMS
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     var patients = (from p in db.Reg_patients
-                                    where (p.Patient_No != null && p.Patient_No.ToString().Contains(searchValue))
+                                    where (p.mr_no_sequence != null && p.mr_no_sequence.ToString().Contains(searchValue))
                                           || (p.Full_Name != null && p.Full_Name.Contains(searchValue))
                                     select new
                                     {
-                                        PatientNo = p.Patient_No,
+                                        PatientNo = p.mr_no_sequence,
                                         FullName = p.Full_Name,
                                         RegID = p.pat_id,
                                     }).Take(5).ToList();
