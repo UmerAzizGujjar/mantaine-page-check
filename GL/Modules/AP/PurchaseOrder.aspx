@@ -21,38 +21,7 @@
         #ui-datepicker-div{
         z-index: 1000 !important;
         }
-        /* Add this to your CSS file or inside <style> in your .aspx page */
-.text-right { text-align: right !important; }
-.text-left { text-align: left !important; }
-.text-danger { color: #f30a0a !important; }
 
-.form-control-sm {
-    text-align: right;
-    width: 50px !important;
-    font-size: 9px !important;
-    height: 20px !important;
-    padding: 2px 4px !important;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-#tblItemDescription td {
-    padding-top: 7px !important;
-    vertical-align: middle;
-}
-
-#tblItemDescription a.btn-delete {
-    display: inline-block;
-    padding: 3px 8px;
-    cursor: pointer;
-}
-
-#tblItemDescription a.btn-delete i {
-    font-size: 13px;
-    margin-left: 16px;
-    position: relative;
-    left: -10px;
-}
     </style>
 
     <script type="text/javascript">
@@ -566,7 +535,6 @@
                     alert(error.get_message());
                 })
         }
-
         function safeVal(v, def) {
             return (v == null || v === undefined) ? def : v;
         }
@@ -821,6 +789,110 @@
             });
         }
         */
+        //oldPOcode 16 march 
+        //function LoadPOItemDetail(PO_ID) {
+        //    var optionsSal = '';
+        //    var optionFed = '';
+        //    PageMethods.getDDLlist(function (Tests) {
+        //        debugger
+        //        $.each(JSON.parse(Tests), function (key, value) {
+        //            debugger;
+        //            if (value.Type == "Sal") {
+        //                optionsSal += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+        //            }
+        //            else {
+        //                optionFed += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
+        //            }
+        //        });
+        //    });
+        //    PageMethods.LoadPOItemDetail(PO_ID, function (resp) {
+        //        debugger;
+        //        var data = (JSON.parse(resp));
+        //        selectedOptions = data;
+        //        var TrnsDate = '';
+        //        $.each(data, function (key, value) {
+        //            debugger;
+
+        //            if (value.Delivery_Date != null) {
+        //                TrnsDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[key].Delivery_Date.substring(6, 19))));
+        //            }
+        //            else {
+        //                TrnsDate = ""
+        //            }
+        //            if (value.Unit == null) value.Unit = "";
+        //            if (value.UnitName == null) value.UnitName = "";
+        //            if (value.SalTax_Id == null) value.SalTax_Id = 0;
+        //            if (value.SalTax_Amount == null) value.SalTax_Amount = 0;
+        //            if (value.Fed_Percentage == null) value.Fed_Percentage = 0;
+        //            if (value.Discount_Amount == null) value.Discount_Amount = 0;
+        //            if (value.Discount_Percentage == null) value.Discount_Percentage = 0;
+        //            if (value.pr_id.includes("ERROR") || value.pr_id.includes("Execute") || value.pr_id.includes("There")) value.pr_id = "";
+        //            if (value.CS_Ven_No == null) value.CS_Ven_No = "";
+        //            if (value.PRDetailId == null) value.PRDetailId = 0;
+        //            if (value.UOM_Qty == null) value.UOM_Qty = 0;
+
+        //            var rowlength = $('#tblItemDescription tr').length;
+        //            var row = '<tr>' +
+        //                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" id="txtPRDId' + (key + 1) + '" name="txtPRDId" value="' + value.PRDetailId + '" />' + (key + 1) + '</td>' +
+        //                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + (key + 1) + '"  value="' + value.pr_id + '"  style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/>' + value.pr_id + '</td>' +
+        //                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + (key + 1) + '"  value="' + value.CS_Ven_No + '"  style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/>' + value.CS_Ven_No + '</td>' +
+        //                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + (key + 1) + '"  value="' + value.Item_Code + '" /> ' + value.Item_Code + ' </td>' +
+        //                '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + (key + 1) + '"  value="' + value.Item_Name + '" /> ' + value.Item_Name + ' </td>' +
+        //                '<td style="text-align:left!important;"><input type="hidden" name="txtUnit" id="txtUnit' + (key + 1) + '"  value="' + value.Unit + '" />' + value.Unit + ' </td>' +
+        //                '<td><input type="text"  id="txtQty' + (key + 1) + '" name="txtQty" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" value=' + parseFloat(value.Qty).toFixed(2) + '></input></td>' +
+        //                '<td><input type="text" id="txtUOMQty' + (key + 1) + '" name="txtUOMQty" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.UOM_Qty != null ? parseFloat(value.UOM_Qty).toFixed(2) : '0') + '" /></td>' +
+        //                '<td><input type="text" style="text-align:right;width:50px!important;font-size:9px;height:20px;" value="' + (value.Bonus_Qty != null ? parseFloat(value.Bonus_Qty).toFixed(2) : '0') + '" id="txtBonusQty' + (key + 1) + '" name="txtBonusQty" /></td>' +
+        //                '<td><input type="text" name="txtRate" style="text-align:right ;width:50px !important;font-size:9px;height:20px" onkeyup="CulculateAmonutWithQty(this)" id="txtRate' + (key + 1) + '"  value="' + parseFloat(value.Rate).toFixed(2) + '" /></td>' +
+        //                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" readonly="readonly"  name="txtDisPer" id="txtDisPer' + (key + 1) + '"  value="' + value.Discount_Percentage + '" /></td>' +
+        //                '<td style="text-align:right;padding-top: 7px!important;"><input type="text"  onkeyup="calcTotal()" value="' + value.Discount_Amount + '" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;"  id="txtDisAmount' + (key + 1) + '" name="txtDisAmount" ></input></td>' +
+        //                '<td><select id="ddlSTAX' + (key + 1) + '" name="ddlSTAX" class="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"></select></td>' +
+        //                '<td style="padding-top: 7px!important;"><input type="text" style="text-align:right!important;width:50px !important;font-size:9px;height:20px;" readonly="readonly" value="' + value.SalTax_Amount + '"  id="txtSalAmount' + (key + 1) + '" name="txtSalAmount" ></input></td>' +
+        //            /*'<td><select id="ddlFurtherTax' + (key + 1) + '" name="ddlFurtherTax" class="ddlFurtherTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +*/
+        //                '<td><input type="text" id="ddlFurtherTax' + (key + 1) + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="' + (value.FurtherTax_Percentage != null ? value.FurtherTax_Percentage : '0') + '" /></td>' +
+        //                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + (value.FurtherTax_Amount !== null && value.FurtherTax_Amount !== undefined ? value.FurtherTax_Amount : '0') + '" id="txtFurtherTaxAmount' + (key + 1) + '" name="txtFurtherTaxAmount"></td>' +
+        //                '<td style="display:none;"><select id="ddlFed' + (key + 1) + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option>' + optionFed + '</select></td>' +
+        //                '<td><select id="ddlAdvanceTax' + (key + 1) + '" name="ddlAdvanceTax" class="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;">' +
+        //                '<option value="0">0</option>' +
+        //                '</select></td>' +
+        //                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" ' +
+        //                'value="' + value.AdvanceTax_Amount + '" id="txtAdvanceTaxAmount' + (key + 1) + '" name="txtAdvanceTaxAmount"></td>' +
+
+        //                '<td style="padding-top: 7px!important;display:none;"><input type="hidden" value="' + value.Fed_Percentage + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"  id="txtFedAmount' + (key + 1) + '" name="txtFedAmount" style="text-align:right ;width:59px !important;font-size:9px;height:20px;"></input>' + value.Fed_Percentage + '</td>' +
+        //                '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="' + (value.Bonus_Tax != null ? parseFloat(value.Bonus_Tax).toFixed(2) : '0') + '" id="txtBonusAmount' + (key + 1) + '" name="txtBonusAmount" /></td>' +
+        //                '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + value.Amount + '" readonly="readonly"  id="txtTotalAmount' + (key + 1) + '" name="txtTotalAmount"></input></td>' +
+        //                '<td><input type="text" name="txtddate" id="txtddate' + (key + 1) + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /></td>' +
+        //                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;" i=""></i></a> </td></tr>';
+        //            $('#tblItemDescription tbody').append(row);
+
+        //        });
+
+        //        setTimeout(function () {
+        //            $.each(selectedOptions, function (key, value) {
+        //                debugger;
+        //                $('#ddlSTAX' + (key + 1)).val(value.SalTax_Id).trigger('change');
+        //                // $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Id).trigger('change');
+        //                $('#ddlFurtherTax' + (key + 1)).val(value.FurtherTax_Percentage != null ? value.FurtherTax_Percentage : '0');
+        //                $('#ddlAdvanceTax' + (key + 1)).val(value.AdvanceTax_ID).trigger('change');
+        //                $("#ddlFed" + (key + 1)).val(value.FedPercent_Id);
+        //                calcTotal();
+        //            });
+        //        }, 4500);
+        //        setTimeout(function () {
+        //            $.each(selectedOptions, function (key, value) {
+        //                $('#txtAdvanceTaxAmount' + (key + 1)).val(value.AdvanceTax_Amount);
+        //            });
+        //        }, 4500);
+        //        var count = $('#tblItemDescription tr').length - 1;
+        //        for (i = 1; i <= count; i++) {
+        //            $('#txtExpirDate' + i).datepicker();
+        //        }
+        //        $('input[name="txtddate"]').datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+        //        $('#btnSave').val('Update');
+        //    },
+        //        function (error) {
+        //            alert(error.get_message());
+        //        })
+        //}
         function httpGet(theUrl) {
             var xmlHttp = null;
             xmlHttp = new XMLHttpRequest();
