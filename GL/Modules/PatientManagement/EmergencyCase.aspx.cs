@@ -2325,6 +2325,7 @@ namespace PMS
             public string Age;
             public string Mobile;
             public string Address;
+            public string Admitted_Status;
             public string Entry_Date;
         }
 
@@ -2456,6 +2457,25 @@ namespace PMS
             }
             return data;
         }
+
+        [WebMethod]
+        public static string GetInvestigationDoctor()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                //var userin = AppConfig.UserID.ToString();
+                var result = (from dv in db.HR_Employees
+                              where dv.IsDoctor == true
+                              select new
+                              {
+                                  dv.Emp_ID,
+                                  dv.Emp_Name
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
         [WebMethod]
         public static string LoadimagesDetail(string TestDetailID)
         {
@@ -2498,6 +2518,7 @@ namespace PMS
                 pt.Mobile = pat.Mobile1;
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 Type = db.GetDataValueName("Patient Type", Type);
+                pt.Admitted_Status = (from st in db.Emergencies where st.Reg_PatId == pat.pat_id orderby st.Created_Time descending select st.Admitted_Status).FirstOrDefault();
                 return pt;
             }
             else

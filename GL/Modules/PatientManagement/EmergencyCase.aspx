@@ -20,6 +20,7 @@
         $(document).ready(function () {
             $('#OtherDetails').hide();
             $('#deathtab').hide();
+            
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_txtCNIC'),
                 format: '_____-_______-_',
@@ -79,17 +80,23 @@
                     selectPatient(Reg_ID);
 
                 }, 1000);
-            } else {
+            } 
+            else {
+               
             }
             var Emergency_id = '<%= Request.QueryString["ID"] %>';
             if (Emergency_id != "") {
                 AllowEmergencyEdit();
+            }
+            if(Reg_ID == "" && Emergency_id == ""){
+                 OpenModal()
             }
 
             AllowDiscountEdit();
             fillmartial();
             fillgender();
             AllowEMRGTabs();
+            LoadInvestigationDoctor();
 
 
             jQuery(function ($) {
@@ -129,6 +136,7 @@
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").select2();
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr2").select2();
             $("#ctl00_MainContent_ddlDoctor").select2();
+            $("#ddlInvestigationDoctor").select2();
             $("#ctl00_MainContent_ddlCallToDoctor").select2();
             $("#ctl00_MainContent_ddlDischarge_By").select2();
             $("#ctl00_MainContent_ddl_Department").select2();
@@ -242,6 +250,7 @@
                 }
             }, 1500);
             LoadCategory();
+            
 
             $("#txtSearch").keyup(function (event) {
 
@@ -2007,7 +2016,7 @@
 
         }
         function GetInvestigationTab() {
-            var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
+            var doctor = $('#ddlInvestigationDoctor').val();
             if (doctor == "0" || doctor == null) {
                 alert("Please Select Doctor Name..")
             }
@@ -2049,13 +2058,13 @@
 
         function InsertDoctorNote() {
 
-            var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
+            var doctor = $('#ddlInvestigationDoctor').val();
             if (doctor == "0" || doctor == null) {
                 alert("Please Select Doctor Name..")
             }
             else {
                 var Date = $('#ctl00_MainContent_txtMo_Date').val();
-                var doctorVal = $('#ctl00_MainContent_ddlMo_Doctor_Name').find('option:selected').val();
+                var doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
                 var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').find('option:selected').text();
                 var DoctorStatusVal = $('#ctl00_MainContent_ddlMO_Doctor_Status').find('option:selected').val();
                 var DoctorStatus = $('#ctl00_MainContent_ddlMO_Doctor_Status').find('option:selected').text();
@@ -2098,7 +2107,7 @@
             $('#tblInstruction tbody').append(rows);
         }
         function GetLastMediceineTab() {
-            var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
+            var doctor = $('#ddlInvestigationDoctor').val();
             if (doctor == "0" || doctor == null) {
                 alert("Please Select Doctor Name..")
             }
@@ -4125,6 +4134,8 @@
                     LoadHistory();
                     $('#tblRoomsHistory').show();
                     $('#tblWardHistory').show();
+                    $('#ui-id-15').hide();
+                    $('#Tab-5').hide();
                 }
                 else {
                     checkRepeateRecord = true;
@@ -4223,6 +4234,34 @@
             });
 
         }
+        function LoadInvestigationDoctor() {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/GetInvestigationDoctor",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var doctor = JSON.parse(response.d);
+                    var options = '<option value=""> Please Select </option>';
+
+                    $.each(doctor, function (key, value) {
+                        options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                    });
+
+                    $('#ddlInvestigationDoctor').html(options);
+                    $('#ddlInvestigationDoctor').select2();
+
+
+
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+
+        }
         function AddBloodTest() {
 
             var test = $('#ddlTestList').find('option:selected').text();
@@ -4241,8 +4280,8 @@
                     var row;
                     var test_array;
 
-                    doctorVal = $('#ctl00_MainContent_ddlDoctor').find('option:selected').val();
-                    doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
+                    doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
+                    doctor = $('#ddlInvestigationDoctor').find('option:selected').text();
 
                     if (doctorVal == 0 || doctorVal == undefined) {
                         alert("Please Select Doctor")
@@ -4285,8 +4324,8 @@
                     var doctorVal;
                     var doctor;
 
-                    doctorVal = $('#ctl00_MainContent_ddlDoctor').find('option:selected').val();
-                    doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
+                    doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
+                    doctor = $('#ddlInvestigationDoctor').find('option:selected').text();
 
 
                     if (doctorVal == 0 || doctorVal == undefined) {
@@ -4346,8 +4385,8 @@
                     var doctor;
 
 
-                    doctorVal = $('#ctl00_MainContent_ddlDoctor').find('option:selected').val();
-                    doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
+                    doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
+                    doctor = $('#ddlInvestigationDoctor').find('option:selected').text();
 
 
                     if (doctorVal == 0 || doctorVal == undefined) {
@@ -4382,8 +4421,8 @@
                 doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').find('option:selected').text();
             }
             else {
-                doctorVal = $('#ctl00_MainContent_ddlDoctor').find('option:selected').val();
-                doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
+                doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
+                doctor = $('#ddlInvestigationDoctor').find('option:selected').text();
             }
 
             if (doctorVal == 0 || doctorVal == undefined) {
@@ -5462,6 +5501,7 @@
             });
         }
         function OnSuccess(data) {
+            debugger;
             if (data.d != '') {
 
                 if (data.d.PatientType == null)
@@ -5475,11 +5515,19 @@
                 $('#<%= vLbl_RegDate.ClientID %>').text(dateR);
                 $('#<%= vLbl_Adress.ClientID %>').text(data.d.Address);
                 $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile);
-
                 $('#<%= vLbl_Patient_Type.ClientID %>').text(data.d.PatientType);
-
-
                 $('#<%= vLbl_Patient_AdmitCatagory.ClientID %>').text(data.d.Type);
+                var status = data.d.Admitted_Status
+                if (status == "Admitted") {
+                    $("#Tab-15").show()
+                    $('#ui-id-11').hide();
+                    $('#ui-id-10').hide();
+                }
+                else {
+                    $("#Tab-15").hide()
+                    $('#ui-id-11').hide();
+                    $('#ui-id-10').hide();
+                }
             }
         }
         function loadtokenInputs(data) {
@@ -7358,6 +7406,10 @@
                                 <option value="R">Right</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select id="ddlInvestigationDoctor" class="form-control">
+                        </select>
                     </div>
                     <div class="col-md-2">
                         <asp:TextBox ID="txtAreaOfInterest" Style="width: 100% !important; height: 35px !important" placeholder="Area of Intrest" runat="server" TextMode="MultiLine" class="form-control"></asp:TextBox>

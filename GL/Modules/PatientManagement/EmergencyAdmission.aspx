@@ -27,6 +27,7 @@
         var currentEmergencyPatientID = 0;
 
         $(document).ready(function () {
+           
             // Initialize date and time fields with current date/time
             var now = new Date();
             var dateStr = now.toISOString().split('T')[0];
@@ -43,6 +44,9 @@
             var emergencyPatientID = urlParams.get('Emergency_ID');
             if (emergencyPatientID) {
                 loadAdmissionForEdit(parseInt(emergencyPatientID));
+            }
+            else {
+                openEmergencyWaitingListModal()
             }
 
             // Setup search functionality for waiting list
