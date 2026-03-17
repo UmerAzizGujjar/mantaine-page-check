@@ -558,8 +558,7 @@
         }
 
         function selectPatient(id, mrNo, name, age, gender, contact) {
-            debugger;
-            //clearFormData();
+            clearFormData();
             
             $('#hdfPatientId').val(id);
             $('#infoMrNo').text(mrNo);
@@ -997,6 +996,289 @@
                 $('#txtarea').html(options);
             });
             return options;
+        }
+
+        function clearFormData() {
+            $('#ddlVascularAccess, #ddlMachineNo, #ddlDialyzer, #ddlAdvisedBy, #ddlPrimingBy, #ddlHeparin, #ddlDialysisType').val('');
+            $('#txtPrimingSol, #txtHeparinInfusion, #txtCurrentWeight, #txtLastWeight, #txtStartTime, #txtFinishTime, #txtWeightDiff, #txtUF, #txtUFRate, #txtTotalDuration, #txtSpecialInstruction, #txtComplaints, #txtConsciousLevel, #txtEdema, #txtCardRhythm, #txtLungs, #txtOther, #txtRemarks').val('');
+
+            $('#vitalSignsBody').empty();
+
+            $('#ddlPostStaff').val('');
+            $('#txtPostStartTime, #txtPostEndTime, #txtPostDuration, #txtPostWeight, #txtPostTemp, #txtPostBPSys, #txtPostBPDias, #txtPostPulse, #txtPostComments').val('');
+
+            generateNewDialysisId();
+
+            $('.step-item').removeClass('active completed').addClass('disabled');
+            $('#step1Nav').removeClass('disabled').addClass('active');
+        }
+
+        function navigateToStep(stepNumber) {
+            var step1Saved = $('#hdfStep1Saved').val() === 'true';
+            var step2Saved = $('#hdfStep2Saved').val() === 'true';
+
+            if (stepNumber === 2 && !step1Saved) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please save Step 1 first',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            if (stepNumber === 3 && !step2Saved) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please save Step 2 first',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            $('.form-section').removeClass('active');
+            $('.step-item').removeClass('active');
+
+            $('#section' + stepNumber).addClass('active');
+            $('#step' + stepNumber + 'Nav').addClass('active');
+            $('#hdfCurrentStep').val(stepNumber);
+        }
+
+        function saveStep1() {
+            var patientId = $('#hdfPatientId').val();
+            if (!patientId) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please select a patient first',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            var data = {
+                DialysisId: currentDialysisId,
+                PatientId: patientId,
+                VascularAccess: $('#ddlVascularAccess').val(),
+                DialysisNo: $('#txtDialysisNo').val(),
+                MachineNo: $('#ddlMachineNo').val(),
+                Dialyzer: $('#ddlDialyzer').val(),
+                AdvisedBy: $('#ddlAdvisedBy').val(),
+                PrimingBy: $('#ddlPrimingBy').val(),
+                PrimingSol: $('#txtPrimingSol').val(),
+                Heparin: $('#ddlHeparin').val(),
+                HeparinInfusion: $('#txtHeparinInfusion').val(),
+                CurrentWeight: $('#txtCurrentWeight').val(),
+                LastWeight: $('#txtLastWeight').val(),
+                StartTime: $('#txtStartTime').val(),
+                FinishTime: $('#txtFinishTime').val(),
+                WeightDiff: $('#txtWeightDiff').val(),
+                UF: $('#txtUF').val(),
+                UFRate: $('#txtUFRate').val(),
+                TotalDuration: $('#txtTotalDuration').val(),
+                DialysisType: $('#ddlDialysisType').val(),
+                SpecialInstruction: $('#txtSpecialInstruction').val(),
+                Complaints: $('#txtComplaints').val(),
+                ConsciousLevel: $('#txtConsciousLevel').val(),
+                Edema: $('#txtEdema').val(),
+                CardRhythm: $('#txtCardRhythm').val(),
+                Lungs: $('#txtLungs').val(),
+                Other: $('#txtOther').val(),
+                Remarks: $('#txtRemarks').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "DialysisForm.aspx/SavePreDialysis",
+                data: JSON.stringify({ data: JSON.stringify(data) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d && response.d.indexOf('error') === -1) {
+                        currentDialysisId = response.d;
+                        $('#hdfDialysisId').val(currentDialysisId);
+                        $('#hdfStep1Saved').val('true');
+                        $('#step1Nav').addClass('completed');
+                        $('#step2Nav').removeClass('disabled');
+                        updateStepSummary();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: isEditMode ? 'Step 1 updated successfully' : 'Step 1 saved successfully',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        navigateToStep(2);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Error saving data: ' + response.d,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                }
+            });
+        }
+
+        function addVitalRow() {
+            var row = '<tr>' +
+                '<td><input type="time" class="form-control vital-time" /></td>' +
+                '<td><input type="number" step="0.1" class="form-control vital-temp" placeholder="°F" /></td>' +
+                '<td><input type="number" step="1" class="form-control vital-bp-sys" placeholder="mmHg" /></td>' +
+                '<td><input type="number" step="1" class="form-control vital-bp-dias" placeholder="mmHg" /></td>' +
+                '<td><input type="number" step="1" class="form-control vital-pulse" placeholder="bpm" /></td>' +
+                '<td><input type="number" step="1" class="form-control vital-dialysis-flow" placeholder="ml/min" /></td>' +
+                '<td><input type="number" step="1" class="form-control vital-venous-pressure" placeholder="mmHg" /></td>' +
+                '<td><input type="number" step="1" class="form-control vital-blood-flow" placeholder="ml/min" /></td>' +
+                '<td><button type="button" class="btn btn-sm btn-danger" onclick="deleteVitalRow(this)"><i class="fa fa-trash"></i></button></td>' +
+                '</tr>';
+
+            $('#vitalSignsBody').append(row);
+        }
+
+        function deleteVitalRow(btn) {
+            $(btn).closest('tr').remove();
+        }
+
+        function getVitalSignsData() {
+            var vitals = [];
+            $('#vitalSignsBody tr').each(function () {
+                var vital = {
+                    Time: $(this).find('.vital-time').val(),
+                    Temperature: $(this).find('.vital-temp').val(),
+                    BPSys: $(this).find('.vital-bp-sys').val(),
+                    BPDias: $(this).find('.vital-bp-dias').val(),
+                    Pulse: $(this).find('.vital-pulse').val(),
+                    DialysisFlowRate: $(this).find('.vital-dialysis-flow').val(),
+                    VenousPressure: $(this).find('.vital-venous-pressure').val(),
+                    BloodFlow: $(this).find('.vital-blood-flow').val()
+                };
+                vitals.push(vital);
+            });
+            return vitals;
+        }
+
+        function saveStep2() {
+            var vitalsData = getVitalSignsData();
+
+            if (vitalsData.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please add at least one vital sign record',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "DialysisForm.aspx/SaveDuringDialysis",
+                data: JSON.stringify({
+                    DialysisId: currentDialysisId,
+                    PatientId: $('#hdfPatientId').val(),
+                    VitalSigns: JSON.stringify(vitalsData)
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d === 'success') {
+                        $('#hdfStep2Saved').val('true');
+                        $('#step2Nav').addClass('completed');
+                        $('#step3Nav').removeClass('disabled');
+                        updateStepSummary();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: isEditMode ? 'Step 2 updated successfully' : 'Step 2 saved successfully',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        navigateToStep(3);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Error saving data: ' + response.d,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                }
+            });
+        }
+
+        function calculateDuration() {
+            var startTime = $('#txtPostStartTime').val();
+            var endTime = $('#txtPostEndTime').val();
+
+            if (startTime && endTime) {
+                var start = new Date('1970-01-01T' + startTime);
+                var end = new Date('1970-01-01T' + endTime);
+
+                var diffMs = end - start;
+                if (diffMs < 0) {
+                    diffMs += 24 * 60 * 60 * 1000;
+                }
+
+                var hours = Math.floor(diffMs / (1000 * 60 * 60));
+                var minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+                $('#txtPostDuration').val(hours + ' hour(s) ' + minutes + ' minute(s)');
+            }
+        }
+
+        function saveStep3() {
+            var data = {
+                DialysisId: currentDialysisId,
+                PatientId: $('#hdfPatientId').val(),
+                StartTime: $('#txtPostStartTime').val(),
+                EndTime: $('#txtPostEndTime').val(),
+                Duration: $('#txtPostDuration').val(),
+                StaffId: $('#ddlPostStaff').val(),
+                Weight: $('#txtPostWeight').val(),
+                Temperature: $('#txtPostTemp').val(),
+                BPSys: $('#txtPostBPSys').val(),
+                BPDias: $('#txtPostBPDias').val(),
+                Pulse: $('#txtPostPulse').val(),
+                Comments: $('#txtPostComments').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "DialysisForm.aspx/SavePostDialysis",
+                data: JSON.stringify({ data: JSON.stringify(data) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d === 'success') {
+                        $('#step3Nav').addClass('completed');
+                        updateStepSummary();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: isEditMode ? 'Dialysis form updated successfully' : 'Dialysis form completed successfully',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Error saving data: ' + response.d,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                }
+            });
         }
         
     </script>
