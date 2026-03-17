@@ -799,6 +799,7 @@ function sanitizePrId(val) {
 function LoadPOItemDetail(PO_ID) {
     console.time('LoadPOItemDetail');
     $('#tblItemDescription tbody').empty();
+    
     PageMethods.LoadPOItemDetail(PO_ID,
         function (resp) {
             var data = (typeof resp === "string") ? JSON.parse(resp) : resp;
@@ -807,11 +808,14 @@ function LoadPOItemDetail(PO_ID) {
                 $('#btnSave').val('Update');
                 return;
             }
+            
             console.log('Loading ' + data.length + ' PO items...');
+            
             // Build ALL rows in memory FIRST
             var rowsHTML = [];
             data.forEach(function (value, key) {
                 var idx = key + 1;
+                
                 // Format date
                 var TrnsDate = "";
                 if (value.Delivery_Date) {
@@ -820,8 +824,10 @@ function LoadPOItemDetail(PO_ID) {
                         TrnsDate = $.datepicker.formatDate('dd M yy', new Date(ms));
                     } catch (e) { TrnsDate = ""; }
                 }
+                
                 var pr_id = sanitizePrId(safeVal(value.pr_id, ""));
-                // Build row with ORIGINAL IDs (critical for calcTotal)
+                
+                // Build row with ORIGINAL IDs
                 var row = '<tr data-index="' + idx + '">' +
                     '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + idx + '" name="txtPRDId" value="' + safeVal(value.PRDetailId, 0) + '" />' + idx + '</td>' +
                     '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + idx + '" value="' + pr_id + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"/>' + pr_id + '</td>' +
@@ -835,16 +841,12 @@ function LoadPOItemDetail(PO_ID) {
                     '<td><input type="text" name="txtRate" style="text-align:right ;width:50px !important;font-size:9px;height:20px" onkeyup="CulculateAmonutWithQty(this)" id="txtRate' + idx + '" value="' + parseFloat(safeVal(value.Rate, 0)).toFixed(2) + '" /></td>' +
                     '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" readonly="readonly" name="txtDisPer" id="txtDisPer' + idx + '" value="' + safeVal(value.Discount_Percentage, 0) + '" /></td>' +
                     '<td style="text-align:right;padding-top: 7px!important;"><input type="text" onkeyup="calcTotal()" value="' + safeVal(value.Discount_Amount, 0) + '" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + idx + '" name="txtDisAmount"></input></td>' +
-                    // SalTax dropdown (options populated by FillStaxtype)
-                    '<td><select id="ddlSTAX' + idx + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlSTAX"><option value="0">0</option></select></td>' +
+                    '<td><select id="ddlSTAX' + idx + '" name="ddlSTAX" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlSTAX"><option value="0">0</option></select></td>' +
                     '<td style="padding-top: 7px!important;"><input type="text" style="text-align:right!important;width:50px !important;font-size:9px;height:20px;" readonly="readonly" value="" id="txtSalAmount' + idx + '" name="txtSalAmount"></input></td>' +
-                    // FurtherTax as text input
-                    '<td><input type="text" id="ddlFurtherTax' + idx + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Percentage, 0) + '" /></td>' +
+                    '<td><input type="text" id="ddlFurtherTax' + idx + '" name="ddlFurtherTax" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Percentage, 0) + '" /></td>' +
                     '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.FurtherTax_Amount, 0) + '" id="txtFurtherTaxAmount' + idx + '" name="txtFurtherTaxAmount"></td>' +
-                    // Fed dropdown (hidden)
-                    '<td style="display:none;"><select id="ddlFed' + idx + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option>' + (typeof optionsList !== 'undefined' ? optionsList : "") + '</select></td>' +
-                    // AdvanceTax dropdown (options populated by FillAdvancetaxtype)
-                    '<td><select id="ddlAdvanceTax' + idx + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"><option value="0">0</option></select></td>' +
+                    '<td style="display:none;"><select id="ddlFed' + idx + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 9px;" ><option value="0">0</option>' + (typeof optionsList !== 'undefined' ? optionsList : "") + '</select></td>' +
+                    '<td><select id="ddlAdvanceTax' + idx + '" name="ddlAdvanceTax" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" class="ddlAdvanceTax"><option value="0">0</option></select></td>' +
                     '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="" id="txtAdvanceTaxAmount' + idx + '" name="txtAdvanceTaxAmount"></td>' +
                     '<td style="padding-top: 7px!important;display:none;"><input type="hidden" value="' + safeVal(value.Fed_Percentage, 0) + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" id="txtFedAmount' + idx + '" name="txtFedAmount"></input></td>' +
                     '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.Bonus_Tax, 0)).toFixed(2) + '" id="txtBonusAmount' + idx + '" name="txtBonusAmount" /></td>' +
@@ -854,73 +856,84 @@ function LoadPOItemDetail(PO_ID) {
                     '</tr>';
                 rowsHTML.push(row);
             });
-            // ⚡ SINGLE DOM insertion (performance)
+            
+            // SINGLE DOM insertion
             $('#tblItemDescription tbody').html(rowsHTML.join(''));
             console.log('DOM rendered, populating dropdowns...');
-            // 🎯 Populate dropdowns for each row + set values
-            data.forEach(function (value, key) {
-                var idx = key + 1;
-                // Populate Sales Tax
-                populateTaxddl(idx);
-                
-                // Populate Advance Tax WITH CALLBACK to ensure value sets after options load
-                populateAdvanceTaxddl(idx, function() {
-                    // AdvanceTax Value Setting (Inside Callback for reliability)
-                    var advTaxId = safeVal(value.AdvanceTax_ID, "0") + "";
-                    var $ddlAdv = $('#ddlAdvanceTax' + idx);
-                    if ($ddlAdv.find('option[value="' + advTaxId + '"]').length > 0) {
-                        $ddlAdv.val(advTaxId);
-                        $('#txtAdvanceTaxAmount' + idx).val(safeVal(value.AdvanceTax_Amount, 0));
-                    } else {
-                        $ddlAdv.val("0");
-                        $('#txtAdvanceTaxAmount' + idx).val("0");
-                    }
-                    // Trigger change for calculations (only if non-zero)
-                    if (advTaxId != "0" && $ddlAdv.val() == advTaxId) {
-                        setTimeout(function() { $ddlAdv.trigger('change'); }, 50);
-                    }
-                });
-
-                // Set values AFTER dropdowns populated (with delay) - For Sales Tax & Others
-                setTimeout(function() {
-                    // SalTax
-                    var salTaxId = safeVal(value.SalTax_Id, "0") + "";
-                    var $ddlSTAX = $('#ddlSTAX' + idx);
-                    if ($ddlSTAX.find('option[value="' + salTaxId + '"]').length > 0) {
-                        $ddlSTAX.val(salTaxId);
+            
+            // Set up counters to track when all async operations complete
+            let pendingOperations = data.length * 2; // For both populateTaxddl and populateAdvanceTaxddl
+            let allOperationsComplete = false;
+            
+            function checkAllComplete() {
+                pendingOperations--;
+                if (pendingOperations <= 0 && !allOperationsComplete) {
+                    allOperationsComplete = true;
+                    
+                    // Now set all dropdown values and calculated fields
+                    console.log('All dropdowns populated, setting values...');
+                    
+                    data.forEach(function (value, key) {
+                        var idx = key + 1;
+                        
+                        // Set SalTax dropdown value
+                        var salTaxId = safeVal(value.SalTax_Id, "0") + "";
+                        var $ddlSTAX = $('#ddlSTAX' + idx);
+                        if ($ddlSTAX.find('option[value="' + salTaxId + '"]').length > 0) {
+                            $ddlSTAX.val(salTaxId);
+                        }
                         $('#txtSalAmount' + idx).val(safeVal(value.SalTax_Amount, 0));
-                    } else {
-                        $ddlSTAX.val("0");
-                        $('#txtSalAmount' + idx).val("0");
+                        
+                        // Set AdvanceTax dropdown value
+                        var advTaxId = safeVal(value.AdvanceTax_ID, "0") + "";
+                        var $ddlAdv = $('#ddlAdvanceTax' + idx);
+                        if ($ddlAdv.find('option[value="' + advTaxId + '"]').length > 0) {
+                            $ddlAdv.val(advTaxId);
+                        }
+                        $('#txtAdvanceTaxAmount' + idx).val(safeVal(value.AdvanceTax_Amount, 0));
+                        
+                        // Set other values
+                        $('#ddlFurtherTax' + idx).val(safeVal(value.FurtherTax_Percentage, 0));
+                        $('#txtFurtherTaxAmount' + idx).val(safeVal(value.FurtherTax_Amount, 0));
+                        $('#ddlFed' + idx).val(safeVal(value.FedPercent_Id, 0));
+                        $('#txtBonusAmount' + idx).val(parseFloat(safeVal(value.Bonus_Tax, 0)).toFixed(2));
+                        $('#txtTotalAmount' + idx).val(safeVal(value.Amount, 0));
+                    });
+                    
+                    // Initialize datepickers
+                    $('input[name="txtddate"]').datepicker({
+                        dateFormat: 'dd M yy'
+                    }).attr('readonly', 'readonly');
+                    
+                    // SINGLE calculation call after everything is set
+                    console.log('Running final calcTotal()...');
+                    if (typeof calcTotal === 'function') {
+                        calcTotal();
                     }
                     
-                    // FurtherTax (text)
-                    $('#ddlFurtherTax' + idx).val(safeVal(value.FurtherTax_Percentage, 0));
-                    $('#txtFurtherTaxAmount' + idx).val(safeVal(value.FurtherTax_Amount, 0));
-                    // Fed (hidden)
-                    $('#ddlFed' + idx).val(safeVal(value.FedPercent_Id, 0));
-                    // Other amounts
-                    $('#txtBonusAmount' + idx).val(parseFloat(safeVal(value.Bonus_Tax, 0)).toFixed(2));
-                    $('#txtTotalAmount' + idx).val(safeVal(value.Amount, 0));
-                    // Trigger change for Sales Tax (only if non-zero)
-                    if (salTaxId != "0" && $ddlSTAX.val() == salTaxId) {
-                        setTimeout(function() { $ddlSTAX.trigger('change'); }, 50);
-                    }
-                }, 1000);
-            });
-            // 📅 Initialize datepickers
-            $('input[name="txtddate"]').datepicker({
-                dateFormat: 'dd M yy'
-            }).attr('readonly', 'readonly');
-            // 🧮 Final calculation after all async operations
-            setTimeout(function() {
-                if (typeof calcTotal === 'function') {
-                    console.log('Running final calcTotal()...');
-                    calcTotal();
+                    $('#btnSave').val('Update');
+                    console.timeEnd('LoadPOItemDetail');
                 }
-            }, 300);
-            $('#btnSave').val('Update');
-            console.timeEnd('LoadPOItemDetail');
+            }
+            
+            // Populate dropdowns for all rows
+            data.forEach(function (value, key) {
+                var idx = key + 1;
+                
+                // Populate tax dropdown
+                populateTaxddl(idx);
+                
+                // Populate advance tax dropdown with callback
+                populateAdvanceTaxddl(idx, function() {
+                    checkAllComplete();
+                });
+                
+                // For populateTaxddl, we need to know when it's done
+                // If it's synchronous, call checkAllComplete immediately
+                // If it's async, modify populateTaxddl to accept a callback
+                setTimeout(checkAllComplete, 100); // Fallback timeout
+            });
+            
         },
         function (error) {
             console.timeEnd('LoadPOItemDetail');
@@ -928,7 +941,19 @@ function LoadPOItemDetail(PO_ID) {
         }
     );
 }
+
+// Helper function to modify populateTaxddl to accept a callback
+// Modify your existing populateTaxddl function or create a new one
+function populateTaxddlWithCallback(index, callback) {
+    // Your existing populateTaxddl logic
+    populateTaxddl(index);
+    
+    // If populateTaxddl is synchronous, call callback immediately
+    if (callback) setTimeout(callback, 50);
+}
         function httpGet(theUrl) {
+     
+            
             var xmlHttp = null;
             xmlHttp = new XMLHttpRequest();
             xmlHttp.open("GET", theUrl, false);
