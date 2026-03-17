@@ -6069,6 +6069,15 @@
                     }, 1500); 
                 }
 
+                $("#ddl_name").change(function () {
+                    var map = {
+                        "Mr.": "S/O",
+                        "Mrs.": "W/O",
+                        "Ms.": "D/O"
+                    };
+
+                    $("#ddlRelation").val(map[$(this).val()]);
+                });
 
             });  // document.ready ends
 

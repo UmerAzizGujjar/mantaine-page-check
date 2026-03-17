@@ -6032,7 +6032,7 @@
 
         function NewEMR() {
             var regId = $('#<%= hdfPatient_ID.ClientID %>').val();
-            var url = "/Modules/Dashboards/NewEMR.aspx";
+            var url = '<%= ResolveUrl("~/Modules/Dashboards/NewEMR.aspx") %>';
             if (regId && regId != '(New)' && regId != '') {
                 url += "?RegID=" + regId;
             }

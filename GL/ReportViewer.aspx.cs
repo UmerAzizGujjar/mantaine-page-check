@@ -3736,6 +3736,9 @@ namespace PMS
                 rd.SetParameterValue("@StartDate", StartDateTime);
                 rd.SetParameterValue("@EndDate", EndDateTime);
                 rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("@StartDate", StartDateTime, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@EndDate", EndDateTime, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
             else if (reportName == "Item_Wise_Gross_Profit")
