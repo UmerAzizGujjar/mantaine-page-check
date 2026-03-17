@@ -70,7 +70,7 @@
                         "data": "Created_Date", "name": "Created_Date",
                         "render": function (data, type, full) {
                             debugger;
-                            var date = full.Invoice_Date;
+                            var date = full.Created_Date;
                             date = moment(date).format('DD-MMM-YYYY');
                             return date;
                         }, "width": "15%"

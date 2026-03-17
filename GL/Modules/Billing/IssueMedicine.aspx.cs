@@ -1110,7 +1110,7 @@ namespace PMS
             saleReturn.TotalDisc_Amount = record.TotalDisAmt;
             saleReturn.Disc_Adjustment = record.AdjustmentAmt;
             saleReturn.Net_Amount = record.Total;
-            //saleReturn.Ware_House = "008";
+        
             saleReturn.Ware_House = record.warehouse;
             saleReturn.Total_Amount = record.TotalPayable;
             saleReturn.Company_ID = AppConfig.Company_ID;

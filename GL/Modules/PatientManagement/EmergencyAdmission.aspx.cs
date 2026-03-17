@@ -43,7 +43,7 @@ namespace PMS.Modules.PatientManagement
                                             Patient_Name = p.Full_Name ?? "",
                                             Age = p.Age_years ?? "",
                                             Created_Time = e.Created_Time,
-                                            Status = e.Status ?? "Pending",
+                                            Status = e.Admitted_Status ?? "Pending",
                                             Patient_ID = e.Reg_PatId
                                         }).ToList();
 
@@ -66,7 +66,7 @@ namespace PMS.Modules.PatientManagement
                     var emergency = db.Emergencies.FirstOrDefault(e => e.Emer_id == Emergency_ID);
                     if (emergency != null)
                     {
-                        emergency.Status = status;
+                        emergency.Admitted_Status = status;
                         db.SubmitChanges();
                         return "Success";
                     }
@@ -160,7 +160,7 @@ namespace PMS.Modules.PatientManagement
                     var emergency = db.Emergencies.FirstOrDefault(e => e.Emer_id == data.Emergency_ID);
                     if (emergency != null)
                     {
-                        emergency.Status = "Admitted";
+                        emergency.Admitted_Status = "Admitted";
                         db.SubmitChanges();
                     }
 
@@ -370,60 +370,110 @@ namespace PMS.Modules.PatientManagement
         public class Beds
         {
             public int WardID { get; set; }
-            public int PatientNo { get; set; }
+            public string PatientNo { get; set; }
             public int BedNo { get; set; }
+            public string Full_Name { get; set; }
+            public DateTime? AdmissionDate { get; set; }
         }
-
         [WebMethod]
         public static string FillWardBeds(int WardID)
         {
-            try
+            if (WardID <= 0)
             {
-                List<Beds> bdsList = new List<Beds>();
-                if (WardID > 0)
+                return new JavaScriptSerializer().Serialize(new List<Beds>());
+            }
+            List<Beds> bdsList = new List<Beds>();
+            if (WardID > 0)
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                int Beds = (int)(from bds in db.Ward_Definitions
+                                 where bds.Ward_ID == WardID
+                                 select bds.No_Of_Beds
+                            ).SingleOrDefault();
+
+                List<Ward_Allocation> Ward_AllocationList = db.Ward_Allocations.Where(w => w.Ward_ID == WardID).ToList();
+
+                for (int i = 1; i <= Beds; i++)
                 {
-                    using (DataBaseDataContext db = new DataBaseDataContext())
+                    var patient = (from p in db.Ward_Allocations
+                                   join rp in db.Reg_patients on p.Patient_ID equals rp.pat_id
+                                   where p.Bed_No_Assigned == (int)(i) && p.Ward_ID == WardID && p.IsDischarge == false
+                                   select new { p.Patient_ID, rp.mr_no_sequence, rp.Full_Name }).FirstOrDefault();
+
+                    Beds b = new Beds();
+                    b.BedNo = i;
+                    b.WardID = WardID;
+
+                    if (patient != null)
                     {
-                        int Beds = (int)(from bds in db.Ward_Definitions
-                                        where bds.Ward_ID == WardID
-                                        select bds.No_Of_Beds).SingleOrDefault();
-
-                        for (int i = 1; i <= Beds; i++)
-                        {
-                            var patID = (from p in db.Ward_Allocations
-                                        where p.Bed_No_Assigned == i && p.Ward_ID == WardID && p.IsDischarge == false
-                                        select p.Patient_ID).FirstOrDefault();
-
-                            if (patID == null)
-                            {
-                                patID = 0;
-                            }
-                            else
-                            {
-                                patID = (from p in db.Reg_patients
-                                        where p.pat_id == patID
-                                        select p.Patient_No).FirstOrDefault();
-                            }
-
-                            if (patID == null)
-                            {
-                                patID = 0;
-                            }
-
-                            Beds b = new Beds();
-                            b.BedNo = i;
-                            b.PatientNo = (int)patID;
-                            b.WardID = WardID;
-                            bdsList.Add(b);
-                        }
+                        b.PatientNo = patient.mr_no_sequence;
+                        b.Full_Name = patient.Full_Name;
+                        b.AdmissionDate = (from ip in db.In_Patients
+                                           where ip.Patient_ID == patient.Patient_ID
+                                           select (DateTime?)ip.Admission_Date).FirstOrDefault();
                     }
+                    else
+                    {
+                        b.PatientNo = "0";
+                        b.Full_Name = "";
+                        b.AdmissionDate = null;
+                    }
+
+                    bdsList.Add(b);
                 }
-                return new JavaScriptSerializer().Serialize(bdsList);
             }
-            catch (Exception ex)
-            {
-                return new JavaScriptSerializer().Serialize(new { error = ex.Message });
-            }
+            return (new JavaScriptSerializer().Serialize(bdsList));
         }
+        //[WebMethod]
+        //public static string FillWardBeds(int WardID)
+        //{
+        //    try
+        //    {
+        //        List<Beds> bdsList = new List<Beds>();
+        //        if (WardID > 0)
+        //        {
+        //            using (DataBaseDataContext db = new DataBaseDataContext())
+        //            {
+        //                int Beds = (int)(from bds in db.Ward_Definitions
+        //                                where bds.Ward_ID == WardID
+        //                                select bds.No_Of_Beds).SingleOrDefault();
+
+        //                for (int i = 1; i <= Beds; i++)
+        //                {
+        //                    var patID = (from p in db.Ward_Allocations
+        //                                where p.Bed_No_Assigned == i && p.Ward_ID == WardID && p.IsDischarge == false
+        //                                select p.Patient_ID).FirstOrDefault();
+
+        //                    if (patID == null)
+        //                    {
+        //                        patID = 0;
+        //                    }
+        //                    else
+        //                    {
+        //                        patID = (from p in db.Reg_patients
+        //                                where p.pat_id == patID
+        //                                select p.Patient_No).FirstOrDefault();
+        //                    }
+
+        //                    if (patID == null)
+        //                    {
+        //                        patID = 0;
+        //                    }
+
+        //                    Beds b = new Beds();
+        //                    b.BedNo = i;
+        //                    b.PatientNo = (int)patID;
+        //                    b.WardID = WardID;
+        //                    bdsList.Add(b);
+        //                }
+        //            }
+        //        }
+        //        return new JavaScriptSerializer().Serialize(bdsList);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new JavaScriptSerializer().Serialize(new { error = ex.Message });
+        //    }
+        //}
     }
 }

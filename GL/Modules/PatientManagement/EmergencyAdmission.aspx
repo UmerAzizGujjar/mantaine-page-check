@@ -27,6 +27,7 @@
         var currentEmergencyPatientID = 0;
 
         $(document).ready(function () {
+           
             // Initialize date and time fields with current date/time
             var now = new Date();
             var dateStr = now.toISOString().split('T')[0];
@@ -43,6 +44,9 @@
             var emergencyPatientID = urlParams.get('Emergency_ID');
             if (emergencyPatientID) {
                 loadAdmissionForEdit(parseInt(emergencyPatientID));
+            }
+            else {
+                openEmergencyWaitingListModal()
             }
 
             // Setup search functionality for waiting list
@@ -211,7 +215,69 @@
             });
         }
 
+
         function handleStatusChange(selectElement) {
+            debugger;
+
+
+            var status = $(selectElement).val();
+            var emergencyID = $(selectElement).data('emergency-id');
+            var patientID = $(selectElement).data('patient-id');
+
+            currentEmergencyID = emergencyID;
+            currentPatientID = patientID;
+            $('#hiddenPatientID').val(patientID);
+
+            // Always load patient info
+            PageMethods.GetPatientInfo(emergencyID, function (response) {
+
+                var patientData = JSON.parse(response);
+
+                if (patientData.error) {
+                    Swal.fire('Error', 'Error loading patient info: ' + patientData.error, 'error');
+                    return;
+                }
+
+                // Populate patient card
+                $('#<%= vlblPatients_Name.ClientID %>').text(patientData.Patient_Name || '');
+                     $('#<%= Label200.ClientID %>').text(patientData.MR_No || '');
+                     $('#<%= Label1.ClientID %>').text(patientData.Emergency_No || '');
+                     $('#<%= vLbl_Age.ClientID %>').text(patientData.Age || '');
+                     $('#<%= vLbl_Contact.ClientID %>').text(patientData.Contact || '');
+
+                     // Status logic
+                     if (status === 'Admitted') {
+
+                         $('#EmergencyWaitingListModal').modal('hide');
+                         $("#btnSave").prop("disabled", false);
+
+                         Swal.fire('Success', 'Patient selected for admission', 'success');
+
+                     } else if (status === 'NotAdmitted') {
+                         $('#EmergencyWaitingListModal').modal('hide');
+                         $("#btnSave").attr("disabled", true);
+
+                         PageMethods.UpdateEmergencyStatus(emergencyID, 'NotAdmitted', function (response) {
+
+                             if (response.indexOf('Success') >= 0) {
+                                 Swal.fire('Info', 'Patient info loaded but cannot save because patient is Not Admitted', 'info');
+                             } else {
+                                 Swal.fire('Error', response, 'error');
+                             }
+
+                         }, function (error) {
+                             Swal.fire('Error', 'Error updating status', 'error');
+                             console.error(error);
+                         });
+                     }
+
+                 }, function (error) {
+                     Swal.fire('Error', 'Error loading patient info', 'error');
+                     console.error(error);
+                 });
+        }
+
+<%--        function handleStatusChange(selectElement) {
             var status = $(selectElement).val();
             var emergencyID = $(selectElement).data('emergency-id');
             var patientID = $(selectElement).data('patient-id');
@@ -259,7 +325,65 @@
                     console.error(error);
                 });
             }
-        }
+        }--%>
+
+
+
+<%--        function handleStatusChange(selectElement) {
+            var status = $(selectElement).val();
+            var emergencyID = $(selectElement).data('emergency-id');
+            var patientID = $(selectElement).data('patient-id');
+
+
+
+            PageMethods.UpdateEmergencyStatus(emergencyID, status, function (response) {
+                if (response.indexOf('Success') >= 0) {
+                    Swal.fire('Success', 'Status updated to Not Admitted', 'success');
+                    PageMethods.GetPatientInfo(emergencyID, function (response) {
+                        var patientData = JSON.parse(response);
+                        if (patientData.error) {
+                            Swal.fire('Error', 'Error loading patient info: ' + patientData.error, 'error');
+                            return;
+                        }
+
+                        // Populate patient card
+                         $('#<%= vlblPatients_Name.ClientID %>').text(patientData.Patient_Name || '');
+                         $('#<%= Label200.ClientID %>').text(patientData.MR_No || '');
+                         $('#<%= Label1.ClientID %>').text(patientData.Emergency_No || '');
+                         $('#<%= vLbl_Age.ClientID %>').text(patientData.Age || '');
+                         $('#<%= vLbl_Contact.ClientID %>').text(patientData.Contact || '');
+
+                       // Swal.fire('Success', 'Selected Patient Data Loaded  ', 'success');
+
+                        if (status === 'Admitted') {
+                            
+                            $('#EmergencyWaitingListModal').modal('hide');
+                            Swal.fire('Success', 'Selected Patient Data Loaded  ', 'success');
+                            // Load patient info and populate patient card
+                            currentEmergencyID = emergencyID;
+                            currentPatientID = patientID;
+                            $('#hiddenPatientID').val(patientID);
+
+
+
+                        } else if (status === 'NotAdmitted') {
+                            // Update status in Emergency table only
+                            Swal.fire('Success', 'Selected Patient Data Loaded But You can t Save As The Patient Not Admit ', 'success');
+                            $("#btnSave").attr("disabled", true);
+                        }
+
+                     }, function (error) {
+                         Swal.fire('Error', 'Error loading patient info', 'error');
+                         console.error(error);
+                     });
+                } else {
+                    Swal.fire('Error', response, 'error');
+                }
+            }, function (error) {
+                Swal.fire('Error', 'Error updating status', 'error');
+                console.error(error);
+            });
+        }--%>
 
         function SaveAdmission() {
             if (currentEmergencyID === 0) {
@@ -386,8 +510,44 @@
                 console.error(error);
             });
         }
+        function SelectBed(WardID, BedNo) {
+            $('#ctl00_MainContent_txtBed_No').val("");
+            $('#ctl00_MainContent_txtBed_No').val(BedNo);
+        }
+
+        function SelectBedRefer(WardID, BedNo) {
+            $('#ctl00_MainContent_txtBedno').val("");
+            $('#ctl00_MainContent_txtBedno').val(BedNo);
+        }
 
         function FillWardBeds() {
+            PageMethods.FillWardBeds($('#ctl00_MainContent_ddlWard_No').find('option:selected')[0].value, function (res) {
+                $('#ctl00_MainContent_txtBed_No').val("");
+                var WardBeds = JSON.parse(res);
+                var rows = '';
+                $.each(WardBeds, function (key, value) {
+                    //let blinkClass = "";
+
+                    //if (value.AdmissionDate) {
+                    //    let admDate = new Date(parseInt(value.AdmissionDate.replace('/Date(', '').replace(')/', '')));
+                    //    let diffHours = (new Date() - admDate) / (1000 * 60 * 60);
+                    //    if (diffHours > 240) {
+                    //        blinkClass = "blink";
+                    //    }
+                    //}
+                    if (value.PatientNo == 0) {
+                        rows += '<tr> <td> Available</td><td> <a  onclick="SelectBed(' + value.WardID + ',' + value.BedNo + ')" style="color:Green"> ' + value.BedNo + ' </a> </td></tr>';
+                    }
+                    else {
+                        rows += '<tr> <td>' + value.PatientNo + ' - ' + value.Full_Name + '</td><td><font color="red">' + value.BedNo + '</font></td></tr>';
+                    }
+                });
+                $('#tblWards tbody tr').remove();
+                $('#tblWards tbody').html(rows);
+            });
+        }
+
+      <%--function FillWardBeds() {
             var wardID = $('#<%= ddlWard_No.ClientID %>').val();
             if (!wardID || wardID === '0') {
                 $('#tblWards tbody').empty();
@@ -409,14 +569,14 @@
                     var rowClass = bed.PatientNo > 0 ? 'table-danger' : 'table-success';
                     var row = '<tr class="' + rowClass + '">' +
                         '<td>' + mrNo + '</td>' +
-                        '<td>' + bed.BedNo + '</td>' +
+                        '<td><a  onclick="SelectBed(' + bed.WardID + ',' + bed.BedNo + ')"> ' + bed.BedNo + '</td>' +
                         '</tr>';
                     tbody.append(row);
                 });
             }, function (error) {
                 console.error('Error:', error);
             });
-        }
+        }--%>
 
         function checkPatientCondition(element) {
             // Can add custom logic for triage area selection if needed
@@ -545,7 +705,7 @@
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12">
             <asp:Label CssClass="form-label" ID="LblBed_No" runat="server" Text="Bed No"></asp:Label>
-            <asp:TextBox ID="txtBed_No" CssClass="form-control-custom" TabIndex="8" runat="server" Enabled="true"></asp:TextBox>
+            <asp:TextBox ID="txtBed_No" CssClass="form-control-custom" TabIndex="8" runat="server"  Enabled="false"></asp:TextBox>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12">
             <asp:Label CssClass="form-label required" ID="lblWard_No" runat="server" Text="Ward"></asp:Label>

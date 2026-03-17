@@ -18,7 +18,9 @@
         localStorage.IsDischarge = 0;
 
         $(document).ready(function () {
+            $('#OtherDetails').hide();
             $('#deathtab').hide();
+            
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_txtCNIC'),
                 format: '_____-_______-_',
@@ -78,17 +80,23 @@
                     selectPatient(Reg_ID);
 
                 }, 1000);
-            } else {
+            } 
+            else {
+               
             }
             var Emergency_id = '<%= Request.QueryString["ID"] %>';
             if (Emergency_id != "") {
                 AllowEmergencyEdit();
+            }
+            if(Reg_ID == "" && Emergency_id == ""){
+                 OpenModal()
             }
 
             AllowDiscountEdit();
             fillmartial();
             fillgender();
             AllowEMRGTabs();
+            LoadInvestigationDoctor();
 
 
             jQuery(function ($) {
@@ -128,6 +136,7 @@
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").select2();
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr2").select2();
             $("#ctl00_MainContent_ddlDoctor").select2();
+            $("#ddlInvestigationDoctor").select2();
             $("#ctl00_MainContent_ddlCallToDoctor").select2();
             $("#ctl00_MainContent_ddlDischarge_By").select2();
             $("#ctl00_MainContent_ddl_Department").select2();
@@ -241,6 +250,7 @@
                 }
             }, 1500);
             LoadCategory();
+            
 
             $("#txtSearch").keyup(function (event) {
 
@@ -268,7 +278,7 @@
                     tabsEmr = data.d;
 
                     if (tabsEmr == "true") {
-                        $('#ui-id-1').show();
+                        $('#ui-id-1').hide();
                         $('#ui-id-11').show();
                         $('#ui-id-2').hide();
                         $('#ui-id-3').hide();
@@ -281,7 +291,7 @@
                         $('#ui-id-10').hide();
                     }
                     else {
-                        $('#ui-id-1').show();
+                        $('#ui-id-1').hide();
                         $('#ui-id-2').show();
                         $('#ui-id-3').show();
                         $('#ui-id-4').show();
@@ -1378,24 +1388,24 @@
 
             var btnsave = $('#btnSave').val();
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
-            var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
-            var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
-            var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
+           // var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
+            //var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
+            //var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
             var ddlCallToDoctor = $('#ctl00_MainContent_ddlCallToDoctor').val();
 
             var ReferToOPD = $('#<%= ReferToOPD.ClientID %>').is(':checked');
 
             /*var ReferToOPD = $('#ReferToOPD').is(':checked');*/
             var txtHealth_Complaints = "";
-            var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
-            var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
+           // var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
+            //var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
 
             var patienttype = $("#ctl00_MainContent_vLbl_Patient_Type").text();
 
             ////
-            var patientcateg = $("#ctl00_MainContent_ddlCategory").val();
+            //var patientcateg = $("#ctl00_MainContent_ddlCategory").val();
 
-            var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
+            //var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
 
             var BP_mm_Hg = $('#ctl00_MainContent_txtBP').val();
             var Temp_C = $('#ctl00_MainContent_txtTemp').val();
@@ -1730,10 +1740,10 @@
             var ddlDischarge_By = $('#ctl00_MainContent_ddlDischarge_By').val();
             var txtDischarge_On = $('#ctl00_MainContent_txtDischarge_On').val();
             var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
-            var ddlPatientCondition = $("#ctl00_MainContent_ddlPatientCondition").val();
-            if (ddlPatientCondition == "0" || ddlPatientCondition == 'undefined' || ddlPatientCondition == " " || ddlPatientCondition == null) {
-                ddlPatientCondition = "01";
-            }
+            //var ddlPatientCondition = $("#ctl00_MainContent_ddlPatientCondition").val();
+            //if (ddlPatientCondition == "0" || ddlPatientCondition == 'undefined' || ddlPatientCondition == " " || ddlPatientCondition == null) {
+            //    ddlPatientCondition = "01";
+            //}
 
 
             if (txtNext_Visit == "")
@@ -1776,7 +1786,7 @@
             var FollowUpPlanInstructions = $("#ctl00_MainContent_txtFollowUpPlanInstructions").val();
             var CauseOfReferral = $("#ctl00_MainContent_txtCauseOfReferral").val();
             var ReferredTo = $("#ctl00_MainContent_ddlReferredTo").val();
-            var TreatmentTime = $("#ctl00_MainContent_txtTreatmentTime").val();
+           // var TreatmentTime = $("#ctl00_MainContent_txtTreatmentTime").val();
 
             var CallingDoctorDepartment = $("#ctl00_MainContent_ddl_Department").val();
             var CallingDoctorMobile = $("#ctl00_MainContent_txtMobileNo").val();
@@ -1927,12 +1937,14 @@
             var Special_Instruction_Desc = $('#ctl00_MainContent_txtRN_Special_Instruction_Desc').val();
             var Receiving_DateDesc = $('#ctl00_MainContent_txttxtReceiving_DateDesc').val();
             var remrks_call_to_doc = $('#ctl00_MainContent_txtCallToDoctor').val();
-            var discount = $('#ctl00_MainContent_txtDiscount').val();
-            var Remarks = $('#ctl00_MainContent_txt_remarks').val();
+            //var discount = $('#ctl00_MainContent_txtDiscount').val();
+            //var Remarks = $('#ctl00_MainContent_txt_remarks').val();
 
+
+            // TreatmentTime,txtAdmission_Date, ddlDepartment, ddlDoctor, ddlWard_No, txtBed_No, discount,patientcateg, Remarks,ddlIssuance_Of,ddlPatientCondition,
 
             var ID = '<%= Request.QueryString["ID"]%>';
-            PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlDepartment, ddlDoctor, ddlCallToDoctor, txtHealth_Complaints, ddlIssuance_Of, ddlWard_No, txtBed_No, RateBeats, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory, txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb, DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane, DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit, ddlPatientCondition, txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo, TreatmentTime, CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD, discount,patientcateg, Remarks,
+            PageMethods.SaveRecord(Patient_ID, btnsave,  ddlCallToDoctor, txtHealth_Complaints,  RateBeats, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory, txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb, DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane, DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit,  txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo,  CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD,
                 function (response) {
                     debugger;
 
@@ -2004,7 +2016,7 @@
 
         }
         function GetInvestigationTab() {
-            var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
+            var doctor = $('#ddlInvestigationDoctor').val();
             if (doctor == "0" || doctor == null) {
                 alert("Please Select Doctor Name..")
             }
@@ -2046,13 +2058,13 @@
 
         function InsertDoctorNote() {
 
-            var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
+            var doctor = $('#ddlInvestigationDoctor').val();
             if (doctor == "0" || doctor == null) {
                 alert("Please Select Doctor Name..")
             }
             else {
                 var Date = $('#ctl00_MainContent_txtMo_Date').val();
-                var doctorVal = $('#ctl00_MainContent_ddlMo_Doctor_Name').find('option:selected').val();
+                var doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
                 var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').find('option:selected').text();
                 var DoctorStatusVal = $('#ctl00_MainContent_ddlMO_Doctor_Status').find('option:selected').val();
                 var DoctorStatus = $('#ctl00_MainContent_ddlMO_Doctor_Status').find('option:selected').text();
@@ -2095,7 +2107,7 @@
             $('#tblInstruction tbody').append(rows);
         }
         function GetLastMediceineTab() {
-            var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
+            var doctor = $('#ddlInvestigationDoctor').val();
             if (doctor == "0" || doctor == null) {
                 alert("Please Select Doctor Name..")
             }
@@ -3332,7 +3344,7 @@
                 }
 
                 PageMethods.SaveWardInformation(btnsave, PatID, EmergencyID, ddlWard_No, txtBed_No, ddlDoctor, DichargChk, function (response) {
-                    SaveMedicines();
+                    
                 });
             }
             else {
@@ -3432,20 +3444,22 @@
                            var bedNo = $('#ctl00_MainContent_txtBed_No').val();
                            bedNo = bedNo ? bedNo.trim() : "";
 
-                           if (bedNo == "") {
-                               alert("Please Select Bed No");
-                               return false;
-                           }
-                           SaveWard();
+                           //if (bedNo == "") {
+                           //    alert("Please Select Bed No");
+                           //    return false;
+                           //}
+                           //SaveWard();
+                           SaveMedicines();
                        }
                    }
                    else if (ddlIssuance_Of == "002") {
                        var roomNo = $('#ctl00_MainContent_ddlRoom_No').val();
-                       if (roomNo == "0" || roomNo == "") {
-                           alert("Please Select Room No");
-                           return false;
-                       }
-                       SaveRoom(); // Make sure this is called only when valid
+                       //if (roomNo == "0" || roomNo == "") {
+                       //    alert("Please Select Room No");
+                       //    return false;
+                       //}
+                       SaveRoom();
+                       SaveMedicines();// Make sure this is called only when valid
                    }
                    else {
                        // Handle unexpected ddlIssuance_Of values
@@ -4120,6 +4134,8 @@
                     LoadHistory();
                     $('#tblRoomsHistory').show();
                     $('#tblWardHistory').show();
+                    $('#ui-id-15').hide();
+                    $('#Tab-5').hide();
                 }
                 else {
                     checkRepeateRecord = true;
@@ -4218,6 +4234,34 @@
             });
 
         }
+        function LoadInvestigationDoctor() {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/GetInvestigationDoctor",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var doctor = JSON.parse(response.d);
+                    var options = '<option value=""> Please Select </option>';
+
+                    $.each(doctor, function (key, value) {
+                        options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                    });
+
+                    $('#ddlInvestigationDoctor').html(options);
+                    $('#ddlInvestigationDoctor').select2();
+
+
+
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+
+        }
         function AddBloodTest() {
 
             var test = $('#ddlTestList').find('option:selected').text();
@@ -4236,8 +4280,8 @@
                     var row;
                     var test_array;
 
-                    doctorVal = $('#ctl00_MainContent_ddlDoctor').find('option:selected').val();
-                    doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
+                    doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
+                    doctor = $('#ddlInvestigationDoctor').find('option:selected').text();
 
                     if (doctorVal == 0 || doctorVal == undefined) {
                         alert("Please Select Doctor")
@@ -4280,8 +4324,8 @@
                     var doctorVal;
                     var doctor;
 
-                    doctorVal = $('#ctl00_MainContent_ddlDoctor').find('option:selected').val();
-                    doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
+                    doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
+                    doctor = $('#ddlInvestigationDoctor').find('option:selected').text();
 
 
                     if (doctorVal == 0 || doctorVal == undefined) {
@@ -4341,8 +4385,8 @@
                     var doctor;
 
 
-                    doctorVal = $('#ctl00_MainContent_ddlDoctor').find('option:selected').val();
-                    doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
+                    doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
+                    doctor = $('#ddlInvestigationDoctor').find('option:selected').text();
 
 
                     if (doctorVal == 0 || doctorVal == undefined) {
@@ -4377,8 +4421,8 @@
                 doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').find('option:selected').text();
             }
             else {
-                doctorVal = $('#ctl00_MainContent_ddlDoctor').find('option:selected').val();
-                doctor = $('#ctl00_MainContent_ddlDoctor').find('option:selected').text();
+                doctorVal = $('#ddlInvestigationDoctor').find('option:selected').val();
+                doctor = $('#ddlInvestigationDoctor').find('option:selected').text();
             }
 
             if (doctorVal == 0 || doctorVal == undefined) {
@@ -5457,6 +5501,7 @@
             });
         }
         function OnSuccess(data) {
+            debugger;
             if (data.d != '') {
 
                 if (data.d.PatientType == null)
@@ -5470,11 +5515,19 @@
                 $('#<%= vLbl_RegDate.ClientID %>').text(dateR);
                 $('#<%= vLbl_Adress.ClientID %>').text(data.d.Address);
                 $('#<%= vLbl_Contact.ClientID %>').text(data.d.Mobile);
-
                 $('#<%= vLbl_Patient_Type.ClientID %>').text(data.d.PatientType);
-
-
                 $('#<%= vLbl_Patient_AdmitCatagory.ClientID %>').text(data.d.Type);
+                var status = data.d.Admitted_Status
+                if (status == "Admitted") {
+                    $("#Tab-15").show()
+                    $('#ui-id-11').hide();
+                    $('#ui-id-10').hide();
+                }
+                else {
+                    $("#Tab-15").hide()
+                    $('#ui-id-11').hide();
+                    $('#ui-id-10').hide();
+                }
             }
         }
         function loadtokenInputs(data) {
@@ -5545,7 +5598,7 @@
             ClearPatientResults();
 
             for (var i = 0; i < data.length; i++) {
-                AddPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Full_Name, data[i].NIC, data[i].Mobile1, data[i].Father_Name);
+                AddPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Emergency_No, data[i].Full_Name, data[i].Father_Name, data[i].NIC, data[i].Mobile1,  data[i].Admitted_Status, data[i].Emer_id);
             }
         }
 
@@ -5559,7 +5612,7 @@
             alert(exc.get_message());
         }
 
-        function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
+        function AddPatientsResult(Reg_Patient_ID, Patient_No, Emergency_No, Full_Name, Father_Name, NIC, Mobile1,  Admitted_Status, Emer_id) {
             debugger;
             tblLength = tblPatientsResult.rows.length;
             var row = iPatientsBody.insertRow(-1);
@@ -5570,6 +5623,8 @@
             cell = row.insertCell(-1);
             cell.innerHTML = '<span class="HRcontent">' + Patient_No + '</span>';
             cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Emergency_No + '</span>';
+            cell = row.insertCell(-1);
             cell.innerHTML = '<span class="HRcontent">' + Full_Name + '</span>';
             cell = row.insertCell(-1);
             cell.innerHTML = '<span class="HRcontent">' + Father_Name + '</span>';
@@ -5577,6 +5632,8 @@
             cell.innerHTML = '<span class="HRcontent">' + NIC + '</span>';
             cell = row.insertCell(-1);
             cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Admitted_Status + '</span>';
             cell = row.insertCell(-1);
             var actions = ''
             actions += '<a style="color:#438eb9 ;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick=AddPatientDetail(' + Reg_Patient_ID + ')><i class="fa fa-plus-circle"></i></a>&nbsp;|&nbsp;&nbsp;';
@@ -5975,7 +6032,7 @@
 
         function NewEMR() {
             var regId = $('#<%= hdfPatient_ID.ClientID %>').val();
-            var url = "/Modules/Dashboards/NewEMR.aspx";
+            var url = '<%= ResolveUrl("~/Modules/Dashboards/NewEMR.aspx") %>';
             if (regId && regId != '(New)' && regId != '') {
                 url += "?RegID=" + regId;
             }
@@ -6025,7 +6082,7 @@
         <div class="col-lg-8 col-md-6 col-sm-12">
             <div class="row">
                 <div class="col-lg-2 col-md-3 col-sm-3">
-                    <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
+                    <input type="button" value="Queue" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-3">
                     <input type="button" value="Refer Admissions" id="btnReferAdmissions" onclick="OpenReferredModal()" class="btn-primry" style="display:none" />
@@ -6056,15 +6113,15 @@
     <div class="modal-dialog">
         <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
             <fieldset style="padding-top: 20px; padding-left: 14px;">
-                <div class="col-lg-3 col-md-4 col-sm-6">                           
+<%--                <div class="col-lg-3 col-md-4 col-sm-6">                           
                 <label id="srchpat">Search Your Patients: </label>
                     <input type="text" id="txtSearch" style="margin-left: 2px;" autocomplete="off" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <label></label>
                     <input type="button" class="btn btn-primry" id="addNewbtn" onclick="addfunc()" value="Add New" />
-                </div>
-                
+                </div>--%>
+                <h2>Emregency Patient List</h2>
             </fieldset>
             <div style="overflow: scroll; height: 460px; padding: 10px;">
                 <table class="table table-hover table-striped table-bordered" id="tblPatientsResult" style="overflow: scroll; height: auto;">
@@ -6072,10 +6129,12 @@
                         <tr>
                             <th style="display: none;">Patient ID</th>
                             <th>MR No</th>
+                            <th>EMR No</th>
                             <th>Patient Name</th>
                             <th>Father Name</th>
                             <th>CNIC</th>
                             <th>Contact No</th>
+                            <th>Admint Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -6499,7 +6558,7 @@
             <div>
                 <div id="tabs" >
                     <ul>
-                        <li><a href="#Tab-1">Admission</a></li>
+                        <li style="display: none" id="Admissiontab"><a href="#Tab-1">Admission</a></li>
                         <li><a href="#Tab-2" >Receiving Note</a></li>
                         <li><a href="#Tab-8">History</a></li>
                         <li><a href="#Tab-9">Examination</a></li>
@@ -6514,7 +6573,7 @@
                       <li><a href="#Tab-3" style="display: none">Operations</a></li>                     
                     </ul>
 
-<div id="Tab-1" class="container-fluid">
+<div id="Tab-1" class="container-fluid" >
     <div id="OtherDetails">
         <div class="row">
             <h2 class="Heading">Admission Details:</h2>
@@ -7347,6 +7406,10 @@
                                 <option value="R">Right</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select id="ddlInvestigationDoctor" class="form-control">
+                        </select>
                     </div>
                     <div class="col-md-2">
                         <asp:TextBox ID="txtAreaOfInterest" Style="width: 100% !important; height: 35px !important" placeholder="Area of Intrest" runat="server" TextMode="MultiLine" class="form-control"></asp:TextBox>
