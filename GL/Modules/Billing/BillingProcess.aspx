@@ -2058,6 +2058,7 @@
                 var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
 
 
                 var category = $('#ddlMainTestDepartment').val();
@@ -2745,6 +2746,7 @@
                     var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                     var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                     var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                    var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
                     debugger;
                     $('#txtTotalAmount').val(Net_Amt);
                     $('#txtTotalPayable').val(Net_Amt);
@@ -3417,6 +3419,7 @@
                 var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
                 var AmtReceived = $('#txtAmountReceived').val();
 
                 var Totalpayable = 0;
@@ -4435,6 +4438,7 @@
                 var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
                 var TotalNetAmount = parseFloat($("#txtTotalAmount").val())
                 var AmtReceived = $('#txtAmountReceived').val();
                 if ($('#txtTotalPayable').val() != '') {
@@ -6818,6 +6822,15 @@
         </div>
         <div class="col-lg-6 col-md-4 col-sm-6">
             <input type="text" id="txtadvance_amount"  style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="row" style="display:none;">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Advance Amount</label>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txtRefund_amount"  style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
         </div>
     </div>
 
