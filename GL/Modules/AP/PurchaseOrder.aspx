@@ -790,6 +790,42 @@ function sanitizePrId(val) {
     return val;
 }
 
+var calcTotalTimer = null;
+var calcTotalRaf = null;
+
+function scheduleCalcTotal(delay) {
+    var wait = (typeof delay === 'number') ? delay : 80;
+
+    if (calcTotalTimer) {
+        clearTimeout(calcTotalTimer);
+    }
+
+    calcTotalTimer = setTimeout(function () {
+        calcTotalTimer = null;
+
+        if (window.requestAnimationFrame) {
+            if (calcTotalRaf) {
+                cancelAnimationFrame(calcTotalRaf);
+            }
+            calcTotalRaf = requestAnimationFrame(function () {
+                calcTotalRaf = null;
+                runCalcTotalCore();
+            });
+        } else {
+            runCalcTotalCore();
+        }
+    }, wait);
+}
+
+function calcTotal(forceNow) {
+    if (forceNow === true) {
+        runCalcTotalCore();
+        return;
+    }
+
+    scheduleCalcTotal();
+}
+
 // ============================================================================
 // MAIN: LoadPOItemDetail - FIXED for dropdown timing + calculations
 // ============================================================================
@@ -1200,8 +1236,7 @@ function populateTaxddlWithCallback(index, callback) {
             });
         }
 
-        function calcTotal() {
-            debugger;
+        function runCalcTotalCore() {
             var netAmount = 0;
             var STpercent = 0;
             var totalstamount = 0;
@@ -1211,7 +1246,6 @@ function populateTaxddlWithCallback(index, callback) {
             var totamount = 0;
             var subtotal = 0;
             var totalfinalamount = 0;
-            var amountExclusiveTaxes = 0;
             var totalAdvAmount = 0;
             var FurtherPercent = 0;
             var FurtherAmount = 0;
@@ -1219,28 +1253,27 @@ function populateTaxddlWithCallback(index, callback) {
             var totalBonusTax = 0; 
 
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                debugger;
-                var DiscAmount = parseFloat($($(value).find('td input[name=txtDisAmount]')[0]).val()) || 0;
+                var $row = $(value);
+                var DiscAmount = parseFloat($row.find('input[name=txtDisAmount]').val()) || 0;
                 if (DiscAmount < 0) {
                     DiscAmount = 0;
-                    $($(value).find('td input[name=txtDisAmount]')[0]).val(DiscAmount);
+                    $row.find('input[name=txtDisAmount]').val(DiscAmount);
                 }
                 var discpercent = 0;
-                var Rate = parseFloat($($(value).find('td input[name=txtRate]')[0]).val()) || 0;
-                var Qty = parseFloat($($(value).find('td input[name=txtQty]')[0]).val()) || 0;
-                if (Qty > 0 && Rate > 0) {
-                    amountExclusiveTaxes = Qty * Rate;
-                }
+                var Rate = parseFloat($row.find('input[name=txtRate]').val()) || 0;
+                var Qty = parseFloat($row.find('input[name=txtQty]').val()) || 0;
+                var amountExclusiveTaxes = Qty * Rate;
+
                 if (amountExclusiveTaxes > 0) {
                     discpercent = parseFloat((DiscAmount / amountExclusiveTaxes) * 100).toFixed(2);
                 }
-                $($(value).find('td input[name=txtDisPer]')[0]).val(discpercent);
+                $row.find('input[name=txtDisPer]').val(discpercent);
                 subtotal += amountExclusiveTaxes;
 
-                var selectedSTAX = $($(value).find('td select[name=ddlSTAX] :selected')[0]).text();
+                var selectedSTAX = $row.find('select[name=ddlSTAX] :selected').text();
                 STpercent = selectedSTAX ? parseFloat(selectedSTAX) || 0 : 0;
 
-                var selectedAdvTax = $($(value).find('td select[name=ddlAdvanceTax] :selected')[0]).text();
+                var selectedAdvTax = $row.find('select[name=ddlAdvanceTax] :selected').text();
                 var AdvPercent = selectedAdvTax ? parseFloat(selectedAdvTax) || 0 : 0;
 
                 //var selectedFurtherTax = $($(value).find('td select[name=ddlFurtherTax] :selected')[0]).text();
@@ -1252,13 +1285,10 @@ function populateTaxddlWithCallback(index, callback) {
                 //FurtherAmount = parseFloat((FurtherPercent / 100) * (amountExclusiveTaxes - DiscAmount));
                 //$($(value).find('td input[name=txtFurtherTaxAmount]')[0]).val(FurtherAmount.toFixed(2));
                 //totalFurtherAmount += FurtherAmount;
-
-
-
-                var selectedFurtherTax = $($(value).find('td input[name=ddlFurtherTax]')[0]).val() || 0;
+                var selectedFurtherTax = $row.find('input[name=ddlFurtherTax]').val() || 0;
                 FurtherPercent = parseFloat(selectedFurtherTax) || 0;
 
-                var furtherAmountField = $($(value).find('td input[name=txtFurtherTaxAmount]')[0]);
+                var furtherAmountField = $row.find('input[name=txtFurtherTaxAmount]');
                 var currentFieldValue = furtherAmountField.val();
                 var calculatedAmount = parseFloat((FurtherPercent / 100) * (amountExclusiveTaxes - DiscAmount));
 
@@ -1276,12 +1306,12 @@ function populateTaxddlWithCallback(index, callback) {
 
 
                 AdvAmount = parseFloat((AdvPercent / 100) * (amountExclusiveTaxes - DiscAmount));
-                $($(value).find('td input[name=txtAdvanceTaxAmount]')[0]).val(AdvAmount.toFixed(2));
+                $row.find('input[name=txtAdvanceTaxAmount]').val(AdvAmount.toFixed(2));
 
                 STAmount = parseFloat((STpercent / 100) * (amountExclusiveTaxes - DiscAmount));
-                $($(value).find('td input[name=txtSalAmount]')[0]).val(STAmount.toFixed(2));
+                $row.find('input[name=txtSalAmount]').val(STAmount.toFixed(2));
 
-                var BonusQty = parseFloat($($(value).find('td input[name=txtBonusQty]')[0]).val()) || 0;
+                var BonusQty = parseFloat($row.find('input[name=txtBonusQty]').val()) || 0;
                 var bonusTaxTotal = 0;
                 var isByDefault = $('#chkByDefault').is(':checked');
                 if (BonusQty > 0 && !isByDefault) {
@@ -1291,11 +1321,11 @@ function populateTaxddlWithCallback(index, callback) {
                   //  var bonusFurther = (FurtherPercent / 100) * bonusBase;
                     bonusTaxTotal = bonusST + bonusAdv/* + bonusFurther*/;
                 }
-                $($(value).find('td input[name=txtBonusAmount]')[0]).val(bonusTaxTotal.toFixed(2));
+                $row.find('input[name=txtBonusAmount]').val(bonusTaxTotal.toFixed(2));
                 totalBonusTax += bonusTaxTotal;
 
                 netAmount = parseFloat(amountExclusiveTaxes + STAmount + AdvAmount + FurtherAmount - DiscAmount);
-                $($(value).find('td input[name=txtTotalAmount]')[0]).val(netAmount.toFixed(2));
+                $row.find('input[name=txtTotalAmount]').val(netAmount.toFixed(2));
 
                 totamount += netAmount;
                 totalstamount += STAmount;
@@ -1340,42 +1370,36 @@ function populateTaxddlWithCallback(index, callback) {
             $(row).find('input[name=ddlFurtherTax]').val(calculatedPercent);
             $(row).find('input[name=txtFurtherTaxAmount]').attr('data-manual', 'false');
 
-            calcTotal();
+            scheduleCalcTotal();
         }
 
         function CulculateAmonutWithQty(anchor) {
-            debugger;
-            var TotalAmount = 0;
-            var TotalAmountWithoutTax = 0;
-            var NetAmount = 0;
-            var TotalDiscountAmount = 0;
-            var TotalQty = 0;
+            var $row = null;
 
-            $.each($('#tblItemDescription tbody tr'), function (key, value) {
-                debugger;
-                var DisPer = 0;
-                var DisAmount = parseFloat($($(value).find('td input[name=txtDisAmount]')[0]).val()) || 0;
-                var Rate = parseFloat($($(value).find('td input[name=txtRate]')[0]).val()) || 0;
-                var Qty = parseFloat($($(value).find('td input[name=txtQty]')[0]).val()) || 0;
-                var stax = parseFloat($($(value).find('td input[name=txtSalAmount]')[0]).val()) || 0;
-                var fed = parseFloat($($(value).find('td input[name=txtFedAmount]')[0]).val()) || 0;
-                var Amount = Rate * Qty;
-                if (Amount > 0) {
-                    DisPer = parseFloat((DisAmount / Amount) * 100).toFixed(2);
+            if (anchor && anchor.nodeType === 1) {
+                $row = $(anchor).closest('tr');
+            } else if (anchor !== undefined && anchor !== null) {
+                var idx = (anchor + '').replace(/[^0-9]/g, '');
+                if (idx) {
+                    $row = $('#txtQty' + idx).closest('tr');
                 }
-                $($(value).find('td input[name=txtDisPer]')[0]).val(DisPer);
-                var NetAmountNew = parseFloat(Amount + stax + fed - DisAmount);
-                $($(value).find('td input[name=txtTotalAmount]')[0]).val(NetAmountNew.toFixed(2));
-                TotalAmount += Amount;
-                NetAmount += NetAmountNew;
-                TotalDiscountAmount += DisAmount;
-                TotalQty += Qty;
-            });
-            $('#txtSub_Total').val(TotalAmount.toFixed(2));
-            $('#ctl00_MainContent_Net_Amount').val(NetAmount.toFixed(2));
-            $('#ctl00_MainContent_txtTotalDiscAmt').val(TotalDiscountAmount.toFixed(2));
-            $('#txtTotalDiscAmt').val(TotalDiscountAmount.toFixed(2));
-            calcTotal();
+            }
+
+            if ($row && $row.length > 0) {
+                var disAmount = parseFloat($row.find('input[name=txtDisAmount]').val()) || 0;
+                var rate = parseFloat($row.find('input[name=txtRate]').val()) || 0;
+                var qty = parseFloat($row.find('input[name=txtQty]').val()) || 0;
+                var amount = rate * qty;
+                var disPer = 0;
+
+                if (amount > 0) {
+                    disPer = parseFloat((disAmount / amount) * 100).toFixed(2);
+                }
+
+                $row.find('input[name=txtDisPer]').val(disPer);
+            }
+
+            scheduleCalcTotal();
         }
 
 
@@ -1563,6 +1587,7 @@ function populateTaxddlWithCallback(index, callback) {
         function SaveAllRecord() {
             debugger
             $("#btnSave").prop("disabled", true);
+            calcTotal(true);
             if (validateSave()) {
                 debugger;
                 var status;
