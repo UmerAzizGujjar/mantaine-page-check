@@ -4934,6 +4934,9 @@
                     $('#wardtype').val(data.d.Ward_Name);
                     $('#bedno').val(data.d.Bed_No);
 
+                  
+                 
+
                     var Packtypes = data.d.Package_Type
                     var Packnames = data.d.Package_Name
 
@@ -4943,7 +4946,9 @@
                     if (Packnames == "There is no row at position 0.") {
                         Packnames = ""
                     }
-
+                    setTimeout(function () {
+                        $('#ddlpanel').val(data.d.IPD_Panel_ID).trigger('change');
+                    }, 1000)
                     $('#PackageType').val(Packtypes);
                     $('#PackageName').val(Packnames);
                     $('#hdn_PatienttypeId').val(data.d.Patient_Type_id);
@@ -5926,6 +5931,7 @@
 
 
             $(document).ready(function () {
+                fillPanel();
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
                 if (Bill_ID != "") {
                     AllowBillEdit();
@@ -5934,7 +5940,7 @@
                 $("#btnPrint").hide();
                 debugger;
                 fillCasher();
-                fillPanel();
+               
                 TotalAmountToday();
                 $("#txtSearch").keypress(function (event) {
 

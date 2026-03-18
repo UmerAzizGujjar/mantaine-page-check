@@ -962,6 +962,7 @@
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
+                    debugger;
                     if (validateSaleReturn()) {
                         var BillId = $('#ddlInvoiceNumber').val() || 0;
                         var Patient_id = $('#ddlpat_no').val() || 0;
@@ -975,6 +976,25 @@
                         var DisPer = $('#txtSaleReturnDisPer').val() || 0;
                         var TotalDisAmt = $('#txtSaleReturnDisAmt').val() || 0;
                         var AdjustmentAmt = $('#txtSaleReturnFlatDisc').val() || 0;
+                        debugger;
+                        //var WareHouse = $('#ddl_Warehouse').val() || 0;
+                        //if (WareHouse == 0) {
+                        //    debugger;
+                        //    Swal.fire({
+                        //        icon: 'error',
+                        //        title: 'Error!',
+                        //        text: 'Please Select Ware House',
+                        //        showConfirmButton: false,
+                        //        timer: 2000,
+                        //        customClass: {
+                        //            popup: 'swal-big-popup',
+                        //            title: 'swal-big-title',
+                        //            htmlContainer: 'swal-big-text'
+                        //        }
+                        //    });
+
+                        //    return;
+                        //}
                         var Total = $('#txtSaleReturnTotal').val() || 0;
                         var table = $('#saleReturnTableBody');
                         var Item_list = [];
