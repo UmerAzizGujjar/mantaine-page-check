@@ -3299,6 +3299,7 @@ namespace PMS
                                     select tbl.Ward_Type).FirstOrDefault();
                         pt.Patient_Type = db.GetDataValueName("Patient Type", inpat.Patient_Discount_Type);
                         pt.Patient_Type_id = inpat.Patient_Discount_Type;
+                        pt.IPD_Panel_ID = inpat.Panel_Company;
                         if(inpat.Discharge_Request == true) {
                             pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);                         
                         }
