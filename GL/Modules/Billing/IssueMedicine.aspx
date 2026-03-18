@@ -1397,18 +1397,54 @@
                 $('#txtAmountReceived').val(parseFloat(TotalNetAmount.toFixed(2)));
             }
         }
+        function ApplyEqualMasterDiscountToRows(masterDisPer) {
+            var totalLineDiscount = 0;
+            var rowCount = $('#tblDetails tbody tr').length;
+            if (rowCount <= 0) {
+                $('#txtLineDisc').val(0);
+                return 0;
+            }
+
+            var perItemDisPer = masterDisPer / rowCount;
+            var roundedPerItemDisPer = parseFloat(perItemDisPer.toFixed(2));
+
+            $.each($('#tblDetails tbody tr'), function (key, value) {
+                var rowNetAmount = parseFloat($($(value).find('td')[11]).text()) || 0;
+                var rowLineDiscount = Math.round((rowNetAmount * roundedPerItemDisPer) / 100);
+
+                $(value).find('input[name="LineDiscount"]').val(rowLineDiscount);
+                totalLineDiscount += rowLineDiscount;
+            });
+
+            totalLineDiscount = Math.round(totalLineDiscount);
+            $('#txtLineDisc').val(totalLineDiscount);
+            return totalLineDiscount;
+        }
         function CalculateSummariesMasterDiscount(AmtWise) {
             debugger
             if (!AmtWise) {
                 debugger
                 var disper = $('#txtDisPer').val() || 0;
+                var tableRowCount = $('#tblDetails tbody tr').length;
+                if (tableRowCount > 0 && parseFloat(disper) > 0) {
+                    var distributedDiscount = ApplyEqualMasterDiscountToRows(parseFloat(disper));
+                    $('#txttotalDisc').val(distributedDiscount);
+                }
+                else if (tableRowCount > 0 && parseFloat(disper) <= 0) {
+                    ApplyEqualMasterDiscountToRows(0);
+                }
                 var totalpayable = $('#txtTotalPayable').val() || 0;
                 var txtLineDisc = $('#txtLineDisc').val() || 0;
                 var netamt = parseFloat(totalpayable - txtLineDisc).toFixed(2);
                 var disAmt = 0;
                 if (disper > 0) {
-                    disAmt = (netamt * disper) / 100;
-                    disAmt = Math.round(disAmt);
+                    if (tableRowCount > 0) {
+                        disAmt = 0;
+                    }
+                    else {
+                        disAmt = (netamt * disper) / 100;
+                        disAmt = Math.round(disAmt);
+                    }
                 }
                 else {
                     disAmt = 0;
@@ -1734,6 +1770,7 @@
                         '<td style="text-align:Right;"></td>' +
                         '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
@@ -1845,6 +1882,7 @@
                         '<td style="text-align:Right;"></td>' +
                         '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
@@ -1972,6 +2010,7 @@
                 var expdate = $($(value).find('td input[name=exp_date]')[0]).val();
                 var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
                 var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
+                var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
                 var CGSAmount = CGSRate * Qty;
                 if (batchno == null) {
                     batchno = '';
@@ -2006,7 +2045,7 @@
                 }
                 var NetAmount = $($(value).find('td')[11]).text();
                 Save_list.push({
-                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid,
+                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount,
                 });
             });
             debugger;
@@ -2146,6 +2185,7 @@
                         var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
                         var Itemid = $($(value).find('td input[name=ItemID]')[0]).val();
                         var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
+                        var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
                         var CGSAmount = CGSRate * Qty;
                        
                         if (batchno == null) {
@@ -2181,7 +2221,7 @@
                         }
                         var NetAmount = $($(value).find('td')[11]).text();
                         Save_list.push({
-                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid,
+                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount,
                         });
                     });
                     debugger;
@@ -2715,6 +2755,7 @@
                             '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' +
                             '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                            '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                             '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
                             '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
@@ -3233,6 +3274,7 @@
                     <th style="width: 60px; text-align: left;">Net Amount </th>
                     <th style="width: 60px; text-align: left;">BatchNo</th>
                     <th style="width: 70px; text-align: left;">Expiry Date </th>
+                    <th style="width: 80px; text-align: left;">Line Discount</th>
                     <th style="width: 53px; text-align: left;">Action </th>
                 </tr>
             </thead>

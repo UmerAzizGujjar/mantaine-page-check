@@ -117,7 +117,8 @@ namespace PMS
 
                     if (!string.IsNullOrWhiteSpace(endDate) && DateTime.TryParseExact(endDate, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedEndDate))
                     {
-                        Billing = Billing.Where(x => x.Bill_Date.HasValue && x.Bill_Date.Value <= parsedEndDate);
+                        var endDateExclusive = parsedEndDate.Date.AddDays(1);
+                        Billing = Billing.Where(x => x.Bill_Date.HasValue && x.Bill_Date.Value < endDateExclusive);
                     }
 
                     var Total_Billing = Billing.Count();
@@ -177,6 +178,8 @@ namespace PMS
                         .Select(i => new { i.Item_ID, Is_Fbr = i.Is_Fbr == true })
                         .ToDictionary(i => i.Item_ID, i => i.Is_Fbr);
 
+                    var postedDetailLookup = GetPostedDetailLookup(db, billId);
+
                     var mappedDetails = billDetails.Select(bd => new
                     {
                         Bill_Detail_ID = bd.Bill_Details_ID,
@@ -188,7 +191,9 @@ namespace PMS
                         Test_Main_Department = bd.Test_Main_Department,
                         Is_Fbr = bd.Item_ID.HasValue
                             && isFbrLookup.ContainsKey(bd.Item_ID.Value)
-                            && isFbrLookup[bd.Item_ID.Value]
+                            && isFbrLookup[bd.Item_ID.Value],
+                        IsFBRPosted = postedDetailLookup.ContainsKey(bd.Bill_Details_ID)
+                            && postedDetailLookup[bd.Bill_Details_ID]
                     }).ToList();
 
                     return JsonConvert.SerializeObject(mappedDetails);
@@ -208,6 +213,9 @@ namespace PMS
                 using (var db = new DataBaseDataContext())
                 {
                     var billing = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == billId);
+                    var URL = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR Credentials")?.Segment1;
+                    var POSID = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR Credentials")?.Code;
+                    var USIN = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR Credentials")?.Segment2;
                     if (billing == null)
                     {
                         return JsonConvert.SerializeObject(new { success = false, message = "Bill not found" });
@@ -239,8 +247,8 @@ namespace PMS
                     FBRInvoiceMaster objInv = new FBRInvoiceMaster();
                     
                     objInv.InvoiceNumber = billing.Bill_No;
-                    objInv.POSID = 818167;
-                    objInv.USIN = "7BFE5BBD";
+                    objInv.POSID = Convert.ToInt32(POSID);
+                    objInv.USIN = USIN;
                     objInv.DateTime = billing.Creation_Date ?? DateTime.Now;
                     objInv.BuyerNTN = "";
                     objInv.BuyerCNIC = "";
@@ -287,6 +295,8 @@ namespace PMS
                             bool IsQRGenerated = GenerateQRCode(FBR_Invoice_No, billId, billing.Bill_No);
                             if (IsQRGenerated)
                             {
+                                MarkDetailsAsFbrPosted(db, selectedDetails.Select(x => x.Bill_Details_ID).ToList());
+
                                 return JsonConvert.SerializeObject(new 
                                 { 
                                     success = true, 
@@ -389,6 +399,44 @@ namespace PMS
                 return "9815-101";
             else
                 return "9815-101";
+        }
+
+        private class DetailPostedStatus
+        {
+            public int Bill_Details_ID { get; set; }
+            public bool IsFBRPosted { get; set; }
+        }
+
+        private static bool HasIsFbrPostedColumn(DataBaseDataContext db)
+        {
+            var exists = db.ExecuteQuery<int>("SELECT CASE WHEN COL_LENGTH('dbo.Ar_Billing_Details','IsFBRPosted') IS NULL THEN 0 ELSE 1 END").FirstOrDefault();
+            return exists == 1;
+        }
+
+        private static Dictionary<int, bool> GetPostedDetailLookup(DataBaseDataContext db, int billId)
+        {
+            if (!HasIsFbrPostedColumn(db))
+                return new Dictionary<int, bool>();
+
+            var rows = db.ExecuteQuery<DetailPostedStatus>(
+                "SELECT Bill_Details_ID, CAST(ISNULL(IsFBRPosted, 0) AS bit) AS IsFBRPosted FROM dbo.Ar_Billing_Details WHERE Bill_ID = {0}",
+                billId).ToList();
+
+            return rows.ToDictionary(x => x.Bill_Details_ID, x => x.IsFBRPosted);
+        }
+
+        private static void MarkDetailsAsFbrPosted(DataBaseDataContext db, List<int> detailIds)
+        {
+            if (detailIds == null || detailIds.Count == 0)
+                return;
+
+            if (!HasIsFbrPostedColumn(db))
+                return;
+
+            foreach (var detailId in detailIds)
+            {
+                db.ExecuteCommand("UPDATE dbo.Ar_Billing_Details SET IsFBRPosted = 1 WHERE Bill_Details_ID = {0}", detailId);
+            }
         }
 
         private static bool GenerateQRCode(string fbrInvoiceNo, int billId, string billNo)
