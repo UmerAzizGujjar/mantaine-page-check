@@ -188,7 +188,7 @@
                             '<option value="Admitted" selected>Admitted</option>' +
                             '<option value="NotAdmitted">Not Admitted</option>' +
                             '</select>';
-                        editIcon = '<a href="EmergencyAdmission.aspx?Emergency_ID=' + item.Emergency_ID + '" class="btn btn-sm btn-info ml-2"><i class="fa fa-edit"></i></a>';
+                        
                     } else {
                         selectDropdown = '<select class="form-control form-control-sm status-select" data-emergency-id="' + item.Emergency_ID + '" data-patient-id="' + item.Patient_ID + '" onchange="handleStatusChange(this)">' +
                             '<option value="Pending" ' + (item.Status === 'Pending' ? 'selected' : '') + '>Pending</option>' +
@@ -204,7 +204,7 @@
                         '<td>' + item.Age + '</td>' +
                         '<td>' + formattedTime + '</td>' +
                         '<td><span class="' + statusClass + '">' + item.Status + '</span></td>' +
-                        '<td>' + selectDropdown + editIcon + '</td>' +
+                        '<td>' + selectDropdown + '</td>' +
                         '</tr>';
 
                     tbody.append(row);
@@ -386,10 +386,16 @@
         }--%>
 
         function SaveAdmission() {
+            var doctor = $('#ctl00_MainContent_ddlDoctor').val();
             if (currentEmergencyID === 0) {
                 Swal.fire('Warning', 'Please select a patient from the waiting list', 'warning');
                 return;
             }
+            if (doctor === "0" || doctor === null) {
+                Swal.fire('Warning', 'Please select a Doctor', 'warning');
+                return;
+            }
+
 
             // Validate required fields
             var admitTo = $('#<%= ddlIssuance_Of.ClientID %>').val();
@@ -594,9 +600,7 @@
                 <div class="col-lg-2">
                     <input type="button" class="btn btn-primry" value="WaitingList" onclick="openEmergencyWaitingListModal()" />
                 </div>
-                <div class="col-lg-2">
-                    <input type="button" class="btn btn-primry" value="List View" onclick="window.location='OutPatientsView.aspx'" />
-                </div>
+               
             </div>
         </div>
     </div>
@@ -734,6 +738,12 @@
                 <div class="col-lg-2 col-md-4 co-sm-6">
                     <input id="btnSave" type="button" class="btn btn-primry" value="Save" onclick="SaveAdmission()" />
                 </div>
+                 <div class="col-lg-2">
+     <input type="button" class="btn btn-primry" value="View" onclick="window.location='OutPatientsView.aspx'" />
+ </div>
+                                <div class="col-lg-2">
+    <input type="button" class="btn btn-primry" value="Print" onclick="window.location='OutPatientsView.aspx'" />
+</div>
             </div>
         </div>
     </div>

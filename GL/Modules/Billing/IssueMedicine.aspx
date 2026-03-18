@@ -2968,6 +2968,21 @@
             }
 
             $("#ddlWarehouse").prop('disabled', true);
+
+        }
+        function DisableSaleReturnWareHouse() {
+            debugger;
+
+            var mro = $("#txtMRNo").val();
+
+            if (!mro) {   // handles "", null, undefined
+                getbatchfrom_grn();
+            }
+
+            $("#ddl_Warehouse").prop('disabled', true);
+            $("#ddlInvoiceNumber").prop('disabled', false);
+            $("#ddlSaleReturnItems").prop('disabled', false);
+
         }
 
 
@@ -3386,27 +3401,29 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
+                                                <div class="col-lg-2 col-md-4 col-sm-6">
+    <label>WareHouse</label>
+    <select id="ddl_Warehouse" class="form-select" onchange="DisableSaleReturnWareHouse()">
+        <option value="0">Please Select</option>
+        <!-- other options -->
+    </select>
+</div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <label>Mr No</label>
                             <select id="ddlpat_no" onchange="getInvoiceNo_PatWise();"></select>
 
                         </div>
+                        
                         <div class="form-group col-lg-2 col-md-2 col-sm-3">
                             <label for="ddlInvoiceNumber">Invoice #</label>
-                            <select id="ddlInvoiceNumber" style="width: 180px !important;" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
+                            <select disabled id="ddlInvoiceNumber" style="width: 180px !important;" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
                         </div>
 
                         <div class="form-group col-lg-2 col-md-5 col-sm-3">
                             <label for="ddlSaleReturnItems">Items</label>
-                            <select id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" style="width: 380px !important;" class="form-control select2"></select>
+                            <select disabled id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" style="width: 380px !important;" class="form-control select2"></select>
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label>WareHouse</label>
-                            <select id="ddl_Warehouse" class="form-select" onchange="DisableWareHouse()">
-                                <option value="0">Please Select</option>
-                                <!-- other options -->
-                            </select>
-                        </div>
+                      
 
                         <%--<div class="form-group col-lg-1 col-md-2 col-sm-0"></div>--%>
 
