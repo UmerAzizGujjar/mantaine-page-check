@@ -792,9 +792,10 @@ function sanitizePrId(val) {
 
 var calcTotalTimer = null;
 var calcTotalRaf = null;
+var CALC_TOTAL_TYPING_PAUSE_MS = 450;
 
 function scheduleCalcTotal(delay) {
-    var wait = (typeof delay === 'number') ? delay : 80;
+    var wait = (typeof delay === 'number') ? delay : CALC_TOTAL_TYPING_PAUSE_MS;
 
     if (calcTotalTimer) {
         clearTimeout(calcTotalTimer);
