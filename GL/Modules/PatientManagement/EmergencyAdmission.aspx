@@ -152,6 +152,8 @@
                     $('#<%= ddlDoctor.ClientID %>').empty().append('<option value="0">Please Select</option>');
                 }
             });
+
+
         }
 
         function openEmergencyWaitingListModal() {
@@ -386,63 +388,64 @@
         }--%>
 
         function SaveAdmission() {
-            var doctor = $('#ctl00_MainContent_ddlDoctor').val();
-            if (currentEmergencyID === 0) {
-                Swal.fire('Warning', 'Please select a patient from the waiting list', 'warning');
-                return;
+    var doctor = $('#ctl00_MainContent_ddlDoctor').val();
+    if (currentEmergencyID === 0) {
+        Swal.fire('Warning', 'Please select a patient from the waiting list', 'warning');
+        return;
+    }
+    if (doctor === "0" || doctor === null) {
+        Swal.fire('Warning', 'Please select a Doctor', 'warning');
+        return;
+    }
+    
+    // ✅ Validate Ward & Bed
+    var admitTo = $('#<%= ddlIssuance_Of.ClientID %>').val();
+    var wardNo = $('#<%= ddlWard_No.ClientID %>').val();
+    var bedNo = $('#<%= txtBed_No.ClientID %>').val();
+    
+    if (admitTo === '001' && (wardNo === '0' || wardNo === '')) {
+        Swal.fire('Warning', 'Please select Ward', 'warning');
+        return;
+    }
+    
+    var admissionData = {
+        Emergency_Patient_ID: currentEmergencyPatientID,
+        Emergency_ID: currentEmergencyID,
+        Patient_ID: currentPatientID,
+        btnAction: $('#btnSave').val(),
+        ddlPatientCondition: $('#<%= ddlPatientCondition.ClientID %>').val(),
+        txtTreatmentTime: $('#<%= txtTreatmentTime.ClientID %>').val(),
+        txtAdmission_Date: $('#<%= txtAdmission_Date.ClientID %>').val(),
+        txtadmissionfee: $('#<%= txtadmissionfee.ClientID %>').val(),
+        ddlDepartment: $('#<%= ddlDepartment.ClientID %>').val(),
+        ddlDoctor: $('#<%= ddlDoctor.ClientID %>').val(),
+        ddlIssuance_Of: $('#<%= ddlIssuance_Of.ClientID %>').val(),
+        ddlWard_No: wardNo,
+        txtBed_No: bedNo
+    };
+    
+    $.ajax({
+        type: "POST",
+        url: "EmergencyAdmission.aspx/SaveAdmission",
+        data: JSON.stringify({ data: admissionData }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var result = response.d;
+            if (result.indexOf('Error') >= 0) {
+                Swal.fire('Error', result, 'error');
+            } else {
+                var actionText = admissionData.btnAction === 'Save' ? 'saved' : 'updated';
+                Swal.fire('Success', 'Admission ' + actionText + ' successfully', 'success').then(function () {
+                    window.location.href = 'EmergencyAdmission.aspx';
+                });
             }
-            if (doctor === "0" || doctor === null) {
-                Swal.fire('Warning', 'Please select a Doctor', 'warning');
-                return;
-            }
-
-
-            // Validate required fields
-            var admitTo = $('#<%= ddlIssuance_Of.ClientID %>').val();
-            if (!admitTo || admitTo === '0') {
-                Swal.fire('Warning', 'Please select Admit To', 'warning');
-                return;
-            }
-
-            var admissionData = {
-                Emergency_Patient_ID: currentEmergencyPatientID,
-                Emergency_ID: currentEmergencyID,
-                Patient_ID: currentPatientID,
-                btnAction: $('#btnSave').val(),
-                ddlPatientCondition: $('#<%= ddlPatientCondition.ClientID %>').val(),
-                txtTreatmentTime: $('#<%= txtTreatmentTime.ClientID %>').val(),
-                txtAdmission_Date: $('#<%= txtAdmission_Date.ClientID %>').val(),
-                txtadmissionfee: $('#<%= txtadmissionfee.ClientID %>').val(),
-                ddlDepartment: $('#<%= ddlDepartment.ClientID %>').val(),
-                ddlDoctor: $('#<%= ddlDoctor.ClientID %>').val(),
-                ddlIssuance_Of: $('#<%= ddlIssuance_Of.ClientID %>').val(),
-                ddlWard_No: $('#<%= ddlWard_No.ClientID %>').val(),
-                txtBed_No: $('#<%= txtBed_No.ClientID %>').val()
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "EmergencyAdmission.aspx/SaveAdmission",
-                data: JSON.stringify({ data: admissionData }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var result = response.d;
-                    if (result.indexOf('Error') >= 0) {
-                        Swal.fire('Error', result, 'error');
-                    } else {
-                        var actionText = admissionData.btnAction === 'Save' ? 'saved' : 'updated';
-                        Swal.fire('Success', 'Admission ' + actionText + ' successfully', 'success').then(function () {
-                            // Redirect to list view or refresh
-                            window.location.href = 'EmergencyAdmission.aspx';
-                        });
-                    }
-                },
-                error: function (xhr, status, error) {
-                    Swal.fire('Error', 'Error saving admission: ' + error, 'error');
-                }
-            });
+        },
+        error: function (xhr, status, error) {
+            Swal.fire('Error', 'Error saving admission: ' + error, 'error');
         }
+    });
+}
 
         function loadAdmissionForEdit(emergencyPatientID) {
             currentEmergencyPatientID = emergencyPatientID;
@@ -526,33 +529,41 @@
             $('#ctl00_MainContent_txtBedno').val(BedNo);
         }
 
-        function FillWardBeds() {
-            PageMethods.FillWardBeds($('#ctl00_MainContent_ddlWard_No').find('option:selected')[0].value, function (res) {
-                $('#ctl00_MainContent_txtBed_No').val("");
-                var WardBeds = JSON.parse(res);
-                var rows = '';
-                $.each(WardBeds, function (key, value) {
-                    //let blinkClass = "";
-
-                    //if (value.AdmissionDate) {
-                    //    let admDate = new Date(parseInt(value.AdmissionDate.replace('/Date(', '').replace(')/', '')));
-                    //    let diffHours = (new Date() - admDate) / (1000 * 60 * 60);
-                    //    if (diffHours > 240) {
-                    //        blinkClass = "blink";
-                    //    }
-                    //}
-                    if (value.PatientNo == 0) {
-                        rows += '<tr> <td> Available</td><td> <a  onclick="SelectBed(' + value.WardID + ',' + value.BedNo + ')" style="color:Green"> ' + value.BedNo + ' </a> </td></tr>';
+                    function FillWardBeds() {
+                var wardID = $('#<%= ddlWard_No.ClientID %>').val();
+                if (!wardID || wardID === '0') {
+                    $('#tblWards tbody').empty();
+                    return;
+                }
+    
+                PageMethods.FillWardBeds(parseInt(wardID), function (response) {
+                    var beds = JSON.parse(response);
+                    if (beds.error) {
+                        console.error('Error loading beds:', beds.error);
+                        return;
                     }
-                    else {
-                        rows += '<tr> <td>' + value.PatientNo + ' - ' + value.Full_Name + '</td><td><font color="red">' + value.BedNo + '</font></td></tr>';
-                    }
+        
+                    var tbody = $('#tblWards tbody');
+                    tbody.empty();
+        
+                    $.each(beds, function (i, bed) {
+                        var mrNo = bed.PatientNo == "0" ? 'Available' : bed.PatientNo;
+                        var rowClass = bed.PatientNo == "0" ? 'table-success' : 'table-danger';
+                        var bedColor = bed.PatientNo == "0" ? 'Green' : 'red';
+            
+                        var row = '<tr class="' + rowClass + '">' +
+                            '<td>' + mrNo + (bed.PatientNo != "0" ? ' - ' + bed.Full_Name : '') + '</td>' +
+                            '<td><a onclick="SelectBed(' + bed.WardID + ',' + bed.BedNo + ')" style="color:' + bedColor + '">' + bed.BedNo + '</a></td>' +
+                            '</tr>';
+                        tbody.append(row);
+                    });
+                }, function (error) {
+                    console.error('Error:', error);
                 });
-                $('#tblWards tbody tr').remove();
-                $('#tblWards tbody').html(rows);
-            });
-        }
+            }
 
+
+            
       <%--function FillWardBeds() {
             var wardID = $('#<%= ddlWard_No.ClientID %>').val();
             if (!wardID || wardID === '0') {
@@ -600,77 +611,77 @@
                 <div class="col-lg-2">
                     <input type="button" class="btn btn-primry" value="WaitingList" onclick="openEmergencyWaitingListModal()" />
                 </div>
-               
+
             </div>
         </div>
     </div>
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="card">
-                    <div class="card-bodyy">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-3 col-sm-4 text-center">
-                                <div class="row">
-                                    <div class="image-container">
-                                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
-                                    </div>
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-bodyy">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-4 text-center">
+                            <div class="row">
+                                <div class="image-container">
+                                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
                                 </div>
-                                <div class="row">
-                                </div>
-
                             </div>
-                            <div class="col-lg-9 col-md-9 col-sm-8">
-                                <div class="row mb-3">
-                                    <div class="col-md-5 col-sm-6 formrgn">
-                                        <asp:Label ID="lblPatient_Name" CssClass="labels" runat="server" Text="Patient Name:"></asp:Label>
-                                    </div>
-                                    <div class="col-md-7 col-sm-6 top">
-                                        <asp:Label ID="vlblPatients_Name" CssClass="md" runat="server"></asp:Label>
-                                    </div>
-                                </div>
+                            <div class="row">
+                            </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-5 col-sm-6 formrgn">
-                                        <asp:Label ID="lblPatien_No" CssClass="labels" runat="server" Text="MR No:"></asp:Label>
-                                    </div>
-                                    <div class="col-md-7 col-sm-6 top">
-                                        <asp:Label ID="Label200" CssClass="md" runat="server"></asp:Label>
-                                    </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-8">
+                            <div class="row mb-3">
+                                <div class="col-md-5 col-sm-6 formrgn">
+                                    <asp:Label ID="lblPatient_Name" CssClass="labels" runat="server" Text="Patient Name:"></asp:Label>
                                 </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-5 col-sm-6 formrgn">
-                                        <asp:Label ID="lblPatien_ID" CssClass="labels" runat="server" Text="Emergency No:"></asp:Label>
-                                    </div>
-                                    <div class="col-md-7 col-sm-6">
-                                        <asp:Label ID="Label1" CssClass="md" runat="server"></asp:Label>
-                                    </div>
+                                <div class="col-md-7 col-sm-6 top">
+                                    <asp:Label ID="vlblPatients_Name" CssClass="md" runat="server"></asp:Label>
                                 </div>
+                            </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-5 col-sm-6 formrgn">
-                                        <asp:Label ID="lblAge_Years" CssClass="labels" runat="server" Text="Age (Years):"></asp:Label>
-                                    </div>
-                                    <div class="col-md-7 col-sm-6">
-                                        <asp:Label ID="vLbl_Age" CssClass="md" runat="server"></asp:Label>
-                                    </div>
+                            <div class="row mb-3">
+                                <div class="col-md-5 col-sm-6 formrgn">
+                                    <asp:Label ID="lblPatien_No" CssClass="labels" runat="server" Text="MR No:"></asp:Label>
                                 </div>
+                                <div class="col-md-7 col-sm-6 top">
+                                    <asp:Label ID="Label200" CssClass="md" runat="server"></asp:Label>
+                                </div>
+                            </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-5 col-sm-6 formrgn">
-                                        <asp:Label ID="lblContactNo" CssClass="labels" runat="server" Text="Contact No:"></asp:Label>
-                                    </div>
-                                    <div class="col-md-7 col-sm-6">
-                                        <asp:Label ID="vLbl_Contact" CssClass="md" runat="server"></asp:Label>
-                                    </div>
+                            <div class="row mb-3">
+                                <div class="col-md-5 col-sm-6 formrgn">
+                                    <asp:Label ID="lblPatien_ID" CssClass="labels" runat="server" Text="Emergency No:"></asp:Label>
+                                </div>
+                                <div class="col-md-7 col-sm-6">
+                                    <asp:Label ID="Label1" CssClass="md" runat="server"></asp:Label>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-5 col-sm-6 formrgn">
+                                    <asp:Label ID="lblAge_Years" CssClass="labels" runat="server" Text="Age (Years):"></asp:Label>
+                                </div>
+                                <div class="col-md-7 col-sm-6">
+                                    <asp:Label ID="vLbl_Age" CssClass="md" runat="server"></asp:Label>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-5 col-sm-6 formrgn">
+                                    <asp:Label ID="lblContactNo" CssClass="labels" runat="server" Text="Contact No:"></asp:Label>
+                                </div>
+                                <div class="col-md-7 col-sm-6">
+                                    <asp:Label ID="vLbl_Contact" CssClass="md" runat="server"></asp:Label>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <hr />
         </div>
+        <hr />
+    </div>
     <div class="row">
         <div class="col-lg-2 col-md-4 col-sm-12">
             <asp:Label CssClass="form-label" ID="lblPatientCondition" runat="server" Text="Triage Area"></asp:Label>
@@ -709,14 +720,14 @@
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12">
             <asp:Label CssClass="form-label" ID="LblBed_No" runat="server" Text="Bed No"></asp:Label>
-            <asp:TextBox ID="txtBed_No" CssClass="form-control-custom" TabIndex="8" runat="server"  Enabled="false"></asp:TextBox>
+            <asp:TextBox ID="txtBed_No" CssClass="form-control-custom" TabIndex="8" runat="server" Enabled="false"></asp:TextBox>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-12">
             <asp:Label CssClass="form-label required" ID="lblWard_No" runat="server" Text="Ward"></asp:Label>
             <asp:DropDownList ID="ddlWard_No" CssClass="form-control-custom" runat="server" AppendDataBoundItems="true" onChange="FillWardBeds()"></asp:DropDownList>
         </div>
-         <div class="col-lg-2 col-md-4 col-sm-12">
-             </div>
+        <div class="col-lg-2 col-md-4 col-sm-12">
+        </div>
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div style="overflow-y: scroll; max-height: 150px;">
                 <table id="tblWards" class="table table-responsive" style="float: right;">
@@ -732,22 +743,23 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-lg-8 col-md-8 co-sm-12">
             <div class="row">
                 <div class="col-lg-2 col-md-4 co-sm-6">
                     <input id="btnSave" type="button" class="btn btn-primry" value="Save" onclick="SaveAdmission()" />
                 </div>
-                 <div class="col-lg-2">
-     <input type="button" class="btn btn-primry" value="View" onclick="window.location='OutPatientsView.aspx'" />
- </div>
-                                <div class="col-lg-2">
-    <input type="button" class="btn btn-primry" value="Print" onclick="window.location='OutPatientsView.aspx'" />
-</div>
+                <div class="col-lg-2">
+                    <input type="button" class="btn btn-primry" value="View" onclick="window.location='OutPatientsView.aspx'" />
+                </div>
+                <div class="col-lg-2">
+                    <input type="button" class="btn btn-primry" value="Print" onclick="window.location='OutPatientsView.aspx'" />
+                </div>
             </div>
         </div>
     </div>
-   
+
     <div id="EmergencyWaitingListModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
