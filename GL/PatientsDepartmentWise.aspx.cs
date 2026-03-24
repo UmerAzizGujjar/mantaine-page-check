@@ -5215,6 +5215,7 @@ namespace PMS
                     }
                     if (this.PageTitle == "Emergency_Time_Line")
                     {
+                        ddlMedicalSubsidy.Items.Clear();
                         ddlMedicalSubsidy.Items.Add("Weekly");
                         ddlMedicalSubsidy.Items.Add("Monthly");
                         ddlMedicalSubsidy.Items.Add("Annually");
