@@ -629,6 +629,8 @@
                 var searchText = $(this).val().trim();
                 LoadAllitem(searchText);
             });
+
+            $('#chkByDefault').prop('checked', true); 
         });
 /*        $(document).ready*/(function () {
             // ✅ Show page loader immediately
