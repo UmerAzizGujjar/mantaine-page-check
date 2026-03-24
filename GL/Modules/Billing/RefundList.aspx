@@ -22,7 +22,7 @@
                     var urlInfo = window.location.href.split('/');
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
-                    url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=PrintAdvanceReport&Title=Refund Print &Refund_ID=" + Refund_ID;
+                    url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=PrintRefundReport&Title=Refund Print &Refund_ID=" + Refund_ID;
                 }
                 window.open(url, '_blank');
             }

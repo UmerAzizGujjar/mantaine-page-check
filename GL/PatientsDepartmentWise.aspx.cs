@@ -1617,7 +1617,7 @@ namespace PMS
                     "ISNULL(item_serial, '') + ' - ' + ISNULL(item_description, '') AS item_display, " +
                     "item_serial " +
                     "FROM Asset_Definition " +
-                    "ORDER BY item_serial" );
+                    "ORDER BY item_serial");
                     ddlProcedure.DataSource = dsPanel;
                     ddlProcedure.DataTextField = "item_display";        // Shows: "ASDAS-FF-GF-MS-125 - MS Storage Rack"
                     ddlProcedure.DataValueField = "asset_definition_id"; // Passes asset_definition_id to backend
@@ -1681,7 +1681,7 @@ namespace PMS
                     "ISNULL(item_serial, '') + ' - ' + ISNULL(item_description, '') AS item_display, " +
                     "item_serial " +
                     "FROM Asset_Definition " +
-                    "ORDER BY item_serial" );
+                    "ORDER BY item_serial");
                     ddlProcedure.DataSource = dsPanel;
                     ddlProcedure.DataTextField = "item_display";        // Shows: "ASDAS-FF-GF-MS-125 - MS Storage Rack"
                     ddlProcedure.DataValueField = "asset_definition_id"; // Passes asset_definition_id to backend
@@ -1744,7 +1744,7 @@ namespace PMS
                     "ISNULL(item_serial, '') + ' - ' + ISNULL(item_description, '') AS item_display, " +
                     "item_serial " +
                     "FROM Asset_Definition " +
-                    "ORDER BY item_serial" );
+                    "ORDER BY item_serial");
                     ddlProcedure.DataSource = dsPanel;
                     ddlProcedure.DataTextField = "item_display";        // Shows: "ASDAS-FF-GF-MS-125 - MS Storage Rack"
                     ddlProcedure.DataValueField = "asset_definition_id"; // Passes asset_definition_id to backend
@@ -1798,9 +1798,9 @@ namespace PMS
                     "ISNULL(item_serial, '') + ' - ' + ISNULL(item_description, '') AS item_display, " +
                     "item_serial " +
                     "FROM Asset_Definition " +
-                    "ORDER BY item_serial" );
+                    "ORDER BY item_serial");
                     ddlProcedure.DataSource = dsPanel;
-                    ddlProcedure.DataTextField = "item_display";       
+                    ddlProcedure.DataTextField = "item_display";
                     ddlProcedure.DataValueField = "asset_definition_id";
                     ddlProcedure.Items.Clear();
                     ddlProcedure.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
@@ -3480,7 +3480,7 @@ namespace PMS
                 {
                     string x = "Daily Sale Summary";
                     Master.Label2.Text = x;
-                    Master.GetMenuName(); 
+                    Master.GetMenuName();
                     tr_Summary.Visible = false;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
@@ -5177,7 +5177,7 @@ namespace PMS
                     lblMainDepartment.Visible = false;
                     dpROw.Visible = false;
                 }
-                else if (this.PageTitle == "OPD_Time_Line" || this.PageTitle == "IPD_Time_Line" || this.PageTitle == "Discharge_Time_Line" || this.PageTitle == "Ward_Allocation_Time_Line" || this.PageTitle == "DepartmentWiseProcedureTimeLine")
+                else if (this.PageTitle == "OPD_Time_Line" || this.PageTitle == "Emergency_Time_Line" || this.PageTitle == "IPD_Time_Line" || this.PageTitle == "Discharge_Time_Line" || this.PageTitle == "Ward_Allocation_Time_Line" || this.PageTitle == "DepartmentWiseProcedureTimeLine")
                 {
                     tr1MedicalSubsidy.Visible = true;
                     lblMedical.Text = "Time Line";
@@ -5209,6 +5209,16 @@ namespace PMS
                     ddlMedicalSubsidy.Items.Add("Annually");
                     if (this.PageTitle == "OPD_Time_Line")
                     {
+                        string x = "OPD Time Line";
+                        Master.Label2.Text = x;
+                        Master.GetMenuName();
+                    }
+                    if (this.PageTitle == "Emergency_Time_Line")
+                    {
+                        ddlMedicalSubsidy.Items.Clear();
+                        ddlMedicalSubsidy.Items.Add("Weekly");
+                        ddlMedicalSubsidy.Items.Add("Monthly");
+                        ddlMedicalSubsidy.Items.Add("Annually");
                         string x = "OPD Time Line";
                         Master.Label2.Text = x;
                         Master.GetMenuName();
@@ -6086,6 +6096,7 @@ namespace PMS
                     lblMultiSelect.Visible = false;
                     GetLabTests();
                     tr_AllPatientRecord.Visible = true;
+                    lblAllPatientRecord.Text = "Detailed Summary";
                     //Label lblAllPatientRecord = tr_AllPatientRecord.FindControl("lblAllPatientRecord") as Label;
                     //if (lblAllPatientRecord != null)
                     //{
