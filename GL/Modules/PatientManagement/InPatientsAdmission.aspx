@@ -1897,13 +1897,13 @@
                         });
 
                         window.location = "InPatientsAdmission.aspx?ID=" + response;
-                        //window.open('ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
+                      
                         $('#btnSave').val("Update");
                     }
                     else if (btn == 'btnsaveprint') {
                         debugger;
-
-                        PrintAdmisionDetails(response);
+                        window.open('ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
+                       // PrintAdmisionDetails(response);
                         $('#btnSave').val("Update");
 
                     }
