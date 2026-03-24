@@ -1157,6 +1157,26 @@
 
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "Emergency_Time_Line") {
+                        debugger;
+                        var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
+
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var url = 'ReportViewer.aspx?ReportName=Emergency_Time_Line' +
+                            '&ReportTitle=' + encodeURIComponent('Emergency Time Line from ' + startDateTime + ' to ' + endDateTime) +
+                            '&Report_Type=' + encodeURIComponent(timeLine) +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime);
+
+                        window.open(url, '_blank');
+                    }
                     else if (rptTitle == "Discharge_Time_Line") {
                         debugger;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();

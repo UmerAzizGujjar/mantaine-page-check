@@ -963,6 +963,7 @@
                     return;
                 }
                 if (userC == userCode && userP == UserPass) {
+                    debugger;
                     if (validateSaleReturn()) {
                         var BillId = $('#ddlInvoiceNumber').val() || 0;
                         var Patient_id = $('#ddlpat_no').val() || 0;
@@ -976,6 +977,25 @@
                         var DisPer = $('#txtSaleReturnDisPer').val() || 0;
                         var TotalDisAmt = $('#txtSaleReturnDisAmt').val() || 0;
                         var AdjustmentAmt = $('#txtSaleReturnFlatDisc').val() || 0;
+                        debugger;
+                        //var WareHouse = $('#ddl_Warehouse').val() || 0;
+                        //if (WareHouse == 0) {
+                        //    debugger;
+                        //    Swal.fire({
+                        //        icon: 'error',
+                        //        title: 'Error!',
+                        //        text: 'Please Select Ware House',
+                        //        showConfirmButton: false,
+                        //        timer: 2000,
+                        //        customClass: {
+                        //            popup: 'swal-big-popup',
+                        //            title: 'swal-big-title',
+                        //            htmlContainer: 'swal-big-text'
+                        //        }
+                        //    });
+
+                        //    return;
+                        //}
                         var Total = $('#txtSaleReturnTotal').val() || 0;
                         var table = $('#saleReturnTableBody');
                         var Item_list = [];
@@ -2955,6 +2975,21 @@
             }
 
             $("#ddlWarehouse").prop('disabled', true);
+
+        }
+        function DisableSaleReturnWareHouse() {
+            debugger;
+
+            var mro = $("#txtMRNo").val();
+
+            if (!mro) {   // handles "", null, undefined
+                getbatchfrom_grn();
+            }
+
+            $("#ddl_Warehouse").prop('disabled', true);
+            $("#ddlInvoiceNumber").prop('disabled', false);
+            $("#ddlSaleReturnItems").prop('disabled', false);
+
         }
 
 
@@ -3373,27 +3408,29 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
+                                                <div class="col-lg-2 col-md-4 col-sm-6">
+    <label>WareHouse</label>
+    <select id="ddl_Warehouse" class="form-select" onchange="DisableSaleReturnWareHouse()">
+        <option value="0">Please Select</option>
+        <!-- other options -->
+    </select>
+</div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <label>Mr No</label>
                             <select id="ddlpat_no" onchange="getInvoiceNo_PatWise();"></select>
 
                         </div>
+                        
                         <div class="form-group col-lg-2 col-md-2 col-sm-3">
                             <label for="ddlInvoiceNumber">Invoice #</label>
-                            <select id="ddlInvoiceNumber" style="width: 180px !important;" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
+                            <select disabled id="ddlInvoiceNumber" style="width: 180px !important;" onchange="AddSaleReturnInvoiceMaster()" class="form-control select2"></select>
                         </div>
 
                         <div class="form-group col-lg-2 col-md-5 col-sm-3">
                             <label for="ddlSaleReturnItems">Items</label>
-                            <select id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" style="width: 380px !important;" class="form-control select2"></select>
+                            <select disabled id="ddlSaleReturnItems" onchange="AddSaleReturnMedicineDetail()" style="width: 380px !important;" class="form-control select2"></select>
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label>WareHouse</label>
-                            <select id="ddl_Warehouse" class="form-select" onchange="DisableWareHouse()">
-                                <option value="0">Please Select</option>
-                                <!-- other options -->
-                            </select>
-                        </div>
+                      
 
                         <%--<div class="form-group col-lg-1 col-md-2 col-sm-0"></div>--%>
 

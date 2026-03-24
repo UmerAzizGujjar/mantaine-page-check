@@ -351,6 +351,7 @@
     <Content Include="Modules\PatientManagement\DialysisView.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyAdmission.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyForm.aspx" />
+    <Content Include="Modules\PatientManagement\Emergency_Admission_View.aspx" />
     <Content Include="Modules\PatientManagement\Emergency_View.aspx" />
     <Content Include="Modules\PatientManagement\NewEmergencyCase.aspx" />
     <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
@@ -26877,6 +26878,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\EmergencyForm.aspx.designer.cs">
       <DependentUpon>EmergencyForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\Emergency_Admission_View.aspx.cs">
+      <DependentUpon>Emergency_Admission_View.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\Emergency_Admission_View.aspx.designer.cs">
+      <DependentUpon>Emergency_Admission_View.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\Emergency_View.aspx.cs">
       <DependentUpon>Emergency_View.aspx</DependentUpon>

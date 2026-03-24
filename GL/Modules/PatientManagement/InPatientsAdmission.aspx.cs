@@ -1008,7 +1008,7 @@ namespace PMS
                     OPD.Issuance_Of = ddlIssuance_Of;
                     OPD.Patient_Discount_Type = PatientDiscountType;
                     OPD.Discharge = false;
-                    //OPD.Panel_Company = panelCompany;
+                    OPD.Panel_Company = panelCompany;
                     OPD.InsuranceCardNo = CardNo;
                     OPD.CardHolderName = Cardholdername;
                     OPD.CompanyNAme = CompanyName;
@@ -1020,8 +1020,8 @@ namespace PMS
                     OPD.AdmissionType = admissionType;
                     OPD.SehatCardNo = sehatCardNo;
                     OPD.VisitId = visitId;
-                    //OPD.CardHolderName = CardHolderName;
-                    //OPD.InsuranceCardNo = InsuranceCardNo;
+                    OPD.CardHolderName = CardHolderName;
+                    OPD.InsuranceCardNo = InsuranceCardNo;
                     OPD.PolicyHolderName = PolicyHolderName;
                     OPD.Sehat_Card_Holder_CNIC = Sehat_Holder;
                     

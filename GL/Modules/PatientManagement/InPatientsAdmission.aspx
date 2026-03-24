@@ -3469,7 +3469,6 @@
             debugger;
             $("#btnSave").attr("disabled", true);
             $("#btnsaveprint").attr("disabled", true);
-
             $('#loadingimage').show();
             SaveNextOfKinDetails();
             CheckExistInOutPatient();
@@ -5232,16 +5231,16 @@
             $("#ctl00_MainContent_panelshow").hide();
 
             if (type === "10") {
-                $('#ctl00_MainContent_lblPanelCompany').hide();
-                $('#ctl00_MainContent_ddlPanelCompany').hide();
-                $("#ctl00_MainContent_lblCardHolderName").hide();
-                $("#ctl00_MainContent_txtcardHolderName").hide();
-                $("#ctl00_MainContent_lblInsuranceCardNo").hide();
-                $("#ctl00_MainContent_txtInsuranceCardNo").hide();
-                $("#ctl00_MainContent_lblPolicyHolderName").hide();
-                $("#ctl00_MainContent_txtPolicyHolderName").hide();
-                $("#ctl00_MainContent_lblSehatHolder").hide();
-                $("#ctl00_MainContent_txtSehatHolder").hide();
+                $('#ctl00_MainContent_lblPanelCompany').show();
+                $('#ctl00_MainContent_ddlPanelCompany').show();
+                //$("#ctl00_MainContent_lblCardHolderName").show();
+                //$("#ctl00_MainContent_txtcardHolderName").show();
+                $("#ctl00_MainContent_lblInsuranceCardNo").show();
+                $("#ctl00_MainContent_txtInsuranceCardNo").show();
+                $("#ctl00_MainContent_lblPolicyHolderName").show();
+                $("#ctl00_MainContent_txtPolicyHolderName").show();
+                $("#ctl00_MainContent_lblSehatHolder").show();
+                $("#ctl00_MainContent_txtSehatHolder").show();
             }
             else {
                 $('#ctl00_MainContent_lblPanelCompany').hide();
