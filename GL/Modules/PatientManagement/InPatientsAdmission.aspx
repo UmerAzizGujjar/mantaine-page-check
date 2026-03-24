@@ -3469,7 +3469,6 @@
             debugger;
             $("#btnSave").attr("disabled", true);
             $("#btnsaveprint").attr("disabled", true);
-
             $('#loadingimage').show();
             SaveNextOfKinDetails();
             CheckExistInOutPatient();

@@ -1078,6 +1078,36 @@ namespace PMS
                     rd.SetParameterValue("@Trans_Type", "OPD");
                 }
             }
+            else if (reportName == "Emergency_Time_Line")
+            {
+                string reportType = Request.QueryString["Report_Type"].ToString();
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string fileName = string.Empty;
+                if (reportType == "Weekly")
+                {
+                    fileName = "Emergency/rptWeeklyPatientRegistrations_WRT_Department.rpt";
+                }
+                else if (reportType == "Monthly")
+                {
+                    fileName = "Emergency/rptDailyRegistrationsOfDepartmentMonthly.rpt";
+                }
+                else if (reportType == "Annually")
+                {
+                    fileName = "Emergency/rptMonthlyRegistrationsOfDepartmentAnually.rpt";
+                }
+                reportPath += fileName;
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+
+                rd.SetParameterValue("@stDate", sqlStartDateTime);
+                rd.SetParameterValue("@endDate", sqlEndDateTime);
+               
+            }
             else if (reportName == "IPDTimeLine")
             {
                 string reportType = Request.QueryString["Report_Type"].ToString();
@@ -5034,8 +5064,7 @@ namespace PMS
             }
             else if (reportName == "In_Patient_VitalSigns")
             {
-                try
-                {
+
                     var in_patient_id = Request.QueryString["In_Patient_ID"].ToString();
 
                     reportPath += "InPatient/rpt_In_Patient_VitalSigns.rpt";
@@ -5047,13 +5076,13 @@ namespace PMS
                     try
                     {
                         string sql = $@"
-        SELECT ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
-               ISNULL(rp.Full_Name, '') AS Full_Name,
-               ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
-               ISNULL(rp.Gender, '') AS Gender
-        FROM Reg_patient rp
-        JOIN In_Patient ip ON ip.patient_id = rp.pat_id
-        WHERE ip.In_Patient_ID = {in_patient_id}";
+                        SELECT ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
+                                      ISNULL(rp.Full_Name, '') AS Full_Name,
+                                      ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
+                                      ISNULL(rp.Gender, '') AS Gender
+                               FROM Reg_patient rp
+                               JOIN in_patient ip ON ip.patient_id = rp.pat_id
+                               WHERE ip.In_Patient_ID = {in_patient_id}";
 
                         DataTable patientData = DBClass.getDataTable(sql);
 
@@ -5086,12 +5115,9 @@ namespace PMS
                     {
                         rd.SetParameterValue("QRImagePath", "");
                     }
+
+
                 }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-            }
             else if (reportName == "ProgressNote")
             {
                 try
