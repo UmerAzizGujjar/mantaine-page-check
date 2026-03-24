@@ -990,7 +990,7 @@
 
                     var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
                     window.open(url, '_blank');
-                    window.location.href = "OPDView.aspx";
+                    window.location.href = "Emergency_View.aspx";
                 },
                 error: function (xhr, status, error) {
                     console.error("Error: ", error);
@@ -1272,7 +1272,7 @@
                     <input type="button" class="btn btn-yellow " id="btnNew" value="New" onclick="window.location = 'EmergencyForm.aspx'" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <input type="button" class="btn btn-gray " id="btnView" value="View" onclick="window.location = 'OPDView.aspx'" />
+                    <input type="button" class="btn btn-gray " id="btnView" value="View" onclick="window.location = 'Emergency_View.aspx'" />
                 </div>
               
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">

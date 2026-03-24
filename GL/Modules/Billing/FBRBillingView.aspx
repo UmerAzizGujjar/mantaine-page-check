@@ -242,7 +242,8 @@
 
                     // Load bill details
                     var qrPath = rowData && rowData.QrCode_path ? rowData.QrCode_path : '';
-                    LoadBillDetails(billId, row, tr, isPosted, qrPath);
+                    var fbrNo = rowData && rowData.FBR_No ? rowData.FBR_No : '';
+                    LoadBillDetails(billId, row, tr, isPosted, qrPath, fbrNo);
                 }
             });
 
@@ -251,7 +252,7 @@
             });
         }
 
-        function LoadBillDetails(billId, row, tr, isPosted, qrPath) {
+        function LoadBillDetails(billId, row, tr, isPosted, qrPath, fbrNo) {
             $.ajax({
                 type: "POST",
                 url: "FBRBillingView.aspx/GetBillDetails",
@@ -261,7 +262,7 @@
                 success: function (response) {
                     if (response.d) {
                         var details = JSON.parse(response.d);
-                        var html = BuildDetailsHTML(details, billId, isPosted, qrPath);
+                        var html = BuildDetailsHTML(details, billId, isPosted, qrPath, fbrNo);
                         row.child(html).show();
                     }
                 },
@@ -272,7 +273,7 @@
             });
         }
 
-        function BuildDetailsHTML(details, billId, isPosted, qrPath) {
+        function BuildDetailsHTML(details, billId, isPosted, qrPath, fbrNo) {
             var html = '<div class="detail-container">';
 
             // Group by category
@@ -334,8 +335,9 @@
                         var net = (item.Net_Amount || 0).toFixed(2);
 
                         html += '<tr class="item-row" style="border-bottom: 1px solid #eee;">';
-                        var isChecked = item.Is_Fbr ? 'checked' : '';
-                        html += '<td style="padding: 10px;"><input type="checkbox" class="item-checkbox" ' + isChecked + ' data-detail-id="' + item.Bill_Detail_ID + '" /></td>';
+                        var isChecked = isPosted ? (item.IsFBRPosted ? 'checked' : '') : (item.Is_Fbr ? 'checked' : '');
+                        var isDisabled = isPosted ? 'disabled' : '';
+                        html += '<td style="padding: 10px;"><input type="checkbox" class="item-checkbox" ' + isChecked + ' ' + isDisabled + ' data-detail-id="' + item.Bill_Detail_ID + '" /></td>';
                         html += '<td style="padding: 10px;">' + itemName + '</td>';
                         html += '<td style="padding: 10px;">' + amount + '</td>';
                         html += '<td style="padding: 10px;">' + discount + '</td>';
@@ -356,6 +358,9 @@
             } else if (qrPath) {
                 var normalizedQrPath = qrPath.replace('~', '');
                 html += '<div style="text-align: right; margin-top: 15px; padding-top: 10px;">';
+                if (fbrNo) {
+                    html += '<div style="margin-bottom:6px;font-weight:600;">FBR Invoice No: ' + fbrNo + '</div>';
+                }
                 html += '<img src="' + normalizedQrPath + '" alt="QR Code" style="width: 120px; height: 120px; border: 1px solid #ddd; padding: 4px; background: #fff;" />';
                 html += '</div>';
             }
@@ -417,10 +422,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
       <div class="row">
      <div class="filter-container">
-         <label for="txtStartDate">Start Date Time</label>
-         <input type="datetime-local" id="txtStartDate" class="form-control" style="max-width:220px;" />
-         <label for="txtEndDate">End Date Time</label>
-         <input type="datetime-local" id="txtEndDate" class="form-control" style="max-width:220px;" />
+         <label for="txtStartDate">Start Date</label>
+         <input type="date" id="txtStartDate" class="form-control" style="max-width:220px;" />
+         <label for="txtEndDate">End Date</label>
+         <input type="date" id="txtEndDate" class="form-control" style="max-width:220px;" />
          <button type="button" id="btnApplyDateFilter" class="btn btn-primary">Apply</button>
      </div>
      <div class="table-container">

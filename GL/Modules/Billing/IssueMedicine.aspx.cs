@@ -586,6 +586,7 @@ namespace PMS
             public decimal Amount { get; set; }
             public decimal DiscPer { get; set; }
             public decimal DiscAmount { get; set; }
+            public decimal LineDiscount { get; set; }
             public decimal NetAmount { get; set; }
             public int Qty { get; set; }
             public decimal Stock { get; set; }
@@ -743,6 +744,7 @@ namespace PMS
                 newBillDetails.Item_Type = "Medicine";
                 newBillDetails.Discount_Percentage = dtls.DiscPer;
                 newBillDetails.Discount_Amount = dtls.DiscAmount;
+                newBillDetails.Line_Discount = dtls.LineDiscount;
                 newBillDetails.Net_Amount = dtls.NetAmount;
                 newBillDetails.Qty = dtls.Qty;
                 newBillDetails.Batch_No = dtls.batchno;
@@ -1110,7 +1112,7 @@ namespace PMS
             saleReturn.TotalDisc_Amount = record.TotalDisAmt;
             saleReturn.Disc_Adjustment = record.AdjustmentAmt;
             saleReturn.Net_Amount = record.Total;
-            //saleReturn.Ware_House = "008";
+        
             saleReturn.Ware_House = record.warehouse;
             saleReturn.Total_Amount = record.TotalPayable;
             saleReturn.Company_ID = AppConfig.Company_ID;

@@ -113,6 +113,7 @@ namespace PMS.Modules.PatientManagement
                         admission.Created_Time = DateTime.Now;
                         admission.Company_ID = AppConfig.Company_ID;
                         admission.Book_ID = AppConfig.Book_ID;
+                        admission.emer_id = data.Emergency_ID;
                     }
                     else
                     {

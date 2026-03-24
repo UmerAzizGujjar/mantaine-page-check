@@ -2058,6 +2058,7 @@
                 var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
 
 
                 var category = $('#ddlMainTestDepartment').val();
@@ -2745,6 +2746,7 @@
                     var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                     var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                     var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                    var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
                     debugger;
                     $('#txtTotalAmount').val(Net_Amt);
                     $('#txtTotalPayable').val(Net_Amt);
@@ -3417,6 +3419,7 @@
                 var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
                 var AmtReceived = $('#txtAmountReceived').val();
 
                 var Totalpayable = 0;
@@ -4435,6 +4438,7 @@
                 var PreviousAmount = parseFloat($("#txtprevious_Amount").val()) || 0;
                 var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                 var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
+                var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
                 var TotalNetAmount = parseFloat($("#txtTotalAmount").val())
                 var AmtReceived = $('#txtAmountReceived').val();
                 if ($('#txtTotalPayable').val() != '') {
@@ -4930,6 +4934,9 @@
                     $('#wardtype').val(data.d.Ward_Name);
                     $('#bedno').val(data.d.Bed_No);
 
+                  
+                 
+
                     var Packtypes = data.d.Package_Type
                     var Packnames = data.d.Package_Name
 
@@ -4939,7 +4946,9 @@
                     if (Packnames == "There is no row at position 0.") {
                         Packnames = ""
                     }
-
+                    setTimeout(function () {
+                        $('#ddlpanel').val(data.d.IPD_Panel_ID).trigger('change');
+                    }, 1000)
                     $('#PackageType').val(Packtypes);
                     $('#PackageName').val(Packnames);
                     $('#hdn_PatienttypeId').val(data.d.Patient_Type_id);
@@ -5922,6 +5931,7 @@
 
 
             $(document).ready(function () {
+                fillPanel();
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
                 if (Bill_ID != "") {
                     AllowBillEdit();
@@ -5930,7 +5940,7 @@
                 $("#btnPrint").hide();
                 debugger;
                 fillCasher();
-                fillPanel();
+               
                 TotalAmountToday();
                 $("#txtSearch").keypress(function (event) {
 
@@ -6818,6 +6828,15 @@
         </div>
         <div class="col-lg-6 col-md-4 col-sm-6">
             <input type="text" id="txtadvance_amount"  style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
+        </div>
+    </div>
+
+    <div class="row" style="display:none;">
+         <div class="col-lg-5 col-md-4 col-sm-6">
+            <label>Advance Amount</label>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-6">
+            <input type="text" id="txtRefund_amount"  style="height: 30px; text-align: right; font-size: 22px;" disabled="disabled" />
         </div>
     </div>
 
