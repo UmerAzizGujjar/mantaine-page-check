@@ -215,9 +215,10 @@
                         "render": function (data, type, full) {
                             debugger;
                             var date = full.LastActivityDate;
-                            date = moment(date).format('DD-MMM-YYYY');
+                            date = moment(date).format('DD-MMM-YYYY hh:mm A'); // added time
                             return date;
-                        }, "width": "7%"
+                        },
+                        "width": "7%"
                     },
                     { "data": "BlockUser", "width": "1%", "orderable": true },
                     {
