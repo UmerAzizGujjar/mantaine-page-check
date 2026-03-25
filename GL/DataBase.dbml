@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="⁬National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3837,21 +3837,6 @@
       <Column Name="CancelledTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.AR_Advances" Member="AR_Advances">
-    <Type Name="AR_Advance">
-      <Column Name="Advance_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Advance_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Creation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Advance_Amount" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="In_Patient_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="isCancelled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="CancelledBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="CancelledTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Ward_Allocation" Member="Ward_Allocations">
     <Type Name="Ward_Allocation">
       <Column Name="Ward_Allocation_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7444,6 +7429,26 @@
       <Column Name="IsFBRPosted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Line_Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AR_Advances" Member="AR_Advances">
+    <Type Name="AR_Advance">
+      <Column Name="Advance_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Advance_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Creation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Advance_Amount" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="In_Patient_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="isCancelled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="CancelledBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="CancelledTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Voucher_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Approve_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Approve_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Payment_type" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -11620,6 +11625,14 @@
       <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
       <Column Name="Hospital_Share" Type="System.Decimal" DbType="Decimal(19,4)" CanBeNull="true" />
       <Column Name="Is_Refund" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SpApprove_Advance" Method="SpApprove_Advance">
+    <Parameter Name="advanceid" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="SpApprove_AdvanceResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Voucher_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>
