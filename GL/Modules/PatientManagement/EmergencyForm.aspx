@@ -123,7 +123,26 @@
                     }
                 }
 
+                $('#txtReferEmergencySearch').off('input').on('input', function () {
+                    FillReferPatientsList();
+                });
 
+                var Reffered_id_opd = '<%= Request.QueryString["Reffered_id_opd"] %>';
+                var refferopd_id = '<%= Request.QueryString["opd_id"] %>';
+                var added = '<%= Request.QueryString["isAdd"] %>';
+
+                if (Reffered_id_opd != "" && added == "true") {
+                    debugger;
+                    $("#hdn_emer_reffered").val(Reffered_id_opd);
+                    $("#hdn_opdId").val(refferopd_id);
+                    $('#ddlPatient_Type').attr('disabled', false);
+
+                    if (typeof Get_Pat_Info_Reffer === 'function') {
+                        Get_Pat_Info_Reffer(Reffered_id_opd);
+                    } else {
+                        Get_Pat_Info(Reffered_id_opd);
+                    }
+                }
 
 
 
@@ -1005,6 +1024,155 @@
                 }
             });
         }
+
+
+        function openReferPatientModal() {
+            $('#SearchReferPatients').modal('show');
+            FillReferPatientsList();
+        }
+
+        function FillReferPatientsList() {
+            var search = $('#txtReferEmergencySearch').val().trim();
+            $('#ReferPatientsBody').empty();
+            PageMethods.SearchPatients_Rff(search, OnFilterReferPatients, OnFailReferPatients);
+        }
+
+        function OnFilterReferPatients(data) {
+            var tbody = $('#ReferPatientsBody');
+            tbody.empty();
+
+            if (!data || data.length === 0) {
+                tbody.append('<tr><td colspan="7" class="text-center">No patients found.</td></tr>');
+                return;
+            }
+
+            $.each(data, function (i, pat) {
+                var row = '<tr>' +
+                    '<td style="display:none;">' + pat.Reg_Patient_ID + '</td>' +
+                    '<td>' + pat.Patient_No + '</td>' +
+                    '<td>' + pat.Full_Name + '</td>' +
+                    '<td>' + pat.Father_Name + '</td>' +
+                    '<td>' + pat.NIC + '</td>' +
+                    '<td>' + pat.Mobile1 + '</td>' +
+                    '<td>' +
+                    '<a class="tooltips" style="color:#438eb9; font-size:16px; display:flex; justify-content:center;" ' +
+                    'href="#" onclick="AddReferPatientDetail(\'' + pat.Reg_Patient_ID + '\', \'' + pat.OPDID + '\')">' +
+                    '<i class="fa fa-plus-circle"></i>' +
+                    '<span class="tooltiptxt">Select</span>' +
+                    '</a>' +
+                    '</td>' +
+                    '</tr>';
+                tbody.append(row);
+            });
+        }
+
+        function OnFailReferPatients(error) {
+            console.error("Refer patient search failed:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to load referred patients.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+
+        $('#txtReferEmergencySearch').off('input').on('input', function () {
+            FillReferPatientsList();
+        });
+
+        function AddReferPatientDetail(reg_id, OPDID) {
+            try {
+                var isAdd = true;
+                window.location.href = "EmergencyForm.aspx?Reffered_id_opd=" + reg_id + "&isAdd=" + isAdd + "&opd_id=" + OPDID;
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function Get_Pat_Info_Reffer(reg_id) {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/GetBasicInfoOFReffer",
+                data: JSON.stringify({ reg_id: reg_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (resp) {
+                    debugger;
+                    var data = JSON.parse(resp.d);
+                    $('#txtPatientNo').val(data.Mr_No);
+                    $('#txtpatient_no').val(data.pat_no);
+                    $('#txt_patname').val(data.Name);
+                    $('#txt_F_Name').val(data.FatherName);
+                    $('#txtage').val(data.Age);
+                    $('#txtnic').val(data.CNIC_Masked);
+                    $('#txtmobile').val(data.Mobile);
+                    $('#txtAdrress').val(data.PermanentAdrress);
+                    $('#hdn_regid').val(data.Reg_PatientID);
+                    $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
+                    $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
+
+                    debugger;
+
+                    $('#ddlmartialstatus').html(
+                        $('<option>', {
+                            value: data.MaritalStatus,
+                            text: data.MaritalStatus_text
+                        })
+                    );
+                    $('#ddlGender').html(
+                        $('<option>', {
+                            value: data.Gender,
+                            text: data.Gender_text
+                        })
+                    );
+                    $('#ddlDepartment').html(
+                        $('<option>', {
+                            value: data.departmentid,
+                            text: data.department_Text
+                        })
+                    );
+
+                    $('#ddlPatient_Type').html(
+                        $('<option>', {
+                            value: data.pat_type_Val,
+                            text: data.pat_type_text
+                        })
+                    ); loaddata();
+
+                    var $select = $('#ddldoctor');
+
+
+                    $select.empty().append(
+                        $('<option>', {
+                            value: data.doctorId,
+                            text: data.DoctorName
+                        })
+                    );
+
+
+                    var $select = $('#ddldoctor');
+
+                    $select.empty().append(
+                        new Option(data.DoctorName, data.doctorId, true, true) // creates selected option
+                    );
+
+
+                    $select.trigger({
+                        type: 'select2:select',
+                        params: {
+                            data: { id: data.doctorId, text: data.DoctorName }
+                        }
+                    });
+
+
+                },
+                error: function (response) {
+                    alert("Error: " + response.responseText);
+                    console.error("AJAX Error: ", response);
+                }
+            });
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -1545,40 +1713,40 @@
     </div>
 
     <div id="SearchReferPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <fieldset class="form-group">
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <h5>Search Your Patients:</h5>
-                                <input type="text" id="txtReferEmergencyFormSearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
-                            </div>
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <fieldset class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <h5>Search Your Patients:</h5>
+                            <input type="text" id="txtReferEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
                         </div>
-                    </fieldset>
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped table-bordered" id="ReferEmergencyFormResult">
-                            <thead>
-                                <tr>
-                                    <th style="display: none;">Patient ID</th>
-                                    <th>MR No</th>
-                                    <th>Patient Name</th>
-                                    <th>Father Name</th>
-                                    <th>CNIC</th>
-                                    <th>Doctor</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ReferPatientsBody">
-                            </tbody>
-                        </table>
                     </div>
+                </fieldset>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-bordered" id="ReferEmergencyResult">
+                        <thead>
+                            <tr>
+                                <th style="display: none;">Patient ID</th>
+                                <th>MR No</th>
+                                <th>Patient Name</th>
+                                <th>Father Name</th>
+                                <th>CNIC</th>
+                                <th>Doctor</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ReferPatientsBody">
+                        </tbody>
+                    </table>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 </asp:Content>
 

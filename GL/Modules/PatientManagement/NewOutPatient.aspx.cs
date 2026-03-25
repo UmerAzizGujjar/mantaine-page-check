@@ -584,6 +584,11 @@ namespace PMS.Modules.PatientManagement
                     if (data.Birth_History != null) OPD.Birth_History = data.Birth_History;
                     if (data.Verbal_Consent != null) OPD.Verbal_Consent = data.Verbal_Consent;
 
+                    OPD.Smokers = data.Smokers;
+                    OPD.Non_Smokers = data.Non_Smokers;
+                    OPD.Diabetics = data.Diabetics;
+                    OPD.Hypertensive = data.Hypertensive;
+
                     // Handle referral logic only if Reffer_To is provided
                     if (!string.IsNullOrEmpty(data.Reffer_To))
                     {
@@ -1388,7 +1393,11 @@ namespace PMS.Modules.PatientManagement
                         RemarksHistory = qry.txtRemarksHistory ?? "",
 
                         // Status
-                        Discharge = qry.Discharge?.ToString().ToLower() ?? "false"
+                        Discharge = qry.Discharge?.ToString().ToLower() ?? "false",
+                        Smokers = qry.Smokers?.ToString().ToLower() ?? "false",
+                        Non_Smokers = qry.Non_Smokers?.ToString().ToLower() ?? "false",
+                        Diabetics = qry.Diabetics?.ToString().ToLower() ?? "false",
+                        Hypertensive = qry.Hypertensive?.ToString().ToLower() ?? "false"
                     }
                 };
 
@@ -1768,8 +1777,8 @@ namespace PMS.Modules.PatientManagement
 
             var dpt = (from d in db.Doctor_Template_Masters
                        join hr in db.HR_Employees
-on d.Doctor_Id equals hr.Emp_ID
-                       where hr.userid == Convert.ToString(AppConfig.UserID) && d.isActive == true
+                        on d.Doctor_Id equals hr.Emp_ID
+                      where hr.userid == Convert.ToString(AppConfig.UserID) && d.isActive == true
                        select new
                        {
                            d.Template_Id,
@@ -2410,6 +2419,10 @@ on d.Doctor_Id equals hr.Emp_ID
             public bool Discharged { get; set; }
             public string Administration { get; set; }
             public string Out_Patient_ID { get; set; }
+            public bool Smokers { get; set; }
+            public bool Non_Smokers { get; set; }
+            public bool Diabetics { get; set; }
+            public bool Hypertensive { get; set; }
         }
         
 

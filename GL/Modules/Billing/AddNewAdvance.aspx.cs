@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -19,40 +21,43 @@ namespace PMS
 
         public static string GetPatientAndAdvanceDetail(string AdvanceId)
         {
-              DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-              int patientid =Convert.ToInt32(db.AR_Advances.Where(x => x.Advance_ID.Equals(AdvanceId)).Select(x => x.Patient_ID).FirstOrDefault());
-              int Patien_No = DBClass.GetMRNOBy_RegID(Convert.ToInt32(patientid));
-              var InPatientId = db.In_Patients.Where(m => m.Patient_ID.Equals(patientid) && m.Discharge == false).OrderByDescending(m => m.Admission_Date).Select(m => m.In_Patient_ID).FirstOrDefault();
-             
-              var Type = (from tbl in db.In_Patients
-                          where tbl.Patient_ID == Convert.ToInt32(patientid)
-                          && tbl.Discharge != true
-                          orderby tbl.Created_Time descending
-                          select tbl.Patient_Discount_Type).FirstOrDefault();
-              var query = (from data in db.AR_Advances
-                           join pat in db.Reg_patients on data.Patient_ID equals pat.pat_id
-                           where pat.pat_id == Convert.ToInt32(patientid) orderby data.Advance_ID descending
-                           select new 
-                           {
-                           pat.Full_Name,
-                           pat.Mobile1,
-                           pat.Created_time,
-                           pat.Gender,
-                           pat.Age_years,
-                           pat.Permanent_Address,
-                           //pat.Patient_Main_Category,
-                           pat.pat_id,
-                         
-                         /*department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category),*/ //updated info
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            int patientid = Convert.ToInt32(db.AR_Advances.Where(x => x.Advance_ID.Equals(AdvanceId)).Select(x => x.Patient_ID).FirstOrDefault());
+            int Patien_No = DBClass.GetMRNOBy_RegID(Convert.ToInt32(patientid));
+            var InPatientId = db.In_Patients.Where(m => m.Patient_ID.Equals(patientid) && m.Discharge == false).OrderByDescending(m => m.Admission_Date).Select(m => m.In_Patient_ID).FirstOrDefault();
 
-                           Patient_Discount_Type = db.GetDataValueName("Patient Type", Type),
-                           data.Remarks,
-                           data.Advance_Date,
-                          data.Advance_Amount,
-                           Balance = Convert.ToInt32(db.getAdvance_Balance(Convert.ToInt32(InPatientId), "In_Patient"))
-                           }).FirstOrDefault();
+            var Type = (from tbl in db.In_Patients
+                        where tbl.Patient_ID == Convert.ToInt32(patientid)
+                        && tbl.Discharge != true
+                        orderby tbl.Created_Time descending
+                        select tbl.Patient_Discount_Type).FirstOrDefault();
+            var query = (from data in db.AR_Advances
+                         join pat in db.Reg_patients on data.Patient_ID equals pat.pat_id
+                         where pat.pat_id == Convert.ToInt32(patientid)
+                         orderby data.Advance_ID descending
+                         select new
+                         {
+                             pat.Full_Name,
+                             pat.Mobile1,
+                             pat.Created_time,
+                             pat.Gender,
+                             pat.Age_years,
+                             pat.Permanent_Address,
+                             //pat.Patient_Main_Category,
+                             pat.pat_id,
 
-              return (new JavaScriptSerializer()).Serialize(query);
+                             /*department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category),*/ //updated info
+
+                             Patient_Discount_Type = db.GetDataValueName("Patient Type", Type),
+                             data.Remarks,
+                             data.Advance_Date,
+                             data.Status,
+                             data.Advance_Amount,
+                             data.Payment_type,
+                             Balance = Convert.ToInt32(db.getAdvance_Balance(Convert.ToInt32(InPatientId), "In_Patient"))
+                         }).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(query);
         }
 
         [WebMethod]
@@ -64,20 +69,20 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
             var pat = (from tbl in db.Reg_patients
-                   where tbl.Patient_No == Patien_No
-                   orderby tbl.Created_time descending
-                   select new
-                {
-                    tbl.Full_Name,
-                    tbl.Gender,
-                    tbl.Age_years,
-                    tbl.Created_time,
-                    tbl.Permanent_Address,
-                    tbl.Mobile1,
-                    //tbl.Patient_Main_Category,
-                    //tbl.Patient_Type,
-                    tbl.Patient_No,
-                }).FirstOrDefault();
+                       where tbl.Patient_No == Patien_No
+                       orderby tbl.Created_time descending
+                       select new
+                       {
+                           tbl.Full_Name,
+                           tbl.Gender,
+                           tbl.Age_years,
+                           tbl.Created_time,
+                           tbl.Permanent_Address,
+                           tbl.Mobile1,
+                           //tbl.Patient_Main_Category,
+                           //tbl.Patient_Type,
+                           tbl.Patient_No,
+                       }).FirstOrDefault();
 
             var Type = (from tbl in db.In_Patients
                         where tbl.Patient_ID == int.Parse(PatientID)
@@ -141,76 +146,179 @@ namespace PMS
         [WebMethod]
         public static string CheckExistInPatient(int PatientID)
         {
-            using (DataBaseDataContext db = new DataBaseDataContext()) 
+            using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var Check = (from inPat in db.In_Patients
-                            where inPat.Patient_ID == PatientID
-                            && inPat.Discharge == false
-                            orderby inPat.Admission_Date descending
-                            select new
-                            {
-                                inPat.In_Patient_ID
-                            }).FirstOrDefault();
-                return (new JavaScriptSerializer().Serialize(Check));                
+                             where inPat.Patient_ID == PatientID
+                             && inPat.Discharge == false
+                             orderby inPat.Admission_Date descending
+                             select new
+                             {
+                                 inPat.In_Patient_ID
+                             }).FirstOrDefault();
+                return (new JavaScriptSerializer().Serialize(Check));
             }
         }
-
         [WebMethod]
-        public static string SaveAdvance(int PatientID, int AdvanceAmount, DateTime AdvanceDate, string Remarks, int InPatientID, string SaveVal, int AdvID)
+        public static string Approve_Advance(string advanceid)
+        {
+            var user_id = AppConfig.UserID;
+
+            try
+            {
+                string message = "";
+                int voucherId = 0;
+
+                using (var db = new DataBaseDataContext())
+                {
+                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                    {
+                        using (var cmd = new SqlCommand("SpApprove_Advance", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@advanceid", Convert.ToInt32(advanceid));
+                            cmd.Parameters.AddWithValue("@user_id", user_id);
+
+                            conn.Open();
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    message = reader["Message"].ToString();
+                                    voucherId = Convert.ToInt32(reader["Voucher_ID"]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var response = new
+                {
+                    Message = message,
+                    Voucher_ID = voucherId,
+                    Success = voucherId > 0
+                };
+
+                return new JavaScriptSerializer().Serialize(response);
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new
+                {
+                    Message = ex.Message,
+                    Voucher_ID = 0,
+                    Success = false
+                };
+                return new JavaScriptSerializer().Serialize(errorResponse);
+            }
+        }
+        [WebMethod]
+        public static string unApproveAdvance(string advid)
+        {
+            var userid = AppConfig.UserID;
+
+            try
+            {
+                string message = "";
+                int result = 0;
+
+                using (var db = new DataBaseDataContext())
+                {
+                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                    {
+                        using (var cmd = new SqlCommand("spUnApproveAdvance", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            // Fix: Parameter name should match stored procedure parameter name
+                            cmd.Parameters.AddWithValue("@advid", Convert.ToInt32(advid));
+                            cmd.Parameters.AddWithValue("@user_id", Convert.ToString(userid));  // Changed from @userid to @user_id
+
+                            conn.Open();
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    // Your stored procedure returns only one column (@returnMessage)
+                                    if (reader.FieldCount > 0)
+                                    {
+                                        message = reader[0] != DBNull.Value ? reader[0].ToString() : "";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var response = new
+                {
+                    Message = message,
+                    Success = !string.IsNullOrEmpty(message) && message.Contains("Successfully")
+                };
+
+                return new JavaScriptSerializer().Serialize(response);
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new
+                {
+                    Message = ex.Message,
+                    Success = false
+                };
+                return new JavaScriptSerializer().Serialize(errorResponse);
+            }
+        }
+        [WebMethod]
+        public static string SaveAdvance(int PatientID, int AdvanceAmount, string ddlPaymentType, string AdvanceDate, string Remarks, int InPatientID, string SaveVal, int AdvID)
         {
             string value = string.Empty;
-            using (DataBaseDataContext db = new DataBaseDataContext()) 
+            using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                if (SaveVal == "Save")
-                {
-                    AR_Advance AdvanceObj = new AR_Advance()
-                    {
-                        Patient_ID = PatientID,
-                        Advance_Amount = AdvanceAmount,
-                        Advance_Date = AdvanceDate,
-                        Remarks = Remarks,
-                        Creation_Date = DateTime.Now,
-                        In_Patient_ID = InPatientID,
-                        Created_By = AppConfig.UserID
-                    };
-                    db.AR_Advances.InsertOnSubmit(AdvanceObj);
-                    db.SubmitChanges();
-                    //value = "Save";
-                    value =  Convert.ToString(AdvanceObj.Advance_ID);
-                }
-                else 
-                {
-                    //var p = from data in db.AR_Advances.Where(x => x.Advance_ID.Equals(AdvID))
-                    //        select data;
-                   
-                    //    AR_Advance obj = new AR_Advance();
-                       
-                    //    obj.Remarks = item.Remarks;
-
-
-
-
-
-
-                    AR_Advance ArObj = db.AR_Advances.First(m => m.Advance_ID.Equals(AdvID));
-
-                    ArObj.Advance_Amount = AdvanceAmount;
-                    ArObj.Remarks = Remarks;
-                    //value="Update";
-                    value = Convert.ToString(ArObj.Advance_ID);
-                    db.SubmitChanges();
-                }
-
-
-              
-
                 try
                 {
-                    //db.SubmitChanges();
+                    // Convert string date to DateTime
+                    DateTime parsedDate = DateTime.Parse(AdvanceDate);
+
+                    if (SaveVal == "Save")
+                    {
+                        AR_Advance AdvanceObj = new AR_Advance()
+                        {
+                            Patient_ID = PatientID,
+                            Advance_Amount = AdvanceAmount,
+                            Advance_Date = parsedDate,
+                            Remarks = Remarks,
+                            Creation_Date = DateTime.Now,
+                            In_Patient_ID = InPatientID,
+                            Created_By = AppConfig.UserID,
+                            Status = "Created",
+                            Payment_type = ddlPaymentType
+                        };
+                        db.AR_Advances.InsertOnSubmit(AdvanceObj);
+                        db.SubmitChanges();
+                        value = Convert.ToString(AdvanceObj.Advance_ID);
+                    }
+                    else if (SaveVal == "Update")
+                    {
+                        AR_Advance ArObj = db.AR_Advances.FirstOrDefault(m => m.Advance_ID == AdvID);
+                        if (ArObj != null)
+                        {
+                            ArObj.Advance_Amount = AdvanceAmount;
+                            ArObj.Remarks = Remarks;
+                            ArObj.Payment_type = ddlPaymentType;
+                            ArObj.Advance_Date = parsedDate;
+                            db.SubmitChanges();
+                            value = Convert.ToString(ArObj.Advance_ID);
+                        }
+                        else
+                        {
+                            value = "Advance record not found";
+                        }
+                    }
 
                     return value;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return ex.Message;
                 }

@@ -11,8 +11,8 @@
 
             $('#btnsaveprint').click(function () {
 
-                $('#btnsaveprint').attr('disabled', true);
-                $('#btnsaveprint').attr('disabled', true);
+                //$('#btnsaveprint').attr('disabled', true);
+                //$('#btnsaveprint').attr('disabled', true);
 
                 $("#ctl00_MainContent_panelshow").hide();
             });
@@ -1309,7 +1309,7 @@
         }
 
         function saveAllRecord() {
-            $('#btnSave').attr('disabled', true);
+           // $('#btnSave').attr('disabled', true);
             debugger;
             var btnsave = $('#btnSave').val();
 
@@ -1897,13 +1897,13 @@
                         });
 
                         window.location = "InPatientsAdmission.aspx?ID=" + response;
-                        //window.open('ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
+                      
                         $('#btnSave').val("Update");
                     }
                     else if (btn == 'btnsaveprint') {
                         debugger;
-
-                        PrintAdmisionDetails(response);
+                        window.open('ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
+                       // PrintAdmisionDetails(response);
                         $('#btnSave').val("Update");
 
                     }
@@ -3096,7 +3096,7 @@
         function SaveAllRecords() {
             debugger;
             var btnsave = $('#btnSave').val();
-            $('#btnSave').attr('disabled', true);
+           // $('#btnSave').attr('disabled', true);
             <%--var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();--%>
             var Patient_ID = $("#<%=txtPatient_ID.ClientID%>").val();
 
@@ -3110,7 +3110,7 @@
                 debugger;
                 if (name_pat == patient_name && patient_age == age_pat && patient_number == num_pat && idofpat == parseInt(Patientid_tocheck)) {
                     debugger;
-                    $('#btnSave').attr('disabled', true);
+                   // $('#btnSave').attr('disabled', true);
                     return false;
 
                 }
@@ -3468,8 +3468,8 @@
 
         function SaveInPatientAllRecord() {
             debugger;
-            $("#btnSave").attr("disabled", true);
-            $("#btnsaveprint").attr("disabled", true);
+          //  $("#btnSave").attr("disabled", true);
+           // $("#btnsaveprint").attr("disabled", true);
             $('#loadingimage').show();
             SaveNextOfKinDetails();
             CheckExistInOutPatient();

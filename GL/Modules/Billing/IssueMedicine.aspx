@@ -838,6 +838,7 @@
             var proceed = true;
             var total = $('#txtSaleReturnTotalPayable').val() || 0;
 
+
             if (!total || total <= 0) {
                 proceed = false;
                 $('#btnSaveSaleReturn').attr('disabled', false);
@@ -1398,7 +1399,7 @@
                 }
                 debugger;
                 Amount = $($(value).find('td')[8]).text();
-                TotalAmount += parseFloat(Amount * Qty);
+                TotalAmount += parseFloat(Amount * Qty).toFixed(0);
                 TotalDiscountAmount += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
                 if (isNaN(TotalDiscountAmount)) {
                     $(value).find('input[name="DisAmount"]').val(0);
@@ -1418,6 +1419,7 @@
             }
         }
         function ApplyEqualMasterDiscountToRows(masterDisPer) {
+            debugger;
             var totalLineDiscount = 0;
             var rowCount = $('#tblDetails tbody tr').length;
             if (rowCount <= 0) {
@@ -1425,19 +1427,20 @@
                 return 0;
             }
 
-            var perItemDisPer = masterDisPer / rowCount;
+            var perItemDisPer = masterDisPer;
             var roundedPerItemDisPer = parseFloat(perItemDisPer.toFixed(2));
 
             $.each($('#tblDetails tbody tr'), function (key, value) {
+                debugger;
                 var rowNetAmount = parseFloat($($(value).find('td')[11]).text()) || 0;
                 var rowLineDiscount = Math.round((rowNetAmount * roundedPerItemDisPer) / 100);
 
                 $(value).find('input[name="LineDiscount"]').val(rowLineDiscount);
                 totalLineDiscount += rowLineDiscount;
             });
-
+            debugger;
             totalLineDiscount = Math.round(totalLineDiscount);
-            $('#txtLineDisc').val(totalLineDiscount);
+            $('#txtDisAmt').val(totalLineDiscount);
             return totalLineDiscount;
         }
         function CalculateSummariesMasterDiscount(AmtWise) {
@@ -1448,35 +1451,37 @@
                 var tableRowCount = $('#tblDetails tbody tr').length;
                 if (tableRowCount > 0 && parseFloat(disper) > 0) {
                     var distributedDiscount = ApplyEqualMasterDiscountToRows(parseFloat(disper));
-                    $('#txttotalDisc').val(distributedDiscount);
+                    $('#txtDisAmt').val(distributedDiscount);
                 }
                 else if (tableRowCount > 0 && parseFloat(disper) <= 0) {
                     ApplyEqualMasterDiscountToRows(0);
                 }
                 var totalpayable = $('#txtTotalPayable').val() || 0;
                 var txtLineDisc = $('#txtLineDisc').val() || 0;
-                var netamt = parseFloat(totalpayable - txtLineDisc).toFixed(2);
-                var disAmt = 0;
-                if (disper > 0) {
-                    if (tableRowCount > 0) {
-                        disAmt = 0;
-                    }
-                    else {
-                        disAmt = (netamt * disper) / 100;
-                        disAmt = Math.round(disAmt);
-                    }
-                }
-                else {
-                    disAmt = 0;
-                }
-                $('#txtDisAmt').val(parseFloat(disAmt).toFixed(2));
+                var txtMasterDisc = $('#txtDisAmt').val() || 0;
+                var netamt = parseFloat(parseFloat(totalpayable) - (parseFloat(txtLineDisc) + parseFloat(txtMasterDisc))).toFixed(2);
+               // $('#txtDisAmt').val(parseFloat(disAmt).toFixed(2));
+                //var disAmt = 0;
+                //if (disper > 0) {
+                //    if (tableRowCount > 0) {
+                //        disAmt = 0;
+                //    }
+                //    else {
+                //        disAmt = (netamt * disper) / 100;
+                //        disAmt = Math.round(disAmt);
+                //    }
+                //}
+                //else {
+                //    disAmt = 0;
+                //}
+               
             }
             if (AmtWise) {
                 debugger
                 var txtDisAmt = $('#txtDisAmt').val() || 0;
                 var totalpayable = $('#txtTotalPayable').val() || 0;
                 var txtLineDisc = $('#txtLineDisc').val() || 0;
-                var netamt = parseFloat(totalpayable - txtLineDisc).toFixed(2);
+                var netamt = parseFloat(parseFloat(totalpayable) - parseFloat(txtLineDisc)).toFixed(2);
                 var disper = 0;
                 if (txtDisAmt > 0) {
                     disper = (txtDisAmt / netamt) * 100;
@@ -1486,6 +1491,7 @@
                 }
                 $('#txtDisPer').val(parseFloat(disper).toFixed(2));
             }
+            debugger;
             var txtDisAmt = $('#txtDisAmt').val();
             TotalAmount = $('#txtTotalPayable').val();
             var txtLineDisc = parseFloat($('#txtLineDisc').val()) || 0;
@@ -1525,6 +1531,7 @@
         }
         var isMax = 0;
         var TDis = 0;
+        debugger;
         function CalculateSummarieDiscountPerWise(rowIndex) {
             debugger;
             isMax = 0;
@@ -1568,7 +1575,7 @@
                     $($(value).find('td')[11]).text(NtAmt);
                 }
                 Amount = $($(value).find('td input[name=txtSalerate]')[0]).val().trim();
-                TotalAmount += parseFloat(Amount * Qty);
+                TotalAmount += Math.round(Amount * Qty);
                 DisAmt = $(value).find('input[name="DisAmount"]').val();
                 if (DisAmt == "") {
                     DisAmt = 0;
@@ -1592,7 +1599,7 @@
             //$('#txtLineDisc').val(TotalDiscountAmount.toFixed(2));
             var discfinalAmnt = $('#txtLineDisc').val() || 0;
             //$('#txtAmountReceived').val(parseFloat(TotalAmount.toFixed()) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc));
-            console.log(blnceCondition)
+
             if (blnceCondition == 'true') {
                 $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
             }
@@ -3258,11 +3265,11 @@
                     <div class="col-lg-6">
                         <label>Disc %</label>
 
-                        <input type="text" tabindex="18" id="txtDisPer" class="form-control me-2" onkeyup="CalculateSummariesMasterDiscount(false),sumdiscount()" />
+                        <input type="text" tabindex="18" id="txtDisPer" class="form-control me-2" onkeyup="CalculateSummariesMasterDiscount(false),sumdiscount()"  onblur="CalculateSummariesMasterDiscount(false),sumdiscount()"/>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <label>Disc (Alt+D)</label>
-                        <input type="text" id="txtDisAmt" tabindex="19" class="form-control ms-2" onkeyup="CalculateSummariesMasterDiscount(true),sumdiscount()" />
+                        <input type="text" id="txtDisAmt" tabindex="19" class="form-control ms-2" onkeyup="CalculateSummariesMasterDiscount(true),sumdiscount()" onblur="CalculateSummariesMasterDiscount(true),sumdiscount()"/>
 
                     </div>
 

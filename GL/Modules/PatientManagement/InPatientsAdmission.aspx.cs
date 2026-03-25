@@ -432,7 +432,7 @@ namespace PMS
                     List<HR_Employee> EmpList = new List<HR_Employee>();
                     EmpList = (from tbl in db.HR_Employees
                                where (tbl.IsDoctor == true
-                               && tbl.Department == ddlDepartment.SelectedValue && (tbl.Designation == "004" || tbl.Designation == "005" || tbl.Designation == "005" || tbl.Designation == "006" || tbl.Designation == "007" || tbl.Designation == "008"))
+                               && tbl.Department == ddlDepartment.SelectedValue )
                                select tbl).ToList();
                     ddlDoctor.Items.Clear();
                     ddlDoctor.DataSource = EmpList;
@@ -4842,7 +4842,7 @@ namespace PMS
             List<HR_Employee> EmpList = new List<HR_Employee>();
             EmpList = (from tbl in db.HR_Employees
                        where (tbl.IsDoctor == true
-                       && tbl.Department == ddlDepartment.SelectedValue && (tbl.Designation == "004" || tbl.Designation == "005" || tbl.Designation == "005" || tbl.Designation == "006" || tbl.Designation == "007" || tbl.Designation == "008"))
+                       && tbl.Department == ddlDepartment.SelectedValue  )
                        select tbl).ToList();
             ddlDoctor.Items.Clear();
             ddlDoctor.DataSource = EmpList;

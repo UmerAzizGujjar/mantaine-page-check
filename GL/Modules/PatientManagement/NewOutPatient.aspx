@@ -745,6 +745,11 @@
                 AddVitals();
                 setDropdownValue('ctl00_MainContent_ddldoctors', data.referDoc);
 
+                setValue('ctl00_MainContent_chkSmokers', data.Smokers);
+                setValue('ctl00_MainContent_chkNon_Smokers', data.Non_Smokers);
+                setValue('ctl00_MainContent_chkDiabetics', data.Diabetics);
+                setValue('ctl00_MainContent_chkHypertensive', data.Hypertensive);
+
             } catch (error) {
                 console.error("Error populating form: ", error);
                 alert("Error populating form data. Please check console for details.");
@@ -3994,6 +3999,11 @@ function LoadLabResultrpt() {
                 Proto: safeGetValue('#ctl00_MainContent_ddlProto'),
                 Verbal_Consent: safeGetValue('#ctl00_MainContent_ddlVerbalConsent'),
 
+                Smokers: document.getElementById("ctl00_MainContent_chkSmokers")?.checked || false,
+                Non_Smokers: document.getElementById("ctl00_MainContent_chkNon_Smokers")?.checked || false,
+                Diabetics: document.getElementById("ctl00_MainContent_chkDiabetics")?.checked || false,
+                Hypertensive: document.getElementById("ctl00_MainContent_chkHypertensive")?.checked || false,
+
                 // Common Fields - ensure these are proper data types
                 Patient_ID: parseInt(Patient_ID) || 0,
                 reg_ID: reg_ID || "",
@@ -4794,6 +4804,33 @@ function LoadLabResultrpt() {
                                                 </div>
                                                 <div class="col-md-7 col-sm-6">
                                                     <asp:Label ID="lblFollow" runat="server"></asp:Label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-5 col-sm-6">
+                                                    <asp:Label CssClass="labels" runat="server" Text="Medical History:"></asp:Label>
+                                                </div>                                               
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-7 col-sm-6">
+                                                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkSmokers" runat="server" />
+                                                            <label for="ctl00_MainContent_chkSmokers" style="margin-left: 5px; margin-bottom: 0;">Smoker</label>
+                                                        </div>                                                     
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkDiabetics" runat="server" />
+                                                            <label for="ctl00_MainContent_chkDiabetics" style="margin-left: 5px; margin-bottom: 0;">Diabetic</label>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center;">
+                                                            <asp:CheckBox ID="chkHypertensive" runat="server" />
+                                                            <label for="ctl00_MainContent_chkHypertensive" style="margin-left: 5px; margin-bottom: 0;">Hypertensive</label>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center;display:none">
+                                                            <asp:CheckBox ID="chkNon_Smokers" runat="server" />
+                                                            <label for="ctl00_MainContent_chkNon_Smokers" style="margin-left: 5px; margin-bottom: 0;">Non-Smoker</label>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="row mb-3" style="display: none">

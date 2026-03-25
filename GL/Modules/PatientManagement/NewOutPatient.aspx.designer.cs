@@ -168,6 +168,42 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.Label lblFollow;
 
         /// <summary>
+        /// chkSmokers control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkSmokers;
+
+        /// <summary>
+        /// chkDiabetics control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkDiabetics;
+
+        /// <summary>
+        /// chkHypertensive control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkHypertensive;
+
+        /// <summary>
+        /// chkNon_Smokers control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkNon_Smokers;
+
+        /// <summary>
         /// Doctor control.
         /// </summary>
         /// <remarks>
