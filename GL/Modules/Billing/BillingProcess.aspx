@@ -3677,10 +3677,17 @@
                                 '<td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate +' </td>' +
                                 '</tr>';
 
+
+
                             $('#tblDetails tbody').append(row);
                             CalculateSummarieDiscountPerWise(rowIndex);
+                            var $newRow = $('#tblDetails tbody tr').eq(rowIndex);
+                            var $amountCell = $newRow.find('td').eq(5);
                             if (Alloweditrate == "true") {
-                                $(this).find("td:eq(5)").attr('contenteditable', 'true');
+                                $amountCell.attr('contenteditable', true);
+                            }
+                            else {
+                                $amountCell.attr('contenteditable', false);
                             }
 
                             // Patient type logic
