@@ -793,7 +793,7 @@ namespace PMS
                                 join b in db.Ar_Billings
                                 on r.Bill_ID equals b.Bill_ID
                                 where b.Bill_ID == BillID
-                                && b.Balance_Amount > 0
+                               // && b.Balance_Amount > 0
                                 orderby r.Receipt_ID descending
                                 select new
                                 {

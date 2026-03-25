@@ -62,6 +62,17 @@ namespace PMS
                         ).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(dept);
         }
+        [WebMethod]
+        public static string ReceiptsUpdateonBilling()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Receipts Update on Billing"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
 
 
         [WebMethod]
@@ -1974,10 +1985,19 @@ namespace PMS
             db.SubmitChanges();
 
             // Manage Receipts
-            var rcpt = db.Receipts.Where(r => r.Bill_ID == newBill.Bill_ID).ToList();
+            // var rcpt = db.Receipts.Where(r => r.Bill_ID == newBill.Bill_ID && (r.isCancel == false || r.isCancel == null)).ToList();
+
+            var rcpt = (from r in db.Receipts where r.Bill_ID == newBill.Bill_ID && (r.isCancel == false || r.isCancel == null) orderby r.Receipt_ID descending select r).FirstOrDefault();
+
             if (rcpt != null)
-                db.Receipts.DeleteAllOnSubmit(rcpt);
-            db.SubmitChanges();
+            {
+                //db.Receipts.DeleteAllOnSubmit(rcpt);
+                rcpt.isCancel = true;
+                rcpt.Cancel_Date = DateTime.Now;
+                rcpt.Cancel_by = AppConfig.UserID;
+                rcpt.CancelRemarks = "Cancelled due to bill update. Bill No: " + newBill.Bill_No;
+                db.SubmitChanges();
+            }
             if (newBill.Received_Amount >= 0)
             {
                 Receipts.SaveRecord((int)0, (int)(newBill.Patient_ID), (DateTime)newBill.Bill_Date, (string)"Amount received while billing, Bill No:- " + newBill.Bill_No + "", (decimal)newBill.Received_Amount, (int)newBill.Bill_ID);

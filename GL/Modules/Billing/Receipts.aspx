@@ -20,6 +20,7 @@
                 ReceiptAmount = 0.00
             var Balance = txtReceiptAmount - ReceiptAmount;
             $('#txtNetBalance').val(Balance);
+            $('#txtNetReceivable').val(Balance);
         }
 
         function DischargeCheck() {
@@ -669,7 +670,7 @@
                 else {
                     var Pending_Amount = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
                     $('#txtNetBalance').val(Pending_Amount);
-                    $('#txtNetReceivable').val(TotalBill_Amount);
+                    $('#txtNetReceivable').val(Pending_Amount);
                     $('#txtNetReceivable').css('background-color', 'red');
                     $('#lblTotalBillsmsg').text('Total Bill Amount:- ');
 
@@ -707,6 +708,7 @@
 
                     $('#txtNetReceivable').css('background-color', 'red');
                 });
+                debugger;
                 var netBalance_Amt = $('#txtNetBalance').val();
                 var Total_amt = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
                 $('#totalAdvanceAmount').val(TotalAmount);
@@ -752,6 +754,7 @@
                        TotalReceipt_Amount = TotalReceiptAmount
                         var Total_amt = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
                         $('#txtNetBalance').val(Total_amt);
+                        $('#txtNetReceivable').val(Total_amt);
                     }
                 });
                 $('#lblTotalReceiptsmsg').text('Total Receipt Amount:- ');
@@ -999,9 +1002,9 @@
             }, function (error) {
                 alert(error.get_message());
             });
-
-            LoadBills();
             LoadAdvance();
+            LoadBills();
+            
            
             
         }
