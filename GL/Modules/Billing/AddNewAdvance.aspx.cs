@@ -50,6 +50,7 @@ namespace PMS
                            Patient_Discount_Type = db.GetDataValueName("Patient Type", Type),
                            data.Remarks,
                            data.Advance_Date,
+                           data.Status,
                           data.Advance_Amount,
                            Balance = Convert.ToInt32(db.getAdvance_Balance(Convert.ToInt32(InPatientId), "In_Patient"))
                            }).FirstOrDefault();
@@ -211,6 +212,62 @@ namespace PMS
             }
         }
         [WebMethod]
+        public static string unApproveAdvance(string advid)
+        {
+            var userid = AppConfig.UserID;
+
+            try
+            {
+                string message = "";
+                int result = 0;
+
+                using (var db = new DataBaseDataContext())
+                {
+                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                    {
+                        using (var cmd = new SqlCommand("spUnApproveAdvance", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            // Fix: Parameter name should match stored procedure parameter name
+                            cmd.Parameters.AddWithValue("@advid", Convert.ToInt32(advid));
+                            cmd.Parameters.AddWithValue("@user_id", Convert.ToString(userid));  // Changed from @userid to @user_id
+
+                            conn.Open();
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    // Your stored procedure returns only one column (@returnMessage)
+                                    if (reader.FieldCount > 0)
+                                    {
+                                        message = reader[0] != DBNull.Value ? reader[0].ToString() : "";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var response = new
+                {
+                    Message = message,
+                    Success = !string.IsNullOrEmpty(message) && message.Contains("Successfully")
+                };
+
+                return new JavaScriptSerializer().Serialize(response);
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new
+                {
+                    Message = ex.Message,
+                    Success = false
+                };
+                return new JavaScriptSerializer().Serialize(errorResponse);
+            }
+        }
+        [WebMethod]
         public static string SaveAdvance(int PatientID, int AdvanceAmount, DateTime AdvanceDate, string Remarks, int InPatientID, string SaveVal, int AdvID)
         {
             string value = string.Empty;
@@ -226,7 +283,8 @@ namespace PMS
                         Remarks = Remarks,
                         Creation_Date = DateTime.Now,
                         In_Patient_ID = InPatientID,
-                        Created_By = AppConfig.UserID
+                        Created_By = AppConfig.UserID,
+                        Status = "Created"
                     };
                     db.AR_Advances.InsertOnSubmit(AdvanceObj);
                     db.SubmitChanges();
