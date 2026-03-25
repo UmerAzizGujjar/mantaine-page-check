@@ -351,9 +351,6 @@ namespace PMS.Modules.Accounts
                 int.TryParse(row.discount, out discount);
                 int.TryParse(row.revenue, out revenue);
 
-                // For Advance tab, Dr is stored in CashInHand and Cr in Revenue
-                // For other tabs, they are used normally
-
                 ClinicalAccountCategory table = new ClinicalAccountCategory
                 {
                     Fn_Department = financialDept,
@@ -378,12 +375,12 @@ namespace PMS.Modules.Accounts
             using (var db = new DataBaseDataContext())
             {
                 var data = (from x in db.ClinicalAccountCategories
-                            where x.IsCancel == false && x.Fn_Department == "012"
+                            where x.IsCancel == false && x.Fn_Department == "013"
                             select new RowData
                             {
                                 categoryname = x.CategoryName,
-                                dr = x.CashInHand.HasValue ? x.CashInHand.Value.ToString() : "",  // Map CashInHand to Dr
-                                cr = x.Revenue.HasValue ? x.Revenue.Value.ToString() : "",        // Map Revenue to Cr
+                                dr = x.CashInHand.HasValue ? x.CashInHand.Value.ToString() : "0",  // Map CashInHand to Dr
+                                cr = x.Revenue.HasValue ? x.Revenue.Value.ToString() : "0",        // Map Revenue to Cr
                                 financialdepartment = x.Fn_Department
                             }).ToList();
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -154,7 +156,60 @@ namespace PMS
                 return (new JavaScriptSerializer().Serialize(Check));                
             }
         }
+        [WebMethod]
+        public static string Approve_Advance(string advanceid)
+        {
+            var user_id = AppConfig.UserID;
 
+            try
+            {
+                string message = "";
+                int voucherId = 0;
+
+                using (var db = new DataBaseDataContext())
+                {
+                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                    {
+                        using (var cmd = new SqlCommand("SpApprove_Advance", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@advanceid", Convert.ToInt32(advanceid));
+                            cmd.Parameters.AddWithValue("@user_id", user_id);
+
+                            conn.Open();
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    message = reader["Message"].ToString();
+                                    voucherId = Convert.ToInt32(reader["Voucher_ID"]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var response = new
+                {
+                    Message = message,
+                    Voucher_ID = voucherId,
+                    Success = voucherId > 0
+                };
+
+                return new JavaScriptSerializer().Serialize(response);
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new
+                {
+                    Message = ex.Message,
+                    Voucher_ID = 0,
+                    Success = false
+                };
+                return new JavaScriptSerializer().Serialize(errorResponse);
+            }
+        }
         [WebMethod]
         public static string SaveAdvance(int PatientID, int AdvanceAmount, DateTime AdvanceDate, string Remarks, int InPatientID, string SaveVal, int AdvID)
         {

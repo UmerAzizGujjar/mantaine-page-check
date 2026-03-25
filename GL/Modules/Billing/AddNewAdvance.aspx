@@ -287,7 +287,73 @@
                 });
             }
         }
+        function ApproveAdvance() {
+            var advanceid = '<% =Request.QueryString["advID"] %>';
+        PageMethods.Approve_Advance(advanceid, function (response) {
+            debugger;
+            try {
+                var result = JSON.parse(response);
 
+                // Check if we have a valid response
+                if (result && result.Message) {
+                    if (result.Success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: result.Message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: result.Message,
+                            showConfirmButton: true,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Invalid response from server',
+                        showConfirmButton: true
+                    });
+                }
+            } catch (error) {
+                console.error("Error parsing response:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while processing the request',
+                    showConfirmButton: true
+                });
+            }
+        }, function (error) {
+            // Error callback for PageMethods
+            debugger;
+            console.error("PageMethods error:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: error.get_message ? error.get_message() : 'An error occurred',
+                showConfirmButton: true
+            });
+        });
+    }
     </script>
 
 
@@ -435,6 +501,9 @@
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-3">
                         <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintAdvance()" value="Print" />
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3">
+                        <input type="button" id="btnApprove" class="btn btn-primry" onclick="ApproveAdvance()" value="Approve" />
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-3">
                         <input type="button" id="btnPrintVoucher" class="btn btn-primry" onclick="PrintVoucher();" value="Voucher" />

@@ -26,383 +26,370 @@
         });
 
         //SAVE DATA
-        function submitData() {
-            debugger;
-            let isEmptyFound = false;
-            let allData = [];
-            let categoryNamesIPD = new Set();
-            let categoryNamesOPD = new Set();
-            let categoryNamesOPDShare = new Set();
-            let categoryNamesReg = new Set();
-            let categoryNamesDiagnostic = new Set();
-            let categoryNamesDiagnosticShare = new Set();
-            let categoryNamesEMERGENCY = new Set();
-            let categoryNamesSERVICE = new Set();
-            let categoryNamesPHARMACY = new Set();
-            let categoryNamesProcedure = new Set();
-            let categoryNamesSpecialService = new Set();
-            let categoryNamesAdvance = new Set();
-            let duplicateFound = false;
+     function submitData() {
+    debugger;
+    let isEmptyFound = false;
+    let allData = [];
+    let categoryNamesIPD = new Set();
+    let categoryNamesOPD = new Set();
+    let categoryNamesOPDShare = new Set();
+    let categoryNamesReg = new Set();
+    let categoryNamesDiagnostic = new Set();
+    let categoryNamesDiagnosticShare = new Set();
+    let categoryNamesEMERGENCY = new Set();
+    let categoryNamesSERVICE = new Set();
+    let categoryNamesPHARMACY = new Set();
+    let categoryNamesProcedure = new Set();
+    let categoryNamesSpecialService = new Set();
+    let duplicateFound = false;
+    
+    let rowsOPD = $('#tableOPD .data-row');
+    let rowsIPD = $('#tableIPD .data-row');
+    let rowsOPDShare = $('#tableOPDShare .data-row');
+    let rowsReg = $('#tableReg .data-row');
+    let rowsDiagnostic = $('#tableDiagnostic .data-row');
+    let rowsDiagnosticShare = $('#tableDiagnosticShare .data-row');
+    let rowsSpecialService = $('#tableSpecialServices .data-row');
+    let rowsProcedure = $('#tableProcedure .data-row');
+    let rowsEMERGENCY = $('#tableEMERGENCY .data-row');
+    let rowsSERVICE = $('#tableSERVICE .data-row');
+    let rowsPHARMACY = $('#tablePHARMACY .data-row');
+    let rowsAdvance = $('#tableAdvance .data-row');
 
-            let rowsOPD = $('#tableOPD .data-row');
-            let rowsIPD = $('#tableIPD .data-row');
-            let rowsOPDShare = $('#tableOPDShare .data-row');
-            let rowsReg = $('#tableReg .data-row');
-            let rowsDiagnostic = $('#tableDiagnostic .data-row');
-            let rowsDiagnosticShare = $('#tableDiagnosticShare .data-row');
-            let rowsSpecialService = $('#tableSpecialServices .data-row');
-            let rowsProcedure = $('#tableProcedure .data-row');
-            let rowsEMERGENCY = $('#tableEMERGENCY .data-row');
-            let rowsSERVICE = $('#tableSERVICE .data-row');
-            let rowsPHARMACY = $('#tablePHARMACY .data-row');
-            let rowsAdvance = $('#tableAdvance .data-row');
+    // Check if any rows exist
+    if (rowsOPD.length === 0 && rowsIPD.length === 0 && rowsOPDShare.length === 0 && rowsReg.length === 0 && 
+        rowsSpecialService.length === 0 && rowsProcedure.length === 0 && rowsDiagnostic.length === 0 && 
+        rowsDiagnosticShare.length === 0 && rowsEMERGENCY.length === 0 && rowsSERVICE.length === 0 && 
+        rowsPHARMACY.length === 0 && rowsAdvance.length === 0) {
+        isEmptyFound = true;
+    }
 
-            // Check if any rows exist
-            if (rowsOPD.length === 0 && rowsIPD.length === 0 && rowsOPDShare.length === 0 && rowsReg.length === 0 &&
-                rowsSpecialService.length === 0 && rowsProcedure.length === 0 && rowsDiagnostic.length === 0 &&
-                rowsDiagnosticShare.length === 0 && rowsEMERGENCY.length === 0 && rowsSERVICE.length === 0 &&
-                rowsPHARMACY.length === 0 && rowsAdvance.length === 0) {
-                isEmptyFound = true;
-            }
-
-            // Get all data from existing tables (keep your existing code)
-            rowsIPD.each(function () {
-                let row = $(this);
-                let rowDataIPD = {
-                    financialdepartment: row.find('.financialDepartmentIPD').val(),
-                    categoryname: row.find('.categorynameIPD').val(),
-                    cashinhand: row.find('.cashinhandIPD').val(),
-                    discount: row.find('.discountIPD').val(),
-                    revenue: row.find('.revenueIPD').val()
-                };
-                if (rowDataIPD.categoryname == 0 || rowDataIPD.cashinhand == 0 || rowDataIPD.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesIPD.has(rowDataIPD.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesIPD.add(rowDataIPD.categoryname);
-                }
-                allData.push(rowDataIPD);
-            });
-
-            rowsOPD.each(function () {
-                let row = $(this);
-                let rowDataOPD = {
-                    financialdepartment: row.find('.financialDepartmentOPD').val(),
-                    categoryname: row.find('.categorynameOPD').val(),
-                    cashinhand: row.find('.cashinhandOPD').val(),
-                    discount: row.find('.discountOPD').val(),
-                    revenue: row.find('.revenueOPD').val()
-                };
-                if (rowDataOPD.categoryname == 0 || rowDataOPD.cashinhand == 0 || rowDataOPD.discount == 0 || rowDataOPD.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesOPD.has(rowDataOPD.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesOPD.add(rowDataOPD.categoryname);
-                }
-                allData.push(rowDataOPD);
-            });
-
-            rowsOPDShare.each(function () {
-                let row = $(this);
-                let rowDataOPDShare = {
-                    financialdepartment: row.find('.financialDepartmentOPDShare').val(),
-                    categoryname: row.find('.categorynameOPDShare').val(),
-                    cashinhand: row.find('.cashinhandOPDShare').val(),
-                    discount: row.find('.discountOPDShare').val(),
-                    revenue: row.find('.revenueOPDShare').val()
-                };
-                if (rowDataOPDShare.categoryname == 0 || rowDataOPDShare.cashinhand == 0 || rowDataOPDShare.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesOPDShare.has(rowDataOPDShare.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesOPDShare.add(rowDataOPDShare.categoryname);
-                }
-                allData.push(rowDataOPDShare);
-            });
-
-            rowsReg.each(function () {
-                let row = $(this);
-                let rowDataReg = {
-                    financialdepartment: row.find('.financialDepartmentReg').val(),
-                    categoryname: row.find('.categorynameReg').val(),
-                    cashinhand: row.find('.cashinhandReg').val(),
-                    discount: row.find('.discountReg').val(),
-                    revenue: row.find('.revenueReg').val()
-                };
-                if (rowDataReg.cashinhand == 0 || rowDataReg.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesReg.has(rowDataReg.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesReg.add(rowDataReg.categoryname);
-                }
-                allData.push(rowDataReg);
-            });
-
-            rowsDiagnostic.each(function () {
-                let row = $(this);
-                let rowDataDiagnostic = {
-                    financialdepartment: row.find('.financialDepartmentDiagnostic').val(),
-                    categoryname: row.find('.categorynameDiagnostic').val(),
-                    cashinhand: row.find('.cashinhandDiagnostic').val(),
-                    discount: row.find('.discountDiagnostic').val(),
-                    revenue: row.find('.revenueDiagnostic').val()
-                };
-                if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesDiagnostic.has(rowDataDiagnostic.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesDiagnostic.add(rowDataDiagnostic.categoryname);
-                }
-                allData.push(rowDataDiagnostic);
-            });
-
-            rowsDiagnosticShare.each(function () {
-                let row = $(this);
-                let rowDataDiagnosticShare = {
-                    financialdepartment: row.find('.financialDepartmentDiagnosticShare').val(),
-                    categoryname: row.find('.categorynameDiagnosticShare').val(),
-                    cashinhand: row.find('.cashinhandDiagnosticShare').val(),
-                    discount: row.find('.discountDiagnosticShare').val(),
-                    revenue: row.find('.revenueDiagnosticShare').val()
-                };
-                if (rowDataDiagnosticShare.categoryname == 0 || rowDataDiagnosticShare.cashinhand == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesDiagnosticShare.has(rowDataDiagnosticShare.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesDiagnosticShare.add(rowDataDiagnosticShare.categoryname);
-                }
-                allData.push(rowDataDiagnosticShare);
-            });
-
-            rowsSpecialService.each(function () {
-                let row = $(this);
-                let rowDataSpecialService = {
-                    financialdepartment: row.find('.financialDepartmentSpecialServices').val(),
-                    categoryname: row.find('.categorynameSpecialServices').val(),
-                    cashinhand: row.find('.cashinhandSpecialServices').val(),
-                    discount: row.find('.discountSpecialServices').val(),
-                    revenue: row.find('.revenueSpecialServices').val()
-                };
-                if (rowDataSpecialService.categoryname == 0 || rowDataSpecialService.cashinhand == 0 || rowDataSpecialService.discount == 0 || rowDataSpecialService.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesSpecialService.has(rowDataSpecialService.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesSpecialService.add(rowDataSpecialService.categoryname);
-                }
-                allData.push(rowDataSpecialService);
-            });
-
-            rowsProcedure.each(function () {
-                let row = $(this);
-                let rowDataProcedure = {
-                    financialdepartment: row.find('.financialDepartmentProcedure').val(),
-                    categoryname: row.find('.categorynameProcedure').val(),
-                    cashinhand: row.find('.cashinhandProcedure').val(),
-                    discount: row.find('.discountProcedure').val(),
-                    revenue: row.find('.revenueProcedure').val()
-                };
-                if (rowDataProcedure.categoryname == 0 || rowDataProcedure.cashinhand == 0 || rowDataProcedure.discount == 0 || rowDataProcedure.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesProcedure.has(rowDataProcedure.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesProcedure.add(rowDataProcedure.categoryname);
-                }
-                allData.push(rowDataProcedure);
-            });
-
-            rowsEMERGENCY.each(function () {
-                let row = $(this);
-                let rowDataEMERGENCY = {
-                    financialdepartment: row.find('.financialDepartmentEMERGENCY').val(),
-                    categoryname: row.find('.categorynameEMERGENCY').val(),
-                    cashinhand: row.find('.cashinhandEMERGENCY').val(),
-                    discount: row.find('.discountEMERGENCY').val(),
-                    revenue: row.find('.revenueEMERGENCY').val()
-                };
-                if (rowDataEMERGENCY.categoryname == 0 || rowDataEMERGENCY.cashinhand == 0 || rowDataEMERGENCY.discount == 0 || rowDataEMERGENCY.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesEMERGENCY.has(rowDataEMERGENCY.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesEMERGENCY.add(rowDataEMERGENCY.categoryname);
-                }
-                allData.push(rowDataEMERGENCY);
-            });
-
-            rowsSERVICE.each(function () {
-                let row = $(this);
-                let rowDataSERVICE = {
-                    financialdepartment: row.find('.financialDepartmentSERVICE').val(),
-                    categoryname: row.find('.categorynameSERVICE').val(),
-                    cashinhand: row.find('.cashinhandSERVICE').val(),
-                    discount: row.find('.discountSERVICE').val(),
-                    revenue: row.find('.revenueSERVICE').val()
-                };
-                if (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesSERVICE.has(rowDataSERVICE.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesSERVICE.add(rowDataSERVICE.categoryname);
-                }
-                allData.push(rowDataSERVICE);
-            });
-
-            rowsPHARMACY.each(function () {
-                let row = $(this);
-                let rowDataPHARMACY = {
-                    financialdepartment: row.find('.financialDepartmentPHARMACY').val(),
-                    categoryname: row.find('.categorynamePHARMACY').val(),
-                    cashinhand: row.find('.cashinhandPHARMACY').val(),
-                    discount: row.find('.discountPHARMACY').val(),
-                    revenue: row.find('.revenuePHARMACY').val()
-                };
-                if (rowDataPHARMACY.categoryname == 0 || rowDataPHARMACY.cashinhand == 0 || rowDataPHARMACY.discount == 0 || rowDataPHARMACY.revenue == 0) {
-                    isEmptyFound = true;
-                }
-                if (categoryNamesPHARMACY.has(rowDataPHARMACY.categoryname)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesPHARMACY.add(rowDataPHARMACY.categoryname);
-                }
-                allData.push(rowDataPHARMACY);
-            });
-
-            // Handle Advance tab data - Map Dr to CashInHand and Cr to Revenue
-            rowsAdvance.each(function () {
-                let row = $(this);
-                let drValue = row.find('.drAdvance').val();
-                let crValue = row.find('.crAdvance').val();
-                let categoryName = row.find('.categorynameAdvance').val();
-
-                let rowDataAdvance = {
-                    financialdepartment: row.find('.financialDepartmentAdvance').val(),
-                    categoryname: categoryName,
-                    cashinhand: drValue && drValue !== '' ? drValue : '0',  // Dr goes to CashInHand
-                    discount: '0',  // No discount for advance
-                    revenue: crValue && crValue !== '' ? crValue : '0'     // Cr goes to Revenue
-                };
-
-                // Validation
-                if (categoryName == 0 || categoryName == '0') {
-                    isEmptyFound = true;
-                }
-
-                // Check if either Dr or Cr is filled (but not both)
-                let hasDr = drValue && drValue !== '';
-                let hasCr = crValue && crValue !== '';
-
-                if ((!hasDr && !hasCr) || (hasDr && hasCr)) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'In Advance tab, please fill either Dr OR Cr, not both or none.',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-                    isEmptyFound = true;
-                    return false;
-                }
-
-                // Check for duplicate categoryname in Advance tab
-                if (categoryNamesAdvance.has(categoryName)) {
-                    duplicateFound = true;
-                } else {
-                    categoryNamesAdvance.add(categoryName);
-                }
-
-                allData.push(rowDataAdvance);
-            });
-
-            // Check for empty fields
-            if (isEmptyFound) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please fill all required fields in each row before submitting.',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-
-            if (duplicateFound) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Categories must be different within each section.',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-
-            // AJAX call to save all data
-            if (!isEmptyFound && !duplicateFound) {
-                $.ajax({
-                    type: "POST",
-                    url: "ClinicalFinancial.aspx/InsertData",
-                    data: JSON.stringify({ rows: allData }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Data Inserted Successfully!',
-                            showConfirmButton: false,
-                            timer: 2500,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-                        setTimeout(function () {
-                            location.reload();
-                        }, 2500);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error:", error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'An error occurred while saving data.',
-                            showConfirmButton: true
-                        });
-                    }
-                });
-            }
+    // Get all data from existing tables (keep your existing code for other tabs)
+    rowsIPD.each(function () {
+        let row = $(this);
+        let rowDataIPD = {
+            financialdepartment: row.find('.financialDepartmentIPD').val(),
+            categoryname: row.find('.categorynameIPD').val(),
+            cashinhand: row.find('.cashinhandIPD').val(),
+            discount: row.find('.discountIPD').val(),
+            revenue: row.find('.revenueIPD').val()
+        };
+        if (rowDataIPD.categoryname == 0 || rowDataIPD.cashinhand == 0 || rowDataIPD.revenue == 0) {
+            isEmptyFound = true;
         }
-
+        if (categoryNamesIPD.has(rowDataIPD.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesIPD.add(rowDataIPD.categoryname);
+        }
+        allData.push(rowDataIPD);
+    });
+    
+    rowsOPD.each(function () {
+        let row = $(this);
+        let rowDataOPD = {
+            financialdepartment: row.find('.financialDepartmentOPD').val(),
+            categoryname: row.find('.categorynameOPD').val(),
+            cashinhand: row.find('.cashinhandOPD').val(),
+            discount: row.find('.discountOPD').val(),
+            revenue: row.find('.revenueOPD').val()
+        };
+        if (rowDataOPD.categoryname == 0 || rowDataOPD.cashinhand == 0 || rowDataOPD.discount == 0 || rowDataOPD.revenue == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesOPD.has(rowDataOPD.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesOPD.add(rowDataOPD.categoryname);
+        }
+        allData.push(rowDataOPD);
+    });
+    
+    rowsOPDShare.each(function () {
+        let row = $(this);
+        let rowDataOPDShare = {
+            financialdepartment: row.find('.financialDepartmentOPDShare').val(),
+            categoryname: row.find('.categorynameOPDShare').val(),
+            cashinhand: row.find('.cashinhandOPDShare').val(),
+            discount: row.find('.discountOPDShare').val(),
+            revenue: row.find('.revenueOPDShare').val()
+        };
+        if (rowDataOPDShare.categoryname == 0 || rowDataOPDShare.cashinhand == 0 || rowDataOPDShare.revenue == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesOPDShare.has(rowDataOPDShare.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesOPDShare.add(rowDataOPDShare.categoryname);
+        }
+        allData.push(rowDataOPDShare);
+    });
+    
+    rowsReg.each(function () {
+        let row = $(this);
+        let rowDataReg = {
+            financialdepartment: row.find('.financialDepartmentReg').val(),
+            categoryname: row.find('.categorynameReg').val(),
+            cashinhand: row.find('.cashinhandReg').val(),
+            discount: row.find('.discountReg').val(),
+            revenue: row.find('.revenueReg').val()
+        };
+        if (rowDataReg.cashinhand == 0 || rowDataReg.revenue == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesReg.has(rowDataReg.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesReg.add(rowDataReg.categoryname);
+        }
+        allData.push(rowDataReg);
+    });
+    
+    rowsDiagnostic.each(function () {
+        let row = $(this);
+        let rowDataDiagnostic = {
+            financialdepartment: row.find('.financialDepartmentDiagnostic').val(),
+            categoryname: row.find('.categorynameDiagnostic').val(),
+            cashinhand: row.find('.cashinhandDiagnostic').val(),
+            discount: row.find('.discountDiagnostic').val(),
+            revenue: row.find('.revenueDiagnostic').val()
+        };
+        if (rowDataDiagnostic.categoryname == 0 || rowDataDiagnostic.cashinhand == 0 || rowDataDiagnostic.discount == 0 || rowDataDiagnostic.revenue == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesDiagnostic.has(rowDataDiagnostic.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesDiagnostic.add(rowDataDiagnostic.categoryname);
+        }
+        allData.push(rowDataDiagnostic);
+    });
+    
+    rowsDiagnosticShare.each(function () {
+        let row = $(this);
+        let rowDataDiagnosticShare = {
+            financialdepartment: row.find('.financialDepartmentDiagnosticShare').val(),
+            categoryname: row.find('.categorynameDiagnosticShare').val(),
+            cashinhand: row.find('.cashinhandDiagnosticShare').val(),
+            discount: row.find('.discountDiagnosticShare').val(),
+            revenue: row.find('.revenueDiagnosticShare').val()
+        };
+        if (rowDataDiagnosticShare.categoryname == 0 || rowDataDiagnosticShare.cashinhand == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesDiagnosticShare.has(rowDataDiagnosticShare.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesDiagnosticShare.add(rowDataDiagnosticShare.categoryname);
+        }
+        allData.push(rowDataDiagnosticShare);
+    });
+    
+    rowsSpecialService.each(function () {
+        let row = $(this);
+        let rowDataSpecialService = {
+            financialdepartment: row.find('.financialDepartmentSpecialServices').val(),
+            categoryname: row.find('.categorynameSpecialServices').val(),
+            cashinhand: row.find('.cashinhandSpecialServices').val(),
+            discount: row.find('.discountSpecialServices').val(),
+            revenue: row.find('.revenueSpecialServices').val()
+        };
+        if (rowDataSpecialService.categoryname == 0 || rowDataSpecialService.cashinhand == 0 || rowDataSpecialService.discount == 0 || rowDataSpecialService.revenue == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesSpecialService.has(rowDataSpecialService.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesSpecialService.add(rowDataSpecialService.categoryname);
+        }
+        allData.push(rowDataSpecialService);
+    });
+    
+    rowsProcedure.each(function () {
+        let row = $(this);
+        let rowDataProcedure = {
+            financialdepartment: row.find('.financialDepartmentProcedure').val(),
+            categoryname: row.find('.categorynameProcedure').val(),
+            cashinhand: row.find('.cashinhandProcedure').val(),
+            discount: row.find('.discountProcedure').val(),
+            revenue: row.find('.revenueProcedure').val()
+        };
+        if (rowDataProcedure.categoryname == 0 || rowDataProcedure.cashinhand == 0 || rowDataProcedure.discount == 0 || rowDataProcedure.revenue == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesProcedure.has(rowDataProcedure.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesProcedure.add(rowDataProcedure.categoryname);
+        }
+        allData.push(rowDataProcedure);
+    });
+    
+    rowsEMERGENCY.each(function () {
+        let row = $(this);
+        let rowDataEMERGENCY = {
+            financialdepartment: row.find('.financialDepartmentEMERGENCY').val(),
+            categoryname: row.find('.categorynameEMERGENCY').val(),
+            cashinhand: row.find('.cashinhandEMERGENCY').val(),
+            discount: row.find('.discountEMERGENCY').val(),
+            revenue: row.find('.revenueEMERGENCY').val()
+        };
+        if (rowDataEMERGENCY.categoryname == 0 || rowDataEMERGENCY.cashinhand == 0 || rowDataEMERGENCY.discount == 0 || rowDataEMERGENCY.revenue == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesEMERGENCY.has(rowDataEMERGENCY.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesEMERGENCY.add(rowDataEMERGENCY.categoryname);
+        }
+        allData.push(rowDataEMERGENCY);
+    });
+    
+    rowsSERVICE.each(function () {
+        let row = $(this);
+        let rowDataSERVICE = {
+            financialdepartment: row.find('.financialDepartmentSERVICE').val(),
+            categoryname: row.find('.categorynameSERVICE').val(),
+            cashinhand: row.find('.cashinhandSERVICE').val(),
+            discount: row.find('.discountSERVICE').val(),
+            revenue: row.find('.revenueSERVICE').val()
+        };
+        if (rowDataSERVICE.categoryname == 0 || rowDataSERVICE.cashinhand == 0 || rowDataSERVICE.discount == 0 || rowDataSERVICE.revenue == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesSERVICE.has(rowDataSERVICE.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesSERVICE.add(rowDataSERVICE.categoryname);
+        }
+        allData.push(rowDataSERVICE);
+    });
+    
+    rowsPHARMACY.each(function () {
+        let row = $(this);
+        let rowDataPHARMACY = {
+            financialdepartment: row.find('.financialDepartmentPHARMACY').val(),
+            categoryname: row.find('.categorynamePHARMACY').val(),
+            cashinhand: row.find('.cashinhandPHARMACY').val(),
+            discount: row.find('.discountPHARMACY').val(),
+            revenue: row.find('.revenuePHARMACY').val()
+        };
+        if (rowDataPHARMACY.categoryname == 0 || rowDataPHARMACY.cashinhand == 0 || rowDataPHARMACY.discount == 0 || rowDataPHARMACY.revenue == 0) {
+            isEmptyFound = true;
+        }
+        if (categoryNamesPHARMACY.has(rowDataPHARMACY.categoryname)) {
+            duplicateFound = true;
+        } else {
+            categoryNamesPHARMACY.add(rowDataPHARMACY.categoryname);
+        }
+        allData.push(rowDataPHARMACY);
+    });
+    
+    // Handle Advance tab data - Hard-coded category name "Advance" with value "01"
+    rowsAdvance.each(function () {
+        let row = $(this);
+        let drValue = row.find('.drAdvance').val();
+        let crValue = row.find('.crAdvance').val();
+        
+        let rowDataAdvance = {
+            financialdepartment: row.find('.financialDepartmentAdvance').val(),
+            categoryname: "01",  // Hard-coded value "01" for Advance
+            cashinhand: drValue && drValue !== '0' ? drValue : '0',  // Dr dropdown value goes to CashInHand
+            discount: '0',  // No discount for advance
+            revenue: crValue && crValue !== '0' ? crValue : '0'      // Cr dropdown value goes to Revenue
+        };
+        
+        // Check if either Dr or Cr is selected (but not both)
+        let hasDr = drValue && drValue !== '0';
+        let hasCr = crValue && crValue !== '0';
+        
+        if ((!hasDr && !hasCr)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'In Advance tab, please select either Dr OR Cr.',
+                showConfirmButton: false,
+                timer: 2000
+            });
+            isEmptyFound = true;
+            return false;
+        }
+        
+        
+        
+        allData.push(rowDataAdvance);
+    });
+    
+    // Check for empty fields
+    //if (isEmptyFound) {
+      //  Swal.fire({
+         //   icon: 'error',
+          //  title: 'Error!',
+           // text: 'Please fill all required fields in each row before submitting.',
+           // showConfirmButton: false,
+           // timer: 2000,
+           // customClass: {
+             //   popup: 'swal-big-popup',
+                //title: 'swal-big-title',
+               // htmlContainer: 'swal-big-text'
+          //  }
+       // });
+        //return;
+    //}
+    
+    if (duplicateFound) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Categories must be different within each section.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        return;
+    }
+    
+    // AJAX call to save all data
+    if (!isEmptyFound && !duplicateFound) {
+        $.ajax({
+            type: "POST",
+            url: "ClinicalFinancial.aspx/InsertData",
+            data: JSON.stringify({ rows: allData }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data Inserted Successfully!',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                setTimeout(function () {
+                    location.reload();
+                }, 2500);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while saving data.',
+                    showConfirmButton: true
+                });
+            }
+        });
+    }
+}
         //load data from db
         function OPDloadSavedRows() {
             $.ajax({
@@ -467,35 +454,38 @@
                 }
             });
         }
-        // Load saved rows for Advance tab
-        function AdvanceloadSavedRows() {
-            $.ajax({
-                type: "POST",
-                url: "ClinicalFinancial.aspx/loadSavedRowsAdvance",
-                data: '{}',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    const savedData = response.d;
-                    console.log(savedData);
-                    getClinicalFinancialAcoountsDropdown(function (options) {
-                        getAdvanceCategories(function (categoryOptions) {
-                            savedData.forEach(item => {
-                                let row = `
+  
+function AdvanceloadSavedRows() {
+    $.ajax({
+        type: "POST",
+        url: "ClinicalFinancial.aspx/loadSavedRowsAdvance",
+        data: '{}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            const savedData = response.d;
+            console.log(savedData);
+            getClinicalFinancialAcoountsDropdown(function (options) {
+                getAccounts(function (optionsVen) {
+                    savedData.forEach(item => {
+                        let row = `
                             <tr class="data-row">
                                 <td style="display: none">
                                     <input type="hidden" class="financialDepartmentAdvance" value="${item.financialdepartment}"/>
                                  </td>
                                  <td>
-                                    <select class="categorynameAdvance select2select" style="background-color: white; height:32px;" disabled>
-                                        ${setSelected(categoryOptions, item.categoryname)}
+                                    <input type="text" class="categorynameAdvance form-control" value="Advance" disabled style="background-color: #f0f0f0;" />
+                                    <input type="hidden" class="categorynameAdvanceHidden" value="01" />
+                                 </td>
+                                 <td>
+                                    <select class="drAdvance select2select" style="background-color: white;" disabled>
+                                        ${setSelected(optionsVen, item.dr)}
                                     </select>
                                  </td>
                                  <td>
-                                    <input type="text" class="drAdvance form-control" value="${item.dr || ''}" disabled style="background-color: white;" placeholder="Enter Dr amount" />
-                                 </td>
-                                 <td>
-                                    <input type="text" class="crAdvance form-control" value="${item.cr || ''}" disabled style="background-color: white;" placeholder="Enter Cr amount" />
+                                    <select class="crAdvance select2select" style="background-color: white;" disabled>
+                                        ${setSelected(optionsVen, item.cr)}
+                                    </select>
                                  </td>
                                  <td>
                                     <a href="#" onclick="removeRow(this)">
@@ -505,40 +495,40 @@
                                         <i class="fa fa-pencil fa-lg" style="color: black;"></i>
                                     </a>
                                  </td>
-                            </tr>`;
+                             </tr>`;
 
-                                $('.financialDepartmentAdvance option[value="012"]').prop('selected', true);
-                                $('#tableAdvance tbody').append(row);
-                            });
-                            $('.select2select').select2();
-                        });
+                        $('#tableAdvance tbody').append(row);
                     });
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error loading advance rows:", error);
-                }
+                    $('.select2select').select2();
+                });
             });
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading advance rows:", error);
         }
-
-        // Add new row for Advance tab
-        function addNewRowAdvance() {
-            getClinicalFinancialAcoountsDropdown(function (options) {
-                getAdvanceCategories(function (categoryOptions) {
-                    let newRow = `
+    });
+}
+function addNewRowAdvance() {
+    getClinicalFinancialAcoountsDropdown(function (options) {
+        getAccounts(function (optionsVen) {
+            let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
-                        <input type="hidden" class="financialDepartmentAdvance" value="012">
+                        <input type="hidden" class="financialDepartmentAdvance" value="013">
                     </td>
                     <td>
-                        <select class="categorynameAdvance select2select" style="background-color: white; height:32px;">
-                            ${categoryOptions}
+                        <input type="text" class="categorynameAdvance form-control" value="Advance" readonly style="background-color: #f0f0f0;" />
+                        <input type="hidden" class="categorynameAdvanceHidden" value="01" />
+                    </td>
+                    <td>
+                        <select class="drAdvance select2select" style="background-color: white;">
+                            ${optionsVen}
                         </select>
                     </td>
                     <td>
-                        <input type="number" class="drAdvance form-control" placeholder="Enter Dr amount" step="0.01" />
-                    </td>
-                    <td>
-                        <input type="number" class="crAdvance form-control" placeholder="Enter Cr amount" step="0.01" />
+                        <select class="crAdvance select2select" style="background-color: white;">
+                            ${optionsVen}
+                        </select>
                     </td>
                     <td>
                         <a href="#" onclick="removeRow(this)">
@@ -547,53 +537,13 @@
                     </td>
                 </tr>
             `;
-                    $('#tableAdvance tbody').append(newRow);
-                    $('.financialDepartmentAdvance option[value="012"]').prop('selected', true);
-                    $('.select2select').select2();
-
-                    // Add validation to ensure only one field is filled
-                    $('.drAdvance, .crAdvance').off('input').on('input', function () {
-                        let row = $(this).closest('tr');
-                        let drInput = row.find('.drAdvance');
-                        let crInput = row.find('.crAdvance');
-
-                        if ($(this).hasClass('drAdvance') && $(this).val() !== '') {
-                            crInput.val('').prop('disabled', true);
-                        } else if ($(this).hasClass('crAdvance') && $(this).val() !== '') {
-                            drInput.val('').prop('disabled', true);
-                        } else if ($(this).val() === '') {
-                            if ($(this).hasClass('drAdvance')) {
-                                crInput.prop('disabled', false);
-                            } else {
-                                drInput.prop('disabled', false);
-                            }
-                        }
-                    });
-                });
-            });
-        }
-
-        // Get advance categories dropdown
-        function getAdvanceCategories(callback) {
-            $.ajax({
-                url: 'ClinicalFinancial.aspx/AdvanceCategories',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    let options = '<option value="0">Please Select</option>';
-                    let data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
-                    });
-                    callback(options);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching advance categories:', error);
-                    callback('<option value="0">Error</option>');
-                }
-            });
-        }
+            $('#tableAdvance tbody').append(newRow);
+            $('.financialDepartmentAdvance option[value="013"]').prop('selected', true);
+            $('.select2select').select2();
+        });
+    });
+}
+       
         //function IPDShareloadSavedRows() {
         //    $.ajax({
         //        type: "POST",
@@ -1981,7 +1931,7 @@
                 </tbody>
             </table>
         </div>
-     <div id="Tab-12">
+ <div id="Tab-12">
     <div class="row">
         <div class="col-lg-11 col-md-11 col-sm-11"></div>
         <div class="col-lg-1 col-md-1 col-sm-1" style="text-align: right;">
