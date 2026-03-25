@@ -948,6 +948,9 @@ namespace PMS
         partial void InsertOut_Patient(Out_Patient instance);
         partial void UpdateOut_Patient(Out_Patient instance);
         partial void DeleteOut_Patient(Out_Patient instance);
+        partial void InsertGl_Accounts_Log(Gl_Accounts_Log instance);
+        partial void UpdateGl_Accounts_Log(Gl_Accounts_Log instance);
+        partial void DeleteGl_Accounts_Log(Gl_Accounts_Log instance);
         #endregion
 
         public DataBaseDataContext() :
@@ -955,6 +958,7 @@ namespace PMS
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -3456,6 +3460,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Out_Patient>();
+            }
+        }
+
+        public System.Data.Linq.Table<Gl_Accounts_Log> Gl_Accounts_Logs
+        {
+            get
+            {
+                return this.GetTable<Gl_Accounts_Log>();
             }
         }
 
@@ -166467,6 +166479,188 @@ namespace PMS
                     this._Hypertensive = value;
                     this.SendPropertyChanged("Hypertensive");
                     this.OnHypertensiveChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Gl_Accounts_Log")]
+    public partial class Gl_Accounts_Log : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Log_Id;
+
+        private System.Nullable<int> _Voucher_Id;
+
+        private string _Master_Logs;
+
+        private string _Details_Logs;
+
+        private System.Nullable<System.Guid> _Logged_By;
+
+        private System.Nullable<System.DateTime> _Logged_Time;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnLog_IdChanging(int value);
+        partial void OnLog_IdChanged();
+        partial void OnVoucher_IdChanging(System.Nullable<int> value);
+        partial void OnVoucher_IdChanged();
+        partial void OnMaster_LogsChanging(string value);
+        partial void OnMaster_LogsChanged();
+        partial void OnDetails_LogsChanging(string value);
+        partial void OnDetails_LogsChanged();
+        partial void OnLogged_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnLogged_ByChanged();
+        partial void OnLogged_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnLogged_TimeChanged();
+        #endregion
+
+        public Gl_Accounts_Log()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Log_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Log_Id
+        {
+            get
+            {
+                return this._Log_Id;
+            }
+            set
+            {
+                if ((this._Log_Id != value))
+                {
+                    this.OnLog_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Log_Id = value;
+                    this.SendPropertyChanged("Log_Id");
+                    this.OnLog_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Voucher_Id", DbType = "Int")]
+        public System.Nullable<int> Voucher_Id
+        {
+            get
+            {
+                return this._Voucher_Id;
+            }
+            set
+            {
+                if ((this._Voucher_Id != value))
+                {
+                    this.OnVoucher_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Voucher_Id = value;
+                    this.SendPropertyChanged("Voucher_Id");
+                    this.OnVoucher_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Master_Logs", DbType = "NVarChar(MAX)")]
+        public string Master_Logs
+        {
+            get
+            {
+                return this._Master_Logs;
+            }
+            set
+            {
+                if ((this._Master_Logs != value))
+                {
+                    this.OnMaster_LogsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Master_Logs = value;
+                    this.SendPropertyChanged("Master_Logs");
+                    this.OnMaster_LogsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Details_Logs", DbType = "NVarChar(MAX)")]
+        public string Details_Logs
+        {
+            get
+            {
+                return this._Details_Logs;
+            }
+            set
+            {
+                if ((this._Details_Logs != value))
+                {
+                    this.OnDetails_LogsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Details_Logs = value;
+                    this.SendPropertyChanged("Details_Logs");
+                    this.OnDetails_LogsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Logged_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Logged_By
+        {
+            get
+            {
+                return this._Logged_By;
+            }
+            set
+            {
+                if ((this._Logged_By != value))
+                {
+                    this.OnLogged_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Logged_By = value;
+                    this.SendPropertyChanged("Logged_By");
+                    this.OnLogged_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Logged_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Logged_Time
+        {
+            get
+            {
+                return this._Logged_Time;
+            }
+            set
+            {
+                if ((this._Logged_Time != value))
+                {
+                    this.OnLogged_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Logged_Time = value;
+                    this.SendPropertyChanged("Logged_Time");
+                    this.OnLogged_TimeChanged();
                 }
             }
         }
