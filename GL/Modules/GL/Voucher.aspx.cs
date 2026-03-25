@@ -187,59 +187,59 @@ namespace PMS
 
 
 
-                    //if (lstItem == null)
-                    //    throw new Exception("Voucher not found for update.");
+                    if (lstItem == null)
+                        throw new Exception("Voucher not found for update.");
 
 
-                    //var existingDetails = db.GL_Voucher_Accounts
-                    //    .Where(d => d.Voucher_ID == int.Parse(record.editmode_voucherID))
-                    //    .ToList();
+                    var existingDetails = db.GL_Voucher_Accounts
+                        .Where(d => d.Voucher_ID == int.Parse(record.editmode_voucherID))
+                        .ToList();
 
-                    //var previousVoucherData = new
-                    //{
-                    //    Voucher = new
-                    //    {
-                    //        lstItem.Voucher_No,
-                    //        VoucherDate = lstItem.Voucher_Date,
-                    //        lstItem.Voucher_Type,
-                    //        lstItem.Remarks,
-                    //        lstItem.Voucher_Status,
-                    //        lstItem.Approved_By,
-                    //        lstItem.Updated_By,
-                    //        lstItem.Approved_Time,
-                    //        lstItem.Update_Time,
-                    //        lstItem.Total_Debit,
-                    //        lstItem.Total_Credit,
-                    //    },
-                    //    Details = new
-                    //    {
-                    //        GL_Voucher_Account = existingDetails.Select(d => new
-                    //        {
-                    //            d.Voucher_account_ID,
-                    //            d.Account_ID,
-                    //            d.DR,
-                    //            d.CR,
-                    //            d.Voucher_ID,
-                    //            d.Cost_Center,
-                    //            d.Cheque_No,
-                    //            d.Cheque_Date
-                    //        }).ToList()
-                    //    }
-                    //};
+                    var previousVoucherData = new
+                    {
+                        Voucher = new
+                        {
+                            lstItem.Voucher_No,
+                            VoucherDate = lstItem.Voucher_Date,
+                            lstItem.Voucher_Type,
+                            lstItem.Remarks,
+                            lstItem.Voucher_Status,
+                            lstItem.Approved_By,
+                            lstItem.Updated_By,
+                            lstItem.Approved_Time,
+                            lstItem.Update_Time,
+                            lstItem.Total_Debit,
+                            lstItem.Total_Credit,
+                        },
+                        Details = new
+                        {
+                            GL_Voucher_Account = existingDetails.Select(d => new
+                            {
+                                d.Voucher_account_ID,
+                                d.Account_ID,
+                                d.DR,
+                                d.CR,
+                                d.Voucher_ID,
+                                d.Cost_Center,
+                                d.Cheque_No,
+                                d.Cheque_Date
+                            }).ToList()
+                        }
+                    };
 
-                    //string masterLogJson = oJS.Serialize(previousVoucherData.Voucher);
-                    //string detailsLogJson = oJS.Serialize(previousVoucherData.Details);
+                    string masterLogJson = oJS.Serialize(previousVoucherData.Voucher);
+                    string detailsLogJson = oJS.Serialize(previousVoucherData.Details);
 
-                    //Gl_Accounts_Log VoucherLog = new Gl_Accounts_Log
-                    //{
-                    //    Voucher_Id = int.Parse(record.editmode_VoucherID),
-                    //    Master_Logs = masterLogJson,
-                    //    Details_Logs = detailsLogJson,
-                    //    Logged_Time = DateTime.Now,
-                    //    Logged_By = AppConfig.UserID
-                    //};
+                    Gl_Accounts_Log VoucherLog = new Gl_Accounts_Log
+                    {
+                        Voucher_Id = int.Parse(record.editmode_voucherID),
+                        Master_Logs = masterLogJson,
+                        Details_Logs = detailsLogJson,
+                        Logged_Time = DateTime.Now,
+                        Logged_By = AppConfig.UserID
+                    };
 
-                    //db.Gl_Accounts_Logs.InsertOnSubmit(VoucherLog);
+                    db.Gl_Accounts_Logs.InsertOnSubmit(VoucherLog);
 
 
                     db.SubmitChanges();
