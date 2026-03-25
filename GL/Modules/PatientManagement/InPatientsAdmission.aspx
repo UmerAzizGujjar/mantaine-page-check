@@ -3265,8 +3265,9 @@
                     else if (btn === 'btnsaveprint') {
                         debugger;
 
-                        PrintAdmisionDetails(response);
+                        //PrintAdmisionDetails(response);
                         window.location = "InPatientsAdmission.aspx?ID=" + response;
+                        window.open('../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
 
                     }
                 });
