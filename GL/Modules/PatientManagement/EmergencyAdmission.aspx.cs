@@ -94,6 +94,10 @@ namespace PMS.Modules.PatientManagement
             public string ddlIssuance_Of { get; set; }
             public string ddlWard_No { get; set; }
             public string txtBed_No { get; set; }
+
+            public string ddlRoom_Type { get; set; }
+            public string ddlRoom_No { get; set; }
+            public string txtRoomBed_No { get; set; }
         }
 
         [WebMethod]
@@ -128,20 +132,26 @@ namespace PMS.Modules.PatientManagement
                         admission.Admission_Date = Convert.ToDateTime(data.txtAdmission_Date);
                     else
                         admission.Admission_Date = DateTime.Now;
-
                     admission.Emergency_Pat_Condition = data.ddlPatientCondition ?? "01";
                     admission.Department = data.ddlDepartment ?? "";
                     admission.Doctor = data.ddlDoctor ?? "";
                     admission.Issuance_Of = data.ddlIssuance_Of ?? "";
-
                     if (!string.IsNullOrEmpty(data.txtadmissionfee))
                         admission.Admission_Fees = int.Parse(data.txtadmissionfee);
 
+                    // Ward allocation
                     if (!string.IsNullOrEmpty(data.ddlWard_No) && data.ddlWard_No != "0")
                         admission.Ward_ID = Convert.ToInt32(data.ddlWard_No);
-
                     if (!string.IsNullOrEmpty(data.txtBed_No) && int.TryParse(data.txtBed_No, out int bedNo))
                         admission.Bed_No = bedNo;
+
+                    // NEW: Room allocation
+                    if (!string.IsNullOrEmpty(data.ddlRoom_Type) && data.ddlRoom_Type != "0")
+                        admission.Room_Type = data.ddlRoom_Type;
+                    if (!string.IsNullOrEmpty(data.ddlRoom_No) && data.ddlRoom_No != "0")
+                        admission.Room_ID = Convert.ToInt32(data.ddlRoom_No);
+                    if (!string.IsNullOrEmpty(data.txtRoomBed_No) && int.TryParse(data.txtRoomBed_No, out int roomBedNo))
+                        admission.Bed_No = roomBedNo;
 
                     if (!string.IsNullOrEmpty(data.txtTreatmentTime))
                         admission.TreatmentTime = Convert.ToDateTime(data.txtTreatmentTime);
@@ -174,6 +184,18 @@ namespace PMS.Modules.PatientManagement
                             false);
                     }
 
+                    // ✅ SAVE ROOM ALLOCATION (NEW)
+                    if (!string.IsNullOrEmpty(data.ddlRoom_Type) && data.ddlRoom_Type != "0"
+                        && !string.IsNullOrEmpty(data.ddlRoom_No))
+                    {
+                        SaveRoomAllocation(db, data.Patient_ID.ToString(),
+                            admission.Emergency_ID.ToString(),
+                            data.ddlRoom_No,
+                            data.ddlRoom_Type,
+                            data.ddlDoctor,
+                            false);
+                    }
+
                     return admission.Emergency_ID.ToString();
                 }
             }
@@ -181,6 +203,27 @@ namespace PMS.Modules.PatientManagement
             {
                 return "Error: " + ex.Message;
             }
+        }
+
+        private static void SaveRoomAllocation(DataBaseDataContext db, string patID, string emergencyID,
+         string roomID, string roomType, string doctorID, bool discharge)
+        {
+            try
+            {
+                var roomAlloc = new Room_Allocation();
+                roomAlloc.Created_By = AppConfig.UserID;
+                roomAlloc.Created_Time = DateTime.Now;
+                roomAlloc.Book_ID = AppConfig.Book_ID;
+                roomAlloc.Company_ID = AppConfig.Company_ID;
+                roomAlloc.From_Date = DateTime.Now;
+                roomAlloc.Patient_ID = Convert.ToInt32(patID);
+                roomAlloc.Room_ID = Convert.ToInt32(roomID);
+                roomAlloc.Room_Type = roomType;
+                roomAlloc.IsDischarge = discharge;
+                db.Room_Allocations.InsertOnSubmit(roomAlloc);
+                db.SubmitChanges();
+            }
+            catch { }
         }
 
         // Helper method for ward allocation
@@ -237,7 +280,10 @@ namespace PMS.Modules.PatientManagement
                                         ddlDoctor = ep.Doctor,
                                         ddlIssuance_Of = ep.Issuance_Of,
                                         ddlWard_No = ep.Ward_ID,
-                                        txtBed_No = ep.Bed_No
+                                        txtBed_No = ep.Bed_No,
+                                        ddlRoom_Type = ep.Room_Type,
+                                        ddlRoom_No = ep.Room_ID,
+                                        txtRoomBed_No = ep.Bed_No
                                     }).FirstOrDefault();
 
                     return new JavaScriptSerializer().Serialize(admission);
