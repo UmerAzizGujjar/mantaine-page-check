@@ -63,7 +63,8 @@ namespace PMS
             {
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var patients = (from p in db.Reg_patients
+                    var patients = (from p in db.Reg_patients join e in db.Emergencies 
+                                    on p.pat_id equals e.Reg_PatId
                                     where (p.mr_no_sequence != null && p.mr_no_sequence.ToString().Contains(searchValue))
                                           || (p.Full_Name != null && p.Full_Name.Contains(searchValue))
                                     select new

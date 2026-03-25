@@ -126,6 +126,31 @@
                 });
             }
 
+            var Rpts;
+            function CheckReceiptsUpdateonBilling() {
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/ReceiptsUpdateonBilling",
+                    data: JSON.stringify({}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                      var  Rptss = JSON.parse(response.d);
+                        if (Rptss == '001') {
+                            Rpts = true;
+                        }
+                        else {
+                            Rpts = false;
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching items", error);
+                    }
+                });
+            }
+
 
             function BackToPrintPatient() {
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
@@ -1760,8 +1785,9 @@
                         if (Patient_ID == '') {
                             alert('Select Patient.');
                         }
-                        PageMethods.CheckReceipts(Bill_ID, function (receipts) {
-                            if (receipts == '') {
+                        if (Rpts == true) {
+                            PageMethods.CheckReceipts(Bill_ID, function (receipts) {
+                                //  if (receipts == '') {
                                 // ? Proceed to save — only ONE CheckReceipts call
                                 PageMethods.SaveBillRecord(JSON.stringify(Parameters), function (resp) {
                                     // ?? Parse response safely
@@ -1840,24 +1866,128 @@
                                     });
                                 });
 
-                            } else {
-                                // Receipts exist — block save
-                                alert('Delete Following Receipts:- ' + receipts);
-                                $('#btnSave').prop('disabled', false);
-                                document.getElementById("hdnDuplicateCheck").value = "0";
-                            }
-                        }, function (error) {
-                            // CheckReceipts failed
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Receipt Check Failed',
-                                text: 'Error: ' + (error.get_message?.() || error),
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                $('#btnSave').prop('disabled', false);
-                                document.getElementById("hdnDuplicateCheck").value = "0";
+                                //}
+                                //else {
+                                //    // Receipts exist — block save
+                                //    alert('Delete Following Receipts:- ' + receipts);
+                                //    $('#btnSave').prop('disabled', false);
+                                //    document.getElementById("hdnDuplicateCheck").value = "0";
+                                //}
+                            }, function (error) {
+                                // CheckReceipts failed
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Receipt Check Failed',
+                                    text: 'Error: ' + (error.get_message?.() || error),
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    $('#btnSave').prop('disabled', false);
+                                    document.getElementById("hdnDuplicateCheck").value = "0";
+                                });
                             });
-                        });
+                        }
+                        else {
+                            PageMethods.CheckReceipts(Bill_ID, function (receipts) {
+                                  if (receipts == '') {
+                                // ? Proceed to save — only ONE CheckReceipts call
+                                PageMethods.SaveBillRecord(JSON.stringify(Parameters), function (resp) {
+                                    // ?? Parse response safely
+                                    let result;
+                                    try {
+                                        result = JSON.parse(resp);
+                                    } catch (e1) {
+                                        try {
+                                            result = JSON.parse(JSON.parse(resp)); // double-serialized fallback
+                                        } catch (e2) {
+                                            result = { success: true, billId: resp.toString().trim() };
+                                        }
+                                    }
+
+                                    // ?? Handle error
+                                    if (result.success === false) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Validation Failed',
+                                            text: result.message || 'An error occurred during save.',
+                                            confirmButtonText: 'OK',
+                                            customClass: {
+                                                popup: 'swal-big-popup',
+                                                title: 'swal-big-title',
+                                                htmlContainer: 'swal-big-text'
+                                            }
+                                        }).then(() => {
+                                            $('#btnSave').prop('disabled', false);
+                                            document.getElementById("hdnDuplicateCheck").value = "0";
+                                        });
+                                        return;
+                                    }
+
+                                    // ?? Success path
+                                    const billId = (result.billId || result || '').toString().trim();
+                                    if (!billId || isNaN(billId)) {
+                                        Swal.fire('Error!', 'Invalid Bill ID returned: ' + billId, 'error').then(() => {
+                                            $('#btnSave').prop('disabled', false);
+                                            document.getElementById("hdnDuplicateCheck").value = "0";
+                                        });
+                                        return;
+                                    }
+
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: 'Data Successfully Saved.',
+                                        showConfirmButton: false,
+                                        timer: 2500,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+
+                                    const encodedBillId = encodeURIComponent(billId);
+                                    window.open('../../ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing%20Base%20Report&Bill_ID=' + encodedBillId);
+
+                                    setTimeout(function () {
+                                        window.location.href = 'BillingProcess.aspx?Bill_ID=' + encodedBillId;
+                                    }, 700);
+
+                                    DeleteExcludedItems();
+
+                                }, function (error) {
+                                    // Save failed (network/exception)
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Save Failed',
+                                        text: 'Network error: ' + (error.get_message?.() || error),
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        $('#btnSave').prop('disabled', false);
+                                        document.getElementById("hdnDuplicateCheck").value = "0";
+                                    });
+                                });
+
+                                }
+                                else {
+                                    // Receipts exist — block save
+                                    alert('Delete Following Receipts:- ' + receipts);
+                                    $('#btnSave').prop('disabled', false);
+                                    document.getElementById("hdnDuplicateCheck").value = "0";
+                                }
+                            }, function (error) {
+                                // CheckReceipts failed
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Receipt Check Failed',
+                                    text: 'Error: ' + (error.get_message?.() || error),
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    $('#btnSave').prop('disabled', false);
+                                    document.getElementById("hdnDuplicateCheck").value = "0";
+                                });
+                            });
+                        }
+                        
                     }
                     else {
                         alert("Processing Please Wait");
@@ -3547,10 +3677,17 @@
                                 '<td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate +' </td>' +
                                 '</tr>';
 
+
+
                             $('#tblDetails tbody').append(row);
                             CalculateSummarieDiscountPerWise(rowIndex);
+                            var $newRow = $('#tblDetails tbody tr').eq(rowIndex);
+                            var $amountCell = $newRow.find('td').eq(5);
                             if (Alloweditrate == "true") {
-                                $(this).find("td:eq(5)").attr('contenteditable', 'true');
+                                $amountCell.attr('contenteditable', true);
+                            }
+                            else {
+                                $amountCell.attr('contenteditable', false);
                             }
 
                             // Patient type logic
@@ -5971,6 +6108,7 @@
                 fillmartial();
                 fillgender();
                 CheckAppointmentAllow();
+                CheckReceiptsUpdateonBilling();
 
                 jQuery(function ($) {
                     MaskedInput({
