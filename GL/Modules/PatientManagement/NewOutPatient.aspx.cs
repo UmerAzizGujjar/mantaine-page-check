@@ -1768,8 +1768,8 @@ namespace PMS.Modules.PatientManagement
 
             var dpt = (from d in db.Doctor_Template_Masters
                        join hr in db.HR_Employees
-on d.Doctor_Id equals hr.Emp_ID
-                       where hr.userid == Convert.ToString(AppConfig.UserID) && d.isActive == true
+                        on d.Doctor_Id equals hr.Emp_ID
+                      where hr.userid == Convert.ToString(AppConfig.UserID) && d.isActive == true
                        select new
                        {
                            d.Template_Id,
