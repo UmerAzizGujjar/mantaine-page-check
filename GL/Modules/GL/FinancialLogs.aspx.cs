@@ -81,10 +81,10 @@ namespace PMS
 
                 if (startdate == "" && enddate == "")
                 {
-                    var query = (from l in db.Gl_Vouchers_Logs
+                    var query = (from l in db.Gl_Accounts_Logs
                                  where l.Voucher_Id.HasValue
                                  join a in db.GL_Vouchers on l.Voucher_Id.Value equals a.Voucher_ID
-                                 where a.iscancel == false
+                                 where a.IsDeleted == false || a.IsDeleted == null
                                  select new
                                  {
 
@@ -93,7 +93,6 @@ namespace PMS
                                      a.Voucher_Date,
                                      a.Ref_Num,
                                      a.Remarks,
-                                     a.Branch_DDL,
                                      a.Voucher_Status,
                                      a.Total_Debit,
                                      a.Voucher_Type
@@ -106,10 +105,10 @@ namespace PMS
                 {
                     dTimestDate = Convert.ToDateTime(startdate);
                     dTimeenDate = Convert.ToDateTime(enddate);
-                    var query = (from l in db.Gl_Vouchers_Logs
+                    var query = (from l in db.Gl_Accounts_Logs
                                  where l.Voucher_Id.HasValue
                                  join a in db.GL_Vouchers on l.Voucher_Id.Value equals a.Voucher_ID
-                                 where a.iscancel == false && a.Voucher_Date >= dTimestDate && a.Voucher_Date <= dTimeenDate
+                                 where (a.IsDeleted == false || a.IsDeleted == null )&& a.Voucher_Date >= dTimestDate && a.Voucher_Date <= dTimeenDate
                                  select new
                                  {
 
@@ -118,7 +117,6 @@ namespace PMS
                                      a.Voucher_Date,
                                      a.Ref_Num,
                                      a.Remarks,
-                                     a.Branch_DDL,
                                      a.Voucher_Status,
                                      a.Total_Debit,
                                      a.Voucher_Type
@@ -138,7 +136,7 @@ namespace PMS
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var voucherLogs = (from l in db.Gl_Vouchers_Logs
+                var voucherLogs = (from l in db.Gl_Accounts_Logs
                                    where l.Voucher_Id == voucherId
                                    orderby l.Log_Id descending
                                    select new

@@ -1,158 +1,24 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FinancialLogs.aspx.cs" Inherits="PMS.VoucherView" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FinancialLogs.aspx.cs" Inherits="PMS.FinancialLogs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <!-- CSS only -->
- <link rel="stylesheet" href="table-style/bootstrap.css">
- <link rel="stylesheet" href="table-style/jquery-ui.css">
- <link rel="stylesheet" href="table-style/dataTables.jqueryui.min.css">
- <link rel="stylesheet" href="table-style/buttons.jqueryui.min.css">
- <!-- JS, Popper.js, and jQuery -->
- <script src="Scripts/jquery-ui.js"></script>
- <script src="Scripts/jquery-ui.min.js"></script>
- <link href="Styles/jquery.datetimepicker.css" rel="stylesheet" />
- <script src="table-style/jquery.dataTables.min.js"></script>
- <script src="table-style/dataTables.jqueryui.min.js"></script>
- <script src="table-style/dataTables.buttons.min.js"></script>
- <script src="table-style/buttons.jqueryui.min.js"></script>
- <script src="table-style/jszip.min.js"></script>
- <script src="table-style/pdfmake.min.js"></script>
- <script src="table-style/vfs_fonts.js"></script>
- <script src="table-style/buttons.html5.min.js"></script>
- <script src="table-style/buttons.print.min.js"></script>
- <script src="table-style/buttons.colVis.min.js"></script>
+    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    <script src='<%= ResolveUrl("~/Scripts/jquery-ui.min.js") %>'></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
  <style type="text/css">
-     .sidebar.h-sidebar .nav-list > li > a {
-         text-align: center !important;
-         line-height: 22px !important;
-         height: auto !important;
-         font-family: Arial, sans-serif !important;
-         padding: 10px 14px !important;
-         font-weight: bold !important;
-     }
-
-     #th-brnch {
-         width: 200px !important;
-     }
-
-     .nav-list > li .submenu > li.hover > a {
-         font-size: 13px !important;
-         font-family: Arial, sans-serif !important;
-         font-weight: bold !important;
-     }
-
-     .table {
-         width: 100%;
-         font-size: small;
-         line-height: 1.5px;
-         font-weight: 400 !important;
-     }
-
-         .table > tbody > tr > td {
-             line-height: 1.75;
-         }
-
-         .table > thead > tr > th {
-             line-height: 0.75;
-         }
-
-     .dataTables_wrapper .dataTables_paginate {
-         font-size: small;
-         width: 300px;
-     }
-
-     .main input {
-         margin-bottom: -5px !important;
-     }
-
-     .buttons-copy {
-         width: 20%;
-         border-radius: 12px;
-         background-color: #8b8f8c !important;
-         color: white !important;
-     }
-
-     .buttons-excel {
-         width: 20%;
-         border-radius: 12px;
-         background-color: #5e8a6a !important;
-         color: white !important;
-     }
-
-     .buttons-pdf {
-         width: 20%;
-         border-radius: 12px;
-         background-color: #e04343 !important;
-         color: white !important;
-     }
-
-     .buttons-colvis {
-         width: 38%;
-         border-radius: 12px;
-         background-color: #4052a1 !important;
-         color: white !important;
-     }
-
-     div.dt-buttons {
-         position: relative;
-         float: left;
-         width: 34%;
-     }
-
-     .ui-button-text-only .ui-button-text {
-         font-weight: 900;
-     }
-
-     .dataTables_info {
-         font-size: 14px;
-         font-weight: 700 !important;
-     }
-
-     .dataTables_wrapper .ui-toolbar {
-         padding: 3px;
-     }
-
-     table.dataTable thead th div.DataTables_sort_wrapper span {
-         display: none;
-     }
-
-     #txt_date {
-         height: 32px;
-     }
-
-     #check {
-         width: 5% !important;
-     }
-
      .info_btn {
-         border-radius: 12px;
-         width: 7%;
-         margin-bottom: 7px;
-         font-size: 14px;
-         font-weight: 700;
-     }
-
-     .dataTables_filter input {
-         border-radius: 15px !important;
-     }
-
-     body {
-         font-weight: 700;
-     }
-
-     #ui-datepicker-div {
-         width: 20% !important;
+         min-width: 90px;
      }
 
      .btn-addnew {
          top: -5px !important;
      }
 
-     .fa-pencil {
-         color: green !important;
-     }
-
-     .fa-print {
-         color: darkblue !important;
+     .view-log-btn {
+         border-radius: 4px;
+         background-color: #d4b7e7;
+         color: black !important;
+         padding: 4px 11px;
+         display: inline-block;
      }
 
      .voucher-log-modal {
@@ -205,41 +71,30 @@
          border-radius: 6px;
          padding: 8px;
          margin-bottom: 10px;
-     }    </style>
+     }
+    </style>
 
     <script type="text/javascript">
         $(document).ready(function () {
+            var currentDate = moment('<%= DateTime.Now %>').format('L');
+            $("#txt_sdate").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly').val(currentDate);
+            $("#txt_edate").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly').val(currentDate);
+
             var table = $('#example').DataTable({
-                lengthChange: false,
+                dom: 'lBfrtip',
+                lengthChange: true,
                 buttons: ['copy', 'excel', 'pdf']
             });
-            table.buttons().container()
-                .insertBefore('#example_filter');
-            LoadPage();
-            var date = '<%= DateTime.Now%>';
-            $("#txt_sdate").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
-            date = moment(date).format('L');
-            $('#txt_sdate').val(date)
 
-            $("#txt_edate").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
-            date = moment(date).format('L');
-            $('#txt_edate').val(date)
+            table.buttons().container().insertBefore('#example_filter');
+            LoadPage();
         });
-        debugger;
+
         function LoadPage() {
-            debugger
-            var getquerytype = '<%= Request.QueryString["VoucherType"]%>'
-            var startdate;
-            if (startdate == null) {
-                var getStartDate = $("#txt_sdate").val();
-                startdate = getStartDate
-            }
-            var enddate;
-            if (enddate == null) {
-                var getEndDate = $("#txt_edate").val();
-                enddate = getEndDate
-            }
-            debugger;
+            var getquerytype = '<%= Request.QueryString["VoucherType"]%>';
+            var startdate = $("#txt_sdate").val();
+            var enddate = $("#txt_edate").val();
+
             $.ajax({
                 type: "POST",
                 url: "FinancialLogs.aspx/VoucherViewList",
@@ -250,40 +105,42 @@
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (data) {
-                    debugger;
-                    var table;
-                    table = $('#example').DataTable();
+                success: function (response) {
+                    var table = $('#example').DataTable();
                     table.clear().draw();
-                    var length = $("#example tr:gt(0)").length;
-                    if (data != '') {
-                        var data = JSON.parse(data.d);
-                        $.each(data, function (i, item) {
-                            var vdate = new Date(parseInt(data[i].Voucher_Date.substr(6)));
-                            vdate = moment(vdate).format('L');
-                            debugger;
-                            table.row.add([(i + 1), data[i].Voucher_No, vdate, data[i].Voucher_Type, data[i].Remarks, data[i].Total_Debit, data[i].Voucher_Status, '<td><a href="#" onclick="openLogModal(' + data[i].Voucher_ID + '); return false;" style="border-radius: 4px; background-color: #d4b7e7; color: black; padding: 4px 11px 4px 11px;">View</a></td>'
-                            ]);
-                        });
+
+                    var rows = [];
+                    if (response && response.d) {
+                        rows = JSON.parse(response.d) || [];
                     }
-                    else {
-                        $('#example').html('<h3>No users are available</h3>');
-                    }
-                    table.draw();
-                    debugger;
-                    $.each(data, function (key, value) {
-                        debugger;
-                        if (data[key].Voucher_Status == "Approved") {
-                            debugger;
-                            $('#btnDel' + (key + 1) + '').hide();
+
+                    $.each(rows, function (i, item) {
+                        var vdate = '';
+                        if (item.Voucher_Date) {
+                            var ticks = parseInt(item.Voucher_Date.substr(6), 10);
+                            if (!isNaN(ticks)) {
+                                vdate = moment(new Date(ticks)).format('L');
+                            }
                         }
 
+                        table.row.add([
+                            (i + 1),
+                            item.Voucher_No,
+                            vdate,
+                            item.Voucher_Type,
+                            item.Remarks,
+                            item.Total_Debit,
+                            item.Voucher_Status,
+                            '<a href="#" class="view-log-btn" onclick="openLogModal(' + item.Voucher_ID + '); return false;">View</a>'
+                        ]);
                     });
 
+                    table.draw();
+                },
+                error: function () {
+                    $('#example').DataTable().clear().draw();
                 }
-
             });
-
         }
 
 
@@ -388,11 +245,11 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <label>From Date  </label>
         <input type="text" id="txt_sdate" />
     </div>
-    <div class="col-md-3" style="margin-left: -25px!important;">
+    <div class="col-md-2" style="margin-left: -25px!important;">
         <label>To Date</label>
         <input type="text" id="txt_edate" />
     </div>
@@ -402,23 +259,26 @@
 </div>
 <br />
 
-
-<table id="example" class="table table-striped table-bordered display">
-    <thead>
-        <tr>
-            <th>SR#</th>
-            <th>Voucher No</th>
-            <th>Voucher Date</th>
-            <th>Voucher Type</th>
-            <th style="width: 30%;">Description</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody id="tblbody">
-    </tbody>
-</table>
+<div class="row">
+    <div class="table-container">
+        <table id="example" class="table table-hover table-striped table-bordered display">
+            <thead>
+                <tr>
+                    <th>SR#</th>
+                    <th>Voucher No</th>
+                    <th>Voucher Date</th>
+                    <th>Voucher Type</th>
+                    <th style="width: 30%;">Description</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tblbody">
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div id="voucherLogModal" class="voucher-log-modal">
     <div class="voucher-log-modal-content">

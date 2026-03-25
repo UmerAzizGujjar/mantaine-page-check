@@ -11,7 +11,7 @@ namespace PMS
 {
 
 
-    public partial class VoucherView
+    public partial class FinancialLogs
     {
     }
 }
