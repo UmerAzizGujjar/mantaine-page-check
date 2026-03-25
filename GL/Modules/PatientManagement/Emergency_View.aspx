@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Emergency_View.aspx.cs" Inherits="PMS.Modules.PatientManagement.Emergency_View" %>
  
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
-     <script src="../../wwwroot/Tibbit_theme/CustomJs/OPDView.js" type="text/javascript"></script>
  <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
  <script type="text/javascript">
      $(document).ready(function () {
@@ -80,6 +79,12 @@
          });
 
         
+     }
+     function Print(Emer_id) {
+         debugger;
+         var url = '../../ReportViewer.aspx?ReportName=Emergency_Patient_Print&Title=Emergency Print&Emergency_Id=' + Emer_id;
+         window.open(url, '_blank');
+
      }
      function LoadPage() {
          const table = $("#tblResult").DataTable({
