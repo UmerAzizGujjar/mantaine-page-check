@@ -116,33 +116,40 @@
         return xmlHttp.responseText;
     }
 
-    function OnSuccesss(data) {
-        debugger;
-        var parseData = JSON.parse(data.d);
-        if (data.d != '') {
-            if (data.d.Patient_Discount_Type == null)
-                data.d.Patient_Discount_Type = "";
-            var mydate = new Date(Date.parse(parseData.Created_time));
-            var dateR = mydate.toLocaleDateString();
-            $('#lblPatienName').text(ReplaceNullWith_Space(parseData.Full_Name));
-            $('#lblAgeYears').text(ReplaceNullWith_Space(parseData.Age_years));
-            $('#lblGender').text(ReplaceNullWith_Space(parseData.Gender));
-            $('#lblRegDate').text(dateR);
-            $('#lblAddress').text(ReplaceNullWith_Space(parseData.Permanent_Address));
-            $('#lblContactNo').text(ReplaceNullWith_Space(parseData.Mobile1));
-            $('#lblDepartment').text(ReplaceNullWith_Space(parseData.department));
-            $('#lblPatientCategory').text(ReplaceNullWith_Space(parseData.Patient_Main_Category));
-            $('#lblPatientDiscountType').text(ReplaceNullWith_Space(parseData.Patient_Discount_Type));
-            $('#txtRemarks').val(ReplaceNullWith_Space(parseData.Remarks));
-            $('#txtAdvanceAmount').val(ReplaceNullWith_Space(parseData.Advance_Amount));
-            var date = $.datepicker.formatDate('mm-dd-yy', new Date(parseInt(parseData.Advance_Date.substring(6, 19))));
-            $('#txtAdvanceDate').val(ReplaceNullWith_Space(date));
-            var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + parseData.pat_id);
-            $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name });
-            $('#btnSave').val('Update');
-            $('#lblOutputShow').text(ReplaceNullWith_Space(Balance));
+   function OnSuccesss(data) {
+    debugger;
+    var parseData = JSON.parse(data.d);
+    if (data.d != '') {
+        if (data.d.Patient_Discount_Type == null)
+            data.d.Patient_Discount_Type = "";
+        var mydate = new Date(Date.parse(parseData.Created_time));
+        var dateR = mydate.toLocaleDateString();
+        $('#lblPatienName').text(ReplaceNullWith_Space(parseData.Full_Name));
+        $('#lblAgeYears').text(ReplaceNullWith_Space(parseData.Age_years));
+        $('#lblGender').text(ReplaceNullWith_Space(parseData.Gender));
+        $('#lblRegDate').text(dateR);
+        $('#lblAddress').text(ReplaceNullWith_Space(parseData.Permanent_Address));
+        $('#lblContactNo').text(ReplaceNullWith_Space(parseData.Mobile1));
+        $('#lblDepartment').text(ReplaceNullWith_Space(parseData.department));
+        $('#lblPatientCategory').text(ReplaceNullWith_Space(parseData.Patient_Main_Category));
+        $('#lblPatientDiscountType').text(ReplaceNullWith_Space(parseData.Patient_Discount_Type));
+        $('#txtRemarks').val(ReplaceNullWith_Space(parseData.Remarks));
+        $('#txtAdvanceAmount').val(ReplaceNullWith_Space(parseData.Advance_Amount));
+        var date = $.datepicker.formatDate('mm-dd-yy', new Date(parseInt(parseData.Advance_Date.substring(6, 19))));
+        $('#txtAdvanceDate').val(ReplaceNullWith_Space(date));
+        var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + parseData.pat_id);
+        $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name });
+        $('#btnSave').val('Update');
+        $('#lblOutputShow').text(ReplaceNullWith_Space(Balance));
+        
+        // Set the payment type dropdown
+        if (parseData.Payment_type) {
+            $('#ddlPaymentType').val(parseData.Payment_type);
+        } else {
+            $('#ddlPaymentType').val("0");
         }
     }
+}
 
     function ReplaceNullWith_Space(Data) {
         if (Data == "null")
@@ -167,94 +174,101 @@
     }
 
     function SaveRecord() {
-        debugger;
-        var Patient_ID = $('#hdPatientID').val();
-        var advanceAmount = $("#txtAdvanceAmount").val();
-        var remarks = $("#txtRemarks").val();
-        var advanceDate = $("#txtAdvanceDate").val();
-        var saveVal = $('#btnSave').val();
-        var advID = '<% =Request.QueryString["advID"] %>';
-        if (advID == "") advID = "0";
-        
-        if (Patient_ID == "") {
-            alert("Mr No. is missing");
-            return;
-        }
-        if (advanceAmount == "") {
-            alert("Advance amount is missing");
-            return;
-        }
-        else {
-            $.ajax({
-                type: "POST",
-                url: "AddNewAdvance.aspx/CheckExistInPatient",
-                data: JSON.stringify({
-                    "PatientID": Patient_ID,
-                }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
+    debugger;
+    var Patient_ID = $('#hdPatientID').val();
+    var advanceAmount = $("#txtAdvanceAmount").val();
+    var ddlPaymentType = $("#ddlPaymentType").val();  // Now matches the HTML ID
+    var remarks = $("#txtRemarks").val();
+    var advanceDate = $("#txtAdvanceDate").val();
+    var saveVal = $('#btnSave').val();
+    var advID = '<% =Request.QueryString["advID"] %>';
+    if (advID == "") advID = "0";
+    
+    if (Patient_ID == "") {
+        alert("Mr No. is missing");
+        return;
+    }
+    if (advanceAmount == "") {
+        alert("Advance amount is missing");
+        return;
+    }
+    if (ddlPaymentType == "0" || ddlPaymentType == "") {
+        alert("Please select Payment Type");
+        return;
+    }
+    else {
+        $.ajax({
+            type: "POST",
+            url: "AddNewAdvance.aspx/CheckExistInPatient",
+            data: JSON.stringify({
+                "PatientID": Patient_ID,
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                var Parse = JSON.parse(response.d);
+                if (Parse == null) {
+                    alert("First create In Patient of : " + $("#txtMRNo").val());
+                    return;
+                }
+                else {
                     debugger;
-                    var Parse = JSON.parse(response.d);
-                    if (Parse == null) {
-                        alert("First create In Patient of : " + $("#txtMRNo").val());
-                        return;
-                    }
-                    else {
-                        debugger;
-                        $.ajax({
-                            type: "POST",
-                            url: "AddNewAdvance.aspx/SaveAdvance",
-                            data: JSON.stringify({
-                                "PatientID": Patient_ID,
-                                "AdvanceAmount": advanceAmount,
-                                "AdvanceDate": advanceDate,
-                                "Remarks": remarks,
-                                "InPatientID": Parse.In_Patient_ID,
-                                "SaveVal": saveVal,
-                                "AdvID": advID
-                            }),
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            success: function (response) {
-                                var advID = response.d;
-                                console.log(advID);
-                                console.log(saveVal);
-                                if (saveVal == "Save") {
-                                    alert("Data Save Successfully");
-                                    $("#txtMRNo").tokenInput('clear');
-                                    $("#txtAdvanceAmount").val("");
-                                    $("#txtRemarks").val("");
-                                    var url = "../../ReportViewer.aspx?ReportName=PrintAdvanceReport&Title=Advane Payment Print &Adv_IDs=" + advID;
-                                    window.open(url, '_blank');
-                                    window.location = "AddNewAdvance.aspx";
-                                }
-                                else if (saveVal == "Update") {
-                                    alert("Data Updated Successfully");
-                                    $("#txtMRNo").tokenInput('clear');
-                                    $("#txtAdvanceAmount").val("");
-                                    $("#txtRemarks").val("");
-                                    var url = "../../ReportViewer.aspx?ReportName=PrintAdvanceReport&Title=Advane Payment Print &Adv_IDs=" + advID;
-                                    window.open(url, '_blank');
-                                    window.location = "AddNewAdvance.aspx";
-                                }
-                                else {
-                                    alert(response.d);
-                                }
-                            },
-                            failure: function (response) {
+                    $.ajax({
+                        type: "POST",
+                        url: "AddNewAdvance.aspx/SaveAdvance",
+                        data: JSON.stringify({
+                            "PatientID": parseInt(Patient_ID),  // Convert to int
+                            "AdvanceAmount": parseInt(advanceAmount),  // Convert to int
+                            "ddlPaymentType": ddlPaymentType,
+                            "AdvanceDate": advanceDate,
+                            "Remarks": remarks,
+                            "InPatientID": Parse.In_Patient_ID,
+                            "SaveVal": saveVal,
+                            "AdvID": parseInt(advID)  // Convert to int
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            var advID = response.d;
+                            console.log(advID);
+                            console.log(saveVal);
+                            if (saveVal == "Save") {
+                                alert("Data Save Successfully");
+                                $("#txtMRNo").tokenInput('clear');
+                                $("#txtAdvanceAmount").val("");
+                                $("#txtRemarks").val("");
+                                $("#ddlPaymentType").val("0");  // Reset dropdown
+                                var url = "../../ReportViewer.aspx?ReportName=PrintAdvanceReport&Title=Advane Payment Print &Adv_IDs=" + advID;
+                                window.open(url, '_blank');
+                                window.location = "AddNewAdvance.aspx";
+                            }
+                            else if (saveVal == "Update") {
+                                alert("Data Updated Successfully");
+                                $("#txtMRNo").tokenInput('clear');
+                                $("#txtAdvanceAmount").val("");
+                                $("#txtRemarks").val("");
+                                $("#ddlPaymentType").val("0");  // Reset dropdown
+                                var url = "../../ReportViewer.aspx?ReportName=PrintAdvanceReport&Title=Advane Payment Print &Adv_IDs=" + advID;
+                                window.open(url, '_blank');
+                                window.location = "AddNewAdvance.aspx";
+                            }
+                            else {
                                 alert(response.d);
                             }
-                        });
-                    }
-                },
-                failure: function (response) {
-                    alert(response.d);
+                        },
+                        failure: function (response) {
+                            alert(response.d);
+                        }
+                    });
                 }
-            });
-        }
+            },
+            failure: function (response) {
+                alert(response.d);
+            }
+        });
     }
-
+}
     function ApproveAdvance() {
         var advanceid = '<% =Request.QueryString["advID"] %>';
         PageMethods.Approve_Advance(advanceid, function (response) {
@@ -319,14 +333,13 @@
             });
         });
     }
+    
     function UnApprove() {
         var advid = '<% =Request.QueryString["advID"] %>';
         PageMethods.unApproveAdvance(advid, function (response) {
             debugger;
             try {
                 var result = JSON.parse(response);
-
-                // Check if we have a valid response
                 if (result && result.Message) {
                     if (result.Success) {
                         Swal.fire({
@@ -386,7 +399,6 @@
         });
     }
 </script>
-
 
 
 
@@ -501,6 +513,14 @@
 
 
         <div class="row">
+           <div class="col-md-2 mb-3">
+                <label for="ddlPaymentType" class="form-label">Payment Type</label>
+                <select id="ddlPaymentType">
+                    <option value="0">Select</option>
+                    <option value="01">Cash</option>
+                    <option value="02">Bank</option>
+                </select>
+            </div>
             <div class="col-md-2 mb-3">
                 <label for="txtAdvanceDate" class="form-label">Advance Date :</label>
                 <input type="text" id="txtAdvanceDate" class="form-control" />
