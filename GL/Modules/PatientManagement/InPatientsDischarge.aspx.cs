@@ -956,7 +956,53 @@ namespace PMS
                 lblMessage.Text = ex.Message;
             }
         }
+        [WebMethod]
+        public static string SetDischargeRequest(int InPatientID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
+                // Find the In_Patient record
+                var inPatient = db.In_Patients.FirstOrDefault(x => x.In_Patient_ID == InPatientID);
+
+                if (inPatient != null)
+                {
+                    inPatient.Discharge_Request = true;
+                    db.SubmitChanges();
+                    return "Success";
+                }
+                else
+                {
+                    return "NotFound";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
+        [WebMethod]
+        public static string GetDischargeRequestStatus(int InPatientID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                var inPatient = db.In_Patients
+                    .Where(x => x.In_Patient_ID == InPatientID)
+                    .Select(x => x.Discharge_Request)
+                    .FirstOrDefault();
+
+                // Return "1" if true, "0" if false or null
+                return (inPatient == true) ? "1" : "0";
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
         [WebMethod]
         public static string LoadExaminationHistory(int PatientID)  // LoadExaminationTabHistory()
         {

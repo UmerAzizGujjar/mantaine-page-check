@@ -137,7 +137,10 @@
                     return false;
                 }
             });
-
+            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
+                CheckDischargeRequestStatus();
+            }
 
         });
 
@@ -2926,7 +2929,9 @@ function CheckPendingBalanceBeforeSave(callback) {
                     var ddlWard_No = data.d.Ward_ID;
                     var txtBed_No = data.d.Bed_No;
                     var PatID = data.d.PatientID;
-
+                    if (data.d.In_PatientID && data.d.In_PatientID !== "(New)" && data.d.In_PatientID !== "") {
+                        CheckDischargeRequestStatus();
+                    }
                     var btnsave = $('#btnSave').val();
                     var PatID_1 = $('#<%= txtPatient_ID.ClientID%>').val();
 
@@ -4464,7 +4469,10 @@ function CheckPendingBalanceBeforeSave(callback) {
             $('#<%= vLbl_Patient_Type.ClientID%>').text(data.d.PatientType);
             $('#<%= vLbl_Patient_AdmitCatagory.ClientID%>').text(data.d.InPatient_AdmitCategory);
             $("#<%= txtIn_Patient_ID.ClientID%>").val(data.d.InPatient_Id);
-
+            debugger;
+            if (data.d.InPatient_Id && data.d.InPatient_Id !== "(New)" && data.d.InPatient_Id !== "") {
+                CheckDischargeRequestStatus();
+            }
             
             FillDoctorsByDepartment(data.d.Department);
 
@@ -4531,7 +4539,175 @@ function CheckPendingBalanceBeforeSave(callback) {
         $(".js-example-responsive").select2({
             width: 'resolve' 
         });
+        // ==================== DISCHARGE REQUEST FUNCTIONS ====================
 
+        // Function to check discharge request status and disable button if already requested
+        function CheckDischargeRequestStatus() {
+            debugger;
+            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+
+            if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsDischarge.aspx/GetDischargeRequestStatus",
+                    data: JSON.stringify({
+                        'InPatientID': inPatientID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var status = response.d;
+                        if (status === "1") {
+                            // Discharge request already exists
+                            $('#btnDischargeRequest').prop('disabled', true);
+                            $('#btnDischargeRequest').val('Request Already Sent');
+                            $('#btnDischargeRequest').addClass('btn-disabled');
+                        } else {
+                            $('#btnDischargeRequest').prop('disabled', false);
+                            $('#btnDischargeRequest').val('Discharge Request');
+                        }
+                    },
+                    error: function (x, e) {
+                        console.log('Error checking discharge request status: ' + e);
+                    }
+                });
+            }
+        }
+
+        // Function to set discharge request
+        function SetDischargeRequest() {
+            debugger;
+            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+
+            if (!inPatientID || inPatientID === "(New)" || inPatientID === "") {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please save the patient admission first before requesting discharge.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            // First check if discharge request already exists
+            $.ajax({
+                type: "POST",
+                url: "InPatientsDischarge.aspx/GetDischargeRequestStatus",
+                data: JSON.stringify({
+                    'InPatientID': inPatientID
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    var status = response.d;
+                    if (status === "1") {
+                        Swal.fire({
+                            title: 'Information',
+                            text: 'Discharge request has already been sent for this patient.',
+                            icon: 'info',
+                            confirmButtonText: 'OK'
+                        });
+                        $('#btnDischargeRequest').prop('disabled', true);
+                        $('#btnDischargeRequest').val('Request Already Sent');
+                        return false;
+                    }
+                }
+            });
+
+            // Check if patient is already discharged
+            if (dischargechk == true) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'This patient is already discharged.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            Swal.fire({
+                title: 'Confirm Discharge Request',
+                text: 'Are you sure you want to request discharge for this patient?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Request',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#loadingimage').show();
+                    $.ajax({
+                        type: "POST",
+                        url: "InPatientsDischarge.aspx/SetDischargeRequest",
+                        data: JSON.stringify({
+                            'InPatientID': inPatientID
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            $('#loadingimage').hide();
+                            if (response.d === "Success") {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Discharge request has been sent successfully.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    // Disable the button after successful request
+                                    $('#btnDischargeRequest').prop('disabled', true);
+                                    $('#btnDischargeRequest').val('Request Already Sent');
+                                    $('#btnDischargeRequest').addClass('btn-disabled');
+                                });
+                            } else if (response.d === "NotFound") {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Patient record not found.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Failed to send discharge request. ' + response.d,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function (x, e) {
+                            $('#loadingimage').hide();
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while processing your request.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        // Main DischargeRequest function
+        function DischargeRequest() {
+            debugger;
+            SetDischargeRequest();
+        }
+
+        // Add CSS for disabled button
+        var style = document.createElement('style');
+                    style.innerHTML = `
+                .btn-disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                    background-color: #6c757d !important;
+                    border-color: #6c757d !important;
+                }
+            `;
+        document.head.appendChild(style);
 
 
     </script>
@@ -4889,6 +5065,10 @@ function CheckPendingBalanceBeforeSave(callback) {
                             <div class="col-lg-2 col-md-6 col-sm-12">
                                 <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
                             </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12">
+                                    <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
+                                    <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
+                                </div>
                             <div class="col-lg-3 col-md-6 col-sm-12" style="display:none;">
                                 <input type="button" class="btn-primry" id="btnDischarge_Billing" value="Discharge & Billing" />
                             </div>
