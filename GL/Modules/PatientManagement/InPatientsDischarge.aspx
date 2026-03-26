@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsDischarge.aspx.cs" Inherits="PMS.InPatientsDischarge" %>
+﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsDischarge.aspx.cs" Inherits="PMS.InPatientsDischarge" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/ipddischarge.css" rel="stylesheet" />
