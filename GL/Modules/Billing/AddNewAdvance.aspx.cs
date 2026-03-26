@@ -122,6 +122,14 @@ namespace PMS
                 pt.Patient_Discount_Type = db.GetDataValueName("Patient Type", Type);
                 var InPatientId = db.In_Patients.Where(m => m.Patient_ID.Equals(PatientID) && m.Discharge == false).OrderByDescending(m => m.Admission_Date).Select(m => m.In_Patient_ID).FirstOrDefault();
                 pt.Balance = Convert.ToInt32(db.getAdvance_Balance(Convert.ToInt32(InPatientId), "In_Patient"));
+
+                var advanceStatus = (from adv in db.AR_Advances
+                                     where adv.Patient_ID == int.Parse(PatientID)
+                                     orderby adv.Advance_ID descending
+                                     select adv.Status).FirstOrDefault();
+
+                pt.Status = advanceStatus ?? "Created";
+
                 return pt;
             }
             else
@@ -141,6 +149,7 @@ namespace PMS
             public string department;
             public string Follow;
             public int Balance;
+            public string Status;
         }
 
         [WebMethod]

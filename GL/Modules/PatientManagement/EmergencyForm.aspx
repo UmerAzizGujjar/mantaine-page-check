@@ -1007,7 +1007,7 @@
                         timer: 2500
                     });
 
-                    var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
+                    var url = '../../ReportViewer.aspx?ReportName=Emergency_Patient_Print&Title=Emergency Print&Emergency_Id=' + patientID;
                     window.open(url, '_blank');
                     window.location.href = "Emergency_View.aspx";
                 },
@@ -1024,7 +1024,13 @@
                 }
             });
         }
+        function Print() {
+            debugger;
+            var Emer_id = '<%= Request.QueryString["EMERID"] %>'
+            var url = '../../ReportViewer.aspx?ReportName=Emergency_Patient_Print&Title=Emergency Print&Emergency_Id=' + Emer_id;
+            window.open(url, '_blank');
 
+        }
 
         function openReferPatientModal() {
             $('#SearchReferPatients').modal('show');
@@ -1444,7 +1450,7 @@
                 </div>
               
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
-                    <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="OPD_Print('<%= Request.QueryString["OPDID"] %>', '<%= AppConfig.Company_Name %>')" />
+                    <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="Print()" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint" style="display: none; position: absolute;">
                     <input type="hidden" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />

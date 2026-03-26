@@ -2,6 +2,17 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
       <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+    <style>
+        .detail-container {
+            padding: 15px;
+        }
+        .clickable-row {
+            cursor: pointer;
+        }
+        .clickable-row:hover {
+            background-color: #f0f8ff;
+        }
+    </style>
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
@@ -49,7 +60,7 @@
                     console.error("Failed to load column preferences");
                 }
             });
-            $("#tbloutPatients").DataTable({
+            var table = $("#tbloutPatients").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
@@ -139,6 +150,10 @@
                     }
 
                 ],
+                "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass('clickable-row');
+                    $(row).attr('data-bill-id', data.Bill_ID);
+                },
                 "initComplete": function (settings, json) {
                     const api = this.api();
                     if (savedVisibility && Array.isArray(savedVisibility)) {
@@ -183,6 +198,124 @@
                     }
                 }
             });
+
+            $('#tbloutPatients tbody').on('click', 'tr.clickable-row', function (e) {
+                if ($(e.target).closest('a,button,input').length > 0) {
+                    return;
+                }
+
+                var tr = $(this);
+                var row = table.row(tr);
+                var billId = tr.attr('data-bill-id');
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    table.rows().every(function () {
+                        if (this.child.isShown()) {
+                            this.child.hide();
+                            $(this.node()).removeClass('shown');
+                        }
+                    });
+
+                    row.child('<div style="padding:20px;text-align:center;">Loading...</div>').show();
+                    tr.addClass('shown');
+                    LoadBillDetails(billId, row);
+                }
+            });
+        }
+
+        function LoadBillDetails(billId, row) {
+            $.ajax({
+                type: "POST",
+                url: "BillingProcessView.aspx/GetBillDetails",
+                data: JSON.stringify({ billId: billId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d) {
+                        var details = JSON.parse(response.d);
+                        var html = BuildDetailsHTML(details);
+                        row.child(html).show();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    row.child('<div style="padding:20px;color:red;">Error loading details</div>').show();
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
+        function BuildDetailsHTML(details) {
+            var html = '<div class="detail-container">';
+            var categories = {
+                'Services': [],
+                'Lab Tests': [],
+                'Radiology': [],
+                'Pharmacy': [],
+                'Consultation': [],
+                'Other': []
+            };
+
+            details.forEach(function (item) {
+                var category = 'Other';
+                var itemType = (item.Item_Type || '').toLowerCase();
+
+                if (itemType === 'service' || itemType === 'services') {
+                    category = 'Services';
+                } else if (itemType === 'test') {
+                    if (item.Test_Main_Department === '001') {
+                        category = 'Lab Tests';
+                    } else {
+                        category = 'Radiology';
+                    }
+                } else if (itemType === 'pharmacy') {
+                    category = 'Pharmacy';
+                } else if (itemType === 'consultation') {
+                    category = 'Consultation';
+                }
+
+                categories[category].push(item);
+            });
+
+            html += '<table class="details-table" style="width: 100%; border-collapse: collapse; text-align: left; font-family: sans-serif;">';
+            html += '<thead>';
+            html += '<tr style="background-color: #f4f4f4; border-bottom: 2px solid #ddd;">';
+            html += '<th style="padding: 10px; width: 70%;">Item Name</th>';
+            html += '<th style="padding: 10px; width: 10%;">Amount</th>';
+            html += '<th style="padding: 10px; width: 10%;">Discount</th>';
+            html += '<th style="padding: 10px; width: 10%;">Net Amount</th>';
+            html += '</tr>';
+            html += '</thead>';
+            html += '<tbody>';
+
+            for (var cat in categories) {
+                if (categories[cat].length > 0) {
+                    html += '<tr style="background-color: #e9ecef;">';
+                    html += '<td colspan="4" style="padding: 8px 10px; font-weight: bold;">' + cat + '</td>';
+                    html += '</tr>';
+
+                    categories[cat].forEach(function (item) {
+                        var itemName = item.Item_Name || item.Description || 'N/A';
+                        var amount = (item.Amount || 0).toFixed(2);
+                        var discount = (item.Discount_Amount || 0).toFixed(2);
+                        var net = (item.Net_Amount || 0).toFixed(2);
+
+                        html += '<tr style="border-bottom: 1px solid #eee;">';
+                        html += '<td style="padding: 10px;">' + itemName + '</td>';
+                        html += '<td style="padding: 10px;">' + amount + '</td>';
+                        html += '<td style="padding: 10px;">' + discount + '</td>';
+                        html += '<td style="padding: 10px;">' + net + '</td>';
+                        html += '</tr>';
+                    });
+                }
+            }
+
+            html += '</tbody>';
+            html += '</table>';
+            html += '</div>';
+            return html;
         }
 
 

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsDischarge.aspx.cs" Inherits="PMS.InPatientsDischarge" %>
+﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsDischarge.aspx.cs" Inherits="PMS.InPatientsDischarge" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/ipddischarge.css" rel="stylesheet" />
@@ -141,11 +141,42 @@
 
         });
 
-        function saveprint() {
-            debugger;
-            $('#loadingimage').show();
-            CheckExistInOutPatient();
+      function saveprint() {
+    debugger;
+    var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+    var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
+    
+    if (dischargechk == true) {
+        if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
+            Swal.fire({
+                title: 'Validation Error!',
+                text: 'Please select Discharge Doctor first.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return false;
         }
+        
+        CheckPendingBalanceBeforeSave(function(canProceed) {
+            if (canProceed) {
+                $('#loadingimage').show();
+                CheckExistInOutPatient();
+            } else {
+                $('#loadingimage').hide();
+                $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
+                $('#btnDischargePrint').attr('disabled', true);
+            }
+        });
+    } else {
+        Swal.fire({
+            title: 'Validation Error!',
+            text: 'Please check the Discharge Slip checkbox first.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+        return false;
+    }
+}
         function InpatientDischargePrint() {
             debugger;
             InPAtID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
@@ -153,16 +184,36 @@
                 window.open('../../ReportViewer.aspx?ReportName=DischargePrint&InPatientId=' + InPAtID);
             }
         }
-        function toggleButton() {
-            debugger;
-            var checkboxdischarge = $('#ctl00_MainContent_cbDicharg_Slip').is(':checked');
-            if (checkboxdischarge == true) {
-                $('#btnDischargePrint').attr('disable', false);
+      function toggleButton() {
+    debugger;
+    var checkboxdischarge = $('#ctl00_MainContent_cbDicharg_Slip').is(':checked');
+    if (checkboxdischarge == true) {
+        var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
+        if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
+            Swal.fire({
+                title: 'Validation Error!',
+                text: 'Please select Discharge Doctor first.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
+                $('#btnDischargePrint').attr('disabled', true);
+            });
+            return false;
+        }
+        
+        CheckPendingBalanceBeforeSave(function(canProceed) {
+            if (canProceed) {
+                $('#btnDischargePrint').attr('disabled', false);
+            } else {
+                $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
+                $('#btnDischargePrint').attr('disabled', true);
             }
-            else {
-                $('#btnDischargePrint').attr('disable', true);
-            }
-         }
+        });
+    } else {
+        $('#btnDischargePrint').attr('disabled', true);
+    }
+}
         function PrintAdmisionDetails(response) {
             debugger;
             PATID = $('#<%=txtPatient_ID.ClientID%>').val();
@@ -702,20 +753,83 @@
                 }
             });
         }
-
-
-
-        function PrintInpatientReceipt() {
-            debugger
-            var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
-            var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-            if (dischargechk == false) {
-                alert("First Discharge The Patient")
-                return false;
+        // Function to check pending balance before save
+        // Function to check pending balance before save
+       // Function to check pending balance before save
+function CheckPendingBalanceBeforeSave(callback) {
+    debugger;
+    var patientID = $('#<%= hdfPatient_ID.ClientID%>').val();
+    var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+    
+    if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
+        $('#loadingimage').show();
+        $.ajax({
+            type: "POST",
+            url: "InPatientsDischarge.aspx/GetPendingBalance",
+            data: JSON.stringify({
+                'PatientID': patientID,
+                'InPatientID': inPatientID
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $('#loadingimage').hide();
+                var pendingBalance = parseFloat(response.d);
+                if (pendingBalance > 0) {
+                    Swal.fire({
+                        title: 'Pending Balance Alert!',
+                        text: `Cannot discharge patient!\n\nPending Balance: Rs. ${pendingBalance.toFixed(2)}\n\nPlease receive the pending amount first.`,
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#dc3545'
+                    }).then(() => callback(false));
+                } else {
+                    callback(true);
+                }
+            },
+            error: function (x, e) {
+                $('#loadingimage').hide();
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Unable to check pending balance. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                }).then(() => callback(false));
             }
-           
-            else {
-
+        });
+    } else {
+        callback(true);
+    }
+}
+       function PrintInpatientReceipt() {
+    debugger
+    var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
+    var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+    if (dischargechk == false) {
+        alert("First Discharge The Patient");
+        return false;
+    } else {
+        var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+        
+        // Check pending balance before printing
+        $.ajax({
+            type: "POST",
+            url: "InPatientsDischarge.aspx/GetPendingBalance",
+            data: JSON.stringify({
+                'PatientID': $('#<%= hdfPatient_ID.ClientID%>').val(),
+                'InPatientID': inPatientID
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                var pendingBalance = parseFloat(response.d);
+                if (pendingBalance > 0) {
+                    alert("Cannot print discharge slip!\n\nPending Balance: Rs. " + pendingBalance.toFixed(2) + "\n\nPlease receive the pending amount first.");
+                    return false;
+                }
+                
+                // Continue with existing print logic if no balance
                 ID = $('#<%=txtPatient_ID.ClientID%>').val();
                 oUTID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
                 $.ajax({
@@ -811,7 +925,7 @@
                             var rows = '';
                             $('#tblMedicenerpt').text("");
                             $.each(Medicines, function (key, value) {
-                                rows += '<td><h6>*</h6></td><td><h6>' + value.Medicine_Name + ',' + '</h6></td>';
+                                rows += '<tr><td><h6>*</h6></td><td><h6>' + value.Medicine_Name + ',' + '</h6></td></tr>';
                             });
                             $('#Madicenrow').html(rows);
                             LoadDischargeMedicinesrpt();
@@ -821,9 +935,14 @@
                         alert(e)
                     }
                 });
+            },
+            error: function (x, e) {
+                alert("Error checking balance: " + e);
+                return false;
             }
-        }
-
+        });
+    }
+}
         function AddBloodTest() {
             debugger;
             var test = $('#ddlTestList').find('option:selected').text();
@@ -2756,52 +2875,42 @@
             });
         }
 
-        function SaveInPatientAllRecord() {
-            debugger;
-            $('#loadingimage').show();
-            
-            SaveLabResult();   
-            LoadPatientDetails();
+     function SaveInPatientAllRecord() {
+    debugger;
+    var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+    var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
+    
+    if (dischargechk == true) {
+        if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
+            Swal.fire({
+                title: 'Validation Error!',
+                text: 'Please select Discharge Doctor first.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return false;
         }
-
-        function LoadPatientDetails() {
-            debugger;
-            var Patient_ID = $('#hdfPatient_ID').val();
-            $("#in_PatientId").val(Patient_ID);
-            var inpatId_Json = "";
-
-            var ddlDoctor = $('#ctl00_MainContent_ddlDischarge_By').val();
-            var DichargChk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-            var recordStatus = $('input#btnSave').val();
-
-            if (recordStatus === "Save" && DichargChk !== true) {
-                alert("You must select discharge Doctor & select Discharge Slip checkbox");
-                $('#CloseSearchModel').click();
+        
+        CheckPendingBalanceBeforeSave(function(canProceed) {
+            if (canProceed) {
+                $('#loadingimage').show();
+                LoadPatientDetails();
+            } else {
                 $('#loadingimage').hide();
-                return false;
+                $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
+                $('#btnDischargePrint').attr('disabled', true);
             }
-
-            if (ddlDoctor !== '0' && ddlDoctor !== 'undefined') {  
-                $.ajax({
-                    type: "POST",
-                    url: "InPatientsDischarge.aspx/GetPatientDetails",
-                    data: "{'PatientID':" + Patient_ID + "}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: OnSuccess1,
-                    failure: function (response) {
-                        alert(response.d);
-                    }
-                });
-            }
-            else {
-                alert("You must select discharge Doctor & select Discharge Slip checkbox");
-                $('#CloseSearchModel').click();
-                $('#loadingimage').hide();
-                return false;
-            }
-        }
-
+        });
+    } else {
+        Swal.fire({
+            title: 'Validation Error!',
+            text: 'Please check the Discharge Slip checkbox to discharge the patient.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+        return false;
+    }
+}
         function OnSuccess1(data) {
             debugger;
             if (data.d != '') {
@@ -3666,7 +3775,30 @@
      var InPatient_Ids_disc;
         $(document).ready(function () {
             debugger;
-           
+            $('#btnsaveprint').off('click').on('click', function (e) {
+                debugger;
+                var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+                var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
+
+                if (dischargechk == true) {
+                    if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
+                        alert("Please select Discharge Doctor first.");
+                        return false;
+                    }
+
+                    CheckPendingBalanceBeforeSave(function (canProceed) {
+                        if (canProceed) {
+                            $('#loadingimage').show();
+                            CheckExistInOutPatient();
+                        } else {
+                            alert("Cannot save and print. Please clear the pending balance first.");
+                            $('#loadingimage').hide();
+                        }
+                    });
+                } else {
+                    alert("Please check the Discharge Slip checkbox first.");
+                }
+            });
 
             $('#btnDischargePrint').attr('disabled', true);
             $("#txtMedicineName").hide();

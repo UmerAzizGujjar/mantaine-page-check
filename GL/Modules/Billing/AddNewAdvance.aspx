@@ -23,6 +23,7 @@
             var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + PatientId_QS);
             $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name, readonly: true });
         }
+
     });
 
     function OnSuccess(data) {
@@ -42,6 +43,27 @@
             $('#lblPatientCategory').text(ReplaceNullWith_Space(data.d.Patient_Type));
             $('#lblPatientDiscountType').text(ReplaceNullWith_Space(data.d.Patient_Discount_Type));
             $('#lblOutputShow').text(ReplaceNullWith_Space(data.d.Balance));
+
+       var status = data.d.Status ? data.d.Status.trim() : "Created";
+        
+        var divApprove = $('#divApproveContainer');
+        var divUnApprove = $('#divUnApproveContainer');
+        var divVoucher = $('#divVoucherContainer');
+
+        divApprove.hide();
+        divUnApprove.hide();
+        divVoucher.hide();
+
+        if (status === "Created") {
+            divApprove.show();
+        } 
+        else if (status === "Approved") {
+            divUnApprove.show();
+            divVoucher.show();
+        } 
+        else if (status === "UnApproved") {
+            divApprove.show();
+        }
         }
     }
 
@@ -141,13 +163,17 @@
         $('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name });
         $('#btnSave').val('Update');
         $('#lblOutputShow').text(ReplaceNullWith_Space(Balance));
+
         
-        // Set the payment type dropdown
+        
+
         if (parseData.Payment_type) {
             $('#ddlPaymentType').val(parseData.Payment_type);
         } else {
             $('#ddlPaymentType').val("0");
         }
+
+        
     }
 }
 
@@ -555,13 +581,15 @@
                     <div class="col-lg-2 col-md-2 col-sm-3">
                         <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintAdvance()" value="Print" />
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3">
-                        <input type="button" id="btnApprove" class="btn btn-primry" onclick="ApproveAdvance()"  value="Approve" />
+                    <div class="col-lg-2 col-md-2 col-sm-3" id="divApproveContainer">
+                        <input type="button" id="btnApprove" class="btn btn-primry" onclick="ApproveAdvance()" value="Approve" />
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3">
-                      <input type="button" id="btnUnApprove" class="btn btn-primry" onclick="UnApprove()"    value="UnApprove" />
+
+                    <div class="col-lg-2 col-md-2 col-sm-3" id="divUnApproveContainer">
+                        <input type="button" id="btnUnApprove" class="btn btn-primry" onclick="UnApprove()" value="UnApprove" />
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3">
+
+                    <div class="col-lg-2 col-md-2 col-sm-3" id="divVoucherContainer">
                         <input type="button" id="btnPrintVoucher" class="btn btn-primry" onclick="PrintVoucher();" value="Voucher" />
                     </div>
                 </div>
