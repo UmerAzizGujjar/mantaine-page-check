@@ -3448,7 +3448,7 @@
                            //    alert("Please Select Bed No");
                            //    return false;
                            //}
-                           //SaveWard();
+                           SaveWard();
                            SaveMedicines();
                        }
                    }
