@@ -307,6 +307,23 @@ namespace PMS
                         batchSet.Add(batch);
                 }
 
+
+                // ------------------------- Stock Transfer Batch -------------------
+                var stocktransBatches = (from sti in db.Stock_Transfer_Items
+                                         join st in db.Stock_Transfers on sti.Stock_Transfer_ID equals st.Stock_Transfer_ID
+                                       where sti.Item_Id == med_id && st.Ware_House_To == warehouse
+                                       && st.Status == "Approved"
+                                       select sti.Batch_No).ToList();
+
+                foreach (var batch in stocktransBatches)
+                {
+                    int stock = Convert.ToInt32(
+                        db.GetPharmcyItemUomTotalStock(med_id, warehouse, batch)
+                    );
+
+                    if (stock > 0)
+                        batchSet.Add(batch);
+                }
                 // ---------- Final Result ----------
                 var result = batchSet.Select(b => new BatchStock
                 {
@@ -383,7 +400,22 @@ namespace PMS
                     if (stock > 0)
                         batchSet.Add(batch);
                 }
+                // ------------------------- Stock Transfer Batch -------------------
+                var stocktransBatches = (from sti in db.Stock_Transfer_Items
+                                         join st in db.Stock_Transfers on sti.Stock_Transfer_ID equals st.Stock_Transfer_ID
+                                         where sti.Item_Id == itemId && st.Ware_House_To == warehouse
+                                         && st.Status == "Approved"
+                                         select sti.Batch_No).ToList();
 
+                foreach (var batch in stocktransBatches)
+                {
+                    int stock = Convert.ToInt32(
+                        db.GetPharmcyItemUomTotalStock(itemId, warehouse, batch)
+                    );
+
+                    if (stock > 0)
+                        batchSet.Add(batch);
+                }
                 // ---------- Final Result ----------
                 var result = batchSet.Select(b => new BatchStock
                 {
