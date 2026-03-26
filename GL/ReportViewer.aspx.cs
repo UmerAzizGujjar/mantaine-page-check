@@ -1106,7 +1106,7 @@ namespace PMS
 
                 rd.SetParameterValue("@stDate", sqlStartDateTime);
                 rd.SetParameterValue("@endDate", sqlEndDateTime);
-               
+
             }
             else if (reportName == "IPDTimeLine")
             {
@@ -4613,6 +4613,106 @@ namespace PMS
                     throw;
                 }
             }
+            //else if (reportName == "BillingBaseReport_Consultant")
+            //{
+            //    var billId = Convert.ToInt32(Request.QueryString["Bill_ID"]);
+            //    string doctorId = Request.QueryString["Doctor_ID"];
+            //    var user_id = AppConfig.UserID;
+            //    var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+            //    reportPath += "Billings/rptBillBasePrintHalf_Consultant.rpt";
+            //    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+            //    rd.Load(reportPath);
+            //    rd.SetParameterValue("@Bill_Id", billId);
+            //    if (string.IsNullOrEmpty(doctorId))
+            //        cmd.Parameters.AddWithValue("@Doctor_ID", DBNull.Value);
+            //    else
+            //        cmd.Parameters.AddWithValue("@Doctor_ID", int.Parse(doctorId));
+            //    rd.SetParameterValue("@Doctor_ID", doctorId);
+            //    rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
+            //    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //    rd.SetParameterValue("CompanyLogo", logoPath);
+            //    rd.SetParameterValue("UserName", userName);
+            //}
+
+            // correct one is below
+
+
+            //else if (reportName == "BillingBaseReport_Consultant" ||reportName == "BillingBaseReport_Hospital_Services")
+            //{
+
+            //    //string reportName = Request.QueryString["ReportName"];
+            //    string billId = Request.QueryString["Bill_ID"];
+            //    string doctorId = Request.QueryString["Doctor_ID"]; // null if not passed
+
+            //    var user_id = AppConfig.UserID;
+            //    var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+            //    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+            //    ReportDocument report = new ReportDocument();
+
+            //    if (reportName == "BillingBaseReport_Consultant")
+            //    {
+            //        // Has Doctor_ID → Consultant report
+            //        report.Load(Server.MapPath("~/Reports/Billings/rptBillBasePrintHalf_Consultant.rpt"));
+            //    }
+            //    else if (reportName == "BillingBaseReport_Hospital_Services")
+            //    {
+            //        // No Doctor_ID → Hospital Services report
+            //        report.Load(Server.MapPath("~/Reports/Billings/rptBillBasePrintHalf_Hospital.rpt"));
+            //    }
+            //    reportPath += "Billings/rptBillBasePrintHalf_Hospital.rpt";
+
+
+            //    rd.Load(reportPath);
+
+
+
+            //    rd.SetParameterValue("@Bill_Id", billId);
+            //    rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
+
+            //    // Fix: Handle Doctor_ID correctly for Crystal Reports
+            //    if (string.IsNullOrEmpty(doctorId))
+            //        rd.SetParameterValue("@Doctor_ID", DBNull.Value);
+            //    else
+            //        rd.SetParameterValue("@Doctor_ID", Convert.ToInt32(doctorId));
+
+            //    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //    rd.SetParameterValue("CompanyLogo", logoPath);
+            //    rd.SetParameterValue("UserName", userName);
+            //}
+
+            else if (reportName == "BillingBaseReport_Consultant" || reportName == "BillingBaseReport_Hospital_Services")
+            {
+                string billId = Request.QueryString["Bill_ID"];
+                string doctorId = Request.QueryString["Doctor_ID"]; // may be null
+
+                var user_id = AppConfig.UserID;
+                var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                if (!string.IsNullOrEmpty(doctorId))
+                {
+                    rd.Load(Server.MapPath("~/Reports/Billings/rptBillBasePrintHalf_Consultant.rpt"));
+                }
+                else
+                {
+                    rd.Load(Server.MapPath("~/Reports/Billings/rptBillBasePrintHalf_Hospital.rpt"));
+                }
+
+                // Set parameters
+                rd.SetParameterValue("@Bill_Id", billId);
+                rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
+
+                if (string.IsNullOrEmpty(doctorId))
+                    rd.SetParameterValue("@Doctor_ID", DBNull.Value);
+                else
+                    rd.SetParameterValue("@Doctor_ID", Convert.ToInt32(doctorId));
+
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("UserName", userName);
+            }
+
             #endregion
             #region Lab/Radiology
             else if (reportName == "TestResultQ")
@@ -5082,17 +5182,17 @@ namespace PMS
             else if (reportName == "In_Patient_VitalSigns")
             {
 
-                    var in_patient_id = Request.QueryString["In_Patient_ID"].ToString();
+                var in_patient_id = Request.QueryString["In_Patient_ID"].ToString();
 
-                    reportPath += "InPatient/rpt_In_Patient_VitalSigns.rpt";
-                    rd.Load(reportPath);
-                    rd.SetParameterValue("Title", reportTitle);
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    rd.SetParameterValue("@In_Patient_ID", in_patient_id);
-                    // ===== DYNAMIC QR CODE GENERATION (NO DATABASE STORAGE) =====
-                    try
-                    {
-                        string sql = $@"
+                reportPath += "InPatient/rpt_In_Patient_VitalSigns.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("@In_Patient_ID", in_patient_id);
+                // ===== DYNAMIC QR CODE GENERATION (NO DATABASE STORAGE) =====
+                try
+                {
+                    string sql = $@"
                         SELECT ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
                                       ISNULL(rp.Full_Name, '') AS Full_Name,
                                       ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
@@ -5101,40 +5201,40 @@ namespace PMS
                                JOIN in_patient ip ON ip.patient_id = rp.pat_id
                                WHERE ip.In_Patient_ID = {in_patient_id}";
 
-                        DataTable patientData = DBClass.getDataTable(sql);
+                    DataTable patientData = DBClass.getDataTable(sql);
 
-                        if (patientData.Rows.Count > 0)
+                    if (patientData.Rows.Count > 0)
+                    {
+                        string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}";
+
+                        // Save to temp file instead of passing bytes
+                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{in_patient_id}_{Guid.NewGuid()}.png");
+
+                        using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
                         {
-                            string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}";
-
-                            // Save to temp file instead of passing bytes
-                            string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{in_patient_id}_{Guid.NewGuid()}.png");
-
-                            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+                            using (PngByteQRCode qrCodeImage = new PngByteQRCode(qrCodeData))
                             {
-                                QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
-                                using (PngByteQRCode qrCodeImage = new PngByteQRCode(qrCodeData))
-                                {
-                                    byte[] qrBytes = qrCodeImage.GetGraphic(10);
-                                    File.WriteAllBytes(tempQrPath, qrBytes);
-                                }
+                                byte[] qrBytes = qrCodeImage.GetGraphic(10);
+                                File.WriteAllBytes(tempQrPath, qrBytes);
                             }
+                        }
 
-                            // Pass FILE PATH as string parameter
-                            rd.SetParameterValue("QRImagePath", tempQrPath);
-                        }
-                        else
-                        {
-                            rd.SetParameterValue("QRImagePath", "");
-                        }
+                        // Pass FILE PATH as string parameter
+                        rd.SetParameterValue("QRImagePath", tempQrPath);
                     }
-                    catch (Exception ex)
+                    else
                     {
                         rd.SetParameterValue("QRImagePath", "");
                     }
-
-
                 }
+                catch (Exception ex)
+                {
+                    rd.SetParameterValue("QRImagePath", "");
+                }
+
+
+            }
             else if (reportName == "ProgressNote")
             {
                 try

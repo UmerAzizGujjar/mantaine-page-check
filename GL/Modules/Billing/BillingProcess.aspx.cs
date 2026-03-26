@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
@@ -10,7 +11,9 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Windows;
 using Telerik.Web;
+using Telerik.Web.UI.ImageEditor;
 
 namespace PMS
 {
@@ -2765,6 +2768,26 @@ namespace PMS
                 }
                 */
                 return Test_Rate;
+            }
+        }
+        [WebMethod]
+        public static string GetDistinctDoctorsByBillId(string Bill_Id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var result = (from bd in db.Ar_Billing_Details
+                              where bd.Bill_ID == Convert.ToInt32(Bill_Id)
+                                    && bd.Doctor_id != null
+                                    && bd.Doctor_id != "0"
+                                    && bd.Doctor_id != ""
+                              select new
+                              {
+                                  Doctor_ID = bd.Doctor_id
+                              })
+                             .Distinct()
+                             .ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
             }
         }
         [WebMethod]
