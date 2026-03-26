@@ -231,8 +231,7 @@
                         dataType: "json",
                         success: function (response) {
                             var advID = response.d;
-                            console.log(advID);
-                            console.log(saveVal);
+                    
                             if (saveVal == "Save") {
                                 alert("Data Save Successfully");
                                 $("#txtMRNo").tokenInput('clear');
