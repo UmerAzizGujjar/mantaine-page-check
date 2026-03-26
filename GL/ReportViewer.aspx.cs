@@ -1321,7 +1321,8 @@ namespace PMS
             {
                 if (Request.QueryString["Emergency_Id"] != null)
                 {
-
+                    var user_id = AppConfig.UserID;
+                    var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
                     var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
                     reportPath += "Emergency/rpt_Emergency_Patient_Reg_Print.rpt";
@@ -1329,6 +1330,7 @@ namespace PMS
                     rd.SetParameterValue("@Emergency_Id", Request.QueryString["Emergency_Id"]);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("UserName", userName);
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                 }
             }
