@@ -32,20 +32,21 @@ namespace PMS.Modules.PatientManagement
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     var emergencyList = (from e in db.Emergencies
-                                        join p in db.Reg_patients on e.Reg_PatId equals p.pat_id
-                                        where (e.isCancel == false || e.isCancel == null)
-                                        orderby e.Emer_id descending
-                                        select new
-                                        {
-                                            Emergency_ID = e.Emer_id,
-                                            Emergency_No = e.Emergency_No ?? 0,
-                                            MR_No = p.mr_no_sequence ?? "",
-                                            Patient_Name = p.Full_Name ?? "",
-                                            Age = p.Age_years ?? "",
-                                            Created_Time = e.Created_Time,
-                                            Status = e.Admitted_Status ?? "Pending",
-                                            Patient_ID = e.Reg_PatId
-                                        }).ToList();
+                                         join p in db.Reg_patients on e.Reg_PatId equals p.pat_id
+                                         where (e.isCancel == false || e.isCancel == null)
+                                         && !db.Emergency_Patients.Any(ep => ep.emer_id == e.Emer_id && ep.Discharge == true)
+                                         orderby e.Emer_id descending
+                                         select new
+                                         {
+                                             Emergency_ID = e.Emer_id,
+                                             Emergency_No = e.Emergency_No ?? 0,
+                                             MR_No = p.mr_no_sequence ?? "",
+                                             Patient_Name = p.Full_Name ?? "",
+                                             Age = p.Age_years ?? "",
+                                             Created_Time = e.Created_Time,
+                                             Status = e.Admitted_Status ?? "Pending",
+                                             Patient_ID = e.Reg_PatId
+                                         }).ToList();
 
                     return new JavaScriptSerializer().Serialize(emergencyList);
                 }
