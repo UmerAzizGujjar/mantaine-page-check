@@ -633,6 +633,7 @@
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\DonorReceiving.css" />
+    <Content Include="wwwroot\ASsiratTheme\css\CustomCss\EmergencyForm.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\GIR.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\ASsiratTheme\css\CustomCss\Advance.css" />
@@ -4087,6 +4088,7 @@
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Emergency.css" />
+    <Content Include="wwwroot\IITH_Theme\css\CustomCss\EmergencyForm.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\EMR.css" />
     <Content Include="wwwroot\IITH_Theme\css\CustomCss\Forms.css" />
@@ -7658,6 +7660,7 @@
     <Content Include="wwwroot\khurshid\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Emergency.css" />
+    <Content Include="wwwroot\khurshid\css\CustomCss\EmergencyForm.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\EMR.css" />
     <Content Include="wwwroot\khurshid\css\CustomCss\IGP.css" />
@@ -11092,6 +11095,7 @@
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\Emergency.css" />
+    <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\EmergencyForm.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\EMR.css" />
     <Content Include="wwwroot\NoorHospitalTheme\css\CustomCss\GIR.css" />
@@ -14519,6 +14523,7 @@
     <Content Include="wwwroot\Pakred\css\CustomCss\Datavalue.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\DonorReceiving.css" />
+    <Content Include="wwwroot\Pakred\css\CustomCss\EmergencyForm.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\Maindashboard.css" />
     <Content Include="wwwroot\Pakred\css\CustomCss\NewEmergencyCase.css" />
@@ -17719,6 +17724,7 @@
     <Content Include="wwwroot\StandardTheme\css\CustomCss\CEODashboard.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\CEODashboardNew.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Donor.css" />
+    <Content Include="wwwroot\StandardTheme\css\CustomCss\EmergencyForm.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\LoginPage.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\changePassword.css" />
     <Content Include="wwwroot\StandardTheme\css\CustomCss\Maindashboard.css" />
@@ -17780,6 +17786,7 @@
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Donor.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\DonorReceiving.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Emergency.css" />
+    <Content Include="wwwroot\Tibbit_theme\css\CustomCss\EmergencyForm.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\Employee.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\EMR.css" />
     <Content Include="wwwroot\Tibbit_theme\css\CustomCss\GIR.css" />

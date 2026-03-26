@@ -177,7 +177,11 @@
 
 
 
-
+            var dischargereq = $("#ctl00_MainContent_DischargeRequest").val()
+            if (dischargereq == true || dischargereq == "true") {
+                btnDischargeRequest
+                $('#btnDischargeRequest').attr('disabled', true);
+            }
 
             $('#Addmedicine').attr('disabled', true);
 
@@ -6224,16 +6228,16 @@
         function SuccessFunc(data) {
             debugger;
             var parsedData = JSON.parse(data);
-            var options = '<option value="0">Please Select</option>';
+            var options = '';
             $.each(parsedData, function (key, value) {
-                options += '<option value=' + value.Department_ID + '> ' + value.Department_Name + '</option>';
+                options += '<option value=' + value.Department + '> ' + value.Department_Name + '</option>';
             });
             $('#ctl00_MainContent_ddlDepartments').html(options);
             setTimeout(function () {
 
                 $('#ctl00_MainContent_ddlDepartments').val(localStorage.DeptID);
             }, 1000);
-
+            fillDoctors()
         }
         function select(inPatID) {
             debugger;
@@ -6252,7 +6256,7 @@
             localStorage.IsPrivate = chkPrivateforload;
             window.location.href = 'InPatientsCase.aspx' + '?ID=' + inPatID;
         }
-
+        debugger;
         function fillDoctors() {
             debugger;
             var departmentId = $('#ctl00_MainContent_ddlDepartments').val();
@@ -6262,7 +6266,7 @@
                 return;
             }
 
-            var options = '<option value="">Select Doctor</option>';
+            var options = '';
 
             $.ajax({
                 url: 'InPatientsCase.aspx/GetDoctors',
@@ -6283,6 +6287,7 @@
                     console.error('Error fetching doctor data:', error);
                 }
             });
+            fillPendingPatientsList()
         }
 
 

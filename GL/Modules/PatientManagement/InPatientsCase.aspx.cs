@@ -1360,22 +1360,21 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
-            var selectedDepts = (from u in db.aspnet_Users
-                                 join ur in db.aspnet_UsersInRoles
-                                 on u.UserId equals ur.UserId
-                                 join r in db.aspnet_Roles
-                                 on ur.RoleId equals r.RoleId
-                                 where u.UserId == UserID && r.Department_ID != null
+            var selectedDepts = (from u in db.HR_Employees
+                                 join r in db.aspnet_Users
+                                 on u.userid equals Convert.ToString(r.UserId)
+
+                                 where r.UserId == UserID && u.Department != null
                                  select new
                                  {
-                                     r.Department_ID,
-                                     Department_Name = (db.GetDataValueName("Patient Main Category", r.Department_ID))
+                                     u.Department,
+                                     Department_Name = (db.GetDataValueName("Patient Main Category", u.Department))
                                  }
                      ).ToList();
 
             foreach (var datarow in selectedDepts)
             {
-                if (datarow.Department_ID == "All_Departments")
+                if (datarow.Department == "All_Departments")
                 {
                     var allDepts = (from d in db.DataValues
                                     join v in db.ValueSets
@@ -1393,11 +1392,11 @@ namespace PMS
         public static string GetDoctors(int departmentId)
         {
             string data = string.Empty;
-
+            var userid = AppConfig.UserID;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var result = (from emp in db.HR_Employees
-                              where emp.IsDoctor == true && Convert.ToInt32(emp.Department) == departmentId
+                              where emp.IsDoctor == true && Convert.ToInt32(emp.Department) == departmentId && emp.userid ==Convert.ToString( userid)
                               select new
                               {
                                   emp.Emp_ID,
