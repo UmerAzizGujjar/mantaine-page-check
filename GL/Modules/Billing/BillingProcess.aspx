@@ -2840,7 +2840,8 @@
                     c_Dis_Amt += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
                     var di = Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
                     Amount = $($(value).find('td')[5]).text();
-                    Qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
+                    Qty = $(value).find('input[name="txtQty"]').val();
+                    //Qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
                     TotalAmount += parseFloat(Amount) * (Qty);
 
 
@@ -2864,7 +2865,8 @@
 
 
                         total_Disc += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
-                        var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
+                        //var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
+                        var qty = $(value).find('input[name="txtQty"]').val();
 
                         Net_Amt += (Math.round(parseFloat($($(value).find('td')[5]).text())) * qty);
 
@@ -2877,7 +2879,7 @@
                     var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                     var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
                     var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
-                    var TotalAmount = Net_Amt - PreviousPaid;
+                    var TotalAmount = Net_Amt - PreviousPaid - total_Disc;
                     debugger;
                     $('#txtTotalAmount').val(Net_Amt);
                     $('#txtTotalPayable').val(TotalAmount);
