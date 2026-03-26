@@ -1284,6 +1284,7 @@ namespace PMS.Modules.PatientManagement
                     pat.Actual_amount = data.Actual_Fees;
                     pat.Remarks = data.Remarks;
                     pat.mr_no_sequence = data.patient_no;
+                    pat.Admitted_Status = "Waiting";
 
                     // 💰 Fee & Discount
                     if (data.Fees >= 0)
