@@ -677,7 +677,845 @@ namespace PMS
 
         }
 
-     
+
+
+        //private void PopulateGetEmergencyPatientData(int Emergency_ID)
+        //{
+        //    try
+        //    {
+        //        db = new DataBaseDataContext(DBClass.ConnectionString());
+        //        var qry = db.sp_GetEmergencyPatientDetail(Emergency_ID).FirstOrDefault();
+        //        #region Old Code
+
+        //        #endregion
+
+        //        if (qry != null)
+        //        {
+        //            ReferToOPD.Checked = Convert.ToBoolean(qry.Refer_To_OPD);
+        //            hdfPatient_ID.Value = qry.Patient_ID.ToString();
+        //            txtPatient_ID.Text = qry.Patient_ID.ToString();
+        //            txtIn_Patient_ID.Text = qry.Emergency_ID.ToString();
+        //            vlblPatients_Name.Text = qry.Full_Name;
+        //            vLbl_Contact.Text = qry.Mobile1;
+        //            vLbl_Adress.Text = qry.Permanent_Address;
+        //            vLbl_Gender.Text = db.GetDataValueName("Gender", qry.Gender);
+        //            vLbl_Age.Text = qry.Age_years;
+        //            //if (qry.Entry_Date == null)
+        //            //    vLbl_RegDate.Text = qry.Created_time.Value.ToString(AppConfig.DateFormat);
+        //            //else
+        //                //vLbl_RegDate.Text = qry.Entry_Date.Value.ToString(AppConfig.DateFormat);
+        //            vLbl_RegDate.Text = qry.Created_time.Value.ToString(AppConfig.DateFormat);
+        //            txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
+
+        //            txtRN_Special_Instruction.Text = qry.RN_Special_Instruction;
+        //            ddlIssuance_Of.SelectedValue = qry.Issuance_Of;
+        //            vLbl_Patient_Type.Text = db.GetDataValueName("Patient Type", qry.Patient_Type);
+        //            vLbl_Patient_AdmitCatagory.Text = db.GetDataValueName("Patient Type", qry.Patient_Discount_Type);
+        //            if (qry.Issuance_Of == "002")
+        //            {
+
+        //            }
+        //            if (qry.Issuance_Of == "001")
+        //            {
+        //                ddlWard_No.SelectedValue = qry.Ward_ID.ToString();
+        //                if (qry.Bed_No != null && qry.Bed_No != 0)
+        //                    txtBed_No.Text = qry.Bed_No.ToString();
+        //            }
+        //            ddlDepartment.SelectedValue = qry.Department;
+        //            ddlPatientCondition.SelectedValue = qry.Emergency_Pat_Condition;
+        //            txtCallToDoctor.Text = qry.remarks_call_to_doctor;
+        //            txtDiscount.Text = Convert.ToString(qry.Discount);
+        //            ddlCategory.SelectedValue = qry.Patient_Category;
+
+
+
+        //            db = new DataBaseDataContext(DBClass.ConnectionString());
+        //            List<HR_Employee> EmpList = new List<HR_Employee>();
+        //            List<HR_Employee> EmpList2 = new List<HR_Employee>();
+        //            EmpList = (from tbl in db.HR_Employees
+        //                       where tbl.IsDoctor == true 
+        //                       select tbl).ToList();
+        //            EmpList2 = (from tbl in db.HR_Employees
+        //                        where tbl.IsDoctor == true
+        //                        select tbl).ToList();
+        //            ddlDoctor.Items.Clear();
+        //            ddlDoctor.DataSource = EmpList;
+        //            ddlDoctor.DataTextField = "Emp_Name";
+        //            ddlDoctor.DataValueField = "Emp_ID";
+        //            ddlDoctor.Items.Add(new ListItem("Please Select", "0"));
+        //            ddlDoctor.DataBind();
+        //            ddlDoctor.SelectedValue = qry.Doctor;
+
+        //            ddlCallToDoctor.Items.Clear();
+        //            ddlCallToDoctor.DataSource = EmpList2;
+        //            ddlCallToDoctor.DataTextField = "Emp_Name";
+        //            ddlCallToDoctor.DataValueField = "Emp_ID";
+        //            ddlCallToDoctor.Items.Add(new ListItem("Please Select", "0"));
+        //            ddlCallToDoctor.DataBind();
+
+        //            ddlDischarge_By.Items.Clear();
+        //            ddlDischarge_By.DataSource = EmpList2;
+        //            ddlDischarge_By.DataTextField = "Emp_Name";
+        //            ddlDischarge_By.DataValueField = "Emp_ID";
+        //            ddlDischarge_By.Items.Add(new ListItem("Please Select", "0"));
+        //            ddlDischarge_By.DataBind();
+        //            ddlDischarge_By.SelectedValue = qry.Discharge_By;
+
+        //            ddlRhythm.SelectedValue = qry.Emergency_Rhythm;
+        //            ddlVolume.SelectedValue = qry.Emergency_Volume;
+        //            ddlDischargeStatus.SelectedValue = qry.Discharge_Status;
+
+        //            if (qry.Expected_Discharge_Date != null)
+
+        //                txtBP.Text = qry.BP_mm_Hg;
+        //            ctl00_MainContent_txtEOR.Text = qry.Eye_Opening_Response;
+        //            txtMR.Text = qry.Motor_Response;
+        //            txtVR.Text = qry.Verbal_Response;
+        //            txtAcc.Text = qry.Accumulated_Response;
+        //            txtTemp.Text = qry.Temp_C;
+        //            txtRespiration.Text = qry.Respiration_Min;
+        //            txtRateBeats.Text = qry.RateBeats;
+        //            txtOthersRcvNote.Text = qry.OthersRecieveNote;
+        //            txtSaturation.Text = qry.O2_Saturation;
+        //            txtVaccinationHistory.Text = qry.Vaccination_History;
+        //            txtAnyOtherHistory.Text = qry.Other_History;
+        //            txtProcedureRecommended.Text = qry.Procedure_Recommended;
+        //            txtIdentificationMarks.Text = qry.IdentificationMarks;
+        //            txtDiagnosis.Text = qry.Diagnosis;
+        //            TextBoxCns.Text = qry.CNS_Value;
+        //            TextBoxCvs.Text = qry.CVS_Value;
+        //            TextBoxResp.Text = qry.RESP_Value;
+        //            TextBoxGit.Text = qry.GIT_Value;
+        //            TextBoxGpe.Text = qry.GPE_Value;
+        //            if (!string.IsNullOrEmpty(qry.DateOfDeath.ToString()))
+        //            {
+        //                txtDateofDeath.Text = Convert.ToDateTime(qry.DateOfDeath.Value).ToString("MM/dd/yyyy");
+        //            }
+        //            if (!string.IsNullOrEmpty(qry.TimeOfDeath.ToString()))
+        //            {
+        //                txtTimeOfDeath.Text = Convert.ToString(qry.TimeOfDeath);
+        //            }
+
+        //            if (qry.HMFIntact != null)
+        //            {
+        //                if (qry.HMFIntact == true)
+        //                {
+        //                    HMFIntact1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    HMFIntact2.Checked = true;
+        //                }
+        //            }
+
+        //            if (qry.CranialNerves != null)
+        //            {
+        //                if (qry.CranialNerves == true)
+        //                {
+        //                    CranialNerves1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    CranialNerves2.Checked = true;
+        //                }
+        //            }
+
+
+        //            if (qry.SignsOfMeningism != null)
+        //            {
+        //                if (qry.SignsOfMeningism == true)
+        //                {
+        //                    SignsOfMeningism1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    SignsOfMeningism2.Checked = true;
+        //                }
+        //            }
+
+
+        //            if (qry.HeartSound != null)
+        //            {
+        //                if (qry.HeartSound == true)
+        //                {
+        //                    HeartSound1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    HeartSound2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.Arrhythmias != null)
+        //            {
+        //                if (qry.Arrhythmias == true)
+        //                {
+        //                    Arrhythmias1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Arrhythmias2.Checked = true;
+        //                }
+        //            }
+
+
+        //            if (qry.Murmur != null)
+        //            {
+        //                if (qry.Murmur == true)
+        //                {
+        //                    Murmur1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Murmur2.Checked = true;
+        //                }
+        //            }
+
+
+        //            if (qry.AnyOtherAddedSound != null)
+        //            {
+        //                if (qry.AnyOtherAddedSound == true)
+        //                {
+        //                    AnyOtherAddedSound1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    AnyOtherAddedSound2.Checked = true;
+        //                }
+        //            }
+
+
+        //            if (qry.AnyOtherFindings != null)
+        //            {
+        //                if (qry.AnyOtherFindings == true)
+        //                {
+        //                    AnyOtherFindings1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    AnyOtherFindings2.Checked = true;
+        //                }
+        //            }
+
+
+        //            if (qry.Wheeze != null)
+        //            {
+        //                if (qry.Wheeze == true)
+        //                {
+        //                    Wheeze1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Wheeze2.Checked = true;
+        //                }
+        //            }
+
+        //            if (qry.Ranchi != null)
+        //            {
+        //                if (qry.Ranchi == true)
+        //                {
+        //                    Ranchi1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Ranchi2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.AnyOtherSound != null)
+        //            {
+        //                if (qry.AnyOtherSound == true)
+        //                {
+        //                    AnyOtherSound1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    AnyOtherSound2.Checked = true;
+        //                }
+        //            }
+
+
+        //            if (qry.AbdomenSoft != null)
+        //            {
+        //                if (qry.AbdomenSoft == true)
+        //                {
+        //                    AbdomenSoft1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    AbdomenSoft2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.Tenderness != null)
+        //            {
+        //                if (qry.Tenderness == true)
+        //                {
+        //                    Tenderness1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Tenderness2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.Guarding != null)
+        //            {
+        //                if (qry.Guarding == true)
+        //                {
+        //                    Guarding1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Guarding2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.BowelSound != null)
+        //            {
+        //                if (qry.BowelSound == true)
+        //                {
+        //                    BowelSound1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    BowelSound2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.Distention != null)
+        //            {
+        //                if (qry.Distention == true)
+        //                {
+        //                    Distention1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Distention2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.FluidThrill != null)
+        //            {
+        //                if (qry.FluidThrill == true)
+        //                {
+        //                    FluidThrill1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    FluidThrill2.Checked = true;
+        //                }
+        //            }
+
+
+        //            if (qry.ShiftingDullness != null)
+        //            {
+        //                if (qry.ShiftingDullness == true)
+        //                {
+        //                    ShiftingDullness1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    ShiftingDullness2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.EpigastriaDiscomfort != null)
+        //            {
+        //                if (qry.EpigastriaDiscomfort == true)
+        //                {
+        //                    EpigastriaDiscomfort1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    EpigastriaDiscomfort2.Checked = true;
+        //                }
+        //            }
+
+
+        //            if (qry.RetrosternalBurning != null)
+        //            {
+        //                if (qry.RetrosternalBurning == true)
+        //                {
+        //                    RetrosternalBurning1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    RetrosternalBurning2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.Jondus != null)
+        //            {
+        //                if (qry.Jondus == true)
+        //                {
+        //                    Jondus1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Jondus2.Checked = true;
+        //                }
+        //            }
+
+
+
+        //            if (qry.Pallor != null)
+        //            {
+        //                if (qry.Pallor == true)
+        //                {
+        //                    Pallor1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Pallor2.Checked = true;
+        //                }
+        //            }
+
+
+
+
+        //            if (qry.Dehydration != null)
+        //            {
+        //                if (qry.Dehydration == true)
+        //                {
+        //                    Dehydration1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Dehydration2.Checked = true;
+        //                }
+        //            }
+
+        //            if (qry.GCSOrientation != null)
+        //            {
+        //                if (qry.GCSOrientation == true)
+        //                {
+        //                    GCSOrientation1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    GCSOrientation2.Checked = true;
+        //                }
+        //            }
+
+        //            if (qry.Conscious_Orientely != null)
+        //            {
+        //                if (qry.Conscious_Orientely == true)
+        //                {
+        //                    ConsciousOrientely1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    ConsciousOrientely2.Checked = true;
+        //                }
+        //            }
+
+        //            if (qry.NVB_Right != null)
+        //            {
+        //                if (qry.NVB_Right == true)
+        //                {
+        //                    NVB_Right1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    NVB_Right2.Checked = true;
+        //                }
+        //            }
+
+        //            if (qry.NVB_Left != null)
+        //            {
+        //                if (qry.NVB_Left == true)
+        //                {
+        //                    NVB_Left1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    NVB_Left2.Checked = true;
+        //                }
+        //            }
+
+        //            if (qry.Crepitation_Right != null)
+        //            {
+        //                if (qry.Crepitation_Right == true)
+        //                {
+        //                    Crepitation_Right1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Crepitation_Right2.Checked = true;
+        //                }
+        //            }
+
+        //            if (qry.Crepitation_Left != null)
+        //            {
+        //                if (qry.Crepitation_Left == true)
+        //                {
+        //                    Crepitation_Left1.Checked = true;
+        //                }
+        //                else
+        //                {
+        //                    Crepitation_Left2.Checked = true;
+        //                }
+        //            }
+
+        //            txtFurtherExplanation.Text = qry.FurtherExplanation;
+        //            txtSaturation_Oxygen1.Text = qry.O2_Saturation_Oxygen1;
+        //            txtSaturation_Oxygen2.Text = qry.O2_Saturation_Oxygen2;
+
+
+        //            ddlPlaceOfDeath.SelectedValue = qry.PlaceOfDeath;
+        //            txtCause_Of_Death.Text = qry.CauseOfDeath;
+        //            txtIssuingOfficerName.Text = qry.IssuingOfficerName;
+        //            ddlDeathCertifiedbyDr1.SelectedValue = qry.DeathCertifiedBy1;
+        //            ddlDeathCertifiedbyDr2.SelectedValue = qry.DeathCertifiedBy2;
+        //            txtBodyHandedOverTo.Text = qry.BodyHandedOverTo;
+        //            txtFamilyPersonName.Text = qry.FamilyPersonName;
+        //            txtCNIC.Text = qry.CNIC;
+        //            txtRelationWithDeceased.Text = qry.RelationWithDeceased;
+        //            txtCMO_Police.Text = qry.CMO_Police;
+        //            txtTreatmentGiven.Text = qry.TreatmentGiven;
+        //            txtPhysicalFinding.Text = qry.PhysicalFinding;
+        //            txtGeneralPhysicalExamination.Text = qry.GeneralPhysicalExamination;
+        //            txtClinicalSummary.Text = qry.ClinicalSummary;
+        //            txtTreatmentAtDischarge.Text = qry.TreatmentAtDischarge;
+        //            txtFollowUpPlanInstructions.Text = qry.FollowUpPlanInstructions;
+        //            txtCauseOfReferral.Text = qry.CauseOfReferral;
+        //            txtProvisionalDiagnosis.Text = qry.Provisional_Diagnosis;
+        //            txtTreatmentTime.Text = (qry.TreatmentTime == null) ? "" : qry.TreatmentTime.ToString();
+        //            ddlReferredTo.SelectedValue = qry.ReferredTo;
+
+
+        //            txtRN_Special_Instruction.Text = qry.RN_Special_Instruction;
+
+
+        //            txtHistoryOfPeresentIllness.Text = qry.HistoryOfPeresentIllness;
+        //            txtHistoryOfFamily.Text = qry.HistoryOfFamily;
+        //            txtHistoryOfPastIllness.Text = qry.HistoryOfPastIllness;
+
+        //            txtSocioEconomicHistory.Text = qry.SocioEconomicHistory;
+
+        //            txtObstetricHistory.Text = qry.ObstetricHistory;
+        //            txtAllergiesHistory.Text = qry.AllergiesHistory;
+
+        //            txtTreatmentHistory.Text = qry.TreatmentHistory;
+        //            txtDrugHistory.Text = qry.Drug_History;
+
+        //            txtBirthHistory.Text = qry.Birth_History;
+        //            ddlPatient_Main_Category.SelectedValue = qry.Reffer_To;
+        //            txt_remarks.Text = qry.remarks;
+
+        //            txtPersonalHistory.Text = qry.Personal_History;
+
+
+        //            txtmidl.Text = qry.ENT_Throat_IDL;
+        //            txtmNose.Text = qry.ENT_Throat_Nose;
+        //            txtmRight.Text = qry.ENT_Ear_Right;
+        //            txtmLeft.Text = qry.Ent_Ear_Left;
+        //            mchkRightPos.Checked = qry.ENT_Rinnes_Right_PosNeg.Value;
+        //            mchkLeftPos.Checked = qry.ENT_Rinnes_Lft_PosNeg.Value;
+        //            mchkRightF.Checked = qry.ENT_Rinnes_Right_FalseNeg.Value;
+        //            mchkLeftF.Checked = qry.ENT_Rinnes_Lft_FalseNeg.Value;
+
+        //            mchkcentral.Checked = qry.ENT_Webber_Central.Value;
+        //            mchkLateralized.Checked = qry.ENT_Webber_Lateralized.Value;
+        //            mchkPTA.Checked = qry.ENT_Investigation_PTA.Value;
+        //            mchkTympanometry.Checked = qry.ENT_Investigation_Tympanometry.Value;
+        //            mchkRightNeg.Checked = qry.ENT_Rinnes_Right_Neg.Value;
+        //            mchkLeftNeg.Checked = qry.ENT_Rinnes_Lft_Neg.Value;
+        //            mchkRightFNeg.Checked = qry.ENT_Rinnes_Right_FNeg.Value;
+        //            mchkLeftFNeg.Checked = qry.ENT_Rinnes_Lft_FNeg.Value;
+
+
+        //            txtInformant.Text = qry.Psychiatry_Informant;
+        //            txtSourceOfReferral.Text = qry.Psychiatry_Source_Referral;
+        //            chkNeckHolding.Checked = Convert.ToBoolean(qry.Psychiatry_Neck_Holding);
+        //            chkWalking.Checked = qry.Psychiatry_Walking.Value;
+        //            chkTalking.Checked = qry.Psychiatry_Talking.Value;
+        //            chkOthers.Checked = qry.Psychiatry_Others.Value;
+        //            txtMenarche.Text = qry.Psychiatry_Menarche;
+        //            txtMenstrual.Text = qry.Psychiatry_Menstrual;
+        //            txtAttachmentSeparationfromParents.Text = qry.Psychiatry_Attachment_Separation;
+        //            txtHealth.Text = qry.Psychiatry_Health;
+        //            chkNailBiting.Checked = Convert.ToBoolean(qry.Psychiatry_Nail_Biting);
+        //            chkTemperTantrums.Checked = Convert.ToBoolean(qry.Psychiatry_Temper_Tantrums);
+        //            chkBedWetting.Checked = Convert.ToBoolean(qry.Psychiatry_Bed_Wetting);
+        //            txtAcademics.Text = qry.Psychiatry_Academics;
+        //            txtPeerRelationship.Text = qry.Psychiatry_Peer_Relationship;
+        //            txtBehaviour.Text = qry.Psychiatry_Behaviour;
+        //            txtOccupationalHistory.Text = qry.Psychiatry_Occupational_History;
+        //            txtMaritalRelationshipSexualHistory.Text = qry.Psychiatry_Sexual_History;
+        //            txtSubstanceUse.Text = qry.Psychiatry_Substance_Use;
+        //            txtForensicUse.Text = qry.Psychiatry_Forensic_Use;
+        //            txtRelationship.Text = qry.Psychiatry_Relationship;
+        //            txtLeisureActivities.Text = qry.Psychiatry_Leisure_Activities;
+        //            txtAttitudetoSelfandStandards.Text = qry.Psychiatry_Attitude_Standards;
+        //            txtPrevallingMood.Text = qry.Psychiatry_Prevalling_Mood;
+        //            txtReactionPattrentoStress.Text = qry.Psychiatry_Reaction_Stress;
+        //            txtReligiousPracticesAttitute.Text = qry.Psychiatry_Religious_Practices;
+        //            txtFather.Text = qry.Psychiatry_Father;
+        //            txtMother.Text = qry.Psychiatry_Mother;
+        //            txtSiblings.Text = qry.Psychiatry_Siblings;
+        //            txtHomeAtmosphererelationshipsocialclass.Text = qry.Psychiatry_Home_Atmosphere;
+        //            txtFamilialIllness.Text = qry.Psychiatry_Familial_Illness;
+        //            txtActualandapparentage.Text = qry.Psychiatry_Actual_age;
+        //            txtRace.Text = qry.Psychiatry_Race;
+        //            txtTattoosbodypiercingandscars.Text = qry.Psychiatry_Tattoos_body_scars;
+        //            txtBodyHabitus.Text = qry.Psychiatry_Body_Habitus;
+        //            txtDress.Text = qry.Psychiatry_Dress;
+        //            txtHygiene.Text = qry.Psychiatry_Hygiene;
+        //            txtPsychomotorActivity.Text = qry.Psychiatry_Psychomotor_Activity;
+        //            txtInvoluntarymovements.Text = qry.Psychiatry_Involuntary_movements;
+        //            txtDystoniaEPS.Text = qry.Psychiatry_Dystonia_EPS;
+        //            txtTardivedyskinesia.Text = qry.Psychiatry_Tardive_dyskinesia;
+        //            txtTics.Text = qry.Psychiatry_Tics;
+        //            txtTremors.Text = qry.Psychiatry_Tremors;
+        //            txtAttentivenesstointerview.Text = qry.Psychiatry_Attentiveness_interview;
+        //            txtEyeContact.Text = qry.Psychiatry_Eye_Contact;
+        //            txtLevelofConsciousness.Text = qry.Psychiatry_Level_Consciousness;
+        //            txtRate.Text = qry.Psychiatry_Rate;
+        //            txtRhythm.Text = qry.Psychiatry_Rhythm;
+        //            txtVolume.Text = qry.Psychiatry_Volume;
+        //            txtTone.Text = qry.Psychiatry_Tone;
+        //            txtModulationvar.Text = qry.Psychiatry_Modulation;
+        //            txtDepressed.Text = qry.Psychiatry_Depressed;
+        //            txtElated.Text = qry.Psychiatry_Elated;
+        //            txtIrritable.Text = qry.Psychiatry_Irritable;
+        //            txtLabile.Text = qry.Psychiatry_Labile;
+        //            txtIncongruent.Text = qry.Psychiatry_Incongruent;
+        //            txtBluntingFlatteningApathy.Text = qry.Psychiatry_Blunting_Flattening_Apathy;
+        //            txtThinkingPremeditation.Text = qry.Psychiatry_Thinking;
+        //            txtPlans.Text = qry.Psychiatry_Plans;
+        //            txtActions.Text = qry.Psychiatry_Actions;
+        //            txtPreservative.Text = qry.Psychiatry_Preservative;
+        //            txtLoosAssociation.Text = qry.Psychiatry_LoosAssociation;
+        //            txtTangentiaility.Text = qry.Psychiatry_Tangentiaility;
+        //            txtCircumstantiality.Text = qry.Psychiatry_Circumstantiality;
+        //            txtFlightofIdeas.Text = qry.Psychiatry_Flight_Ideas;
+        //            txtThoughtInsertion.Text = qry.Psychiatry_Thought_Insertion;
+        //            txtThoughtWithdrawal.Text = qry.Psychiatry_Thought_Withdrawal;
+        //            txtThoughBroadcasting.Text = qry.Psychiatry_Thought_Broadcasting;
+        //            txtThoughControl.Text = qry.Psychiatry_Thought_Control;
+        //            txtDellusion.Text = qry.Psychiatry_Dellusion;
+        //            txtovervaluedideas.Text = qry.Psychiatry_Overvalued_Ideas;
+        //            txtDepresonalization.Text = qry.Psychiatry_Depresonalization;
+        //            txtDerealization.Text = qry.Psychiatry_Derealization;
+        //            txtthrougObsession.Text = qry.Psychiatry_Informant;
+        //            txtthrougPhobies.Text = qry.Psychiatry_Phobies;
+        //            txtthrougHomocidialIdeas.Text = qry.Psychiatry_Homocidial_Ideas;
+        //            txtillusion.Text = qry.Psychiatry_Illusion;
+        //            txtHallucinationAuditoryVisualOlfactoryGustatoryTactile.Text = qry.Psychiatry_Hallucination;
+        //            txtorientationtime.Text = qry.Psychiatry_Orientation_Time;
+        //            txtplace.Text = qry.Psychiatry_Place;
+        //            txtperson.Text = qry.Psychiatry_Person;
+        //            txtAttentionConcentrationSerial7Test.Text = qry.Psychiatry_Attention_Concentration;
+        //            txtOrDaysOfWeekReverseOrder.Text = qry.Psychiatry_Days_Week;
+        //            txtImmediatememory.Text = qry.Psychiatry_Immediate_Memory;
+        //            txtshorttermrecentevents.Text = qry.Psychiatry_Recent_Events;
+        //            txtadressrecallafter2minutes.Text = qry.Psychiatry_Adress_Recall_Two;
+        //            longtermremoteevents.Text = qry.Psychiatry_Remote_Events;
+        //            txtadressrecallafter5minues.Text = qry.Psychiatry_Adress_Recall_Five;
+        //            txtgeneralknowledgequestion.Text = qry.Psychiatry_General_knowledge;
+        //            txtsimplearthemeticcalculation.Text = qry.Psychiatry_Arthemetic_Calculation;
+        //            txtabstrationconcertethinking.Text = qry.Psychiatry_Abstraction;
+        //            txtinsight.Text = qry.Psychiatry_Insight;
+
+        //            txtDermaFace.Text = qry.DermaFace;
+        //            txtDermaNeck.Text = qry.DermaNeck;
+        //            txtDermaTrunk.Text = qry.DermaTrunk;
+        //            txtDermaUpperLimb.Text = qry.DermaUpperLimb;
+        //            txtDermaLowerLimb.Text = qry.DermaLowerLimb;
+        //            txtDermaFlexures.Text = qry.DermaFlexures;
+        //            txtDermaGenitalias.Text = qry.DermaGenitalias;
+        //            txtDermaHair.Text = qry.DermaHair;
+        //            txtDermaNail.Text = qry.DermaNail;
+        //            txtDermaMucousMembrane.Text = qry.DermaMucousMembrane;
+        //            txtDermaEyes.Text = qry.DermaEyes;
+        //            txtDermaEars.Text = qry.DermaEars;
+        //            txtDermaNose.Text = qry.DermaNose;
+        //            txtDermaLips.Text = qry.DermaLips;
+
+        //            txtHBM_Problem.Text = qry.Psychiatry_HBM_Problem;
+        //            txtHBM_Caused.Text = qry.Psychiatry_HBM_Caused;
+        //            txtHBM_Started.Text = qry.Psychiatry_HBM_Started;
+        //            txtHBM_Course.Text = qry.Psychiatry_HBM_Course;
+        //            txtHBM_Treatment.Text = qry.Psychiatry_HBM_Treatment;
+        //            txtHBM_Effects.Text = qry.Psychiatry_HBM_Effects;
+        //            txtPE_Pluse.Text = qry.Psychiatry_PE_Pluse;
+        //            txtPE_BP.Text = qry.Psychiatry_PE_BP;
+        //            txtPE_Temperature.Text = qry.Psychiatry_PE_Temperature;
+        //            txtPE_Weight.Text = qry.Psychiatry_PE_Weight;
+        //            txtPE_RespiratoryRate.Text = qry.Psychiatry_PE_RespiratoryRate;
+        //            txtPE_Jaundice.Text = qry.Psychiatry_PE_Jaundice;
+        //            txtPE_Anemia.Text = qry.Psychiatry_PE_Anemia;
+        //            txtPE_Cyanosis.Text = qry.Psychiatry_PE_Cyanosis;
+        //            txtPE_Clubbing.Text = qry.Psychiatry_PE_Clubbing;
+        //            txtPE_JVP.Text = qry.Psychiatry_PE_JVP;
+        //            txtPE_LymphNodes.Text = qry.Psychiatry_PE_LymphNodes;
+        //            txtPE_Edema.Text = qry.Psychiatry_PE_Edema;
+        //            txtPE_Respiratory.Text = qry.Psychiatry_PE_Respiratory;
+        //            txtPE_Cardiovascular.Text = qry.Psychiatry_PE_Cardiovascular;
+        //            txtPE_Gastro_Intestinal.Text = qry.Psychiatry_PE_Gastro_Intestinal;
+        //            txtPE_Observation.Text = qry.Psychiatry_PE_Observation;
+        //            txtPE_Cranial_Nerves.Text = qry.Psychiatry_PE_Cranial_Nerves;
+        //            txtPE_Limb_Strength.Text = qry.Psychiatry_PE_Limb_Strength;
+        //            txtPE_Spasticity.Text = qry.Psychiatry_PE_Spasticity;
+        //            txtPE_Position.Text = qry.Psychiatry_PE_Position;
+        //            txtPE_Vibration.Text = qry.Psychiatry_PE_Vibration;
+        //            txtPE_Stereognosis.Text = qry.Psychiatry_PE_Stereognosis;
+        //            txtPE_Pain.Text = qry.Psychiatry_PE_Pain;
+        //            txtPE_Biceps.Text = qry.Psychiatry_PE_Biceps;
+        //            txtPE_Triceps.Text = qry.Psychiatry_PE_Triceps;
+        //            txtPE_Brachioradialis.Text = qry.Psychiatry_PE_Brachioradialis;
+        //            txtPE_Quadriceps.Text = qry.Psychiatry_PE_Quadriceps;
+        //            txtPE_Patellar.Text = qry.Psychiatry_PE_Patellar;
+        //            txtPE_Achilles.Text = qry.Psychiatry_PE_Achilles;
+        //            txtPE_Extensor.Text = qry.Psychiatry_PE_Extensor;
+        //            txtPE_Frontal.Text = qry.Psychiatry_PE_Frontal;
+        //            txtPE_Finger.Text = qry.Psychiatry_PE_Finger;
+        //            txtPE_Heel.Text = qry.Psychiatry_PE_Heel;
+        //            txtPE_Movements.Text = qry.Psychiatry_PE_Movements;
+        //            txtPE_Gait.Text = qry.Psychiatry_PE_Gait;
+        //            chkPE_Neck_Rigidity.Checked = qry.Psychiatry_PE_Neck_Rigidity.Value;
+        //            chkPE_Kerning_Sign.Checked = qry.Psychiatry_PE_Kerning_Sign.Value;
+        //            chkPE_Brudzinki_Sign.Checked = qry.Psychiatry_PE_Brudzinki_Sign.Value;
+        //            txtFor_Summary.Text = qry.Psychiatry_For_Summary;
+        //            txtFor_Diagnosis.Text = qry.Psychiatry_For_Diagnosis;
+        //            txtFor_AxisI.Text = qry.Psychiatry_For_AxisI;
+        //            txtFor_AxisIII.Text = qry.Psychiatry_For_AxisIII;
+        //            txtFor_AxisII.Text = qry.Psychiatry_For_AxisII;
+
+        //            txtFor_AxisIV.Text = qry.Psychiatry_For_AxisIV;
+        //            txtFor_AxisV.Text = qry.Psychiatry_For_AxisV;
+        //            txtFor_PredisposingFactors.Text = qry.Psychiatry_For_PredisposingFactors;
+        //            txtFor_PrecipitatingFactors.Text = qry.Psychiatry_For_PrecipitatingFactors;
+        //            txtFor_PrepetuatingFactors.Text = qry.Psychiatry_For_PrepetuatingFactors;
+        //            txtFor_Investigation.Text = qry.Psychiatry_For_Investigation;
+        //            txtFor_Medical.Text = qry.Psychiatry_For_Medical;
+        //            txtFor_Psychological.Text = qry.Psychiatry_For_Psychological;
+        //            txtFor_Major_Issues.Text = qry.Psychiatry_Major_Issues;
+        //            txtFor_Strengths.Text = qry.Psychiatry_For_Strengths;
+        //            txtFor_Goals.Text = qry.Psychiatry_For_Goals;
+        //            txtFor_Strategies.Text = qry.Psychiatry_For_Strategies;
+
+        //            txtPeads_weight.Text = qry.Peads_weight;
+        //            txtPeads_Length.Text = qry.Peads_Length;
+        //            txtPeads_HC.Text = qry.Peads_HC;
+        //            txtPeads_General_Appearance.Text = qry.Peads_General_Appearance;
+        //            chkPeads_Cyanosis.Checked = qry.Peads_Cyanosis.Value;
+        //            chkPeads_Jaundice.Checked = qry.Peads_Jaundice.Value;
+        //            chkPeads_Lethargy.Checked = qry.Peads_Lethargy.Value;
+        //            chkPeads_Rash.Checked = qry.Peads_Rash.Value;
+        //            txtPeads_Others.Text = qry.Peads_Others;
+        //            chkPeads_Caput.Checked = qry.Peads_Caput.Value;
+
+        //            chkPeads_Cephalhematoma.Checked = qry.Peads_Cephalhematoma.Value;
+        //            rdbPeads_Anterioropen.Checked = qry.Peads_Anterioropen.Value;
+        //            rdbPeads_AnteriorClose.Checked = qry.Peads_AnteriorClose.Value;
+        //            chkPeads_Dextrocardia.Checked = qry.Peads_Dextrocardia.Value;
+        //            chkPeads_Bulging.Checked = qry.Peads_Bulging.Value;
+        //            chkPeads_Murmur.Checked = qry.Peads_Murmur.Value;
+        //            txtPeads_HeartSound.Text = qry.Peads_HeartSound;
+        //            chkPeads_Nasal.Checked = qry.Peads_Nasal.Value;
+        //            chkPeads_Recessions.Checked = qry.Peads_Recessions.Value;
+        //            txtPeads_AddedSounds.Text = qry.Peads_AddedSounds;
+
+        //            rdbPeads_Flat.Checked = qry.Peads_Flat.Value;
+        //            rdbPeads_Distended.Checked = qry.Peads_Distended.Value;
+        //            rdbPeads_Scaphoid.Checked = qry.Peads_Scaphoid.Value;
+        //            chkPeads_Liver.Checked = qry.Peads_Liver.Value;
+        //            chkPeads_Spleen.Checked = qry.Peads_Spleen.Value;
+        //            txtPeads_GITOthers.Text = qry.Peads_GITOthers;
+        //            chkPeads_Sucking.Checked = qry.Peads_Sucking.Value;
+        //            chkPeads_Rooting.Checked = qry.Peads_Rooting.Value;
+        //            chkPeads_Moro.Checked = qry.Peads_Moro.Value;
+        //            txtPeads_CNSOthers.Text = qry.Peads_CNSOthers;
+
+        //            chkPeads_FullTerm.Checked = qry.Peads_FullTerm.Value;
+        //            chkPeads_PreTerm.Checked = qry.Peads_PreTerm.Value;
+        //            if (qry.Peads_DateOfDelivery != null)
+        //                txtPeads_DateOfDelivery.Text = qry.Peads_DateOfDelivery.Value.ToString(AppConfig.DateFormat);
+        //            txtPeads_TimeOfDelivery.Text = qry.Peads_TimeOfDelivery;
+        //            rdbPeads_Booked.Checked = qry.Peads_Booked.Value;
+        //            rdbPeads_UnBooked.Checked = qry.Peads_UnBooked.Value;
+        //            chkPeads_DAIHandling.Checked = qry.Peads_DAIHandling.Value;
+        //            chkPeads_ANTURash.Checked = qry.Peads_ANTURash.Value;
+        //            chkPeads_PIH.Checked = qry.Peads_PIH.Value;
+        //            chkPeads_GDM.Checked = qry.Peads_GDM.Value;
+        //            chkPeads_Vacinated.Checked = qry.Peads_Vacinated.Value;
+
+        //            txtPeads_ANTOthers.Text = qry.Peads_ANTOthers;
+        //            rdbPeads_SVD.Checked = qry.Peads_SVD.Value;
+        //            rdbPeads_LSCS.Checked = qry.Peads_LSCS.Value;
+        //            rdbPeads_Emergency.Checked = qry.Peads_Emergency.Value;
+        //            rdbPeads_Elective.Checked = qry.Peads_Elective.Value;
+
+        //            txtPeads_PlaceOfDelivery.Text = qry.Peads_PlaceOfDelivery;
+        //            txtPeads_IndicationForLSCS.Text = qry.Peads_IndicationForLSCS;
+        //            ddlPeads_apgerScore1min.SelectedValue = qry.Peads_apgerScore1min;
+        //            ddlPeads_apgerScore5min.SelectedValue = qry.Peads_apgerScore5min;
+        //            chkPeads_Resuscitation.Checked = qry.Peads_Resuscitation.Value;
+
+        //            txtPeads_NatalOthers.Text = qry.Peads_NatalOthers;
+        //            chkPeads_Moaning.Checked = qry.Peads_Moaning.Value;
+        //            chkPeads_RespDistress.Checked = qry.Peads_RespDistress.Value;
+        //            chkPeads_PostNATALCyanosis.Checked = qry.Peads_PostNATALCyanosis.Value;
+        //            chkPeads_Fits.Checked = qry.Peads_Fits.Value;
+        //            chkPeads_ReluctanceToFeed.Checked = qry.Peads_ReluctanceToFeed.Value;
+        //            txtPeads_PostNatalOthers.Text = qry.Peads_PostNatalOthers;
+
+
+
+        //            ddlDischarge_By.SelectedValue = qry.Discharge_By;
+        //            // Show existing file link if it exists
+        //            if (!string.IsNullOrEmpty(qry.emergecny_pat_file))
+        //            {
+        //                string fileUrl = ResolveUrl(qry.emergecny_pat_file);
+        //                hlExistingFile.NavigateUrl = fileUrl;
+        //                hlExistingFile.Text = "View File: " + System.IO.Path.GetFileName(qry.emergecny_pat_file);
+        //                hlExistingFile.Visible = true;
+        //            }
+        //            else
+        //            {
+        //                hlExistingFile.Visible = false;
+        //            }
+
+        //            txtPrevention_Precaution.Text = qry.Prevention_Precaution;
+        //            if (qry.Next_Visit != null)
+        //                txtNext_Visit.Text = qry.Next_Visit.Value.ToString(AppConfig.DateFormat);
+        //            if (qry.Discharge_On != null)
+        //                txtDischarge_On.Text = qry.Discharge_On.Value.ToString(AppConfig.DateFormat);
+        //            cbDicharg_Slip.Checked = qry.Discharge.Value;
+        //            if (qry.Discharge_On != null && qry.Discharge == true)
+        //            {
+        //                PatientDischargeStatus = true;
+        //            }
+
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        lblMessage.CssClass = "errorMessage";
+        //        lblMessage.Text = ex.Message;
+        //    }
+        //}
 
         private void PopulateGetEmergencyPatientData(int Emergency_ID)
         {
@@ -685,13 +1523,12 @@ namespace PMS
             {
                 db = new DataBaseDataContext(DBClass.ConnectionString());
                 var qry = db.sp_GetEmergencyPatientDetail(Emergency_ID).FirstOrDefault();
-                #region Old Code
-
-                #endregion
 
                 if (qry != null)
                 {
-                    ReferToOPD.Checked = Convert.ToBoolean(qry.Refer_To_OPD);
+                    // Safe boolean conversion for Refer_To_OPD
+                    ReferToOPD.Checked = qry.Refer_To_OPD ?? false;
+
                     hdfPatient_ID.Value = qry.Patient_ID.ToString();
                     txtPatient_ID.Text = qry.Patient_ID.ToString();
                     txtIn_Patient_ID.Text = qry.Emergency_ID.ToString();
@@ -700,44 +1537,48 @@ namespace PMS
                     vLbl_Adress.Text = qry.Permanent_Address;
                     vLbl_Gender.Text = db.GetDataValueName("Gender", qry.Gender);
                     vLbl_Age.Text = qry.Age_years;
-                    //if (qry.Entry_Date == null)
-                    //    vLbl_RegDate.Text = qry.Created_time.Value.ToString(AppConfig.DateFormat);
-                    //else
-                        //vLbl_RegDate.Text = qry.Entry_Date.Value.ToString(AppConfig.DateFormat);
-                    vLbl_RegDate.Text = qry.Created_time.Value.ToString(AppConfig.DateFormat);
-                    txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
+
+                    // Safe DateTime check for Created_time
+                    if (qry.Created_time.HasValue)
+                        vLbl_RegDate.Text = qry.Created_time.Value.ToString(AppConfig.DateFormat);
+                    else
+                        vLbl_RegDate.Text = "";
+
+                    // Safe DateTime check for Admission_Date
+                    if (qry.Admission_Date.HasValue)
+                        txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
+                    else
+                        txtAdmission_Date.Text = "";
 
                     txtRN_Special_Instruction.Text = qry.RN_Special_Instruction;
                     ddlIssuance_Of.SelectedValue = qry.Issuance_Of;
                     vLbl_Patient_Type.Text = db.GetDataValueName("Patient Type", qry.Patient_Type);
                     vLbl_Patient_AdmitCatagory.Text = db.GetDataValueName("Patient Type", qry.Patient_Discount_Type);
+
                     if (qry.Issuance_Of == "002")
                     {
-                        
                     }
                     if (qry.Issuance_Of == "001")
                     {
-                        ddlWard_No.SelectedValue = qry.Ward_ID.ToString();
+                        if (qry.Ward_ID != null)
+                            ddlWard_No.SelectedValue = qry.Ward_ID.ToString();
+
                         if (qry.Bed_No != null && qry.Bed_No != 0)
                             txtBed_No.Text = qry.Bed_No.ToString();
                     }
+
                     ddlDepartment.SelectedValue = qry.Department;
                     ddlPatientCondition.SelectedValue = qry.Emergency_Pat_Condition;
                     txtCallToDoctor.Text = qry.remarks_call_to_doctor;
                     txtDiscount.Text = Convert.ToString(qry.Discount);
                     ddlCategory.SelectedValue = qry.Patient_Category;
 
-                 
-
                     db = new DataBaseDataContext(DBClass.ConnectionString());
                     List<HR_Employee> EmpList = new List<HR_Employee>();
                     List<HR_Employee> EmpList2 = new List<HR_Employee>();
-                    EmpList = (from tbl in db.HR_Employees
-                               where tbl.IsDoctor == true 
-                               select tbl).ToList();
-                    EmpList2 = (from tbl in db.HR_Employees
-                                where tbl.IsDoctor == true
-                                select tbl).ToList();
+                    EmpList = (from tbl in db.HR_Employees where tbl.IsDoctor == true select tbl).ToList();
+                    EmpList2 = (from tbl in db.HR_Employees where tbl.IsDoctor == true select tbl).ToList();
+
                     ddlDoctor.Items.Clear();
                     ddlDoctor.DataSource = EmpList;
                     ddlDoctor.DataTextField = "Emp_Name";
@@ -766,8 +1607,8 @@ namespace PMS
                     ddlDischargeStatus.SelectedValue = qry.Discharge_Status;
 
                     if (qry.Expected_Discharge_Date != null)
-                      
                         txtBP.Text = qry.BP_mm_Hg;
+
                     ctl00_MainContent_txtEOR.Text = qry.Eye_Opening_Response;
                     txtMR.Text = qry.Motor_Response;
                     txtVR.Text = qry.Verbal_Response;
@@ -787,399 +1628,110 @@ namespace PMS
                     TextBoxResp.Text = qry.RESP_Value;
                     TextBoxGit.Text = qry.GIT_Value;
                     TextBoxGpe.Text = qry.GPE_Value;
-                    if (!string.IsNullOrEmpty(qry.DateOfDeath.ToString()))
-                    {
-                        txtDateofDeath.Text = Convert.ToDateTime(qry.DateOfDeath.Value).ToString("MM/dd/yyyy");
-                    }
-                    if (!string.IsNullOrEmpty(qry.TimeOfDeath.ToString()))
-                    {
-                        txtTimeOfDeath.Text = Convert.ToString(qry.TimeOfDeath);
-                    }
 
-                    if (qry.HMFIntact != null)
-                    {
-                        if (qry.HMFIntact == true)
-                        {
-                            HMFIntact1.Checked = true;
-                        }
-                        else
-                        {
-                            HMFIntact2.Checked = true;
-                        }
-                    }
+                    // Safe DateOfDeath
+                    if (qry.DateOfDeath.HasValue)
+                        txtDateofDeath.Text = qry.DateOfDeath.Value.ToString("MM/dd/yyyy");
+                    else
+                        txtDateofDeath.Text = "";
 
-                    if (qry.CranialNerves != null)
-                    {
-                        if (qry.CranialNerves == true)
-                        {
-                            CranialNerves1.Checked = true;
-                        }
-                        else
-                        {
-                            CranialNerves2.Checked = true;
-                        }
-                    }
+                    // Safe TimeOfDeath
+                    if (qry.TimeOfDeath.HasValue)
+                        txtTimeOfDeath.Text = qry.TimeOfDeath.Value.ToString();
+                    else
+                        txtTimeOfDeath.Text = "";
 
+                    // Examination Radio Buttons - Using ?? false for safety
+                    HMFIntact1.Checked = (qry.HMFIntact ?? false) == true;
+                    HMFIntact2.Checked = (qry.HMFIntact ?? false) == false;
 
-                    if (qry.SignsOfMeningism != null)
-                    {
-                        if (qry.SignsOfMeningism == true)
-                        {
-                            SignsOfMeningism1.Checked = true;
-                        }
-                        else
-                        {
-                            SignsOfMeningism2.Checked = true;
-                        }
-                    }
+                    CranialNerves1.Checked = (qry.CranialNerves ?? false) == true;
+                    CranialNerves2.Checked = (qry.CranialNerves ?? false) == false;
 
+                    SignsOfMeningism1.Checked = (qry.SignsOfMeningism ?? false) == true;
+                    SignsOfMeningism2.Checked = (qry.SignsOfMeningism ?? false) == false;
 
-                    if (qry.HeartSound != null)
-                    {
-                        if (qry.HeartSound == true)
-                        {
-                            HeartSound1.Checked = true;
-                        }
-                        else
-                        {
-                            HeartSound2.Checked = true;
-                        }
-                    }
+                    HeartSound1.Checked = (qry.HeartSound ?? false) == true;
+                    HeartSound2.Checked = (qry.HeartSound ?? false) == false;
 
+                    Arrhythmias1.Checked = (qry.Arrhythmias ?? false) == true;
+                    Arrhythmias2.Checked = (qry.Arrhythmias ?? false) == false;
 
+                    Murmur1.Checked = (qry.Murmur ?? false) == true;
+                    Murmur2.Checked = (qry.Murmur ?? false) == false;
 
-                    if (qry.Arrhythmias != null)
-                    {
-                        if (qry.Arrhythmias == true)
-                        {
-                            Arrhythmias1.Checked = true;
-                        }
-                        else
-                        {
-                            Arrhythmias2.Checked = true;
-                        }
-                    }
+                    AnyOtherAddedSound1.Checked = (qry.AnyOtherAddedSound ?? false) == true;
+                    AnyOtherAddedSound2.Checked = (qry.AnyOtherAddedSound ?? false) == false;
 
+                    AnyOtherFindings1.Checked = (qry.AnyOtherFindings ?? false) == true;
+                    AnyOtherFindings2.Checked = (qry.AnyOtherFindings ?? false) == false;
 
-                    if (qry.Murmur != null)
-                    {
-                        if (qry.Murmur == true)
-                        {
-                            Murmur1.Checked = true;
-                        }
-                        else
-                        {
-                            Murmur2.Checked = true;
-                        }
-                    }
+                    Wheeze1.Checked = (qry.Wheeze ?? false) == true;
+                    Wheeze2.Checked = (qry.Wheeze ?? false) == false;
 
+                    Ranchi1.Checked = (qry.Ranchi ?? false) == true;
+                    Ranchi2.Checked = (qry.Ranchi ?? false) == false;
 
-                    if (qry.AnyOtherAddedSound != null)
-                    {
-                        if (qry.AnyOtherAddedSound == true)
-                        {
-                            AnyOtherAddedSound1.Checked = true;
-                        }
-                        else
-                        {
-                            AnyOtherAddedSound2.Checked = true;
-                        }
-                    }
+                    AnyOtherSound1.Checked = (qry.AnyOtherSound ?? false) == true;
+                    AnyOtherSound2.Checked = (qry.AnyOtherSound ?? false) == false;
 
+                    AbdomenSoft1.Checked = (qry.AbdomenSoft ?? false) == true;
+                    AbdomenSoft2.Checked = (qry.AbdomenSoft ?? false) == false;
 
-                    if (qry.AnyOtherFindings != null)
-                    {
-                        if (qry.AnyOtherFindings == true)
-                        {
-                            AnyOtherFindings1.Checked = true;
-                        }
-                        else
-                        {
-                            AnyOtherFindings2.Checked = true;
-                        }
-                    }
+                    Tenderness1.Checked = (qry.Tenderness ?? false) == true;
+                    Tenderness2.Checked = (qry.Tenderness ?? false) == false;
 
+                    Guarding1.Checked = (qry.Guarding ?? false) == true;
+                    Guarding2.Checked = (qry.Guarding ?? false) == false;
 
-                    if (qry.Wheeze != null)
-                    {
-                        if (qry.Wheeze == true)
-                        {
-                            Wheeze1.Checked = true;
-                        }
-                        else
-                        {
-                            Wheeze2.Checked = true;
-                        }
-                    }
+                    BowelSound1.Checked = (qry.BowelSound ?? false) == true;
+                    BowelSound2.Checked = (qry.BowelSound ?? false) == false;
 
-                    if (qry.Ranchi != null)
-                    {
-                        if (qry.Ranchi == true)
-                        {
-                            Ranchi1.Checked = true;
-                        }
-                        else
-                        {
-                            Ranchi2.Checked = true;
-                        }
-                    }
+                    Distention1.Checked = (qry.Distention ?? false) == true;
+                    Distention2.Checked = (qry.Distention ?? false) == false;
 
+                    FluidThrill1.Checked = (qry.FluidThrill ?? false) == true;
+                    FluidThrill2.Checked = (qry.FluidThrill ?? false) == false;
 
+                    ShiftingDullness1.Checked = (qry.ShiftingDullness ?? false) == true;
+                    ShiftingDullness2.Checked = (qry.ShiftingDullness ?? false) == false;
 
-                    if (qry.AnyOtherSound != null)
-                    {
-                        if (qry.AnyOtherSound == true)
-                        {
-                            AnyOtherSound1.Checked = true;
-                        }
-                        else
-                        {
-                            AnyOtherSound2.Checked = true;
-                        }
-                    }
+                    EpigastriaDiscomfort1.Checked = (qry.EpigastriaDiscomfort ?? false) == true;
+                    EpigastriaDiscomfort2.Checked = (qry.EpigastriaDiscomfort ?? false) == false;
 
+                    RetrosternalBurning1.Checked = (qry.RetrosternalBurning ?? false) == true;
+                    RetrosternalBurning2.Checked = (qry.RetrosternalBurning ?? false) == false;
 
-                    if (qry.AbdomenSoft != null)
-                    {
-                        if (qry.AbdomenSoft == true)
-                        {
-                            AbdomenSoft1.Checked = true;
-                        }
-                        else
-                        {
-                            AbdomenSoft2.Checked = true;
-                        }
-                    }
+                    Jondus1.Checked = (qry.Jondus ?? false) == true;
+                    Jondus2.Checked = (qry.Jondus ?? false) == false;
 
+                    Pallor1.Checked = (qry.Pallor ?? false) == true;
+                    Pallor2.Checked = (qry.Pallor ?? false) == false;
 
+                    Dehydration1.Checked = (qry.Dehydration ?? false) == true;
+                    Dehydration2.Checked = (qry.Dehydration ?? false) == false;
 
-                    if (qry.Tenderness != null)
-                    {
-                        if (qry.Tenderness == true)
-                        {
-                            Tenderness1.Checked = true;
-                        }
-                        else
-                        {
-                            Tenderness2.Checked = true;
-                        }
-                    }
+                    GCSOrientation1.Checked = (qry.GCSOrientation ?? false) == true;
+                    GCSOrientation2.Checked = (qry.GCSOrientation ?? false) == false;
 
+                    ConsciousOrientely1.Checked = (qry.Conscious_Orientely ?? false) == true;
+                    ConsciousOrientely2.Checked = (qry.Conscious_Orientely ?? false) == false;
 
+                    NVB_Right1.Checked = (qry.NVB_Right ?? false) == true;
+                    NVB_Right2.Checked = (qry.NVB_Right ?? false) == false;
 
-                    if (qry.Guarding != null)
-                    {
-                        if (qry.Guarding == true)
-                        {
-                            Guarding1.Checked = true;
-                        }
-                        else
-                        {
-                            Guarding2.Checked = true;
-                        }
-                    }
+                    NVB_Left1.Checked = (qry.NVB_Left ?? false) == true;
+                    NVB_Left2.Checked = (qry.NVB_Left ?? false) == false;
 
+                    Crepitation_Right1.Checked = (qry.Crepitation_Right ?? false) == true;
+                    Crepitation_Right2.Checked = (qry.Crepitation_Right ?? false) == false;
 
-
-                    if (qry.BowelSound != null)
-                    {
-                        if (qry.BowelSound == true)
-                        {
-                            BowelSound1.Checked = true;
-                        }
-                        else
-                        {
-                            BowelSound2.Checked = true;
-                        }
-                    }
-
-
-
-                    if (qry.Distention != null)
-                    {
-                        if (qry.Distention == true)
-                        {
-                            Distention1.Checked = true;
-                        }
-                        else
-                        {
-                            Distention2.Checked = true;
-                        }
-                    }
-
-
-
-                    if (qry.FluidThrill != null)
-                    {
-                        if (qry.FluidThrill == true)
-                        {
-                            FluidThrill1.Checked = true;
-                        }
-                        else
-                        {
-                            FluidThrill2.Checked = true;
-                        }
-                    }
-
-
-                    if (qry.ShiftingDullness != null)
-                    {
-                        if (qry.ShiftingDullness == true)
-                        {
-                            ShiftingDullness1.Checked = true;
-                        }
-                        else
-                        {
-                            ShiftingDullness2.Checked = true;
-                        }
-                    }
-
-
-
-                    if (qry.EpigastriaDiscomfort != null)
-                    {
-                        if (qry.EpigastriaDiscomfort == true)
-                        {
-                            EpigastriaDiscomfort1.Checked = true;
-                        }
-                        else
-                        {
-                            EpigastriaDiscomfort2.Checked = true;
-                        }
-                    }
-
-
-                    if (qry.RetrosternalBurning != null)
-                    {
-                        if (qry.RetrosternalBurning == true)
-                        {
-                            RetrosternalBurning1.Checked = true;
-                        }
-                        else
-                        {
-                            RetrosternalBurning2.Checked = true;
-                        }
-                    }
-
-
-
-                    if (qry.Jondus != null)
-                    {
-                        if (qry.Jondus == true)
-                        {
-                            Jondus1.Checked = true;
-                        }
-                        else
-                        {
-                            Jondus2.Checked = true;
-                        }
-                    }
-
-
-
-                    if (qry.Pallor != null)
-                    {
-                        if (qry.Pallor == true)
-                        {
-                            Pallor1.Checked = true;
-                        }
-                        else
-                        {
-                            Pallor2.Checked = true;
-                        }
-                    }
-
-
-
-
-                    if (qry.Dehydration != null)
-                    {
-                        if (qry.Dehydration == true)
-                        {
-                            Dehydration1.Checked = true;
-                        }
-                        else
-                        {
-                            Dehydration2.Checked = true;
-                        }
-                    }
-
-                    if (qry.GCSOrientation != null)
-                    {
-                        if (qry.GCSOrientation == true)
-                        {
-                            GCSOrientation1.Checked = true;
-                        }
-                        else
-                        {
-                            GCSOrientation2.Checked = true;
-                        }
-                    }
-
-                    if (qry.Conscious_Orientely != null)
-                    {
-                        if (qry.Conscious_Orientely == true)
-                        {
-                            ConsciousOrientely1.Checked = true;
-                        }
-                        else
-                        {
-                            ConsciousOrientely2.Checked = true;
-                        }
-                    }
-
-                    if (qry.NVB_Right != null)
-                    {
-                        if (qry.NVB_Right == true)
-                        {
-                            NVB_Right1.Checked = true;
-                        }
-                        else
-                        {
-                            NVB_Right2.Checked = true;
-                        }
-                    }
-
-                    if (qry.NVB_Left != null)
-                    {
-                        if (qry.NVB_Left == true)
-                        {
-                            NVB_Left1.Checked = true;
-                        }
-                        else
-                        {
-                            NVB_Left2.Checked = true;
-                        }
-                    }
-
-                    if (qry.Crepitation_Right != null)
-                    {
-                        if (qry.Crepitation_Right == true)
-                        {
-                            Crepitation_Right1.Checked = true;
-                        }
-                        else
-                        {
-                            Crepitation_Right2.Checked = true;
-                        }
-                    }
-
-                    if (qry.Crepitation_Left != null)
-                    {
-                        if (qry.Crepitation_Left == true)
-                        {
-                            Crepitation_Left1.Checked = true;
-                        }
-                        else
-                        {
-                            Crepitation_Left2.Checked = true;
-                        }
-                    }
+                    Crepitation_Left1.Checked = (qry.Crepitation_Left ?? false) == true;
+                    Crepitation_Left2.Checked = (qry.Crepitation_Left ?? false) == false;
 
                     txtFurtherExplanation.Text = qry.FurtherExplanation;
                     txtSaturation_Oxygen1.Text = qry.O2_Saturation_Oxygen1;
                     txtSaturation_Oxygen2.Text = qry.O2_Saturation_Oxygen2;
-       
 
                     ddlPlaceOfDeath.SelectedValue = qry.PlaceOfDeath;
                     txtCause_Of_Death.Text = qry.CauseOfDeath;
@@ -1201,62 +1753,57 @@ namespace PMS
                     txtProvisionalDiagnosis.Text = qry.Provisional_Diagnosis;
                     txtTreatmentTime.Text = (qry.TreatmentTime == null) ? "" : qry.TreatmentTime.ToString();
                     ddlReferredTo.SelectedValue = qry.ReferredTo;
-
-
                     txtRN_Special_Instruction.Text = qry.RN_Special_Instruction;
-
-
                     txtHistoryOfPeresentIllness.Text = qry.HistoryOfPeresentIllness;
                     txtHistoryOfFamily.Text = qry.HistoryOfFamily;
                     txtHistoryOfPastIllness.Text = qry.HistoryOfPastIllness;
-
                     txtSocioEconomicHistory.Text = qry.SocioEconomicHistory;
-    
                     txtObstetricHistory.Text = qry.ObstetricHistory;
                     txtAllergiesHistory.Text = qry.AllergiesHistory;
-
                     txtTreatmentHistory.Text = qry.TreatmentHistory;
                     txtDrugHistory.Text = qry.Drug_History;
-        
                     txtBirthHistory.Text = qry.Birth_History;
                     ddlPatient_Main_Category.SelectedValue = qry.Reffer_To;
                     txt_remarks.Text = qry.remarks;
- 
                     txtPersonalHistory.Text = qry.Personal_History;
-
 
                     txtmidl.Text = qry.ENT_Throat_IDL;
                     txtmNose.Text = qry.ENT_Throat_Nose;
                     txtmRight.Text = qry.ENT_Ear_Right;
                     txtmLeft.Text = qry.Ent_Ear_Left;
-                    mchkRightPos.Checked = qry.ENT_Rinnes_Right_PosNeg.Value;
-                    mchkLeftPos.Checked = qry.ENT_Rinnes_Lft_PosNeg.Value;
-                    mchkRightF.Checked = qry.ENT_Rinnes_Right_FalseNeg.Value;
-                    mchkLeftF.Checked = qry.ENT_Rinnes_Lft_FalseNeg.Value;
 
-                    mchkcentral.Checked = qry.ENT_Webber_Central.Value;
-                    mchkLateralized.Checked = qry.ENT_Webber_Lateralized.Value;
-                    mchkPTA.Checked = qry.ENT_Investigation_PTA.Value;
-                    mchkTympanometry.Checked = qry.ENT_Investigation_Tympanometry.Value;
-                    mchkRightNeg.Checked = qry.ENT_Rinnes_Right_Neg.Value;
-                    mchkLeftNeg.Checked = qry.ENT_Rinnes_Lft_Neg.Value;
-                    mchkRightFNeg.Checked = qry.ENT_Rinnes_Right_FNeg.Value;
-                    mchkLeftFNeg.Checked = qry.ENT_Rinnes_Lft_FNeg.Value;
-
+                    // ENT Checkboxes - Fixed with ?? false
+                    mchkRightPos.Checked = qry.ENT_Rinnes_Right_PosNeg ?? false;
+                    mchkLeftPos.Checked = qry.ENT_Rinnes_Lft_PosNeg ?? false;
+                    mchkRightF.Checked = qry.ENT_Rinnes_Right_FalseNeg ?? false;
+                    mchkLeftF.Checked = qry.ENT_Rinnes_Lft_FalseNeg ?? false;
+                    mchkcentral.Checked = qry.ENT_Webber_Central ?? false;
+                    mchkLateralized.Checked = qry.ENT_Webber_Lateralized ?? false;
+                    mchkPTA.Checked = qry.ENT_Investigation_PTA ?? false;
+                    mchkTympanometry.Checked = qry.ENT_Investigation_Tympanometry ?? false;
+                    mchkRightNeg.Checked = qry.ENT_Rinnes_Right_Neg ?? false;
+                    mchkLeftNeg.Checked = qry.ENT_Rinnes_Lft_Neg ?? false;
+                    mchkRightFNeg.Checked = qry.ENT_Rinnes_Right_FNeg ?? false;
+                    mchkLeftFNeg.Checked = qry.ENT_Rinnes_Lft_FNeg ?? false;
 
                     txtInformant.Text = qry.Psychiatry_Informant;
                     txtSourceOfReferral.Text = qry.Psychiatry_Source_Referral;
-                    chkNeckHolding.Checked = Convert.ToBoolean(qry.Psychiatry_Neck_Holding);
-                    chkWalking.Checked = qry.Psychiatry_Walking.Value;
-                    chkTalking.Checked = qry.Psychiatry_Talking.Value;
-                    chkOthers.Checked = qry.Psychiatry_Others.Value;
+
+                    // Psychiatry Checkboxes - Fixed mixed types
+                    chkNeckHolding.Checked = qry.Psychiatry_Neck_Holding ?? false;
+                    chkWalking.Checked = qry.Psychiatry_Walking ?? false;
+                    chkTalking.Checked = qry.Psychiatry_Talking ?? false;
+                    chkOthers.Checked = qry.Psychiatry_Others ?? false;
+
                     txtMenarche.Text = qry.Psychiatry_Menarche;
                     txtMenstrual.Text = qry.Psychiatry_Menstrual;
                     txtAttachmentSeparationfromParents.Text = qry.Psychiatry_Attachment_Separation;
                     txtHealth.Text = qry.Psychiatry_Health;
+
                     chkNailBiting.Checked = Convert.ToBoolean(qry.Psychiatry_Nail_Biting);
                     chkTemperTantrums.Checked = Convert.ToBoolean(qry.Psychiatry_Temper_Tantrums);
                     chkBedWetting.Checked = Convert.ToBoolean(qry.Psychiatry_Bed_Wetting);
+
                     txtAcademics.Text = qry.Psychiatry_Academics;
                     txtPeerRelationship.Text = qry.Psychiatry_Peer_Relationship;
                     txtBehaviour.Text = qry.Psychiatry_Behaviour;
@@ -1393,15 +1940,17 @@ namespace PMS
                     txtPE_Heel.Text = qry.Psychiatry_PE_Heel;
                     txtPE_Movements.Text = qry.Psychiatry_PE_Movements;
                     txtPE_Gait.Text = qry.Psychiatry_PE_Gait;
-                    chkPE_Neck_Rigidity.Checked = qry.Psychiatry_PE_Neck_Rigidity.Value;
-                    chkPE_Kerning_Sign.Checked = qry.Psychiatry_PE_Kerning_Sign.Value;
-                    chkPE_Brudzinki_Sign.Checked = qry.Psychiatry_PE_Brudzinki_Sign.Value;
+
+                    // Psychiatry PE Checkboxes - Fixed
+                    chkPE_Neck_Rigidity.Checked = qry.Psychiatry_PE_Neck_Rigidity ?? false;
+                    chkPE_Kerning_Sign.Checked = qry.Psychiatry_PE_Kerning_Sign ?? false;
+                    chkPE_Brudzinki_Sign.Checked = qry.Psychiatry_PE_Brudzinki_Sign ?? false;
+
                     txtFor_Summary.Text = qry.Psychiatry_For_Summary;
                     txtFor_Diagnosis.Text = qry.Psychiatry_For_Diagnosis;
                     txtFor_AxisI.Text = qry.Psychiatry_For_AxisI;
                     txtFor_AxisIII.Text = qry.Psychiatry_For_AxisIII;
                     txtFor_AxisII.Text = qry.Psychiatry_For_AxisII;
-
                     txtFor_AxisIV.Text = qry.Psychiatry_For_AxisIV;
                     txtFor_AxisV.Text = qry.Psychiatry_For_AxisV;
                     txtFor_PredisposingFactors.Text = qry.Psychiatry_For_PredisposingFactors;
@@ -1419,71 +1968,70 @@ namespace PMS
                     txtPeads_Length.Text = qry.Peads_Length;
                     txtPeads_HC.Text = qry.Peads_HC;
                     txtPeads_General_Appearance.Text = qry.Peads_General_Appearance;
-                    chkPeads_Cyanosis.Checked = qry.Peads_Cyanosis.Value;
-                    chkPeads_Jaundice.Checked = qry.Peads_Jaundice.Value;
-                    chkPeads_Lethargy.Checked = qry.Peads_Lethargy.Value;
-                    chkPeads_Rash.Checked = qry.Peads_Rash.Value;
+
+                    // Peads Checkboxes - Fixed
+                    chkPeads_Cyanosis.Checked = qry.Peads_Cyanosis ?? false;
+                    chkPeads_Jaundice.Checked = qry.Peads_Jaundice ?? false;
+                    chkPeads_Lethargy.Checked = qry.Peads_Lethargy ?? false;
+                    chkPeads_Rash.Checked = qry.Peads_Rash ?? false;
                     txtPeads_Others.Text = qry.Peads_Others;
-                    chkPeads_Caput.Checked = qry.Peads_Caput.Value;
-
-                    chkPeads_Cephalhematoma.Checked = qry.Peads_Cephalhematoma.Value;
-                    rdbPeads_Anterioropen.Checked = qry.Peads_Anterioropen.Value;
-                    rdbPeads_AnteriorClose.Checked = qry.Peads_AnteriorClose.Value;
-                    chkPeads_Dextrocardia.Checked = qry.Peads_Dextrocardia.Value;
-                    chkPeads_Bulging.Checked = qry.Peads_Bulging.Value;
-                    chkPeads_Murmur.Checked = qry.Peads_Murmur.Value;
+                    chkPeads_Caput.Checked = qry.Peads_Caput ?? false;
+                    chkPeads_Cephalhematoma.Checked = qry.Peads_Cephalhematoma ?? false;
+                    rdbPeads_Anterioropen.Checked = qry.Peads_Anterioropen ?? false;
+                    rdbPeads_AnteriorClose.Checked = qry.Peads_AnteriorClose ?? false;
+                    chkPeads_Dextrocardia.Checked = qry.Peads_Dextrocardia ?? false;
+                    chkPeads_Bulging.Checked = qry.Peads_Bulging ?? false;
+                    chkPeads_Murmur.Checked = qry.Peads_Murmur ?? false;
                     txtPeads_HeartSound.Text = qry.Peads_HeartSound;
-                    chkPeads_Nasal.Checked = qry.Peads_Nasal.Value;
-                    chkPeads_Recessions.Checked = qry.Peads_Recessions.Value;
+                    chkPeads_Nasal.Checked = qry.Peads_Nasal ?? false;
+                    chkPeads_Recessions.Checked = qry.Peads_Recessions ?? false;
                     txtPeads_AddedSounds.Text = qry.Peads_AddedSounds;
-
-                    rdbPeads_Flat.Checked = qry.Peads_Flat.Value;
-                    rdbPeads_Distended.Checked = qry.Peads_Distended.Value;
-                    rdbPeads_Scaphoid.Checked = qry.Peads_Scaphoid.Value;
-                    chkPeads_Liver.Checked = qry.Peads_Liver.Value;
-                    chkPeads_Spleen.Checked = qry.Peads_Spleen.Value;
+                    rdbPeads_Flat.Checked = qry.Peads_Flat ?? false;
+                    rdbPeads_Distended.Checked = qry.Peads_Distended ?? false;
+                    rdbPeads_Scaphoid.Checked = qry.Peads_Scaphoid ?? false;
+                    chkPeads_Liver.Checked = qry.Peads_Liver ?? false;
+                    chkPeads_Spleen.Checked = qry.Peads_Spleen ?? false;
                     txtPeads_GITOthers.Text = qry.Peads_GITOthers;
-                    chkPeads_Sucking.Checked = qry.Peads_Sucking.Value;
-                    chkPeads_Rooting.Checked = qry.Peads_Rooting.Value;
-                    chkPeads_Moro.Checked = qry.Peads_Moro.Value;
+                    chkPeads_Sucking.Checked = qry.Peads_Sucking ?? false;
+                    chkPeads_Rooting.Checked = qry.Peads_Rooting ?? false;
+                    chkPeads_Moro.Checked = qry.Peads_Moro ?? false;
                     txtPeads_CNSOthers.Text = qry.Peads_CNSOthers;
+                    chkPeads_FullTerm.Checked = qry.Peads_FullTerm ?? false;
+                    chkPeads_PreTerm.Checked = qry.Peads_PreTerm ?? false;
 
-                    chkPeads_FullTerm.Checked = qry.Peads_FullTerm.Value;
-                    chkPeads_PreTerm.Checked = qry.Peads_PreTerm.Value;
-                    if (qry.Peads_DateOfDelivery != null)
+                    if (qry.Peads_DateOfDelivery.HasValue)
                         txtPeads_DateOfDelivery.Text = qry.Peads_DateOfDelivery.Value.ToString(AppConfig.DateFormat);
+                    else
+                        txtPeads_DateOfDelivery.Text = "";
+
                     txtPeads_TimeOfDelivery.Text = qry.Peads_TimeOfDelivery;
-                    rdbPeads_Booked.Checked = qry.Peads_Booked.Value;
-                    rdbPeads_UnBooked.Checked = qry.Peads_UnBooked.Value;
-                    chkPeads_DAIHandling.Checked = qry.Peads_DAIHandling.Value;
-                    chkPeads_ANTURash.Checked = qry.Peads_ANTURash.Value;
-                    chkPeads_PIH.Checked = qry.Peads_PIH.Value;
-                    chkPeads_GDM.Checked = qry.Peads_GDM.Value;
-                    chkPeads_Vacinated.Checked = qry.Peads_Vacinated.Value;
-
+                    rdbPeads_Booked.Checked = qry.Peads_Booked ?? false;
+                    rdbPeads_UnBooked.Checked = qry.Peads_UnBooked ?? false;
+                    chkPeads_DAIHandling.Checked = qry.Peads_DAIHandling ?? false;
+                    chkPeads_ANTURash.Checked = qry.Peads_ANTURash ?? false;
+                    chkPeads_PIH.Checked = qry.Peads_PIH ?? false;
+                    chkPeads_GDM.Checked = qry.Peads_GDM ?? false;
+                    chkPeads_Vacinated.Checked = qry.Peads_Vacinated ?? false;
                     txtPeads_ANTOthers.Text = qry.Peads_ANTOthers;
-                    rdbPeads_SVD.Checked = qry.Peads_SVD.Value;
-                    rdbPeads_LSCS.Checked = qry.Peads_LSCS.Value;
-                    rdbPeads_Emergency.Checked = qry.Peads_Emergency.Value;
-                    rdbPeads_Elective.Checked = qry.Peads_Elective.Value;
-
+                    rdbPeads_SVD.Checked = qry.Peads_SVD ?? false;
+                    rdbPeads_LSCS.Checked = qry.Peads_LSCS ?? false;
+                    rdbPeads_Emergency.Checked = qry.Peads_Emergency ?? false;
+                    rdbPeads_Elective.Checked = qry.Peads_Elective ?? false;
                     txtPeads_PlaceOfDelivery.Text = qry.Peads_PlaceOfDelivery;
                     txtPeads_IndicationForLSCS.Text = qry.Peads_IndicationForLSCS;
                     ddlPeads_apgerScore1min.SelectedValue = qry.Peads_apgerScore1min;
                     ddlPeads_apgerScore5min.SelectedValue = qry.Peads_apgerScore5min;
-                    chkPeads_Resuscitation.Checked = qry.Peads_Resuscitation.Value;
-
+                    chkPeads_Resuscitation.Checked = qry.Peads_Resuscitation ?? false;
                     txtPeads_NatalOthers.Text = qry.Peads_NatalOthers;
-                    chkPeads_Moaning.Checked = qry.Peads_Moaning.Value;
-                    chkPeads_RespDistress.Checked = qry.Peads_RespDistress.Value;
-                    chkPeads_PostNATALCyanosis.Checked = qry.Peads_PostNATALCyanosis.Value;
-                    chkPeads_Fits.Checked = qry.Peads_Fits.Value;
-                    chkPeads_ReluctanceToFeed.Checked = qry.Peads_ReluctanceToFeed.Value;
+                    chkPeads_Moaning.Checked = qry.Peads_Moaning ?? false;
+                    chkPeads_RespDistress.Checked = qry.Peads_RespDistress ?? false;
+                    chkPeads_PostNATALCyanosis.Checked = qry.Peads_PostNATALCyanosis ?? false;
+                    chkPeads_Fits.Checked = qry.Peads_Fits ?? false;
+                    chkPeads_ReluctanceToFeed.Checked = qry.Peads_ReluctanceToFeed ?? false;
                     txtPeads_PostNatalOthers.Text = qry.Peads_PostNatalOthers;
 
-
-
                     ddlDischarge_By.SelectedValue = qry.Discharge_By;
+
                     // Show existing file link if it exists
                     if (!string.IsNullOrEmpty(qry.emergecny_pat_file))
                     {
@@ -1498,16 +2046,23 @@ namespace PMS
                     }
 
                     txtPrevention_Precaution.Text = qry.Prevention_Precaution;
-                    if (qry.Next_Visit != null)
+
+                    if (qry.Next_Visit.HasValue)
                         txtNext_Visit.Text = qry.Next_Visit.Value.ToString(AppConfig.DateFormat);
-                    if (qry.Discharge_On != null)
+                    else
+                        txtNext_Visit.Text = "";
+
+                    if (qry.Discharge_On.HasValue)
                         txtDischarge_On.Text = qry.Discharge_On.Value.ToString(AppConfig.DateFormat);
-                    cbDicharg_Slip.Checked = qry.Discharge.Value;
-                    if (qry.Discharge_On != null && qry.Discharge == true)
+                    else
+                        txtDischarge_On.Text = "";
+
+                    cbDicharg_Slip.Checked = qry.Discharge ?? false;
+
+                    if (qry.Discharge_On.HasValue && (qry.Discharge ?? false))
                     {
                         PatientDischargeStatus = true;
                     }
-
                 }
             }
             catch (Exception ex)
@@ -1516,8 +2071,6 @@ namespace PMS
                 lblMessage.Text = ex.Message;
             }
         }
-
-
 
 
         [WebMethod]
