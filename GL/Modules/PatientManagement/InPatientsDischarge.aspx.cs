@@ -1349,23 +1349,38 @@ namespace PMS
                                           where b.In_Patient_ID == InPatientID
                                           select b).ToList();
 
+                    // Get all advance records for this inpatient
+                    var advanceRecords = (from a in db.AR_Advances
+                                          where a.In_Patient_ID == InPatientID
+                                          select a).ToList();
+
+                    decimal totalBillAmount = 0;
+                    decimal totalReceivedAmount = 0;
+                    decimal totalDiscountAmount = 0;
+                    decimal totalAdvanceAmount = 0;
+
+                    // Calculate totals from billing
                     if (billingRecords != null && billingRecords.Any())
                     {
-                        decimal totalBillAmount = billingRecords.Sum(b => b.Total_Amount ?? 0);
-                        decimal totalReceivedAmount = billingRecords.Sum(b => b.Received_Amount ?? 0);
-                        decimal totalDiscountAmount = billingRecords.Sum(b => b.Discount_Amount ?? 0);
-
-                        // Calculate pending balance: Total Bill - Received - Discount
-                        decimal pendingBalance = totalBillAmount - totalReceivedAmount - totalDiscountAmount;
-
-                        // If pending balance is negative, set to 0
-                        if (pendingBalance < 0)
-                            pendingBalance = 0;
-
-                        return pendingBalance.ToString("F2");
+                        totalBillAmount = billingRecords.Sum(b => b.Total_Amount ?? 0);
+                        totalReceivedAmount = billingRecords.Sum(b => b.Received_Amount ?? 0);
+                        totalDiscountAmount = billingRecords.Sum(b => b.Discount_Amount ?? 0);
                     }
 
-                    return "0";
+                    // Calculate total advance amount
+                    if (advanceRecords != null && advanceRecords.Any())
+                    {
+                        totalAdvanceAmount = advanceRecords.Sum(a => a.Advance_Amount ?? 0);
+                    }
+
+                    // Calculate pending balance: Total Bill - (Received + Discount + Advance)
+                    decimal pendingBalance = totalBillAmount - (totalReceivedAmount + totalDiscountAmount + totalAdvanceAmount);
+
+                    // If pending balance is negative, set to 0
+                    if (pendingBalance < 0)
+                        pendingBalance = 0;
+
+                    return pendingBalance.ToString("F2");
                 }
             }
             catch (Exception ex)
