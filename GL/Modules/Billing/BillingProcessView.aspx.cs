@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 using static PMS.BillingProcess;
 
 namespace PMS
@@ -204,6 +205,35 @@ namespace PMS
             catch (Exception ex)
             {
                 throw new Exception("Error fetching patient list", ex);
+            }
+        }
+
+        [WebMethod]
+        public static string GetBillDetails(int billId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var billDetails = db.Ar_Billing_Details
+                        .Where(bd => bd.Bill_ID == billId)
+                        .Select(bd => new
+                        {
+                            Item_Type = bd.Item_Type,
+                            Item_Name = bd.Item_Name,
+                            Amount = bd.Amount,
+                            Discount_Amount = bd.Discount_Amount,
+                            Net_Amount = bd.Net_Amount,
+                            Test_Main_Department = bd.Test_Main_Department
+                        })
+                        .ToList();
+
+                    return JsonConvert.SerializeObject(billDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { error = ex.Message });
             }
         }
 

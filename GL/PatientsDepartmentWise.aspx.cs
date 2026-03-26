@@ -5219,7 +5219,7 @@ namespace PMS
                         ddlMedicalSubsidy.Items.Add("Weekly");
                         ddlMedicalSubsidy.Items.Add("Monthly");
                         ddlMedicalSubsidy.Items.Add("Annually");
-                        string x = "OPD Time Line";
+                        string x = "Emergency Time Line";
                         Master.Label2.Text = x;
                         Master.GetMenuName();
                     }

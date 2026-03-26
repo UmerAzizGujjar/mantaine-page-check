@@ -265,6 +265,7 @@
     <Content Include="Modules\Dashboards\PurchaseSection.aspx" />
     <Content Include="Modules\Dashboards\Sales_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\ShortCuts.aspx" />
+    <Content Include="Modules\GL\FinancialLogs.aspx" />
     <Content Include="Modules\Inventory\AdvanceTaxDefinition.aspx" />
     <Content Include="Modules\Inventory\BOM.aspx" />
     <Content Include="Modules\Inventory\BOM_View.aspx" />
@@ -26150,6 +26151,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\ShortCuts.aspx.designer.cs">
       <DependentUpon>ShortCuts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GL\FinancialLogs.aspx.cs">
+      <DependentUpon>FinancialLogs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\GL\FinancialLogs.aspx.designer.cs">
+      <DependentUpon>FinancialLogs.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Inventory\AdvanceTaxDefinition.aspx.cs">
       <DependentUpon>AdvanceTaxDefinition.aspx</DependentUpon>

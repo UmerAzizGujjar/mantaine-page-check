@@ -1317,6 +1317,21 @@ namespace PMS
                     rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
                 }
             }
+            else if (reportName == "Emergency_Patient_Print")
+            {
+                if (Request.QueryString["Emergency_Id"] != null)
+                {
+
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                    reportPath += "Emergency/rpt_Emergency_Patient_Reg_Print.rpt";
+                    rd.Load(reportPath);
+                    rd.SetParameterValue("@Emergency_Id", Request.QueryString["Emergency_Id"]);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
+                }
+            }
             else if (reportName == "OPD_Patient_Print_Slip")
             {
                 if (Request.QueryString["OPD_ID"] != null)
