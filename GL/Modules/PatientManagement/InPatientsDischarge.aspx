@@ -2,6 +2,16 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/ipddischarge.css" rel="stylesheet" />
+    <style type="text/css">
+        .edit-mode .token-input-delete-token {
+            display: none !important;
+        }
+
+        .edit-mode #ctl00_MainContent_txtPatient_ID {
+            background-color: #e9ecef !important;
+            cursor: not-allowed !important;
+        }
+    </style>
     <script type="text/javascript">
         var btnVal = '';
         localStorage.IsDischarge = 0;
@@ -3744,7 +3754,14 @@
      var InPatient_Ids_disc;
         $(document).ready(function () {
             debugger;
-           
+
+            var chk = '<%= Request.QueryString["ID"]%>';
+            if (chk != "") {
+                $('#ctl00_MainContent_cbDicharg_Slip').prop('disabled', true);
+                $('#btnSave').prop('disabled', true);
+                $('#ctl00_MainContent_txtPatient_ID').closest('.top').addClass('edit-mode');
+                $('#ctl00_MainContent_txtPatient_ID').prop('disabled', true);
+            }
 
             $('#btnDischargePrint').attr('disabled', true);
             $("#txtMedicineName").hide();
@@ -3798,6 +3815,7 @@
 
                }
            });
+
            
             $("#ctl00_MainContent_txtPeads_DateOfDelivery").datepicker();
             
