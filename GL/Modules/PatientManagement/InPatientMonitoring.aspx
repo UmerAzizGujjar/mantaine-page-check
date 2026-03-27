@@ -2715,7 +2715,7 @@
         }
         function loadtokenInputsDefault() {
             debugger;
-            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
+            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=In_Patients",
                 {
                     tokenLimit: 1,
                     onAdd: function (item) {
@@ -2767,7 +2767,7 @@
         }
         function loadtokenInputs(data) {
             debugger;
-            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
+            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=In_Patients",
                 {
                     prePopulate: data,
                     tokenLimit: 1,
