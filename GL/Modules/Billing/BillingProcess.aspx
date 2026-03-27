@@ -1571,6 +1571,7 @@
                         var Opd_id = $('#hdnOpd_id').val();
                         var hdn_docid = $("#hdn_docid").val();
                         var opd_procedure = $('#hdn_opd_procedure').val();
+                        var finalbill = $('#hdn_finalBill').val();
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
                         var TotalPayable = $('#txtTotalPayable').val();
@@ -1816,7 +1817,7 @@
                             alert("Amount Should not be zero");
                             return true;
                         }
-                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), }; //Total_Doctor_Share: Total_Doctor_Share,
+                        var Parameters = { Bill_ID: Bill_ID, Patient_ID: Patient_ID, Opd_id: Opd_id, Bill_Date: Bill_Date, Remarks: Remarks, TotalPayable: TotalPayable, Discount_Percentage: Discount_Percentage, Discount_Amount: Discount_Amount, Net_Amount: Net_Amount, Received_Amount: Received_Amount, Balance_Amount: Balance_Amount, ChargePolicy: ChargePolicy, Details: Details, Share: Share, referred_by_doctor: referred_by_doctor, bomItems: bomItems, Casher: Casher, Previous_Balance: Previous_Balance, Previous_Paid: Previous_Paid, Over_and_Above: Over_and_Above, Cash_In_Hand: Cash_In_Hand, Cash_In_Hand_Account: Cash_In_Hand_Account, Bank_Account: Bank_Account, Bank_Cash: Bank_Cash, Main_Department: Main_Department, PackageType: PackageType, PackageName: PackageName, finalbill: finalbill, BillDepartment: BillDepartment, BillCategory: BillCategory, hdn_docid: hdn_docid, opd_procedure: opd_procedure, bomTotalValue: bomTotalValue, SelectedBranchId: selectedBranchId, Sales_Tax_ID: $('#hdnSalesTaxID').val(), Sales_Tax_Percentage: $('#hdnSalesTaxPercentage').val(), Panel_Id: Panel_Id, Appointment_ID: $('#hdnAppointment_ID').val(), }; //Total_Doctor_Share: Total_Doctor_Share,
                         var rcptAmt = $('#txtAmountReceived').val();
                         if (Patient_ID == '') {
                             alert('Select Patient.');
@@ -5270,10 +5271,16 @@
                     if (id == '') {
                         if (Request_Discharge == true) {
                             debugger;
+                            $("#hdn_finalBill").val("true");
                             AddPackage();
                             FetchAllPreviousBill(in_Pat);
 
 
+
+                        }
+                        else if (Request_Discharge != true)
+                        {
+                            $("#hdn_finalBill").val("false");
                         }
                         else {
                             if (id == '') {
@@ -5285,6 +5292,7 @@
                             }
                         }
                     }
+                   
                     debugger;
                     var lblIn_Patient_Category = $('#lblPatientDiscountType').text();
                     if ((lblPatientCategory == "Insurance Company") || (lblIn_Patient_Category == "Insurance Company")) {
@@ -6676,6 +6684,7 @@
          <input type="hidden" name="hdn_InPatienttype" value="0" id="hdn_InPatienttype" />
          <input type="hidden" name="hdn_opd_procedure" value="0" id="hdn_opd_procedure" />
          <input type="hidden" name="hdn_docid" value="0" id="hdn_docid" />
+         <input type="hidden" name="hdn_finalBill"  id="hdn_finalBill" />
         <input type="hidden" name="hdnAppointment_ID" value="0" id="hdnAppointment_ID" />
        <div class="row">
            <div class="col-md-2 text-end">

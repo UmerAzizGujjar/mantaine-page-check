@@ -1390,6 +1390,7 @@ namespace PMS
             newBill.Discount_Amount = data.Discount_Amount;
             newBill.Total_Amount = data.TotalPayable;
             newBill.Net_Amount = data.Net_Amount;
+            newBill.final_bill_ipd = data.finalbill;
             newBill.Received_Amount = data.Received_Amount;
             newBill.Balance_Amount = data.Balance_Amount;
             newBill.Charge_Policy = data.ChargePolicy;
@@ -2689,6 +2690,7 @@ namespace PMS
             public string Panel_Id { get; set; }
             public string referred_by_doctor { get; set; }
             public string PackageName { get; set; }
+
             public string BillDepartment { get; set; }
             public string BillCategory { get; set; }
             public string bomTotalValue { get; set; }
@@ -2713,6 +2715,7 @@ namespace PMS
             public decimal Bank_Cash { get; set; }
             public int? hdn_docid { get; set; }
             public string Main_Department { get; set; }
+            public bool finalbill { get; set; }
 
             public int? Sales_Tax_ID { get; set; }
 
