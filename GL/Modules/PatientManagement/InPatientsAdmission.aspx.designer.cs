@@ -1452,7 +1452,7 @@ namespace PMS
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBirthFatherNationality;
+        protected global::System.Web.UI.WebControls.DropDownList txtBirthFatherNationality;
 
         /// <summary>
         /// lblBirthMotherName control.
@@ -1524,7 +1524,7 @@ namespace PMS
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBirthMotherNationality;
+        protected global::System.Web.UI.WebControls.DropDownList txtBirthMotherNationality;
 
         /// <summary>
         /// lblBirthRegNumber control.

@@ -202,6 +202,19 @@
             });
             fillmartial();
             fillgender();
+            fillBirthGender(function() {
+            fillBirthType(function() {
+                fillReligion(function() {
+                    fillProvince(function() {
+                        fillNationality(function() {
+                            if ($('#ctl00_MainContent_txtIn_Patient_ID').val() != '(New)') {
+                                LoadBirthCertificateData();
+                            }
+                        });
+                    });
+                });
+            });
+        });
             // Initialize birth certificate date pickers
             $("#ctl00_MainContent_txtBirthDate").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#ctl00_MainContent_txtBirthTime").datetimepicker({
@@ -4048,59 +4061,78 @@
                 $('#ddlDaysMonthsYears').html(options);
             }, function (error) { })
         }
+        debugger;
         function LoadBirthCertificateData() {
-            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
-            if (inPatientID && inPatientID !== '(New)') {
-                $.ajax({
-                    type: "POST",
-                    url: "InPatientsAdmission.aspx/LoadBirthCertificateData",
-                    data: JSON.stringify({ InPatientID: inPatientID }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        if (response.d && response.d !== "null" && response.d !== "Error") {
-                            var data = JSON.parse(response.d);
-                            $('#ctl00_MainContent_txtBirthChildName').val(data.Birth_Child_Name || '');
-                            $('#ctl00_MainContent_ddlBirthGender').val(data.Birth_Gender || '');
-                            if (data.Birth_Date) {
-                                var date = new Date(data.Birth_Date);
-                                $('#ctl00_MainContent_txtBirthDate').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
-                            }
-                            $('#ctl00_MainContent_txtBirthTime').val(data.Birth_Time || '');
-                            $('#ctl00_MainContent_txtBirthPlace').val(data.Birth_Place || '');
-                            $('#ctl00_MainContent_txtBirthWeight').val(data.Birth_Weight || '');
-                            $('#ctl00_MainContent_ddlBirthType').val(data.Birth_Type || '');
-                            $('#ctl00_MainContent_txtBirthOrder').val(data.Birth_Order || '');
-                            $('#ctl00_MainContent_txtBirthFatherName').val(data.Birth_Father_Name || '');
-                            $('#ctl00_MainContent_txtBirthFatherCNIC').val(data.Birth_Father_CNIC || '');
-                            $('#ctl00_MainContent_txtBirthFatherOccupation').val(data.Birth_Father_Occupation || '');
-                            $('#ctl00_MainContent_txtBirthFatherNationality').val(data.Birth_Father_Nationality || '');
-                            $('#ctl00_MainContent_txtBirthMotherName').val(data.Birth_Mother_Name || '');
-                            $('#ctl00_MainContent_txtBirthMotherCNIC').val(data.Birth_Mother_CNIC || '');
-                            $('#ctl00_MainContent_txtBirthMotherOccupation').val(data.Birth_Mother_Occupation || '');
-                            $('#ctl00_MainContent_txtBirthMotherNationality').val(data.Birth_Mother_Nationality || '');
-                            $('#ctl00_MainContent_txtBirthRegNumber').val(data.Birth_Reg_Number || '');
-                            if (data.Birth_Reg_Date) {
-                                var regDate = new Date(data.Birth_Reg_Date);
-                                $('#ctl00_MainContent_txtBirthRegDate').val((regDate.getMonth() + 1) + '/' + regDate.getDate() + '/' + regDate.getFullYear());
-                            }
-                            $('#ctl00_MainContent_txtBirthRegistrar').val(data.Birth_Registrar || '');
-                            $('#ctl00_MainContent_txtBirthUnionCouncil').val(data.Birth_Union_Council || '');
-                            $('#ctl00_MainContent_txtBirthAddress').val(data.Birth_Address || '');
-                            $('#ctl00_MainContent_txtBirthCity').val(data.Birth_City || '');
-                            $('#ctl00_MainContent_ddlBirthProvince').val(data.Birth_Province || '');
-                            $('#ctl00_MainContent_txtBirthPostalCode').val(data.Birth_Postal_Code || '');
-                            $('#ctl00_MainContent_ddlBirthReligion').val(data.Birth_Religion || '');
-                            $('#ctl00_MainContent_txtBirthAttendant').val(data.Birth_Attendant || '');
-                            $('#ctl00_MainContent_txtBirthRemarks').val(data.Birth_Remarks || '');
-                        }
-                    },
-                    error: function (error) {
-                        console.log("Error loading birth certificate data: ", error);
+    debugger;
+    var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+    if (inPatientID && inPatientID !== '(New)') {
+        $.ajax({
+            type: "POST",
+            url: "InPatientsAdmission.aspx/LoadBirthCertificateData",
+            data: JSON.stringify({ InPatientID: inPatientID }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                if (response.d && response.d !== "null" && response.d !== "Error") {
+                    var data = JSON.parse(response.d);
+                    
+                    $('#ctl00_MainContent_txtBirthChildName').val(data.Birth_Child_Name || '');
+                    
+                    var genderDropdown = $('#ctl00_MainContent_ddlBirthGender');
+                    genderDropdown.val(data.Birth_Gender || '');
+                    
+                    if (data.Birth_Date) {
+                        var date = new Date(parseInt(data.Birth_Date.substr(6)));
+                        $('#ctl00_MainContent_txtBirthDate').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
                     }
-                });
+                    
+                    $('#ctl00_MainContent_txtBirthTime').val(data.Birth_Time || '');
+                    $('#ctl00_MainContent_txtBirthPlace').val(data.Birth_Place || '');
+                    $('#ctl00_MainContent_txtBirthWeight').val(data.Birth_Weight || '');
+                    
+                    var typeDropdown = $('#ctl00_MainContent_ddlBirthType');
+                    typeDropdown.val(data.Birth_Type || '');
+                    
+                    $('#ctl00_MainContent_txtBirthOrder').val(data.Birth_Order || '');
+                    $('#ctl00_MainContent_txtBirthFatherName').val(data.Birth_Father_Name || '');
+                    $('#ctl00_MainContent_txtBirthFatherCNIC').val(data.Birth_Father_CNIC || '');
+                    $('#ctl00_MainContent_txtBirthFatherOccupation').val(data.Birth_Father_Occupation || '');
+                    $('#ctl00_MainContent_txtBirthFatherNationality').val(data.Birth_Father_Nationality || '');
+                    $('#ctl00_MainContent_txtBirthMotherName').val(data.Birth_Mother_Name || '');
+                    $('#ctl00_MainContent_txtBirthMotherCNIC').val(data.Birth_Mother_CNIC || '');
+                    $('#ctl00_MainContent_txtBirthMotherOccupation').val(data.Birth_Mother_Occupation || '');
+                    $('#ctl00_MainContent_txtBirthMotherNationality').val(data.Birth_Mother_Nationality || '');
+                    $('#ctl00_MainContent_txtBirthRegNumber').val(data.Birth_Reg_Number || '');
+                    
+                    if (data.Birth_Reg_Date) {
+                        var regDate = new Date(parseInt(data.Birth_Reg_Date.substr(6)));
+                        $('#ctl00_MainContent_txtBirthRegDate').val((regDate.getMonth() + 1) + '/' + regDate.getDate() + '/' + regDate.getFullYear());
+                    }
+                    
+                    $('#ctl00_MainContent_txtBirthRegistrar').val(data.Birth_Registrar || '');
+                    $('#ctl00_MainContent_txtBirthUnionCouncil').val(data.Birth_Union_Council || '');
+                    $('#ctl00_MainContent_txtBirthAddress').val(data.Birth_Address || '');
+                    $('#ctl00_MainContent_txtBirthCity').val(data.Birth_City || '');
+                    
+                    var provinceDropdown = $('#ctl00_MainContent_ddlBirthProvince');
+                    provinceDropdown.val(data.Birth_Province || '');
+                    
+                    $('#ctl00_MainContent_txtBirthPostalCode').val(data.Birth_Postal_Code || '');
+                    
+                    var religionDropdown = $('#ctl00_MainContent_ddlBirthReligion');
+                    religionDropdown.val(data.Birth_Religion || '');
+                    
+                    $('#ctl00_MainContent_txtBirthAttendant').val(data.Birth_Attendant || '');
+                    $('#ctl00_MainContent_txtBirthRemarks').val(data.Birth_Remarks || '');
+                }
+            },
+            error: function (error) {
+                console.log("Error loading birth certificate data: ", error);
             }
-        }
+        });
+    }
+}
         function checkOPDTrasfer() {
             var patID = $('#<%= txtPatient_ID.ClientID%>').val();
             PageMethods.checkOPDTrasfer(patID, function (data) {
@@ -6275,6 +6307,78 @@
             }
         }
 
+         function fillBirthGender(callback) {
+    var options = '<option value="0">Select</option>';
+    PageMethods.GetGender(function (data) {
+        if (data) {
+            var genderList = JSON.parse(data);
+            $.each(genderList, function (key, value) {
+                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+            });
+            $('#ctl00_MainContent_ddlBirthGender').html(options);
+        }
+        if (callback) callback();
+    });
+}
+
+function fillBirthType(callback) {
+    var options = '<option value="0">Select</option>';
+    PageMethods.GetBirthType(function (data) {
+        if (data) {
+            var typeList = JSON.parse(data);
+            $.each(typeList, function (key, value) {
+                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+            });
+            $('#ctl00_MainContent_ddlBirthType').html(options);
+        }
+        if (callback) callback();
+    });
+}
+
+function fillReligion(callback) {
+    var options = '<option value="0">Select</option>';
+    PageMethods.GetReligion(function (data) {
+        if (data) {
+            var religionList = JSON.parse(data);
+            $.each(religionList, function (key, value) {
+                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+            });
+            $('#ctl00_MainContent_ddlBirthReligion').html(options);
+        }
+        if (callback) callback();
+    });
+}
+
+function fillProvince(callback) {
+    var options = '<option value="0">Select</option>';
+    PageMethods.GetProvince(function (data) {
+        if (data) {
+            var provinceList = JSON.parse(data);
+            $.each(provinceList, function (key, value) {
+                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+            });
+            $('#ctl00_MainContent_ddlBirthProvince').html(options);
+        }
+        if (callback) callback();
+    });
+}
+
+function fillNationality(callback) {
+    var options = '<option value="0">Select</option>';
+    PageMethods.GetNationality(function (data) {
+        if (data) {
+            var nationalityList = JSON.parse(data);
+            $.each(nationalityList, function (key, value) {
+                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+            });
+            $('#ctl00_MainContent_txtBirthFatherNationality').html(options);
+            $('#ctl00_MainContent_txtBirthMotherNationality').html(options);
+        }
+        if (callback) callback();
+    });
+}
+
+           
 
 
     </script>
@@ -7274,9 +7378,7 @@
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <asp:Label ID="lblBirthGender" runat="server" Text="Gender *"></asp:Label>
                             <asp:DropDownList ID="ddlBirthGender" runat="server" AppendDataBoundItems="true">
-                                <asp:ListItem Text="Select" Value=""></asp:ListItem>
-                                <asp:ListItem Text="Male" Value="Male"></asp:ListItem>
-                                <asp:ListItem Text="Female" Value="Female"></asp:ListItem>
+                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
@@ -7299,13 +7401,10 @@
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <asp:Label ID="lblBirthType" runat="server" Text="Type of Birth"></asp:Label>
-                            <asp:DropDownList ID="ddlBirthType" runat="server" AppendDataBoundItems="true">
-                                <asp:ListItem Text="Select Type" Value=""></asp:ListItem>
-                                <asp:ListItem Text="Normal Delivery" Value="Normal"></asp:ListItem>
-                                <asp:ListItem Text="C-Section" Value="C-Section"></asp:ListItem>
-                                <asp:ListItem Text="Assisted Delivery" Value="Assisted"></asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
+                                <asp:DropDownList ID="ddlBirthType" runat="server" AppendDataBoundItems="true">
+                                    <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <asp:Label ID="lblBirthOrder" runat="server" Text="Birth Order"></asp:Label>
                             <asp:TextBox ID="txtBirthOrder" runat="server" placeholder="1st, 2nd, etc."></asp:TextBox>
@@ -7337,7 +7436,9 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <asp:Label ID="lblBirthFatherNationality" runat="server" Text="Nationality"></asp:Label>
-                            <asp:TextBox ID="txtBirthFatherNationality" runat="server" placeholder="e.g., Pakistani" Text="Pakistani"></asp:TextBox>
+                            <asp:DropDownList ID="txtBirthFatherNationality" runat="server" AppendDataBoundItems="true">
+                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                            </asp:DropDownList>
                         </div>
                     </div>
                 </div>
@@ -7366,7 +7467,9 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <asp:Label ID="lblBirthMotherNationality" runat="server" Text="Nationality"></asp:Label>
-                            <asp:TextBox ID="txtBirthMotherNationality" runat="server" placeholder="e.g., Pakistani" Text="Pakistani"></asp:TextBox>
+                            <asp:DropDownList ID="txtBirthMotherNationality" runat="server" AppendDataBoundItems="true">
+                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                            </asp:DropDownList>
                         </div>
                     </div>
                 </div>
@@ -7421,14 +7524,7 @@
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <asp:Label ID="lblBirthProvince" runat="server" Text="Province"></asp:Label>
                             <asp:DropDownList ID="ddlBirthProvince" runat="server" AppendDataBoundItems="true">
-                                <asp:ListItem Text="Select Province" Value=""></asp:ListItem>
-                                <asp:ListItem Text="Punjab" Value="Punjab"></asp:ListItem>
-                                <asp:ListItem Text="Sindh" Value="Sindh"></asp:ListItem>
-                                <asp:ListItem Text="Khyber Pakhtunkhwa" Value="KPK"></asp:ListItem>
-                                <asp:ListItem Text="Balochistan" Value="Balochistan"></asp:ListItem>
-                                <asp:ListItem Text="Islamabad Capital Territory" Value="ICT"></asp:ListItem>
-                                <asp:ListItem Text="Gilgit Baltistan" Value="GB"></asp:ListItem>
-                                <asp:ListItem Text="Azad Jammu & Kashmir" Value="AJK"></asp:ListItem>
+                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
@@ -7451,12 +7547,7 @@
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <asp:Label ID="lblBirthReligion" runat="server" Text="Religion"></asp:Label>
                             <asp:DropDownList ID="ddlBirthReligion" runat="server" AppendDataBoundItems="true">
-                                <asp:ListItem Text="Select Religion" Value=""></asp:ListItem>
-                                <asp:ListItem Text="Islam" Value="Islam"></asp:ListItem>
-                                <asp:ListItem Text="Christianity" Value="Christianity"></asp:ListItem>
-                                <asp:ListItem Text="Hinduism" Value="Hinduism"></asp:ListItem>
-                                <asp:ListItem Text="Sikhism" Value="Sikhism"></asp:ListItem>
-                                <asp:ListItem Text="Other" Value="Other"></asp:ListItem>
+                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6">
@@ -7473,6 +7564,30 @@
         </div>
     </div>
 </div>
+</div>
+                <div class="row">
+    <div class="col-lg-9 col-md-12 col-sm-12">
+        <div class="row" style="margin-top: 1%">
+            <div class="col-lg-2 col-md-4 col-sm-6" id="saveprintbtn">
+                <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn-primry" onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-yellow" id="btnAdvance" value="Advance " onclick="GoToAdvance()" />
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
+            </div>
+        </div>
+    </div>
 </div>
     
  
@@ -9868,30 +9983,6 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12">
-            <div class="row" style="margin-top: 1%">
-                <div class="col-lg-2 col-md-4 col-sm-6" id="saveprintbtn">
-                    <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn-primry" onclick="SaveInPatientAllRecord();" value="Save" id="btnSave" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <input type="button" class="btn btn-yellow" id="btnAdvance" value="Advance " onclick="GoToAdvance()" />
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                    <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
-                </div>
-            </div>
-        </div>
-    </div>
      <div id="PsychiatryModel" class="modal fade" role="dialog" style="width: 1080px; overflow-y: overaly; margin-left: 95px;">
         <div class="modal-dialog">
             <div class="modal-content" style="width: 1060px;">
