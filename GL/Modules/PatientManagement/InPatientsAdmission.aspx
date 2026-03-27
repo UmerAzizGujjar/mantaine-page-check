@@ -202,6 +202,19 @@
             });
             fillmartial();
             fillgender();
+            // Initialize birth certificate date pickers
+            $("#ctl00_MainContent_txtBirthDate").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#ctl00_MainContent_txtBirthTime").datetimepicker({
+                format: 'h:i A',
+                step: 15
+            });
+
+            // Set registration date to current date
+            $("#ctl00_MainContent_txtBirthRegDate").val(new Date().toLocaleDateString('en-US'));
+
+            // Generate registration number
+            var regNumber = 'B-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            $("#ctl00_MainContent_txtBirthRegNumber").val(regNumber);
             jQuery(function ($) {
                 MaskedInput({
                     elm: document.getElementById('txtSearch'), // select only by id
@@ -3096,183 +3109,176 @@
         function SaveAllRecords() {
             debugger;
             var btnsave = $('#btnSave').val();
-           // $('#btnSave').attr('disabled', true);
-            <%--var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();--%>
             var Patient_ID = $("#<%=txtPatient_ID.ClientID%>").val();
 
-            var patient_name = $('#ctl00_MainContent_vlblPatients_Name').text();
-            var patient_age = $('#ctl00_MainContent_vLbl_Age').text();
-            var patient_number = $('#ctl00_MainContent_vLbl_Contact').text();
-            var idofpat = parseInt(Patient_ID);
+           var patient_name = $('#ctl00_MainContent_vlblPatients_Name').text();
+           var patient_age = $('#ctl00_MainContent_vLbl_Age').text();
+           var patient_number = $('#ctl00_MainContent_vLbl_Contact').text();
+           var idofpat = parseInt(Patient_ID);
 
-            debugger;
-            if (btnsave == "Save" || btnsave == 'Save') {
-                debugger;
-                if (name_pat == patient_name && patient_age == age_pat && patient_number == num_pat && idofpat == parseInt(Patientid_tocheck)) {
-                    debugger;
-                   // $('#btnSave').attr('disabled', true);
-                    return false;
+           debugger;
+           if (btnsave == "Save" || btnsave == 'Save') {
+               debugger;
+               if (name_pat == patient_name && patient_age == age_pat && patient_number == num_pat && idofpat == parseInt(Patientid_tocheck)) {
+                   debugger;
+                   return false;
+               }
+           }
 
-                }
+           var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
+           var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
+           var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
 
-            }
+           var main_department = $('#ctl00_MainContent_ddl_mainCategory').val();
+           var packagetype = $('#ctl00_MainContent_ddlpacakagetype').val();
+           var packagetypename = $('#ctl00_MainContent_ddlpacakagetype option:selected').text();
+           var packagename = $('#ctl00_MainContent_ddlpackagename').val();
+           var packagenamess = $('#ctl00_MainContent_ddlpackagename option:selected').text();
+           var ipdProcedures = $('#ctl00_MainContent_ddlipdProcedures').val();
+           var proc_name = $('#ctl00_MainContent_txtprocedurename').val();
+           var panelcompanys = $('#ctl00_MainContent_ddlpanelcompanys').val();
 
-            var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
-            var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
-            var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
+           var txtHealth_Complaints = $('#ctl00_MainContent_txtHealth_Complaints').val();
+           var txtExpected_Discharge_Date = $('#ctl00_MainContent_txtExpected_Discharge_Date').val();
+           var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
+           var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
+           var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
 
+           var panelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
+           var CardNo = $('#ctl00_MainContent_cardno').val();
+           var Cardholdername = $('#ctl00_MainContent_txtcardHolderName').val();
+           var CompanyName = $('#ctl00_MainContent_txtcompanyname').val();
+           var Approvelimit = $('#ctl00_MainContent_txtapprovelimit').val();
+           var Roomlimit = $('#ctl00_MainContent_txtroomlimit').val();
+           var Cardlimit = $('#ctl00_MainContent_txtcardlimit').val();
+           var ApproveDays = $('#ctl00_MainContent_txtapprovedays').val();
+           var Privatecharges = $('#ctl00_MainContent_txtpvtcharges').val();
 
-            var main_department = $('#ctl00_MainContent_ddl_mainCategory').val();
-            var packagetype = $('#ctl00_MainContent_ddlpacakagetype').val();
-            var packagetypename = $('#ctl00_MainContent_ddlpacakagetype option:selected').text();
-            var packagename = $('#ctl00_MainContent_ddlpackagename').val();
-            var packagenamess = $('#ctl00_MainContent_ddlpackagename option:selected').text();
-            var ipdProcedures = $('#ctl00_MainContent_ddlipdProcedures').val();
-            var proc_name = $('#ctl00_MainContent_txtprocedurename').val();
-            var panelcompanys = $('#ctl00_MainContent_ddlpanelcompanys').val();
+           var ddl_IPD_Procedure = 0;
 
+           if (typeof panelCompany == 'undefined') {
+               panelCompany = '0';
+           }
+           var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
+           var ddlRoom_No = $('#ctl00_MainContent_ddlRoom_No').val();
+           var txtRoom_Type = $('#ctl00_MainContent_txtRoom_Type').val();
 
-            var txtHealth_Complaints = $('#ctl00_MainContent_txtHealth_Complaints').val();
-            var txtExpected_Discharge_Date = $('#ctl00_MainContent_txtExpected_Discharge_Date').val();
-            var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
-            var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
-            var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
+           var admissionType = "0";
+           var sehatCardNo = "0";
+           var visitId = "0";
 
-            var panelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-            var CardNo = $('#ctl00_MainContent_cardno').val();
-            var Cardholdername = $('#ctl00_MainContent_txtcardHolderName').val();
-            var CompanyName = $('#ctl00_MainContent_txtcompanyname').val();
-            var Approvelimit = $('#ctl00_MainContent_txtapprovelimit').val();
-            var Roomlimit = $('#ctl00_MainContent_txtroomlimit').val();
-            var Cardlimit = $('#ctl00_MainContent_txtcardlimit').val();
-            var ApproveDays = $('#ctl00_MainContent_txtapprovedays').val();
-            var Privatecharges = $('#ctl00_MainContent_txtpvtcharges').val();
+           var CardHolderName = "";
+           var InsuranceCardNo = "";
+           var PolicyHolderName = "";
+           var Sehat_Holder = "";
+           if ($('#ctl00_MainContent_ddlPatientType').val() === "12") {
+               admissionType = $('#ctl00_MainContent_ddl_AdmissionType').val();
+               sehatCardNo = $("#ctl00_MainContent_txtSehatCardNo").val();
+               visitId = $("#ctl00_MainContent_txtVisitId").val();
+               Sehat_Holder = $("#ctl00_MainContent_txtSehatHolder").val();
+           }
 
-            var ddl_IPD_Procedure = 0;
+           if ($('#ctl00_MainContent_ddlPatientType').val() === "10") {
+               CardHolderName = $("#ctl00_MainContent_txtcardHolderName").val();
+               InsuranceCardNo = $("#ctl00_MainContent_txtInsuranceCardNo").val();
+               PolicyHolderName = $("#ctl00_MainContent_txtPolicyHolderName").val();
+           }
+           var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
+           var pkg = $('#ctl00_MainContent_ddlpacakagetype').val();
+           var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
+           var Discount = $('#ctl00_MainContent_txtDiscount').val();
 
-            if (typeof panelCompany == 'undefined') {
-                panelCompany = '0';
-            }
-            var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
-            var ddlRoom_No = $('#ctl00_MainContent_ddlRoom_No').val();
-            var txtRoom_Type = $('#ctl00_MainContent_txtRoom_Type').val();
+           // Birth Certificate Fields
+           var BirthChildName = $('#ctl00_MainContent_txtBirthChildName').val();
+           var BirthGender = $('#ctl00_MainContent_ddlBirthGender').val();
+           var BirthDate = $('#ctl00_MainContent_txtBirthDate').val();
+           var BirthTime = $('#ctl00_MainContent_txtBirthTime').val();
+           var BirthPlace = $('#ctl00_MainContent_txtBirthPlace').val();
+           var BirthWeight = $('#ctl00_MainContent_txtBirthWeight').val();
+           var BirthType = $('#ctl00_MainContent_ddlBirthType').val();
+           var BirthOrder = $('#ctl00_MainContent_txtBirthOrder').val();
+           var BirthFatherName = $('#ctl00_MainContent_txtBirthFatherName').val();
+           var BirthFatherCNIC = $('#ctl00_MainContent_txtBirthFatherCNIC').val();
+           var BirthFatherOccupation = $('#ctl00_MainContent_txtBirthFatherOccupation').val();
+           var BirthFatherNationality = $('#ctl00_MainContent_txtBirthFatherNationality').val();
+           var BirthMotherName = $('#ctl00_MainContent_txtBirthMotherName').val();
+           var BirthMotherCNIC = $('#ctl00_MainContent_txtBirthMotherCNIC').val();
+           var BirthMotherOccupation = $('#ctl00_MainContent_txtBirthMotherOccupation').val();
+           var BirthMotherNationality = $('#ctl00_MainContent_txtBirthMotherNationality').val();
+           var BirthRegNumber = $('#ctl00_MainContent_txtBirthRegNumber').val();
+           var BirthRegDate = $('#ctl00_MainContent_txtBirthRegDate').val();
+           var BirthRegistrar = $('#ctl00_MainContent_txtBirthRegistrar').val();
+           var BirthUnionCouncil = $('#ctl00_MainContent_txtBirthUnionCouncil').val();
+           var BirthAddress = $('#ctl00_MainContent_txtBirthAddress').val();
+           var BirthCity = $('#ctl00_MainContent_txtBirthCity').val();
+           var BirthProvince = $('#ctl00_MainContent_ddlBirthProvince').val();
+           var BirthPostalCode = $('#ctl00_MainContent_txtBirthPostalCode').val();
+           var BirthReligion = $('#ctl00_MainContent_ddlBirthReligion').val();
+           var BirthAttendant = $('#ctl00_MainContent_txtBirthAttendant').val();
+           var BirthRemarks = $('#ctl00_MainContent_txtBirthRemarks').val();
 
-            var admissionType = "0";
-            var sehatCardNo = "0";
-            var visitId = "0";
+           PageMethods.SaveAllRecord(
+               Patient_ID, btnsave, txtAdmission_Date, patient_name, patient_age, patient_number,
+               ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date,
+               ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type,
+               PatientDiscountType, panelCompany, admissionType, sehatCardNo, visitId,
+               CardHolderName, InsuranceCardNo, PolicyHolderName, Sehat_Holder,
+               main_department, packagetype, packagename, packagetypename, packagenamess,
+               ipdProcedures, proc_name, panelcompanys, CardNo, Cardholdername, CompanyName,
+               Approvelimit, Roomlimit, Cardlimit, ApproveDays, Discount, Privatecharges,
+               // Birth Certificate Parameters
+               BirthChildName, BirthGender, BirthDate, BirthTime, BirthPlace, BirthWeight,
+               BirthType, BirthOrder, BirthFatherName, BirthFatherCNIC, BirthFatherOccupation,
+               BirthFatherNationality, BirthMotherName, BirthMotherCNIC, BirthMotherOccupation,
+               BirthMotherNationality, BirthRegNumber, BirthRegDate, BirthRegistrar,
+               BirthUnionCouncil, BirthAddress, BirthCity, BirthProvince, BirthPostalCode,
+               BirthReligion, BirthAttendant, BirthRemarks,
+               function (response) {
+                   debugger;
+                   var btn = btnVal;
 
-            var CardHolderName = "";
-            var InsuranceCardNo = "";
-            var PolicyHolderName = "";
-            var Sehat_Holder = "";
-            if ($('#ctl00_MainContent_ddlPatientType').val() === "12") {
-                admissionType = $('#ctl00_MainContent_ddl_AdmissionType').val();
-                sehatCardNo = $("#ctl00_MainContent_txtSehatCardNo").val();
-                visitId = $("#ctl00_MainContent_txtVisitId").val();
-                Sehat_Holder = $("#ctl00_MainContent_txtSehatHolder").val();
-            }
-
-            if ($('#ctl00_MainContent_ddlPatientType').val() === "10") {
-                CardHolderName = $("#ctl00_MainContent_txtcardHolderName").val();
-                InsuranceCardNo = $("#ctl00_MainContent_txtInsuranceCardNo").val();
-                PolicyHolderName = $("#ctl00_MainContent_txtPolicyHolderName").val();
-            }
-            var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
-            var pkg = $('#ctl00_MainContent_ddlpacakagetype').val();
-            var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-            var Discount = $('#ctl00_MainContent_txtDiscount').val();
-            //if (PatientDiscountType == "10") {
-            //    if (PanelCompany == "0") {
-
-            //        Swal.fire({
-            //            icon: 'error',
-            //            title: 'Error!',
-            //            text: 'Please Select Panel Company',
-            //            showConfirmButton: false,
-            //            timer: 2000,
-            //            customClass: {
-            //                popup: 'swal-big-popup',
-            //                title: 'swal-big-title',
-            //                htmlContainer: 'swal-big-text'
-            //            }
-            //        });
-            //        return true;
-            //    }
-
-            //}
-            //if (pkg == "0") {
-
-            //    Swal.fire({
-            //        icon: 'error',
-            //        title: 'Error!',
-            //        text: 'You Have not Selected Package',
-            //        showConfirmButton: false,
-            //        timer: 2000,
-            //        customClass: {
-            //            popup: 'swal-big-popup',
-            //            title: 'swal-big-title',
-            //            htmlContainer: 'swal-big-text'
-            //        }
-            //    });
-
-            //}
-
-
-            PageMethods.SaveAllRecord(Patient_ID, btnsave, txtAdmission_Date, patient_name, patient_age, patient_number, ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date, ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type, PatientDiscountType, panelCompany, admissionType, sehatCardNo, visitId, CardHolderName, InsuranceCardNo, PolicyHolderName, Sehat_Holder, main_department, packagetype, packagename, packagetypename, packagenamess, ipdProcedures, proc_name, panelcompanys, CardNo, Cardholdername, CompanyName, Approvelimit, Roomlimit, Cardlimit, ApproveDays, Discount, Privatecharges, /*DischargeDate, Time_Out, DaysOccupied,*/
-                function (response) {
-
-                    debugger;
-                    var btn = btnVal;
-
-                    if (btn === 'btnSave') {
-                        debugger;
-
-                        if (response === "0") {
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Data not Saved !',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-                        }
-                        else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Data Successfully Save',
-                                showConfirmButton: false,
-                                timer: 2500,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-                        }
-
-                        debugger;
-                        window.location = "InPatientsAdmission.aspx?ID=" + response;
-                        $('#btnSave').val("Update");
-
-                    }
-                    else if (btn === 'btnsaveprint') {
-                        debugger;
-
-                        //PrintAdmisionDetails(response);
-                        window.location = "InPatientsAdmission.aspx?ID=" + response;
-                        window.open('../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
-
-                    }
-                });
-
-        }
+                   if (btn === 'btnSave') {
+                       debugger;
+                       if (response === "0") {
+                           Swal.fire({
+                               icon: 'error',
+                               title: 'Error!',
+                               text: 'Data not Saved !',
+                               showConfirmButton: false,
+                               timer: 2000,
+                               customClass: {
+                                   popup: 'swal-big-popup',
+                                   title: 'swal-big-title',
+                                   htmlContainer: 'swal-big-text'
+                               }
+                           });
+                       }
+                       else {
+                           Swal.fire({
+                               icon: 'success',
+                               title: 'Success!',
+                               text: 'Data Successfully Save',
+                               showConfirmButton: false,
+                               timer: 2500,
+                               customClass: {
+                                   popup: 'swal-big-popup',
+                                   title: 'swal-big-title',
+                                   htmlContainer: 'swal-big-text'
+                               }
+                           });
+                       }
+                       debugger;
+                       window.location = "InPatientsAdmission.aspx?ID=" + response;
+                       $('#btnSave').val("Update");
+                   }
+                   else if (btn === 'btnsaveprint') {
+                       debugger;
+                       window.location = "InPatientsAdmission.aspx?ID=" + response;
+                       window.open('../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
+                   }
+               }
+           );
+       }
 
 
         function CheckExistInOutPatient() {
@@ -4042,7 +4048,59 @@
                 $('#ddlDaysMonthsYears').html(options);
             }, function (error) { })
         }
-
+        function LoadBirthCertificateData() {
+            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            if (inPatientID && inPatientID !== '(New)') {
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsAdmission.aspx/LoadBirthCertificateData",
+                    data: JSON.stringify({ InPatientID: inPatientID }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d && response.d !== "null" && response.d !== "Error") {
+                            var data = JSON.parse(response.d);
+                            $('#ctl00_MainContent_txtBirthChildName').val(data.Birth_Child_Name || '');
+                            $('#ctl00_MainContent_ddlBirthGender').val(data.Birth_Gender || '');
+                            if (data.Birth_Date) {
+                                var date = new Date(data.Birth_Date);
+                                $('#ctl00_MainContent_txtBirthDate').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+                            }
+                            $('#ctl00_MainContent_txtBirthTime').val(data.Birth_Time || '');
+                            $('#ctl00_MainContent_txtBirthPlace').val(data.Birth_Place || '');
+                            $('#ctl00_MainContent_txtBirthWeight').val(data.Birth_Weight || '');
+                            $('#ctl00_MainContent_ddlBirthType').val(data.Birth_Type || '');
+                            $('#ctl00_MainContent_txtBirthOrder').val(data.Birth_Order || '');
+                            $('#ctl00_MainContent_txtBirthFatherName').val(data.Birth_Father_Name || '');
+                            $('#ctl00_MainContent_txtBirthFatherCNIC').val(data.Birth_Father_CNIC || '');
+                            $('#ctl00_MainContent_txtBirthFatherOccupation').val(data.Birth_Father_Occupation || '');
+                            $('#ctl00_MainContent_txtBirthFatherNationality').val(data.Birth_Father_Nationality || '');
+                            $('#ctl00_MainContent_txtBirthMotherName').val(data.Birth_Mother_Name || '');
+                            $('#ctl00_MainContent_txtBirthMotherCNIC').val(data.Birth_Mother_CNIC || '');
+                            $('#ctl00_MainContent_txtBirthMotherOccupation').val(data.Birth_Mother_Occupation || '');
+                            $('#ctl00_MainContent_txtBirthMotherNationality').val(data.Birth_Mother_Nationality || '');
+                            $('#ctl00_MainContent_txtBirthRegNumber').val(data.Birth_Reg_Number || '');
+                            if (data.Birth_Reg_Date) {
+                                var regDate = new Date(data.Birth_Reg_Date);
+                                $('#ctl00_MainContent_txtBirthRegDate').val((regDate.getMonth() + 1) + '/' + regDate.getDate() + '/' + regDate.getFullYear());
+                            }
+                            $('#ctl00_MainContent_txtBirthRegistrar').val(data.Birth_Registrar || '');
+                            $('#ctl00_MainContent_txtBirthUnionCouncil').val(data.Birth_Union_Council || '');
+                            $('#ctl00_MainContent_txtBirthAddress').val(data.Birth_Address || '');
+                            $('#ctl00_MainContent_txtBirthCity').val(data.Birth_City || '');
+                            $('#ctl00_MainContent_ddlBirthProvince').val(data.Birth_Province || '');
+                            $('#ctl00_MainContent_txtBirthPostalCode').val(data.Birth_Postal_Code || '');
+                            $('#ctl00_MainContent_ddlBirthReligion').val(data.Birth_Religion || '');
+                            $('#ctl00_MainContent_txtBirthAttendant').val(data.Birth_Attendant || '');
+                            $('#ctl00_MainContent_txtBirthRemarks').val(data.Birth_Remarks || '');
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error loading birth certificate data: ", error);
+                    }
+                });
+            }
+        }
         function checkOPDTrasfer() {
             var patID = $('#<%= txtPatient_ID.ClientID%>').val();
             PageMethods.checkOPDTrasfer(patID, function (data) {
@@ -4601,6 +4659,7 @@
                 LoadMedicines();
                 //loadPackages();
                 LoadDischargeMedicines();
+                LoadBirthCertificateData();
             }
             var Reg_ID = '<%= Request.QueryString["Reg_ID"]%>';
             $('#hdfPatient_ID').val(Reg_ID);
@@ -6252,6 +6311,86 @@
         .Checking {
             color: #00ff21;
         }
+        /* Birth Certificate Tab Styles */
+                 .compact-card {
+            margin-bottom: 15px;
+                border: 1px solid #999999;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .compact-card .card-header {
+            background-color: #f8f9fa;
+            padding: 8px 15px;
+            border-bottom: 1px solid #b9b9b9;
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .compact-card .card-header h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .compact-card .card-body {
+            padding: 12px 15px;
+        }
+        
+        .compact-row {
+            margin: 0 -8px;
+        }
+        
+        .compact-row [class*="col-"] {
+            padding: 0 8px;
+            margin-bottom: 10px;
+        }
+        
+        .compact-card label {
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 3px;
+            color: #555;
+            display: block;
+        }
+        
+        .compact-card input, 
+        .compact-card select, 
+        .compact-card textarea {
+            font-size: 13px;
+            padding: 4px 8px;
+            height: 30px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .compact-card textarea {
+            height: 60px;
+            resize: vertical;
+        }
+        
+        .compact-card hr {
+            margin: 8px 0;
+        }
+        
+        .compact-card .form-group {
+            margin-bottom: 0;
+        }
+        
+        /* Remove extra spacing from parent containers */
+        #Tab-14 .mt {
+            margin-top: 0 !important;
+        }
+        
+        #Tab-14 .row {
+            margin-bottom: 0;
+        }
+        
+        .section-divider {
+            margin: 0 0 10px 0;
+            border-top: 1px solid #eee;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -6533,6 +6672,7 @@
                     <ul>
                         <li><a href="#Tab-1">Admission Details</a></li>
                         <li><a href="#Tab-NextOfKin">Next to Kin</a></li>
+                         <li><a href="#Tab-14">Birth Certificate</a></li>
                     </ul>
 
                     <div id="Tab-1">
@@ -7117,7 +7257,226 @@
                         </table>
 
                     </div>
+                    <div id="Tab-14" style="display: none;">
+                    <div class="row compact-row">
+        <!-- Child Information Card -->
+        <div class="col-lg-12">
+            <div class="compact-card">
+                <div class="card-header">
+                    <h4><i class="fa fa-child"></i> Child Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row compact-row">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthChildName" runat="server" Text="Child's Full Name *"></asp:Label>
+                            <asp:TextBox ID="txtBirthChildName" runat="server" placeholder="Enter child's full name"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthGender" runat="server" Text="Gender *"></asp:Label>
+                            <asp:DropDownList ID="ddlBirthGender" runat="server" AppendDataBoundItems="true">
+                                <asp:ListItem Text="Select" Value=""></asp:ListItem>
+                                <asp:ListItem Text="Male" Value="Male"></asp:ListItem>
+                                <asp:ListItem Text="Female" Value="Female"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthDate" runat="server" Text="Date of Birth *"></asp:Label>
+                            <asp:TextBox ID="txtBirthDate" runat="server" placeholder="mm/dd/yyyy"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthTime" runat="server" Text="Time of Birth"></asp:Label>
+                            <asp:TextBox ID="txtBirthTime" runat="server" placeholder="hh:mm AM/PM"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthPlace" runat="server" Text="Place of Birth *"></asp:Label>
+                            <asp:TextBox ID="txtBirthPlace" runat="server" placeholder="City/District"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="row compact-row">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthWeight" runat="server" Text="Birth Weight (kg)"></asp:Label>
+                            <asp:TextBox ID="txtBirthWeight" runat="server" placeholder="e.g., 3.2"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthType" runat="server" Text="Type of Birth"></asp:Label>
+                            <asp:DropDownList ID="ddlBirthType" runat="server" AppendDataBoundItems="true">
+                                <asp:ListItem Text="Select Type" Value=""></asp:ListItem>
+                                <asp:ListItem Text="Normal Delivery" Value="Normal"></asp:ListItem>
+                                <asp:ListItem Text="C-Section" Value="C-Section"></asp:ListItem>
+                                <asp:ListItem Text="Assisted Delivery" Value="Assisted"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthOrder" runat="server" Text="Birth Order"></asp:Label>
+                            <asp:TextBox ID="txtBirthOrder" runat="server" placeholder="1st, 2nd, etc."></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Father's Information Card -->
+        <div class="col-lg-12">
+            <div class="compact-card">
+                <div class="card-header">
+                    <h4><i class="fa fa-male"></i> Father's Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row compact-row">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthFatherName" runat="server" Text="Father's Full Name *"></asp:Label>
+                            <asp:TextBox ID="txtBirthFatherName" runat="server" placeholder="Enter father's full name"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthFatherCNIC" runat="server" Text="Father's CNIC *"></asp:Label>
+                            <asp:TextBox ID="txtBirthFatherCNIC" runat="server" placeholder="XXXXX-XXXXXXX-X"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthFatherOccupation" runat="server" Text="Occupation"></asp:Label>
+                            <asp:TextBox ID="txtBirthFatherOccupation" runat="server" placeholder="Occupation"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthFatherNationality" runat="server" Text="Nationality"></asp:Label>
+                            <asp:TextBox ID="txtBirthFatherNationality" runat="server" placeholder="e.g., Pakistani" Text="Pakistani"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mother's Information Card -->
+        <div class="col-lg-12">
+            <div class="compact-card">
+                <div class="card-header">
+                    <h4><i class="fa fa-female"></i> Mother's Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row compact-row">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthMotherName" runat="server" Text="Mother's Full Name *"></asp:Label>
+                            <asp:TextBox ID="txtBirthMotherName" runat="server" placeholder="Enter mother's full name"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthMotherCNIC" runat="server" Text="Mother's CNIC *"></asp:Label>
+                            <asp:TextBox ID="txtBirthMotherCNIC" runat="server" placeholder="XXXXX-XXXXXXX-X"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthMotherOccupation" runat="server" Text="Occupation"></asp:Label>
+                            <asp:TextBox ID="txtBirthMotherOccupation" runat="server" placeholder="Occupation"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthMotherNationality" runat="server" Text="Nationality"></asp:Label>
+                            <asp:TextBox ID="txtBirthMotherNationality" runat="server" placeholder="e.g., Pakistani" Text="Pakistani"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Information Card -->
+        <div class="col-lg-12">
+            <div class="compact-card">
+                <div class="card-header">
+                    <h4><i class="fa fa-registered"></i> Registration Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row compact-row">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthRegNumber" runat="server" Text="Registration Number"></asp:Label>
+                            <asp:TextBox ID="txtBirthRegNumber" runat="server" placeholder="Auto-generated" ReadOnly="true"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthRegDate" runat="server" Text="Registration Date"></asp:Label>
+                            <asp:TextBox ID="txtBirthRegDate" runat="server" ReadOnly="true"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthRegistrar" runat="server" Text="Registrar Name"></asp:Label>
+                            <asp:TextBox ID="txtBirthRegistrar" runat="server" placeholder="Registrar name"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthUnionCouncil" runat="server" Text="Union Council"></asp:Label>
+                            <asp:TextBox ID="txtBirthUnionCouncil" runat="server" placeholder="Union Council"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Permanent Address Card -->
+        <div class="col-lg-12">
+            <div class="compact-card">
+                <div class="card-header">
+                    <h4><i class="fa fa-home"></i> Permanent Address</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row compact-row">
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <asp:Label ID="lblBirthAddress" runat="server" Text="Address"></asp:Label>
+                            <asp:TextBox ID="txtBirthAddress" runat="server" placeholder="House No., Street, Area"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthCity" runat="server" Text="City/District"></asp:Label>
+                            <asp:TextBox ID="txtBirthCity" runat="server" placeholder="City/District"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthProvince" runat="server" Text="Province"></asp:Label>
+                            <asp:DropDownList ID="ddlBirthProvince" runat="server" AppendDataBoundItems="true">
+                                <asp:ListItem Text="Select Province" Value=""></asp:ListItem>
+                                <asp:ListItem Text="Punjab" Value="Punjab"></asp:ListItem>
+                                <asp:ListItem Text="Sindh" Value="Sindh"></asp:ListItem>
+                                <asp:ListItem Text="Khyber Pakhtunkhwa" Value="KPK"></asp:ListItem>
+                                <asp:ListItem Text="Balochistan" Value="Balochistan"></asp:ListItem>
+                                <asp:ListItem Text="Islamabad Capital Territory" Value="ICT"></asp:ListItem>
+                                <asp:ListItem Text="Gilgit Baltistan" Value="GB"></asp:ListItem>
+                                <asp:ListItem Text="Azad Jammu & Kashmir" Value="AJK"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthPostalCode" runat="server" Text="Postal Code"></asp:Label>
+                            <asp:TextBox ID="txtBirthPostalCode" runat="server" placeholder="Postal code"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Information Card -->
+        <div class="col-lg-12">
+            <div class="compact-card">
+                <div class="card-header">
+                    <h4><i class="fa fa-info-circle"></i> Additional Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row compact-row">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthReligion" runat="server" Text="Religion"></asp:Label>
+                            <asp:DropDownList ID="ddlBirthReligion" runat="server" AppendDataBoundItems="true">
+                                <asp:ListItem Text="Select Religion" Value=""></asp:ListItem>
+                                <asp:ListItem Text="Islam" Value="Islam"></asp:ListItem>
+                                <asp:ListItem Text="Christianity" Value="Christianity"></asp:ListItem>
+                                <asp:ListItem Text="Hinduism" Value="Hinduism"></asp:ListItem>
+                                <asp:ListItem Text="Sikhism" Value="Sikhism"></asp:ListItem>
+                                <asp:ListItem Text="Other" Value="Other"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <asp:Label ID="lblBirthAttendant" runat="server" Text="Birth Attendant"></asp:Label>
+                            <asp:TextBox ID="txtBirthAttendant" runat="server" placeholder="Doctor/Nurse/Midwife"></asp:TextBox>
+                        </div>
+                        <div class="col-lg-6 col-md-8 col-sm-12">
+                            <asp:Label ID="lblBirthRemarks" runat="server" Text="Remarks"></asp:Label>
+                            <asp:TextBox ID="txtBirthRemarks" runat="server" TextMode="MultiLine" Rows="2" placeholder="Any additional remarks"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+    
+ 
+</div>
                     <div id="Tab-3" style="display:none;">
 
                         <div id="Operations" style="width: 70%">
