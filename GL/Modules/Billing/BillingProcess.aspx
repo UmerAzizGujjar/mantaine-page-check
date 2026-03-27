@@ -3242,7 +3242,11 @@
 
                         });
                         debugger;
-                        $('#txtTotalPayable').val(Net_Amt);
+
+                        $('#txtTotalAmount').val(Net_Amt);
+                        var previouspaid = $('#txtprevious_paid').val();
+                        var totalpayable = Net_Amt - previouspaid;
+                        $('#txtTotalPayable').val(totalpayable);;
                         $('#txtDisAmt').val(total_Disc);
                         var net = Net_Amt - total_Disc;
 
@@ -3340,14 +3344,18 @@
                         debugger;
 
                         total_Disc += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
-                        var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
+                        var qty =($(value).find('input[name="txtQty"]').val());
 
                         Net_Amt += (Math.round(parseFloat($($(value).find('td')[5]).text())) * qty);
 
                         total_amt += Math.round(parseFloat($($(value).find('td')[8]).text()));
 
                     });
-                    $('#txtTotalPayable').val(Net_Amt);
+
+                    $('#txtTotalAmount').val(Net_Amt);
+                    var previouspaid = $('#txtprevious_paid').val();
+                    var totalpayable = Net_Amt - previouspaid;
+                    $('#txtTotalPayable').val(totalpayable);
                     $('#txtDisAmt').val(total_Disc);
                     var net = Net_Amt - total_Disc;
                     $('#txtNetPayable').val(total_amt);
@@ -3458,7 +3466,7 @@
                             debugger;
 
                             total_Disc += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
-                            var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
+                            var qty = ($(value).find('input[name="txtQty"]').val());
 
                             Net_Amt += (Math.round(parseFloat($($(value).find('td')[5]).text())) * qty);
 
@@ -3466,7 +3474,11 @@
 
                         });
                         debugger;
-                        $('#txtTotalPayable').val(Net_Amt);
+
+                        $('#txtTotalAmount').val(Net_Amt);
+                        var previouspaid = $('#txtprevious_paid').val();
+                        var totalpayable = Net_Amt - previouspaid;
+                        $('#txtTotalPayable').val(totalpayable);
                         $('#txtDisAmt').val(total_Disc);
                         var net = Net_Amt - total_Disc;
                         $('#txtNetPayable').val(total_amt);
@@ -3565,16 +3577,21 @@
                             debugger;
 
                             total_Disc += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
-                            var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
+                            var qty = $(value).find('input[name="txtQty"]').val();
 
                             Net_Amt += (Math.round(parseFloat($($(value).find('td')[5]).text())) * qty);
 
                             total_amt += Math.round(parseFloat($($(value).find('td')[8]).text()));
 
                         });
-                        $('#txtTotalPayable').val(Net_Amt);
+
+                        $('#txtTotalAmount').val(Net_Amt);
+                        var previouspaid = $('#txtprevious_paid').val();
+                        var totalpayable = Net_Amt - previouspaid;
+                        $('#txtTotalPayable').val(totalpayable);
                         $('#txtDisAmt').val(total_Disc);
-                        var net = Net_Amt - total_Disc;
+                        var net = totalpayable - total_Disc;
+                        
                         $('#txtNetPayable').val(total_amt);
                         var AmtReceived = $('#txtAmountReceived').val();
                         if ($('#txtTotalPayable').val() != '') {
@@ -3609,6 +3626,8 @@
                         calculateDoctorShare();
                     }
                 }
+                CalculateSummariesMaster(false)
+                CountBalance()
             }
 
 
