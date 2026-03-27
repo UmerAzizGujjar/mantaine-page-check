@@ -1,4 +1,4 @@
-﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsDischarge.aspx.cs" Inherits="PMS.InPatientsDischarge" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsDischarge.aspx.cs" Inherits="PMS.InPatientsDischarge" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/ipddischarge.css" rel="stylesheet" />
@@ -7,34 +7,34 @@
         localStorage.IsDischarge = 0;
         $(document).ready(function () {
             debugger;
-            
+
             MaskedInput({
-                elm: document.getElementById('ctl00_MainContent_txtCNIC'), 
+                elm: document.getElementById('ctl00_MainContent_txtCNIC'),
                 format: '_____-_______-_',
                 separator: '-'
             });
             MaskedInput({
-                elm: document.getElementById('ctl00_MainContent_txtBP'), 
+                elm: document.getElementById('ctl00_MainContent_txtBP'),
                 format: '___/___',
                 separator: '-'
             });
             MaskedInput({
-                elm: document.getElementById('ctl00_MainContent_ctl00_MainContent_txtEOR'), 
+                elm: document.getElementById('ctl00_MainContent_ctl00_MainContent_txtEOR'),
                 format: '_/4',
                 separator: '/'
             });
             MaskedInput({
-                elm: document.getElementById('ctl00_MainContent_txtMR'), 
+                elm: document.getElementById('ctl00_MainContent_txtMR'),
                 format: '_/5',
                 separator: '/'
             });
             MaskedInput({
-                elm: document.getElementById('ctl00_MainContent_txtVR'), 
+                elm: document.getElementById('ctl00_MainContent_txtVR'),
                 format: '_/6',
                 separator: '/'
             });
             MaskedInput({
-                elm: document.getElementById('ctl00_MainContent_txtAcc'), 
+                elm: document.getElementById('ctl00_MainContent_txtAcc'),
                 format: '_/15',
                 separator: '/'
             });
@@ -137,49 +137,45 @@
                     return false;
                 }
             });
-            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
-            if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
-                CheckDischargeRequestStatus();
-            }
+
 
         });
+        function saveprint() {
+            debugger;
+            var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+            var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
 
-      function saveprint() {
-    debugger;
-    var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-    var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
-    
-    if (dischargechk == true) {
-        if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
-            Swal.fire({
-                title: 'Validation Error!',
-                text: 'Please select Discharge Doctor first.',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-            });
-            return false;
-        }
-        
-        CheckPendingBalanceBeforeSave(function(canProceed) {
-            if (canProceed) {
-                $('#loadingimage').show();
-                CheckExistInOutPatient();
+            if (dischargechk == true) {
+                if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
+                    Swal.fire({
+                        title: 'Validation Error!',
+                        text: 'Please select Discharge Doctor first.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
+
+                CheckPendingBalanceBeforeSave(function (canProceed) {
+                    if (canProceed) {
+                        $('#loadingimage').show();
+                        CheckExistInOutPatient();
+                    } else {
+                        $('#loadingimage').hide();
+                        $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
+                        $('#btnDischargePrint').attr('disabled', true);
+                    }
+                });
             } else {
-                $('#loadingimage').hide();
-                $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
-                $('#btnDischargePrint').attr('disabled', true);
+                Swal.fire({
+                    title: 'Validation Error!',
+                    text: 'Please check the Discharge Slip checkbox first.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return false;
             }
-        });
-    } else {
-        Swal.fire({
-            title: 'Validation Error!',
-            text: 'Please check the Discharge Slip checkbox first.',
-            icon: 'warning',
-            confirmButtonText: 'OK'
-        });
-        return false;
-    }
-}
+        }
         function InpatientDischargePrint() {
             debugger;
             InPAtID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
@@ -187,40 +183,40 @@
                 window.open('../../ReportViewer.aspx?ReportName=DischargePrint&InPatientId=' + InPAtID);
             }
         }
-      function toggleButton() {
-    debugger;
-    var checkboxdischarge = $('#ctl00_MainContent_cbDicharg_Slip').is(':checked');
-    if (checkboxdischarge == true) {
-        var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
-        if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
-            Swal.fire({
-                title: 'Validation Error!',
-                text: 'Please select Discharge Doctor first.',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
-                $('#btnDischargePrint').attr('disabled', true);
-            });
-            return false;
-        }
-        
-        CheckPendingBalanceBeforeSave(function(canProceed) {
-            if (canProceed) {
-                $('#btnDischargePrint').attr('disabled', false);
+        function toggleButton() {
+            debugger;
+            var checkboxdischarge = $('#ctl00_MainContent_cbDicharg_Slip').is(':checked');
+            if (checkboxdischarge == true) {
+                var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
+                if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
+                    Swal.fire({
+                        title: 'Validation Error!',
+                        text: 'Please select Discharge Doctor first.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
+                        $('#btnDischargePrint').attr('disabled', true);
+                    });
+                    return false;
+                }
+
+                CheckPendingBalanceBeforeSave(function (canProceed) {
+                    if (canProceed) {
+                        $('#btnDischargePrint').attr('disabled', false);
+                    } else {
+                        $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
+                        $('#btnDischargePrint').attr('disabled', true);
+                    }
+                });
             } else {
-                $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
                 $('#btnDischargePrint').attr('disabled', true);
             }
-        });
-    } else {
-        $('#btnDischargePrint').attr('disabled', true);
-    }
-}
+        }
         function PrintAdmisionDetails(response) {
             debugger;
             PATID = $('#<%=txtPatient_ID.ClientID%>').val();
-           
+
             InPAtID = response;
             $.ajax({
                 type: "POST",
@@ -244,7 +240,7 @@
                     else {
                         $('#lblDept').text("");
                     }
-                    
+
                     var finaldate = response.d.Created_Time;
                     $('#lblAdmissionDate').text(finaldate);
 
@@ -278,7 +274,7 @@
                         $('#lblContact').text(response.d.ContectNo);
                     }
                     $('#lblMRNo').text(response.d.MR_No);
-                    
+
 
                     $('#lblWard').text(response.d.Ward_Name);
                     $('#lblBedNo').text(response.d.Bed_No);
@@ -402,10 +398,10 @@
             $("body").append(frame1);
             var frameDoc = frame1[0].contentWindow;
             frameDoc.document.open();
-           
+
             frameDoc.document.write('<html>');
             frameDoc.document.write('<body>');
-            
+
             frameDoc.document.write(contents);
             frameDoc.document.write('</body></html>');
             frameDoc.document.close();
@@ -440,7 +436,7 @@
                     else {
                         $('#lblTMDept').text("");
                     }
-                    
+
                     var finaldate = response.d.Created_Time;
                     $('#lblTMAdmissionDate').text(finaldate);
 
@@ -468,7 +464,7 @@
                         $('#lblTMContact').text(response.d.ContectNo);
                     }
                     $('#lblTMMRNo').text(response.d.MR_No);
-                   
+
 
                     $('#lblTMWard').text(response.d.Ward_Name);
                     $('#lblTMBedNo').text(response.d.Bed_No);
@@ -480,7 +476,7 @@
                     }
                     PrintMedicationList(InPAtID);
 
-                  
+
 
 
 
@@ -514,7 +510,7 @@
                     else {
                         $('#lblTDept').text("");
                     }
-                    
+
                     var finaldate = response.d.Created_Time;
                     $('#lblTAdmissionDate').text(finaldate);
 
@@ -542,7 +538,7 @@
                         $('#lblTContact').text(response.d.ContectNo);
                     }
                     $('#lblTMRNo').text(response.d.MR_No);
-                   
+
 
                     $('#lblTWard').text(response.d.Ward_Name);
                     $('#lblTBedNo').text(response.d.Bed_No);
@@ -577,7 +573,7 @@
                         rows += '<tr><td valign="top" style="border: 1px solid black; border-collapse: collapse;border-color:lightgrey;text-align:center">' + SrNo + '</td><td valign="top" style="border: 1px solid black; border-collapse: collapse;border-color:lightgrey">' + value.Group_Name + '</td><td valign="top" style="border: 1px solid black; border-collapse: collapse;text-align: center;border-color:lightgrey;text-align:right"> ' + value.Area_Of_Interest + '</td><td valign="top" style="border: 1px solid black; border-collapse: collapse;text-align: center;border-color:lightgrey;display:none;text-align:right">' + value.Special_Tests + '</td><td valign="top" style="border: 1px solid black; border-collapse: collapse;text-align: center;border-color:lightgrey;text-align:left;">' + value.DoctorName + '</td><</tr>';
 
                     }
-                    
+
                 });
                 $('#testBilltbody').html(rows);
                 PrintRecommendedTestDetail();
@@ -594,10 +590,10 @@
             $("body").append(frame1);
             var frameDoc = frame1[0].contentWindow;
             frameDoc.document.open();
-           
+
             frameDoc.document.write('<html>');
             frameDoc.document.write('<body>');
-            
+
             frameDoc.document.write(contents);
             frameDoc.document.write('</body></html>');
             frameDoc.document.close();
@@ -616,10 +612,10 @@
             $("body").append(frame1);
             var frameDoc = frame1[0].contentWindow;
             frameDoc.document.open();
-           
+
             frameDoc.document.write('<html>');
             frameDoc.document.write('<body>');
-            
+
             frameDoc.document.write(contents);
             frameDoc.document.write('</body></html>');
             frameDoc.document.close();
@@ -638,13 +634,13 @@
             var frameDoc = frame1[0].contentWindow;
             frameDoc.document.open();
 
-            
+
             frameDoc.document.write('<html>');
             frameDoc.document.write('<body>');
-            
+
             frameDoc.document.write(contents);
             frameDoc.document.write('</body></html>');
-            
+
             frameDoc.document.close();
             setTimeout(function () {
                 window.frames["frame1"].focus();
@@ -660,13 +656,13 @@
             $("body").append(frame1);
             var frameDoc = frame1[0].contentWindow;
             frameDoc.document.open();
-         
+
             frameDoc.document.write('<html>');
             frameDoc.document.write('<body>');
-           
+
             frameDoc.document.write(contents);
             frameDoc.document.write('</body></html>');
-          
+
             frameDoc.document.close();
             setTimeout(function () {
                 window.frames["frame1"].focus();
@@ -707,7 +703,7 @@
                     else {
                         $('#lblDept').text("");
                     }
-                   
+
                     var finaldate = response.d.Created_Time;
                     $('#lblAdmissionDate').text(finaldate);
                     $('#lblAdmissionFeeRpt').text(response.d.Admission_Fee);
@@ -735,7 +731,7 @@
                         $('#lblContact').text(response.d.ContectNo);
                     }
                     $('#lblMRNo').text(response.d.MR_No);
-                   
+
 
                     $('#lblWard').text(response.d.Ward_Name);
                     $('#lblBedNo').text(response.d.Bed_No);
@@ -756,83 +752,20 @@
                 }
             });
         }
-        // Function to check pending balance before save
-        // Function to check pending balance before save
-       // Function to check pending balance before save
-function CheckPendingBalanceBeforeSave(callback) {
-    debugger;
-    var patientID = $('#<%= hdfPatient_ID.ClientID%>').val();
-    var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
-    
-    if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
-        $('#loadingimage').show();
-        $.ajax({
-            type: "POST",
-            url: "InPatientsDischarge.aspx/GetPendingBalance",
-            data: JSON.stringify({
-                'PatientID': patientID,
-                'InPatientID': inPatientID
-            }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                $('#loadingimage').hide();
-                var pendingBalance = parseFloat(response.d);
-                if (pendingBalance > 0) {
-                    Swal.fire({
-                        title: 'Pending Balance Alert!',
-                        text: `Cannot discharge patient!\n\nPending Balance: Rs. ${pendingBalance.toFixed(2)}\n\nPlease receive the pending amount first.`,
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#dc3545'
-                    }).then(() => callback(false));
-                } else {
-                    callback(true);
-                }
-            },
-            error: function (x, e) {
-                $('#loadingimage').hide();
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Unable to check pending balance. Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                }).then(() => callback(false));
+
+
+
+        function PrintInpatientReceipt() {
+            debugger
+            var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
+            var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+            if (dischargechk == false) {
+                alert("First Discharge The Patient")
+                return false;
             }
-        });
-    } else {
-        callback(true);
-    }
-}
-       function PrintInpatientReceipt() {
-    debugger
-    var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
-    var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-    if (dischargechk == false) {
-        alert("First Discharge The Patient");
-        return false;
-    } else {
-        var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
-        
-        // Check pending balance before printing
-        $.ajax({
-            type: "POST",
-            url: "InPatientsDischarge.aspx/GetPendingBalance",
-            data: JSON.stringify({
-                'PatientID': $('#<%= hdfPatient_ID.ClientID%>').val(),
-                'InPatientID': inPatientID
-            }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            async: false,
-            success: function (response) {
-                var pendingBalance = parseFloat(response.d);
-                if (pendingBalance > 0) {
-                    alert("Cannot print discharge slip!\n\nPending Balance: Rs. " + pendingBalance.toFixed(2) + "\n\nPlease receive the pending amount first.");
-                    return false;
-                }
-                
-                // Continue with existing print logic if no balance
+
+            else {
+
                 ID = $('#<%=txtPatient_ID.ClientID%>').val();
                 oUTID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
                 $.ajax({
@@ -928,7 +861,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                             var rows = '';
                             $('#tblMedicenerpt').text("");
                             $.each(Medicines, function (key, value) {
-                                rows += '<tr><td><h6>*</h6></td><td><h6>' + value.Medicine_Name + ',' + '</h6></td></tr>';
+                                rows += '<td><h6>*</h6></td><td><h6>' + value.Medicine_Name + ',' + '</h6></td>';
                             });
                             $('#Madicenrow').html(rows);
                             LoadDischargeMedicinesrpt();
@@ -938,18 +871,13 @@ function CheckPendingBalanceBeforeSave(callback) {
                         alert(e)
                     }
                 });
-            },
-            error: function (x, e) {
-                alert("Error checking balance: " + e);
-                return false;
             }
-        });
-    }
-}
+        }
+
         function AddBloodTest() {
             debugger;
             var test = $('#ddlTestList').find('option:selected').text();
-           
+
 
             PageMethods.GetBBDDLDetails(test, function (res) {
                 debugger;
@@ -982,7 +910,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                         row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="001"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td> <td>' + doctor + ' <input type="hidden" name="Docid" value="' + doctorVal + '"/></td> <td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
                         test_array = $('.tests-table').find('input[name=txtGroupCategory][value="' + value.Group_Category + '"]');
                     }
-                   
+
 
                     if (test_array.length > 0) {
                         alert('This test already added!');
@@ -1096,21 +1024,21 @@ function CheckPendingBalanceBeforeSave(callback) {
             }
         }
         function LoadEyeListHistory(PatientID) {
-            
+
             if (PatientID != "(New)") {
                 var rows = '';
                 PageMethods.GetEyeListHistory(PatientID, function (res) {
                     var list = JSON.parse(res);
                     $.each(list, function (key, value) {
                         var timeStamp = '<%= DateTime.Now%>'
-                            var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
-                            rows += '<tr><td>' + value.Status + '</td><td><input type="hidden" name="txtEyeUUID" value="' + uuid() + '" /> <input type="hidden" name="txtEyeMainTypeID" value=' + value.EyeMainTypeID + ' /><input type="hidden" name="txtEyeSubTypeID" value=' + value.EyeSubTypeID + ' /> ' + value.EyeMainTypeName + '</td><td>' + value.EyeSubTypeName + '</td><td>' + value.RightEye + '</td><td>' + value.LeftEye + '</td> </tr>';
+                        var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+                        rows += '<tr><td>' + value.Status + '</td><td><input type="hidden" name="txtEyeUUID" value="' + uuid() + '" /> <input type="hidden" name="txtEyeMainTypeID" value=' + value.EyeMainTypeID + ' /><input type="hidden" name="txtEyeSubTypeID" value=' + value.EyeSubTypeID + ' /> ' + value.EyeMainTypeName + '</td><td>' + value.EyeSubTypeName + '</td><td>' + value.RightEye + '</td><td>' + value.LeftEye + '</td> </tr>';
 
-                           
 
-                        });
-                        $('#tblEyesHistory tbody').html(rows);
+
                     });
+                    $('#tblEyesHistory tbody').html(rows);
+                });
             }
         }
         function FillEyeSubTypeOnchangeOfEyeMainType() {
@@ -1147,7 +1075,7 @@ function CheckPendingBalanceBeforeSave(callback) {
             }
             else if ($('#btnAddEye').val() == 'Update') {
 
-                
+
             }
 
         }
@@ -1163,7 +1091,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                 });
                 $('#ddlEyeMainType option').remove()
                 $('#ddlEyeMainType').html(options);
-               
+
             });
         }
 
@@ -1230,548 +1158,548 @@ function CheckPendingBalanceBeforeSave(callback) {
             debugger;
             var btnsave = $('#btnSave').val();
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID%>").val();
-                    var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
-                    var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
-                    var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
-                    var txtHealth_Complaints = $('#ctl00_MainContent_txtHealth_Complaints').val();
-                    var txtExpected_Discharge_Date = $('#ctl00_MainContent_txtExpected_Discharge_Date').val();
-                    var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
-                    var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
-                    var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
-                    var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-                    if (PatientDiscountType == "10") {
-                        if (PanelCompany == "0") {
-                            alert("Please Select Panel Company");
-                            return true;
-                        }
+            var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
+            var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
+            var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
+            var txtHealth_Complaints = $('#ctl00_MainContent_txtHealth_Complaints').val();
+            var txtExpected_Discharge_Date = $('#ctl00_MainContent_txtExpected_Discharge_Date').val();
+            var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
+            var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
+            var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
+            var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
+            if (PatientDiscountType == "10") {
+                if (PanelCompany == "0") {
+                    alert("Please Select Panel Company");
+                    return true;
+                }
 
-                    }
-                    var patienttype = $("#ctl00_MainContent_vLbl_Patient_Type").text();
+            }
+            var patienttype = $("#ctl00_MainContent_vLbl_Patient_Type").text();
 
-                    var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
-                    var ddlRoom_No = $('#ctl00_MainContent_ddlRoom_No').val();
-                    var txtRoom_Type = $('#ctl00_MainContent_txtRoom_Type').val();
+            var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
+            var ddlRoom_No = $('#ctl00_MainContent_ddlRoom_No').val();
+            var txtRoom_Type = $('#ctl00_MainContent_txtRoom_Type').val();
 
-                    var pulse_Min = $('#ctl00_MainContent_txtPuls').val();
-                   
-                    var BP_mm_Hg = $('#ctl00_MainContent_txtBP').val();
-                    var Temp_C = $('#ctl00_MainContent_txtTemp').val();
-                    var Respiration_Min = $('#ctl00_MainContent_txtRespiration').val();
-    
-                    var txtRN_Special_Instruction = $('#ctl00_MainContent_txtRN_Special_Instruction').val();
+            var pulse_Min = $('#ctl00_MainContent_txtPuls').val();
 
-                    var txtReceiving_Date = $('#ctl00_MainContent_txtReceiving_Date').val();
+            var BP_mm_Hg = $('#ctl00_MainContent_txtBP').val();
+            var Temp_C = $('#ctl00_MainContent_txtTemp').val();
+            var Respiration_Min = $('#ctl00_MainContent_txtRespiration').val();
 
-                    var Provisional_Diagnosis = $('#ctl00_MainContent_txtProvisionalDiagnosis').val();
-                    var Refer_To_Hospital = $('#ctl00_MainContent_txtRefer_To_Hospital').val();
-                    var Reffer_To = $('#ctl00_MainContent_ddlPatient_Main_Category').val();
-                    if (Reffer_To == 0)
-                        Reffer_To = "";
+            var txtRN_Special_Instruction = $('#ctl00_MainContent_txtRN_Special_Instruction').val();
 
-                    var HistoryOfPeresentIllness = $('#ctl00_MainContent_txtHistoryOfPeresentIllness').val();
-                    var HistoryOfFamily = $('#ctl00_MainContent_txtHistoryOfFamily').val();
-                    var HistoryOfPastIllness = $('#ctl00_MainContent_txtHistoryOfPastIllness').val();
-                   
-                    var SocioEconomicHistory = $('#ctl00_MainContent_txtSocioEconomicHistory').val();
-                   
+            var txtReceiving_Date = $('#ctl00_MainContent_txtReceiving_Date').val();
 
-                    var Birth_History = $('#ctl00_MainContent_txtBirthHistory').val();
+            var Provisional_Diagnosis = $('#ctl00_MainContent_txtProvisionalDiagnosis').val();
+            var Refer_To_Hospital = $('#ctl00_MainContent_txtRefer_To_Hospital').val();
+            var Reffer_To = $('#ctl00_MainContent_ddlPatient_Main_Category').val();
+            if (Reffer_To == 0)
+                Reffer_To = "";
 
-                    var Reffer_No = $('#ctl00_MainContent_txtRefferNote').val();
-                    var Drug_History = $('#ctl00_MainContent_txtDrugHistory').val();
-                    var Personal_History = $('#ctl00_MainContent_txtPersonalHistory').val();
-                    
-                    var ObstetricHistory = $('#ctl00_MainContent_txtObstetricHistory').val();
-                    var AllergiesHistory = $('#ctl00_MainContent_txtAllergiesHistory').val();
-                    var TreatmentHistory = $('#ctl00_MainContent_txtTreatmentHistory').val();
-                    var VaccinationHistory = $('#ctl00_MainContent_txtVaccinationHistory').val();
-                    var AnyOtherHistory = $('#ctl00_MainContent_txtAnyOtherHistory').val();
-                    /*------ENT RECORD start-----*/
+            var HistoryOfPeresentIllness = $('#ctl00_MainContent_txtHistoryOfPeresentIllness').val();
+            var HistoryOfFamily = $('#ctl00_MainContent_txtHistoryOfFamily').val();
+            var HistoryOfPastIllness = $('#ctl00_MainContent_txtHistoryOfPastIllness').val();
 
-                    var ENT_Throat_IDL = $('#ctl00_MainContent_txtmidl').val();
-                    if (ENT_Throat_IDL == null)
-                        ENT_Throat_IDL = "";
-                    var ENT_Throat_Nose = $('#ctl00_MainContent_txtmNose').val();
-                    if (ENT_Throat_Nose == null)
-                        ENT_Throat_Nose = "";
-                    var ENT_Ear_Right = $('#ctl00_MainContent_txtmRight').val();
-                    if (ENT_Ear_Right == null)
-                        ENT_Ear_Right = "";
-                    var Ent_Ear_Left = $('#ctl00_MainContent_txtmLeft').val();
-                    if (Ent_Ear_Left == null)
-                        Ent_Ear_Left = "";
-
-                    var ENT_Rinnes_Right_PosNeg = document.getElementById('ctl00_MainContent_mchkRightPos').checked;
-                    var ENT_Rinnes_Lft_PosNeg = document.getElementById('ctl00_MainContent_mchkLeftPos').checked;
-                    var ENT_Rinnes_Right_FalseNeg = document.getElementById('ctl00_MainContent_mchkRightF').checked;
-                    var ENT_Rinnes_Lft_FalseNeg = document.getElementById('ctl00_MainContent_mchkLeftF').checked;
-
-                    var ENT_Webber_Central = document.getElementById('ctl00_MainContent_mchkcentral').checked;
-                    var ENT_Webber_Lateralized = document.getElementById('ctl00_MainContent_mchkLateralized').checked;
-
-                    var ENT_Investigation_PTA = document.getElementById('ctl00_MainContent_mchkPTA').checked;
-                    var ENT_Investigation_Tympanometry = document.getElementById('ctl00_MainContent_mchkTympanometry').checked;
-
-                    var ENT_Rinnes_Right_Neg = document.getElementById('ctl00_MainContent_mchkRightNeg').checked;
-                    var ENT_Rinnes_Lft_Neg = document.getElementById('ctl00_MainContent_mchkLeftNeg').checked;
-                    var ENT_Rinnes_Right_FNeg = document.getElementById('ctl00_MainContent_mchkRightFNeg').checked;
-                    var ENT_Rinnes_Lft_FNeg = document.getElementById('ctl00_MainContent_mchkLeftFNeg').checked;
-                    var txtInformant = $('#ctl00_MainContent_txtInformant').val();
-
-                    var txtSourceOfReferral = $('#ctl00_MainContent_txtSourceOfReferral').val();
-                    var chkNeckHolding = document.getElementById("ctl00_MainContent_chkNeckHolding").checked;
-                    var chkWalking = document.getElementById('ctl00_MainContent_chkWalking').checked;
-                    var chkTalking = document.getElementById('ctl00_MainContent_chkTalking').checked;
-                    var chkOthers = document.getElementById('ctl00_MainContent_chkOthers').checked;
-                    var txtMenarche = $('#ctl00_MainContent_txtMenarche').val();
-                    var txtMenstrual = $('#ctl00_MainContent_txtMenstrual').val();
-                    var txtAttachmentSeparationfromParents = $('#ctl00_MainContent_txtAttachmentSeparationfromParents').val();
-                    var txtHealth = $('#ctl00_MainContent_txtHealth').val();
-                    var chkNailBiting = document.getElementById('ctl00_MainContent_chkNailBiting').checked;
-                    var chkTemperTantrums = document.getElementById('ctl00_MainContent_chkTemperTantrums').checked;
-                    var chkBedWetting = document.getElementById('ctl00_MainContent_chkBedWetting').checked;
-                    var txtAcademics = $('#ctl00_MainContent_txtAcademics').val();
-
-                    var txtPeerRelationship = $('#ctl00_MainContent_txtPeerRelationship').val();
-                    var txtBehaviour = $('#ctl00_MainContent_txtBehaviour').val();
-                    var txtOccupationalHistory = $('#ctl00_MainContent_txtOccupationalHistory').val();
-                    var txtMaritalRelationshipSexualHistory = $('#ctl00_MainContent_txtMaritalRelationshipSexualHistory').val();
-                    var txtSubstanceUse = $('#ctl00_MainContent_txtSubstanceUse').val();
-                    var txtForensicUse = $('#ctl00_MainContent_txtForensicUse').val();
-                    var txtRelationship = $('#ctl00_MainContent_txtRelationship').val();
-                    var txtLeisureActivities = $('#ctl00_MainContent_txtLeisureActivities').val();
-                    var txtAttitudetoSelfandStandards = $('#ctl00_MainContent_txtAttitudetoSelfandStandards').val();
-                    var txtPrevallingMood = $('#ctl00_MainContent_txtPrevallingMood').val();
-                    var txtReactionPattrentoStress = $('#ctl00_MainContent_txtReactionPattrentoStress').val();
-                    var txtReligiousPracticesAttitute = $('#ctl00_MainContent_txtReligiousPracticesAttitute').val();
-                    var txtFather = $('#ctl00_MainContent_txtFather').val();
-                    var txtMother = $('#ctl00_MainContent_txtMother').val();
-                    var txtSiblings = $('#ctl00_MainContent_txtSiblings').val();
-
-                    var txtHomeAtmosphererelationshipsocialclass = $('#ctl00_MainContent_txtHomeAtmosphererelationshipsocialclass').val();
-                    var txtFamilialIllness = $('#ctl00_MainContent_txtFamilialIllness').val();
-                    var txtActualandapparentage = $('#ctl00_MainContent_txtActualandapparentage').val();
-                    var txtRace = $('#ctl00_MainContent_txtRace').val();
-                    var txtTattoosbodypiercingandscars = $('#ctl00_MainContent_txtTattoosbodypiercingandscars').val();
-                    var txtBodyHabitus = $('#ctl00_MainContent_txtBodyHabitus').val();
-                    var txtDress = $('#ctl00_MainContent_txtDress').val();
-                    var txtHygiene = $('#ctl00_MainContent_txtHygiene').val();
-                    var txtPsychomotorActivity = $('#ctl00_MainContent_txtPsychomotorActivity').val();
-                    var txtInvoluntarymovements = $('#ctl00_MainContent_txtInvoluntarymovements').val();
-                    var txtDystoniaEPS = $('#ctl00_MainContent_txtDystoniaEPS').val();
-                    var txtTardivedyskinesia = $('#ctl00_MainContent_txtTardivedyskinesia').val();
-
-                    var txtTics = $('#ctl00_MainContent_txtTics').val();
-                    var txtTremors = $('#ctl00_MainContent_txtTremors').val();
-                    var txtAttentivenesstointerview = $('#ctl00_MainContent_txtAttentivenesstointerview').val();
-                    var txtEyeContact = $('#ctl00_MainContent_txtEyeContact').val();
-                    var txtLevelofConsciousness = $('#ctl00_MainContent_txtLevelofConsciousness').val();
-                    var txtRate = $('#ctl00_MainContent_txtRate').val();
-                    var txtRhythm = $('#ctl00_MainContent_txtRhythm').val();
-                    var txtVolume = $('#ctl00_MainContent_txtVolume').val();
-                    var txtTone = $('#ctl00_MainContent_txtTone').val();
-                    var txtModulationvar = $('#ctl00_MainContent_txtModulationvar').val();
-                    var txtDepressed = $('#ctl00_MainContent_txtDepressed').val();
-                    var txtElated = $('#ctl00_MainContent_txtElated').val();
-
-                    var txtIrritable = $('#ctl00_MainContent_txtIrritable').val();
-                    var txtLabile = $('#ctl00_MainContent_txtLabile').val();
-                    var txtIncongruent = $('#ctl00_MainContent_txtIncongruent').val();
-                    var txtbluntingflatteningapathy = $('#ctl00_MainContent_txtBluntingFlatteningApathy').val();
-                    var txtThinkingPremeditation = $('#ctl00_MainContent_txtThinkingPremeditation').val();
-                    var txtPlans = $('#ctl00_MainContent_txtPlans').val();
-                    var txtActions = $('#ctl00_MainContent_txtActions').val();
-                    var txtPreservative = $('#ctl00_MainContent_txtPreservative').val();
-                    var txtLoosAssociation = $('#ctl00_MainContent_txtLoosAssociation').val();
-                    var txtTangentiaility = $('#ctl00_MainContent_txtTangentiaility').val();
-                    var txtCircumstantiality = $('#ctl00_MainContent_txtCircumstantiality').val();
-                    var txtFlightofIdeas = $('#ctl00_MainContent_txtFlightofIdeas').val();
-                    var txtThoughtInsertion = $('#ctl00_MainContent_txtThoughtInsertion').val();
-                    var txtThoughtWithdrawal = $('#ctl00_MainContent_txtThoughtWithdrawal').val();
-                    var txtThoughBroadcasting = $('#ctl00_MainContent_txtThoughBroadcasting').val();
-                    var txtThoughControl = $('#ctl00_MainContent_txtThoughControl').val();
-                    var txtDellusion = $('#ctl00_MainContent_txtDellusion').val();
-                    var txtovervaluedideas = $('#ctl00_MainContent_txtovervaluedideas').val();
-                    var txtDepresonalization = $('#ctl00_MainContent_txtDepresonalization').val();
-                    var txtDerealization = $('#ctl00_MainContent_txtDerealization').val();
-                    var txtthrougObsession = $('#ctl00_MainContent_txtthrougObsession').val();
-                    var txtthrougPhobies = $('#ctl00_MainContent_txtthrougPhobies').val();
-                    var txtthrougHomocidialIdeas = $('#ctl00_MainContent_txtthrougHomocidialIdeas').val();
-                    var txtillusion = $('#ctl00_MainContent_txtillusion').val();
-
-                    var txtHallucinationAuditoryVisualOlfactoryGustatoryTactile = $('#ctl00_MainContent_txtHallucinationAuditoryVisualOlfactoryGustatoryTactile').val();
-                    var txtorientationtime = $('#ctl00_MainContent_txtorientationtime').val();
-                    var txtplace = $('#ctl00_MainContent_txtplace').val();
-                    var txtperson = $('#ctl00_MainContent_txtperson').val();
-                    var txtAttentionConcentrationSerial7Test = $('#ctl00_MainContent_txtAttentionConcentrationSerial7Test').val();
-                    var txtOrDaysOfWeekReverseOrder = $('#ctl00_MainContent_txtOrDaysOfWeekReverseOrder').val();
-                    var txtImmediatememory = $('#ctl00_MainContent_txtImmediatememory').val();
-                    var txtshorttermrecentevents = $('#ctl00_MainContent_txtshorttermrecentevents').val();
-                    var txtadressrecallafter2minutes = $('#ctl00_MainContent_txtadressrecallafter2minutes').val();
-                    var txtlongtermremoteevents = $('#ctl00_MainContent_longtermremoteevents').val();
-                    var txtadressrecallafter5minues = $('#ctl00_MainContent_txtadressrecallafter5minues').val();
-                    var txtgeneralknowledgequestion = $('#ctl00_MainContent_txtgeneralknowledgequestion').val();
-                    var txtsimplearthemeticcalculation = $('#ctl00_MainContent_txtsimplearthemeticcalculation').val();
-                    var txtabstrationconcertethinking = $('#ctl00_MainContent_txtabstrationconcertethinking').val();
-                    var txtinsight = $('#ctl00_MainContent_txtinsight').val();
+            var SocioEconomicHistory = $('#ctl00_MainContent_txtSocioEconomicHistory').val();
 
 
-                    var DermaFace = $('#ctl00_MainContent_txtDermaFace').val();
-                    if (DermaFace == null)
-                        DermaFace = "";
-                    var DermaNeck = $('#ctl00_MainContent_txtDermaNeck').val();
-                    if (DermaNeck == null)
-                        DermaNeck = "";
-                    var DermaTrunk = $('#ctl00_MainContent_txtDermaTrunk').val();
-                    if (DermaTrunk == null)
-                        DermaTrunk = "";
-                    var DermaUpperLimb = $('#ctl00_MainContent_txtDermaUpperLimb').val();
-                    if (DermaUpperLimb == null)
-                        DermaUpperLimb = "";
-                    var DermaLowerLimb = $('#ctl00_MainContent_txtDermaLowerLimb').val();
-                    if (DermaLowerLimb == null)
-                        DermaLowerLimb = "";
-                    var DermaFlexures = $('#ctl00_MainContent_txtDermaFlexures').val();
-                    if (DermaFlexures == null)
-                        DermaFlexures = "";
-                    var DermaGenitalias = $('#ctl00_MainContent_txtDermaGenitalias').val();
-                    if (DermaGenitalias == null)
-                        DermaGenitalias = "";
-                    var DermaHair = $('#ctl00_MainContent_txtDermaHair').val();
-                    if (DermaHair == null)
-                        DermaHair = "";
-                    var DermaNail = $('#ctl00_MainContent_txtDermaNail').val();
-                    if (DermaNail == null)
-                        DermaNail = "";
-                    var DermaMucousMembrane = $('#ctl00_MainContent_txtDermaMucousMembrane').val();
-                    if (DermaMucousMembrane == null)
-                        DermaMucousMembrane = "";
-                    var DermaEyes = $('#ctl00_MainContent_txtDermaEyes').val();
-                    if (DermaEyes == null)
-                        DermaEyes = "";
-                    var DermaEars = $('#ctl00_MainContent_txtDermaEars').val();
-                    if (DermaEars == null)
-                        DermaEars = "";
-                    var DermaNose = $('#ctl00_MainContent_txtDermaNose').val();
-                    if (DermaNose == null)
-                        DermaNose = "";
-                    var DermaLips = $('#ctl00_MainContent_txtDermaLips').val();
-                    if (DermaLips == null)
-                        DermaLips = "";
-                    var PE_Pluse = $('#ctl00_MainContent_txtPE_Pluse').val();
-                    var PE_BP = $('#ctl00_MainContent_txtPE_BP').val();
-                    var PE_Temperature = $('#ctl00_MainContent_txtPE_Temperature').val();
-                    var PE_Weight = $('#ctl00_MainContent_txtPE_Weight').val();
-                    var PE_RespiratoryRate = $('#ctl00_MainContent_txtPE_RespiratoryRate').val();
-                    var PE_Jaundice = $('#ctl00_MainContent_txtPE_Jaundice').val();
-                    var PE_Anemia = $('#ctl00_MainContent_txtPE_Anemia').val();
-                    var PE_Cyanosis = $('#ctl00_MainContent_txtPE_Cyanosis').val();
-                    var PE_Clubbing = $('#ctl00_MainContent_txtPE_Clubbing').val();
-                    var PE_JVP = $('#ctl00_MainContent_txtPE_JVP').val();
-                    var PE_LymphNodes = $('#ctl00_MainContent_txtPE_LymphNodes').val();
-                    var PE_Edema = $('#ctl00_MainContent_txtPE_Edema').val();
-                    var PE_Respiratory = $('#ctl00_MainContent_txtPE_Respiratory').val();
-                    var PE_Cardiovascular = $('#ctl00_MainContent_txtPE_Cardiovascular').val();
-                    var PE_Gastro_Intestinal = $('#ctl00_MainContent_txtPE_Gastro_Intestinal').val();
-                    var PE_Observation = $('#ctl00_MainContent_txtPE_Observation').val();
-                    var PE_Cranial_Nerves = $('#ctl00_MainContent_txtPE_Cranial_Nerves').val();
-                    var PE_Limb_Strength = $('#ctl00_MainContent_txtPE_Limb_Strength').val();
-                    var PE_Spasticity = $('#ctl00_MainContent_txtPE_Spasticity').val();
-                    var PE_Position = $('#ctl00_MainContent_txtPE_Position').val();
-                    var PE_Vibration = $('#ctl00_MainContent_txtPE_Vibration').val();
-                    var PE_Stereognosis = $('#ctl00_MainContent_txtPE_Stereognosis').val();
-                    var PE_Pain = $('#ctl00_MainContent_txtPE_Pain').val();
-                    var PE_Biceps = $('#ctl00_MainContent_txtPE_Biceps').val();
-                    var PE_Triceps = $('#ctl00_MainContent_txtPE_Triceps').val();
-                    var PE_Brachioradialis = $('#ctl00_MainContent_txtPE_Brachioradialis').val();
-                    var PE_Quadriceps = $('#ctl00_MainContent_txtPE_Quadriceps').val();
-                    var PE_Patellar = $('#ctl00_MainContent_txtPE_Patellar').val();
-                    var PE_Achilles = $('#ctl00_MainContent_txtPE_Achilles').val();
-                    var PE_Extensor = $('#ctl00_MainContent_txtPE_Extensor').val();
-                    var PE_Frontal = $('#ctl00_MainContent_txtPE_Frontal').val();
-                    var PE_Finger = $('#ctl00_MainContent_txtPE_Finger').val();
-                    var PE_Heel = $('#ctl00_MainContent_txtPE_Heel').val();
-                    var PE_Movements = $('#ctl00_MainContent_txtPE_Movements').val();
-                    var PE_Gait = $('#ctl00_MainContent_txtPE_Gait').val();
-                    var HBM_Problem = $('#ctl00_MainContent_txtHBM_Problem').val();
-                    var HBM_Caused = $('#ctl00_MainContent_txtHBM_Caused').val();
-                    var HBM_Started = $('#ctl00_MainContent_txtHBM_Started').val();
-                    var HBM_Course = $('#ctl00_MainContent_txtHBM_Course').val();
-                    var HBM_Treatment = $('#ctl00_MainContent_txtHBM_Treatment').val();
-                    var HBM_Effects = $('#ctl00_MainContent_txtHBM_Effects').val();
-                    var PE_Neck_Rigidity = document.getElementById('ctl00_MainContent_chkPE_Neck_Rigidity').checked;
-                    var PE_Kerning_Sign = document.getElementById('ctl00_MainContent_chkPE_Kerning_Sign').checked;
-                    var PE_Brudzinki_Sign = document.getElementById('ctl00_MainContent_chkPE_Brudzinki_Sign').checked;
+            var Birth_History = $('#ctl00_MainContent_txtBirthHistory').val();
 
-                    var For_Summary = $('#ctl00_MainContent_txtFor_Summary').val();
-                    var For_Diagnosis = $('#ctl00_MainContent_txtFor_Diagnosis').val();
-                    var For_AxisI = $('#ctl00_MainContent_txtFor_AxisI').val();
-                    var For_AxisII = $('#ctl00_MainContent_txtFor_AxisII').val();
-                    var For_AxisIII = $('#ctl00_MainContent_txtFor_AxisIII').val();
-                    var For_AxisIV = $('#ctl00_MainContent_txtFor_AxisIV').val();
-                    var For_AxisV = $('#ctl00_MainContent_txtFor_AxisV').val();
-                    var For_PredisposingFactors = $('#ctl00_MainContent_txtFor_PredisposingFactors').val();
-                    var For_PrecipitatingFactors = $('#ctl00_MainContent_txtFor_PrecipitatingFactors').val();
-                    var For_PrepetuatingFactors = $('#ctl00_MainContent_txtFor_PrepetuatingFactors').val();
-                    var For_Investigation = $('#ctl00_MainContent_txtFor_Investigation').val();
-                    var For_Medical = $('#ctl00_MainContent_txtFor_Medical').val();
-                    var For_Psychological = $('#ctl00_MainContent_txtFor_Psychological').val();
-                    var For_Major_Issues = $('#ctl00_MainContent_txtFor_Major_Issues').val();
-                    var For_Strengths = $('#ctl00_MainContent_txtFor_Strengths').val();
-                    var For_Goals = $('#ctl00_MainContent_txtFor_Goals').val();
-                    var For_Strategies = $('#ctl00_MainContent_txtFor_Strategies').val();
+            var Reffer_No = $('#ctl00_MainContent_txtRefferNote').val();
+            var Drug_History = $('#ctl00_MainContent_txtDrugHistory').val();
+            var Personal_History = $('#ctl00_MainContent_txtPersonalHistory').val();
 
-                    var txtPeads_weight = $('#ctl00_MainContent_txtPeads_weight').val();
-                    var txtPeads_Length = $('#ctl00_MainContent_txtPeads_Length').val();
-                    var txtPeads_HC = $('#ctl00_MainContent_txtPeads_HC').val();
-                    var txtPeads_General_Appearance = $('#ctl00_MainContent_txtPeads_General_Appearance').val();
-                    var chkPeads_Cyanosis = document.getElementById('ctl00_MainContent_chkPeads_Cyanosis').checked;
-                    var chkPeads_Jaundice = document.getElementById('ctl00_MainContent_chkPeads_Jaundice').checked;
-                    var chkPeads_Lethargy = document.getElementById('ctl00_MainContent_chkPeads_Rash').checked;
-                    var chkPeads_Rash = document.getElementById('ctl00_MainContent_chkPeads_Rash').checked;
-                    var txtPeads_Others = $('#ctl00_MainContent_txtPeads_Others').val();
-                    var chkPeads_Caput = document.getElementById('ctl00_MainContent_chkPeads_Caput').checked;
-                    var chkPeads_Cephalhematoma = document.getElementById('ctl00_MainContent_chkPeads_Cephalhematoma').checked;
-                    var rdbPeads_Anterioropen = document.getElementById('ctl00_MainContent_rdbPeads_Anterioropen').checked;
-                    var rdbPeads_AnteriorClose = document.getElementById('ctl00_MainContent_rdbPeads_AnteriorClose').checked;
-                    var chkPeads_Dextrocardia = document.getElementById('ctl00_MainContent_chkPeads_Dextrocardia').checked;
-                    var chkPeads_Bulging = document.getElementById('ctl00_MainContent_chkPeads_Bulging').checked;
-                    var chkPeads_Murmur = document.getElementById('ctl00_MainContent_chkPeads_Murmur').checked;
-                    var txtPeads_HeartSound = $('#ctl00_MainContent_txtPeads_HeartSound').val();
-                    var chkPeads_Nasal = document.getElementById('ctl00_MainContent_chkPeads_Nasal').checked;
-                    var chkPeads_Recessions = document.getElementById('ctl00_MainContent_chkPeads_Recessions').checked;
-                    var txtPeads_AddedSounds = $('#ctl00_MainContent_txtPeads_AddedSounds').val();
-                    var rdbPeads_Flat = document.getElementById('ctl00_MainContent_rdbPeads_Flat').checked;
-                    var rdbPeads_Distended = document.getElementById('ctl00_MainContent_rdbPeads_Distended').checked;
-                    var rdbPeads_Scaphoid = document.getElementById('ctl00_MainContent_rdbPeads_Scaphoid').checked;
-                    var chkPeads_Liver = document.getElementById('ctl00_MainContent_chkPeads_Liver').checked;
-                    var chkPeads_Spleen = document.getElementById('ctl00_MainContent_chkPeads_Spleen').checked;
-                    var txtPeads_GITOthers = $('#ctl00_MainContent_txtPeads_GITOthers').val();
-                    var chkPeads_Sucking = document.getElementById('ctl00_MainContent_chkPeads_Sucking').checked;
-                    var chkPeads_Rooting = document.getElementById('ctl00_MainContent_chkPeads_Rooting').checked;
-                    var chkPeads_Moro = document.getElementById('ctl00_MainContent_chkPeads_Moro').checked;
-                    var txtPeads_CNSOthers = $('#ctl00_MainContent_txtPeads_CNSOthers').val();
-                    var chkPeads_FullTerm = document.getElementById('ctl00_MainContent_chkPeads_FullTerm').checked;
-                    var chkPeads_PreTerm = document.getElementById('ctl00_MainContent_chkPeads_PreTerm').checked;
-                    var txtPeads_DateOfDelivery = $('#ctl00_MainContent_txtPeads_DateOfDelivery').val();
-                    var txtPeads_TimeOfDelivery = $('#ctl00_MainContent_txtPeads_TimeOfDelivery').val();
-                    var rdbPeads_Booked = document.getElementById('ctl00_MainContent_rdbPeads_Booked').checked;
-                    var rdbPeads_UnBooked = document.getElementById('ctl00_MainContent_rdbPeads_UnBooked').checked;
-                    var chkPeads_DAIHandling = document.getElementById('ctl00_MainContent_chkPeads_DAIHandling').checked;
-                    var chkPeads_ANTURash = document.getElementById('ctl00_MainContent_chkPeads_ANTURash').checked;
-                    var chkPeads_PIH = document.getElementById('ctl00_MainContent_chkPeads_PIH').checked;
-                    var chkPeads_GDM = document.getElementById('ctl00_MainContent_chkPeads_GDM').checked;
-                    var chkPeads_Vacinated = document.getElementById('ctl00_MainContent_chkPeads_Vacinated').checked;
-                    var txtPeads_ANTOthers = $('#ctl00_MainContent_txtPeads_ANTOthers').val();
-                    var rdbPeads_SVD = document.getElementById('ctl00_MainContent_rdbPeads_SVD').checked;
-                    var rdbPeads_LSCS = document.getElementById('ctl00_MainContent_rdbPeads_LSCS').checked;
-                    var rdbPeads_Emergency = document.getElementById('ctl00_MainContent_rdbPeads_Emergency').checked;
-                    var rdbPeads_Elective = document.getElementById('ctl00_MainContent_rdbPeads_Elective').checked;
-                    var txtPeads_PlaceOfDelivery = $('#ctl00_MainContent_txtPeads_PlaceOfDelivery').val();
-                    var txtPeads_IndicationForLSCS = $('#ctl00_MainContent_txtPeads_IndicationForLSCS').val();
-                    var Peads_apgerScore1min = $('#ctl00_MainContent_ddlPeads_apgerScore1min').val();
-                    if (Peads_apgerScore1min == 0)
-                        Peads_apgerScore1min = "";
-                    var Peads_apgerScore5min = $('#ctl00_MainContent_ddlPeads_apgerScore5min').val();
-                    if (Peads_apgerScore5min == 0)
-                        Peads_apgerScore5min = "";
-                    var chkPeads_Resuscitation = document.getElementById('ctl00_MainContent_chkPeads_Resuscitation').checked;
-                    var txtPeads_NatalOthers = $('#ctl00_MainContent_txtPeads_NatalOthers').val();
-                    var chkPeads_Moaning = document.getElementById('ctl00_MainContent_chkPeads_Moaning').checked;
-                    var chkPeads_RespDistress = document.getElementById('ctl00_MainContent_chkPeads_RespDistress').checked;
-                    var chkPeads_PostNATALCyanosis = document.getElementById('ctl00_MainContent_chkPeads_PostNATALCyanosis').checked;
-                    var chkPeads_Fits = document.getElementById('ctl00_MainContent_chkPeads_Fits').checked;
-                    var chkPeads_ReluctanceToFeed = document.getElementById('ctl00_MainContent_chkPeads_ReluctanceToFeed').checked;
-                    var txtPeads_PostNatalOthers = $('#ctl00_MainContent_txtPeads_PostNatalOthers').val();
-                    var txtProcedure_Operation = $('#ctl00_MainContent_txtProcedure_Operation').val();
-                    var txtDignosis = $('#ctl00_MainContent_txtMedication').val();
-                    var txtProcedure_Detail = $('#ctl00_MainContent_txtBilling').val();
-                    var ddlDischarge_By = $('#ctl00_MainContent_ddlDischarge_By').val();
-                    var txtDischarge_On = $('#ctl00_MainContent_txtDischarge_On').val();
-                    var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
-             
-                    var referto = $("#ctl00_MainContent_ddlReferTo").val();
-                    var referward = $("#ctl00_MainContent_ddlwards").val();
-                    var referbed_no = $("#ctl00_MainContent_txtBedno").val();
-                    var referroomno = $("#ctl00_MainContent_ddlroom").val();
-                    var referroomtype = $("#ctl00_MainContent_ddlRoomType").val();
+            var ObstetricHistory = $('#ctl00_MainContent_txtObstetricHistory').val();
+            var AllergiesHistory = $('#ctl00_MainContent_txtAllergiesHistory').val();
+            var TreatmentHistory = $('#ctl00_MainContent_txtTreatmentHistory').val();
+            var VaccinationHistory = $('#ctl00_MainContent_txtVaccinationHistory').val();
+            var AnyOtherHistory = $('#ctl00_MainContent_txtAnyOtherHistory').val();
+            /*------ENT RECORD start-----*/
 
-                    var RateBeats = $("#ctl00_MainContent_txtRateBeats").val();
-                    var Saturation = $("#ctl00_MainContent_txtSaturation").val();
-                    var OthersRN = $("#ctl00_MainContent_txtOthersRcvNote").val();
-                   
-                    var ddlEmrgRhythm = $('#ctl00_MainContent_ddlRhythm').val();
-                    var ddlEmrgVolume = $('#ctl00_MainContent_ddlVolume').val();
-                    var O2_Saturation_Oxygen1 = $("#ctl00_MainContent_txtSaturation_Oxygen1").val();
-                    var O2_Saturation_Oxygen2 = $("#ctl00_MainContent_txtSaturation_Oxygen2").val();
+            var ENT_Throat_IDL = $('#ctl00_MainContent_txtmidl').val();
+            if (ENT_Throat_IDL == null)
+                ENT_Throat_IDL = "";
+            var ENT_Throat_Nose = $('#ctl00_MainContent_txtmNose').val();
+            if (ENT_Throat_Nose == null)
+                ENT_Throat_Nose = "";
+            var ENT_Ear_Right = $('#ctl00_MainContent_txtmRight').val();
+            if (ENT_Ear_Right == null)
+                ENT_Ear_Right = "";
+            var Ent_Ear_Left = $('#ctl00_MainContent_txtmLeft').val();
+            if (Ent_Ear_Left == null)
+                Ent_Ear_Left = "";
 
-                    var TextBoxCns = $("#ctl00_MainContent_TextBoxCns").val();
-                    var TextBoxCvs = $("#ctl00_MainContent_TextBoxCvs").val();
-                    var TextBoxResp = $("#ctl00_MainContent_TextBoxResp").val();
-                    var TextBoxGit = $("#ctl00_MainContent_TextBoxGit").val();
-                    var TextBoxGpe = $("#ctl00_MainContent_TextBoxGpe").val();
-                    var FurtherExplanation = $("#ctl00_MainContent_txtFurtherExplanation").val();
+            var ENT_Rinnes_Right_PosNeg = document.getElementById('ctl00_MainContent_mchkRightPos').checked;
+            var ENT_Rinnes_Lft_PosNeg = document.getElementById('ctl00_MainContent_mchkLeftPos').checked;
+            var ENT_Rinnes_Right_FalseNeg = document.getElementById('ctl00_MainContent_mchkRightF').checked;
+            var ENT_Rinnes_Lft_FalseNeg = document.getElementById('ctl00_MainContent_mchkLeftF').checked;
 
-                    var eye_response = $('#ctl00_MainContent_ctl00_MainContent_txtEOR').val();
-                    var motor_response = $('#ctl00_MainContent_txtMR').val();
-                    var verbal_Response = $('#ctl00_MainContent_txtVR').val();
-                    var accumulated_response = $('#ctl00_MainContent_txtAcc').val();
+            var ENT_Webber_Central = document.getElementById('ctl00_MainContent_mchkcentral').checked;
+            var ENT_Webber_Lateralized = document.getElementById('ctl00_MainContent_mchkLateralized').checked;
 
-                    if (txtNext_Visit == "")
-                        txtNext_Visit = null;
-                    var txtAdvice = $('#ctl00_MainContent_txtPrevention_Precaution').val();
-                    var chkdischarge = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+            var ENT_Investigation_PTA = document.getElementById('ctl00_MainContent_mchkPTA').checked;
+            var ENT_Investigation_Tympanometry = document.getElementById('ctl00_MainContent_mchkTympanometry').checked;
 
-                    var HMFIntact = $("input[name='ctl00$MainContent$HMFIntact']:checked").val();
-                    if (typeof HMFIntact === 'undefined')
-                        HMFIntact = null;
-                    else HMFIntact = (JSON.parse(HMFIntact.toLowerCase())); 
-                               
+            var ENT_Rinnes_Right_Neg = document.getElementById('ctl00_MainContent_mchkRightNeg').checked;
+            var ENT_Rinnes_Lft_Neg = document.getElementById('ctl00_MainContent_mchkLeftNeg').checked;
+            var ENT_Rinnes_Right_FNeg = document.getElementById('ctl00_MainContent_mchkRightFNeg').checked;
+            var ENT_Rinnes_Lft_FNeg = document.getElementById('ctl00_MainContent_mchkLeftFNeg').checked;
+            var txtInformant = $('#ctl00_MainContent_txtInformant').val();
 
-                    var CranialNerves = $("input[name='ctl00$MainContent$CranialNerves']:checked").val();
-                    if (typeof CranialNerves === 'undefined') CranialNerves = null;
-                    else CranialNerves = (JSON.parse(CranialNerves.toLowerCase()));
+            var txtSourceOfReferral = $('#ctl00_MainContent_txtSourceOfReferral').val();
+            var chkNeckHolding = document.getElementById("ctl00_MainContent_chkNeckHolding").checked;
+            var chkWalking = document.getElementById('ctl00_MainContent_chkWalking').checked;
+            var chkTalking = document.getElementById('ctl00_MainContent_chkTalking').checked;
+            var chkOthers = document.getElementById('ctl00_MainContent_chkOthers').checked;
+            var txtMenarche = $('#ctl00_MainContent_txtMenarche').val();
+            var txtMenstrual = $('#ctl00_MainContent_txtMenstrual').val();
+            var txtAttachmentSeparationfromParents = $('#ctl00_MainContent_txtAttachmentSeparationfromParents').val();
+            var txtHealth = $('#ctl00_MainContent_txtHealth').val();
+            var chkNailBiting = document.getElementById('ctl00_MainContent_chkNailBiting').checked;
+            var chkTemperTantrums = document.getElementById('ctl00_MainContent_chkTemperTantrums').checked;
+            var chkBedWetting = document.getElementById('ctl00_MainContent_chkBedWetting').checked;
+            var txtAcademics = $('#ctl00_MainContent_txtAcademics').val();
 
-                    var SignsOfMeningism = $("input[name='ctl00$MainContent$SignsOfMeningism']:checked").val();
-                    if (typeof SignsOfMeningism === 'undefined') SignsOfMeningism = null;
-                    else SignsOfMeningism = (JSON.parse(SignsOfMeningism.toLowerCase()));
+            var txtPeerRelationship = $('#ctl00_MainContent_txtPeerRelationship').val();
+            var txtBehaviour = $('#ctl00_MainContent_txtBehaviour').val();
+            var txtOccupationalHistory = $('#ctl00_MainContent_txtOccupationalHistory').val();
+            var txtMaritalRelationshipSexualHistory = $('#ctl00_MainContent_txtMaritalRelationshipSexualHistory').val();
+            var txtSubstanceUse = $('#ctl00_MainContent_txtSubstanceUse').val();
+            var txtForensicUse = $('#ctl00_MainContent_txtForensicUse').val();
+            var txtRelationship = $('#ctl00_MainContent_txtRelationship').val();
+            var txtLeisureActivities = $('#ctl00_MainContent_txtLeisureActivities').val();
+            var txtAttitudetoSelfandStandards = $('#ctl00_MainContent_txtAttitudetoSelfandStandards').val();
+            var txtPrevallingMood = $('#ctl00_MainContent_txtPrevallingMood').val();
+            var txtReactionPattrentoStress = $('#ctl00_MainContent_txtReactionPattrentoStress').val();
+            var txtReligiousPracticesAttitute = $('#ctl00_MainContent_txtReligiousPracticesAttitute').val();
+            var txtFather = $('#ctl00_MainContent_txtFather').val();
+            var txtMother = $('#ctl00_MainContent_txtMother').val();
+            var txtSiblings = $('#ctl00_MainContent_txtSiblings').val();
 
-                    var HeartSound = $("input[name='ctl00$MainContent$HeartSound']:checked").val();
-                    if (typeof HeartSound === 'undefined') HeartSound = null;
-                    else HeartSound = (JSON.parse(HeartSound.toLowerCase()));
+            var txtHomeAtmosphererelationshipsocialclass = $('#ctl00_MainContent_txtHomeAtmosphererelationshipsocialclass').val();
+            var txtFamilialIllness = $('#ctl00_MainContent_txtFamilialIllness').val();
+            var txtActualandapparentage = $('#ctl00_MainContent_txtActualandapparentage').val();
+            var txtRace = $('#ctl00_MainContent_txtRace').val();
+            var txtTattoosbodypiercingandscars = $('#ctl00_MainContent_txtTattoosbodypiercingandscars').val();
+            var txtBodyHabitus = $('#ctl00_MainContent_txtBodyHabitus').val();
+            var txtDress = $('#ctl00_MainContent_txtDress').val();
+            var txtHygiene = $('#ctl00_MainContent_txtHygiene').val();
+            var txtPsychomotorActivity = $('#ctl00_MainContent_txtPsychomotorActivity').val();
+            var txtInvoluntarymovements = $('#ctl00_MainContent_txtInvoluntarymovements').val();
+            var txtDystoniaEPS = $('#ctl00_MainContent_txtDystoniaEPS').val();
+            var txtTardivedyskinesia = $('#ctl00_MainContent_txtTardivedyskinesia').val();
 
-                    var Arrhythmias = $("input[name='ctl00$MainContent$Arrhythmias']:checked").val();
-                    if (typeof Arrhythmias === 'undefined') Arrhythmias = null;
-                    else Arrhythmias = (JSON.parse(Arrhythmias.toLowerCase()));
+            var txtTics = $('#ctl00_MainContent_txtTics').val();
+            var txtTremors = $('#ctl00_MainContent_txtTremors').val();
+            var txtAttentivenesstointerview = $('#ctl00_MainContent_txtAttentivenesstointerview').val();
+            var txtEyeContact = $('#ctl00_MainContent_txtEyeContact').val();
+            var txtLevelofConsciousness = $('#ctl00_MainContent_txtLevelofConsciousness').val();
+            var txtRate = $('#ctl00_MainContent_txtRate').val();
+            var txtRhythm = $('#ctl00_MainContent_txtRhythm').val();
+            var txtVolume = $('#ctl00_MainContent_txtVolume').val();
+            var txtTone = $('#ctl00_MainContent_txtTone').val();
+            var txtModulationvar = $('#ctl00_MainContent_txtModulationvar').val();
+            var txtDepressed = $('#ctl00_MainContent_txtDepressed').val();
+            var txtElated = $('#ctl00_MainContent_txtElated').val();
 
-                    var AnyOtherAddedSound = $("input[name='ctl00$MainContent$AnyOtherAddedSound']:checked").val();
-                    if (typeof AnyOtherAddedSound === 'undefined') AnyOtherAddedSound = null;
-                    else AnyOtherAddedSound = (JSON.parse(AnyOtherAddedSound.toLowerCase()));
+            var txtIrritable = $('#ctl00_MainContent_txtIrritable').val();
+            var txtLabile = $('#ctl00_MainContent_txtLabile').val();
+            var txtIncongruent = $('#ctl00_MainContent_txtIncongruent').val();
+            var txtbluntingflatteningapathy = $('#ctl00_MainContent_txtBluntingFlatteningApathy').val();
+            var txtThinkingPremeditation = $('#ctl00_MainContent_txtThinkingPremeditation').val();
+            var txtPlans = $('#ctl00_MainContent_txtPlans').val();
+            var txtActions = $('#ctl00_MainContent_txtActions').val();
+            var txtPreservative = $('#ctl00_MainContent_txtPreservative').val();
+            var txtLoosAssociation = $('#ctl00_MainContent_txtLoosAssociation').val();
+            var txtTangentiaility = $('#ctl00_MainContent_txtTangentiaility').val();
+            var txtCircumstantiality = $('#ctl00_MainContent_txtCircumstantiality').val();
+            var txtFlightofIdeas = $('#ctl00_MainContent_txtFlightofIdeas').val();
+            var txtThoughtInsertion = $('#ctl00_MainContent_txtThoughtInsertion').val();
+            var txtThoughtWithdrawal = $('#ctl00_MainContent_txtThoughtWithdrawal').val();
+            var txtThoughBroadcasting = $('#ctl00_MainContent_txtThoughBroadcasting').val();
+            var txtThoughControl = $('#ctl00_MainContent_txtThoughControl').val();
+            var txtDellusion = $('#ctl00_MainContent_txtDellusion').val();
+            var txtovervaluedideas = $('#ctl00_MainContent_txtovervaluedideas').val();
+            var txtDepresonalization = $('#ctl00_MainContent_txtDepresonalization').val();
+            var txtDerealization = $('#ctl00_MainContent_txtDerealization').val();
+            var txtthrougObsession = $('#ctl00_MainContent_txtthrougObsession').val();
+            var txtthrougPhobies = $('#ctl00_MainContent_txtthrougPhobies').val();
+            var txtthrougHomocidialIdeas = $('#ctl00_MainContent_txtthrougHomocidialIdeas').val();
+            var txtillusion = $('#ctl00_MainContent_txtillusion').val();
 
-                    var AnyOtherFindings = $("input[name='ctl00$MainContent$AnyOtherFindings']:checked").val();
-                    if (typeof AnyOtherFindings === 'undefined') AnyOtherFindings = null;
-                    else AnyOtherFindings = (JSON.parse(AnyOtherFindings.toLowerCase()));
+            var txtHallucinationAuditoryVisualOlfactoryGustatoryTactile = $('#ctl00_MainContent_txtHallucinationAuditoryVisualOlfactoryGustatoryTactile').val();
+            var txtorientationtime = $('#ctl00_MainContent_txtorientationtime').val();
+            var txtplace = $('#ctl00_MainContent_txtplace').val();
+            var txtperson = $('#ctl00_MainContent_txtperson').val();
+            var txtAttentionConcentrationSerial7Test = $('#ctl00_MainContent_txtAttentionConcentrationSerial7Test').val();
+            var txtOrDaysOfWeekReverseOrder = $('#ctl00_MainContent_txtOrDaysOfWeekReverseOrder').val();
+            var txtImmediatememory = $('#ctl00_MainContent_txtImmediatememory').val();
+            var txtshorttermrecentevents = $('#ctl00_MainContent_txtshorttermrecentevents').val();
+            var txtadressrecallafter2minutes = $('#ctl00_MainContent_txtadressrecallafter2minutes').val();
+            var txtlongtermremoteevents = $('#ctl00_MainContent_longtermremoteevents').val();
+            var txtadressrecallafter5minues = $('#ctl00_MainContent_txtadressrecallafter5minues').val();
+            var txtgeneralknowledgequestion = $('#ctl00_MainContent_txtgeneralknowledgequestion').val();
+            var txtsimplearthemeticcalculation = $('#ctl00_MainContent_txtsimplearthemeticcalculation').val();
+            var txtabstrationconcertethinking = $('#ctl00_MainContent_txtabstrationconcertethinking').val();
+            var txtinsight = $('#ctl00_MainContent_txtinsight').val();
 
-                    var NVB_Right = $("input[name='ctl00$MainContent$NVB_Right']:checked").val();
-                    if (typeof NVB_Right === 'undefined') NVB_Right = null;
-                    else NVB_Right = (JSON.parse(NVB_Right.toLowerCase()));
 
-                    var NVB_Left = $("input[name='ctl00$MainContent$NVB_Left']:checked").val();
-                    if (typeof NVB_Left === 'undefined') NVB_Left = null;
-                    else NVB_Left = (JSON.parse(NVB_Left.toLowerCase()));
+            var DermaFace = $('#ctl00_MainContent_txtDermaFace').val();
+            if (DermaFace == null)
+                DermaFace = "";
+            var DermaNeck = $('#ctl00_MainContent_txtDermaNeck').val();
+            if (DermaNeck == null)
+                DermaNeck = "";
+            var DermaTrunk = $('#ctl00_MainContent_txtDermaTrunk').val();
+            if (DermaTrunk == null)
+                DermaTrunk = "";
+            var DermaUpperLimb = $('#ctl00_MainContent_txtDermaUpperLimb').val();
+            if (DermaUpperLimb == null)
+                DermaUpperLimb = "";
+            var DermaLowerLimb = $('#ctl00_MainContent_txtDermaLowerLimb').val();
+            if (DermaLowerLimb == null)
+                DermaLowerLimb = "";
+            var DermaFlexures = $('#ctl00_MainContent_txtDermaFlexures').val();
+            if (DermaFlexures == null)
+                DermaFlexures = "";
+            var DermaGenitalias = $('#ctl00_MainContent_txtDermaGenitalias').val();
+            if (DermaGenitalias == null)
+                DermaGenitalias = "";
+            var DermaHair = $('#ctl00_MainContent_txtDermaHair').val();
+            if (DermaHair == null)
+                DermaHair = "";
+            var DermaNail = $('#ctl00_MainContent_txtDermaNail').val();
+            if (DermaNail == null)
+                DermaNail = "";
+            var DermaMucousMembrane = $('#ctl00_MainContent_txtDermaMucousMembrane').val();
+            if (DermaMucousMembrane == null)
+                DermaMucousMembrane = "";
+            var DermaEyes = $('#ctl00_MainContent_txtDermaEyes').val();
+            if (DermaEyes == null)
+                DermaEyes = "";
+            var DermaEars = $('#ctl00_MainContent_txtDermaEars').val();
+            if (DermaEars == null)
+                DermaEars = "";
+            var DermaNose = $('#ctl00_MainContent_txtDermaNose').val();
+            if (DermaNose == null)
+                DermaNose = "";
+            var DermaLips = $('#ctl00_MainContent_txtDermaLips').val();
+            if (DermaLips == null)
+                DermaLips = "";
+            var PE_Pluse = $('#ctl00_MainContent_txtPE_Pluse').val();
+            var PE_BP = $('#ctl00_MainContent_txtPE_BP').val();
+            var PE_Temperature = $('#ctl00_MainContent_txtPE_Temperature').val();
+            var PE_Weight = $('#ctl00_MainContent_txtPE_Weight').val();
+            var PE_RespiratoryRate = $('#ctl00_MainContent_txtPE_RespiratoryRate').val();
+            var PE_Jaundice = $('#ctl00_MainContent_txtPE_Jaundice').val();
+            var PE_Anemia = $('#ctl00_MainContent_txtPE_Anemia').val();
+            var PE_Cyanosis = $('#ctl00_MainContent_txtPE_Cyanosis').val();
+            var PE_Clubbing = $('#ctl00_MainContent_txtPE_Clubbing').val();
+            var PE_JVP = $('#ctl00_MainContent_txtPE_JVP').val();
+            var PE_LymphNodes = $('#ctl00_MainContent_txtPE_LymphNodes').val();
+            var PE_Edema = $('#ctl00_MainContent_txtPE_Edema').val();
+            var PE_Respiratory = $('#ctl00_MainContent_txtPE_Respiratory').val();
+            var PE_Cardiovascular = $('#ctl00_MainContent_txtPE_Cardiovascular').val();
+            var PE_Gastro_Intestinal = $('#ctl00_MainContent_txtPE_Gastro_Intestinal').val();
+            var PE_Observation = $('#ctl00_MainContent_txtPE_Observation').val();
+            var PE_Cranial_Nerves = $('#ctl00_MainContent_txtPE_Cranial_Nerves').val();
+            var PE_Limb_Strength = $('#ctl00_MainContent_txtPE_Limb_Strength').val();
+            var PE_Spasticity = $('#ctl00_MainContent_txtPE_Spasticity').val();
+            var PE_Position = $('#ctl00_MainContent_txtPE_Position').val();
+            var PE_Vibration = $('#ctl00_MainContent_txtPE_Vibration').val();
+            var PE_Stereognosis = $('#ctl00_MainContent_txtPE_Stereognosis').val();
+            var PE_Pain = $('#ctl00_MainContent_txtPE_Pain').val();
+            var PE_Biceps = $('#ctl00_MainContent_txtPE_Biceps').val();
+            var PE_Triceps = $('#ctl00_MainContent_txtPE_Triceps').val();
+            var PE_Brachioradialis = $('#ctl00_MainContent_txtPE_Brachioradialis').val();
+            var PE_Quadriceps = $('#ctl00_MainContent_txtPE_Quadriceps').val();
+            var PE_Patellar = $('#ctl00_MainContent_txtPE_Patellar').val();
+            var PE_Achilles = $('#ctl00_MainContent_txtPE_Achilles').val();
+            var PE_Extensor = $('#ctl00_MainContent_txtPE_Extensor').val();
+            var PE_Frontal = $('#ctl00_MainContent_txtPE_Frontal').val();
+            var PE_Finger = $('#ctl00_MainContent_txtPE_Finger').val();
+            var PE_Heel = $('#ctl00_MainContent_txtPE_Heel').val();
+            var PE_Movements = $('#ctl00_MainContent_txtPE_Movements').val();
+            var PE_Gait = $('#ctl00_MainContent_txtPE_Gait').val();
+            var HBM_Problem = $('#ctl00_MainContent_txtHBM_Problem').val();
+            var HBM_Caused = $('#ctl00_MainContent_txtHBM_Caused').val();
+            var HBM_Started = $('#ctl00_MainContent_txtHBM_Started').val();
+            var HBM_Course = $('#ctl00_MainContent_txtHBM_Course').val();
+            var HBM_Treatment = $('#ctl00_MainContent_txtHBM_Treatment').val();
+            var HBM_Effects = $('#ctl00_MainContent_txtHBM_Effects').val();
+            var PE_Neck_Rigidity = document.getElementById('ctl00_MainContent_chkPE_Neck_Rigidity').checked;
+            var PE_Kerning_Sign = document.getElementById('ctl00_MainContent_chkPE_Kerning_Sign').checked;
+            var PE_Brudzinki_Sign = document.getElementById('ctl00_MainContent_chkPE_Brudzinki_Sign').checked;
 
-                    var Crepitation_Right = $("input[name='ctl00$MainContent$Crepitation_Right']:checked").val();
-                    if (typeof Crepitation_Right === 'undefined') Crepitation_Right = null;
-                    else Crepitation_Right = (JSON.parse(Crepitation_Right.toLowerCase()));
+            var For_Summary = $('#ctl00_MainContent_txtFor_Summary').val();
+            var For_Diagnosis = $('#ctl00_MainContent_txtFor_Diagnosis').val();
+            var For_AxisI = $('#ctl00_MainContent_txtFor_AxisI').val();
+            var For_AxisII = $('#ctl00_MainContent_txtFor_AxisII').val();
+            var For_AxisIII = $('#ctl00_MainContent_txtFor_AxisIII').val();
+            var For_AxisIV = $('#ctl00_MainContent_txtFor_AxisIV').val();
+            var For_AxisV = $('#ctl00_MainContent_txtFor_AxisV').val();
+            var For_PredisposingFactors = $('#ctl00_MainContent_txtFor_PredisposingFactors').val();
+            var For_PrecipitatingFactors = $('#ctl00_MainContent_txtFor_PrecipitatingFactors').val();
+            var For_PrepetuatingFactors = $('#ctl00_MainContent_txtFor_PrepetuatingFactors').val();
+            var For_Investigation = $('#ctl00_MainContent_txtFor_Investigation').val();
+            var For_Medical = $('#ctl00_MainContent_txtFor_Medical').val();
+            var For_Psychological = $('#ctl00_MainContent_txtFor_Psychological').val();
+            var For_Major_Issues = $('#ctl00_MainContent_txtFor_Major_Issues').val();
+            var For_Strengths = $('#ctl00_MainContent_txtFor_Strengths').val();
+            var For_Goals = $('#ctl00_MainContent_txtFor_Goals').val();
+            var For_Strategies = $('#ctl00_MainContent_txtFor_Strategies').val();
 
-                    var Crepitation_Left = $("input[name='ctl00$MainContent$Crepitation_Left']:checked").val();
-                    if (typeof Crepitation_Left === 'undefined') Crepitation_Left = null;
-                    else Crepitation_Left = (JSON.parse(Crepitation_Left.toLowerCase()));
+            var txtPeads_weight = $('#ctl00_MainContent_txtPeads_weight').val();
+            var txtPeads_Length = $('#ctl00_MainContent_txtPeads_Length').val();
+            var txtPeads_HC = $('#ctl00_MainContent_txtPeads_HC').val();
+            var txtPeads_General_Appearance = $('#ctl00_MainContent_txtPeads_General_Appearance').val();
+            var chkPeads_Cyanosis = document.getElementById('ctl00_MainContent_chkPeads_Cyanosis').checked;
+            var chkPeads_Jaundice = document.getElementById('ctl00_MainContent_chkPeads_Jaundice').checked;
+            var chkPeads_Lethargy = document.getElementById('ctl00_MainContent_chkPeads_Rash').checked;
+            var chkPeads_Rash = document.getElementById('ctl00_MainContent_chkPeads_Rash').checked;
+            var txtPeads_Others = $('#ctl00_MainContent_txtPeads_Others').val();
+            var chkPeads_Caput = document.getElementById('ctl00_MainContent_chkPeads_Caput').checked;
+            var chkPeads_Cephalhematoma = document.getElementById('ctl00_MainContent_chkPeads_Cephalhematoma').checked;
+            var rdbPeads_Anterioropen = document.getElementById('ctl00_MainContent_rdbPeads_Anterioropen').checked;
+            var rdbPeads_AnteriorClose = document.getElementById('ctl00_MainContent_rdbPeads_AnteriorClose').checked;
+            var chkPeads_Dextrocardia = document.getElementById('ctl00_MainContent_chkPeads_Dextrocardia').checked;
+            var chkPeads_Bulging = document.getElementById('ctl00_MainContent_chkPeads_Bulging').checked;
+            var chkPeads_Murmur = document.getElementById('ctl00_MainContent_chkPeads_Murmur').checked;
+            var txtPeads_HeartSound = $('#ctl00_MainContent_txtPeads_HeartSound').val();
+            var chkPeads_Nasal = document.getElementById('ctl00_MainContent_chkPeads_Nasal').checked;
+            var chkPeads_Recessions = document.getElementById('ctl00_MainContent_chkPeads_Recessions').checked;
+            var txtPeads_AddedSounds = $('#ctl00_MainContent_txtPeads_AddedSounds').val();
+            var rdbPeads_Flat = document.getElementById('ctl00_MainContent_rdbPeads_Flat').checked;
+            var rdbPeads_Distended = document.getElementById('ctl00_MainContent_rdbPeads_Distended').checked;
+            var rdbPeads_Scaphoid = document.getElementById('ctl00_MainContent_rdbPeads_Scaphoid').checked;
+            var chkPeads_Liver = document.getElementById('ctl00_MainContent_chkPeads_Liver').checked;
+            var chkPeads_Spleen = document.getElementById('ctl00_MainContent_chkPeads_Spleen').checked;
+            var txtPeads_GITOthers = $('#ctl00_MainContent_txtPeads_GITOthers').val();
+            var chkPeads_Sucking = document.getElementById('ctl00_MainContent_chkPeads_Sucking').checked;
+            var chkPeads_Rooting = document.getElementById('ctl00_MainContent_chkPeads_Rooting').checked;
+            var chkPeads_Moro = document.getElementById('ctl00_MainContent_chkPeads_Moro').checked;
+            var txtPeads_CNSOthers = $('#ctl00_MainContent_txtPeads_CNSOthers').val();
+            var chkPeads_FullTerm = document.getElementById('ctl00_MainContent_chkPeads_FullTerm').checked;
+            var chkPeads_PreTerm = document.getElementById('ctl00_MainContent_chkPeads_PreTerm').checked;
+            var txtPeads_DateOfDelivery = $('#ctl00_MainContent_txtPeads_DateOfDelivery').val();
+            var txtPeads_TimeOfDelivery = $('#ctl00_MainContent_txtPeads_TimeOfDelivery').val();
+            var rdbPeads_Booked = document.getElementById('ctl00_MainContent_rdbPeads_Booked').checked;
+            var rdbPeads_UnBooked = document.getElementById('ctl00_MainContent_rdbPeads_UnBooked').checked;
+            var chkPeads_DAIHandling = document.getElementById('ctl00_MainContent_chkPeads_DAIHandling').checked;
+            var chkPeads_ANTURash = document.getElementById('ctl00_MainContent_chkPeads_ANTURash').checked;
+            var chkPeads_PIH = document.getElementById('ctl00_MainContent_chkPeads_PIH').checked;
+            var chkPeads_GDM = document.getElementById('ctl00_MainContent_chkPeads_GDM').checked;
+            var chkPeads_Vacinated = document.getElementById('ctl00_MainContent_chkPeads_Vacinated').checked;
+            var txtPeads_ANTOthers = $('#ctl00_MainContent_txtPeads_ANTOthers').val();
+            var rdbPeads_SVD = document.getElementById('ctl00_MainContent_rdbPeads_SVD').checked;
+            var rdbPeads_LSCS = document.getElementById('ctl00_MainContent_rdbPeads_LSCS').checked;
+            var rdbPeads_Emergency = document.getElementById('ctl00_MainContent_rdbPeads_Emergency').checked;
+            var rdbPeads_Elective = document.getElementById('ctl00_MainContent_rdbPeads_Elective').checked;
+            var txtPeads_PlaceOfDelivery = $('#ctl00_MainContent_txtPeads_PlaceOfDelivery').val();
+            var txtPeads_IndicationForLSCS = $('#ctl00_MainContent_txtPeads_IndicationForLSCS').val();
+            var Peads_apgerScore1min = $('#ctl00_MainContent_ddlPeads_apgerScore1min').val();
+            if (Peads_apgerScore1min == 0)
+                Peads_apgerScore1min = "";
+            var Peads_apgerScore5min = $('#ctl00_MainContent_ddlPeads_apgerScore5min').val();
+            if (Peads_apgerScore5min == 0)
+                Peads_apgerScore5min = "";
+            var chkPeads_Resuscitation = document.getElementById('ctl00_MainContent_chkPeads_Resuscitation').checked;
+            var txtPeads_NatalOthers = $('#ctl00_MainContent_txtPeads_NatalOthers').val();
+            var chkPeads_Moaning = document.getElementById('ctl00_MainContent_chkPeads_Moaning').checked;
+            var chkPeads_RespDistress = document.getElementById('ctl00_MainContent_chkPeads_RespDistress').checked;
+            var chkPeads_PostNATALCyanosis = document.getElementById('ctl00_MainContent_chkPeads_PostNATALCyanosis').checked;
+            var chkPeads_Fits = document.getElementById('ctl00_MainContent_chkPeads_Fits').checked;
+            var chkPeads_ReluctanceToFeed = document.getElementById('ctl00_MainContent_chkPeads_ReluctanceToFeed').checked;
+            var txtPeads_PostNatalOthers = $('#ctl00_MainContent_txtPeads_PostNatalOthers').val();
+            var txtProcedure_Operation = $('#ctl00_MainContent_txtProcedure_Operation').val();
+            var txtDignosis = $('#ctl00_MainContent_txtMedication').val();
+            var txtProcedure_Detail = $('#ctl00_MainContent_txtBilling').val();
+            var ddlDischarge_By = $('#ctl00_MainContent_ddlDischarge_By').val();
+            var txtDischarge_On = $('#ctl00_MainContent_txtDischarge_On').val();
+            var txtNext_Visit = $('#ctl00_MainContent_txtNext_Visit').val();
 
-                    var Wheeze = $("input[name='ctl00$MainContent$Wheeze']:checked").val();
-                    if (typeof Wheeze === 'undefined') Wheeze = null;
-                    else Wheeze = (JSON.parse(Wheeze.toLowerCase()));
+            var referto = $("#ctl00_MainContent_ddlReferTo").val();
+            var referward = $("#ctl00_MainContent_ddlwards").val();
+            var referbed_no = $("#ctl00_MainContent_txtBedno").val();
+            var referroomno = $("#ctl00_MainContent_ddlroom").val();
+            var referroomtype = $("#ctl00_MainContent_ddlRoomType").val();
 
-                    var Ranchi = $("input[name='ctl00$MainContent$Ranchi']:checked").val();
-                    if (typeof Ranchi === 'undefined') Ranchi = null;
-                    else Ranchi = (JSON.parse(Ranchi.toLowerCase()));
+            var RateBeats = $("#ctl00_MainContent_txtRateBeats").val();
+            var Saturation = $("#ctl00_MainContent_txtSaturation").val();
+            var OthersRN = $("#ctl00_MainContent_txtOthersRcvNote").val();
 
-                    var AnyOtherSound = $("input[name='ctl00$MainContent$AnyOtherSound']:checked").val();
-                    if (typeof AnyOtherSound === 'undefined') AnyOtherSound = null;
-                    else AnyOtherSound = (JSON.parse(AnyOtherSound.toLowerCase()));
+            var ddlEmrgRhythm = $('#ctl00_MainContent_ddlRhythm').val();
+            var ddlEmrgVolume = $('#ctl00_MainContent_ddlVolume').val();
+            var O2_Saturation_Oxygen1 = $("#ctl00_MainContent_txtSaturation_Oxygen1").val();
+            var O2_Saturation_Oxygen2 = $("#ctl00_MainContent_txtSaturation_Oxygen2").val();
 
-                    var AbdomenSoft = $("input[name='ctl00$MainContent$AbdomenSoft']:checked").val();
-                    if (typeof AbdomenSoft === 'undefined') AbdomenSoft = null;
-                    else AbdomenSoft = (JSON.parse(AbdomenSoft.toLowerCase()));
+            var TextBoxCns = $("#ctl00_MainContent_TextBoxCns").val();
+            var TextBoxCvs = $("#ctl00_MainContent_TextBoxCvs").val();
+            var TextBoxResp = $("#ctl00_MainContent_TextBoxResp").val();
+            var TextBoxGit = $("#ctl00_MainContent_TextBoxGit").val();
+            var TextBoxGpe = $("#ctl00_MainContent_TextBoxGpe").val();
+            var FurtherExplanation = $("#ctl00_MainContent_txtFurtherExplanation").val();
 
-                    var Tenderness = $("input[name='ctl00$MainContent$Tenderness']:checked").val();
-                    if (typeof Tenderness === 'undefined') Tenderness = null;
-                    else Tenderness = (JSON.parse(Tenderness.toLowerCase()));
+            var eye_response = $('#ctl00_MainContent_ctl00_MainContent_txtEOR').val();
+            var motor_response = $('#ctl00_MainContent_txtMR').val();
+            var verbal_Response = $('#ctl00_MainContent_txtVR').val();
+            var accumulated_response = $('#ctl00_MainContent_txtAcc').val();
 
-                    var Guarding = $("input[name='ctl00$MainContent$Guarding']:checked").val();
-                    if (typeof Guarding === 'undefined') Guarding = null;
-                    else Guarding = (JSON.parse(Guarding.toLowerCase()));
+            if (txtNext_Visit == "")
+                txtNext_Visit = null;
+            var txtAdvice = $('#ctl00_MainContent_txtPrevention_Precaution').val();
+            var chkdischarge = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
 
-                    var BowelSound = $("input[name='ctl00$MainContent$BowelSound']:checked").val();
-                    if (typeof BowelSound === 'undefined') BowelSound = null;
-                    else BowelSound = (JSON.parse(BowelSound.toLowerCase()));
+            var HMFIntact = $("input[name='ctl00$MainContent$HMFIntact']:checked").val();
+            if (typeof HMFIntact === 'undefined')
+                HMFIntact = null;
+            else HMFIntact = (JSON.parse(HMFIntact.toLowerCase()));
 
-                    var Distention = $("input[name='ctl00$MainContent$Distention']:checked").val();
-                    if (typeof Distention === 'undefined') Distention = null;
-                    else Distention = (JSON.parse(Distention.toLowerCase()));
 
-                    var FluidThrill = $("input[name='ctl00$MainContent$FluidThrill']:checked").val();
-                    if (typeof FluidThrill === 'undefined') FluidThrill = null;
-                    else FluidThrill = (JSON.parse(FluidThrill.toLowerCase()));
+            var CranialNerves = $("input[name='ctl00$MainContent$CranialNerves']:checked").val();
+            if (typeof CranialNerves === 'undefined') CranialNerves = null;
+            else CranialNerves = (JSON.parse(CranialNerves.toLowerCase()));
 
-                    var ShiftingDullness = $("input[name='ctl00$MainContent$ShiftingDullness']:checked").val();
-                    if (typeof ShiftingDullness === 'undefined') ShiftingDullness = null;
-                    else ShiftingDullness = (JSON.parse(ShiftingDullness.toLowerCase()));
+            var SignsOfMeningism = $("input[name='ctl00$MainContent$SignsOfMeningism']:checked").val();
+            if (typeof SignsOfMeningism === 'undefined') SignsOfMeningism = null;
+            else SignsOfMeningism = (JSON.parse(SignsOfMeningism.toLowerCase()));
 
-                    var EpigastriaDiscomfort = $("input[name='ctl00$MainContent$EpigastriaDiscomfort']:checked").val();
-                    if (typeof EpigastriaDiscomfort === 'undefined') EpigastriaDiscomfort = null;
-                    else EpigastriaDiscomfort = (JSON.parse(EpigastriaDiscomfort.toLowerCase()));
+            var HeartSound = $("input[name='ctl00$MainContent$HeartSound']:checked").val();
+            if (typeof HeartSound === 'undefined') HeartSound = null;
+            else HeartSound = (JSON.parse(HeartSound.toLowerCase()));
 
-                    var RetrosternalBurning = $("input[name='ctl00$MainContent$RetrosternalBurning']:checked").val();
-                    if (typeof RetrosternalBurning === 'undefined') RetrosternalBurning = null;
-                    else RetrosternalBurning = (JSON.parse(RetrosternalBurning.toLowerCase()));
+            var Arrhythmias = $("input[name='ctl00$MainContent$Arrhythmias']:checked").val();
+            if (typeof Arrhythmias === 'undefined') Arrhythmias = null;
+            else Arrhythmias = (JSON.parse(Arrhythmias.toLowerCase()));
 
-                    var Jondus = $("input[name='ctl00$MainContent$Jondus']:checked").val();
-                    if (typeof Jondus === 'undefined') Jondus = null;
-                    else Jondus = (JSON.parse(Jondus.toLowerCase()));
+            var AnyOtherAddedSound = $("input[name='ctl00$MainContent$AnyOtherAddedSound']:checked").val();
+            if (typeof AnyOtherAddedSound === 'undefined') AnyOtherAddedSound = null;
+            else AnyOtherAddedSound = (JSON.parse(AnyOtherAddedSound.toLowerCase()));
 
-                    var Pallor = $("input[name='ctl00$MainContent$Pallor']:checked").val();
-                    if (typeof Pallor === 'undefined') Pallor = null;
-                    else Pallor = (JSON.parse(Pallor.toLowerCase()));
+            var AnyOtherFindings = $("input[name='ctl00$MainContent$AnyOtherFindings']:checked").val();
+            if (typeof AnyOtherFindings === 'undefined') AnyOtherFindings = null;
+            else AnyOtherFindings = (JSON.parse(AnyOtherFindings.toLowerCase()));
 
-                    var Dehydration = $("input[name='ctl00$MainContent$Dehydration']:checked").val();
-                    if (typeof Dehydration === 'undefined') Dehydration = null;
-                    else Dehydration = (JSON.parse(Dehydration.toLowerCase()));
+            var NVB_Right = $("input[name='ctl00$MainContent$NVB_Right']:checked").val();
+            if (typeof NVB_Right === 'undefined') NVB_Right = null;
+            else NVB_Right = (JSON.parse(NVB_Right.toLowerCase()));
 
-                    var GCSOrientation = $("input[name='ctl00$MainContent$GCSOrientation']:checked").val();
-                    if (typeof GCSOrientation === 'undefined') GCSOrientation = null;
-                    else GCSOrientation = (JSON.parse(GCSOrientation.toLowerCase()));
+            var NVB_Left = $("input[name='ctl00$MainContent$NVB_Left']:checked").val();
+            if (typeof NVB_Left === 'undefined') NVB_Left = null;
+            else NVB_Left = (JSON.parse(NVB_Left.toLowerCase()));
 
-                    var ConsciousOrientely = $("input[name='ctl00$MainContent$ConsciousOrientely']:checked").val();
-                    if (typeof ConsciousOrientely === 'undefined') ConsciousOrientely = null;
-                    else ConsciousOrientely = (JSON.parse(ConsciousOrientely.toLowerCase()));
+            var Crepitation_Right = $("input[name='ctl00$MainContent$Crepitation_Right']:checked").val();
+            if (typeof Crepitation_Right === 'undefined') Crepitation_Right = null;
+            else Crepitation_Right = (JSON.parse(Crepitation_Right.toLowerCase()));
 
-                    var Murmur = $("input[name='ctl00$MainContent$Murmur']:checked").val();
-                    if (typeof Murmur === 'undefined') Murmur = null;
-                    else Murmur = JSON.parse(Murmur.toLowerCase());
+            var Crepitation_Left = $("input[name='ctl00$MainContent$Crepitation_Left']:checked").val();
+            if (typeof Crepitation_Left === 'undefined') Crepitation_Left = null;
+            else Crepitation_Left = (JSON.parse(Crepitation_Left.toLowerCase()));
 
-                  
+            var Wheeze = $("input[name='ctl00$MainContent$Wheeze']:checked").val();
+            if (typeof Wheeze === 'undefined') Wheeze = null;
+            else Wheeze = (JSON.parse(Wheeze.toLowerCase()));
 
-                    var PulseRate = $('#ctl00_MainContent_txtPulseRate').val();
-                    var BPDischarge = $('#ctl00_MainContent_txtBPDischarge').val();
-                    var Rhythmdischarge = $('#ctl00_MainContent_ddlRhythmdischarge').val();
-                    var volumedisc = $('#ctl00_MainContent_ddlvolumedisc').val();
-                    var Tempdisch = $('#ctl00_MainContent_txtTempdisch').val();
-                    var RespRateDesc = $('#ctl00_MainContent_txtRespRateDesc').val();
-                    var Oxygen2_desc = $('#ctl00_MainContent_txtSaturation_Oxygen2_desc').val();
-                    var saturationDis = $('#ctl00_MainContent_txtsaturationDis').val();
-                    var Oxygen1 = $('#ctl00_MainContent_txtOxygen1').val();
-                    var otherecdesc = $('#ctl00_MainContent_txtotherecdesc').val();
-                    var Special_Instruction_Desc = $('#ctl00_MainContent_txtRN_Special_Instruction_Desc').val();
-                    var Receiving_Date_Discharge = $('#ctl00_MainContent_txttxtReceiving_DateDesc').val();
+            var Ranchi = $("input[name='ctl00$MainContent$Ranchi']:checked").val();
+            if (typeof Ranchi === 'undefined') Ranchi = null;
+            else Ranchi = (JSON.parse(Ranchi.toLowerCase()));
 
-                    /* Death details tab, Portion fields */
+            var AnyOtherSound = $("input[name='ctl00$MainContent$AnyOtherSound']:checked").val();
+            if (typeof AnyOtherSound === 'undefined') AnyOtherSound = null;
+            else AnyOtherSound = (JSON.parse(AnyOtherSound.toLowerCase()));
 
-                    var IdentificationMarks = $("#ctl00_MainContent_txtIdentificationMarks").val();
-                    var DateOfDeath = $("#ctl00_MainContent_txtDateofDeath").val();
-                    var TimeOfDeath = $("#ctl00_MainContent_txtTimeOfDeath").val();
-                    var PlaceOfDeath = $("#ctl00_MainContent_ddlPlaceOfDeath").val();
-                    var CauseOfDeath = $("#ctl00_MainContent_txtCause_Of_Death").val();
-                    var IssuingOfficerName = $("#ctl00_MainContent_txtIssuingOfficerName").val();
-                    var DeathCertifiedby1 = $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").val();
-                    var DeathCertifiedby2 = $("#ctl00_MainContent_ddlDeathCertifiedbyDr2").val();
-                    var BodyHandedOverTo = $("#ctl00_MainContent_txtBodyHandedOverTo").val();
-                    var FamilyPersonName = $("#ctl00_MainContent_txtFamilyPersonName").val();
-                    var CNIC = $("#ctl00_MainContent_txtCNIC").val();
-                    var RelationWithDeceased = $("#ctl00_MainContent_txtRelationWithDeceased").val();
-                    var CMO_Police = $("#ctl00_MainContent_txtCMO_Police").val();
+            var AbdomenSoft = $("input[name='ctl00$MainContent$AbdomenSoft']:checked").val();
+            if (typeof AbdomenSoft === 'undefined') AbdomenSoft = null;
+            else AbdomenSoft = (JSON.parse(AbdomenSoft.toLowerCase()));
 
-                    var ID = '<%= Request.QueryString["ID"]%>';
+            var Tenderness = $("input[name='ctl00$MainContent$Tenderness']:checked").val();
+            if (typeof Tenderness === 'undefined') Tenderness = null;
+            else Tenderness = (JSON.parse(Tenderness.toLowerCase()));
+
+            var Guarding = $("input[name='ctl00$MainContent$Guarding']:checked").val();
+            if (typeof Guarding === 'undefined') Guarding = null;
+            else Guarding = (JSON.parse(Guarding.toLowerCase()));
+
+            var BowelSound = $("input[name='ctl00$MainContent$BowelSound']:checked").val();
+            if (typeof BowelSound === 'undefined') BowelSound = null;
+            else BowelSound = (JSON.parse(BowelSound.toLowerCase()));
+
+            var Distention = $("input[name='ctl00$MainContent$Distention']:checked").val();
+            if (typeof Distention === 'undefined') Distention = null;
+            else Distention = (JSON.parse(Distention.toLowerCase()));
+
+            var FluidThrill = $("input[name='ctl00$MainContent$FluidThrill']:checked").val();
+            if (typeof FluidThrill === 'undefined') FluidThrill = null;
+            else FluidThrill = (JSON.parse(FluidThrill.toLowerCase()));
+
+            var ShiftingDullness = $("input[name='ctl00$MainContent$ShiftingDullness']:checked").val();
+            if (typeof ShiftingDullness === 'undefined') ShiftingDullness = null;
+            else ShiftingDullness = (JSON.parse(ShiftingDullness.toLowerCase()));
+
+            var EpigastriaDiscomfort = $("input[name='ctl00$MainContent$EpigastriaDiscomfort']:checked").val();
+            if (typeof EpigastriaDiscomfort === 'undefined') EpigastriaDiscomfort = null;
+            else EpigastriaDiscomfort = (JSON.parse(EpigastriaDiscomfort.toLowerCase()));
+
+            var RetrosternalBurning = $("input[name='ctl00$MainContent$RetrosternalBurning']:checked").val();
+            if (typeof RetrosternalBurning === 'undefined') RetrosternalBurning = null;
+            else RetrosternalBurning = (JSON.parse(RetrosternalBurning.toLowerCase()));
+
+            var Jondus = $("input[name='ctl00$MainContent$Jondus']:checked").val();
+            if (typeof Jondus === 'undefined') Jondus = null;
+            else Jondus = (JSON.parse(Jondus.toLowerCase()));
+
+            var Pallor = $("input[name='ctl00$MainContent$Pallor']:checked").val();
+            if (typeof Pallor === 'undefined') Pallor = null;
+            else Pallor = (JSON.parse(Pallor.toLowerCase()));
+
+            var Dehydration = $("input[name='ctl00$MainContent$Dehydration']:checked").val();
+            if (typeof Dehydration === 'undefined') Dehydration = null;
+            else Dehydration = (JSON.parse(Dehydration.toLowerCase()));
+
+            var GCSOrientation = $("input[name='ctl00$MainContent$GCSOrientation']:checked").val();
+            if (typeof GCSOrientation === 'undefined') GCSOrientation = null;
+            else GCSOrientation = (JSON.parse(GCSOrientation.toLowerCase()));
+
+            var ConsciousOrientely = $("input[name='ctl00$MainContent$ConsciousOrientely']:checked").val();
+            if (typeof ConsciousOrientely === 'undefined') ConsciousOrientely = null;
+            else ConsciousOrientely = (JSON.parse(ConsciousOrientely.toLowerCase()));
+
+            var Murmur = $("input[name='ctl00$MainContent$Murmur']:checked").val();
+            if (typeof Murmur === 'undefined') Murmur = null;
+            else Murmur = JSON.parse(Murmur.toLowerCase());
+
+
+
+            var PulseRate = $('#ctl00_MainContent_txtPulseRate').val();
+            var BPDischarge = $('#ctl00_MainContent_txtBPDischarge').val();
+            var Rhythmdischarge = $('#ctl00_MainContent_ddlRhythmdischarge').val();
+            var volumedisc = $('#ctl00_MainContent_ddlvolumedisc').val();
+            var Tempdisch = $('#ctl00_MainContent_txtTempdisch').val();
+            var RespRateDesc = $('#ctl00_MainContent_txtRespRateDesc').val();
+            var Oxygen2_desc = $('#ctl00_MainContent_txtSaturation_Oxygen2_desc').val();
+            var saturationDis = $('#ctl00_MainContent_txtsaturationDis').val();
+            var Oxygen1 = $('#ctl00_MainContent_txtOxygen1').val();
+            var otherecdesc = $('#ctl00_MainContent_txtotherecdesc').val();
+            var Special_Instruction_Desc = $('#ctl00_MainContent_txtRN_Special_Instruction_Desc').val();
+            var Receiving_Date_Discharge = $('#ctl00_MainContent_txttxtReceiving_DateDesc').val();
+
+            /* Death details tab, Portion fields */
+
+            var IdentificationMarks = $("#ctl00_MainContent_txtIdentificationMarks").val();
+            var DateOfDeath = $("#ctl00_MainContent_txtDateofDeath").val();
+            var TimeOfDeath = $("#ctl00_MainContent_txtTimeOfDeath").val();
+            var PlaceOfDeath = $("#ctl00_MainContent_ddlPlaceOfDeath").val();
+            var CauseOfDeath = $("#ctl00_MainContent_txtCause_Of_Death").val();
+            var IssuingOfficerName = $("#ctl00_MainContent_txtIssuingOfficerName").val();
+            var DeathCertifiedby1 = $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").val();
+            var DeathCertifiedby2 = $("#ctl00_MainContent_ddlDeathCertifiedbyDr2").val();
+            var BodyHandedOverTo = $("#ctl00_MainContent_txtBodyHandedOverTo").val();
+            var FamilyPersonName = $("#ctl00_MainContent_txtFamilyPersonName").val();
+            var CNIC = $("#ctl00_MainContent_txtCNIC").val();
+            var RelationWithDeceased = $("#ctl00_MainContent_txtRelationWithDeceased").val();
+            var CMO_Police = $("#ctl00_MainContent_txtCMO_Police").val();
+
+            var ID = '<%= Request.QueryString["ID"]%>';
             PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date, ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory,
                 txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb,
                 DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane,
@@ -1794,7 +1722,7 @@ function CheckPendingBalanceBeforeSave(callback) {
 
                         PrintAdmisionDetails(response);
                         $('#btnSave').val("Update");
-                        
+
                     }
                 });
         }
@@ -1875,12 +1803,12 @@ function CheckPendingBalanceBeforeSave(callback) {
                 $('#tblResultrpt tbody').append(rows);
                 $('#ctl00_MainContent_ddlLabResult').val("0");
             }
-           
+
         }
 
 
 
-        
+
         function GetLastMediceineTab() {
             var doctor = $('#ctl00_MainContent_ddlMo_Doctor_Name').val();
             if (doctor == "0" || doctor == null) {
@@ -1888,7 +1816,7 @@ function CheckPendingBalanceBeforeSave(callback) {
             }
             else {
                 $('#ctl00_MainContent_chkMedDoctor').prop('checked', true);
-               
+
                 $("#tabs").tabs("option", "active", 4);
                 $('#MedicationModel').modal({
                     backdrop: 'static'
@@ -1901,7 +1829,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                 $('#txtInjection').val('');
                 $('#AttendingParamedicalStaff').val('');
                 $('#txtMedicineName').focus();
-               
+
                 localStorage.DoctorNoteTab = "true";
 
 
@@ -1971,7 +1899,7 @@ function CheckPendingBalanceBeforeSave(callback) {
 
 
 
-       
+
         function FillRotations() {
             var options = '';
             PageMethods.GetRotations(function (GetRotations) {
@@ -2036,7 +1964,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                 $('#ddlTestList').select2();
             });
         }
-       
+
         function SelectBed(WardID, BedNo) {
             $('#ctl00_MainContent_txtBed_No').val("");
             $('#ctl00_MainContent_txtBed_No').val(BedNo);
@@ -2153,11 +2081,11 @@ function CheckPendingBalanceBeforeSave(callback) {
                 });
 
                 $('#txtMedicineName').html(options);
-              
+
             });
         }
 
-       
+
 
         function editMedicine(AnchorTag) {
             debugger;
@@ -2176,8 +2104,8 @@ function CheckPendingBalanceBeforeSave(callback) {
                 var row = $(AnchorTag).parents('tr')[0];
                 $('#txtMedicineName').val($($(row).find('td')[1]).text());
 
-                
-                var Medicine_Id = $($(row).find('td')[1]).text();  
+
+                var Medicine_Id = $($(row).find('td')[1]).text();
                 var dosage_qty = $($(row).find('td')[7]).text().trim();
                 var dosage_form = $($(row).find('td')[6]).text().trim();
                 var frequency = $($(row).find('td')[2]).text().trim();
@@ -2185,7 +2113,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                 var duration = $($(row).find('td')[4]).text().trim();
                 var special_instruction = $($(row).find('td')[5]).text().trim();
                 var other_instruction = $($(row).find('td')[8]).text().trim();
-                
+
                 $('#txtPharmacyItem').find('option:contains(' + $(row).find('td')[1].innerText + ')')[0].selected = true;
                 $("#ddlDosage_Qty").find('option:contains(' + dosage_qty + ')')[0].selected = true;
                 $("#ddlDosage_From").find('option:contains(' + dosage_form + ')')[0].selected = true;
@@ -2193,7 +2121,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                 $("#Routes").find('option:contains(' + routes + ')')[0].selected = true;
                 $('#ddlOther_Instruction').find('option:contains(' + other_instruction + ')')[0].selected = true;
                 $('#txtMedicineName').val($($(row).find('td')[1]).text());
-               
+
 
                 $('#txtInjection').val($($(row).find('td')[4]).text());
                 $('#AttendingParamedicalStaff').val($($(row).find('td')[5]).text());
@@ -2221,7 +2149,7 @@ function CheckPendingBalanceBeforeSave(callback) {
         function LoadDischargeMedicines() {
 
             if ($('#<%= txtIn_Patient_ID.ClientID%>').val() != '(New)') {
-                        PageMethods.LoadDischageMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
+                PageMethods.LoadDischageMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
                     var Medicines = JSON.parse(res);
                     var rows = '';
                     $.each(Medicines, function (key, value) {
@@ -2239,7 +2167,7 @@ function CheckPendingBalanceBeforeSave(callback) {
         function LoadMedicines() {
             debugger;
             if ($('#<%= txtIn_Patient_ID.ClientID%>').val() != '(New)') {
-                        PageMethods.LoadMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
+                PageMethods.LoadMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
                     var Medicines = JSON.parse(res);
                     debugger;
                     var rows = '';
@@ -2261,7 +2189,7 @@ function CheckPendingBalanceBeforeSave(callback) {
         function LoadDischargeMedicines() {
             debugger;
             if ($('#<%= txtIn_Patient_ID.ClientID%>').val() != '(New)') {
-                    PageMethods.LoadDischargeMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
+                PageMethods.LoadDischargeMedicines($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
                     var Medicines = JSON.parse(res);
                     debugger;
                     var rows = '';
@@ -2282,7 +2210,7 @@ function CheckPendingBalanceBeforeSave(callback) {
         function LoadLabResultrpt() {
 
             if ($('#<%= txtIn_Patient_ID.ClientID%>').val() != '(New)') {
-                    PageMethods.LoadLabResultrptDetail($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
+                PageMethods.LoadLabResultrptDetail($('#<%= txtIn_Patient_ID.ClientID%>').val(), function (res) {
                     var Medicines = JSON.parse(res);
                     var rows = '';
                     $.each(Medicines, function (key, value) {
@@ -2333,7 +2261,7 @@ function CheckPendingBalanceBeforeSave(callback) {
             var tblInstruction = document.getElementById("tblInstructionbody")
             var ttl;
             var rows;
-            
+
             for (var i = 0; row = tblInstruction.rows[i]; i++) {
                 rows = tblInstruction.rows[i];
 
@@ -2354,7 +2282,7 @@ function CheckPendingBalanceBeforeSave(callback) {
 
             row.remove();
 
-           
+
 
         }
         function Delete_Symtom(row) {
@@ -2553,7 +2481,7 @@ function CheckPendingBalanceBeforeSave(callback) {
             }
         }
 
-        
+
 
         function SaveDischargeMedicines() {
 
@@ -2561,7 +2489,7 @@ function CheckPendingBalanceBeforeSave(callback) {
             var MedicinesList = [];
             Dtable.find('tbody tr').each(function (key, value) {
 
-              
+
                 MedicinesList.push({
                     'Medicine_Date': $($(value).find('td')[0]).text(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
                     'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $($(value).find('td')[10]).text(),
@@ -2581,7 +2509,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                     var Medicines = JSON.parse(res);
                     var rows = '';
                     $.each(Medicines, function (key, value) {
-                      
+
                         rows += '<tr>  <td><input type="hidden" name ="txtDoctorStatus" value="' + value.Organ_Name + '"> ' + value.Organ_Name
                             + ' </td> <td> ' + value.Organ_Side + ' </td> <td> ' + value.Ortho_History + ' </td> <td>' + value.DM + '</td><td> ' + value.Ortho_History + ' </td> <td>' + value.IHD + '</td><td> ' + value.Look + ' </td> <td>' + value.Feel + '</td><td> ' + value.Move + ' </td> <td>' + value.Special_Tests + '</td><td> ' + value.Sensory + ' </td> <td>' + value.Motor + '</td> <td> ' + value.Reflexes + ' </td> <td>' + value.Vascular_Status + '</td> <td> ' + value.Others + ' </td></tr>';
                     });
@@ -2617,7 +2545,7 @@ function CheckPendingBalanceBeforeSave(callback) {
             var MedicinesList = [];
             table.find('tbody tr').each(function (key, value) {
                 debugger;
-               
+
                 MedicinesList.push({
                     'Medicine_Date': $($(value).find('td')[0]).text(), 'Medicine_Name': $($(value).find('td')[1]).text(), 'Frequency': $($(value).find('td')[2]).text(), 'Oral': $($(value).find('td')[3]).text(), 'Injection': $($(value).find('td')[4]).text(), 'AttendingParamedical_Staff': $($(value).find('td')[5]).text(),
                     'Dosage_From': $($(value).find('td')[6]).text(), 'Dosage_Qty': $($(value).find('td')[7]).text(), 'Other_Instruction': $($(value).find('td')[8]).text(), 'ItemCode': $($(value).find('td')[10]).text(),
@@ -2630,7 +2558,7 @@ function CheckPendingBalanceBeforeSave(callback) {
             PageMethods.SaveMedicines(JSON.stringify(MedicineDetails), function (response) { SaveDischargeMedicines(); });
         }
 
-        function saveTests() { 
+        function saveTests() {
             debugger;
             var table = $('.tests-table tbody');
             var test_list = [];
@@ -2647,7 +2575,7 @@ function CheckPendingBalanceBeforeSave(callback) {
         }
 
 
-      
+
 
         function SaveLabResult() {
             var table = $('#tblResultrpt');
@@ -2664,7 +2592,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                 InPatID = 0;
             var ResulttrptDetail = { Pat: PatID, InPatientID: InPatID, Resulttrpt: tblResultrpt }
 
-           
+
             PageMethods.SaveLabResultrpt(btnsave, JSON.stringify(ResulttrptDetail), function (response) { });
 
         }
@@ -2715,7 +2643,7 @@ function CheckPendingBalanceBeforeSave(callback) {
             });
 
         }
-        
+
         function SaveWard() {
             debugger;
             var btnsave = $('#btnSave').val();
@@ -2726,7 +2654,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                 InPatID = 0;
             var refer_To = $("#ctl00_MainContent_ddlReferTo").val();
             if (refer_To != "0") {
-                
+
                 var ddlWard_No = $('#ctl00_MainContent_ddlwards').val();
 
                 var txtExpected_Discharge_Date = $('#ctl00_MainContent_txtExpected_Discharge_Date').val();
@@ -2878,49 +2806,87 @@ function CheckPendingBalanceBeforeSave(callback) {
             });
         }
 
-     function SaveInPatientAllRecord() {
-    debugger;
-    var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-    var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
-    
-    if (dischargechk == true) {
-        if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
-            Swal.fire({
-                title: 'Validation Error!',
-                text: 'Please select Discharge Doctor first.',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-            });
-            return false;
-        }
-        
-        CheckPendingBalanceBeforeSave(function(canProceed) {
-            if (canProceed) {
-                $('#loadingimage').show();
-                LoadPatientDetails();
+        function SaveInPatientAllRecord() {
+            debugger;
+            var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+            var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
+
+            if (dischargechk == true) {
+                if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
+                    Swal.fire({
+                        title: 'Validation Error!',
+                        text: 'Please select Discharge Doctor first.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
+
+                CheckPendingBalanceBeforeSave(function (canProceed) {
+                    if (canProceed) {
+                        $('#loadingimage').show();
+                        LoadPatientDetails();
+                    } else {
+                        $('#loadingimage').hide();
+                        $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
+                        $('#btnDischargePrint').attr('disabled', true);
+                    }
+                });
             } else {
-                $('#loadingimage').hide();
-                $('#ctl00_MainContent_cbDicharg_Slip').prop('checked', false);
-                $('#btnDischargePrint').attr('disabled', true);
+                Swal.fire({
+                    title: 'Validation Error!',
+                    text: 'Please check the Discharge Slip checkbox to discharge the patient.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return false;
             }
-        });
-    } else {
-        Swal.fire({
-            title: 'Validation Error!',
-            text: 'Please check the Discharge Slip checkbox to discharge the patient.',
-            icon: 'warning',
-            confirmButtonText: 'OK'
-        });
-        return false;
-    }
-}
+        }
+        function LoadPatientDetails() {
+            debugger;
+            var Patient_ID = $('#hdfPatient_ID').val();
+            $("#in_PatientId").val(Patient_ID);
+            var inpatId_Json = "";
+
+            var ddlDoctor = $('#ctl00_MainContent_ddlDischarge_By').val();
+            var DichargChk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
+            var recordStatus = $('input#btnSave').val();
+
+            if (recordStatus === "Save" && DichargChk !== true) {
+                alert("You must select discharge Doctor & select Discharge Slip checkbox");
+                $('#CloseSearchModel').click();
+                $('#loadingimage').hide();
+                return false;
+            }
+
+            if (ddlDoctor !== '0' && ddlDoctor !== 'undefined') {
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsDischarge.aspx/GetPatientDetails",
+                    data: "{'PatientID':" + Patient_ID + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: OnSuccess1,
+                    failure: function (response) {
+                        alert(response.d);
+                    }
+                });
+            }
+            else {
+                alert("You must select discharge Doctor & select Discharge Slip checkbox");
+                $('#CloseSearchModel').click();
+                $('#loadingimage').hide();
+                return false;
+            }
+        }
+
         function OnSuccess1(data) {
             debugger;
             if (data.d != '') {
 
                 $("#in_PatientId").val(data.d.PatientID);
 
-              
+
 
                 if ((data.d.Bed_No != "" && data.d.Bed_No != 'undefined' && data.d.Bed_No != null) && (data.d.Ward_ID != "" && data.d.Ward_ID != 'undefined' && data.d.Ward_ID != null)) {
 
@@ -2929,9 +2895,7 @@ function CheckPendingBalanceBeforeSave(callback) {
                     var ddlWard_No = data.d.Ward_ID;
                     var txtBed_No = data.d.Bed_No;
                     var PatID = data.d.PatientID;
-                    if (data.d.In_PatientID && data.d.In_PatientID !== "(New)" && data.d.In_PatientID !== "") {
-                        CheckDischargeRequestStatus();
-                    }
+
                     var btnsave = $('#btnSave').val();
                     var PatID_1 = $('#<%= txtPatient_ID.ClientID%>').val();
 
@@ -3780,30 +3744,7 @@ function CheckPendingBalanceBeforeSave(callback) {
      var InPatient_Ids_disc;
         $(document).ready(function () {
             debugger;
-            $('#btnsaveprint').off('click').on('click', function (e) {
-                debugger;
-                var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
-                var ddlDischargeBy = $('#ctl00_MainContent_ddlDischarge_By').val();
-
-                if (dischargechk == true) {
-                    if (ddlDischargeBy == "0" || ddlDischargeBy == null || ddlDischargeBy == "") {
-                        alert("Please select Discharge Doctor first.");
-                        return false;
-                    }
-
-                    CheckPendingBalanceBeforeSave(function (canProceed) {
-                        if (canProceed) {
-                            $('#loadingimage').show();
-                            CheckExistInOutPatient();
-                        } else {
-                            alert("Cannot save and print. Please clear the pending balance first.");
-                            $('#loadingimage').hide();
-                        }
-                    });
-                } else {
-                    alert("Please check the Discharge Slip checkbox first.");
-                }
-            });
+           
 
             $('#btnDischargePrint').attr('disabled', true);
             $("#txtMedicineName").hide();
@@ -3915,7 +3856,10 @@ function CheckPendingBalanceBeforeSave(callback) {
 
 
             }); 
-            
+            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
+                CheckDischargeRequestStatus();
+            }
             $('#add-new-Othertest').click(function () {
 
 
@@ -4469,13 +4413,12 @@ function CheckPendingBalanceBeforeSave(callback) {
             $('#<%= vLbl_Patient_Type.ClientID%>').text(data.d.PatientType);
             $('#<%= vLbl_Patient_AdmitCatagory.ClientID%>').text(data.d.InPatient_AdmitCategory);
             $("#<%= txtIn_Patient_ID.ClientID%>").val(data.d.InPatient_Id);
-            debugger;
+
+            
+            FillDoctorsByDepartment(data.d.Department);
             if (data.d.InPatient_Id && data.d.InPatient_Id !== "(New)" && data.d.InPatient_Id !== "") {
                 CheckDischargeRequestStatus();
             }
-            
-            FillDoctorsByDepartment(data.d.Department);
-
         }
     }
 
@@ -4537,9 +4480,8 @@ function CheckPendingBalanceBeforeSave(callback) {
         }
 
         $(".js-example-responsive").select2({
-            width: 'resolve' 
+            width: 'resolve'
         });
-        // ==================== DISCHARGE REQUEST FUNCTIONS ====================
 
         // Function to check discharge request status and disable button if already requested
         function CheckDischargeRequestStatus() {
@@ -4562,6 +4504,13 @@ function CheckPendingBalanceBeforeSave(callback) {
                             $('#btnDischargeRequest').prop('disabled', true);
                             $('#btnDischargeRequest').val('Request Already Sent');
                             $('#btnDischargeRequest').addClass('btn-disabled');
+
+                            //Swal.fire({
+                            //    title: 'Information',
+                            //    text: 'Discharge request has already been sent for this patient.',
+                            //    icon: 'info',
+                            //    confirmButtonText: 'OK'
+                            //});
                         } else {
                             $('#btnDischargeRequest').prop('disabled', false);
                             $('#btnDischargeRequest').val('Discharge Request');
@@ -4610,7 +4559,6 @@ function CheckPendingBalanceBeforeSave(callback) {
                             confirmButtonText: 'OK'
                         });
                         $('#btnDischargeRequest').prop('disabled', true);
-                        $('#btnDischargeRequest').val('Request Already Sent');
                         return false;
                     }
                 }
@@ -4690,25 +4638,77 @@ function CheckPendingBalanceBeforeSave(callback) {
                 }
             });
         }
+        function CheckPendingBalanceBeforeSave(callback) {
+            debugger;
+            var patientID = $('#<%= hdfPatient_ID.ClientID%>').val();
+            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
 
-        // Main DischargeRequest function
+            if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
+                $('#loadingimage').show();
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsDischarge.aspx/GetPendingBalance",
+                    data: JSON.stringify({
+                        'PatientID': patientID,
+                        'InPatientID': inPatientID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $('#loadingimage').hide();
+                        var pendingBalance = parseFloat(response.d);
+                        if (pendingBalance > 0) {
+                            Swal.fire({
+                                title: 'Pending Balance Alert!',
+                                text: `Cannot discharge patient!\n\nPending Balance: Rs. ${pendingBalance.toFixed(2)}\n\nPlease receive the pending amount first.`,
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#dc3545'
+                            }).then(() => {
+                                if (callback) callback(false);
+                            });
+                        } else {
+                            if (callback) callback(true);
+                        }
+                    },
+                    error: function (x, e) {
+                        $('#loadingimage').hide();
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Unable to check pending balance. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            if (callback) callback(false);
+                        });
+                    }
+                });
+            } else {
+                if (callback) callback(true);
+            }
+        }
+
+        // Modified DischargeRequest function to use the new method
         function DischargeRequest() {
             debugger;
+            // Set the hidden field value
+            $("#ctl00_MainContent_DischargeRequest").val('true');
+
+            // Call the new function
             SetDischargeRequest();
         }
 
-        // Add CSS for disabled button
+        // Add CSS class for disabled button
         var style = document.createElement('style');
-                    style.innerHTML = `
-                .btn-disabled {
-                    opacity: 0.6;
-                    cursor: not-allowed;
-                    background-color: #6c757d !important;
-                    border-color: #6c757d !important;
-                }
-            `;
+        style.innerHTML = `
+    .btn-disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+    }
+`;
         document.head.appendChild(style);
-
 
     </script>
 
@@ -5065,10 +5065,11 @@ function CheckPendingBalanceBeforeSave(callback) {
                             <div class="col-lg-2 col-md-6 col-sm-12">
                                 <input type="button" class="btn-primry" id="btnsaveprint" value="Save & Print" onclick="SaveInPatientAllRecord();" />
                             </div>
-                                <div class="col-lg-3 col-md-3 col-sm-12">
-                                    <input type="button" id="btnDischargeRequest" value="Discharge Request" class="btn btn-primry" onclick="DischargeRequest()" />
-                                    <input type="hidden" runat="server" id="DischargeRequest" value='false'/>
-                                </div>
+                            <div class="col-lg-3 col-md-6 col-sm-12">
+                            <input type="button" id="btnDischargeRequest" value="Discharge Request" 
+                                    class="btn btn-primry" onclick="DischargeRequest()" />
+                            </div>
+
                             <div class="col-lg-3 col-md-6 col-sm-12" style="display:none;">
                                 <input type="button" class="btn-primry" id="btnDischarge_Billing" value="Discharge & Billing" />
                             </div>
