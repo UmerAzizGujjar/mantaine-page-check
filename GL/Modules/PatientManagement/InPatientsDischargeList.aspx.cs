@@ -85,8 +85,6 @@ namespace PMS
                     string userId = HttpContext.Current.Session["UserId"]?.ToString() ?? "N/A";
 
                     var Total_Patients = _dbContext.Reg_patients.Count();
-
-                    // Step 1: Build base query (without Discharge_By resolution)
                     var baseQuery = from P in _dbContext.Reg_patients
                                     join opd in _dbContext.In_Patients on P.pat_id equals opd.Patient_ID
                                     where opd.Discharge == true
@@ -106,14 +104,13 @@ namespace PMS
                                         P.Father_Name,
                                         Department = _dbContext.GetDataValueName("Patient Main Category", opd.Department),
                                         Patient_Type = _dbContext.GetDataValueName("Patient Type", opd.Patient_Discount_Type),
-                                        opd.Discharge_By,   // ← Keep as raw string for now
+                                        opd.Discharge_By,   // ← Keep as raw string
                                         opd.Discharge_On,
                                         AdmitDays = SqlMethods.DateDiffDay(opd.Admission_Date, DateTime.Now)
                                     };
 
                     var filteredCount = baseQuery.Count();
 
-                    // Apply sorting
                     switch (sortColumn)
                     {
                         case "Department":
@@ -141,10 +138,8 @@ namespace PMS
                             break;
                     }
 
-                    // ⚠️ Important: Apply Skip/Take *before* switching to in-memory
-                    var pagedData = baseQuery.Skip(start).Take(length).ToList(); // ← Execute SQL here
+                    var pagedData = baseQuery.Skip(start).Take(length).ToList();
 
-                    // Pre-fetch all possible employee IDs for lookup (optimize: batch lookup)
                     var possibleEmpIds = pagedData
                         .Select(x => x.Discharge_By)
                         .Where(s => !string.IsNullOrWhiteSpace(s))
@@ -153,17 +148,33 @@ namespace PMS
                         .Distinct()
                         .ToList();
 
+                    var possibleUserIds = pagedData
+                        .Select(x => x.Discharge_By)
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .Where(s => Guid.TryParse(s, out _))
+                        .Select(s => Guid.Parse(s))
+                        .Distinct()
+                        .ToList();
+
                     var empDict = _dbContext.HR_Employees
                         .Where(e => possibleEmpIds.Contains(e.Emp_ID))
-                        .ToDictionary(e => e.Emp_ID, e => e.Emp_Name); // ← Adjust EmpName → actual prop
+                        .ToDictionary(e => e.Emp_ID, e => e.Emp_Name);
 
-                    // Now map to final result in C#
+                    var userDict = _dbContext.aspnet_Users
+                        .Where(u => possibleUserIds.Contains(u.UserId))
+                        .ToDictionary(u => u.UserId, u => u.UserName);
+
                     var patientList = pagedData.Select(x =>
                     {
-                        string dischargeByName;
-                        if (int.TryParse(x.Discharge_By, out int id) && empDict.TryGetValue(id, out string name))
+                        string dischargeByName = "N/A";
+
+                        if (int.TryParse(x.Discharge_By, out int empId) && empDict.TryGetValue(empId, out string empName))
                         {
-                            dischargeByName = name;
+                            dischargeByName = empName;
+                        }
+                        else if (Guid.TryParse(x.Discharge_By, out Guid userGuid) && userDict.TryGetValue(userGuid, out string userName))
+                        {
+                            dischargeByName = userName;
                         }
                         else
                         {
@@ -179,18 +190,23 @@ namespace PMS
                             x.Father_Name,
                             x.Department,
                             x.Patient_Type,
-                            Discharge_By = dischargeByName, // ✅ Resolved safely
+                            Discharge_By = dischargeByName,
                             x.Discharge_On,
                             AdmitDays = SqlMethods.DateDiffDay(x.Admission_Date, DateTime.Now)
                         };
                     }).ToList();
 
-                    return new { draw, recordsFiltered = filteredCount, recordsTotal = Total_Patients, data = patientList };
+                    return new
+                    {
+                        draw,
+                        recordsFiltered = filteredCount,
+                        recordsTotal = Total_Patients,
+                        data = patientList
+                    };
                 }
             }
             catch (Exception ex)
             {
-                // ⚠️ Log ex, don't just throw — for WebMethods, return error JSON in prod
                 throw new Exception("Error fetching patient list", ex);
             }
         }
