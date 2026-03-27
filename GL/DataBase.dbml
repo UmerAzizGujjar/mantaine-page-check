@@ -7023,41 +7023,6 @@
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing_Details" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing_Detail" />
     </Type>
   </Table>
-  <Table Name="dbo.Ar_Billing_Details" Member="Ar_Billing_Details">
-    <Type Name="Ar_Billing_Detail">
-      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Bill_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="RecommendedByDoctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ParentTrans_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ParentTrans_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="ParentTrans_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Category_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Batch_No" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Expiry_Date" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Is_Group_Category" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Frequency" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
-      <Column Name="Test_Main_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Service_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CGS" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Hospital_Share" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Doctor_id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="WareHouse" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Column Name="Issue_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="IsFBRPosted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="Line_Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.AR_Advances" Member="AR_Advances">
     <Type Name="AR_Advance">
       <Column Name="Advance_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7463,6 +7428,41 @@
       <Column Name="Details_Logs" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="Logged_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Logged_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Ar_Billing_Details" Member="Ar_Billing_Details">
+    <Type Name="Ar_Billing_Detail">
+      <Column Name="Bill_Details_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Bill_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="RecommendedByDoctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ParentTrans_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ParentTrans_Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ParentTrans_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Category_ID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Batch_No" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Expiry_Date" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Is_Group_Category" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Frequency" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Test_Main_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Service_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CGS" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Hospital_Share" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Doctor_id" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="WareHouse" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Issue_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsFBRPosted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Line_Discount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

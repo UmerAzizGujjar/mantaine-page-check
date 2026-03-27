@@ -2876,7 +2876,8 @@
                     c_Dis_Amt += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
                     var di = Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
                     Amount = $($(value).find('td')[5]).text();
-                    Qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
+                    Qty = $(value).find('input[name="txtQty"]').val();
+                    //Qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
                     TotalAmount += parseFloat(Amount) * (Qty);
 
 
@@ -2900,7 +2901,8 @@
 
 
                         total_Disc += Math.round(parseFloat($(value).find('input[name="DisAmount"]').val()));
-                        var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
+                        //var qty = Math.round(parseFloat($(value).find('input[name="txtQty"]').val()));
+                        var qty = $(value).find('input[name="txtQty"]').val();
 
                         Net_Amt += (Math.round(parseFloat($($(value).find('td')[5]).text())) * qty);
 
@@ -2913,7 +2915,7 @@
                     var PreviousBalance = parseFloat($("#txt_balance").val()) || 0;
                     var AdvanceAmount = parseFloat($("#txtadvance_amount").val()) || 0;
                     var RefundAmount = parseFloat($("#txtRefund_amount").val()) || 0;
-                    var TotalAmount = Net_Amt - PreviousPaid;
+                    var TotalAmount = Net_Amt - PreviousPaid - total_Disc;
                     debugger;
                     $('#txtTotalAmount').val(Net_Amt);
                     $('#txtTotalPayable').val(TotalAmount);
@@ -5176,8 +5178,11 @@
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
                     $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
-                    $('#ddlReffered_By').val(ReplaceNullWith_Space(data.d.refferedoc)).trigger('change');
-                    $('#ddlReffered_By').attr('disabled', true);
+                   // $('#ddlReffered_By').val(ReplaceNullWith_Space(data.d.refferedoc)).trigger('change');
+                    //$('#ddlReffered_By').attr('disabled', true);
+                    var doc = data.d.refferedoc;
+                    var hasDoctor = (doc && doc != "" && doc != "There is no row at position 0.");
+                    $('#ddlReffered_By').val(doc).trigger('change').prop('disabled', hasDoctor);
                     $('#txtadmitdate').val(data.d.Admission_Date);
                     $('#txtdischargedate').val(data.d.Discharge_On);
                     $('#wardtype').val(data.d.Ward_Name);

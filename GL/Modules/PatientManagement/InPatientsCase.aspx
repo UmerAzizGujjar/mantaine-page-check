@@ -179,7 +179,7 @@
 
             var dischargereq = $("#ctl00_MainContent_DischargeRequest").val()
             if (dischargereq == true || dischargereq == "true") {
-                btnDischargeRequest
+             /*   btnDischargeRequest*/
                 $('#btnDischargeRequest').attr('disabled', true);
             }
 
@@ -6446,7 +6446,7 @@
         }
         function loadtokenInputsDefault() {
 
-            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients",
+            $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=In_Patients",
                 {
                     tokenLimit: 1,
                     onAdd: function (item) {
@@ -6585,7 +6585,7 @@
         }
         function loadtokenInputs(data) {
 
-            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
+            $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=In_Patients",
                 {
                     prePopulate: data,
                     tokenLimit: 1,

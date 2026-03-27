@@ -14,12 +14,12 @@
         var TotalReceipt_Amount = 0;
         function CountNetAmount() {
             debugger;
-            var txtReceiptAmount = $('#txtNetReceivable').val();
+            var txtReceiptAmount = $('#txtNetBalance').val();
             var ReceiptAmount = $('#txtReceiptAmount').val();
             if (ReceiptAmount == "")
                 ReceiptAmount = 0.00
             var Balance = txtReceiptAmount - ReceiptAmount;
-            $('#txtNetBalance').val(Balance);
+          //  $('#txtNetBalance').val(Balance);
             $('#txtNetReceivable').val(Balance);
         }
 
