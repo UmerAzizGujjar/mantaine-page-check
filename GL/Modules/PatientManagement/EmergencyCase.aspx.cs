@@ -2713,6 +2713,8 @@ namespace PMS
                                              where tbl.pat_id == Patient_ID
                                              select tbl.Mobile1).FirstOrDefault();
 
+                        DBClass.executeNonQueryWithoutBegin("UPDATE Emergency SET Admitted_Status = 'Discharged' WHERE Emer_id = " + OPD.Emergency_ID);
+
                     }
                     OPD.Discharge = chkdischarge;
 
@@ -5561,7 +5563,7 @@ namespace PMS
 
                 if (DichargChk)
                 {
-                    DBClass.executeNonQueryWithoutBegin("UPDATE Ward_Allocation SET IsDischarge=1, To_TimeDate=GETDATE() WHERE EmergencyID=" + EmergencyID + " AND IsDischarge=0");
+                    DBClass.executeNonQueryWithoutBegin("UPDATE Ward_Allocation SET IsDischarge=1, To_TimeDate=GETDATE() WHERE EmergencyID=" + EmergencyID);
                 }
 
                 return "Success";
