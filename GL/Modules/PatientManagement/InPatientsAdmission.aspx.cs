@@ -507,7 +507,58 @@ namespace PMS
                 lblMessage.Text = ex.Message;
             }
         }
+        [WebMethod]
+        public static string LoadBirthCertificateData(string InPatientID)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var result = (from ip in db.In_Patients
+                                  where ip.In_Patient_ID.ToString() == InPatientID
+                                  select new
+                                  {
+                                      ip.Birth_Child_Name,
+                                      ip.Birth_Gender,
+                                      ip.Birth_Date,
+                                      ip.Birth_Time,
+                                      ip.Birth_Place,
+                                      ip.Birth_Weight,
+                                      ip.Birth_Type,
+                                      ip.Birth_Order,
+                                      ip.Birth_Father_Name,
+                                      ip.Birth_Father_CNIC,
+                                      ip.Birth_Father_Occupation,
+                                      ip.Birth_Father_Nationality,
+                                      ip.Birth_Mother_Name,
+                                      ip.Birth_Mother_CNIC,
+                                      ip.Birth_Mother_Occupation,
+                                      ip.Birth_Mother_Nationality,
+                                      ip.Birth_Reg_Number,
+                                      ip.Birth_Reg_Date,
+                                      ip.Birth_Registrar,
+                                      ip.Birth_Union_Council,
+                                      ip.Birth_Address,
+                                      ip.Birth_City,
+                                      ip.Birth_Province,
+                                      ip.Birth_Postal_Code,
+                                      ip.Birth_Religion,
+                                      ip.Birth_Attendant,
+                                      ip.Birth_Remarks
+                                  }).FirstOrDefault();
 
+                    if (result != null)
+                    {
+                        return Newtonsoft.Json.JsonConvert.SerializeObject(result);
+                    }
+                    return "null";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
         [WebMethod]
         public static List<PatientsResult> GetReferredPatients(string SearchString)
         {
@@ -886,23 +937,39 @@ namespace PMS
 
 
         [WebMethod]
-        public static string SaveAllRecord(int Patient_ID, string btnsave, string txtAdmission_Date,string patient_name, string patient_age,string patient_number, string ddlDepartment, string ddlDoctor, string txtHealth_Complaints, DateTime txtExpected_Discharge_Date, string ddlIssuance_Of, string ddlWard_No, string txtBed_No, string ddlRoom_No, string txtRoom_Type, string PatientDiscountType, string panelCompany, string admissionType, string sehatCardNo, string visitId, string CardHolderName, string InsuranceCardNo, string PolicyHolderName ,string Sehat_Holder, string main_department, string packagetype, string packagename, string packagetypename, string packagenamess, string ipdProcedures, string proc_name,string panelcompanys, string CardNo,string Cardholdername,string CompanyName,string Approvelimit,string Roomlimit,string Cardlimit,
-            string ApproveDays,string Discount,string Privatecharges/* string ddl_IPD_Procedure, string Time_in, string DischargeDate, string Time_Out, string DaysOccupied */ )
+        public static string SaveAllRecord(
+      int Patient_ID, string btnsave, string txtAdmission_Date, string patient_name,
+      string patient_age, string patient_number, string ddlDepartment, string ddlDoctor,
+      string txtHealth_Complaints, DateTime txtExpected_Discharge_Date, string ddlIssuance_Of,
+      string ddlWard_No, string txtBed_No, string ddlRoom_No, string txtRoom_Type,
+      string PatientDiscountType, string panelCompany, string admissionType, string sehatCardNo,
+      string visitId, string CardHolderName, string InsuranceCardNo, string PolicyHolderName,
+      string Sehat_Holder, string main_department, string packagetype, string packagename,
+      string packagetypename, string packagenamess, string ipdProcedures, string proc_name,
+      string panelcompanys, string CardNo, string Cardholdername, string CompanyName,
+      string Approvelimit, string Roomlimit, string Cardlimit, string ApproveDays,
+      string Discount, string Privatecharges,
+      // Birth Certificate Parameters
+      string BirthChildName, string BirthGender, string BirthDate, string BirthTime,
+      string BirthPlace, string BirthWeight, string BirthType, string BirthOrder,
+      string BirthFatherName, string BirthFatherCNIC, string BirthFatherOccupation,
+      string BirthFatherNationality, string BirthMotherName, string BirthMotherCNIC,
+      string BirthMotherOccupation, string BirthMotherNationality, string BirthRegNumber,
+      string BirthRegDate, string BirthRegistrar, string BirthUnionCouncil,
+      string BirthAddress, string BirthCity, string BirthProvince, string BirthPostalCode,
+      string BirthReligion, string BirthAttendant, string BirthRemarks)
         {
-
             In_Patient OPD = null;
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
             {
                 var InPatientID = 0;
                 try
                 {
-                    //In_Patient OPD;
                     if (btnsave == "Save")
                     {
                         OPD = new In_Patient();
                         OPD.Patient_ID = Convert.ToInt32(Patient_ID);
                         OPD.IPD_No = DBClass.getMaxEntry_No("In_Patient", "IPD_No");
-
 
                         if (PatientDiscountType == "02")
                         {
@@ -911,15 +978,11 @@ namespace PMS
                                          on v.ValueSet_ID equals d.ValueSet_ID
                                          where v.ValueSet_Name == "Patient Type"
                                          && (d.DataValue_Description == "Private")
-                                         select d.Segment1
-                               ).FirstOrDefault();
-
-                           
+                                         select d.Segment1).FirstOrDefault();
                         }
                         OPD.pat_name = patient_name;
                         OPD.pat_number = patient_number;
                         OPD.pat_age = patient_age;
-                        
                     }
                     else
                     {
@@ -928,8 +991,7 @@ namespace PMS
                                select tbl).FirstOrDefault();
                         OPD.Updated_By = AppConfig.UserID;
                         OPD.Updated_Time = DateTime.Now;
-                       
-                    
+
                         if (PatientDiscountType == "02")
                         {
                             var query = (from v in db.ValueSets
@@ -937,12 +999,8 @@ namespace PMS
                                          on v.ValueSet_ID equals d.ValueSet_ID
                                          where v.ValueSet_Name == "Patient Type"
                                          && (d.DataValue_Description == "Private")
-                                         select d.Segment1
-                               ).FirstOrDefault();
-
-                           
+                                         select d.Segment1).FirstOrDefault();
                         }
-                      
                     }
 
                     string fee = DBClass.getParameter("In Patient Fee").ToString();
@@ -952,14 +1010,13 @@ namespace PMS
                     OPD.Admission_Fees = int.Parse(fee);
                     OPD.Admission_Date = Convert.ToDateTime(txtAdmission_Date);
                     OPD.Department = ddlDepartment;
-                    //OPD.Discount = Convert.ToDecimal(Discount);
+
                     decimal discountValue = 0;
                     if (!decimal.TryParse(Discount, out discountValue))
                     {
                         discountValue = 0;
                     }
                     OPD.Discount = discountValue;
-
 
                     if (ddlIssuance_Of == "001")
                     {
@@ -970,9 +1027,7 @@ namespace PMS
                         Room_Allocation Room = db.Room_Allocations.Where(w => w.Patient_ID == Patient_ID).FirstOrDefault();
                         if (Room != null)
                             Room.IsDischarge = true;
-                        
                     }
-                    //Adeel
                     else if (ddlIssuance_Of == "003")
                     {
                         OPD.Ward_ID = Convert.ToInt32(ddlWard_No);
@@ -989,19 +1044,15 @@ namespace PMS
                         Ward_Allocation ward = db.Ward_Allocations.Where(w => w.Patient_ID == Patient_ID).FirstOrDefault();
                         if (ward != null)
                             ward.IsDischarge = true;
-                       
-
                     }
-                    OPD.Health_Complaints = txtHealth_Complaints;
-                  
-                    OPD.Doctor = ddlDoctor;
 
+                    OPD.Health_Complaints = txtHealth_Complaints;
+                    OPD.Doctor = ddlDoctor;
                     OPD.patient_main_department = main_department;
-                    //packagae_type
                     OPD.packagae_type = packagetype;
-                    OPD.Package_Type_Id =  packagetypename;
+                    OPD.Package_Type_Id = packagetypename;
                     OPD.packagae_name = packagename;
-                    OPD.Package_Name_Id =  packagenamess;
+                    OPD.Package_Name_Id = packagenamess;
                     OPD.ipd_Procedure = ipdProcedures;
                     OPD.Procedure_Desc = proc_name;
                     OPD.Panel_Company = panelcompanys;
@@ -1024,7 +1075,80 @@ namespace PMS
                     OPD.InsuranceCardNo = InsuranceCardNo;
                     OPD.PolicyHolderName = PolicyHolderName;
                     OPD.Sehat_Card_Holder_CNIC = Sehat_Holder;
-                    
+
+                    // Birth Certificate Fields Assignment
+                    OPD.Birth_Child_Name = string.IsNullOrEmpty(BirthChildName) ? null : BirthChildName;
+                    OPD.Birth_Gender = string.IsNullOrEmpty(BirthGender) ? null : BirthGender;
+
+                    if (!string.IsNullOrEmpty(BirthDate))
+                    {
+                        try
+                        {
+                            OPD.Birth_Date = Convert.ToDateTime(BirthDate);
+                        }
+                        catch
+                        {
+                            OPD.Birth_Date = null;
+                        }
+                    }
+                    else
+                    {
+                        OPD.Birth_Date = null;
+                    }
+
+                    OPD.Birth_Time = string.IsNullOrEmpty(BirthTime) ? null : BirthTime;
+                    OPD.Birth_Place = string.IsNullOrEmpty(BirthPlace) ? null : BirthPlace;
+
+                    if (!string.IsNullOrEmpty(BirthWeight))
+                    {
+                        decimal weightValue;
+                        if (decimal.TryParse(BirthWeight, out weightValue))
+                        {
+                            OPD.Birth_Weight = weightValue;
+                        }
+                        else
+                        {
+                            OPD.Birth_Weight = null;
+                        }
+                    }
+
+                    OPD.Birth_Type = string.IsNullOrEmpty(BirthType) ? null : BirthType;
+                    OPD.Birth_Order = string.IsNullOrEmpty(BirthOrder) ? null : BirthOrder;
+                    OPD.Birth_Father_Name = string.IsNullOrEmpty(BirthFatherName) ? null : BirthFatherName;
+                    OPD.Birth_Father_CNIC = string.IsNullOrEmpty(BirthFatherCNIC) ? null : BirthFatherCNIC;
+                    OPD.Birth_Father_Occupation = string.IsNullOrEmpty(BirthFatherOccupation) ? null : BirthFatherOccupation;
+                    OPD.Birth_Father_Nationality = string.IsNullOrEmpty(BirthFatherNationality) ? null : BirthFatherNationality;
+                    OPD.Birth_Mother_Name = string.IsNullOrEmpty(BirthMotherName) ? null : BirthMotherName;
+                    OPD.Birth_Mother_CNIC = string.IsNullOrEmpty(BirthMotherCNIC) ? null : BirthMotherCNIC;
+                    OPD.Birth_Mother_Occupation = string.IsNullOrEmpty(BirthMotherOccupation) ? null : BirthMotherOccupation;
+                    OPD.Birth_Mother_Nationality = string.IsNullOrEmpty(BirthMotherNationality) ? null : BirthMotherNationality;
+                    OPD.Birth_Reg_Number = string.IsNullOrEmpty(BirthRegNumber) ? null : BirthRegNumber;
+
+                    if (!string.IsNullOrEmpty(BirthRegDate))
+                    {
+                        try
+                        {
+                            OPD.Birth_Reg_Date = Convert.ToDateTime(BirthRegDate);
+                        }
+                        catch
+                        {
+                            OPD.Birth_Reg_Date = null;
+                        }
+                    }
+                    else
+                    {
+                        OPD.Birth_Reg_Date = null;
+                    }
+
+                    OPD.Birth_Registrar = string.IsNullOrEmpty(BirthRegistrar) ? null : BirthRegistrar;
+                    OPD.Birth_Union_Council = string.IsNullOrEmpty(BirthUnionCouncil) ? null : BirthUnionCouncil;
+                    OPD.Birth_Address = string.IsNullOrEmpty(BirthAddress) ? null : BirthAddress;
+                    OPD.Birth_City = string.IsNullOrEmpty(BirthCity) ? null : BirthCity;
+                    OPD.Birth_Province = string.IsNullOrEmpty(BirthProvince) ? null : BirthProvince;
+                    OPD.Birth_Postal_Code = string.IsNullOrEmpty(BirthPostalCode) ? null : BirthPostalCode;
+                    OPD.Birth_Religion = string.IsNullOrEmpty(BirthReligion) ? null : BirthReligion;
+                    OPD.Birth_Attendant = string.IsNullOrEmpty(BirthAttendant) ? null : BirthAttendant;
+                    OPD.Birth_Remarks = string.IsNullOrEmpty(BirthRemarks) ? null : BirthRemarks;
 
                     if (btnsave == "Save")
                     {
@@ -1033,37 +1157,12 @@ namespace PMS
                         OPD.Created_Time = DateTime.Now;
                         OPD.Company_ID = AppConfig.Company_ID;
                         db.In_Patients.InsertOnSubmit(OPD);
-
-                        //// SMS Configration
-                        //string ward = (from tbl in db.Ward_Definitions
-                        //               where tbl.Ward_ID == Convert.ToInt32(ddlWard_No)
-                        //               select tbl.Ward_No).FirstOrDefault();
-                        //string SMS_Contant = "عارف میموریل ہسپتال پراعتماد کرنےکا شکریہ۔ آپکاداخلہ " + ward + " میں تجویز ہوا ہے-شکایات کیصورت میں اس نمبر پر رابطہ کریں۔ 03138458018";
-
-
-
-                        //string msg = "";
-                        //string DocumentName = "InPatientAdmission";
-                        ////string CellNumber = txtMobile1.Text;
-                        //string CellNumber = (from tbl in db.Reg_patients
-                        //                     where tbl.pat_id == Patient_ID
-                        //                     select tbl.Mobile1).FirstOrDefault();
-
-                        //var Patientno = (from tbl in db.Reg_patients
-                        //                     where tbl.pat_id == Patient_ID
-                        //                     select tbl.Patient_No).FirstOrDefault();
-
-                        //bool Send_Status = DBClass.sendSMS(CellNumber, SMS_Contant, out msg, DocumentName, Convert.ToString(Patientno));
-
-                        // SMS Configration End
                     }
 
                     db.SubmitChanges();
 
                     if (OPD.In_Patient_ID > 0)
                     {
-
-                        
                         if (ddlIssuance_Of == "001")
                         {
                             List<Ward_Allocation> wlist = db.Ward_Allocations.Where(p => p.InPatient_ID == "0").ToList();
@@ -1093,45 +1192,54 @@ namespace PMS
                                 med.In_Patient_ID = OPD.In_Patient_ID;
                             }
                         }
+
                         /***********Setting 0 Inpatient id inserted medicine to current In patient id****************/
                         List<In_Patient_Medicine> list = db.In_Patient_Medicines.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").ToList();
                         foreach (In_Patient_Medicine med in list)
                         {
                             med.Patient_ID = OPD.In_Patient_ID;
                         }
+
                         /***********Setting 0 Inpatient id inserted Instruction to current In patient id****************/
                         List<InPatient_Instruction> Inslist = db.InPatient_Instructions.Where(p => p.In_Patient_ID == 0).ToList();
                         foreach (InPatient_Instruction Ins in Inslist)
                         {
                             Ins.In_Patient_ID = OPD.In_Patient_ID;
                         }
+
                         List<InPatient_Doctor_Note> DOclist = db.InPatient_Doctor_Notes.Where(p => p.In_Patient_ID == 0).ToList();
                         foreach (InPatient_Doctor_Note DOd in DOclist)
                         {
                             DOd.In_Patient_ID = OPD.In_Patient_ID;
                         }
+
                         List<Lab_Resultrpt> lablist = db.Lab_Resultrpts.Where(p => p.In_Patient_ID == 0).ToList();
                         foreach (Lab_Resultrpt DOd in lablist)
                         {
                             DOd.In_Patient_ID = OPD.In_Patient_ID;
                         }
+
                         /***********Setting 0 Inpatient id inserted eyes to current In patient id****************/
                         List<PMS.EyeDetail> eyelist = db.EyeDetails.Where(t => t.TransactionType == "InPatient" && t.TransactionID == 0).ToList();
                         foreach (PMS.EyeDetail eye in eyelist)
                         {
                             eye.TransactionID = OPD.In_Patient_ID;
                         }
+
                         /***********Setting 0 patient id inserted test to current In patient id****************/
                         Laboratory_Test test = db.Laboratory_Tests.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "InPatient").FirstOrDefault();
                         if (test != null)
                             test.Patient_ID = OPD.In_Patient_ID;
+
                         var INPATID = OPD.In_Patient_ID;
+
                         /***********Setting 0 patient id inserted Ortho to current out patient id****************/
                         List<PMS.Ortho> ortholist = db.Orthos.Where(t => t.Patient_Type == "InPatient" && t.Transaction_ID == 0).ToList();
                         foreach (PMS.Ortho orth in ortholist)
                         {
                             orth.Transaction_ID = OPD.In_Patient_ID;
                         }
+
                         db.SubmitChanges();
                     }
                     else
@@ -1141,21 +1249,19 @@ namespace PMS
 
                     InPatientID = OPD.In_Patient_ID;
                 }
-
                 catch (Exception ex)
                 {
                     if (OPD.In_Patient_ID == 0)
                     {
                         RemoveWardAndRooms_Allocation(txtBed_No, ddlRoom_No, Patient_ID, db);
                     }
-
                     throw ex;
                 }
+
                 DBClass.executeNonQueryWithoutBegin("delete from Room_Allocation where Patient_ID not in (select Patient_ID from In_Patient)");
                 DBClass.executeNonQueryWithoutBegin("delete from Ward_Allocation where Patient_ID not in (select Patient_ID from In_Patient)");
                 return InPatientID.ToString();
             }
-
         }
 
 
@@ -5274,6 +5380,86 @@ namespace PMS
                               join ds in db.ValueSets
                               on dv.ValueSet_ID equals ds.ValueSet_ID
                               where ds.ValueSet_Name == "Gender"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetBirthType()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Birth Type"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetProvince()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Province"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetNationality()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Nationality"
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
+        [WebMethod]
+        public static string GetReligion()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Religion"
                               select new
                               {
                                   dv.DataValue_Name,

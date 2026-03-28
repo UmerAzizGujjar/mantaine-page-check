@@ -5895,48 +5895,37 @@ namespace PMS
             {
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    // Get all billing records for this inpatient
+                    // Get billing records based on final bill existence
                     var billingRecords = (from b in db.Ar_Billings
                                           where b.In_Patient_ID == InPatientID
                                           select b).ToList();
+
+                    // Check if any final bill exists
+                    bool hasFinalBill = billingRecords.Any(b => b.final_bill_ipd == true);
+
+                    // Filter records based on scenario
+                    var filteredBillingRecords = hasFinalBill
+                        ? billingRecords.Where(b => b.final_bill_ipd == true).ToList()
+                        : billingRecords.Where(b => b.final_bill_ipd == false || b.final_bill_ipd == null).ToList();
 
                     // Get all advance records for this inpatient
                     var advanceRecords = (from a in db.AR_Advances
                                           where a.In_Patient_ID == InPatientID
                                           select a).ToList();
 
-                    decimal totalBillAmount = 0;
-                    decimal totalReceivedAmount = 0;
-                    decimal totalDiscountAmount = 0;
-                    decimal totalAdvanceAmount = 0;
+                    decimal totalBillAmount = filteredBillingRecords.Sum(b => b.Total_Amount ?? 0);
+                    decimal totalReceivedAmount = filteredBillingRecords.Sum(b => b.Received_Amount ?? 0);
+                    decimal totalDiscountAmount = filteredBillingRecords.Sum(b => b.Discount_Amount ?? 0);
+                    decimal totalAdvanceAmount = advanceRecords.Sum(a => a.Advance_Amount ?? 0);
 
-                    // Calculate totals from billing
-                    if (billingRecords != null && billingRecords.Any())
-                    {
-                        totalBillAmount = billingRecords.Sum(b => b.Total_Amount ?? 0);
-                        totalReceivedAmount = billingRecords.Sum(b => b.Received_Amount ?? 0);
-                        totalDiscountAmount = billingRecords.Sum(b => b.Discount_Amount ?? 0);
-                    }
-
-                    // Calculate total advance amount
-                    if (advanceRecords != null && advanceRecords.Any())
-                    {
-                        totalAdvanceAmount = advanceRecords.Sum(a => a.Advance_Amount ?? 0);
-                    }
-
-                    // Calculate pending balance: Total Bill - (Received + Discount + Advance)
+                    // Calculate pending balance
                     decimal pendingBalance = totalBillAmount - (totalReceivedAmount + totalDiscountAmount + totalAdvanceAmount);
 
-                    // If pending balance is negative, set to 0
-                    if (pendingBalance < 0)
-                        pendingBalance = 0;
-
-                    return pendingBalance.ToString("F2");
+                    return (pendingBalance < 0 ? 0 : pendingBalance).ToString("F2");
                 }
             }
             catch (Exception ex)
             {
-                // Log the error if needed
                 return "0";
             }
         }

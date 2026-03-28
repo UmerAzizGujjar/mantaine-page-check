@@ -821,6 +821,23 @@ namespace PMS
                     }
                     Response.Write("[" + result + "]");
                 }
+                else if (Request.QueryString["Table"] == "In_Patients_discharge")
+                {
+                    string sqlQuery;
+                    if (Request.QueryString["q"] != null)
+                        sqlQuery = "Select top 1 pat_id as Patient_ID, mr_no_sequence as  Patient_No from Reg_patient rg inner join In_Patient ipd  on rg.pat_id=ipd.Patient_ID Where mr_no_sequence = '" + Request.QueryString["q"].ToString() + "' and isnull(ipd.Discharge,0)=0 order by rg.Created_time desc";
+                    else
+                        sqlQuery = "Select distinct pat_id as Patient_ID, mr_no_sequence as Patient_No from Reg_patient rg inner join In_Patient ipd on rg.pat_id = ipd.Patient_ID where ISNULL(ipd.Discharge,0)=0 order by rg.Created_time desc";
+
+                    string result = "";
+                    DataTable dt = DBClass.getDataTable(sqlQuery);
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        result += (result == "") ? "" : ",";
+                        result += @"{""id"":""" + dr["Patient_ID"].ToString() + @""",""name"": """ + dr["Patient_No"].ToString() + @"""}";
+                    }
+                    Response.Write("[" + result + "]");
+                }
                 else if (Request.QueryString["Table"] == "PatientsForPharmacy")
                 {
                     string sqlQuery;

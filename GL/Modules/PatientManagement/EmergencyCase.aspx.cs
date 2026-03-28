@@ -2713,6 +2713,8 @@ namespace PMS
                                              where tbl.pat_id == Patient_ID
                                              select tbl.Mobile1).FirstOrDefault();
 
+                        DBClass.executeNonQueryWithoutBegin("UPDATE Emergency SET Admitted_Status = 'Discharged' WHERE Emer_id = " + OPD.Emergency_ID);
+
                     }
                     OPD.Discharge = chkdischarge;
 
@@ -5455,148 +5457,121 @@ namespace PMS
                 Ward_Allocation ward_aloct;
                 DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
+                int patIdInt = Convert.ToInt32(PatID);
+                int emerIdInt = Convert.ToInt32(EmergencyID);
+                int wardIdInt = (string.IsNullOrEmpty(ddlWard_No) || ddlWard_No == "0") ? 0 : Convert.ToInt32(ddlWard_No);
+                int bedNoInt = (string.IsNullOrEmpty(txtBed_No)) ? 0 : Convert.ToInt32(txtBed_No);
+                int docIdInt = (string.IsNullOrEmpty(ddlDoctor)) ? 0 : Convert.ToInt32(ddlDoctor);
+
                 if (btnsave == "Update")
                 {
-                    ward_aloct = db.Ward_Allocations.Where(w => w.EmergencyID == Convert.ToInt32(EmergencyID)
-                        && w.Patient_ID == Convert.ToInt32(PatID)
-                        && w.Ward_ID == Convert.ToInt32(ddlWard_No)
-                        && w.Bed_No_Assigned == Convert.ToInt32(txtBed_No)
-                        ).FirstOrDefault();
+                    ward_aloct = db.Ward_Allocations.FirstOrDefault(w =>
+                        w.EmergencyID == emerIdInt &&
+                        w.Patient_ID == patIdInt &&
+                        w.IsDischarge == false);
 
-                    if (ward_aloct != null && DichargChk != true) 
+                    if (ward_aloct != null)
                     {
-                        ward_aloct.Updated_By = AppConfig.UserID;
-                        ward_aloct.Updated_Time = DateTime.Now;
-                    }
-                    else if (ward_aloct != null && DichargChk == true)
-                    {
-                        ward_aloct.Updated_By = AppConfig.UserID;
-                        ward_aloct.Updated_Time = DateTime.Now;
-                        ward_aloct.IsDischarge = true;
-                    }
-
-                    else
-                    {
-                        ward_aloct = (from tbl in db.Ward_Allocations
-                                      where tbl.EmergencyID == Convert.ToInt32(EmergencyID) && tbl.Patient_ID == Convert.ToInt32(PatID)
-                                       && tbl.IsDischarge == false
-                                      select tbl).FirstOrDefault();
-                        if (ward_aloct != null)
+                        if (wardIdInt > 0)
                         {
-                            ward_aloct.IsDischarge = true;
-                            ward_aloct = new Ward_Allocation();
-                            ward_aloct.Created_By = AppConfig.UserID;
-                            ward_aloct.Created_Time = DateTime.Now;
-                            ward_aloct.Book_ID = AppConfig.Book_ID;
-                            ward_aloct.Company_ID = AppConfig.Company_ID;
-                            ward_aloct.From_TimeDate = Convert.ToDateTime(DateTime.Now);
-                            ward_aloct.EmergencyID = Convert.ToInt32(EmergencyID);
-                            ward_aloct.Patient_ID = Convert.ToInt32(PatID);
-                            ward_aloct.Ward_ID = Convert.ToInt32(ddlWard_No);
-                            ward_aloct.Bed_No_Assigned = Convert.ToInt32(txtBed_No);
-                            ward_aloct.Doctor_Assigned = Convert.ToInt32(ddlDoctor);
-                            ward_aloct.IsDischarge = false;
-                            db.Ward_Allocations.InsertOnSubmit(ward_aloct);
-
-                            if (DichargChk == true)
-                            {
-                                ward_aloct.IsDischarge = true;
-                            }
+                            ward_aloct.Ward_ID = wardIdInt;
+                        }
+                        if (bedNoInt > 0)
+                        {
+                            ward_aloct.Bed_No_Assigned = bedNoInt;
                         }
 
+                        if (docIdInt > 0)
+                        {
+                            ward_aloct.Doctor_Assigned = docIdInt;
+                        }
+
+                        if (DichargChk)
+                        {
+                            ward_aloct.IsDischarge = true;
+                            ward_aloct.To_TimeDate = DateTime.Now;
+                        }
+
+                        ward_aloct.Updated_By = AppConfig.UserID;
+                        ward_aloct.Updated_Time = DateTime.Now;
+                    }
+                    else
+                    {
+                        return "Success";
                     }
                 }
                 else if (btnsave == "Save")
                 {
+                    ward_aloct = db.Ward_Allocations.FirstOrDefault(w =>
+                        w.Ward_ID == wardIdInt &&
+                        w.EmergencyID == emerIdInt &&
+                        w.Patient_ID == patIdInt &&
+                        w.Bed_No_Assigned == bedNoInt &&
+                        w.IsDischarge == false);
 
-                    ward_aloct = (from tbl in db.Ward_Allocations
-                                  where tbl.Ward_ID == Convert.ToInt32(ddlWard_No)
-                                   && tbl.EmergencyID == Convert.ToInt32(EmergencyID) && tbl.Patient_ID == Convert.ToInt32(PatID)
-                                   && tbl.Bed_No_Assigned == Convert.ToInt32(txtBed_No) && tbl.IsDischarge == false
-                                  select tbl).FirstOrDefault();
                     if (ward_aloct == null)
                     {
-                        ward_aloct = new Ward_Allocation();
+                        var PreviousWardHistory = db.Ward_Allocations
+                            .Where(w => w.EmergencyID == emerIdInt && w.Patient_ID == patIdInt && w.IsDischarge == false)
+                            .ToList();
 
+                        foreach (var ward in PreviousWardHistory)
+                        {
+                            ward.IsDischarge = true;
+                            ward.To_TimeDate = DateTime.Now;
+                        }
+                        var DuplicateBed = db.Ward_Allocations
+                            .FirstOrDefault(w => w.Ward_ID == wardIdInt
+                                && w.EmergencyID != emerIdInt
+                                && w.Patient_ID != patIdInt
+                                && w.Bed_No_Assigned == bedNoInt
+                                && w.IsDischarge == false);
+
+                        if (DuplicateBed != null)
+                        {
+                            DuplicateBed.IsDischarge = true;
+                            DuplicateBed.To_TimeDate = DateTime.Now;
+                        }
+                        ward_aloct = new Ward_Allocation();
                         ward_aloct.Created_By = AppConfig.UserID;
                         ward_aloct.Created_Time = DateTime.Now;
                         ward_aloct.Book_ID = AppConfig.Book_ID;
                         ward_aloct.Company_ID = AppConfig.Company_ID;
-                        ward_aloct.From_TimeDate = Convert.ToDateTime(DateTime.Now);
+                        ward_aloct.From_TimeDate = DateTime.Now;
+                        ward_aloct.EmergencyID = emerIdInt;
+                        ward_aloct.Patient_ID = patIdInt;
+                        ward_aloct.Ward_ID = wardIdInt;
+                        ward_aloct.Bed_No_Assigned = bedNoInt;
+                        ward_aloct.Doctor_Assigned = docIdInt;
+                        ward_aloct.IsDischarge = DichargChk;
+
                         db.Ward_Allocations.InsertOnSubmit(ward_aloct);
-                        var PreviousWardHistory = (from tbl in db.Ward_Allocations
-                                                   join inpat in db.Emergency_Patients
-                                                   on tbl.EmergencyID equals inpat.Emergency_ID
-                                                   where tbl.EmergencyID == Convert.ToInt32(EmergencyID) && tbl.Patient_ID == Convert.ToInt32(PatID)
-                                               && tbl.IsDischarge == false
-                                                   select tbl).ToList();
-                        if (PreviousWardHistory.Count != 0)
-                        {
-
-                            foreach (var ward in PreviousWardHistory)
-                            {
-                                ward.IsDischarge = true;
-                                ward.To_TimeDate = Convert.ToDateTime(DateTime.Now);
-                            }
-                        }
-                        var DuplicateBed = (from tbl in db.Ward_Allocations
-                                            where tbl.Ward_ID == Convert.ToInt32(ddlWard_No)
-                               && tbl.EmergencyID != Convert.ToInt32(EmergencyID) && tbl.Patient_ID != Convert.ToInt32(PatID)
-                               && tbl.Bed_No_Assigned == Convert.ToInt32(txtBed_No) && tbl.IsDischarge == false
-                                            select tbl).FirstOrDefault();
-                        if (DuplicateBed != null)
-                        {
-                            DuplicateBed.IsDischarge = true;
-                            DuplicateBed.To_TimeDate = Convert.ToDateTime(DateTime.Now);
-                        }
-                        if (btnsave != "Update")
-                        {
-
-                            ward_aloct.EmergencyID = DBClass.getMaxEntry_No("Emergency_Patient", "Emergency_ID");
-                        }
-                       
                     }
                     else
                     {
-
                         ward_aloct.Updated_By = AppConfig.UserID;
                         ward_aloct.Updated_Time = DateTime.Now;
+                        if (DichargChk)
+                        {
+                            ward_aloct.IsDischarge = true;
+                            ward_aloct.To_TimeDate = DateTime.Now;
+                        }
                     }
-                    ward_aloct.Patient_ID = Convert.ToInt32(PatID);
-                    ward_aloct.Ward_ID = Convert.ToInt32(ddlWard_No);
-                    ward_aloct.Bed_No_Assigned = Convert.ToInt32(txtBed_No);
-
-                    ward_aloct.Doctor_Assigned = Convert.ToInt32(ddlDoctor);
-                    if (DichargChk == true)
-                    {
-                        ward_aloct.IsDischarge = true;
-                    }
-                    else
-                    {
-                        ward_aloct.IsDischarge = false;
-                    }
-                   
                 }
 
                 db.SubmitChanges();
-                var records = (from tbl in db.Ward_Allocations
-                               where
-                  tbl.EmergencyID == Convert.ToInt32(EmergencyID) &&
-                   tbl.IsDischarge == false
-                               select tbl).ToList();
-                if (DichargChk == true)
+
+                if (DichargChk)
                 {
-                    if (records.Count > 0)
-                    {
-                        DBClass.executeNonQueryWithoutBegin("update Ward_Allocation set IsDischarge=1 where emergencyid=" + EmergencyID);
-                    }
+                    DBClass.executeNonQueryWithoutBegin("UPDATE Ward_Allocation SET IsDischarge=1, To_TimeDate=GETDATE() WHERE EmergencyID=" + EmergencyID);
                 }
+
+                return "Success";
             }
             catch (Exception ex)
             {
-                throw;
+                return "Error: " + ex.Message;
             }
-            return "";
         }
 
         [WebMethod]
