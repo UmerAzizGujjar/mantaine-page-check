@@ -7631,52 +7631,59 @@ namespace PMS
                 //        ddloprators.DataBind();
                 //    }
                 //}
-                if (PageTitle == "Doctotr_Receipts")
-                {
-                    string x = "Doctor Receipts";
-                    Master.Label2.Text = x;
-                    Master.GetMenuName();
-                    DateDiv.Visible = true;
-                    Time_Row.Visible = true;
-                    dpROw.Visible = true;
-                    object valusets;
-                    valusets = DBClass.GetValueSet("Patient Main Category");
-                    ddlDepartments.DataSource = valusets;
-                    ddlDepartments.DataTextField = "DataValue_Description";
-                    ddlDepartments.DataValueField = "DataValue_Name";
-                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
-                    ddlDepartments.DataBind();
+                //if (PageTitle == "Doctotr_Receipts")
+                //{
+                //    string x = "Doctor Receipts";
+                //    Master.Label2.Text = x;
+                //    Master.GetMenuName();
+                //    tr_Export.Visible = true;
+                //    tr_AllPatientRecord.Visible = true;
+                //    DateDiv.Visible = true;
+                //    Time_Row.Visible = true;
+                //    dpROw.Visible = true;
 
-                    valusets = DBClass.GetValueSet("Patient Type");
-                    ddlPatientType.DataSource = valusets;
-                    ddlPatientType.DataTextField = "DataValue_Description";
-                    ddlPatientType.DataValueField = "DataValue_Name";
-                    ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
-                    ddlPatientType.DataBind();
+                //    object valusets;
+                //    valusets = DBClass.GetValueSet("Patient Main Category");
+                //    ddlDepartments.DataSource = valusets;
+                //    ddlDepartments.DataTextField = "DataValue_Description";
+                //    ddlDepartments.DataValueField = "DataValue_Name";
+                //    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                //    ddlDepartments.DataBind();
+
+                //    valusets = DBClass.GetValueSet("Patient Type");
+                //    ddlPatientType.DataSource = valusets;
+                //    ddlPatientType.DataTextField = "DataValue_Description";
+                //    ddlPatientType.DataValueField = "DataValue_Name";
+                //    ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                //    ddlPatientType.DataBind();
 
 
 
-                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
-                    ddlDoctor.DataSource = dt;
-                    ddlDoctor.DataValueField = "Emp_ID";
-                    ddlDoctor.DataTextField = "Emp_Name";
-                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
-                    ddlDoctor.DataBind();
-                    lblMultiSelect.Visible = false;
-                    trDoctor.Visible = true;
-                    if (AllowPatientRecord)
-                    {
-                        optRw.Visible = true;
-                        DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                        valusets = from d in db.aspnet_Users
-                                   select new { d.UserName, d.UserId };
-                        ddloprators.DataSource = valusets;
-                        ddloprators.DataTextField = "UserName";
-                        ddloprators.DataValueField = "UserId";
-                        ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                        ddloprators.DataBind();
-                    }
-                }
+                //    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                //    ddlDoctor.DataSource = dt;
+                //    ddlDoctor.DataValueField = "Emp_ID";
+                //    ddlDoctor.DataTextField = "Emp_Name";
+                //    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                //    ddlDoctor.DataBind();
+                //    lblMultiSelect.Visible = false;
+                //    trDoctor.Visible = true;
+                //    if (AllowPatientRecord)
+                //    {
+                //        optRw.Visible = true;
+                //        DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                //        valusets = from d in db.aspnet_Users
+                //                   select new { d.UserName, d.UserId };
+                //        ddloprators.DataSource = valusets;
+                //        ddloprators.DataTextField = "UserName";
+                //        ddloprators.DataValueField = "UserId";
+                //        ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                //        ddloprators.DataBind();
+                //        lbShift.Visible = false;
+                //        ddlShift.Visible = false;
+                //    }
+
+
+                //}
                 if (PageTitle == "AllCash_Report")
                 {
                     string x = "All Cash Report";
@@ -7725,6 +7732,68 @@ namespace PMS
                     ddlShift.DataTextField = "Shift_Name";
                     ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
                     ddlShift.DataBind();
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = true;
+
+                    optRw.Visible = true;
+
+                    if (AllowPatientRecord)
+                    {
+                        optRw.Visible = true;
+                        DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                        valusets = from d in db.aspnet_Users
+                                   select new { d.UserName, d.UserId };
+                        ddloprators.DataSource = valusets;
+                        ddloprators.DataTextField = "UserName";
+                        ddloprators.DataValueField = "UserId";
+                        ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                        ddloprators.DataBind();
+                    }
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = true;
+                }
+                if (PageTitle == "Doctotr_Receipts")
+                {
+                    string x = "Doctor Wise Patients";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Main Category");
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlDepartments.DataBind();
+                    dpROw.Visible = true;
+                    tr_Summary.Visible = true;
+                    tr_Export.Visible = true;
+                    tr_AllPatientRecord.Visible = true;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    ddlShift.Visible = true;   //turned it on
+                    lbShift.Visible = true;    //turned it on
+                    valusets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlPatientType.DataBind();
+
+                    DataTable shift = DBClass.getDataTable("select * from HR_Shifts");
+                    ddlShift.DataSource = shift;
+                    ddlShift.DataValueField = "Shift_ID";
+                    ddlShift.DataTextField = "Shift_Name";
+                    ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
+                    ddlShift.DataBind();
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
 
                     DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
                     ddlDoctor.DataSource = dt;
