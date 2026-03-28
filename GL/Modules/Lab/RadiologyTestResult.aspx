@@ -1501,6 +1501,20 @@
                 $('#<%= vPatient_Category.ClientID %>').text(data.d.Patient_Category);
                 $('#<%= vLbl_Location.ClientID %>').text(data.d.Location);
 
+                $("#ctl00_MainContent_txtPatient_ID").tokenInput('clear');
+                var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + data.d.Patient_No);
+
+                if (tokendata && JSON.parse(tokendata).length > 0) {
+                    var patientData = JSON.parse(tokendata)[0];
+                    $('#ctl00_MainContent_txtPatient_ID').tokenInput("add", {
+                        id: patientData.id,
+                        name: patientData.name
+                    });
+                    $("#hdnPatient_ID").val(patientData.id);
+                }
+
+               
+
                 GetLabDetailAgainstBill();
                 
             }
