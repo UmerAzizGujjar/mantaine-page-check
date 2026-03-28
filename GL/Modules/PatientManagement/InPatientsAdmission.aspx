@@ -7562,6 +7562,11 @@ function fillNationality(callback) {
                 </div>
             </div>
         </div>
+                        <div class="row">
+
+                            <input value="Genrate" id="genrateCerti" type="button" onclick="GenrateCertificate"/>
+
+                        </div>
     </div>
 </div>
 </div>
