@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NoorHospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -1270,18 +1270,6 @@
       <Column Name="Lab_Test_Multiple_Value_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Test_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
       <Column Name="Value" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Test_Image" Member="Test_Images">
-    <Type Name="Test_Image">
-      <Column Name="Image_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Lab_Test_Detail_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Test_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Image_path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Parent_Transaction_Type_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Parent_Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Lab_Test_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Image_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Out_Patient_Eye_Info" Member="Out_Patient_Eye_Infos">
@@ -7492,6 +7480,21 @@
       <Column Name="Birth_Attendant" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Column Name="Birth_Remarks" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="GenrateBirthCertificate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Test_Image" Member="Test_Images">
+    <Type Name="Test_Image">
+      <Column Name="Image_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Lab_Test_Detail_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Test_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Image_path" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Parent_Transaction_Type_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Parent_Transaction_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Lab_Test_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Image_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="IsCancel" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cancel_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Cancel_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

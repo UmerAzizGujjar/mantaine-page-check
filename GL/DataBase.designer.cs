@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "NoorHospital")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "National_Hospital")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -285,9 +285,6 @@ namespace PMS
         partial void InsertLab_Test_Multiple_Value(Lab_Test_Multiple_Value instance);
         partial void UpdateLab_Test_Multiple_Value(Lab_Test_Multiple_Value instance);
         partial void DeleteLab_Test_Multiple_Value(Lab_Test_Multiple_Value instance);
-        partial void InsertTest_Image(Test_Image instance);
-        partial void UpdateTest_Image(Test_Image instance);
-        partial void DeleteTest_Image(Test_Image instance);
         partial void InsertOut_Patient_Eye_Info(Out_Patient_Eye_Info instance);
         partial void UpdateOut_Patient_Eye_Info(Out_Patient_Eye_Info instance);
         partial void DeleteOut_Patient_Eye_Info(Out_Patient_Eye_Info instance);
@@ -951,12 +948,17 @@ namespace PMS
         partial void InsertIn_Patient(In_Patient instance);
         partial void UpdateIn_Patient(In_Patient instance);
         partial void DeleteIn_Patient(In_Patient instance);
+        partial void InsertTest_Image(Test_Image instance);
+        partial void UpdateTest_Image(Test_Image instance);
+        partial void DeleteTest_Image(Test_Image instance);
         #endregion
+
         public DataBaseDataContext() :
-        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -1690,14 +1692,6 @@ namespace PMS
             get
             {
                 return this.GetTable<Lab_Test_Multiple_Value>();
-            }
-        }
-
-        public System.Data.Linq.Table<Test_Image> Test_Images
-        {
-            get
-            {
-                return this.GetTable<Test_Image>();
             }
         }
 
@@ -3466,6 +3460,14 @@ namespace PMS
             get
             {
                 return this.GetTable<In_Patient>();
+            }
+        }
+
+        public System.Data.Linq.Table<Test_Image> Test_Images
+        {
+            get
+            {
+                return this.GetTable<Test_Image>();
             }
         }
 
@@ -30698,236 +30700,6 @@ namespace PMS
                     this._Value = value;
                     this.SendPropertyChanged("Value");
                     this.OnValueChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Test_Image")]
-    public partial class Test_Image : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Image_ID;
-
-        private System.Nullable<int> _Lab_Test_Detail_ID;
-
-        private System.Nullable<int> _Test_ID;
-
-        private string _Image_path;
-
-        private System.Nullable<int> _Parent_Transaction_Type_ID;
-
-        private string _Parent_Transaction_Type;
-
-        private System.Nullable<int> _Lab_Test_ID;
-
-        private System.Nullable<long> _Image_No;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnImage_IDChanging(int value);
-        partial void OnImage_IDChanged();
-        partial void OnLab_Test_Detail_IDChanging(System.Nullable<int> value);
-        partial void OnLab_Test_Detail_IDChanged();
-        partial void OnTest_IDChanging(System.Nullable<int> value);
-        partial void OnTest_IDChanged();
-        partial void OnImage_pathChanging(string value);
-        partial void OnImage_pathChanged();
-        partial void OnParent_Transaction_Type_IDChanging(System.Nullable<int> value);
-        partial void OnParent_Transaction_Type_IDChanged();
-        partial void OnParent_Transaction_TypeChanging(string value);
-        partial void OnParent_Transaction_TypeChanged();
-        partial void OnLab_Test_IDChanging(System.Nullable<int> value);
-        partial void OnLab_Test_IDChanged();
-        partial void OnImage_NoChanging(System.Nullable<long> value);
-        partial void OnImage_NoChanged();
-        #endregion
-
-        public Test_Image()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Image_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Image_ID
-        {
-            get
-            {
-                return this._Image_ID;
-            }
-            set
-            {
-                if ((this._Image_ID != value))
-                {
-                    this.OnImage_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Image_ID = value;
-                    this.SendPropertyChanged("Image_ID");
-                    this.OnImage_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Lab_Test_Detail_ID", DbType = "Int")]
-        public System.Nullable<int> Lab_Test_Detail_ID
-        {
-            get
-            {
-                return this._Lab_Test_Detail_ID;
-            }
-            set
-            {
-                if ((this._Lab_Test_Detail_ID != value))
-                {
-                    this.OnLab_Test_Detail_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Lab_Test_Detail_ID = value;
-                    this.SendPropertyChanged("Lab_Test_Detail_ID");
-                    this.OnLab_Test_Detail_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_ID", DbType = "Int")]
-        public System.Nullable<int> Test_ID
-        {
-            get
-            {
-                return this._Test_ID;
-            }
-            set
-            {
-                if ((this._Test_ID != value))
-                {
-                    this.OnTest_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Test_ID = value;
-                    this.SendPropertyChanged("Test_ID");
-                    this.OnTest_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Image_path", DbType = "VarChar(MAX)")]
-        public string Image_path
-        {
-            get
-            {
-                return this._Image_path;
-            }
-            set
-            {
-                if ((this._Image_path != value))
-                {
-                    this.OnImage_pathChanging(value);
-                    this.SendPropertyChanging();
-                    this._Image_path = value;
-                    this.SendPropertyChanged("Image_path");
-                    this.OnImage_pathChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Parent_Transaction_Type_ID", DbType = "Int")]
-        public System.Nullable<int> Parent_Transaction_Type_ID
-        {
-            get
-            {
-                return this._Parent_Transaction_Type_ID;
-            }
-            set
-            {
-                if ((this._Parent_Transaction_Type_ID != value))
-                {
-                    this.OnParent_Transaction_Type_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Parent_Transaction_Type_ID = value;
-                    this.SendPropertyChanged("Parent_Transaction_Type_ID");
-                    this.OnParent_Transaction_Type_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Parent_Transaction_Type", DbType = "VarChar(50)")]
-        public string Parent_Transaction_Type
-        {
-            get
-            {
-                return this._Parent_Transaction_Type;
-            }
-            set
-            {
-                if ((this._Parent_Transaction_Type != value))
-                {
-                    this.OnParent_Transaction_TypeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Parent_Transaction_Type = value;
-                    this.SendPropertyChanged("Parent_Transaction_Type");
-                    this.OnParent_Transaction_TypeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Lab_Test_ID", DbType = "Int")]
-        public System.Nullable<int> Lab_Test_ID
-        {
-            get
-            {
-                return this._Lab_Test_ID;
-            }
-            set
-            {
-                if ((this._Lab_Test_ID != value))
-                {
-                    this.OnLab_Test_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Lab_Test_ID = value;
-                    this.SendPropertyChanged("Lab_Test_ID");
-                    this.OnLab_Test_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Image_No", DbType = "BigInt")]
-        public System.Nullable<long> Image_No
-        {
-            get
-            {
-                return this._Image_No;
-            }
-            set
-            {
-                if ((this._Image_No != value))
-                {
-                    this.OnImage_NoChanging(value);
-                    this.SendPropertyChanging();
-                    this._Image_No = value;
-                    this.SendPropertyChanged("Image_No");
-                    this.OnImage_NoChanged();
                 }
             }
         }
@@ -167355,6 +167127,308 @@ namespace PMS
                     this._GenrateBirthCertificate = value;
                     this.SendPropertyChanged("GenrateBirthCertificate");
                     this.OnGenrateBirthCertificateChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Test_Image")]
+    public partial class Test_Image : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Image_ID;
+
+        private System.Nullable<int> _Lab_Test_Detail_ID;
+
+        private System.Nullable<int> _Test_ID;
+
+        private string _Image_path;
+
+        private System.Nullable<int> _Parent_Transaction_Type_ID;
+
+        private string _Parent_Transaction_Type;
+
+        private System.Nullable<int> _Lab_Test_ID;
+
+        private System.Nullable<long> _Image_No;
+
+        private System.Nullable<bool> _IsCancel;
+
+        private System.Nullable<System.Guid> _Cancel_By;
+
+        private System.Nullable<System.DateTime> _Cancel_Time;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnImage_IDChanging(int value);
+        partial void OnImage_IDChanged();
+        partial void OnLab_Test_Detail_IDChanging(System.Nullable<int> value);
+        partial void OnLab_Test_Detail_IDChanged();
+        partial void OnTest_IDChanging(System.Nullable<int> value);
+        partial void OnTest_IDChanged();
+        partial void OnImage_pathChanging(string value);
+        partial void OnImage_pathChanged();
+        partial void OnParent_Transaction_Type_IDChanging(System.Nullable<int> value);
+        partial void OnParent_Transaction_Type_IDChanged();
+        partial void OnParent_Transaction_TypeChanging(string value);
+        partial void OnParent_Transaction_TypeChanged();
+        partial void OnLab_Test_IDChanging(System.Nullable<int> value);
+        partial void OnLab_Test_IDChanged();
+        partial void OnImage_NoChanging(System.Nullable<long> value);
+        partial void OnImage_NoChanged();
+        partial void OnIsCancelChanging(System.Nullable<bool> value);
+        partial void OnIsCancelChanged();
+        partial void OnCancel_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCancel_ByChanged();
+        partial void OnCancel_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCancel_TimeChanged();
+        #endregion
+
+        public Test_Image()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Image_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Image_ID
+        {
+            get
+            {
+                return this._Image_ID;
+            }
+            set
+            {
+                if ((this._Image_ID != value))
+                {
+                    this.OnImage_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Image_ID = value;
+                    this.SendPropertyChanged("Image_ID");
+                    this.OnImage_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Lab_Test_Detail_ID", DbType = "Int")]
+        public System.Nullable<int> Lab_Test_Detail_ID
+        {
+            get
+            {
+                return this._Lab_Test_Detail_ID;
+            }
+            set
+            {
+                if ((this._Lab_Test_Detail_ID != value))
+                {
+                    this.OnLab_Test_Detail_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Lab_Test_Detail_ID = value;
+                    this.SendPropertyChanged("Lab_Test_Detail_ID");
+                    this.OnLab_Test_Detail_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_ID", DbType = "Int")]
+        public System.Nullable<int> Test_ID
+        {
+            get
+            {
+                return this._Test_ID;
+            }
+            set
+            {
+                if ((this._Test_ID != value))
+                {
+                    this.OnTest_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Test_ID = value;
+                    this.SendPropertyChanged("Test_ID");
+                    this.OnTest_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Image_path", DbType = "VarChar(MAX)")]
+        public string Image_path
+        {
+            get
+            {
+                return this._Image_path;
+            }
+            set
+            {
+                if ((this._Image_path != value))
+                {
+                    this.OnImage_pathChanging(value);
+                    this.SendPropertyChanging();
+                    this._Image_path = value;
+                    this.SendPropertyChanged("Image_path");
+                    this.OnImage_pathChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Parent_Transaction_Type_ID", DbType = "Int")]
+        public System.Nullable<int> Parent_Transaction_Type_ID
+        {
+            get
+            {
+                return this._Parent_Transaction_Type_ID;
+            }
+            set
+            {
+                if ((this._Parent_Transaction_Type_ID != value))
+                {
+                    this.OnParent_Transaction_Type_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Parent_Transaction_Type_ID = value;
+                    this.SendPropertyChanged("Parent_Transaction_Type_ID");
+                    this.OnParent_Transaction_Type_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Parent_Transaction_Type", DbType = "VarChar(50)")]
+        public string Parent_Transaction_Type
+        {
+            get
+            {
+                return this._Parent_Transaction_Type;
+            }
+            set
+            {
+                if ((this._Parent_Transaction_Type != value))
+                {
+                    this.OnParent_Transaction_TypeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Parent_Transaction_Type = value;
+                    this.SendPropertyChanged("Parent_Transaction_Type");
+                    this.OnParent_Transaction_TypeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Lab_Test_ID", DbType = "Int")]
+        public System.Nullable<int> Lab_Test_ID
+        {
+            get
+            {
+                return this._Lab_Test_ID;
+            }
+            set
+            {
+                if ((this._Lab_Test_ID != value))
+                {
+                    this.OnLab_Test_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Lab_Test_ID = value;
+                    this.SendPropertyChanged("Lab_Test_ID");
+                    this.OnLab_Test_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Image_No", DbType = "BigInt")]
+        public System.Nullable<long> Image_No
+        {
+            get
+            {
+                return this._Image_No;
+            }
+            set
+            {
+                if ((this._Image_No != value))
+                {
+                    this.OnImage_NoChanging(value);
+                    this.SendPropertyChanging();
+                    this._Image_No = value;
+                    this.SendPropertyChanged("Image_No");
+                    this.OnImage_NoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsCancel", DbType = "Bit")]
+        public System.Nullable<bool> IsCancel
+        {
+            get
+            {
+                return this._IsCancel;
+            }
+            set
+            {
+                if ((this._IsCancel != value))
+                {
+                    this.OnIsCancelChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsCancel = value;
+                    this.SendPropertyChanged("IsCancel");
+                    this.OnIsCancelChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cancel_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Cancel_By
+        {
+            get
+            {
+                return this._Cancel_By;
+            }
+            set
+            {
+                if ((this._Cancel_By != value))
+                {
+                    this.OnCancel_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cancel_By = value;
+                    this.SendPropertyChanged("Cancel_By");
+                    this.OnCancel_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cancel_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Cancel_Time
+        {
+            get
+            {
+                return this._Cancel_Time;
+            }
+            set
+            {
+                if ((this._Cancel_Time != value))
+                {
+                    this.OnCancel_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cancel_Time = value;
+                    this.SendPropertyChanged("Cancel_Time");
+                    this.OnCancel_TimeChanged();
                 }
             }
         }
