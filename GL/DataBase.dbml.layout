@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 108.75, 169.625" name="DataBase">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 78.625, 169.625" name="DataBase">
   <DataContextMoniker Name="/DataBaseDataContext" />
   <nestedChildShapes>
     <classShape Id="fa9019b7-a859-464e-8cc1-67828fbc07fe" isExpanded="false" absoluteBounds="3.875, 9.125, 2, 0.45">
@@ -1996,24 +1996,24 @@
         <elementListCompartment Id="fff48f56-98de-4716-bcd5-c744d913cb3e" absoluteBounds="13.89, 66.96, 1.9700000000000002, 6.0184326171875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="5314a557-e48b-46ab-96d7-56a9c058e567" absoluteBounds="106.5, 32, 2, 104.84446451822915">
-      <DataClassMoniker Name="/DataBaseDataContext/In_Patient" />
-      <nestedChildShapes>
-        <elementListCompartment Id="a551b95e-c751-473d-a6a6-6b749ae28a5c" absoluteBounds="106.515, 32.46, 1.9700000000000002, 104.28446451822916" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="cbecfa9f-b431-4950-8ab5-4c5d8091db1c" absoluteBounds="17.125, 65.875, 2, 16.193504231770834">
       <DataClassMoniker Name="/DataBaseDataContext/Ar_Billing" />
       <nestedChildShapes>
         <elementListCompartment Id="4d02b6a1-6a6a-40a7-9a56-6dbe40bd487e" absoluteBounds="17.14, 66.335, 1.9700000000000002, 15.633504231770832" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(17.125 : 69.7892163085938); (15.875 : 69.7892163085938)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(17.125 : 69.7892163085938); (15.875 : 69.7892163085938)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/DataBaseDataContext/Ar_Billing/Ar_Billing_Ar_Billing_Detail" />
       <nodes>
         <classShapeMoniker Id="cbecfa9f-b431-4950-8ab5-4c5d8091db1c" />
         <classShapeMoniker Id="4c7b16b7-9279-4352-bc11-b3290af7ddaf" />
       </nodes>
     </associationConnector>
+    <classShape Id="9ffd92a5-bd6e-45c8-8582-d66bc25492fa" absoluteBounds="76.375, 34.625, 2, 105.03676595052082">
+      <DataClassMoniker Name="/DataBaseDataContext/In_Patient" />
+      <nestedChildShapes>
+        <elementListCompartment Id="4bd891ab-330d-4109-bd78-728b4ccdf66f" absoluteBounds="76.39, 35.085, 1.9700000000000002, 104.47676595052083" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>
