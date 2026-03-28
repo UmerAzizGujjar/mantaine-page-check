@@ -1099,6 +1099,8 @@
                                     AddLabTest(maindpt);
                                 }
 
+                                $('#ddlTestList').val('0').trigger('change');
+
                             },
                             failure: function (response) { }
                         });
@@ -3985,6 +3987,9 @@
 
                     $('#tblDetails tbody').append(rows);
                     $('.ddlDoctor').select2();
+                    if ($('#txtAddService').tokenInput) {
+                        $('#txtAddService').tokenInput("clear");
+                    }
 
                     loadBOMDetails(localStorage.SelectedItemID)
 

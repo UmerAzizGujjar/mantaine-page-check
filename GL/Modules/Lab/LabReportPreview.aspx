@@ -906,12 +906,9 @@
             var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
             if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
                 if (typeof (FileReader) != "undefined") {
-                    //loop for each file selected for uploaded.
                     for (var i = 0; i < countFiles; i++) {
-
                         var reader = new FileReader();
                         reader.onload = function (e) {
-
                             var img = $('<img />').attr({
                                 'id': 'myImage' + i,
                                 'src': e.target.result,
@@ -919,12 +916,12 @@
                                 'title': 'JSFiddle logo',
                                 'width': 40
                             }).appendTo('#container');
-                            ////var ff = $("<a >Delete</a>");
 
+                            // Create CANCEL button (not delete)
+                            var cancelBtn = $('<a href="#" onclick="cancelImage(this); return false;" style="display:block; color:orange; text-decoration:none; font-size:12px;">Delete</a>');
+                            img.after(cancelBtn);
                         }
-                        // image_holder.show();
                         reader.readAsDataURL($(input)[0].files[i]);
-                        '<a href="#" onclick="deleteImage(this)">Delete</a>'
                     }
                 } else {
                     Swal.fire({
@@ -939,7 +936,6 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
                 }
             } else {
                 Swal.fire({
@@ -954,9 +950,7 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-
             }
-
         }
 
 
@@ -1610,9 +1604,7 @@
         function showImage(testDetailID, single) {
             debugger;
             PageMethods.LoadimagesDetail(testDetailID, single, function (res) {
-
-                var container = '';
-                container = $('#container');
+                var container = $('#container');
                 if (res == null || res == "[]" || res == "undefined") {
                     $("#errorMsg").show();
                     container.html('');
@@ -1620,30 +1612,23 @@
                 else { $("#errorMsg").hide(); }
 
                 var test = JSON.parse(res);
-                var counter = test[0].Single;
-                var rows = '';
-
-
                 container.innerHTML = "";
                 container.html('');
-                localStorage.clear();
+
                 $.each(test, function (key, value) {
-                    // var img = $("<img onclick='window.open(this.src)' />");
+                    // Skip cancelled images
+                    if (value.IsCancel == true) {
+                        return; // continue to next
+                    }
 
-
-                    //var img = $('<img onclick="window.open(this.src)" src=""/><a style= href="#" onclick="deleteImage(this)">Delete</a>');
                     var img = $('<img onclick="window.open(this.src)" src=""/>');
                     img.attr("style", "height:82px;width: 82px;");
-                    var dd = value.Image_path;
-
-                    img.attr("src", dd);
-
+                    img.attr("src", value.Image_path);
                     container.append(img);
 
-                    if (value.Image_path == null || value.Image_path == "") {
-                        $("#errorMsg").show();
-                    }
-                    else { $("#errorMsg").hide(); }
+                    // Add cancel button for non-cancelled images
+                    var cancelBtn = $('<a href="#" onclick="cancelImage(this); return false;" style="display:block; color:orange; text-decoration:none; font-size:12px;">Cancel</a>');
+                    img.after(cancelBtn);
                 });
             });
         }
@@ -2469,6 +2454,78 @@
                 });
                 $('#chkUltraSound_level').html(options);
                 // levelType = options;
+            });
+        }
+
+        function cancelImage(btn) {
+            var imgElement = $(btn).prev('img');
+            var imageURL = imgElement.attr('src');
+            var isTemporaryImage = imageURL.startsWith('data:') || imageURL.startsWith('blob:');
+            var cancelBy = '<%= AppConfig.UserID %>';
+            Swal.fire({
+                title: 'Delete Image?',
+                text: "This will mark the image as deleted.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete it!',
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (isTemporaryImage) {
+                        imgElement.hide();
+                        $(btn).hide();
+                        imgElement.after('<span style="color:gray; font-size:10px;">[Deleted]</span>');
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Image removed from upload list',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        $.ajax({
+                            type: "POST",
+                            url: "LabReportPreview.aspx/CancelImage",
+                            data: JSON.stringify({
+                                "imagSrc": imageURL,
+                                "cancelBy": cancelBy
+                            }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.d == "Cancelled Successfully") {
+                                    imgElement.hide();
+                                    $(btn).hide();
+                                    imgElement.after('<span style="color:gray; font-size:10px;">[Deleted]</span>');
+
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: 'Image marked as deleted',
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+                                }
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to delete image',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    }
+                }
             });
         }
 
