@@ -957,7 +957,7 @@ namespace PMS
       string BirthMotherOccupation, string BirthMotherNationality, string BirthRegNumber,
       string BirthRegDate, string BirthRegistrar, string BirthUnionCouncil,
       string BirthAddress, string BirthCity, string BirthProvince, string BirthPostalCode,
-      string BirthReligion, string BirthAttendant, string BirthRemarks)
+      string BirthReligion, string BirthAttendant, string BirthRemarks,bool isCertificateGenrate)
         {
             In_Patient OPD = null;
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
@@ -1075,6 +1075,7 @@ namespace PMS
                     OPD.InsuranceCardNo = InsuranceCardNo;
                     OPD.PolicyHolderName = PolicyHolderName;
                     OPD.Sehat_Card_Holder_CNIC = Sehat_Holder;
+                    OPD.GenrateBirthCertificate = isCertificateGenrate;
 
                     // Birth Certificate Fields Assignment
                     OPD.Birth_Child_Name = string.IsNullOrEmpty(BirthChildName) ? null : BirthChildName;
