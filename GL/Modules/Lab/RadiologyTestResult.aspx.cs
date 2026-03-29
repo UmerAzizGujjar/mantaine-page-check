@@ -935,6 +935,8 @@ namespace PMS.Modules.Lab
             public string Approved_By { get; set; }
             public string Approved_Time { get; set; }
             public string TestDepartment { get; set; }
+
+            public string History { get; set; }
         }
         [WebMethod]
         public static string FillTestDepartment()
@@ -992,6 +994,7 @@ namespace PMS.Modules.Lab
                             ltd.Lab_Test_Detail_ID,
                             tdef.Test_Name,
                             ltd.Rotation_ID,
+                            ltd.History,
                             ltd.Emergancy,
                             ltd.L_R_Rotation_ID,
                             tdef.Group_Category,
@@ -1035,6 +1038,7 @@ namespace PMS.Modules.Lab
                 test.DepartmentName = item.DepartmentName;
                 test.Group_Category = item.Group_Category;
                 test.TestDepartment = item.TestDepartment;
+                test.History = item.History?.ToString() ?? "";
                 test.GroupName = item.GroupName;
                 if (item.Is_Result != null)
                 {
@@ -1112,7 +1116,8 @@ namespace PMS.Modules.Lab
         CAST(MAX(CAST(ISNULL(ld.Is_Result, 0) AS INT)) AS BIT) AS Is_Result,
         MIN(ltm.Patient_ID) AS Patient_ID,
         MIN(bd.Test_Main_Department) AS Test_Main_Department,
-        dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
+        dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department,
+        MIN(ld.History) AS History
         FROM Lab_Test_Detail ld
         JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
         JOIN Laboratory_Test ltm ON ltm.Lab_Test_ID = ld.Lab_Test_ID
@@ -1148,7 +1153,8 @@ namespace PMS.Modules.Lab
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
-                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
+                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString(),
+
                 };
 
                 TestObj.ListOfTestIDs = DBClass.getField("select dbo.[GetGroupSubTests]('" + TestObj.Group_Category + "')");
@@ -1289,6 +1295,7 @@ namespace PMS.Modules.Lab
                             ltd.Test_Performed_By,
                             ltd.Created_Time,
                             ltd.Approved_Time,
+                            ltd.History,
                             Approved_By = (from asp in db.aspnet_Users
                                            where asp.UserId == ltd.Approved_By
                                            select asp.UserName).FirstOrDefault()
@@ -1308,6 +1315,7 @@ namespace PMS.Modules.Lab
                 test.DepartmentName = item.DepartmentName;
                 test.Group_Category = item.Group_Category;
                 test.TestDepartment = item.TestDepartment;
+                test.History = item.History?.ToString() ?? "";
                 test.GroupName = item.GroupName;
                 if (item.Is_Result != null)
                 {
@@ -1385,6 +1393,7 @@ namespace PMS.Modules.Lab
     CAST((CAST(ISNULL(ld.isApproved, 0) AS INT)) AS BIT) AS IsApproved,
     (ltm.Patient_ID) AS patient_id,
     (ISNULL(bd.Test_Main_Department, '')) AS Test_Main_Department,
+    ld.History AS History,
     dbo.GetDataValueName('Test Departments', lt.Group_Department) AS Test_Department
     FROM Lab_Test_Detail ld
     JOIN Lab_Tests lt ON lt.Test_ID = ld.Test_ID
@@ -1420,7 +1429,10 @@ namespace PMS.Modules.Lab
                     Result_Time = item[6] == DBNull.Value ? "" : Convert.ToDateTime(item[6]).ToString(),
                     Approved_Time = item[7] == DBNull.Value ? "" : Convert.ToDateTime(item[7]).ToString(),
                     Approved_By = item[8] == DBNull.Value ? "" : item[8].ToString(),
-                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString()
+                    TestDepartment = item[16] == DBNull.Value ? "" : item[16].ToString(),
+                    History = item[17] == DBNull.Value ? "" : item[17].ToString()
+
+
 
 
                 };
