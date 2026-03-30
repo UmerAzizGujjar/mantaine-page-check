@@ -1394,9 +1394,9 @@ namespace PMS
                         string birthMessage = birthDict.ContainsKey("message") ? birthDict["message"]?.ToString() : null;
 
                         // 6. Update database
-                        //patient.IsCertificateSentToNADRA = true;
-                        //patient.CertificateSentDate = DateTime.Now;
-                        //patient.NADRA_Response = birthResponseString;
+                        patient.IsCertificateSentToNADRA = true;
+                        patient.CertificateSentDate = DateTime.Now;
+                        patient.NADRA_Response = birthResponseString;
                         db.SubmitChanges();
 
                         // 7. Return result
