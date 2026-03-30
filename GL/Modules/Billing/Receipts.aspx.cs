@@ -1689,5 +1689,17 @@ namespace PMS
             return actualAmount;
         }
 
+        [WebMethod]
+        public static string GetBoxesVisibility()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Receipts_Boxes"
+                        select data.Code
+                       ).FirstOrDefault();
+
+            return dept;
+        }
+
     }
 }

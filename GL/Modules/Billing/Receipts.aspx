@@ -1333,6 +1333,7 @@
             LoadAdvances();
             LoadRefund();
             LoadActual();
+            GetBoxesVisibility();
 
         });
         function PrinAllReceiptDetail() {
@@ -1431,10 +1432,30 @@
             });
         }
 
+        function GetBoxesVisibility() {
+            $.ajax({
+                type: "POST",
+                url: "Receipts.aspx/GetBoxesVisibility",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    var code = response.d;
+
+                    if (code === "01") {
+                        $("#divReceiptsBoxes").show();
+                    } else {
+                        $("#divReceiptsBoxes").hide();
+                    }
+                }
+            });
+        }
+
     </script>
     <div class="row">
         <input type="hidden" name="hdnDuplicateCheck" value="0" id="hdnDuplicateCheck" />
-        <div class="row mb-3">
+        <div class="row mb-3" id="divReceiptsBoxes">
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
                     <div class="card-header text-white">
