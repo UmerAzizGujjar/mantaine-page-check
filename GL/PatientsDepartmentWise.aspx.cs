@@ -707,6 +707,34 @@ namespace PMS
                     ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddloprators.DataBind();
                 }
+                else if (this.PageTitle == "Emergency_Reg_Report")
+                {
+                    string x = "Registered Emergency Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = false;
+                    trDoctor.Visible = false;
+                    tr_Summary.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    lblPatientType.Text = "Operators";
+
+
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    op_PanelCompany.Visible = false;
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+                    optRw.Visible = true;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    object valusetss = from d in db.aspnet_Users
+                                       select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusetss;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                }
 
                 //else if (this.PageTitle == "OPD_Time_Line")
                 //{
