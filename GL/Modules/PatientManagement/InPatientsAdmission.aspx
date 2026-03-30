@@ -250,7 +250,7 @@
             $('#loadingimage').show();
             CheckExistInOutPatient();
         }
-        var isCertificateGenrate = fasle;
+        var isCertificateGenrate = false;
         function GenrateCertificate() {
             isCertificateGenrate = true;
             SaveInPatientAllRecord();
