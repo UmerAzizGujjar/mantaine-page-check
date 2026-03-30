@@ -1603,7 +1603,10 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
             DateTime today = DateTime.Now.Date;
             decimal totalAmount = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
+                .Where(b => b.Bill_Date.HasValue &&
+                            b.Main_Department != "03" && b.Created_By == AppConfig.UserID &&
+                            (b.Panel_Id == null || b.Panel_Id == 0 ) &&
+                            b.Bill_Date.Value.Date == today)
                 .Sum(b => (decimal?)b.Total_Amount) ?? 0;
 
             return totalAmount;
@@ -1615,7 +1618,10 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
             DateTime today = DateTime.Now.Date;
             decimal totalAmount = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
+                .Where(b => b.Bill_Date.HasValue &&
+                            b.Main_Department != "03" && b.Created_By == AppConfig.UserID &&
+                            (b.Panel_Id == null || b.Panel_Id == 0) &&
+                            b.Bill_Date.Value.Date == today)
                 .Sum(b => (decimal?)b.Discount_Amount) ?? 0;
 
             return totalAmount;
@@ -1627,24 +1633,32 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
             DateTime today = DateTime.Now.Date;
             decimal totalAmount = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
+                .Where(b => b.Bill_Date.HasValue &&
+                            b.Main_Department != "03" && b.Created_By == AppConfig.UserID &&
+                            (b.Panel_Id == null || b.Panel_Id == 0) &&
+                            b.Bill_Date.Value.Date == today)
                 .Sum(b => (decimal?)b.Received_Amount) ?? 0;
 
             return totalAmount;
         }
-
         [WebMethod]
         public static decimal GetTotalCashPaid()
         {
             DataBaseDataContext db = new DataBaseDataContext();
             DateTime today = DateTime.Now.Date;
-            decimal totalAmount = db.Receipts
-                .Where(b => b.Receipt_Date.HasValue && b.Receipt_Date.Value.Date == today)
-                .Sum(b => (decimal?)b.Receipt_Amount) ?? 0;
+            decimal totalAmount = (from r in db.Receipts
+                                   join b in db.Ar_Billings on r.Bill_ID equals b.Bill_ID
+                                   where r.Receipt_Date.HasValue &&
+                                         r.Receipt_Date.Value.Date == today &&
+                                         b.Main_Department != "03" &&
+                                         r.Created_By == AppConfig.UserID &&
+                                         (r.isCancel == null || r.isCancel == false) && // Check Receipt's isCancel
+                                         (b.Panel_Id == null || b.Panel_Id == 0)
+                                   select r.Receipt_Amount)
+                                   .Sum() ?? 0;
 
             return totalAmount;
         }
-
         [WebMethod]
         public static decimal GetTotalAdvance()
         {
@@ -1662,9 +1676,15 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
             DateTime today = DateTime.Now.Date;
-            decimal totalAmount = db.Refunds
-                .Where(b => b.Refund_Date.HasValue && b.Refund_Date.Value.Date == today)
-                .Sum(b => (decimal?)b.Refund_Amount) ?? 0;
+            decimal totalAmount = (from r in db.Refunds
+                                   join b in db.Ar_Billings on r.Bill_ID equals b.Bill_ID
+                                   where r.Refund_Date.HasValue &&
+                                         r.Refund_Date.Value.Date == today &&
+                                         b.Main_Department != "03" && r.Created_By == AppConfig.UserID && 
+                                         (b.Panel_Id == null || b.Panel_Id == 0)
+                                      
+                                   select r.Refund_Amount)
+                                   .Sum() ?? 0;
 
             return totalAmount;
         }
@@ -1673,16 +1693,25 @@ namespace PMS
         public static decimal GetTotalActual()
         {
             DataBaseDataContext db = new DataBaseDataContext();
-
             DateTime today = DateTime.Now.Date;
 
             decimal totalReceived = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
+                .Where(b => b.Bill_Date.HasValue &&
+                            b.Main_Department != "03" && b.Created_By == AppConfig.UserID &&
+                            (b.Panel_Id == null || b.Panel_Id == 0) 
+                            &&(b.isCancel == null || b.isCancel == false)&&
+                            b.Bill_Date.Value.Date == today)
                 .Sum(b => (decimal?)b.Received_Amount) ?? 0;
 
-            decimal totalRefund = db.Ar_Billings
-                .Where(b => b.Bill_Date.HasValue && b.Bill_Date.Value.Date == today)
-                .Sum(b => (decimal?)b.Received_Amount) ?? 0;
+            decimal totalRefund = (from r in db.Refunds
+                                   join b in db.Ar_Billings on r.Bill_ID equals b.Bill_ID
+                                   where r.Refund_Date.HasValue &&
+                                         r.Refund_Date.Value.Date == today &&
+                                         b.Main_Department != "03" && r.Created_By == AppConfig.UserID &&
+                                         (b.isCancel == null || b.isCancel == false) &&
+                                         (b.Panel_Id == null || b.Panel_Id == 0)
+                                   select r.Refund_Amount)
+                                   .Sum() ?? 0;
 
             decimal actualAmount = totalReceived - totalRefund;
 
