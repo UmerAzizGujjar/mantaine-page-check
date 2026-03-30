@@ -1642,14 +1642,45 @@ namespace PMS
             return totalAmount;
         }
         [WebMethod]
+        public static string CloseSale()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var userId = AppConfig.UserID;
+
+            // Get last receipt created by this user
+            var receipt = (from r in db.Receipts
+                           where r.Created_By == userId
+                           orderby r.Receipt_ID descending
+                           select r).FirstOrDefault();
+
+            if (receipt != null)
+            {
+                receipt.SaleClosing = DateTime.Now;     
+                db.SubmitChanges();
+                return "Success";
+            }
+            return "No receipt found";
+
+        }
+
+
+        [WebMethod]
         public static decimal GetTotalCashPaid()
         {
             DataBaseDataContext db = new DataBaseDataContext();
             DateTime today = DateTime.Now.Date;
+
+            DateTime? lastCloseTime = (from r in db.Receipts
+                                       where r.Created_By == AppConfig.UserID
+                                             && r.SaleClosing != null
+                                       orderby r.SaleClosing descending
+                                       select r.SaleClosing).FirstOrDefault();
+
             decimal totalAmount = (from r in db.Receipts
                                    join b in db.Ar_Billings on r.Bill_ID equals b.Bill_ID
                                    where r.Receipt_Date.HasValue &&
-                                         r.Receipt_Date.Value.Date == today &&
+                                         r.SaleClosing > lastCloseTime &&
                                          b.Main_Department != "03" &&
                                          r.Created_By == AppConfig.UserID &&
                                          (r.isCancel == null || r.isCancel == false) && // Check Receipt's isCancel
