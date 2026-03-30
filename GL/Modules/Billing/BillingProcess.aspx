@@ -1573,7 +1573,10 @@
                         var Opd_id = $('#hdnOpd_id').val();
                         var hdn_docid = $("#hdn_docid").val();
                         var opd_procedure = $('#hdn_opd_procedure').val();
-                        var finalbill = $('#hdn_finalBill').val();
+                        //var finalbill = $('#hdn_finalBill').val();
+                        //if(finalbill == ""){
+                        //     $("#hdn_finalBill").val("false");
+                        //}
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
                         var TotalPayable = $('#txtTotalPayable').val();
@@ -2045,67 +2048,87 @@
             debugger;
             function GetDocAgreementValuess(rows) {
                 debugger;
-                var doc_1 = $("#ddldoctor1").val();
-                $("#hdn_docid").val(doc_1);
+                var PanelId = $("#ddlpanel").val();
+                
+                if (PanelId == "0") {
 
-                var InPatient_Type = $("#hdn_InPatienttype").val();
-                var Patient_Type = $("#hdn_PatienttypeId").val();
-                var Aggreement_Type = '02'
+                    var doc_1 = $("#ddldoctor1").val();
+                    $("#hdn_docid").val(doc_1);
 
-                if (InPatient_Type == "There is no row at position 0.") {
-                    Aggreement_Type = Patient_Type
+                    var InPatient_Type = $("#hdn_InPatienttype").val();
+                    var Patient_Type = $("#hdn_PatienttypeId").val();
+                    var Aggreement_Type = '02'
+
+                    if (InPatient_Type == "There is no row at position 0.") {
+                        Aggreement_Type = Patient_Type
+                    }
+                    else {
+                        Aggreement_Type = Aggreement_Type
+                    }
+                    var doc_id = $(rows).closest('tr').find('td select[name="ddlDoctor"]').val();
+                    var test_id = $(rows).closest('tr').find('td input[name ="hdnItemID"]').val();
+                    var item_id = $(rows).closest('tr').find('td input[name ="hdnItemID"]').val();
+                    var item_name = $(rows).closest('tr').find('td input[name ="hdnItemName"]').val();
+                    $.ajax({
+                        type: "POST",
+                        url: "BillingProcess.aspx/GetDocAgreementValues",
+                        data: JSON.stringify({
+                            doc_id: doc_id,
+                            test_id: test_id,
+                            item_id: item_id,
+                            item_name: item_name,
+                            Aggreement_Type: Aggreement_Type,
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            debugger;
+                            var result = JSON.parse(data.d);
+                            var hos_share = parseFloat(result["hos_share"]) || 0;
+                            var doc_share = parseFloat(result["doc_share"]) || 0;
+
+                            // ?? Find the <tr> from 'rows'
+                            var $row = $(rows).closest('tr');
+
+                            // ? Read DisPer from *this row* (not 'value')
+                            var disPerStr = $row.find('input[name="DisPer"]').val();
+                            var disPerNum = parseFloat(disPerStr) || 0;
+
+                            // ?? Apply discount % to hospital & doctor shares (if > 0)
+                            if (disPerNum > 0) {
+                                var factor = disPerNum / 100; // e.g. 20 ? 0.2
+                                hos_share = hos_share * (1 - factor);
+                                doc_share = doc_share * (1 - factor);
+                            }
+
+                            // ? Set final (discounted) values back
+                            $row.find('input[name="HocShare"]').val(hos_share.toFixed(2));
+                            $row.find('input[name="DocShare"]').val(doc_share.toFixed(2));
+
+                            $row.find('input[name="hdnPerUnitDocShare"]').remove();
+                            $row.find('input[name="hdnPerUnitHocShare"]').remove();
+
+                            $row.append('<input type="hidden" name="hdnPerUnitDocShare" value="' + doc_share.toFixed(6) + '" />');
+                            $row.append('<input type="hidden" name="hdnPerUnitHocShare" value="' + hos_share.toFixed(6) + '" />');
+
+                        }
+                    })
                 }
                 else {
-                    Aggreement_Type = Aggreement_Type
+                    var $row = $(rows).closest('tr');
+
+                    var netAmount = parseFloat($row.find('td:eq(5)').text()) || 0;
+
+                    $row.find('input[name="HocShare"]').val(netAmount.toFixed(2));
+
+                    $row.find('input[name="DocShare"]').val("0.00");
+
+                    $row.find('input[name="hdnPerUnitDocShare"]').remove();
+                    $row.find('input[name="hdnPerUnitHocShare"]').remove();
+
+                    $row.append('<input type="hidden" name="hdnPerUnitDocShare" value="0.00" />');
+                    $row.append('<input type="hidden" name="hdnPerUnitHocShare" value="' + netAmount.toFixed(6) + '" />');
                 }
-                var doc_id = $(rows).closest('tr').find('td select[name="ddlDoctor"]').val();
-                var test_id = $(rows).closest('tr').find('td input[name ="hdnItemID"]').val();
-                var item_id = $(rows).closest('tr').find('td input[name ="hdnItemID"]').val();
-                var item_name = $(rows).closest('tr').find('td input[name ="hdnItemName"]').val();
-                $.ajax({
-                    type: "POST",
-                    url: "BillingProcess.aspx/GetDocAgreementValues",
-                    data: JSON.stringify({
-                        doc_id: doc_id,
-                        test_id: test_id,
-                        item_id: item_id,
-                        item_name: item_name,
-                        Aggreement_Type: Aggreement_Type,
-                    }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data) {
-                        debugger;
-                        var result = JSON.parse(data.d);
-                        var hos_share = parseFloat(result["hos_share"]) || 0;
-                        var doc_share = parseFloat(result["doc_share"]) || 0;
-
-                        // ?? Find the <tr> from 'rows'
-                        var $row = $(rows).closest('tr');
-
-                        // ? Read DisPer from *this row* (not 'value')
-                        var disPerStr = $row.find('input[name="DisPer"]').val();
-                        var disPerNum = parseFloat(disPerStr) || 0;
-
-                        // ?? Apply discount % to hospital & doctor shares (if > 0)
-                        if (disPerNum > 0) {
-                            var factor = disPerNum / 100; // e.g. 20 ? 0.2
-                            hos_share = hos_share * (1 - factor);
-                            doc_share = doc_share * (1 - factor);
-                        }
-
-                        // ? Set final (discounted) values back
-                        $row.find('input[name="HocShare"]').val(hos_share.toFixed(2));
-                        $row.find('input[name="DocShare"]').val(doc_share.toFixed(2));
-
-                        $row.find('input[name="hdnPerUnitDocShare"]').remove();
-                        $row.find('input[name="hdnPerUnitHocShare"]').remove();
-
-                        $row.append('<input type="hidden" name="hdnPerUnitDocShare" value="' + doc_share.toFixed(6) + '" />');
-                        $row.append('<input type="hidden" name="hdnPerUnitHocShare" value="' + hos_share.toFixed(6) + '" />');
-
-                    }
-                })
             }
 
 
@@ -5164,6 +5187,7 @@
             debugger;
             var IsDiscountAvaible = "";
             var departmentpat;
+            var finalbill = false;
             var PatientID;
             var pat_id;
             function OnSuccess(data) {
@@ -5277,6 +5301,7 @@
                         if (Request_Discharge == true) {
                             debugger;
                             $("#hdn_finalBill").val("true");
+                            finalbill = true;
                             AddPackage();
                             FetchAllPreviousBill(in_Pat);
 
@@ -5286,6 +5311,7 @@
                         else if (Request_Discharge != true)
                         {
                             $("#hdn_finalBill").val("false");
+                            finalbill = false;
                         }
                         else {
                             if (id == '') {
