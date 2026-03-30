@@ -250,9 +250,42 @@
             $('#loadingimage').show();
             CheckExistInOutPatient();
         }
-        var isCertificateGenrate = false;
+        //var isCertificateGenrate = false;
         function GenrateCertificate() {
-            isCertificateGenrate = true;
+            debugger;
+            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+
+            // Validate required fields
+            var childName = $('#ctl00_MainContent_txtBirthChildName').val();
+            var fatherName = $('#ctl00_MainContent_txtBirthFatherName').val();
+            var motherName = $('#ctl00_MainContent_txtBirthMotherName').val();
+            var fatherCNIC = $('#ctl00_MainContent_txtBirthFatherCNIC').val();
+            var motherCNIC = $('#ctl00_MainContent_txtBirthMotherCNIC').val();
+
+            if (!childName || !fatherName || !motherName) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Incomplete Information',
+                    text: 'Please fill Child Name, Father Name, and Mother Name first.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            if (!fatherCNIC || !motherCNIC) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'CNIC Required',
+                    text: 'Father and Mother CNIC are required for NADRA registration.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Set flag and save without showing loading first
+            window.isCertificateGenrate = true;
+
+            // Just call save - don't show loading here
             SaveInPatientAllRecord();
         }
         function isNumberKey(evt) {
@@ -1899,7 +1932,8 @@
             var CNIC = $("#ctl00_MainContent_txtCNIC").val();
             var RelationWithDeceased = $("#ctl00_MainContent_txtRelationWithDeceased").val();
             var CMO_Police = $("#ctl00_MainContent_txtCMO_Police").val();
-
+            debugger;
+            var isCertificateGenrate = window.isCertificateGenrate || false;
 
             var ID = '<%= Request.QueryString["ID"]%>';
             PageMethods.SaveRecord(Patient_ID, btnsave, txtAdmission_Date, ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date, ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory,
@@ -1926,8 +1960,12 @@
                             }
                         });
 
-                        window.location = "InPatientsAdmission.aspx?ID=" + response;
-                      
+                          if (isCertificateGenrate) {
+                            callNADRAAPI(response);
+                        } else {
+                            window.location = "InPatientsAdmission.aspx?ID=" + response;
+                        }
+                
                         $('#btnSave').val("Update");
                     }
                     else if (btn == 'btnsaveprint') {
@@ -1940,7 +1978,63 @@
                 });
         }
 
-
+        function callNADRAAPI(inPatientID) {
+    debugger;
+    
+    Swal.fire({
+        title: 'Sending to NADRA...',
+        text: 'Please wait while we send the birth certificate to NADRA.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    
+    $.ajax({
+        type: "POST",
+        url: "InPatientsAdmission.aspx/SendToNADRA",
+        data: JSON.stringify({ InPatientID: inPatientID }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var result = response.d;
+            
+            if (result.startsWith("SUCCESS")) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    html: `<p>Record saved and ${result.replace("SUCCESS: ", "")}</p>`,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    $('#genrateCerti').prop('disabled', true);
+                    $('#genrateCerti').val('Certificate Sent');
+                    window.location = "InPatientsAdmission.aspx?ID=" + inPatientID;
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Partial Success',
+                    html: `<p>Record saved successfully but NADRA submission failed.</p>
+                           <p>Error: ${result.replace("ERROR: ", "")}</p>
+                           <p>You can try sending again later.</p>`,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location = "InPatientsAdmission.aspx?ID=" + inPatientID;
+                });
+            }
+        },
+        error: function (error) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Record Saved',
+                html: '<p>Record saved successfully but could not connect to NADRA.</p><p>Please try sending the certificate again later.</p>',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location = "InPatientsAdmission.aspx?ID=" + inPatientID;
+            });
+        }
+    });
+}
         function ShowDermaModel() {
             $('#myModalDerma').modal({
                 backdrop: 'static'
@@ -3233,68 +3327,123 @@
            var BirthReligion = $('#ctl00_MainContent_ddlBirthReligion').val();
            var BirthAttendant = $('#ctl00_MainContent_txtBirthAttendant').val();
            var BirthRemarks = $('#ctl00_MainContent_txtBirthRemarks').val();
+           var isCertificateGenrate = window.isCertificateGenrate || false;
 
-           PageMethods.SaveAllRecord(
-               Patient_ID, btnsave, txtAdmission_Date, patient_name, patient_age, patient_number,
-               ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date,
-               ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type,
-               PatientDiscountType, panelCompany, admissionType, sehatCardNo, visitId,
-               CardHolderName, InsuranceCardNo, PolicyHolderName, Sehat_Holder,
-               main_department, packagetype, packagename, packagetypename, packagenamess,
-               ipdProcedures, proc_name, panelcompanys, CardNo, Cardholdername, CompanyName,
-               Approvelimit, Roomlimit, Cardlimit, ApproveDays, Discount, Privatecharges,
-               // Birth Certificate Parameters
-               BirthChildName, BirthGender, BirthDate, BirthTime, BirthPlace, BirthWeight,
-               BirthType, BirthOrder, BirthFatherName, BirthFatherCNIC, BirthFatherOccupation,
-               BirthFatherNationality, BirthMotherName, BirthMotherCNIC, BirthMotherOccupation,
-               BirthMotherNationality, BirthRegNumber, BirthRegDate, BirthRegistrar,
-               BirthUnionCouncil, BirthAddress, BirthCity, BirthProvince, BirthPostalCode,
-               BirthReligion, BirthAttendant, BirthRemarks,
-               function (response) {
-                   debugger;
-                   var btn = btnVal;
+            PageMethods.SaveAllRecord(
+                Patient_ID, btnsave, txtAdmission_Date, patient_name, patient_age, patient_number,
+                ddlDepartment, ddlDoctor, txtHealth_Complaints, txtExpected_Discharge_Date,
+                ddlIssuance_Of, ddlWard_No, txtBed_No, ddlRoom_No, txtRoom_Type,
+                PatientDiscountType, panelCompany, admissionType, sehatCardNo, visitId,
+                CardHolderName, InsuranceCardNo, PolicyHolderName, Sehat_Holder,
+                main_department, packagetype, packagename, packagetypename, packagenamess,
+                ipdProcedures, proc_name, panelcompanys, CardNo, Cardholdername, CompanyName,
+                Approvelimit, Roomlimit, Cardlimit, ApproveDays, Discount, Privatecharges,
+                // Birth Certificate Parameters
+                BirthChildName, BirthGender, BirthDate, BirthTime, BirthPlace, BirthWeight,
+                BirthType, BirthOrder, BirthFatherName, BirthFatherCNIC, BirthFatherOccupation,
+                BirthFatherNationality, BirthMotherName, BirthMotherCNIC, BirthMotherOccupation,
+                BirthMotherNationality, BirthRegNumber, BirthRegDate, BirthRegistrar,
+                BirthUnionCouncil, BirthAddress, BirthCity, BirthProvince, BirthPostalCode,
+                BirthReligion, BirthAttendant, BirthRemarks, isCertificateGenrate,
+                function (response) {
+                    debugger;
+                    var btn = btnVal;
 
-                   if (btn === 'btnSave') {
-                       debugger;
-                       if (response === "0") {
-                           Swal.fire({
-                               icon: 'error',
-                               title: 'Error!',
-                               text: 'Data not Saved !',
-                               showConfirmButton: false,
-                               timer: 2000,
-                               customClass: {
-                                   popup: 'swal-big-popup',
-                                   title: 'swal-big-title',
-                                   htmlContainer: 'swal-big-text'
-                               }
-                           });
-                       }
-                       else {
-                           Swal.fire({
-                               icon: 'success',
-                               title: 'Success!',
-                               text: 'Data Successfully Save',
-                               showConfirmButton: false,
-                               timer: 2500,
-                               customClass: {
-                                   popup: 'swal-big-popup',
-                                   title: 'swal-big-title',
-                                   htmlContainer: 'swal-big-text'
-                               }
-                           });
-                       }
-                       debugger;
-                       window.location = "InPatientsAdmission.aspx?ID=" + response;
-                       $('#btnSave').val("Update");
-                   }
-                   else if (btn === 'btnsaveprint') {
-                       debugger;
-                       window.location = "InPatientsAdmission.aspx?ID=" + response;
-                       window.open('../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
-                   }
-               }
-           );
+                    if (btn === 'btnSave') {
+                        debugger;
+                        if (response === "0") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Data not Saved !',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            })
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Successfully Saved',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                               
+                            })
+                              
+                            callNADRAAPI(response);
+                        }
+                        $('#btnSave').val("Update");
+                    }
+                    if (btn === 'genrateCerti') {
+                        debugger;
+                        if (response === "0") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Data not Saved !',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            })
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Successfully Saved',
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+
+                            })
+
+                            callNADRAAPI(response);
+                        }
+                        $('#btnSave').val("Update");
+                    }
+                    else if (btn === 'btnsaveprint') {
+                        debugger;
+                        if (isCertificateGenrate) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Data Successfully Saved',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            }).then(() => {
+                                callNADRAAPI(response);
+                            });
+                        } else {
+                            window.location = "InPatientsAdmission.aspx?ID=" + response;
+                            window.open('../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
+                        }
+                        $('#btnSave').val("Update");
+                    }
+                }
+            );
        }
 
 
@@ -3491,12 +3640,9 @@
 
         function SaveInPatientAllRecord() {
             debugger;
-          //  $("#btnSave").attr("disabled", true);
-           // $("#btnsaveprint").attr("disabled", true);
             $('#loadingimage').show();
             SaveNextOfKinDetails();
             CheckExistInOutPatient();
-
         }
 
         function LoadHistory() {
