@@ -1449,6 +1449,29 @@
                 console.log(error.get_message());
             });
         }
+        function SaleClose() {
+            $.ajax({
+                type: "POST",
+                url: "Receipts.aspx/CloseSale",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    var code = response.d;
+
+                    if (code === "Success") {
+                        location.reload();
+                    } else {
+                        alert(code || "Something went wrong!");
+                    }
+                },
+                error: function (xhr, status, error) {
+   
+                    alert("Error: " + error);
+                }
+            });
+        }
 
         function GetBoxesVisibility() {
             $.ajax({
@@ -1813,8 +1836,11 @@
                   <div class="col-lg-2 col-md-3 col-sm-4">
                            <input type="button" class="btn-gray"  style="width:auto" value="List View" onclick="window.open('ReceiptsView.aspx')" />
                   </div> 
-                  <div class="col-lg-3 col-md-3 col-sm-4">             
+                  <div class="col-lg-2 col-md-3 col-sm-4">             
                       <input type="button" style="width:auto" class="btn btn-primry" value="Print All Detail" onclick="PrinAllReceiptDetail();" />
+                  </div>
+                  <div class="col-lg-2 col-md-3 col-sm-4">             
+                      <input type="button" style="width:auto" class="btn btn-primry" value="Sale Close" onclick="SaleClose();" />
                   </div>
                 </div>
             </div>
