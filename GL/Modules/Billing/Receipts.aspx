@@ -1333,6 +1333,8 @@
             LoadAdvances();
             LoadRefund();
             LoadActual();
+            LoadPrivateCash();
+            LoadPanelCash();
             GetBoxesVisibility();
 
         });
@@ -1432,6 +1434,45 @@
             });
         }
 
+        function LoadPrivateCash() {
+            PageMethods.GetTotalPrivateCash(function (data) {
+                $('#lblPrivateCash').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
+        function LoadPanelCash() {
+            PageMethods.GetTotalPanelCash(function (data) {
+                $('#lblPanelCash').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+        function SaleClose() {
+            $.ajax({
+                type: "POST",
+                url: "Receipts.aspx/CloseSale",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    var code = response.d;
+
+                    if (code === "Success") {
+                        location.reload();
+                    } else {
+                        alert(code || "Something went wrong!");
+                    }
+                },
+                error: function (xhr, status, error) {
+   
+                    alert("Error: " + error);
+                }
+            });
+        }
+
         function GetBoxesVisibility() {
             $.ajax({
                 type: "POST",
@@ -1466,6 +1507,24 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header text-white"><i class=""></i>Private</div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblPrivateCash">0.00</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header text-white"><i class=""></i>Panel</div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblPanelCash">0.00</h4>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
                     <div class="card-header text-white">
@@ -1530,6 +1589,8 @@
                     </div>
                 </div>
             </div>
+            
+            
 
         </div>
         <!-- Left Card -->
@@ -1775,8 +1836,11 @@
                   <div class="col-lg-2 col-md-3 col-sm-4">
                            <input type="button" class="btn-gray"  style="width:auto" value="List View" onclick="window.open('ReceiptsView.aspx')" />
                   </div> 
-                  <div class="col-lg-3 col-md-3 col-sm-4">             
+                  <div class="col-lg-2 col-md-3 col-sm-4">             
                       <input type="button" style="width:auto" class="btn btn-primry" value="Print All Detail" onclick="PrinAllReceiptDetail();" />
+                  </div>
+                  <div class="col-lg-2 col-md-3 col-sm-4">             
+                      <input type="button" style="width:auto" class="btn btn-primry" value="Sale Close" onclick="SaleClose();" />
                   </div>
                 </div>
             </div>

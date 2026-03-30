@@ -408,10 +408,11 @@
                 row.remove();
             }
         }
-        function getbatchfrom_grn(id) {
+        function getbatchfrom_grn() {
             debugger;
-            var warehouse = $('#ddlwareHouse').val();
-            var item_id = id
+            var item_id = '<% =Request.QueryString["ID"] %>';
+            var warehouse = $('#ddlWare').val();
+            //var item_id = id
             PageMethods.Getbatch_grn(item_id, warehouse, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
@@ -495,6 +496,15 @@
             });
 
 
+        }
+        function FillWarehouseForBatch() {
+            PageMethods.GetWarehouses(function (Dosage) {
+                var options = '<option value=""> Select</option>'
+                $.each(JSON.parse(Dosage), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '"> ' + value.DataValue_Description + ' </option>';
+                });
+                $('#ddlWare').html(options);
+            });
         }
         function Saveitem() {
             if (validateSave()) {
@@ -916,7 +926,8 @@
                     }
                     if (parse.IsBatch == 1) {
                         $("#IsBatch").prop('checked', true);
-                        getbatchfrom_grn(id);
+                        /*getbatchfrom_grn(id);*/
+                        FillWarehouseForBatch()
                         LoadBatchData(id)
                     }
                     if (parse.Purchaseable == 1) {
@@ -1410,17 +1421,26 @@
             </table>
             <table style="margin-left:0px">
                 <tr>
-                    <td style="width: 66px;">Generic Name</td>
+                    <td style="width: 71px;">Generic Name</td>
                     <td>
-                        <input type="text" id="GenericName" name="GenericName" style="width: 166px!Important; margin-left: 8px" /></td>
-                    <td style="width: 66px;">
-                        <label style="margin-right: 40px;margin-left: 15px;">Batch Number</label></td>
+                        <input type="text" id="GenericName" name="GenericName" style="width: 178px!Important; margin-left: 8px" /></td>
+                    <td>
+                        <label style=" float: left; position: relative; width: 80px;margin-right: 14px; margin-bottom : 10px;margin-left: 16px">WareHouse</label>
+                    </td>
+                    <td >
+                        <select id="ddlWare" onchange="getbatchfrom_grn();" style="width: 170px;"></select>
+
+                    </td>
+                    <td>
+                        <label style="display: inline-block; float: left; position: relative; width: 150px !important;margin-left: 33px;margin-bottom: 10px">Batch Number</label>
+                    </td>
                     <td >
                         <select id="ddlBatchNum" style="width: 170px;"></select>
 
                     </td>
                     <td>
-                        <input type="button" onclick="AppendBatch()" value="+" id="AddBatch" style="width: 44px; margin-left: 10px !important;" /></td>
+                        <input type="button" onclick="AppendBatch()" value="+" id="AddBatch" style="width: 44px; margin-left: 10px !important;" />
+                    </td>
                 </tr>
             </table>
             <table class="table table-bordered" id="BatchTable" style="overflow: scroll; width: 550px; height: auto;">
