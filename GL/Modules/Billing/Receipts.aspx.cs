@@ -1701,5 +1701,36 @@ namespace PMS
             return dept;
         }
 
+        [WebMethod]
+        public static decimal GetTotalPrivateCash()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime today = DateTime.Now.Date;
+
+            decimal totalAmount = db.Ar_Billings
+                .Where(b => b.Bill_Date.HasValue
+                         && b.Bill_Date.Value.Date == today
+                         && (b.Panel_Id == null || b.Panel_Id == 0))
+                .Sum(b => (decimal?)b.Total_Amount) ?? 0;
+
+            return totalAmount;
+        }
+
+        [WebMethod]
+        public static decimal GetTotalPanelCash()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            DateTime today = DateTime.Now.Date;
+
+            decimal totalAmount = db.Ar_Billings
+                .Where(b => b.Bill_Date.HasValue
+                         && b.Bill_Date.Value.Date == today
+                         && b.Panel_Id != null
+                         && b.Panel_Id > 0)
+                .Sum(b => (decimal?)b.Total_Amount) ?? 0;
+
+            return totalAmount;
+        }
+
     }
 }
