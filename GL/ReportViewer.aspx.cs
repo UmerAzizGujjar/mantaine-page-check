@@ -1322,7 +1322,7 @@ namespace PMS
                     var emer_id = Request.QueryString["Emergency_Id"].ToString();
                     var user_id = AppConfig.UserID;
                     var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
-                    var address = DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "")
+                var address = DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
                     var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
                     reportPath += "Emergency/rpt_Emergency_Patient_Reg_Print.rpt";
