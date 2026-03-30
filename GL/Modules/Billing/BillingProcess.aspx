@@ -1574,6 +1574,9 @@
                         var hdn_docid = $("#hdn_docid").val();
                         var opd_procedure = $('#hdn_opd_procedure').val();
                         var finalbill = $('#hdn_finalBill').val();
+                        if(finalbill == ""){
+                             $("#hdn_finalBill").val("false");
+                        }
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
                         var TotalPayable = $('#txtTotalPayable').val();
