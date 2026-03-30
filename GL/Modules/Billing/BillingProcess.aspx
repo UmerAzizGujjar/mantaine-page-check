@@ -3758,6 +3758,7 @@
 
                 var PackType = $("#hdn_pkgtype").val();
                 var packname = $("#hdn_pkgname").val();
+                var panelId = $("#ddlpanel").val();
 
                 $.ajax({
                     type: "POST",
@@ -3772,7 +3773,6 @@
                         var data = JSON.parse(resp.d);
                         var rowIndex = $('#tblDetails tbody tr').length;
 
-                        // ?? Ensure doctors is valid
                         if (typeof doctors === 'undefined' || !doctors) {
                             console.error("? 'doctors' variable is not defined or empty!");
                             return;
@@ -3782,7 +3782,14 @@
                             var disc = "0.00";
                             var itemanme = value.Item_Name || value.GroupName;
 
-                            // ? Safely get Share_type
+                            // Check if panel is selected and not "0"
+                            var hasPanel = panelId && panelId != "0";
+                            var itemRate = value.Amount;
+
+                            // Store the original item ID for panel rate lookup
+                            var itemIdForPanel = value.Item_Code;
+
+                            // Share type logic
                             var shareType = null;
                             if (value.m && value.m.Share_type !== undefined) {
                                 shareType = value.m.Share_type;
@@ -3791,79 +3798,132 @@
                             } else {
                                 shareType = '';
                             }
+                            debugger;
+
                             var TestDate = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
-                            // ? Build select safely
-                            var disabledAttr = (shareType === '002') ? ' disabled' : '';
-                            var doctorSelect =
-                                '<select id="ddldoctor' + (rowIndex + 1) + '" ' +
-                                'name="ddlDoctor" ' +
-                                'onchange="GetDocAgreementValuess(this)" ' +
-                                'class="ddlDoctor"' +
-                                disabledAttr + '>' +
-                                doctors +
-                                '</select>';
+                var disabledAttr = (shareType === '002') ? ' disabled' : '';
+                var doctorSelect =
+                    '<select id="ddldoctor' + (rowIndex + 1) + '" ' +
+                    'name="ddlDoctor" ' +
+                    'onchange="GetDocAgreementValuess(this)" ' +
+                    'class="ddlDoctor"' +
+                    disabledAttr + '>' +
+                    doctors +
+                    '</select>';
 
-                            // ? Build row
-                            var row = '<tr>' +
-                                '<td style="text-align:center;">' + (rowIndex + 1) + '</td>' +
-                                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
-                                '<td style="text-align:left;">' +
-                                '<input type="hidden" name="hdnParentTrans_ID" value="' + (value.ParentTrans_ID || '') + '" />' +
-                                '<input type="hidden" name="hdnParentTrans_Name" value="' + (value.ParentTrans_Name || '') + '" />' +
-                                '<input type="hidden" name="hdnParentTrans_Type" value="' + (value.ParentTrans_Type || '') + '" />' +
-                                '<input type="hidden" name="hdnDisPer" value="' + disc + '" />' +
-                                '<input type="hidden" name="hdnDisAmount" value="0.00" />' +
-                                '<input type="hidden" name="hdnNet_Amount" value="' + value.Amount + '" />' +
-                                '<input type="hidden" name="hdnItemID" value="' + value.Item_Code + '" />' +
-                                '<input type="hidden" name="hdnItemName" value="' + itemanme + '" />' +
-                                '<input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" />' +
-                                '<input type="hidden" name="hdnRecommendedByDoctor" value="false" />' +
-                                itemanme +
-                                '</td>' +
-                                '<td></td>' +
-                                '<td>' +
-                                '<input type="text" name="txtQty" disabled value="1" style="width:45px" onkeyup="CulculateAmonutWithQty(this)" />' +
-                                '<input type="hidden" name="txtActualAmount" value="' + value.Amount + '" />' +
-                                '<input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" />' +
-                                '</td>' +
-                                '<td style="text-align:right" onkeypress="CalculateSummarieDiscountPerWise(' + rowIndex + ')">' + value.Amount + '</td>' +
-                                '<td><input type="text" name="DisPer" value="' + disc + '" style="width:37px" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" /></td>' +
-                                '<td><input type="text" name="DisAmount" value="" style="width:75px" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" disabled /></td>' +
-                                '<td style="text-align:right;">45</td>' +
-                                '<td><input type="number" id="DocShare' + rowIndex + '" name="DocShare" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
-                                '<td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
-                                '<td>' + doctorSelect + '</td>' +
-                                '<td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td>' +
-                                '</tr>';
+                // Create the row with a unique ID for rate lookup
+                var rowId = 'pkgrow_' + rowIndex + '_' + key;
 
+                var row = '<tr>' +
+                    '<td style="text-align:center;">' + (rowIndex + 1) + '</td>' +
+                    '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' +
+                    '<td style="text-align:left;">' +
+                    '<input type="hidden" name="hdnParentTrans_ID" value="' + (value.ParentTrans_ID || '') + '" />' +
+                    '<input type="hidden" name="hdnParentTrans_Name" value="' + (value.ParentTrans_Name || '') + '" />' +
+                    '<input type="hidden" name="hdnParentTrans_Type" value="' + (value.ParentTrans_Type || '') + '" />' +
+                    '<input type="hidden" name="hdnDisPer" value="' + disc + '" />' +
+                    '<input type="hidden" name="hdnDisAmount" value="0.00" />' +
+                    '<input type="hidden" name="hdnNet_Amount" value="' + itemRate + '" />' +
+                    '<input type="hidden" name="hdnItemID" value="' + value.Item_Code + '" />' +
+                    '<input type="hidden" name="hdnItemName" value="' + itemanme + '" />' +
+                    '<input type="hidden" name="hdnItemType" value="' + value.Item_Type + '" />' +
+                    '<input type="hidden" name="hdnRecommendedByDoctor" value="false" />' +
+                    '<input type="hidden" name="hdnOriginalRate" value="' + itemRate + '" />' +
+                    '<input type="hidden" name="hdnItemCodeForPanel" value="' + itemIdForPanel + '" />' +
+                    '<input type="hidden" name="hdnRowId" value="' + rowId + '" />' +
+                    itemanme +
+                    '</td>' +
+                    '<td></td>' +
+                    '<td>' +
+                    '<input type="text" name="txtQty" disabled value="1" style="width:45px" onkeyup="CulculateAmonutWithQty(this)" />' +
+                    '<input type="hidden" name="txtActualAmount" value="' + itemRate + '" />' +
+                    '<input type="hidden" name="hdnCategory_ID" value="' + value.Category_ID + '" />' +
+                    '</td>' +
+                    '<td style="text-align:right" id="amnt' + rowIndex + '" name="amnt">' + itemRate + '</td>' +
+                    '<td><input type="text" name="DisPer" value="' + disc + '" style="width:37px" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')" /></td>' +
+                    '<td><input type="text" name="DisAmount" value="" style="width:75px" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')" disabled /></td>' +
+                    '<td style="text-align:right;">45</td>' +
+                    '<td><input type="number" id="DocShare' + rowIndex + '" name="DocShare" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
+                    '<td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="0" style="width:75px" onkeyup="calculateDoctorShare()" /></td>' +
+                    '<td>' + doctorSelect + '</td>' +
+                    '<td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + '</td>' +
+                    '</tr>';
 
+                $('#tblDetails tbody').append(row);
+                debugger;
+                // If panel is selected, get panel rate for this item
+                if (hasPanel && panelId != "0" && panelId != "") {
+                    getPackageItemPanelRate(panelId, value.Item_Code, value.Item_Type, rowIndex);
+                }
 
-                            $('#tblDetails tbody').append(row);
+                CalculateSummarieDiscountPerWise(rowIndex);
+
+                var $newRow = $('#tblDetails tbody tr').eq(rowIndex);
+                var $amountCell = $newRow.find('td').eq(5);
+                if (Alloweditrate == "true") {
+                    $amountCell.attr('contenteditable', true);
+                } else {
+                    $amountCell.attr('contenteditable', false);
+                }
+
+                rowIndex++;
+            });
+
+            $('input[name="DisAmount"]').prop('disabled', true);
+        },
+        failure: function (error) {
+            alert(error.get_message());
+        }
+    });
+            }
+
+            // New function to get panel rate for package items
+            function getPackageItemPanelRate(panelId, itemId, itemType, rowIndex) {
+                debugger;
+                var url = "BillingProcess.aspx/GetPackageItemPanelRate";
+                var data = JSON.stringify({
+                    'Panel_Id': panelId,
+                    'Item_Id': itemId,
+                    'Item_Type': itemType
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: data,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var result = JSON.parse(response.d);
+
+                        if (result && result.Rate && result.Rate > 0) {
+                            var newRate = parseFloat(result.Rate);
+                            var $row = $("#tblDetails tbody tr").eq(rowIndex);
+
+                            // Update the rate in the row
+                            $row.find('input[name="txtActualAmount"]').val(newRate);
+                            $row.find('input[name="hdnNet_Amount"]').val(newRate);
+                            $row.find('td[id^="amnt"]').text(newRate.toFixed(2));
+
+                            // If there's discount percentage, recalculate
+                            var disPer = $row.find('input[name="DisPer"]').val();
+                            if (disPer && disPer > 0) {
+                                var disAmt = (newRate * disPer) / 100;
+                                var netAmt = newRate - disAmt;
+                                $row.find('input[name="DisAmount"]').val(disAmt.toFixed(2));
+                                $row.find('input[name="hdnDisAmount"]').val(disAmt.toFixed(2));
+                                $row.find('td:eq(8)').text(netAmt.toFixed(2));
+                                $row.find('input[name="hdnNet_Amount"]').val(netAmt.toFixed(2));
+                            }
+
+                            // Recalculate totals
                             CalculateSummarieDiscountPerWise(rowIndex);
-                            var $newRow = $('#tblDetails tbody tr').eq(rowIndex);
-                            var $amountCell = $newRow.find('td').eq(5);
-                            if (Alloweditrate == "true") {
-                                $amountCell.attr('contenteditable', true);
-                            }
-                            else {
-                                $amountCell.attr('contenteditable', false);
-                            }
-
-                            // Patient type logic
-                            //if ($("#lblPatientDiscountType").text().trim() === "Private") {
-                            //    $("#tblDetails tr").each(function () {
-                            //        //2right
-                            //        $(this).find("td:eq(5)").attr('contenteditable', 'true');
-                            //    });
-                            //}
-
-                            rowIndex++;
-                        });
-
-                        $('input[name="DisAmount"]').prop('disabled', true);
+                            CalculateSummariesMaster(false);
+                        }
                     },
-                    failure: function (error) {
-                        alert(error.get_message());
+                    error: function (xhr, status, error) {
+                        console.error("Error getting panel rate for package item:", error);
                     }
                 });
             }
@@ -5249,9 +5309,15 @@
                     if (Packnames == "There is no row at position 0.") {
                         Packnames = ""
                     }
-                    setTimeout(function () {
-                        $('#ddlpanel').val(data.d.IPD_Panel_ID).trigger('change');
-                    }, 1000)
+                    debugger;
+                    $('#ddlpanel').html(
+                        $('<option>', {
+                            value: data.d.IPD_Panel_ID,
+                            text: data.d.IPD_Panel_Name
+                        })
+                    ).attr('disabled', true);
+
+
                     $('#PackageType').val(Packtypes);
                     $('#PackageName').val(Packnames);
                     $('#hdn_PatienttypeId').val(data.d.Patient_Type_id);
@@ -6243,10 +6309,14 @@
 
 
             $(document).ready(function () {
-                fillPanel();
+              
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"] %>';
+                var rgid = '<%= Request.QueryString["Reg_ID"] %>';
                 if (Bill_ID != "") {
                     AllowBillEdit();
+                }
+                if (Bill_ID != "" && rgid != "") {
+                    fillPanel();
                 }
 
                 $("#btnPrint").hide();

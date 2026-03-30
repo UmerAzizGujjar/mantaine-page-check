@@ -3380,7 +3380,7 @@
                                
                             })
                               
-                            callNADRAAPI(response);
+                          //  callNADRAAPI(response);
                         }
                         $('#btnSave').val("Update");
                     }
