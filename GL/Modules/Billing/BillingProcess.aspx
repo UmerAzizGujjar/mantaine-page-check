@@ -1573,10 +1573,10 @@
                         var Opd_id = $('#hdnOpd_id').val();
                         var hdn_docid = $("#hdn_docid").val();
                         var opd_procedure = $('#hdn_opd_procedure').val();
-                        var finalbill = $('#hdn_finalBill').val();
-                        if(finalbill == ""){
-                             $("#hdn_finalBill").val("false");
-                        }
+                        //var finalbill = $('#hdn_finalBill').val();
+                        //if(finalbill == ""){
+                        //     $("#hdn_finalBill").val("false");
+                        //}
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
                         var TotalPayable = $('#txtTotalPayable').val();
@@ -5187,6 +5187,7 @@
             debugger;
             var IsDiscountAvaible = "";
             var departmentpat;
+            var finalbill = false;
             var PatientID;
             var pat_id;
             function OnSuccess(data) {
@@ -5300,6 +5301,7 @@
                         if (Request_Discharge == true) {
                             debugger;
                             $("#hdn_finalBill").val("true");
+                            finalbill = true;
                             AddPackage();
                             FetchAllPreviousBill(in_Pat);
 
@@ -5309,6 +5311,7 @@
                         else if (Request_Discharge != true)
                         {
                             $("#hdn_finalBill").val("false");
+                            finalbill = false;
                         }
                         else {
                             if (id == '') {
