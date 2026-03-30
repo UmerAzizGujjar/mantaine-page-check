@@ -2,6 +2,14 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">     
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    <style type="text/css">
+        .select2-search--dropdown .select2-search__field {
+            padding: 4px;
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+
+    </style>
     <script type="text/javascript">
         var doctorsList = [];
 
@@ -172,7 +180,19 @@
                         }
                     },
                     { "data": "Lab_Test_Detail_ID", "name": "Lab_Test_Detail_ID","visible": false }
-                ]
+                ],
+
+                "drawCallback": function () {
+                    $('.doctor-select').each(function () {
+                        if (!$(this).hasClass("select2-hidden-accessible")) {
+                            $(this).select2({
+                                width: '100%',
+                                placeholder: "Select Doctor",
+                                allowClear: true
+                            });
+                        }
+                    });
+                }
             });
 
         }

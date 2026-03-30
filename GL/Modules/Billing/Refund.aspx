@@ -50,7 +50,7 @@
                  var urlInfo = window.location.href.split('/');
                  var ip = urlInfo[2];
                  var foldername = urlInfo[3];
-                 url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=PrintAdvanceReport&Title=Refund Print &Refund_ID=" + refundID;
+                 url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=PrintRefundReport&Title=Refund Print &Refund_ID=" + refundID;
              }
              window.open(url, '_blank');
          }
