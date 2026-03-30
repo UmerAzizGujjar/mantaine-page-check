@@ -1333,6 +1333,8 @@
             LoadAdvances();
             LoadRefund();
             LoadActual();
+            LoadPrivateCash();
+            LoadPanelCash();
             GetBoxesVisibility();
 
         });
@@ -1432,6 +1434,22 @@
             });
         }
 
+        function LoadPrivateCash() {
+            PageMethods.GetTotalPrivateCash(function (data) {
+                $('#lblPrivateCash').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
+        function LoadPanelCash() {
+            PageMethods.GetTotalPanelCash(function (data) {
+                $('#lblPanelCash').text(CurrencyFormatted(data));
+            }, function (error) {
+                console.log(error.get_message());
+            });
+        }
+
         function GetBoxesVisibility() {
             $.ajax({
                 type: "POST",
@@ -1466,6 +1484,24 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header text-white"><i class=""></i>Private</div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblPrivateCash">0.00</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card1 border-primary shadow-sm">
+                    <div class="card-header text-white"><i class=""></i>Panel</div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary" id="lblPanelCash">0.00</h4>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="card1 border-primary shadow-sm">
                     <div class="card-header text-white">
@@ -1530,6 +1566,8 @@
                     </div>
                 </div>
             </div>
+            
+            
 
         </div>
         <!-- Left Card -->
