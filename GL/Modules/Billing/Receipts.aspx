@@ -784,7 +784,7 @@
                 var NetReceivable = $('#txtNetReceivable').val();
                 var Net_Balance = $('#txtNetBalance').val();
 
-                if (Receipt_ID == '')
+                if (Receipt_ID == '' )
                     Receipt_ID = 0
                 if (Bill_ID == '')
                     Bill_ID = 0
