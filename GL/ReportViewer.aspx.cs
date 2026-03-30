@@ -1319,20 +1319,20 @@ namespace PMS
             }
             else if (reportName == "Emergency_Patient_Print")
             {
-                if (Request.QueryString["Emergency_Id"] != null)
-                {
+                    var emer_id = Request.QueryString["Emergency_Id"].ToString();
                     var user_id = AppConfig.UserID;
                     var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+                    var address = DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "")
                     var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
                     reportPath += "Emergency/rpt_Emergency_Patient_Reg_Print.rpt";
                     rd.Load(reportPath);
-                    rd.SetParameterValue("@Emergency_Id", Request.QueryString["Emergency_Id"]);
+                    rd.SetParameterValue("@Emergency_Id", emer_id);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("CompanyLogo", logoPath);
                     rd.SetParameterValue("UserName", userName);
-                    rd.SetParameterValue("Address", DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + ""));
-                }
+                    rd.SetParameterValue("Address", address);
+                
             }
             else if (reportName == "OPD_Patient_Print_Slip")
             {
