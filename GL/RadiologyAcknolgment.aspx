@@ -132,7 +132,7 @@
                                 var selected = (selectedDoctorId == doctor.Emp_ID) ? 'selected' : '';
                                 options += `<option value="${doctor.Emp_ID}" ${selected}>${doctor.Emp_Name}</option>`;
                             });
-                            return `<select class="form-control doctor-select" name="doctor" ${disabled}>${options}</select>`;
+                            return `<select class="form-control doctor-select" name="doctor" >${options}</select>`;
                         }
                     },
                     {
