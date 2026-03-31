@@ -5370,17 +5370,13 @@
                             finalbill = true;
                             AddPackage();
                             FetchAllPreviousBill(in_Pat);
-
-
-
                         }
-                        else if (Request_Discharge != true)
+                
+                        else 
                         {
-                            $("#hdn_finalBill").val("false");
                             finalbill = false;
-                        }
-                        else {
                             if (id == '') {
+                                
                                 var urlParams = new URLSearchParams(window.location.search);
                                 var appointmentId = urlParams.get('Appointment_ID');
                                 if (!appointmentId || appointmentId == '0' || appointmentId == '') {
