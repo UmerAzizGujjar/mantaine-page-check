@@ -371,6 +371,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                     obj.Item_Code = Item_Code;
                     obj.Description = Desc;
                     obj.Active = Convert.ToBoolean(Active);
+                    obj.Is_Active = Convert.ToBoolean(Active);
                     obj.Unit = PackUnit;
                     obj.Manufacture_Company = Menu;
                     obj.Item_Type = ItemType;
@@ -491,6 +492,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
 
                     obj.Description = Desc;
                     obj.Active = Convert.ToBoolean(Active);
+                    obj.Is_Active = Convert.ToBoolean(Active);
                     obj.Unit = PackUnit;
                     obj.Manufacture_Company = Menu;
                     obj.Item_Type = ItemType;

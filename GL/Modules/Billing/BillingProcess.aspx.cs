@@ -3345,8 +3345,21 @@ namespace PMS
                                     select tbl.Ward_Type).FirstOrDefault();
                         pt.Patient_Type = db.GetDataValueName("Patient Type", inpat.Patient_Discount_Type);
                         pt.Patient_Type_id = inpat.Patient_Discount_Type;
-                        pt.IPD_Panel_ID = inpat.Panel_Company;
-                        if(inpat.Discharge_Request == true) {
+              
+                        pt.IPD_Panel_ID = inpat.Panel_Company?.ToString();
+
+                        // Get IPD panel name from Panels table
+                        if (!string.IsNullOrEmpty(inpat.Panel_Company))
+                        {
+                            var ipdPanel = (from p in db.Panels
+                                            where p.Panel_ID == Convert.ToInt32(inpat.Panel_Company)
+                                            select p).FirstOrDefault();
+                            if (ipdPanel != null)
+                            {
+                                pt.IPD_Panel_Name = ipdPanel.Company_Name;
+                            }
+                        }
+                        if (inpat.Discharge_Request == true) {
                             pt.paid_amount = DBClass.getField("select sum(Received_Amount) from Ar_Billings where  In_Patient_ID =" + inpat.In_Patient_ID);                         
                         }
                         pt.advance_amount = DBClass.getField("select sum(Advance_Amount) from AR_Advances where In_Patient_ID=" + inpat.In_Patient_ID);
@@ -5204,7 +5217,48 @@ namespace PMS
             public string Emp_name { get; set; }
             public string pat_id { get; set; }
         }
+        [WebMethod]
+        public static string GetPackageItemPanelRate(string Panel_Id, string Item_Id, string Item_Type)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                decimal rate = 0;
 
+                if (Item_Type == "Test")
+                {
+                    // For Test items
+                    var panelRate = (from p in db.Panels
+                                     join pd in db.Panel_Detail_Services
+                                     on p.Panel_ID equals pd.Panel_ID
+                                     where p.Panel_ID == Convert.ToInt32(Panel_Id)
+                                           && pd.Test_ID == Item_Id
+                                     select new { pd.Rate }).FirstOrDefault();
+
+                    if (panelRate != null)
+                    {
+                        rate = panelRate.Rate ?? 0;
+                    }
+                }
+                else
+                {
+                    // For Service/Item items
+                    var panelRate = (from p in db.Panels
+                                     join pd in db.Panel_Detail_Services
+                                     on p.Panel_ID equals pd.Panel_ID
+                                     where p.Panel_ID == Convert.ToInt32(Panel_Id)
+                                           && pd.Item_ID == Item_Id
+                                     select new { pd.Rate }).FirstOrDefault();
+
+                    if (panelRate != null)
+                    {
+                        rate = panelRate.Rate ?? 0;
+                    }
+                }
+
+                var result = new { Rate = rate };
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
         [WebMethod]
         public static string GetDermaAppointmentServices(int Appointment_ID)
         {

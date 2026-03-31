@@ -117,9 +117,9 @@ namespace PMS
 
             if (!string.IsNullOrEmpty(ddlDoctorFilter) && ddlDoctorFilter != "0")
             {
-                queryList = queryList.Where(x => x.Billing_DoctorID == Convert.ToInt32(ddlDoctorFilter)).ToList();
+                queryList = queryList.Where(x => x.Billing_DoctorID == Convert.ToInt32(ddlDoctorFilter) ||  x.LabTest_DoctorID == Convert.ToInt32(ddlDoctorFilter)).ToList();
             }
-
+   
             if (!string.IsNullOrEmpty(mainDepartmentFilter) && mainDepartmentFilter != "All")
             {
                 queryList = queryList.Where(x => x.ParentTrans_Name == mainDepartmentFilter || (string.IsNullOrEmpty(x.ParentTrans_Name) && mainDepartmentFilter == "WalkIn")).ToList();
@@ -151,6 +151,7 @@ namespace PMS
                 queryList = queryList.Where(x =>
                     x.Full_Name.Contains(searchValue) ||
                     x.Bill_No.Contains(searchValue) ||
+                    x.mr_no_sequence.Contains(searchValue) ||
                     x.Item_Name.Contains(searchValue)
                 ).ToList();
             }
