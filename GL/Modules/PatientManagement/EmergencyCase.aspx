@@ -4533,6 +4533,33 @@
             }
         }
 
+        $(document).on('keyup', '.select2-search__field', function () {
+            var searchString = $(this).val();
+
+            var options;
+            $.ajax({
+                url: 'EmergencyCase.aspx/getpharmacyitems',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ searchString: searchString }),
+                success: function (response) {
+                    var options = '';
+                    try {
+                        var pharmacyItems = JSON.parse(response.d);
+                        $.each(pharmacyItems, function (key, value) {
+                            options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
+                        });
+                        $('#txtPharmacyItem').append(options).trigger('change');
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+
         function FillPharmacyItem() {
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {
                 var options = '<option value=""> Select Medicine  </option>'

@@ -2946,15 +2946,31 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var Routes = (from d in db.INV_Items
-
                           where d.Pharmacy_Item == true
                           select new
                           {
                               d.Item_Code,
                               Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
-                          }).ToList();
+                          }).ToList().Take(20);
 
             return (new JavaScriptSerializer().Serialize(Routes));
+        }
+
+        [WebMethod]
+        public static string getpharmacyitems(string searchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var pharmacyItems = (from d in db.INV_Items
+                                     where d.Pharmacy_Item == true && d.Description.Contains(searchString)
+                                     orderby d.Item_Code descending
+                                     select new
+                                     {
+                                         d.Item_Code,
+                                         Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
+                                     }).Take(20).ToList();
+                return (new JavaScriptSerializer().Serialize(pharmacyItems));
+            }
         }
         [WebMethod]
         public static string GetDoctorsAgainstMO(string status)
