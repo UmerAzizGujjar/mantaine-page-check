@@ -1601,7 +1601,13 @@
                         var BillCategory = $('#BillCategory').val();
                         var bomTotalValue = $('#bomTotalValue').val();
                         var selectedBranchId = $('#ddlUserBranch').val();
+                        debugger;
                         var Panel_Id = $('#ddlpanel').val();
+
+
+                        if (Panel_Id == "null") {
+                            Panel_Id = "0";
+                        }
                         if (bomTotalValue == undefined || bomTotalValue == null || bomTotalValue == "") {
                             bomTotalValue = 0.00
                         }
@@ -5287,8 +5293,7 @@
                     $('#lblDepartment').val(data.d.Department);
                     $('#txt_balance').val(data.d.Balance);
                     $('#txtMaindepartment').val(data.d.MainDepartment).trigger('change');
-                   // $('#ddlReffered_By').val(ReplaceNullWith_Space(data.d.refferedoc)).trigger('change');
-                    //$('#ddlReffered_By').attr('disabled', true);
+                
                     var doc = data.d.refferedoc;
                     var hasDoctor = (doc && doc != "" && doc != "There is no row at position 0.");
                     $('#ddlReffered_By').val(doc).trigger('change').prop('disabled', hasDoctor);
@@ -5315,7 +5320,7 @@
                             value: data.d.IPD_Panel_ID,
                             text: data.d.IPD_Panel_Name
                         })
-                    ).attr('disabled', true);
+                    );
 
 
                     $('#PackageType').val(Packtypes);
@@ -5370,17 +5375,13 @@
                             finalbill = true;
                             AddPackage();
                             FetchAllPreviousBill(in_Pat);
-
-
-
                         }
-                        else if (Request_Discharge != true)
+                
+                        else 
                         {
-                            $("#hdn_finalBill").val("false");
                             finalbill = false;
-                        }
-                        else {
                             if (id == '') {
+                                
                                 var urlParams = new URLSearchParams(window.location.search);
                                 var appointmentId = urlParams.get('Appointment_ID');
                                 if (!appointmentId || appointmentId == '0' || appointmentId == '') {
@@ -6315,9 +6316,9 @@
                 if (Bill_ID != "") {
                     AllowBillEdit();
                 }
-                if (Bill_ID != "" && rgid != "") {
+/*                if (Bill_ID == "" && rgid == "") {*/
                     fillPanel();
-                }
+                //}
 
                 $("#btnPrint").hide();
                 debugger;
