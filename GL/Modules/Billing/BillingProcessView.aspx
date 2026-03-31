@@ -24,19 +24,31 @@
 
 
         function PrintBilling(Bill_ID) {
-            debugger;
             var locationInfo = window.location;
-            var user_name = '<% =AppConfig.Company_Name %>';
-            url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + Bill_ID;
-            if (!locationInfo.origin.includes('localhost')) {
-                var urlInfo = window.location.href.split('/');
-                var ip = urlInfo[2];
-                var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + Bill_ID;
-            }
-            window.open(url, '_blank');
+            var user_name = '<%= AppConfig.Company_Name %>';
+    var reportPath;  // ✅ declared properly
 
-        }
+    if (user_name == 'As-Siraat Serving Humanity') {
+        reportPath = '../../ReportViewer.aspx';
+    } else {
+        reportPath = 'ReportViewer.aspx';
+    }
+
+    var url;
+
+    if (!locationInfo.origin.includes('localhost')) {
+        var urlInfo = window.location.href.split('/');
+        var ip = urlInfo[2];
+        var foldername = urlInfo[3];
+        url = 'http://' + ip + '/' + foldername + '/' + reportPath +
+            '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + Bill_ID;  // ✅ was using undefined `id`
+    } else {
+        url = '/' + reportPath +
+            '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + Bill_ID;  // ✅ fixed localhost URL + uses reportPath
+    }
+
+    window.open(url, '_blank');
+}
 
         function LoadPage() {
             let savedVisibility = null;

@@ -1365,6 +1365,65 @@ namespace PMS
                     rd.SetParameterValue("Address", address);
                 
             }
+            else if (reportName == "Emergency_Patient_Print_LTR")
+            {
+                    var emer_id = Request.QueryString["Emergency_Id"].ToString();
+                    var user_id = AppConfig.UserID;
+                    var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+                var address = DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
+                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                    reportPath += "Emergency/rptEmergencyBasePrintHalf.rpt";
+                    rd.Load(reportPath);
+                    rd.SetParameterValue("@Emergency_Id", emer_id);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("CompanyLogo", logoPath);
+                    rd.SetParameterValue("UserName", userName);
+                    rd.SetParameterValue("Address", address);
+
+                try
+                {
+                    string sql = $@"
+        SELECT ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
+               ISNULL(rp.Full_Name, '') AS Full_Name,
+               ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
+               ISNULL(rp.Gender, '') AS Gender
+        FROM emergency em 
+        JOIN Reg_patient rp ON em.Reg_PatId = rp.pat_id
+        WHERE em.Emer_id = {emer_id}";
+
+                    DataTable patientData = DBClass.getDataTable(sql);
+
+                    if (patientData.Rows.Count > 0)
+                    {
+                        string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}";
+
+                        // Save to temp file instead of passing bytes
+                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{emer_id}_{Guid.NewGuid()}.png");
+
+                        using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                        {
+                            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+                            using (PngByteQRCode qrCodeImage = new PngByteQRCode(qrCodeData))
+                            {
+                                byte[] qrBytes = qrCodeImage.GetGraphic(10);
+                                File.WriteAllBytes(tempQrPath, qrBytes);
+                            }
+                        }
+
+                        // Pass FILE PATH as string parameter
+                        rd.SetParameterValue("QRImagePath", tempQrPath);
+                    }
+                    else
+                    {
+                        rd.SetParameterValue("QRImagePath", "");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    rd.SetParameterValue("QRImagePath", "");
+                }
+            }
             else if (reportName == "OPD_Patient_Print_Slip")
             {
                 if (Request.QueryString["OPD_ID"] != null)

@@ -1031,6 +1031,13 @@
             window.open(url, '_blank');
 
         }
+        function PrintLTR() {
+            debugger;
+            var Emer_id = '<%= Request.QueryString["EMERID"] %>'
+            var url = '../../ReportViewer.aspx?ReportName=Emergency_Patient_Print_LTR&Title=Emergency Print&Emergency_Id=' + Emer_id;
+            window.open(url, '_blank');
+
+        }
 
         function openReferPatientModal() {
             $('#SearchReferPatients').modal('show');
@@ -1451,6 +1458,9 @@
               
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
                     <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="Print()" />
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint1">
+                    <input type="button" class="btn-primry " id="btnPrint2" value="Print-1" onclick="PrintLTR()" />
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint" style="display: none; position: absolute;">
                     <input type="hidden" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />
