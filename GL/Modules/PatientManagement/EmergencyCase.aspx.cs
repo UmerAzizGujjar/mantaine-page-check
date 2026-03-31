@@ -650,6 +650,8 @@ namespace PMS
             txtRespiration.Text = "";
 
             ddlDepartment.SelectedIndex = 0;
+            ddlRhythm.SelectedIndex = 0;
+            ddlVolume.SelectedIndex = 0;
             ddlDoctor.SelectedIndex = 0;
 
             txtOperation_No.Text = "";
@@ -1602,8 +1604,8 @@ namespace PMS
                     ddlDischarge_By.DataBind();
                     ddlDischarge_By.SelectedValue = qry.Discharge_By;
 
-                    ddlRhythm.SelectedValue = qry.Emergency_Rhythm;
-                    ddlVolume.SelectedValue = qry.Emergency_Volume;
+                    //ddlRhythm.SelectedValue = qry.Emergency_Rhythm;
+                    //ddlVolume.SelectedValue = qry.Emergency_Volume;
                     ddlDischargeStatus.SelectedValue = qry.Discharge_Status;
 
                     if (qry.Expected_Discharge_Date != null)
