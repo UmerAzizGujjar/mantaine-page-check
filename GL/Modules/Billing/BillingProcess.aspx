@@ -5321,7 +5321,9 @@
                             text: data.d.IPD_Panel_Name
                         })
                     );
-
+                    if(data.d.IPD_Panel_ID == null){
+                        fillPanel();
+                    }
 
                     $('#PackageType').val(Packtypes);
                     $('#PackageName').val(Packnames);
