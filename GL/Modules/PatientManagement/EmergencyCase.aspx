@@ -5,13 +5,13 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Emergency.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
         <style type="text/css">
-    .file-upload-wrapper {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-</style>
+            .file-upload-wrapper {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        </style>
   
     <script type="text/javascript">
         var btnVal = '';
@@ -20,7 +20,7 @@
         $(document).ready(function () {
             $('#OtherDetails').hide();
             $('#deathtab').hide();
-            
+
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_txtCNIC'),
                 format: '_____-_______-_',
@@ -80,16 +80,16 @@
                     selectPatient(Reg_ID);
 
                 }, 1000);
-            } 
+            }
             else {
-               
+
             }
             var Emergency_id = '<%= Request.QueryString["ID"] %>';
             if (Emergency_id != "") {
                 AllowEmergencyEdit();
             }
-            if(Reg_ID == "" && Emergency_id == ""){
-                 OpenModal()
+            if (Reg_ID == "" && Emergency_id == "") {
+                OpenModal()
             }
 
             AllowDiscountEdit();
@@ -97,6 +97,10 @@
             fillgender();
             AllowEMRGTabs();
             LoadInvestigationDoctor();
+            LoadTemplate();
+            LoadTemplateForTest();
+
+
 
 
             //jQuery(function ($) {
@@ -214,7 +218,7 @@
                 var Min = $(this).children(":selected").attr('name');
                 if (typeof (Min) != "undefined") {
 
-                   
+
 
 
                     var Minutes = parseInt(Min, 10);
@@ -238,7 +242,7 @@
                     debugger;
 
               <% if (PatientDischargeStatus == true)
-              { %>
+        { %>
 
                     $("#btnDischargeSummary").removeAttr("disabled");
                     $("#btnBasePrintPrint").removeAttr("disabled");
@@ -250,7 +254,7 @@
                 }
             }, 1500);
             LoadCategory();
-            
+
 
             $("#txtSearch").keyup(function (event) {
 
@@ -1388,7 +1392,7 @@
 
             var btnsave = $('#btnSave').val();
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID %>").val();
-           // var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
+            // var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
             //var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
             //var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
             var ddlCallToDoctor = $('#ctl00_MainContent_ddlCallToDoctor').val();
@@ -1397,7 +1401,7 @@
 
             /*var ReferToOPD = $('#ReferToOPD').is(':checked');*/
             var txtHealth_Complaints = "";
-           // var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
+            // var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
             //var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
 
             var patienttype = $("#ctl00_MainContent_vLbl_Patient_Type").text();
@@ -1786,7 +1790,7 @@
             var FollowUpPlanInstructions = $("#ctl00_MainContent_txtFollowUpPlanInstructions").val();
             var CauseOfReferral = $("#ctl00_MainContent_txtCauseOfReferral").val();
             var ReferredTo = $("#ctl00_MainContent_ddlReferredTo").val();
-           // var TreatmentTime = $("#ctl00_MainContent_txtTreatmentTime").val();
+            // var TreatmentTime = $("#ctl00_MainContent_txtTreatmentTime").val();
 
             var CallingDoctorDepartment = $("#ctl00_MainContent_ddl_Department").val();
             var CallingDoctorMobile = $("#ctl00_MainContent_txtMobileNo").val();
@@ -1944,7 +1948,7 @@
             // TreatmentTime,txtAdmission_Date, ddlDepartment, ddlDoctor, ddlWard_No, txtBed_No, discount,patientcateg, Remarks,ddlIssuance_Of,ddlPatientCondition,
 
             var ID = '<%= Request.QueryString["ID"]%>';
-            PageMethods.SaveRecord(Patient_ID, btnsave,  ddlCallToDoctor, txtHealth_Complaints,  RateBeats, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory, txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb, DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane, DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit,  txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo,  CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD,
+            PageMethods.SaveRecord(Patient_ID, btnsave, ddlCallToDoctor, txtHealth_Complaints, RateBeats, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory, txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb, DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane, DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit, txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo, CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD,
                 function (response) {
                     debugger;
 
@@ -2532,9 +2536,9 @@
 
                         var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
 
-                        rows += '<tr>' + '<td><input type="checkbox" class="row-checkbox" /></td>' +  '<td>' + newdate + '</td>' +'<td>' + value.Status + '</td>' + '<td>' + value.Medicine_Name + '</td>' +
-                        '<td>' + value.Dosage_From + ' ' + value.Dosage_Qty + '</td>' + '<td>' + value.Frequency + '</td>' + '<td>' + (value.Oral || '') + ' ' + (value.Injections || '') + '</td>' +
-                          '<td>' + value.Other_Instruction + '</td>' + '<td style="display:none;">' + value.AttendingParamedical_Staff + '</td>' +'</tr>';
+                        rows += '<tr>' + '<td><input type="checkbox" class="row-checkbox" /></td>' + '<td>' + newdate + '</td>' + '<td>' + value.Status + '</td>' + '<td>' + value.Medicine_Name + '</td>' +
+                            '<td>' + value.Dosage_From + ' ' + value.Dosage_Qty + '</td>' + '<td>' + value.Frequency + '</td>' + '<td>' + (value.Oral || '') + ' ' + (value.Injections || '') + '</td>' +
+                            '<td>' + value.Other_Instruction + '</td>' + '<td style="display:none;">' + value.AttendingParamedical_Staff + '</td>' + '</tr>';
                         if (value.Medicine_Name.length > 0)
                             $('#dvHistoryMedication').show();
                         else
@@ -3345,7 +3349,7 @@
                 }
 
                 PageMethods.SaveWardInformation(btnsave, PatID, EmergencyID, ddlWard_No, txtBed_No, ddlDoctor, DichargChk, function (response) {
-                    
+
                 });
             }
             else {
@@ -3401,98 +3405,98 @@
         function CheckExistInOutPatient() {
             var patient_Id = $("#<%= hdfPatient_ID.ClientID %>").val();
 
-       $.ajax({
-           type: "POST",
-           url: "EmergencyCase.aspx/CheckExistOutPatient",
-           data: JSON.stringify({ "Patient_ID": patient_Id }),
-           contentType: "application/json; charset=utf-8",
-           dataType: "json",
-           success: function (response) {
-               debugger;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/CheckExistOutPatient",
+                data: JSON.stringify({ "Patient_ID": patient_Id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
 
-               var data = response.d;  // e.g., "OPD", "IPD", or ""
+                    var data = response.d;  // e.g., "OPD", "IPD", or ""
 
-               if (data == "OPD") {
-                   alert("First Discharge Patient from OPD");
-               }
-               else if (data == "IPD") {
-                   alert("First Discharge from IPD");
-               }
-               else {
-                   var Doctor = $('#ctl00_MainContent_ddlDoctor').val();
-                   var Complain = $('#ctl00_MainContent_txtHealth_Complaints').val();
+                    if (data == "OPD") {
+                        alert("First Discharge Patient from OPD");
+                    }
+                    else if (data == "IPD") {
+                        alert("First Discharge from IPD");
+                    }
+                    else {
+                        var Doctor = $('#ctl00_MainContent_ddlDoctor').val();
+                        var Complain = $('#ctl00_MainContent_txtHealth_Complaints').val();
 
-                   if (Complain == "") {
-                       alert("Please Enter Health Complaint");
-                       return false;
-                   }
+                        if (Complain == "") {
+                            alert("Please Enter Health Complaint");
+                            return false;
+                        }
 
-                   var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
-                   var refer_to = $('#ctl00_MainContent_ddlReferTo').val();
-                   var opd_pat = $('#ctl00_MainContent_ddlPatientCondition').val();
-                   opd_pat = opd_pat ? opd_pat.trim() : "";
+                        var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
+                        var refer_to = $('#ctl00_MainContent_ddlReferTo').val();
+                        var opd_pat = $('#ctl00_MainContent_ddlPatientCondition').val();
+                        opd_pat = opd_pat ? opd_pat.trim() : "";
 
-                   if (ddlIssuance_Of == "0") {
-                       alert("Please First Create Admission");
-                       return false;
-                   }
+                        if (ddlIssuance_Of == "0") {
+                            alert("Please First Create Admission");
+                            return false;
+                        }
 
-                   if (ddlIssuance_Of == "001") {
-                       if (opd_pat == "006") {
-                           console.log("Skipping SaveWard for opd_pat = 006");
-                           saveAllRecord();
-                       } else {
-                           var bedNo = $('#ctl00_MainContent_txtBed_No').val();
-                           bedNo = bedNo ? bedNo.trim() : "";
+                        if (ddlIssuance_Of == "001") {
+                            if (opd_pat == "006") {
+                                console.log("Skipping SaveWard for opd_pat = 006");
+                                saveAllRecord();
+                            } else {
+                                var bedNo = $('#ctl00_MainContent_txtBed_No').val();
+                                bedNo = bedNo ? bedNo.trim() : "";
 
-                           //if (bedNo == "") {
-                           //    alert("Please Select Bed No");
-                           //    return false;
-                           //}
-                           SaveWard();
-                           SaveMedicines();
-                       }
-                   }
-                   else if (ddlIssuance_Of == "002") {
-                       var roomNo = $('#ctl00_MainContent_ddlRoom_No').val();
-                       //if (roomNo == "0" || roomNo == "") {
-                       //    alert("Please Select Room No");
-                       //    return false;
-                       //}
-                       SaveRoom();
-                       SaveMedicines();// Make sure this is called only when valid
-                   }
-                   else {
-                       // Handle unexpected ddlIssuance_Of values
-                       return false;
-                   }
+                                //if (bedNo == "") {
+                                //    alert("Please Select Bed No");
+                                //    return false;
+                                //}
+                                SaveWard();
+                                SaveMedicines();
+                            }
+                        }
+                        else if (ddlIssuance_Of == "002") {
+                            var roomNo = $('#ctl00_MainContent_ddlRoom_No').val();
+                            //if (roomNo == "0" || roomNo == "") {
+                            //    alert("Please Select Room No");
+                            //    return false;
+                            //}
+                            SaveRoom();
+                            SaveMedicines();// Make sure this is called only when valid
+                        }
+                        else {
+                            // Handle unexpected ddlIssuance_Of values
+                            return false;
+                        }
 
-                   // Save to localStorage only if we passed validation
-                   localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
-                   localStorage.DoctorID = $("#ctl00_MainContent_ddlMo_Doctor_Name").val();
-                   localStorage.DesignationID = $("#ctl00_MainContent_ddlMO_Doctor_Status").val();
-               }
-           },
-           failure: function (response) {
-               alert("Failure");
-           },
-           error: function (xhr, status, error) {
-               console.error("AJAX Error:", error);
-               alert("An error occurred while checking patient status.");
-           }
-       });
+                        // Save to localStorage only if we passed validation
+                        localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
+                        localStorage.DoctorID = $("#ctl00_MainContent_ddlMo_Doctor_Name").val();
+                        localStorage.DesignationID = $("#ctl00_MainContent_ddlMO_Doctor_Status").val();
+                    }
+                },
+                failure: function (response) {
+                    alert("Failure");
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    alert("An error occurred while checking patient status.");
+                }
+            });
         }
 
-        
+
 
         debugger;
         function PrintoutPatient() {
             debugger;
             var Emergency_ID = $('#<%= txtIn_Patient_ID.ClientID%>').val();
             var url = '../../ReportViewer.aspx?ReportName=Emergencypatient&Title=Emergency Patient Report&Emergency_ID=' + Emergency_ID;
-            window.open(url,'_blank');
+            window.open(url, '_blank');
         }
-        function SaveInPatientAllRecord() { 
+        function SaveInPatientAllRecord() {
 
             if (!ValidateDiscountFields()) {
                 return false;
@@ -3502,7 +3506,7 @@
             $("#btnSave").attr("disabled", "disabled");
             CheckExistInOutPatient();
 
-            
+
 
         }
 
@@ -4006,20 +4010,20 @@
         function LoadWardHistory(PatientID) {
 
             if (PatientID != '(New)') {
-                
+
                 PageMethods.LoadWardForHistory(PatientID, function (res) {
-                   
+
                     var Wards = JSON.parse(res);
                     var rows = '';
                     var Discharge_On = '';
                     var TrnsDateRec = '';
-                    
+
                     $.each(Wards, function (key, value) {
                         var timeStampEx;
-                        
-                        var timeStamp = parseInt(value.Admission_Date.substr(6, 10)) * 1000; 
-                        var date = moment(timeStamp).format('DD/MM/YYYY h:mm:ss A'); 
-                        
+
+                        var timeStamp = parseInt(value.Admission_Date.substr(6, 10)) * 1000;
+                        var date = moment(timeStamp).format('DD/MM/YYYY h:mm:ss A');
+
                         if (value.To_TimeDate != null) {
                             if (value.Discharge_On != null) {
                                 timeStampEx = parseInt(value.Discharge_On.substr(6, 10));
@@ -4030,7 +4034,7 @@
                             }
                         }
 
-                       
+
                         Discharge_On = null;
                         if (value.Discharge_On != null) {
                             TrnsDateRec = parseInt(value.Discharge_On.substr(6, 10));
@@ -4044,7 +4048,7 @@
 
                         if (value.To_TimeDate == null)
                             timeStampEx = "";
-                      
+
                         rows += '<tr> <td> ' + date + ' </td><td> ' + department + ' </td> <td> ' + value.DoctorName + ' </td><td> ' + value.Emergency_Pat_Condition + ' </td> <td> ' + Discharge_On  /*timeStampEx*/ + ' </td><td> ' + value.Ward_No + ' </td> <td> ' + value.Bed_No_Assigned + ' </td> </tr>';
 
                     }
@@ -4723,7 +4727,7 @@
             debugger;
             if (chk !== "") {
 
-              
+
 
                 chkIssuance_Of_Select();
                 chkrefer_Of_Select();
@@ -4780,7 +4784,7 @@
         {%>
 
             $('#btnSave').val("Update");
-         
+
             <%}%>
             FillWardBeds();
 
@@ -5059,21 +5063,21 @@
             if (Issuance_Of == 0) {
 
                 document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
-              
+
 
 
                 document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
-              
+
 
                 document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
-              
+
 
             }
             else if (Issuance_Of == '001') {
 
 
                 document.getElementById('<%= ddlWard_No.ClientID%>').disabled = false;
-              
+
                 document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroudWhite";
             }
             else {
@@ -5103,7 +5107,7 @@
 
 
                     });
-                
+
                 }
 
             });
@@ -5115,7 +5119,7 @@
             var tokenData = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
             var parsedData = JSON.parse(tokenData);
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("add", { id: JSON.parse(tokenData)[0].id, name: JSON.parse(tokenData)[0].name });
-            
+
 
             $('#<%= txtPatient_ID.ClientID%>').val(Patient_ID);
             $('#<%= hdfPatient_ID.ClientID%>').val(Patient_ID);
@@ -5604,15 +5608,15 @@
             width: 'resolve'
         });
 
-        
+
         function OpenModal() {
             debugger;
             $('#PatientsSearchModel').modal({
                 backdrop: 'static'
             });
-            FillPatientsList(); 
+            FillPatientsList();
             $('#srchpat').text("Search Your Patients:");
-            $('#txtSearch').unmask(); 
+            $('#txtSearch').unmask();
             $('#txtSearch').val('');
             $('#ClosePatientsSearchModel').show();
         }
@@ -5628,7 +5632,7 @@
             ClearPatientResults();
 
             for (var i = 0; i < data.length; i++) {
-                AddPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Emergency_No, data[i].Full_Name, data[i].Father_Name, data[i].NIC, data[i].Mobile1,  data[i].Admitted_Status, data[i].Emer_id);
+                AddPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Emergency_No, data[i].Full_Name, data[i].Father_Name, data[i].NIC, data[i].Mobile1, data[i].Admitted_Status, data[i].Emer_id);
             }
         }
 
@@ -5642,7 +5646,7 @@
             alert(exc.get_message());
         }
 
-        function AddPatientsResult(Reg_Patient_ID, Patient_No, Emergency_No, Full_Name, Father_Name, NIC, Mobile1,  Admitted_Status, Emer_id) {
+        function AddPatientsResult(Reg_Patient_ID, Patient_No, Emergency_No, Full_Name, Father_Name, NIC, Mobile1, Admitted_Status, Emer_id) {
             debugger;
             tblLength = tblPatientsResult.rows.length;
             var row = iPatientsBody.insertRow(-1);
@@ -5727,7 +5731,7 @@
                 backdrop: 'static'
             });
             $("#ddl_name").focus();
-           
+
         }
 
         function clearPatient() {
@@ -5785,7 +5789,7 @@
             var CNIC = $('#txt_cnic').val();
             var Address = $('#txt_Address').val();
             var martail_status = $('#ddl_status').val();
-            if ((PatientName == "" )) {
+            if ((PatientName == "")) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -5853,7 +5857,7 @@
 
             var amount = parseInt(ageInput, 10);
 
-            if (isNaN(amount) || amount <= 0 || amount > 1500) { 
+            if (isNaN(amount) || amount <= 0 || amount > 1500) {
                 $('#txtAge_yearss').val('');
                 return;
             }
@@ -5979,8 +5983,8 @@
             var selectedVal = ddl.value;
             var selectedText = ddl.options[ddl.selectedIndex].text;
             var doctor = document.getElementById("<%= ddlDoctor.ClientID %>");
-           var ward = document.getElementById("<%= ddlWard_No.ClientID %>");
-           var bedNo = document.getElementById("<%= txtBed_No.ClientID %>");
+            var ward = document.getElementById("<%= ddlWard_No.ClientID %>");
+            var bedNo = document.getElementById("<%= txtBed_No.ClientID %>");
             var referOPD = document.getElementById("<%= ReferToOPD.ClientID %>");
 
             if (selectedVal === "006" || selectedText === "OPD") {
@@ -6078,6 +6082,431 @@
             window.searchTimeout = setTimeout(function () {
                 PageMethods.AddPatient(searchString, OnFilterPatients, OnFailPatients);
             }, 300);
+        }
+
+        function LoadTemplate() {
+            var options = '<option value="0" >Select Template</option>';
+            PageMethods.GetTemplate(function (Tests) {
+                $.each(JSON.parse(Tests), function (key, value) {
+                    options += '<option value="' + value.Template_Id + '" >' + value.Template_Name + '</option>';
+                });
+                $('#ddlTemplate').html(options);
+                $('#ddlTemplate').select2();
+            });
+        }
+
+        function LoadTemplateMedicine() {
+            debugger;
+            var Templateid = $('#ddlTemplate').val()
+            PageMethods.GetTemplateMedicine(Templateid, function (res) {
+                debugger;
+                var Medicines = JSON.parse(res);
+                var rows = '';
+                $.each(Medicines, function (key, value) {
+                    debugger;
+                    var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
+                    var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
+                    var datearray = date.split("/");
+                    var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+                    debugger;
+                    rows += '<tr> <td><input type="hidden" name="testDate" value="' + date + '"> ' + newdate + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td> ' + value.Injections + ' </td> <td> ' + value.AttendingParamedical_Staff + ' </td><td> ' + value.Dosage_From + ' </td><td> ' + value.Dosage_Qty + ' </td><td> ' + value.Other_Instruction + ' </td><td> <a href="#" onclick="editMedicine(this)">Edit</a> |  <a href="#" onclick="deleteMedicine(this)"> Delete </a></td> <td style="display:none;">' + value.Item_Code + '</td></tr>';
+                });
+                $('#tblMedicinesList tbody').append(rows);
+            })
+        }
+
+
+        function LoadTemplate() {
+            var options = '<option value="0" >Select Template</option>';
+            PageMethods.GetTemplate(function (Tests) {
+                $.each(JSON.parse(Tests), function (key, value) {
+                    options += '<option value="' + value.Template_Id + '" >' + value.Template_Name + '</option>';
+                });
+                $('#ddlTemplate').html(options);
+                $('#ddlTemplate').select2();
+            });
+        }
+
+        function LoadTemplateForTest() {
+            var options = '<option value="0">Select Template</option>';
+            PageMethods.GetTemplate(function (Tests) {
+                try {
+                    var templates = JSON.parse(Tests);
+                    $.each(templates, function (key, value) {
+                        options += '<option value="' + value.Template_Id + '" >' + value.Template_Name + '</option>';
+                    });
+                    $('#ddlTemplateTest').html(options);
+                    if ($.fn.select2) {
+                        $('#ddlTemplateTest').select2();
+                    }
+                    console.log("Templates loaded:", templates.length);
+                } catch (e) {
+                    console.error("Error loading templates:", e);
+                }
+            }, function (error) {
+                console.error("Failed to load templates:", error);
+            });
+        }
+
+        function LoadtepmlateTest() {
+            debugger;
+            var Templateid = $('#ddlTemplateTest').val();
+
+            console.log("Selected Template ID:", Templateid);
+
+            if (Templateid == "0" || Templateid == "" || Templateid == null || Templateid == undefined) {
+                console.log("Invalid template ID, returning");
+                return;
+            }
+
+            PageMethods.GetTemplateTest(Templateid, function (res) {
+                debugger;
+                try {
+                    console.log("Raw response:", res);
+                    var test = JSON.parse(res);
+                    console.log("Parsed tests:", test);
+                    console.log("Number of tests:", test.length);
+
+                    if (test.length == 0) {
+                        alert("No tests found in this template");
+                        return;
+                    }
+
+                    var Dep_id = '';
+                    var Test = '';
+                    var Rot_id = '';
+                    var Testid = '';
+
+                    $.each(test, function (key, value) {
+                        debugger;
+                        console.log("Processing test:", value);
+                        Dep_id = value.Department_id;
+                        Test = value.Test_Name;
+                        Testid = value.Test_Id;
+                        Rot_id = value.Rotation_Id;
+                        AddTemplateTest(Dep_id, Test, Rot_id, Testid);
+                    });
+
+                    console.log("Template tests added successfully");
+                } catch (e) {
+                    console.error("Error parsing template test data:", e);
+                    alert("Error loading template tests: " + e.message);
+                }
+            }, function (error) {
+                console.error("Error calling GetTemplateTest:", error);
+                alert("Failed to load template tests");
+            });
+        }
+
+        function AddTemplateTest(Dep_id, Test, Rot_id, Testid) {
+            debugger;
+            var maindpt = Dep_id;
+            var CheckTest = Test;
+
+            console.log("Adding template test - Dept:", maindpt, "Test:", Test, "TestID:", Testid);
+
+            if (CheckTest != 0 && CheckTest != null && CheckTest != "") {
+                if (maindpt == "001") {
+                    AddTemLabTest(maindpt, CheckTest);
+                }
+                else if (maindpt == "002" || maindpt == "003" || maindpt == "004") {
+                    AddTempRadialogyTest(CheckTest, Testid);
+                }
+                else if (maindpt == "005") {
+                    AddTempBloodTest(Testid, CheckTest);
+                    $('#divRotation').hide();
+                }
+                else if (maindpt == "006") {
+                    FillTemProcedure(CheckTest, Testid);
+                    $('#divRotation').hide();
+                }
+                else if (maindpt == "007") {
+                    FillProcedure("007");
+                    $('#ddlXRayLF').hide();
+                    $('#divRotation').hide();
+                }
+                else if (maindpt == "008") {
+                    AddCardioTest(maindpt, CheckTest);
+                }
+                else {
+                    console.log("Unknown department ID:", maindpt);
+                }
+            } else {
+                console.log("Invalid test data");
+            }
+        }
+
+        function AddTemLabTest(maindpt, CheckTest) {
+            debugger;
+            var test = CheckTest;
+            console.log("Adding Lab Test:", test);
+
+            PageMethods.GetLabTestDDLDetails(test, maindpt, function (res) {
+                try {
+                    console.log("Lab test response:", res);
+                    var labTests = JSON.parse(res);
+                    console.log("Parsed lab tests:", labTests);
+
+                    $.each(labTests, function (key, value) {
+                        debugger;
+                        var Result = 'Result';
+                        var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
+                        var dateValue = '<%= DateTime.Now%>';
+                        var row;
+
+                        // Get special tests and area of interest values safely
+                        var specialTestsVal = $('#ctl00_MainContent_txtSpecialTests').val() || "";
+                        var areaOfInterestVal = $('#ctl00_MainContent_txtAreaOfInterest').val() || "";
+
+                        if (value.Test_ID != 0) {
+                            row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                                '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                                '<input type="hidden" name="txtRotation" value="0">' +
+                                '<input type="hidden" name="txtGroupCategory" value="0">' +
+                                '<input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' +
+                                (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + '</td>' +
+                                '<td>No</td><td>' + Result + '</td>' +
+                                '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
+                                '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
+                                '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+                        }
+                        else {
+                            row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                                '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                                '<input type="hidden" name="txtRotation" value="0">' +
+                                '<input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/>' +
+                                '<input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' +
+                                (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>' +
+                                '<td>No</td><td>' + Result + '</td>' +
+                                '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
+                                '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
+                                '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+                        }
+
+                        // FIXED: Use tbody selector
+                        var tableBody = $('.tests-table tbody');
+                        if (tableBody.length == 0) {
+                            tableBody = $('#tblLabtest tbody');
+                        }
+                        if (tableBody.length == 0) {
+                            tableBody = $('#tblLabtest');
+                        }
+
+                        console.log("Appending row to table:", tableBody);
+                        tableBody.append(row);
+                    });
+
+                    $("#ctl00_MainContent_txtSpecialTests").val("");
+                    $("#ctl00_MainContent_txtAreaOfInterest").val("");
+                    console.log("Lab tests added successfully");
+                } catch (e) {
+                    console.error("Error in AddTemLabTest:", e);
+                }
+            }, function (err) {
+                console.error("Error calling GetLabTestDDLDetails:", err);
+            });
+        }
+
+        function AddTempRadialogyTest(CheckTest, Testid) {
+            debugger;
+            var Result = 'Result';
+            var test = Testid;
+            var testname = CheckTest;
+            var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
+            var dateValue = '<%= DateTime.Now%>';
+            var IsRotationShow = $('#divRotation').is(":visible");
+            var Rotation_ID = IsRotationShow ? $('#ddlRotation option:selected').val() : "0";
+            var Rotation_Name = IsRotationShow ? $('#ddlRotation option:selected').text() : " ";
+
+            if (Rotation_Name == "Select" || Rotation_ID == 0) {
+                Rotation_ID = "";
+                Rotation_Name = "";
+            }
+
+            var ddlXRayLF_ID = IsRotationShow ? $('#ddlXRayLF option:selected').val() : "0";
+            var ddl_XRayLF_Name = IsRotationShow ? $('#ddlXRayLF option:selected').text() : " ";
+            var ddlXRayLF_Name = ',' + ddl_XRayLF_Name;
+
+            console.log("Adding Radiology Test:", testname, "TestID:", test);
+
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/GetTestMainDepartmentDetails",
+                data: JSON.stringify({ TestID: test }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    try {
+                        var MainDeptName = JSON.parse(data.d);
+                        TestMainDepartmentName = MainDeptName[0].TestMainDepartmentName123;
+                        MainDepartmentName = MainDeptName[0].estMainDepartmen;
+
+                        var specialTestsVal = $('#ctl00_MainContent_txtSpecialTests').val() || "";
+                        var areaOfInterestVal = $('#ctl00_MainContent_txtAreaOfInterest').val() || "";
+
+                        var row;
+                        if (MainDepartmentName == "003") {
+                            row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                                '<td><input type="hidden" name="testID" value="' + test + '" />' +
+                                '<input type="hidden" name="txtRotation" value="' + Rotation_ID + '">' +
+                                '<input type="hidden" name="txtddlXRayLF_Name" value="' + ddl_XRayLF_Name + '">' +
+                                '<input type="hidden" name="txtDeptID" value="' + MainDepartmentName + '"/> ' +
+                                TestMainDepartmentName + ', ' + testname + ', ' + Rotation_Name + ddlXRayLF_Name + '</td>' +
+                                '<td>No</td><td>' + Result + '</td>' +
+                                '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
+                                '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
+                                '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+                        }
+                        else {
+                            row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                                '<td><input type="hidden" name="testID" value="' + test + '" />' +
+                                '<input type="hidden" name="txtRotation" value="' + Rotation_ID + '">' +
+                                '<input type="hidden" name="txtDeptID" value="' + MainDepartmentName + '"/> ' +
+                                TestMainDepartmentName + ', ' + testname + ', ' + Rotation_Name + '</td>' +
+                                '<td>No</td><td>' + Result + '</td>' +
+                                '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
+                                '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
+                                '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+                        }
+
+                        var tableBody = $('.tests-table tbody');
+                        if (tableBody.length == 0) {
+                            tableBody = $('#tblLabtest tbody');
+                        }
+                        if (tableBody.length == 0) {
+                            tableBody = $('#tblLabtest');
+                        }
+
+                        console.log("Appending radiology row to table");
+                        tableBody.append(row);
+                        $('#ddlXRayLF option:selected').val("0");
+                        $("#ctl00_MainContent_txtSpecialTests").val("");
+                        $("#ctl00_MainContent_txtAreaOfInterest").val("");
+                        console.log("Radiology test added successfully");
+                    } catch (e) {
+                        console.error("Error in AddTempRadialogyTest:", e);
+                    }
+                },
+                failure: function (response) {
+                    console.error("Failure in AddTempRadialogyTest:", response);
+                    alert(response.d);
+                }
+            });
+        }
+
+        function AddTempBloodTest(Testid, CheckTest) {
+            var test = CheckTest;
+            console.log("Adding Blood Test:", test);
+
+            PageMethods.GetBBDDLDetails(test, function (res) {
+                try {
+                    var bloodTests = JSON.parse(res);
+                    console.log("Blood tests:", bloodTests);
+
+                    $.each(bloodTests, function (key, value) {
+                        var Result = 'Result';
+                        var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
+                var dateValue = '<%= DateTime.Now%>';
+                var row;
+
+                var specialTestsVal = $('#ctl00_MainContent_txtSpecialTests').val() || "";
+                var areaOfInterestVal = $('#ctl00_MainContent_txtAreaOfInterest').val() || "";
+
+                if (value.Test_ID != 0) {
+                    row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                        '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                        '<input type="hidden" name="txtRotation" value="0">' +
+                        '<input type="hidden" name="txtGroupCategory" value="0">' +
+                        '<input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' +
+                        (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' ' +
+                        (value.GroupCategoryName == null ? ' ' : ', ' + value.GroupCategoryName) + '</td>' +
+                        '<td>No</td><td>' + Result + '</td>' +
+                        '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
+                        '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
+                        '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+                }
+                else {
+                    row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                        '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                        '<input type="hidden" name="txtRotation" value="0">' +
+                        '<input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/>' +
+                        '<input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' +
+                        (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>' +
+                        '<td>No</td><td>' + Result + '</td>' +
+                        '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
+                        '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
+                        '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+                }
+
+                var tableBody = $('.tests-table tbody');
+                if (tableBody.length == 0) {
+                    tableBody = $('#tblLabtest tbody');
+                }
+                if (tableBody.length == 0) {
+                    tableBody = $('#tblLabtest');
+                }
+
+                tableBody.append(row);
+            });
+
+            $("#ctl00_MainContent_txtSpecialTests").val("");
+            $("#ctl00_MainContent_txtAreaOfInterest").val("");
+            console.log("Blood tests added successfully");
+        } catch (e) {
+            console.error("Error in AddTempBloodTest:", e);
+        }
+    }, function (err) {
+        console.error("Error calling GetBBDDLDetails:", err);
+    });
+        }
+
+        function FillTemProcedure(CheckTest, Testid) {
+            debugger;
+            console.log("Filling Procedure:", CheckTest);
+
+            PageMethods.GetTemProcedure(CheckTest, function (item) {
+                try {
+                    var procedures = JSON.parse(item);
+                    console.log("Procedures:", procedures);
+
+                    $.each(procedures, function (key, value) {
+                        var Result = 'Result';
+                        var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
+                var dateValue = '<%= DateTime.Now%>';
+                var row;
+                var TestMainDepartmentName = value.Main_Department_Name;
+
+                var specialTestsVal = $('#ctl00_MainContent_txtSpecialTests').val() || "";
+                var areaOfInterestVal = $('#ctl00_MainContent_txtAreaOfInterest').val() || "";
+
+                row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                    '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                    '<input type="hidden" name="txtRotation" value="0">' +
+                    '<input type="hidden" name="txtGroupCategory" value="0">' +
+                    '<input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' +
+                    (TestMainDepartmentName == null ? '' : TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' ' +
+                    (value.GroupCategoryName == null ? ' ' : ', ' + value.GroupCategoryName) + '</td>' +
+                    '<td>No</td><td>' + Result + '</td>' +
+                    '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
+                    '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
+                    '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+
+                var tableBody = $('.tests-table tbody');
+                if (tableBody.length == 0) {
+                    tableBody = $('#tblLabtest tbody');
+                }
+                if (tableBody.length == 0) {
+                    tableBody = $('#tblLabtest');
+                }
+
+                tableBody.append(row);
+            });
+
+            console.log("Procedures added successfully");
+        } catch (e) {
+            console.error("Error in FillTemProcedure:", e);
+        }
+    });
         }
 
 
@@ -6963,10 +7392,14 @@
 </div>
 
                     <div id="Tab-4">
-
                          <div id="Medication">
-                    <h2>Medication :</h2>
+                    <h2>Medication :</h2>                 
                             <div class="row align-items-center mb-3">
+                                <div class="col-lg-2 col-md-4 col-sm-12">
+                                    <select id="ddlTemplate" class="form-select" onchange="LoadTemplateMedicine()">
+                                        <option value="">Select Template</option>
+                                    </select>
+                                </div>
                                 <div class="col-lg-2 col-md-4 col-sm-12">                               
                                     <input type="button" class="btn-primry"  value="Add Medicine" id="btnAddMedicine" />
                                 </div>
@@ -7430,6 +7863,11 @@
                    <h2>Main Tests Department:</h2>
                 <div class="row mb-3">
                     <div class="col-md-2">
+                    <select id="ddlTemplateTest" class="form-select" onchange="LoadtepmlateTest()">
+                        <option value="">Select Template</option>
+                    </select>
+                        </div>
+                    <div class="col-md-2">
                         <select id="ddlMainTestDepartment" onchange="LoadTestByDepartment()" class="form-control">
                             <option value="">Select Department</option>
                         </select>
@@ -7463,7 +7901,7 @@
          
                 
                     <div style="overflow: scroll; height: 280px;">
-                        <table class="table tests-table">
+                        <table id="tblLabtest" class="table table-bordered table-custom tests-table">
                             <thead>
                                 <tr style="position: sticky; top: 0px; z-index: 10;">
                                     <th style="width: 163px">Date</th>
