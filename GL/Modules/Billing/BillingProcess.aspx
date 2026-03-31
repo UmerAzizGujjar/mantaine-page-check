@@ -58,6 +58,27 @@
                 window.open(url, '_blank');
 
             }
+            function PrintCRV2() {
+                debugger;
+                var id = '<%= Request.QueryString["Bill_ID"]%>';
+                var locationInfo = window.location;
+
+                var user_name = '<% =AppConfig.Company_Name %>';
+                if (user_name == 'As-Siraat Serving Humanity') {
+                    reportPath = '../../ReportViewer.aspx';
+                } else {
+                    reportPath = 'ReportViewer.aspx'; // same folder
+                }
+                var url = "/ReportViewer.aspx?ReportName=BillingBaseReport_Thermal&ReportTitle=Billing Base Report&Bill_ID=" + id;
+                if (!locationInfo.origin.includes('localhost')) {
+                    var urlInfo = window.location.href.split('/');
+                    var ip = urlInfo[2];
+                    var foldername = urlInfo[3];
+                    url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=BillingBaseReport_Thermal&ReportTitle=Billing Base Report&Bill_ID=' + id;
+                }
+                window.open(url, '_blank');
+
+            }
             function PrintCRV1() {
                 debugger;
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
@@ -7293,6 +7314,9 @@
                     </div>
                     <div class="col-lg-2">
                         <input type="button" class="btn-primry" value="Print-1" onclick="PrintCRV1();"  style="width: 100px;" />
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="button" class="btn-primry" value="Print-2" onclick="PrintCRV2();"  style="width: 100px;" />
                     </div>
                             <div class="col-lg-2">
                         <input type="button" class="btn btn-gray" value="List View" onclick="window.open('BillingProcessView.aspx')" />
