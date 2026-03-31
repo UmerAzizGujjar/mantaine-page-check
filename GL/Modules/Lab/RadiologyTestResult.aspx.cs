@@ -85,6 +85,16 @@ namespace PMS.Modules.Lab
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
+        [WebMethod]
+        public static string CheckRadiologydoclistRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Radiology_result_Approval).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
         public void buttonimageuploadNotes_Click(object sender, EventArgs e)
         {
             DataBaseDataContext db = new DataBaseDataContext();

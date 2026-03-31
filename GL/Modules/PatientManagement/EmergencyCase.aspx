@@ -99,32 +99,32 @@
             LoadInvestigationDoctor();
 
 
-            jQuery(function ($) {
+            //jQuery(function ($) {
 
-                MaskedInput({
-                    elm: document.getElementById('txtSearch'),
-                    format: '+92__________',
-                    separator: '-'
-                });
+            //    MaskedInput({
+            //        elm: document.getElementById('txtSearch'),
+            //        format: '+92__________',
+            //        separator: '-'
+            //    });
 
-                var phoneInput = document.getElementById('txtSearch');
-                phoneInput.addEventListener("focus", function () {
-                    if (!this.value.startsWith("+92")) {
-                        this.value = "+92";
-                    }
-                    this.setSelectionRange(3, 3);
-                });
+            //    var phoneInput = document.getElementById('txtSearch');
+            //    phoneInput.addEventListener("focus", function () {
+            //        if (!this.value.startsWith("+92")) {
+            //            this.value = "+92";
+            //        }
+            //        this.setSelectionRange(3, 3);
+            //    });
 
-                phoneInput.addEventListener("keydown", function (e) {
-                    if (this.selectionStart <= 3 && (e.key === "Backspace" || e.key === "Delete")) {
-                        e.preventDefault();
-                    }
-                    if (this.selectionStart < 3) {
-                        this.setSelectionRange(3, 3);
-                    }
-                });
+            //    phoneInput.addEventListener("keydown", function (e) {
+            //        if (this.selectionStart <= 3 && (e.key === "Backspace" || e.key === "Delete")) {
+            //            e.preventDefault();
+            //        }
+            //        if (this.selectionStart < 3) {
+            //            this.setSelectionRange(3, 3);
+            //        }
+            //    });
 
-            });
+            //});
 
             $("#txtSearch").keyup(function (event) {
                 var SearchString = $('#txtSearch').val();
@@ -4533,6 +4533,33 @@
             }
         }
 
+        $(document).on('keyup', '.select2-search__field', function () {
+            var searchString = $(this).val();
+
+            var options;
+            $.ajax({
+                url: 'EmergencyCase.aspx/getpharmacyitems',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ searchString: searchString }),
+                success: function (response) {
+                    var options = '';
+                    try {
+                        var pharmacyItems = JSON.parse(response.d);
+                        $.each(pharmacyItems, function (key, value) {
+                            options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
+                        });
+                        $('#txtPharmacyItem').append(options).trigger('change');
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+
         function FillPharmacyItem() {
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {
                 var options = '<option value=""> Select Medicine  </option>'
@@ -5577,14 +5604,16 @@
             width: 'resolve'
         });
 
+        
         function OpenModal() {
             debugger;
             $('#PatientsSearchModel').modal({
                 backdrop: 'static'
             });
-            FillPatientsList();
+            FillPatientsList(); 
             $('#srchpat').text("Search Your Patients:");
-            $('#txtSearch').unmask();
+            $('#txtSearch').unmask(); 
+            $('#txtSearch').val('');
             $('#ClosePatientsSearchModel').show();
         }
 
@@ -6039,7 +6068,17 @@
             }
             window.open(url, '_blank');
         }
-        
+
+        function PerformPatientSearch() {
+            var searchString = $('#txtSearch').val();
+            if (window.searchTimeout) {
+                clearTimeout(window.searchTimeout);
+            }
+
+            window.searchTimeout = setTimeout(function () {
+                PageMethods.AddPatient(searchString, OnFilterPatients, OnFailPatients);
+            }, 300);
+        }
 
 
     </script>
@@ -6114,15 +6153,17 @@
     <div class="modal-dialog">
         <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
             <fieldset style="padding-top: 20px; padding-left: 14px;">
-<%--                <div class="col-lg-3 col-md-4 col-sm-6">                           
-                <label id="srchpat">Search Your Patients: </label>
-                    <input type="text" id="txtSearch" style="margin-left: 2px;" autocomplete="off" />
+                <div class="row" style="margin-bottom: 15px;">
+                    <div class="col-lg-4 col-md-8 col-sm-8">
+                        <label id="srchpat" style="font-weight:bold; font-size: 16px;">Search Your Patients (Name, CNIC, Mobile): </label>
+                        <input type="text" id="txtSearch" style="margin-left: 10px; width: 60%; padding: 5px;" autocomplete="off" onkeyup="PerformPatientSearch()" placeholder="Type to search..." />
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4" style="display:none">
+                        <label></label>
+                        <input type="button" class="btn btn-primry" id="addNewbtn" onclick="addfunc()" value="Add New Patient" />
+                    </div>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <label></label>
-                    <input type="button" class="btn btn-primry" id="addNewbtn" onclick="addfunc()" value="Add New" />
-                </div>--%>
-                <h2>Emregency Patient List</h2>
+                <h2>Emergency Patient List</h2>
             </fieldset>
             <div style="overflow: scroll; height: 460px; padding: 10px;">
                 <table class="table table-hover table-striped table-bordered" id="tblPatientsResult" style="overflow: scroll; height: auto;">

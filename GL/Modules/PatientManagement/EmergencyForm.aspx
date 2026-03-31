@@ -6,6 +6,14 @@
 
         $(document).ready(function () {
             debugger;
+            MaskedInput({
+                elm: document.getElementById('txt_mobile'),
+                format: '+92__________',
+                separator: '+92 -'
+
+            }); 
+
+            
             showhide();
             $('#btnsearchpatlist').click(function () {
                 $("#PatientsSearchModel").modal('show');
@@ -144,10 +152,55 @@
                     }
                 }
 
+               
+                
+                $(document).on('change', '#ddl_name', function () {
+                    autoSelectGender();
+                });
 
+                $('#PatientModel').on('shown.bs.modal', function () {
+                    setTimeout(function () {
+                        var $gender = $('#ddl_Gender');
+                        if ($gender.find('option').length <= 1) {
+                            $gender.trigger('focus');
+                            setTimeout(autoSelectGender, 600);
+                        } else {
+                            autoSelectGender();
+                        }
+                    }, 300);
+                });
 
             });
         });
+        function autoSelectGender() {
+            var prefix = $('#ddl_name').val();
+            var $gender = $('#ddl_Gender');
+            var MALE_VALUE = 'M';
+            var FEMALE_VALUE = 'F';
+
+            var targetValue = '';
+
+            if (prefix === 'Mr.') {
+                targetValue = MALE_VALUE;
+            } else if (prefix === 'Mrs.' || prefix === 'Ms.') {
+                targetValue = FEMALE_VALUE;
+            }
+            if (!targetValue || $gender.length === 0) return;
+
+            if ($gender.find('option').length <= 1) {
+                console.log("Gender list not loaded yet. Triggering focus to load...");
+                $gender.trigger('focus');
+                setTimeout(autoSelectGender, 500);
+                return;
+            }
+            $gender.val(targetValue).trigger('change');
+            if ($gender.hasClass('select2-hidden-accessible')) {
+                $gender.trigger('select2:select');
+            }
+
+            console.log("Gender set to: " + targetValue);
+        }
+
         function AllowOPdEdit() {
             debugger;
             $.ajax({
@@ -570,9 +623,9 @@
             });
         }
         function fillDropdown($dropdown, methodName) {
-            if ($dropdown.data('filled')) return;
+            if ($dropdown.data('filled') && $dropdown.find('option').length > 1) return;
 
-            $dropdown.data('filled', false);
+            $dropdown.data('filled', true); 
 
             $.ajax({
                 type: "POST",
@@ -583,17 +636,20 @@
                 success: function (response) {
                     try {
                         const data = JSON.parse(response.d);
+                        var currentVal = $dropdown.val();
                         var options = '<option value="0">Please Select</option>';
 
                         $.each(data, function (key, value) {
-                            options += `<option value="${value.DataValue_Name}">
-                                    ${value.DataValue_Description}
-                                </option>`;
+                            options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
                         });
 
-                        $dropdown.html(options)
-                            .data('filled', true)
-                            .trigger('change');
+                        $dropdown.html(options);
+                        if (currentVal && currentVal !== "0" && currentVal !== "") {
+                            $dropdown.val(currentVal);
+                        }
+
+                        $dropdown.trigger('change');
+
                         if ($dropdown.hasClass('select2-hidden-accessible')) {
                             $dropdown.select2('close').select2('open');
                         }
