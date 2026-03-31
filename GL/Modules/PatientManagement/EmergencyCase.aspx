@@ -2532,8 +2532,9 @@
 
                         var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
 
-                        rows += '<tr> <td> ' + newdate + ' </td><td>' + value.Status + '</td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td> ' + value.Injections + ' </td><td> ' + value.AttendingParamedical_Staff + ' </td><td>' + value.Dosage_From + '</td><td>' + value.Dosage_Qty + '</td><td>' + value.Other_Instruction + '</td> </tr>';
-
+                        rows += '<tr>' + '<td><input type="checkbox" class="row-checkbox" /></td>' +  '<td>' + newdate + '</td>' +'<td>' + value.Status + '</td>' + '<td>' + value.Medicine_Name + '</td>' +
+                        '<td>' + value.Dosage_From + ' ' + value.Dosage_Qty + '</td>' + '<td>' + value.Frequency + '</td>' + '<td>' + (value.Oral || '') + ' ' + (value.Injections || '') + '</td>' +
+                          '<td>' + value.Other_Instruction + '</td>' + '<td style="display:none;">' + value.AttendingParamedical_Staff + '</td>' +'</tr>';
                         if (value.Medicine_Name.length > 0)
                             $('#dvHistoryMedication').show();
                         else
@@ -6981,7 +6982,7 @@
                               <th>Dosage</th>
                               <th>Frequency  </th>
                               <th>Routes </th>
-                              <th>Duration </th>
+                              <th>Other Instruction</th>
                             <th style="display:none;">Attending Paramedical Staff </th>
                           </tr>
                       </thead>
