@@ -558,9 +558,6 @@ namespace PMS
         partial void InsertTempReg_patient(TempReg_patient instance);
         partial void UpdateTempReg_patient(TempReg_patient instance);
         partial void DeleteTempReg_patient(TempReg_patient instance);
-        partial void InsertPanel(Panel instance);
-        partial void UpdatePanel(Panel instance);
-        partial void DeletePanel(Panel instance);
         partial void InsertAsset_SubCategory(Asset_SubCategory instance);
         partial void UpdateAsset_SubCategory(Asset_SubCategory instance);
         partial void DeleteAsset_SubCategory(Asset_SubCategory instance);
@@ -954,6 +951,9 @@ namespace PMS
         partial void Insertaspnet_User(aspnet_User instance);
         partial void Updateaspnet_User(aspnet_User instance);
         partial void Deleteaspnet_User(aspnet_User instance);
+        partial void InsertPanel(Panel instance);
+        partial void UpdatePanel(Panel instance);
+        partial void DeletePanel(Panel instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
@@ -2424,14 +2424,6 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<Panel> Panels
-        {
-            get
-            {
-                return this.GetTable<Panel>();
-            }
-        }
-
         public System.Data.Linq.Table<Asset_SubCategory> Asset_SubCategories
         {
             get
@@ -3477,6 +3469,14 @@ namespace PMS
             get
             {
                 return this.GetTable<aspnet_User>();
+            }
+        }
+
+        public System.Data.Linq.Table<Panel> Panels
+        {
+            get
+            {
+                return this.GetTable<Panel>();
             }
         }
 
@@ -64531,356 +64531,6 @@ namespace PMS
                     this._mr_no_sequence = value;
                     this.SendPropertyChanged("mr_no_sequence");
                     this.Onmr_no_sequenceChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Panel")]
-    public partial class Panel : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Panel_ID;
-
-        private System.Nullable<System.Guid> _Created_By;
-
-        private System.Nullable<System.DateTime> _Created_Time;
-
-        private System.Nullable<System.Guid> _Updated_By;
-
-        private System.Nullable<System.DateTime> _Updated_Time;
-
-        private string _Company_Name;
-
-        private System.Nullable<int> _No_Of_Employees;
-
-        private string _Email;
-
-        private string _Contact_No;
-
-        private string _Address;
-
-        private System.Nullable<decimal> _Discount;
-
-        private System.Nullable<decimal> _Panel_Rate;
-
-        private System.Nullable<int> _gl_account;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnPanel_IDChanging(int value);
-        partial void OnPanel_IDChanged();
-        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnCreated_ByChanged();
-        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnCreated_TimeChanged();
-        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
-        partial void OnUpdated_ByChanged();
-        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
-        partial void OnUpdated_TimeChanged();
-        partial void OnCompany_NameChanging(string value);
-        partial void OnCompany_NameChanged();
-        partial void OnNo_Of_EmployeesChanging(System.Nullable<int> value);
-        partial void OnNo_Of_EmployeesChanged();
-        partial void OnEmailChanging(string value);
-        partial void OnEmailChanged();
-        partial void OnContact_NoChanging(string value);
-        partial void OnContact_NoChanged();
-        partial void OnAddressChanging(string value);
-        partial void OnAddressChanged();
-        partial void OnDiscountChanging(System.Nullable<decimal> value);
-        partial void OnDiscountChanged();
-        partial void OnPanel_RateChanging(System.Nullable<decimal> value);
-        partial void OnPanel_RateChanged();
-        partial void Ongl_accountChanging(System.Nullable<int> value);
-        partial void Ongl_accountChanged();
-        #endregion
-
-        public Panel()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Panel_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Panel_ID
-        {
-            get
-            {
-                return this._Panel_ID;
-            }
-            set
-            {
-                if ((this._Panel_ID != value))
-                {
-                    this.OnPanel_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Panel_ID = value;
-                    this.SendPropertyChanged("Panel_ID");
-                    this.OnPanel_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Created_By
-        {
-            get
-            {
-                return this._Created_By;
-            }
-            set
-            {
-                if ((this._Created_By != value))
-                {
-                    this.OnCreated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_By = value;
-                    this.SendPropertyChanged("Created_By");
-                    this.OnCreated_ByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Created_Time
-        {
-            get
-            {
-                return this._Created_Time;
-            }
-            set
-            {
-                if ((this._Created_Time != value))
-                {
-                    this.OnCreated_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_Time = value;
-                    this.SendPropertyChanged("Created_Time");
-                    this.OnCreated_TimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
-        public System.Nullable<System.Guid> Updated_By
-        {
-            get
-            {
-                return this._Updated_By;
-            }
-            set
-            {
-                if ((this._Updated_By != value))
-                {
-                    this.OnUpdated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Updated_By = value;
-                    this.SendPropertyChanged("Updated_By");
-                    this.OnUpdated_ByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Updated_Time
-        {
-            get
-            {
-                return this._Updated_Time;
-            }
-            set
-            {
-                if ((this._Updated_Time != value))
-                {
-                    this.OnUpdated_TimeChanging(value);
-                    this.SendPropertyChanging();
-                    this._Updated_Time = value;
-                    this.SendPropertyChanged("Updated_Time");
-                    this.OnUpdated_TimeChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Name", DbType = "VarChar(50)")]
-        public string Company_Name
-        {
-            get
-            {
-                return this._Company_Name;
-            }
-            set
-            {
-                if ((this._Company_Name != value))
-                {
-                    this.OnCompany_NameChanging(value);
-                    this.SendPropertyChanging();
-                    this._Company_Name = value;
-                    this.SendPropertyChanged("Company_Name");
-                    this.OnCompany_NameChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_No_Of_Employees", DbType = "Int")]
-        public System.Nullable<int> No_Of_Employees
-        {
-            get
-            {
-                return this._No_Of_Employees;
-            }
-            set
-            {
-                if ((this._No_Of_Employees != value))
-                {
-                    this.OnNo_Of_EmployeesChanging(value);
-                    this.SendPropertyChanging();
-                    this._No_Of_Employees = value;
-                    this.SendPropertyChanged("No_Of_Employees");
-                    this.OnNo_Of_EmployeesChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Email", DbType = "VarChar(50)")]
-        public string Email
-        {
-            get
-            {
-                return this._Email;
-            }
-            set
-            {
-                if ((this._Email != value))
-                {
-                    this.OnEmailChanging(value);
-                    this.SendPropertyChanging();
-                    this._Email = value;
-                    this.SendPropertyChanged("Email");
-                    this.OnEmailChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Contact_No", DbType = "VarChar(50)")]
-        public string Contact_No
-        {
-            get
-            {
-                return this._Contact_No;
-            }
-            set
-            {
-                if ((this._Contact_No != value))
-                {
-                    this.OnContact_NoChanging(value);
-                    this.SendPropertyChanging();
-                    this._Contact_No = value;
-                    this.SendPropertyChanged("Contact_No");
-                    this.OnContact_NoChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Address", DbType = "VarChar(50)")]
-        public string Address
-        {
-            get
-            {
-                return this._Address;
-            }
-            set
-            {
-                if ((this._Address != value))
-                {
-                    this.OnAddressChanging(value);
-                    this.SendPropertyChanging();
-                    this._Address = value;
-                    this.SendPropertyChanged("Address");
-                    this.OnAddressChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Discount
-        {
-            get
-            {
-                return this._Discount;
-            }
-            set
-            {
-                if ((this._Discount != value))
-                {
-                    this.OnDiscountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Discount = value;
-                    this.SendPropertyChanged("Discount");
-                    this.OnDiscountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Panel_Rate", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Panel_Rate
-        {
-            get
-            {
-                return this._Panel_Rate;
-            }
-            set
-            {
-                if ((this._Panel_Rate != value))
-                {
-                    this.OnPanel_RateChanging(value);
-                    this.SendPropertyChanging();
-                    this._Panel_Rate = value;
-                    this.SendPropertyChanged("Panel_Rate");
-                    this.OnPanel_RateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_gl_account", DbType = "Int")]
-        public System.Nullable<int> gl_account
-        {
-            get
-            {
-                return this._gl_account;
-            }
-            set
-            {
-                if ((this._gl_account != value))
-                {
-                    this.Ongl_accountChanging(value);
-                    this.SendPropertyChanging();
-                    this._gl_account = value;
-                    this.SendPropertyChanged("gl_account");
-                    this.Ongl_accountChanged();
                 }
             }
         }
@@ -168074,6 +167724,380 @@ namespace PMS
         {
             this.SendPropertyChanging();
             entity.aspnet_User = null;
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Panel")]
+    public partial class Panel : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Panel_ID;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        private string _Company_Name;
+
+        private System.Nullable<int> _No_Of_Employees;
+
+        private string _Email;
+
+        private string _Contact_No;
+
+        private string _Address;
+
+        private System.Nullable<decimal> _Discount;
+
+        private System.Nullable<decimal> _Panel_Rate;
+
+        private System.Nullable<int> _gl_account;
+
+        private System.Nullable<decimal> _Panel_Rate_Emergency;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnPanel_IDChanging(int value);
+        partial void OnPanel_IDChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        partial void OnCompany_NameChanging(string value);
+        partial void OnCompany_NameChanged();
+        partial void OnNo_Of_EmployeesChanging(System.Nullable<int> value);
+        partial void OnNo_Of_EmployeesChanged();
+        partial void OnEmailChanging(string value);
+        partial void OnEmailChanged();
+        partial void OnContact_NoChanging(string value);
+        partial void OnContact_NoChanged();
+        partial void OnAddressChanging(string value);
+        partial void OnAddressChanged();
+        partial void OnDiscountChanging(System.Nullable<decimal> value);
+        partial void OnDiscountChanged();
+        partial void OnPanel_RateChanging(System.Nullable<decimal> value);
+        partial void OnPanel_RateChanged();
+        partial void Ongl_accountChanging(System.Nullable<int> value);
+        partial void Ongl_accountChanged();
+        partial void OnPanel_Rate_EmergencyChanging(System.Nullable<decimal> value);
+        partial void OnPanel_Rate_EmergencyChanged();
+        #endregion
+
+        public Panel()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Panel_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Panel_ID
+        {
+            get
+            {
+                return this._Panel_ID;
+            }
+            set
+            {
+                if ((this._Panel_ID != value))
+                {
+                    this.OnPanel_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Panel_ID = value;
+                    this.SendPropertyChanged("Panel_ID");
+                    this.OnPanel_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_Name", DbType = "VarChar(50)")]
+        public string Company_Name
+        {
+            get
+            {
+                return this._Company_Name;
+            }
+            set
+            {
+                if ((this._Company_Name != value))
+                {
+                    this.OnCompany_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Company_Name = value;
+                    this.SendPropertyChanged("Company_Name");
+                    this.OnCompany_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_No_Of_Employees", DbType = "Int")]
+        public System.Nullable<int> No_Of_Employees
+        {
+            get
+            {
+                return this._No_Of_Employees;
+            }
+            set
+            {
+                if ((this._No_Of_Employees != value))
+                {
+                    this.OnNo_Of_EmployeesChanging(value);
+                    this.SendPropertyChanging();
+                    this._No_Of_Employees = value;
+                    this.SendPropertyChanged("No_Of_Employees");
+                    this.OnNo_Of_EmployeesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Email", DbType = "VarChar(50)")]
+        public string Email
+        {
+            get
+            {
+                return this._Email;
+            }
+            set
+            {
+                if ((this._Email != value))
+                {
+                    this.OnEmailChanging(value);
+                    this.SendPropertyChanging();
+                    this._Email = value;
+                    this.SendPropertyChanged("Email");
+                    this.OnEmailChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Contact_No", DbType = "VarChar(50)")]
+        public string Contact_No
+        {
+            get
+            {
+                return this._Contact_No;
+            }
+            set
+            {
+                if ((this._Contact_No != value))
+                {
+                    this.OnContact_NoChanging(value);
+                    this.SendPropertyChanging();
+                    this._Contact_No = value;
+                    this.SendPropertyChanged("Contact_No");
+                    this.OnContact_NoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Address", DbType = "VarChar(50)")]
+        public string Address
+        {
+            get
+            {
+                return this._Address;
+            }
+            set
+            {
+                if ((this._Address != value))
+                {
+                    this.OnAddressChanging(value);
+                    this.SendPropertyChanging();
+                    this._Address = value;
+                    this.SendPropertyChanged("Address");
+                    this.OnAddressChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Discount
+        {
+            get
+            {
+                return this._Discount;
+            }
+            set
+            {
+                if ((this._Discount != value))
+                {
+                    this.OnDiscountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Discount = value;
+                    this.SendPropertyChanged("Discount");
+                    this.OnDiscountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Panel_Rate", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Panel_Rate
+        {
+            get
+            {
+                return this._Panel_Rate;
+            }
+            set
+            {
+                if ((this._Panel_Rate != value))
+                {
+                    this.OnPanel_RateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Panel_Rate = value;
+                    this.SendPropertyChanged("Panel_Rate");
+                    this.OnPanel_RateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_gl_account", DbType = "Int")]
+        public System.Nullable<int> gl_account
+        {
+            get
+            {
+                return this._gl_account;
+            }
+            set
+            {
+                if ((this._gl_account != value))
+                {
+                    this.Ongl_accountChanging(value);
+                    this.SendPropertyChanging();
+                    this._gl_account = value;
+                    this.SendPropertyChanged("gl_account");
+                    this.Ongl_accountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Panel_Rate_Emergency", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Panel_Rate_Emergency
+        {
+            get
+            {
+                return this._Panel_Rate_Emergency;
+            }
+            set
+            {
+                if ((this._Panel_Rate_Emergency != value))
+                {
+                    this.OnPanel_Rate_EmergencyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Panel_Rate_Emergency = value;
+                    this.SendPropertyChanged("Panel_Rate_Emergency");
+                    this.OnPanel_Rate_EmergencyChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 
