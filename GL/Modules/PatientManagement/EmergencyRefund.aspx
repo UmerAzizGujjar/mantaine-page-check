@@ -344,7 +344,7 @@
                 </div>
             </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
-                <input type="button" value="Search" id="btnSearch" class="btn btn-primary" onclick="GetPatientDetailByEmergencyNO()" />
+                <input type="button" value="Search" id="btnSearch" class="btn btn-primry" onclick="GetPatientDetailByEmergencyNO()" />
             </div>
         </div>
 
@@ -390,13 +390,13 @@
             <div class="col-lg-8">
                 <div class="row">
                     <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" value="Save" onclick="SaveEmergencyRecord()" id="btnSave" class="btn btn-primary" />
+                        <input type="button" value="Save" onclick="SaveEmergencyRecord()" id="btnSave" class="btn btn-primry" />
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-6">
-                        <input type="button" value="List View" class="btn btn-secondary" onclick="window.open('EmergencyRefund_List.aspx')" />
+                        <input type="button" value="List View" class="btn btn-primry" onclick="window.open('EmergencyRefund_List.aspx')" />
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-3">
-                        <input type="button" id="btnPrint" class="btn btn-primary" onclick="PrintRefund()" value="Print" style="display: none" />
+                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" style="display: none" />
                     </div>
                 </div>
             </div>
