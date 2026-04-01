@@ -86,7 +86,7 @@ namespace PMS.Modules.Lab
             return (new JavaScriptSerializer()).Serialize(ups);
         }
         [WebMethod]
-        public static string CheckRadiologydoclistRights()
+        public static string CheckRadiologylistApprovalRights()
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var ups = (from St in db.aspnet_Users

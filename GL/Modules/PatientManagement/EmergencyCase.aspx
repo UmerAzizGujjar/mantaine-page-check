@@ -6148,52 +6148,29 @@
             });
         }
 
-        function LoadtepmlateTest() {
-            debugger;
+            function LoadtepmlateTest() {
             var Templateid = $('#ddlTemplateTest').val();
-
-            console.log("Selected Template ID:", Templateid);
-
-            if (Templateid == "0" || Templateid == "" || Templateid == null || Templateid == undefined) {
-                console.log("Invalid template ID, returning");
-                return;
-            }
-
+            if (!Templateid || Templateid == "0") return;
             PageMethods.GetTemplateTest(Templateid, function (res) {
-                debugger;
                 try {
-                    console.log("Raw response:", res);
-                    var test = JSON.parse(res);
-                    console.log("Parsed tests:", test);
-                    console.log("Number of tests:", test.length);
-
-                    if (test.length == 0) {
+                    var test = res.d || res;
+            
+                    console.log("Tests received:", test);
+            
+                    if (!test || test.length === 0) {
                         alert("No tests found in this template");
                         return;
                     }
-
-                    var Dep_id = '';
-                    var Test = '';
-                    var Rot_id = '';
-                    var Testid = '';
-
+            
                     $.each(test, function (key, value) {
-                        debugger;
-                        console.log("Processing test:", value);
-                        Dep_id = value.Department_id;
-                        Test = value.Test_Name;
-                        Testid = value.Test_Id;
-                        Rot_id = value.Rotation_Id;
-                        AddTemplateTest(Dep_id, Test, Rot_id, Testid);
+                        AddTemplateTest(value.Department_id, value.Test_Name, value.Rotation_Id, value.Test_Id);
                     });
-
-                    console.log("Template tests added successfully");
                 } catch (e) {
-                    console.error("Error parsing template test data:", e);
+                    console.error("Error:", e);
                     alert("Error loading template tests: " + e.message);
                 }
             }, function (error) {
-                console.error("Error calling GetTemplateTest:", error);
+                console.error("AJAX error:", error);
                 alert("Failed to load template tests");
             });
         }
@@ -6237,75 +6214,75 @@
         }
 
         function AddTemLabTest(maindpt, CheckTest) {
-            debugger;
-            var test = CheckTest;
-            console.log("Adding Lab Test:", test);
-
-            PageMethods.GetLabTestDDLDetails(test, maindpt, function (res) {
-                try {
-                    console.log("Lab test response:", res);
-                    var labTests = JSON.parse(res);
-                    console.log("Parsed lab tests:", labTests);
-
-                    $.each(labTests, function (key, value) {
-                        debugger;
-                        var Result = 'Result';
-                        var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
-                        var dateValue = '<%= DateTime.Now%>';
-                        var row;
-
-                        // Get special tests and area of interest values safely
-                        var specialTestsVal = $('#ctl00_MainContent_txtSpecialTests').val() || "";
-                        var areaOfInterestVal = $('#ctl00_MainContent_txtAreaOfInterest').val() || "";
-
-                        if (value.Test_ID != 0) {
-                            row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
-                                '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
-                                '<input type="hidden" name="txtRotation" value="0">' +
-                                '<input type="hidden" name="txtGroupCategory" value="0">' +
-                                '<input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' +
-                                (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + '</td>' +
-                                '<td>No</td><td>' + Result + '</td>' +
-                                '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
-                                '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
-                                '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
-                        }
-                        else {
-                            row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
-                                '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
-                                '<input type="hidden" name="txtRotation" value="0">' +
-                                '<input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/>' +
-                                '<input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' +
-                                (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>' +
-                                '<td>No</td><td>' + Result + '</td>' +
-                                '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
-                                '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
-                                '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
-                        }
-
-                        // FIXED: Use tbody selector
-                        var tableBody = $('.tests-table tbody');
-                        if (tableBody.length == 0) {
-                            tableBody = $('#tblLabtest tbody');
-                        }
-                        if (tableBody.length == 0) {
-                            tableBody = $('#tblLabtest');
-                        }
-
-                        console.log("Appending row to table:", tableBody);
-                        tableBody.append(row);
-                    });
-
-                    $("#ctl00_MainContent_txtSpecialTests").val("");
-                    $("#ctl00_MainContent_txtAreaOfInterest").val("");
-                    console.log("Lab tests added successfully");
-                } catch (e) {
-                    console.error("Error in AddTemLabTest:", e);
+    debugger;
+    var test = CheckTest;
+    console.log("Adding Lab Test:", test);
+    
+    // ✅ FIXED: Only pass 'test' parameter, then callbacks
+    PageMethods.GetLabTestDDLDetails(test, function (res) {
+        try {
+            console.log("Lab test response:", res);
+            var labTests = JSON.parse(res);
+            console.log("Parsed lab tests:", labTests);
+            
+            $.each(labTests, function (key, value) {
+                debugger;
+                var Result = 'Result';
+                var date = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A") %>';
+                var dateValue = '<%= DateTime.Now%>';
+                var row;
+                
+                var specialTestsVal = $('#ctl00_MainContent_txtSpecialTests').val() || "";
+                var areaOfInterestVal = $('#ctl00_MainContent_txtAreaOfInterest').val() || "";
+                
+                if (value.Test_ID != 0) {
+                    row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                    '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                    '<input type="hidden" name="txtRotation" value="0">' +
+                    '<input type="hidden" name="txtGroupCategory" value="0">' +
+                    '<input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' +
+                    (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + '</td>' +
+                    '<td>No</td><td>' + Result + '</td>' +
+                    '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
+                    '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
+                    '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+                } else {
+                    row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td>' +
+                    '<td><input type="hidden" name="testID" value="' + value.Test_ID + '" />' +
+                    '<input type="hidden" name="txtRotation" value="0">' +
+                    '<input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/>' +
+                    '<input type="hidden" name="txtDeptID" value="' + value.Main_Department + '"/> ' +
+                    (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>' +
+                    '<td>No</td><td>' + Result + '</td>' +
+                    '<td><input type="hidden" name="txtSpecial_Test" value="' + specialTestsVal + '"/> ' + specialTestsVal + '  </td>' +
+                    '<td><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfInterestVal + '"/> ' + areaOfInterestVal + ' </td>' +
+                    '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
                 }
-            }, function (err) {
-                console.error("Error calling GetLabTestDDLDetails:", err);
+                
+                var tableBody = $('.tests-table tbody');
+                if (tableBody.length == 0) {
+                    tableBody = $('#tblLabtest tbody');
+                }
+                if (tableBody.length == 0) {
+                    tableBody = $('#tblLabtest');
+                }
+                
+                console.log("Appending row to table:", tableBody);
+                tableBody.append(row);
             });
+            
+            $("#ctl00_MainContent_txtSpecialTests").val("");
+            $("#ctl00_MainContent_txtAreaOfInterest").val("");
+            console.log("Lab tests added successfully");
+        } catch (e) {
+            console.error("Error in AddTemLabTest:", e);
+            alert("Error adding lab test: " + e.message);
         }
+    }, function (err) {
+        console.error("Error calling GetLabTestDDLDetails:", err);
+        alert("Failed to load lab test details");
+    });
+}
 
         function AddTempRadialogyTest(CheckTest, Testid) {
             debugger;

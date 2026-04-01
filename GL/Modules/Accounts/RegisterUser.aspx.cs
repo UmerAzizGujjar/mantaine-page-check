@@ -86,6 +86,7 @@ namespace PMS.Modules.Accounts
                              AllowSaleReturn = p.AllowSaleReturn,
                              AllowStudentUpdate = p.Student_Update,
                              RadiologyAllList = p.Allow_RadiologyAllList,
+                             Radiology_result_Approval = p.Radiology_result_Approval,
                              AllowActiveItems = p.AllowActiveItems,
                              AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
@@ -196,6 +197,7 @@ namespace PMS.Modules.Accounts
                     user.AllowSaleReturn = data.AllowSaleReturn;
                     user.Student_Update = data.AllowStudentUpdate;
                     user.Allow_RadiologyAllList = data.RadiologyAllList;
+                    user.Radiology_result_Approval = data.AllowRadiologyApproval;
                     user.AllowActiveItems = data.AllowActiveItems;
                     user.cashier = data.ddlcasher;
                     user.AllowRateEdit = data.AllowRateEdit;
@@ -272,6 +274,7 @@ namespace PMS.Modules.Accounts
                 newuser.AllowSaleReturn = data.AllowSaleReturn;
                 newuser.Student_Update = data.AllowStudentUpdate;
                 newuser.Allow_RadiologyAllList = data.RadiologyAllList;
+                newuser.Radiology_result_Approval = data.AllowRadiologyApproval;
                 newuser.AllowActiveItems = data.AllowActiveItems;
                 newuser.cashier = data.ddlcasher;
                 newuser.AllowRateEdit = data.AllowRateEdit;
@@ -384,6 +387,7 @@ namespace PMS.Modules.Accounts
             public bool AllowSaleReturn { get; set; }
             public bool AllowStudentUpdate { get; set; }
             public bool RadiologyAllList { get; set; }
+            public bool AllowRadiologyApproval { get; set; }
             public bool AllowRateEdit { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }

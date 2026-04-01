@@ -6115,8 +6115,8 @@ namespace PMS
                 ltd.Lab_Test_ID = labID;
                 ltd.Patient_ID = Convert.ToInt32(record.PatientID);
                 ltd.Date = Convert.ToDateTime(test.Date);
-                ltd.Doctor = test.Doctor != null ? test.Doctor.ToString() : "";
-                //ltd.Doctor = test.Doctor.ToString();
+               // ltd.Doctor = test.Doctor != null ? test.Doctor.ToString() : "";
+                ltd.Doctor = test.Doctor.ToString();
                 ltd.Special_Tests = test.Special_Tests;
                 ltd.Rotation_ID = test.RotationID;
                 ltd.Actual_Patient_ID = Convert.ToInt32(record.PatientID);
@@ -7320,7 +7320,7 @@ namespace PMS
             var dpt = (from d in db.Doctor_Template_Masters
                        join hr in db.HR_Employees
                        on d.Doctor_Id equals hr.Emp_ID
-                       where hr.userid == Convert.ToString(AppConfig.UserID) && d.isActive == true
+                       where /*hr.userid == Convert.ToString(AppConfig.UserID) && */d.isActive == true
                        select new
                        {
                            d.Template_Id,
@@ -7355,10 +7355,10 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(dpt));
         }
 
-        
+
 
         [WebMethod]
-        public static string GetTemplateTest(int Templateid)
+        public static object GetTemplateTest(int Templateid) 
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var dpt = (from dt in db.Doctor_Template_Masters
@@ -7372,7 +7372,8 @@ namespace PMS
                            dtm.Test_Name,
                            dtm.Rotation_Id,
                        }).ToList();
-            return (new JavaScriptSerializer().Serialize(dpt));
+
+            return dpt; 
         }
 
     }
