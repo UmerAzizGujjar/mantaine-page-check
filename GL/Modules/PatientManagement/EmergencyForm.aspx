@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmergencyForm.aspx.cs" Inherits="PMS.Modules.PatientManagement.EmergencyForm" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EmergencyForm.css" rel="stylesheet" />
@@ -191,6 +192,7 @@
             var emer_reffered = $("#hdn_emer_reffered").val();
 
             if (emer_reffered !== "") {
+              
                 $('#txtfees').val("0");
                 return;
             }
@@ -508,6 +510,65 @@
                 loadalldoctor();
                 // Load panels and doctors
           
+            }
+            else if (Category == "06") {
+                          $('#department').hide();
+              $('#ddldoctor').hide();
+              $('#doctor').hide();
+              $('#pnlcompany').hide();
+              $('#employee').hide();
+
+       
+                   $('#discount').show();
+                   $('#discount').val("100");
+                   
+                $('#txtfees').val("0");
+              
+          
+            }
+            else if (Category == "04") {
+                // Show Panel Company, Department, and Doctor
+                         $('#department').hide();
+                           $('#ddldoctor').hide();
+                           $('#doctor').hide();
+                           $('#pnlcompany').hide();
+                           $('#employee').hide();
+
+       
+                                $('#discount').show();
+                                $('#discount').val("100");
+               
+          
+                $('#txtfees').val("0");
+            }
+            else if (Category == "05") {
+                // Show Panel Company, Department, and Doctor
+                           $('#department').hide();
+              $('#ddldoctor').hide();
+              $('#doctor').hide();
+              $('#pnlcompany').hide();
+              $('#employee').hide();
+
+       
+                   $('#discount').show();
+               $('#discount').val("100");
+               
+                $('#txtfees').val("0");
+          
+            }
+            else if (Category == "10") {
+                       $('#department').hide();
+              $('#ddldoctor').hide();
+              $('#doctor').hide();
+              $('#pnlcompany').hide();
+              $('#employee').hide();
+
+       
+                   $('#discount').show();
+                    $('#discount').val("100");
+              
+          
+                $('#txtfees').val("0");
             }
             // Rest of the categories remain the same...
         }
@@ -1609,12 +1670,12 @@
     <input type="text" id="hdn_emer_reffered" style="display: none;" />
     <input type="text" id="hdn_dep_id" style="display: none;" />
     <div class="row">
-      
 
 
 
 
-        <div class="col-lg-9 col-md-9 col-sm-12 fields" >
+
+        <div class="col-lg-9 col-md-9 col-sm-12 fields">
             <!-- Quick Actions row: four equal, high-contrast cards -->
             <div class="row">
                 <!-- Card 1 -->
@@ -1634,7 +1695,7 @@
                 </div>
 
                 <!-- Card 2 -->
-          
+
 
                 <!-- Card 3 -->
                 <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields">
@@ -1650,7 +1711,7 @@
                     </div>
                 </div>
 
-          
+
                 <div class="col-lg-3 col-md-3 col-sm-6 mb-3 fields" id="RefferdBy">
                     <div id="btnsearchReferlist" role="button" tabindex="0" onclick="openReferPatientModal()" onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
                         class="d-flex flex-column justify-content-center align-items-start quick-actions" style="cursor: pointer;">
@@ -1672,10 +1733,10 @@
         <div class="col-lg-3 col-md-3 col-sm-4 fields">
             <div class="card3">
                 <span style="font-size: 15px;">Total Emergecny </span>
-                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat"  runat="server"></span>
+                <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat" runat="server"></span>
 
             </div>
-           
+
         </div>
     </div>
 
@@ -1743,7 +1804,7 @@
                         <input type="text" id="txtfees" readonly="readonly" class="form-control" />
                         <input type="text" id="txtactualfee" style="display: none;" class="form-control" />
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Services" style="display:none;">
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" id="field_Services" style="display: none;">
                         <label>Services</label>
                         <select id="ddlServices">
                             <option value="0">Select Service</option>
@@ -1754,7 +1815,7 @@
                         <label>Address</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
                     </div>
-                    
+
                     <div class="col-lg-3 col-md-8 col-sm-8" id="remarks">
                         <label>Remarks</label>
                         <input type="text" id="txtremarks" />
@@ -1809,7 +1870,7 @@
                     <label>Employee Department</label>
                     <input type="text" id="EmpDept" class="form-control" />
                 </div>
-       
+
                 <div class="col-lg-12 col-md-12 col-sm-12" id="discount">
                     <label>Discount %</label>
                     <input type="text" id="txtdiscount" onchange="Calc_Discount()" class="form-control" />
@@ -1836,7 +1897,7 @@
                         <option value="0">Select</option>
                     </select>
                 </div>
-             
+
                 <div class="col-lg-12 col-md-12 col-sm-12" id="Field-CIH">
                     <label>Cash In Hand</label>
                     <select id="ddlCashInHand">
@@ -1844,8 +1905,8 @@
                 </div>
 
                 <!-- Checkboxes Section -->
-               
-                
+
+
             </div>
         </div>
     </div>
@@ -1861,7 +1922,7 @@
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <input type="button" class="btn btn-gray " id="btnView" value="View" onclick="window.location = 'Emergency_View.aspx'" />
                 </div>
-              
+
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdprint">
                     <input type="button" class="btn-primry " id="btnPrint" value="Print" onclick="Print()" />
                 </div>
@@ -1871,10 +1932,10 @@
                 <div class="col-lg-2 col-md-3 col-sm-4" id="btn-opdFormprint" style="display: none; position: absolute;">
                     <input type="hidden" class="btn-primry " id="btnOPDFormPrint" value="OPD Form" onclick="OPD_Form_Print()" />
                 </div>
-                <div class="col-lg-2 col-md-3 col-sm-6" id="divvoucher" style="display:none;">
+                <div class="col-lg-2 col-md-3 col-sm-6" id="divvoucher" style="display: none;">
                     <input type="button" class="btn-primry " id="btnPrintVoucher" value="Voucher" onclick="PrintVoucher();" />
                 </div>
-                <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove" style="display:none;">
+                <div class="col-lg-2 col-md-3 col-sm-4" id="divapprove" style="display: none;">
                     <input type="button" class="btn-primry " id="btnapprove" value="Approve" onclick="ApproveOPD()" />
                 </div>
             </div>
@@ -1996,7 +2057,7 @@
                             <label for="txt_house">Address</label>
                             <input type="text" id="txt_house" class="form-control" />
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6" style="display:none">
+                        <div class="col-lg-2 col-md-4 col-sm-6" style="display: none">
                             <label for="lblfee">Fee<span style="color: red;">*</span></label>
                             <input type="text" tabindex="17" id="txtCardFee" class="form-control" />
                         </div>
@@ -2135,40 +2196,40 @@
     </div>
 
     <div id="SearchReferPatients" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <fieldset class="form-group">
-                    <div class="form-row">
-                        <div class="col-md-6">
-                            <h5>Search Your Patients:</h5>
-                            <input type="text" id="txtReferEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <fieldset class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <h5>Search Your Patients:</h5>
+                                <input type="text" id="txtReferEmergencySearch" class="form-control" autocomplete="off" placeholder="Enter patient name or MR No." />
+                            </div>
                         </div>
+                    </fieldset>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered" id="ReferEmergencyResult">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;">Patient ID</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Doctor</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ReferPatientsBody">
+                            </tbody>
+                        </table>
                     </div>
-                </fieldset>
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped table-bordered" id="ReferEmergencyResult">
-                        <thead>
-                            <tr>
-                                <th style="display: none;">Patient ID</th>
-                                <th>MR No</th>
-                                <th>Patient Name</th>
-                                <th>Father Name</th>
-                                <th>CNIC</th>
-                                <th>Doctor</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ReferPatientsBody">
-                        </tbody>
-                    </table>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </asp:Content>
 
