@@ -521,7 +521,7 @@
        
                    $('#discount').show();
                    $('#txtdiscount').val("100");
-                   
+                    $('#txtdiscount').attr('disabled',true);
                 $('#txtfees').val("0");
               
           
@@ -537,6 +537,7 @@
        
                                 $('#discount').show();
                                 $('#txtdiscount').val("100");
+                                $('#txtdiscount').attr('disabled',true);
                
           
                 $('#txtfees').val("0");
@@ -552,7 +553,7 @@
        
                    $('#discount').show();
                $('#txtdiscount').val("100");
-               
+                $('#txtdiscount').attr('disabled',true);
                 $('#txtfees').val("0");
           
             }
@@ -566,7 +567,7 @@
        
                    $('#discount').show();
                     $('#txtdiscount').val("100");
-              
+               $('#txtdiscount').attr('disabled',true);
           
                 $('#txtfees').val("0");
             }
@@ -1393,7 +1394,7 @@
                 return;
             }
 
-            if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!hdnDepartment || hdnDepartment === "0")) {
+            if ((pat_category === "01" || ["02"].includes(pat_category)) && (!hdnDepartment || hdnDepartment === "0")) {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a department.', showConfirmButton: false, timer: 2000 });
                 return;
             }
