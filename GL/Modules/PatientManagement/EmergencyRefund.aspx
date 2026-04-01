@@ -130,7 +130,7 @@
                         });
                         return;
                     }
-                    $('#hdPatientID').text(p.Patient_ID);
+                    $('#hdPatientID').text(p.Emer_id);
                     $('#hdRegPatId').val(p.Reg_PatId);
                     $('#lblMRNo').text(p.Patient_No);
                     $('#lblPatienName').text(p.Full_Name);
