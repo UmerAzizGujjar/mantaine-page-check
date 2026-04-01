@@ -6115,8 +6115,8 @@ namespace PMS
                 ltd.Lab_Test_ID = labID;
                 ltd.Patient_ID = Convert.ToInt32(record.PatientID);
                 ltd.Date = Convert.ToDateTime(test.Date);
-               // ltd.Doctor = test.Doctor != null ? test.Doctor.ToString() : "";
-                ltd.Doctor = test.Doctor.ToString();
+                ltd.Doctor = test.Doctor != null ? test.Doctor.ToString() : "";
+                //ltd.Doctor = test.Doctor.ToString();
                 ltd.Special_Tests = test.Special_Tests;
                 ltd.Rotation_ID = test.RotationID;
                 ltd.Actual_Patient_ID = Convert.ToInt32(record.PatientID);
