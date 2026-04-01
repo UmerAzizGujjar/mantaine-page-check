@@ -287,10 +287,24 @@
 
                 if (hasRights === true) {
                     $('#Radiologylist').show();
-                    $('#PendingRadiologylist').show();
+                
                     //UltraSoundTestDetail();
                 } else {
                     $('#Radiologylist').hide();
+                   
+                }
+            }, function (error) {
+                alert('Error checking rights: ' + error.get_message());
+            });
+            PageMethods.CheckRadiologylistApprovalRights(function (response) {
+                var hasRights = JSON.parse(response);
+
+                if (hasRights === true) {
+               x
+                    $('#PendingRadiologylist').show();
+                    //UltraSoundTestDetail();
+                } else {
+                 
                     $('#PendingRadiologylist').hide();
                 }
             }, function (error) {
