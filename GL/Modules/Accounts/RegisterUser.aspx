@@ -678,7 +678,7 @@
                                                           <label class="form-check-label" for="EmpCode">Student Update</label>
                                                       </div>
                                                        <div class="form-check">
-                                                          <label class="form-check-label" for="RadiologyList">Radiology List</label>
+                                                          <label class="form-check-label" for="RadiologyList">Radiology Doctor Rights</label>
                                                       </div>
                                                        <div class="form-check">
                                                           <label class="form-check-label" for="EmpCode">Radiology Approval List</label>
