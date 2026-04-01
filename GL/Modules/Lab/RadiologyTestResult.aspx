@@ -2669,6 +2669,7 @@
                                 '<td>' + item.Bill_No + '</td>' +
                                 '<td>' + item.Full_Name + '</td>' +
                                 '<td>' + item.Item_Name + '</td>' +
+                                '<td>' + item.Doctor + '</td>' +
                                 '<td>' + item.Test_Main_Department + '</td>' +
                                 '<td>' + statuss + '</td>' +
                                 '<td><button type="button" class="btn btn-sm btn-primary" ' +
@@ -3300,6 +3301,7 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
                             <th>Bill No</th>
                             <th>Name</th>
                             <th>Test Name</th>
+                            <th>Doctor</th>
                             <th>Test Main Department</th>
                             <th>Patient Status</th>
                             <th>Action</th>
