@@ -135,7 +135,9 @@
              "columns": [
                  { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                  { "data": "Emer_id", "name": "Emer_id", "visible": false, "width": "0%", "orderable": false },
+                 { "data": "Emergency_No", "name": "Emergency_No", "width": "12%", "orderable": true },
                  { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "12%", "orderable": true },
+           
                  { "data": "Full_Name", "width": "20%", "orderable": false },
                  { 
                      "data": "Amount", 
@@ -195,7 +197,9 @@
                  <tr>
                      <th style="width:4% !important;">Sr#</th>                
                      <th style="display: none;">Emergency ID</th>    
+                          <th style="6%">Emr No.</th>
                      <th style="width: 12%;">MR No.</th>
+                
                      <th style="width: 17%;">Name</th>
                      <th style="width: 12%;">Amount</th>
                      <th style="width: 12%;">Type</th>
