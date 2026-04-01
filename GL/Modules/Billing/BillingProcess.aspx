@@ -4063,6 +4063,16 @@
 
 
                 }
+                var comp_name = '<% =AppConfig.Company_Name %>';
+                if (comp_name == 'Skin Studio') {
+                    // Enable discount amount fields for Skin Studio
+                    $('input[name="DisAmount"]').attr('disabled', false);
+                    $('input[name="DisPer"]').attr('disabled', false);
+                } else {
+                    // Disable discount amount fields for other companies
+                    $('input[name="DisAmount"]').attr('disabled', true);
+                    $('input[name="DisPer"]').attr('disabled', true);
+                }
 
                 var remarks = $("#ctl00_MainContent_ddlpro_dis").val();
                 setTimeout(function () {
@@ -4128,7 +4138,7 @@
                     //    $('input[name="DisAmount"]').attr('disabled', false);
                     //}
                     /* else {*/
-                    $('input[name="DisAmount"]').attr('disabled', true);
+                /*    $('input[name="DisAmount"]').attr('disabled', true);*/
                     //}
                     $('#txtDisPer').on('keyup', function () {
                         $('#tblDetails').find('input[name="DisPer"]').prop('disabled', true);
@@ -4140,13 +4150,16 @@
                     });
 
 
-                    ////else
-                    ////{
-                    ////       // $('input[name="DisPer"]').attr('disabled', true);
-                    ////        $('input[name="DisAmount"]').attr('disabled', true);
-
-                    ////}
-
+                    var comp_names = '<% =AppConfig.Company_Name %>';
+                    if (comp_names == 'Skin Studio') {
+                        // Enable discount amount fields for newly added rows
+                        $('input[name="DisAmount"]').attr('disabled', false);
+                        $('input[name="DisPer"]').attr('disabled', false);
+                    } else {
+                        // Disable discount amount fields for newly added rows
+                        $('input[name="DisAmount"]').attr('disabled', true);
+                        $('input[name="DisPer"]').attr('disabled', true);
+                    }
 
 
 
@@ -4179,35 +4192,12 @@
                     else if (pat_type == "Insurance Company" || INP_Private == "Insurance Company") {
 
                         debugger;
-                        //if (ItemId == 13206 || ItemId == 18842 || ItemId == 13208 || ItemId == 12393 || ItemId == 19192 || ItemId == 19068) {
-                        //    $("#tblDetails tr").each(function () {
-                        //        debugger;
-                        //        var item_id = $('#txtAddService').val();
-                        //        var row_item_id = $(this).find('input[name="hdnItemID"]').val();
-                        //        if (item_id == row_item_id) {
-
-                        //            $(this).find("td:eq(5)").attr('contenteditable', 'True');
-                        //        }
-                        //    });
-                        //}
+                     
                     }
 
                     var user_name = '<% =AppConfig.UserName %>';
                     // Ali.Tariq
-                    if (user_name == "Ali.Tariq" || user_name == "ali.tariq") {
-                        debugger;
-                        if (typeof localStorage.Total_Disc_Amt === 'undefined') {
-                            debugger;
-                            $('input[name="DisPer"]').attr('disabled', false);
-                            $('input[name="DisAmount"]').attr('disabled', false)
-                        }
-                        else {
-                            $('input[name="DisAmount"]').attr('disabled', true)
-                        }
-                    }
-                    else {
-                        $('input[name="DisAmount"]').attr('disabled', true)
-                    }
+                   
                 }, 300);
                 setTimeout(function () {
                     $(arr).filter(function (i, n) {
