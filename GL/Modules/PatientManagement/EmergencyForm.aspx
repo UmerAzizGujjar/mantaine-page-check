@@ -63,7 +63,7 @@
                 //$('#ddlcashier').attr('disabled', true);
             }
             var dropdowns = [
-                /* { id: '#ddlMode_Of_Registration', method: 'ModePresentation' },*/
+                { id: '#ddlMode_Of_Registration', method: 'ModePresentation' },
                 { id: '#ddlPatient_Type', method: 'PatientType' },
                 { id: '#ddl_Gender', method: 'GetGender' },
                 { id: '#ddlrollno', method: 'GetRollNo' },
@@ -115,19 +115,29 @@
                 }
 
                 if (item.id === '#ddlDepartment') {
-                    // Since modal uses native select, bind to 'change', not 'select2:select'
-                    const deptChangeHandler = function () {
-                        if (typeof getGeneralFee === 'function') {
-                            getGeneralFee();
+                    $element.prop('disabled', false);
+                    const deptHandler = function () {
+                        loaddoctor();
+                    };
+                    if (!isInsideModal) {
+                        $element.off('select2:select').on('select2:select', deptHandler);
+                    } else {
+                        $element.off('change').on('change', deptHandler);
+                    }
+                }
+
+                if (item.id === '#ddldoctor') {
+                    const doctorHandler = function (e) {
+                        var selectedVal = $(this).val();
+                        if (selectedVal) {
+                            loadFee();
                         }
                     };
-
                     if (!isInsideModal) {
-                        // Non-modal: Select2 uses custom event
-                        $element.off('select2:select.dept').on('select2:select.dept', deptChangeHandler);
+                        $element.off('select2:select').on('select2:select', doctorHandler);
+                        $element.off('select2:open');
                     } else {
-                        // Modal: Native select uses standard 'change'
-                        $element.off('change.dept').on('change.dept', deptChangeHandler);
+                        $element.off('change').on('change', doctorHandler);
                     }
                 }
 
@@ -172,6 +182,218 @@
 
             });
         });
+        function loadFee() {
+            debugger;
+
+            var Doc = $('#ddldoctor').val();
+            var opdid = $('#hdn_EmergencyFormId').val();
+            var selectedPatientType = $('#ddlPatient_Type').val();
+            var emer_reffered = $("#hdn_emer_reffered").val();
+
+            if (emer_reffered !== "") {
+                $('#txtfees').val("0");
+                return;
+            }
+            if (selectedPatientType == '03') {
+                $('#txtfees').val("0");
+                return;
+            }
+
+            if (!Doc) return;
+            checkDoctorBlockStatus(Doc, selectedPatientType, function (isBlocked) {
+                if (isBlocked) {
+                    return;
+                }
+
+                if (selectedPatientType == '11') {
+                    getspecialfees(Doc);
+                } else {
+                    if (opdid == "") {
+                        $.ajax({
+                            type: "POST",
+                            url: "EmergencyForm.aspx/loadRegistrationFees",
+                            data: JSON.stringify({ Doc: Doc }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                debugger;
+                                var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+
+                                if (!res.success) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: res.message,
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        customClass: {
+                                            popup: 'swal-big-popup',
+                                            title: 'swal-big-title',
+                                            htmlContainer: 'swal-big-text'
+                                        }
+                                    });
+                                } else {
+                                    debugger;
+                                    var fee = parseFloat(res.fee) || 0;
+                                    var disper = parseFloat(res.discount_percentage) || 0;
+                                    var afterdiscountfee = fee - ((fee * disper) / 100);
+
+                                    $('#txtfees').val(afterdiscountfee.toFixed(2));
+                                    $('#txtactualfee').val(res.fee);
+                                    $('#txtdiscount').val(res.discount_percentage);
+                                    if (disper == 0) {
+                                        $('#txtdiscount').attr('disabled', false);
+                                    }
+                                    else {
+                                        $('#txtdiscount').attr('disabled', true);
+                                    }
+
+                                    $('#hdnhospShare').val(res.Hospital_Share);
+                                    $('#hdnDocshare').val(res.Doctor_Share);
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("Error: " + error);
+                            }
+                        });
+                    }
+                    loadDepartment(Doc);
+                }
+            });
+        }
+        function checkDoctorBlockStatus(Doc, selectedPatientType, callback) {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/GetDoctorBlockInfo",
+                data: JSON.stringify({ Doc: Doc }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var blockInfo = JSON.parse(response.d);
+
+                    if (blockInfo && blockInfo.error) {
+                        console.error("Block info error:", blockInfo.error);
+                        callback(false);
+                        return;
+                    }
+                    if (blockInfo.offDays && blockInfo.offDays !== "" && blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
+                        debugger;
+                        let offDays = blockInfo.offDays.toLowerCase().split(',').map(x => x.trim());
+                        let today = new Date();
+                        let todayDay = today.toLocaleString("en-US", { weekday: 'short' }).toLowerCase();
+                        todayDay = todayDay.substring(0, 3);
+                        if (offDays.includes(todayDay)) {
+
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Doctor Off-Day',
+                                text: 'This Category is Blocked by the Admin.',
+                                timer: 2500,
+                                showConfirmButton: false,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+                            $('#txtfees').val("0");
+                            $('#txtactualfee').val("0");
+                            $('#txtdiscount').val("");
+                            $('#ddldoctor').val("");
+
+                            callback(true);
+                            return;
+                        }
+                    }
+
+                    if (blockInfo.Block_category === true && blockInfo.Patient_Type === selectedPatientType) {
+
+                        const now = new Date();
+
+                        const parseLocalDate = (str) => {
+                            const [y, m, d] = str.split('-').map(Number);
+                            return new Date(y, m - 1, d);
+                        };
+
+                        const stDate = parseLocalDate(blockInfo.st_day);
+                        const endDate = parseLocalDate(blockInfo.end_day);
+
+                        const [startHour, startMin] = (blockInfo.Timings_In || "00:00").split(':').map(Number);
+                        const [endHour, endMin] = (blockInfo.Timings_Out || "23:59").split(':').map(Number);
+
+                        stDate.setHours(startHour, startMin, 0, 0);
+                        endDate.setHours(endHour, endMin, 0, 0);
+
+                        const isWithinWindow = now >= stDate && now <= endDate;
+
+                        if (isWithinWindow) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Access Denied',
+                                text: 'This category is blocked by the admin.',
+                                timer: 2500,
+                                showConfirmButton: false,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+                            $('#txtfees').val("0");
+                            $('#txtactualfee').val("0");
+                            $('#txtdiscount').val("");
+                            $('#ddldoctor').val("");
+
+                            callback(true);
+                            return;
+                        }
+                    }
+
+                    callback(false);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Failed to fetch block info:", error);
+                    callback(false);
+                }
+            });
+        }
+        function getspecialfees(Doc) {
+            debugger
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/loadSpecialFees",
+                data: JSON.stringify({ Doc: Doc }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    var res = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+
+                    if (!res) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Special Fee not found.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        return;
+                    }
+                    $('#txtactualfee').val(res.Consultant_Charges);
+                    $('#txtfees').val(res.Consultant_Charges);
+                    $('#txtdiscount').val(0);
+
+                    $('#hdnhospShare').val(res.Hospital_Amount);
+                    $('#hdnDocshare').val(res.Doctor_Amount);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
         function autoSelectGender() {
             var prefix = $('#ddl_name').val();
             var $gender = $('#ddl_Gender');
@@ -230,6 +452,88 @@
 
 
         }
+        function loaddata() {
+            debugger;
+            var Category = $('#ddlPatient_Type').val();
+
+            if (Category == "0") {
+               
+            }
+            else if (Category == "01") {
+                // Show Doctor and Department for Private
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').hide();
+                $('#ddlDepartment').attr('disabled', false);
+            
+
+                // Hide panel company elements
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+             
+                $('#discount').show();
+            }
+            else if (Category == "02") {
+                // Show Doctor and Department for Private
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').show();
+                $('#ddlDepartment').attr('disabled', false);
+                $('#ddldoctor').attr('disabled', false);
+
+                // Hide panel company elements
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+            
+                $('#discount').show();
+
+                // Load doctors for private
+                //
+            }
+            else if (Category == "03") {
+                // Show Panel Company, Department, and Doctor
+                $('#fees').show();
+                $('#department').hide();
+                $('#ddldoctor').show();
+                $('#doctor').show();
+                $('#pnlcompany').show();
+                $('#employee').show();
+                $('#ddlDepartment').attr('disabled', false);
+                $('#ddldoctor').attr('disabled', false);
+                $('#ddlpanel').attr('disabled', false);
+
+                // Hide discount for panel patients
+                $('#discount').hide();
+                //loaddoctor();
+                loadalldoctor();
+                // Load panels and doctors
+          
+            }
+            // Rest of the categories remain the same...
+        }
+
+      
+        function getpanelRate() {
+            var panelid = $('#ddlpanel').val();
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/LoadPanelInfo",
+                data: JSON.stringify({ panelid: panelid }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (resp) {
+                    debugger;
+                    var data = JSON.parse(resp.d);
+
+                    $('#txtfees').val(data.Fees);
+                    $('#txtfees').attr('disabled', true);
+                },
+                error: function (response) {
+                    alert("Error: " + response.responseText);
+                    console.error("AJAX Error: ", response);
+                }
+            });
+        }
         function loadPatientDetail(EMERID) {
             debugger;
             $('#btnsave').val('Update');
@@ -268,7 +572,6 @@
                     $('#txtdiscount').val(data.discount_amt).attr('disabled', true);
                     $('#txtdependent').val(data.Dependent).attr('disabled', true);
                     $('#txtemployee').val(data.Employee_Name).attr('disabled', true);
-                    $('#txtreferenceno').val(data.Refference_No).attr('disabled', true);
                     $('#txtremarks').val(data.Remarks).attr('disabled', true);
 
 
@@ -499,11 +802,18 @@
             debugger;
 
             var Department_id = $('#ddlDepartment').val();
-
+            var emer_reffered = $("#hdn_emer_reffered").val();
             var type = $("#ddlPatient_Type").val();
             var type_text = $('#ddlPatient_Type option:selected').text().trim();
 
-
+            if (emer_reffered !== "") {
+                $('#txtfees').val("0");
+                $('#hdnDocshare').val("0");
+                $('#hdnhospShare').val("0");
+                $('#txtdiscount').val("");
+                $('#txtdiscount').attr('disabled', false);
+                return;
+            }
 
             if (!Department_id || Department_id === "") {
                 $('#txtfees').val("0");
@@ -515,7 +825,7 @@
             }
 
             $.ajax({
-                url: 'EmergencyForm.aspx/GetFees',
+                url: 'EmergencyForm.aspx/GetFees',  // Changed from OPD.aspx to EmergencyOPD.aspx
                 type: 'POST',
                 data: JSON.stringify({ Department_id: Department_id }),
                 contentType: 'application/json; charset=utf-8',
@@ -536,7 +846,6 @@
                         var Receipt_fee = data && data.Receipt_fee !== undefined ? data.Receipt_fee : 0;
                         debugger;
                         $('#txtactualfee').val(code);
-
 
                         if (
                             (type === "04" && type_text === "Employee") ||
@@ -559,19 +868,14 @@
                             $('#hdnDocshare').val(dShare);
                             $('#hdnhospShare').val(hShare);
                         }
-                        debugger;
+
                         if (parseFloat(code) === 0) {
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Policy Not Defined',
                                 text: 'Policy is not defined against this department.',
                                 timer: 2000,
-                                showConfirmButton: false,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
+                                showConfirmButton: false
                             });
                         }
 
@@ -588,12 +892,7 @@
                             title: 'Data Error',
                             text: 'Invalid fee data received.',
                             timer: 2000,
-                            showConfirmButton: false,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
+                            showConfirmButton: false
                         });
                     }
                 },
@@ -605,15 +904,9 @@
                         title: 'Request Failed',
                         text: 'Could not retrieve fee information.',
                         timer: 2000,
-                        showConfirmButton: false,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
+                        showConfirmButton: false
                     });
 
-                    debugger;
                     $('#txtfees').val("0");
                     $('#hdnDocshare').val("0");
                     $('#hdnhospShare').val("0");
@@ -623,33 +916,30 @@
             });
         }
         function fillDropdown($dropdown, methodName) {
-            if ($dropdown.data('filled') && $dropdown.find('option').length > 1) return;
+            if ($dropdown.data('filled')) return;
 
-            $dropdown.data('filled', true); 
+            $dropdown.data('filled', false);
 
             $.ajax({
                 type: "POST",
-                url: "EmergencyForm.aspx/" + methodName,
+                url: "EmergencyForm.aspx/" + methodName,  // Changed from OPD.aspx to EmergencyOPD.aspx
                 data: '{}',
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
                     try {
                         const data = JSON.parse(response.d);
-                        var currentVal = $dropdown.val();
                         var options = '<option value="0">Please Select</option>';
 
                         $.each(data, function (key, value) {
-                            options += `<option value="${value.DataValue_Name}">${value.DataValue_Description}</option>`;
+                            options += `<option value="${value.DataValue_Name}">
+                                    ${value.DataValue_Description}
+                                </option>`;
                         });
 
-                        $dropdown.html(options);
-                        if (currentVal && currentVal !== "0" && currentVal !== "") {
-                            $dropdown.val(currentVal);
-                        }
-
-                        $dropdown.trigger('change');
-
+                        $dropdown.html(options)
+                            .data('filled', true)
+                            .trigger('change');
                         if ($dropdown.hasClass('select2-hidden-accessible')) {
                             $dropdown.select2('close').select2('open');
                         }
@@ -664,6 +954,80 @@
                 }
             });
         }
+        function loaddoctor() {
+            debugger;
+        
+
+      
+                var dpt = $('#ddlDepartment').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "EmergencyForm.aspx/LoadDoctor",
+                    data: JSON.stringify({ dpt: dpt }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var doctor = JSON.parse(response.d);
+                        var options = '<option value=""> Please Select </option>';
+
+                        $.each(doctor, function (key, value) {
+                            options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                        });
+
+                        $('#ddldoctor').html(options);
+                        var type = $('#ddlPatient_Type').val();
+
+                        if (type != "02") {
+
+                            getGeneralFee();
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            
+        }
+
+
+        function loadalldoctor() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/LoadEmplData",
+                data: '{}',  // Empty object, no parameters
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var doctors = JSON.parse(response.d);  // Now this will be an array
+                    var options = '<option value=""> Please Select </option>';
+
+                    // Check if doctors is an array and has items
+                    if (doctors && doctors.length > 0) {
+                        $.each(doctors, function (key, value) {
+                            options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                        });
+                    }
+
+                    $('#ddldoctor').html(options);
+                    var type = $('#ddlPatient_Type').val();
+
+                    // Only call getGeneralFee for categories other than 03 (Panel)
+                    if (type == "02" || type == "01") {
+                        getGeneralFee();
+                    } else if (type == "03") {
+                        $('#txtfees').val("0");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
         function showhide() {
             $('.show').show();
             $('#fees').hide();
@@ -672,7 +1036,7 @@
             $('#doctor').hide();
             $('#pnlcompany').hide();
             $('#employee').hide();
-            $('#refference').hide();
+         
             $('#discount').hide();
             $('#empname').hide();
             $('#designation').hide();
@@ -685,27 +1049,7 @@
             $('#EmpDep').hide();
             $('#StdName').hide();
         }
-        function loaddata() {
-            debugger;
-            var Category = $('#ddlPatient_Type').val();
-            // $('#ddlPatient_Type').attr('disabled', true);
-            debugger;
-            if (Category == "0") {
-
-                $('.show').show();
-                $('#fees').hide();
-                $('#department').hide();
-                /*     showIfAllowed('field_Clinic', false);*/
-
-
-            }
-            else if (Category == "01") {
-                $('#fees').show();
-                $('#department').show();
-
-            }
-
-        }
+       
         function FillUserAccount() {
             var options;
 
@@ -949,48 +1293,45 @@
         function SaveData() {
             debugger;
 
-            // ✅ Collect ONLY defined variables
             var regid = $('#hdn_regid').val();
-            var appid = $('#hdn_aptid').val();
             var emer_id = $('#hdn_EmergencyFormId').val();
             var patient_no = $('#txtPatientNo').val();
             var modeof_presentation = $('#ddlMode_Of_Registration').val();
             var pat_category = $('#ddlPatient_Type').val();
-            var hdnDepartment = $('#ddlDepartment').val(); // ✅ Use this, not "Department"
+            var hdnDepartment = $('#ddlDepartment').val();
             var employee = $('#txtemployee').val();
             var employee_id_raw = $('#Employe_id').val();
             var employee_id = employee_id_raw === "" || !employee_id_raw ? null : parseInt(employee_id_raw);
             var EmployeeName = $('#empname').val();
-
+            var EmployeeDept = $('#EmpDept').val();
             var StudentName = $('#txtStdName').val();
             var Fees = parseFloat($('#txtfees').val()) || 0;
             var Actual_Fees = parseFloat($('#txtactualfee').val()) || 0;
-            var discount = parseFloat($('#txtdiscount').val()) || 0;
+            var discount = $('#txtdiscount').val() || "0";
             var Doc_Share = parseFloat($('#hdnDocshare').val()) || 0;
             var Hosp_share = parseFloat($('#hdnhospShare').val()) || 0;
             var rollno = $('#ddlrollno').val();
             var Class = $('#ddlclass').val();
             var accountid = $('#ddlCashInHand').val();
             var Remarks = $('#txtremarks').val() || "";
-            var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val(); // ✅ Anti-forgery token
+            var hfAntiForgery = $('#ctl00_MainContent_hfAntiForgery').val();
 
-            // ✅ Validation: Use hdnDepartment (not undefined "Department")
+            // Panel and Private fields
+            var panel = $('#ddlpanel').val();
+            var doctor = $('#ddldoctor').val();
+
+            // Validations
             if (discount < 100.0 && Fees == 0.0) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
                     text: 'Fee Should Not be Zero',
                     showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
+                    timer: 2000
                 });
                 return;
             }
-            debugger;
+
             if (!patient_no || patient_no === "0") {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a Patient.', showConfirmButton: false, timer: 2000 });
                 return;
@@ -999,28 +1340,39 @@
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a patient category.', showConfirmButton: false, timer: 2000 });
                 return;
             }
-            // ✅ Fixed: Use hdnDepartment instead of undefined "Department"
-            if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!hdnDepartment || hdnDepartment === "0")) {
-                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a department for the selected patient category.', showConfirmButton: false, timer: 2000 });
+
+            // Category specific validations
+            if (pat_category === "03" && (!panel || panel === "0")) {
+                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a panel company.', showConfirmButton: false, timer: 2000 });
                 return;
             }
+
+            if ((pat_category === "02" || pat_category === "03") && (!doctor || doctor === "0")) {
+                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a doctor.', showConfirmButton: false, timer: 2000 });
+                return;
+            }
+
+            if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!hdnDepartment || hdnDepartment === "0")) {
+                Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a department.', showConfirmButton: false, timer: 2000 });
+                return;
+            }
+
             if (!accountid || accountid === "0") {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a Cash In Hand.', showConfirmButton: false, timer: 2000 });
                 return;
             }
 
-            // ✅ ONLY include variables that are ACTUALLY DEFINED above
             var data = {
                 regid: regid,
-                appid: appid,
-                emer_id: emer_id,               // ✅ Included (was missing earlier)
+                emer_id: emer_id,
                 patient_no: patient_no,
                 modeof_presentation: modeof_presentation,
                 pat_category: pat_category,
-                hdnDepartment: hdnDepartment, // ✅ Use correct variable name
+                hdnDepartment: hdnDepartment,
                 employee: employee,
                 employee_id: employee_id,
                 EmployeeName: EmployeeName,
+                EmployeeDept: EmployeeDept,
                 StudentName: StudentName,
                 Fees: Fees,
                 Actual_Fees: Actual_Fees,
@@ -1031,10 +1383,10 @@
                 Class: Class,
                 accountid: accountid,
                 Remarks: Remarks,
-                AntiForgeryToken: hfAntiForgery
+                AntiForgeryToken: hfAntiForgery,
+                panel: panel,
+                doctor: doctor
             };
-
-            console.log("Data being sent:", data);
 
             $.ajax({
                 type: "POST",
@@ -1149,7 +1501,28 @@
         $('#txtReferEmergencySearch').off('input').on('input', function () {
             FillReferPatientsList();
         });
+        function getpanelRate() {
+            var panelid = $('#ddlpanel').val();
+            if (!panelid || panelid === "0") return;
 
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/LoadPanelInfo",
+                data: JSON.stringify({ panelid: panelid }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (resp) {
+                    debugger;
+                    var data = JSON.parse(resp.d);
+                    $('#txtfees').val(data.Fees);
+                    $('#txtfees').attr('disabled', true);
+                },
+                error: function (response) {
+                    alert("Error: " + response.responseText);
+                    console.error("AJAX Error: ", response);
+                }
+            });
+        }
         function AddReferPatientDetail(reg_id, OPDID) {
             try {
                 var isAdd = true;
@@ -1456,10 +1829,7 @@
                     <label>Employee Department</label>
                     <input type="text" id="EmpDept" class="form-control" />
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" id="refference">
-                    <label>Reference #</label>
-                    <input type="text" id="txtreferenceno" class="form-control" />
-                </div>
+       
                 <div class="col-lg-12 col-md-12 col-sm-12" id="discount">
                     <label>Discount %</label>
                     <input type="text" id="txtdiscount" onchange="Calc_Discount()" class="form-control" />
