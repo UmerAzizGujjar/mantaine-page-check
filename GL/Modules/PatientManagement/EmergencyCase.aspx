@@ -9300,7 +9300,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <asp:Label ID="lblMessage" runat="server"></asp:Label>
+                                <asp:Label  ID="lblMessage" runat="server" style="display:none;" ></asp:Label>
                             </td>
                         </tr>
                     </table>

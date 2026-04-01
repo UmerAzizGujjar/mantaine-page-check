@@ -1838,27 +1838,38 @@ function AddReferPatientDetail(reg_id, OPDID) {
 
 // OPD.js
 function OPD_Print(OPD_ID, company_name) {
+    debugger;
     if (!OPD_ID) {
         console.error("OPD_ID is missing");
         return;
     }
 
+    var reportPath;
+    var url;
     var locationInfo = window.location;
 
     if (company_name == 'As-Siraat Serving Humanity') {
         reportPath = '../../ReportViewer.aspx';
     } else {
-        reportPath = 'ReportViewer.aspx'; // same folder
+        reportPath = 'ReportViewer.aspx';
     }
 
-    var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+    var reportParams = '?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=' + OPD_ID;
 
-    if (locationInfo.hostname !== "localhost") {
-        var urlInfo = window.location.href.split('/');
-        var ip = urlInfo[2];
-        var foldername = urlInfo[3];
-        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=' + OPD_ID;
+    if (locationInfo.hostname === "localhost") {
+        // Local development — use relative path
+        url = '../../' + reportPath + reportParams;
+    } else {
+        // Live server — dynamically pick up IP and folder
+        var urlParts = window.location.href.split('/');
+        var protocol = urlParts[0];           // "http:"
+        var ip = urlParts[2];           // "173.234.137.51"
+        var foldername = urlParts[3];           // "Assiraat_Standard"
+
+        url = protocol + '//' + ip + '/' + foldername + '/' + reportPath + reportParams;
     }
 
+    console.log("Opening URL:", url); // helpful for debugging
     window.open(url, '_blank');
 }
+
