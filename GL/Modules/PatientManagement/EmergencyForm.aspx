@@ -520,7 +520,7 @@
 
        
                    $('#discount').show();
-                   $('#discount').val("100");
+                   $('#txtdiscount').val("100");
                    
                 $('#txtfees').val("0");
               
@@ -536,7 +536,7 @@
 
        
                                 $('#discount').show();
-                                $('#discount').val("100");
+                                $('#txtdiscount').val("100");
                
           
                 $('#txtfees').val("0");
@@ -551,7 +551,7 @@
 
        
                    $('#discount').show();
-               $('#discount').val("100");
+               $('#txtdiscount').val("100");
                
                 $('#txtfees').val("0");
           
@@ -565,7 +565,7 @@
 
        
                    $('#discount').show();
-                    $('#discount').val("100");
+                    $('#txtdiscount').val("100");
               
           
                 $('#txtfees').val("0");
