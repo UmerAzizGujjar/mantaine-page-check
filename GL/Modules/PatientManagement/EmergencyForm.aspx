@@ -458,6 +458,14 @@
             debugger;
             var Category = $('#ddlPatient_Type').val();
 
+         $('#txtfees').val('');
+        $('#txtactualfee').val('');
+        $('#hdnDocshare').val('');
+        $('#hdnhospShare').val('');
+        $('#txtdiscount').val('').attr('disabled', false);
+        $('#ddlDepartment').val('0').trigger('change');
+        $('#ddldoctor').val('0').trigger('change');
+
             if (Category == "0") {
                
             }

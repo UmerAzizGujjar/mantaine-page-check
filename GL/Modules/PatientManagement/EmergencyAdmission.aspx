@@ -20,6 +20,8 @@
             margin-top: 10px;
         }
 
+
+
     </style>
     <script type="text/javascript">
         var currentEmergencyID = 0;
@@ -917,7 +919,7 @@
                         </div>
 
 
-                        <div class="table-responsive previewTable">
+                        <div class="table-responsive previewTable" style="max-height: 400px; overflow-y: auto;">
                             <table class="table table-bordered table-custom" id="tblEmergencyWaitingList">
                                 <thead id="ihead">
                                     <tr>
@@ -933,7 +935,6 @@
                                 <tbody id="ibody">
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
