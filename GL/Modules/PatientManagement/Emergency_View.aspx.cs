@@ -95,7 +95,8 @@ namespace PMS.Modules.PatientManagement
                                   NIC = rg.NIC,
                                   Mobile1 = rg.Mobile1,
                                   Amount = e.Receipt_Amount ?? 0,
-                                  Type = "Emergency" 
+                                  Type = "Emergency" ,
+                                  Patient_Type = _dbContext.GetDataValueName("Patient Type", e.Patient_Type),
                                   // Note: OutPatientID column commented out as per requirement
                                   // Type = string.IsNullOrEmpty(e.OutPatientID) ? "Emergency" : "Referred"
                               };
