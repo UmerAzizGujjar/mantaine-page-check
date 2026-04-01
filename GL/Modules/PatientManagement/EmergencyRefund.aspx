@@ -37,7 +37,7 @@
                 alert("Refund not found.");
                 return;
             }
-            $('#hdPatientID').text(data.Patient_ID);
+            $('#hdPatientID').text(data.Emer_id);
             $('#hdRegPatId').val(data.Reg_PatId);
             $('#lblMRNo').text(data.Patient_No);
             $('#lblPatienName').text(data.Full_Name);

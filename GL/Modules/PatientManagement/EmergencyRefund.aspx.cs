@@ -117,6 +117,7 @@ namespace PMS.Modules.PatientManagement
                         {
                             emergency_No = emergencyNo,
                             pat_id = regPatId,
+                            
                             Refund_Date = refundDate,
                             Hospital_Refund = data.Hospital_Refund,
                             Doctor_Refund = data.Doctor_Refund,
@@ -215,7 +216,7 @@ namespace PMS.Modules.PatientManagement
                                  {
                                      emg.Emergency_No,
                                      emg.Reg_PatId,
-                            
+                                     emg.Emer_id,
                                      emg.Doctor_Amount,
                                      emg.Hospital_share,
                                      emg.Actual_amount,
