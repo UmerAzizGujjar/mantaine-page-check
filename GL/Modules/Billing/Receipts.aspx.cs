@@ -1680,7 +1680,7 @@ namespace PMS
             decimal totalAmount = (from r in db.Receipts
                                    join b in db.Ar_Billings on r.Bill_ID equals b.Bill_ID
                                    where r.Receipt_Date.HasValue &&
-                                         r.SaleClosing > lastCloseTime &&
+                                         r.Creation_Date > lastCloseTime &&
                                          b.Main_Department != "03" &&
                                          r.Created_By == AppConfig.UserID &&
                                          (r.isCancel == null || r.isCancel == false) && // Check Receipt's isCancel
