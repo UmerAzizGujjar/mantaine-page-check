@@ -135,8 +135,8 @@
              "columns": [
                  { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                  { "data": "Emer_id", "name": "Emer_id", "visible": false, "width": "0%", "orderable": false },
-                 { "data": "Emergency_No", "name": "Emergency_No", "width": "10%", "orderable": true },
-                 { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%", "orderable": true },
+                 { "data": "Emergency_No", "name": "Emergency_No", "width": "4%", "orderable": true },
+                 { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
            
                  { "data": "Full_Name", "width": "16%", "orderable": false },
                  { 
@@ -146,7 +146,9 @@
                      "orderable": true,
                      "render": (data, type, full) => data ? parseFloat(data).toFixed(2) : "0.00"
                  },
+
                  { "data": "Type", "width": "10%", "orderable": false },
+                 { "data": "Patient_Type", "width": "6%", "orderable": false },
                  { "data": "NIC", "width": "10%", "orderable": false },
                  { "data": "Mobile1", "width": "10%", "orderable": false },
                  {
@@ -202,7 +204,8 @@
                 
                      <th style="width: 17%;">Name</th>
                      <th style="width: 12%;">Amount</th>
-                     <th style="width: 12%;">Type</th>
+                     <th style="width: 12%;">Department</th>
+                     <th style="width: 12%;">Patient Type</th>
                      <th style="width: 12%;">CNIC</th>
                      <th style="width: 12%;">Mobile</th>
                      <th style="width: 10%;">Date</th>
