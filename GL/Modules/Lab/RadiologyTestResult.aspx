@@ -274,6 +274,24 @@
 
 
         $(document).ready(function () {
+            var date = '<%= DateTime.Now%>';
+            $("#sdate").datepicker({
+                dateFormat: 'MM d,yy',
+            }).attr('readonly', 'readonly');
+            $("#edate").datepicker({
+                dateFormat: 'MM d,yy',
+            }).attr('readonly', 'readonly');
+            $("#sAppdate").datepicker({
+                dateFormat: 'MM d,yy',
+            }).attr('readonly', 'readonly');
+            $("#eAppdate").datepicker({
+                dateFormat: 'MM d,yy',
+            }).attr('readonly', 'readonly');
+            date = moment(date).format('LL');
+            $("#sdate").val(date);
+            $("#edate").val(date);
+            $("#sAppdate").val(date);
+            $("#eAppdate").val(date);
 
             $("#ddlrptColumns").val(4);
             AllowLabRights();
@@ -2605,14 +2623,23 @@
                 // levelType = options;
             });
         }
+        function reloadPendingList(){
+            LoadRadiologyPatientsList() 
+        }
 
         function LoadRadiologyPatientsList() {
             var deptFilter = $('#ddlDepartment').val(); 
+            var startdate = $('#sdate').val();
+            var endtdate = $('#edate').val();
 
             $.ajax({
                 type: "POST",
                 url: "RadiologyTestResult.aspx/AllUltraSoundTest",
-                data: JSON.stringify({ departmentCode: deptFilter }),
+                data: JSON.stringify({
+                    departmentCode: deptFilter,
+                    startdate: startdate,
+                    endtdate: endtdate
+                }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -2628,6 +2655,14 @@
                                 var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
                                 formattedDate = billDate.toLocaleDateString();
                             }
+                            var status = item.IsAcknowledge
+                            var statuss;
+                            if (status == true) {
+                                statuss = 'Acknowledge'
+                            }
+                            else {
+                                statuss = 'Waiting'
+                            }
 
                             var row = '<tr>' +
                                 '<td>' + formattedDate + '</td>' +
@@ -2635,6 +2670,7 @@
                                 '<td>' + item.Full_Name + '</td>' +
                                 '<td>' + item.Item_Name + '</td>' +
                                 '<td>' + item.Test_Main_Department + '</td>' +
+                                '<td>' + statuss + '</td>' +
                                 '<td><button type="button" class="btn btn-sm btn-primary" ' +
                                 'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
                                 '</tr>';
@@ -2709,11 +2745,21 @@
             });
         }
 
-
+        function reloadApprovalList() {
+            LoadRadiologyResultsReadyList()
+        }
         function LoadRadiologyResultsReadyList() {
+            var deptFilter = $('#ddlDepartments').val();
+            var startdate = $('#sAppdate').val();
+            var endtdate = $('#eAppdate').val();
             $.ajax({
                 type: "POST",
                 url: "RadiologyTestResult.aspx/GetRadiologyResultsReady",
+                data: JSON.stringify({
+                    departmentCode: deptFilter,
+                    startdate: startdate,
+                    endtdate: endtdate
+                }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -2754,6 +2800,7 @@
                                     '<td>' + item.Bill_No + '</td>' +
                                     '<td>' + item.Full_Name + '</td>' +
                                     '<td>' + item.Item_Name + '</td>' +
+                                    '<td>' + item.Test_Main_Department + '</td>' +
                                     '<td>' + (item.Doctor || '') + '</td>' +
                                     '<td><button type="button" class="btn btn-sm btn-success" ' +
                                     'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
@@ -3214,57 +3261,103 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
     </div>
     <div class="row">
         <div class="col-lg-6 col-md-3 sm-6" id="Radiologylist">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 23px">
+                <h1 style="margin: 0;">Patients Waiting List</h1>
+            </div>
+            <div class="row">
 
-        <div style="display:flex; justify-content:space-between; align-items:center;margin-bottom:24px;margin-top:23px">
-            <h1 style="margin:0;">Radiology Patients List</h1>
-
-            <select id="ddlDepartment" class="form-control" style="width:200px;">
-                <option value="">All Departments</option>
-                <option value="002">Ultrasound</option>
-                <option value="003">X-Ray</option>
-                <option value="004">CTScan</option>
-                <option value="005">Physiotherapy</option>
-                <option value="006">MRI</option>
-                <option value="008">Cardiology</option>
-            </select>
-        </div>
-
-        <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
-            <table class="table test-table" id="tblradilogy">
-                <thead style="position: sticky; top: 0; background-color: white; z-index: 10;">
-                    <tr>
-                        <th>Bill Date</th>
-                        <th>Bill No</th>
-                        <th>Name</th>
-                        <th>Test Name</th>
-                        <th>Test Main Department</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="tbl_tbody_radiology">
-                </tbody>
-            </table>
-        </div>
-    </div>
-        <div class="col-lg-6 col-md-3 sm-6" id="PendingRadiologylist">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h1>Results Ready - Pending Approval</h1>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <label>Doctor:</label>
-                    <select id="ddlFilterDoctor" class="form-control">
-                        <option value="">All Doctors</option>
-                    </select>
+                <div class="col-lg-2">
+                    <label>Start Date </label>
+                    <input type="text" id="sdate" />
+                </div>
+                <div class="col-lg-2">
+                    <label>End Date </label>
+                    <input type="text" id="edate" />
+                </div>
+                <div class="col-lg-3">
+                    <label>Departemnt </label>
+                <select id="ddlDepartment" class="form-control" >
+                    <option value="0">All Departments</option>
+                    <option value="002">Ultrasound</option>
+                    <option value="003">X-Ray</option>
+                    <option value="004">CTScan</option>
+                    <option value="005">Physiotherapy</option>
+                    <option value="006">MRI</option>
+                    <option value="008">Cardiology</option>
+                </select>
+                    </div>
+                                <div class="col-lg-2">
+                   
+                   <input type="button" id="searchpendding" class="btn btn-primry" onclick="reloadPendingList();" value="Search" />
                 </div>
             </div>
 
             <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
-                <table class="table test-table" id="tblradilogy_results">
-                    <thead style="position: sticky; top: 0; background-color: white; z-index: 10;">
+                <table class="table test-table" id="tblradilogy">
+                    <thead>
                         <tr>
                             <th>Bill Date</th>
                             <th>Bill No</th>
                             <th>Name</th>
                             <th>Test Name</th>
+                            <th>Test Main Department</th>
+                            <th>Patient Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbl_tbody_radiology">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-3 sm-6" id="PendingRadiologylist">
+             <div >
+                  <h1>Results Ready - Pending Approval</h1>
+                 </div>
+            <div class="row">
+
+                <div class="col-lg-2">
+                    <label>Start Date </label>
+                    <input type="text" id="sAppdate" />
+                </div>
+                <div class="col-lg-2">
+                    <label>End Date </label>
+                    <input type="text" id="eAppdate" />
+                </div>
+                <div class="col-lg-3">
+                    <label>Department:</label>
+                    <select id="ddlDepartments" class="form-control">
+                        <option value="0">All Departments</option>
+                        <option value="002">Ultrasound</option>
+                        <option value="003">X-Ray</option>
+                        <option value="004">CTScan</option>
+                        <option value="005">Physiotherapy</option>
+                        <option value="006">MRI</option>
+                        <option value="008">Cardiology</option>
+                    </select>
+                </div>
+                <div class="col-lg-3">
+                    <label>Doctor:</label>
+                    <select id="ddlFilterDoctor" class="form-control">
+                        <option value="">All Doctors</option>
+                    </select>
+                </div>
+                <div class="col-lg-2">
+                   
+                   <input type="button" id="searchapprove" onclick="reloadApprovalList();" class="btn btn-primry" value="Search" />
+                </div>
+            </div>
+
+
+            <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+                <table class="table test-table" id="tblradilogy_results">
+                    <thead >
+                        <tr>
+                            <th>Bill Date</th>
+                            <th>Bill No</th>
+                            <th>Name</th>
+                            <th>Test Name</th>
+                            <th>Department</th>
                             <th>Doctor</th>
                             <th>Action</th>
                         </tr>
