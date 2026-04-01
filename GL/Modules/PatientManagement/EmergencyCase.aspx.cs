@@ -707,7 +707,7 @@ namespace PMS
                     //else
                     //vLbl_RegDate.Text = qry.Entry_Date.Value.ToString(AppConfig.DateFormat);
                     vLbl_RegDate.Text = qry.Created_time.Value.ToString(AppConfig.DateFormat);
-                    txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
+                    //txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
 
                     txtRN_Special_Instruction.Text = qry.RN_Special_Instruction;
                     ddlIssuance_Of.SelectedValue = qry.Issuance_Of;
