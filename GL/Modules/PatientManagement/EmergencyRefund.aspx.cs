@@ -71,6 +71,7 @@ namespace PMS.Modules.PatientManagement
                             : "",
                         Department = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
                         Patient_Type = db.GetDataValueName("Patient Type", p.Patient_Type),
+                        Emer_id = p.Emer_id,
                         Is_Refund = p.Is_Refund ?? false
                     }).ToList();
 
@@ -117,7 +118,7 @@ namespace PMS.Modules.PatientManagement
                         {
                             emergency_No = emergencyNo,
                             pat_id = regPatId,
-                            
+                            Emer_id = patientID,
                             Refund_Date = refundDate,
                             Hospital_Refund = data.Hospital_Refund,
                             Doctor_Refund = data.Doctor_Refund,
@@ -161,7 +162,7 @@ namespace PMS.Modules.PatientManagement
 
                         refund.emergency_No = emergencyNo;
                         refund.pat_id = regPatId;
-                     
+                        refund.Emer_id = patientID;
                         refund.Refund_Date = refundDate;
                         refund.Hospital_Refund = data.Hospital_Refund;
                         refund.Doctor_Refund = data.Doctor_Refund;
