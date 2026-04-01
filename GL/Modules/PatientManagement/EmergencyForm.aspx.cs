@@ -989,7 +989,7 @@ namespace PMS.Modules.PatientManagement
                        where emp.Panel_ID == Convert.ToInt32(panelid)
                        select new
                        {
-                           Fees = emp.Panel_Rate
+                           Fees = emp.Panel_Rate_Emergency
                        }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(doc);
         }
@@ -1211,8 +1211,7 @@ namespace PMS.Modules.PatientManagement
             if (string.IsNullOrWhiteSpace(data?.pat_category) || data.pat_category == "0")
                 errors.Add("Patient category is required.");
 
-            if (string.IsNullOrWhiteSpace(data?.hdnDepartment) || data.hdnDepartment == "0")
-                errors.Add("Department is required.");
+            
 
             if (string.IsNullOrWhiteSpace(data?.accountid) || data.accountid == "0")
                 errors.Add("Cash In Hand account is required.");

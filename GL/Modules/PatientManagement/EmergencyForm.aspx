@@ -513,27 +513,7 @@
         }
 
       
-        function getpanelRate() {
-            var panelid = $('#ddlpanel').val();
-            $.ajax({
-                type: "POST",
-                url: "OPD.aspx/LoadPanelInfo",
-                data: JSON.stringify({ panelid: panelid }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (resp) {
-                    debugger;
-                    var data = JSON.parse(resp.d);
-
-                    $('#txtfees').val(data.Fees);
-                    $('#txtfees').attr('disabled', true);
-                },
-                error: function (response) {
-                    alert("Error: " + response.responseText);
-                    console.error("AJAX Error: ", response);
-                }
-            });
-        }
+     
         function loadPatientDetail(EMERID) {
             debugger;
             $('#btnsave').val('Update');
