@@ -159,15 +159,27 @@
 
 
 
+        //function loaddoctor() {
+        //    PageMethods.LoadDoctor(function (res) {
+        //        var doctor = JSON.parse(res);
+        //        var options = '';
+        //        var rowsText = '';
+        //        $.each(doctor, function (key, value) {
+        //            options = '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+        //        });
+        //        $('#ddlDoctor').html(options)
+        //        $('#ddlDoctor').select2();
+        //    });
+        //}
+
         function loaddoctor() {
             PageMethods.LoadDoctor(function (res) {
                 var doctor = JSON.parse(res);
-                var options = '';
-                var rowsText = '';
+                var options = '<option value="0">Please Select</option>';
                 $.each(doctor, function (key, value) {
-                    options = '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+                    options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
                 });
-                $('#ddlDoctor').html(options)
+                $('#ddlDoctor').html(options);
                 $('#ddlDoctor').select2();
             });
         }
@@ -535,7 +547,7 @@
         <div class="col-lg-3 col-md-5 col-sm-12">
             <label>Doctor Name</label>
             <div>
-                <select id="ddlDoctor" name="ddlDoctor" disabled>
+                <select id="ddlDoctor" name="ddlDoctor">
                 </select>
             </div>
         </div>

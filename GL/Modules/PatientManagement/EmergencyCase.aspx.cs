@@ -707,7 +707,7 @@ namespace PMS
                     //else
                     //vLbl_RegDate.Text = qry.Entry_Date.Value.ToString(AppConfig.DateFormat);
                     vLbl_RegDate.Text = qry.Created_time.Value.ToString(AppConfig.DateFormat);
-                    txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
+                    //txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
 
                     txtRN_Special_Instruction.Text = qry.RN_Special_Instruction;
                     ddlIssuance_Of.SelectedValue = qry.Issuance_Of;
@@ -6115,6 +6115,7 @@ namespace PMS
                 ltd.Lab_Test_ID = labID;
                 ltd.Patient_ID = Convert.ToInt32(record.PatientID);
                 ltd.Date = Convert.ToDateTime(test.Date);
+               // ltd.Doctor = test.Doctor != null ? test.Doctor.ToString() : "";
                 ltd.Doctor = test.Doctor.ToString();
                 ltd.Special_Tests = test.Special_Tests;
                 ltd.Rotation_ID = test.RotationID;
@@ -7312,6 +7313,68 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
         }
 
+        [WebMethod]
+        public static string GetTemplate()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var dpt = (from d in db.Doctor_Template_Masters
+                       join hr in db.HR_Employees
+                       on d.Doctor_Id equals hr.Emp_ID
+                       where /*hr.userid == Convert.ToString(AppConfig.UserID) && */d.isActive == true
+                       select new
+                       {
+                           d.Template_Id,
+                           d.Template_Name
+                       }).ToList();
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+        [WebMethod]
+        public static string GetTemplateMedicine(int Templateid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var dpt = (from dt in db.Doctor_Template_Masters
+                       join dtm in db.Doctor_Template_Medicines
+                       on dt.Template_Id equals dtm.Template_Id
+                       join mt in db.Medicines_Templates
+                       on dtm.Medicine_id equals mt.Item_Code
+                       where dt.Template_Id == Templateid
+                       select new
+                       {
+                           mt.Medicine_Date,
+                           mt.Medicine_Name,
+                           mt.Dosage_From,
+                           mt.Dosage_Qty,
+                           mt.AttendingParamedical_Staff,
+                           mt.Item_Code,
+                           mt.Other_Instruction,
+                           mt.Frequency,
+                           mt.Injections,
+                           mt.Oral,
+                       }).ToList();
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+
+
+        [WebMethod]
+        public static object GetTemplateTest(int Templateid) 
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var dpt = (from dt in db.Doctor_Template_Masters
+                       join dtm in db.Doctor_Template_Tests
+                       on dt.Template_Id equals dtm.Template_Id
+                       where dt.Template_Id == Templateid
+                       select new
+                       {
+                           dtm.Department_id,
+                           dtm.Test_Id,
+                           dtm.Test_Name,
+                           dtm.Rotation_Id,
+                       }).ToList();
+
+            return dpt; 
+        }
 
     }
 }

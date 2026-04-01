@@ -97,7 +97,7 @@
             {
                 "data": "Bill_Date", "name": "Bill_Date",
                 "render": function (data) {
-                    return moment(data).format("DD-MMM-YYYY hh:mm A");
+                    return moment(data).format("DD-MMM-YYYY");
                 }
             },
             { "data": "Bill_No", "name": "Bill_No" },

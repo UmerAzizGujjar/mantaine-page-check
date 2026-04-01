@@ -76,6 +76,8 @@
                     $('#AllowActiveItems').prop('checked', data.AllowActiveItems);
                     $('#AllowSaleReturn').prop('checked', data.AllowSaleReturn);
                     $('#AllowStudentUpdate').prop('checked', data.AllowStudentUpdate);
+                    $('#RadiologyAllList').prop('checked', data.RadiologyAllList);
+                    $('#AllowRadiologyApproval').prop('checked', data.Radiology_result_Approval);
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                 },
                 error: function (xhr, status, error) {
@@ -127,6 +129,8 @@
             var AllowActiveItems = $('#AllowActiveItems').prop('checked');
             var AllowSaleReturn = $('#AllowSaleReturn').prop('checked');
             var AllowStudentUpdate = $('#AllowStudentUpdate').prop('checked');
+            var RadiologyAllList = $('#RadiologyAllList').prop('checked');
+            var AllowRadiologyApproval = $('#AllowRadiologyApproval').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var EmpCode = $('#EmpCode').val();
             var ddlcasher = $('#ddlcasher').val();
@@ -251,6 +255,8 @@
                 "AllowActiveItems": AllowActiveItems,
                 "AllowSaleReturn": AllowSaleReturn,
                 "AllowStudentUpdate": AllowStudentUpdate,
+                "RadiologyAllList": RadiologyAllList,
+                "AllowRadiologyApproval": AllowRadiologyApproval,
                 "AllowRateEdit": AllowRateEdit,
                 "ddlcasher": ddlcasher
 
@@ -608,6 +614,12 @@
                                                    <div class="form-check">
                                                          <input type="checkbox" class="form-check-input" id="AllowStudentUpdate" name="AllowStudentUpdate" style="" />
                                                      </div>
+                                                   <div class="form-check">
+                                                         <input type="checkbox" class="form-check-input" id="RadiologyAllList" name="RadiologyAllList" style="" />
+                                                     </div>
+                                                   <div class="form-check">
+                                                         <input type="checkbox" class="form-check-input" id="AllowRadiologyApproval" name="AllowRadiologyApproval" style="" />
+                                                     </div>
                                              
 
 
@@ -664,6 +676,12 @@
                                                      </div>
                                                        <div class="form-check">
                                                           <label class="form-check-label" for="EmpCode">Student Update</label>
+                                                      </div>
+                                                       <div class="form-check">
+                                                          <label class="form-check-label" for="RadiologyList">Radiology List</label>
+                                                      </div>
+                                                       <div class="form-check">
+                                                          <label class="form-check-label" for="EmpCode">Radiology Approval List</label>
                                                       </div>
                                                  
                                                  
