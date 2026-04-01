@@ -893,16 +893,18 @@ namespace PMS.Modules.PatientManagement
         }
 
         [WebMethod]
-        public static string LoadEmplData(string employeeid)
+        public static string LoadEmplData()
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var doc = (from emp in db.HR_Employees
-                       where emp.Emp_ID == Convert.ToInt32(employeeid)
+                       where emp.IS_Active == true
+                       && emp.IsDoctor == true
                        select new
                        {
-                           Name = emp.Emp_Name,
-                           Dependent = emp.Dependent
-                       }).FirstOrDefault();
+                           Emp_ID = emp.Emp_ID,
+                           Emp_Name = emp.Emp_Name
+                       }).ToList();  // Changed from FirstOrDefault() to ToList()
+
             return (new JavaScriptSerializer()).Serialize(doc);
         }
 
@@ -987,7 +989,7 @@ namespace PMS.Modules.PatientManagement
                        where emp.Panel_ID == Convert.ToInt32(panelid)
                        select new
                        {
-                           Fees = emp.Panel_Rate
+                           Fees = emp.Panel_Rate_Emergency
                        }).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(doc);
         }
@@ -1189,17 +1191,18 @@ namespace PMS.Modules.PatientManagement
             if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(data?.AntiForgeryToken))
                 return "ERROR: Invalid request. Possible CSRF attack.";
 
-            // 🧼 Sanitize only fields that exist in MasterList
+            // 🧼 Sanitize inputs
             if (data != null)
             {
                 data.StudentName = SanitizeInput(data.StudentName);
                 data.EmployeeName = SanitizeInput(data.EmployeeName);
+                data.EmployeeDept = SanitizeInput(data.EmployeeDept);
                 data.Remarks = SanitizeInput(data.Remarks);
                 data.employee = SanitizeInput(data.employee);
                 data.patient_no = SanitizeInput(data.patient_no);
             }
 
-            // ✅ Validations (only on fields we actually receive)
+            // ✅ Validations
             var errors = new List<string>();
 
             if (string.IsNullOrWhiteSpace(data?.patient_no) || data.patient_no == "0")
@@ -1208,11 +1211,25 @@ namespace PMS.Modules.PatientManagement
             if (string.IsNullOrWhiteSpace(data?.pat_category) || data.pat_category == "0")
                 errors.Add("Patient category is required.");
 
-            if (string.IsNullOrWhiteSpace(data?.hdnDepartment) || data.hdnDepartment == "0")
-                errors.Add("Department is required.");
+            
 
             if (string.IsNullOrWhiteSpace(data?.accountid) || data.accountid == "0")
                 errors.Add("Cash In Hand account is required.");
+
+            // Panel category validations
+            if (data.pat_category == "03") // Panel
+            {
+                if (string.IsNullOrWhiteSpace(data.panel) || data.panel == "0")
+                    errors.Add("Please select a panel company.");
+
+                if (string.IsNullOrWhiteSpace(data.doctor) || data.doctor == "0")
+                    errors.Add("Please select a doctor.");
+            }
+            else if (data.pat_category == "02") // Private
+            {
+                if (string.IsNullOrWhiteSpace(data.doctor) || data.doctor == "0")
+                    errors.Add("Please select a doctor.");
+            }
 
             if (data?.Fees < 0)
                 errors.Add("Fee amount must be zero or positive.");
@@ -1236,7 +1253,6 @@ namespace PMS.Modules.PatientManagement
                     Emergency pat = null;
                     bool isNew = string.IsNullOrEmpty(emer_id) || emer_id == "0" || emer_id == "(New)";
 
-                    // 🔍 Load existing record or create new
                     if (!isNew)
                     {
                         int e_id = Convert.ToInt32(emer_id);
@@ -1248,9 +1264,8 @@ namespace PMS.Modules.PatientManagement
                     {
                         pat = new Emergency
                         {
-                            // ✅ Only set fields we have data for
                             Emergency_No = DBClass.getMaxEntry_No("Emergency", "Emergency_No"),
-                            Reg_PatId = data.regid,
+                            Reg_PatId = Convert.ToInt32(data.regid),
                             Created_By = Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId) ? userId : Guid.Empty,
                             Created_Time = DateTime.Now,
                             Company_ID = AppConfig.Company_ID,
@@ -1258,24 +1273,15 @@ namespace PMS.Modules.PatientManagement
                             isCancel = false,
                             Status = "Created",
                             Is_billed = false,
-
-                            // ⚠️ Minimal defaults for required DB fields (not sent from frontend)
                             Patient_Main_Category = data.hdnDepartment,
-                            Doctor_ID = "0",
-                            PanelCompany = 0,
-                            RollNo = 0,
-                            Class = 0,
-                            Section = 0,
-                            free_check = false,
                             tokenNo = db.Emergencies.Count(p =>
                                p.Created_Time.HasValue &&
                                p.Created_Time.Value.Date == DateTime.Now.Date &&
                                p.Patient_Main_Category == data.hdnDepartment) + 1
                         };
-
                     }
 
-                    // ✏️ Update ONLY fields that come from frontend
+                    // Common fields
                     pat.Student_Name = data.StudentName;
                     pat.Mode_Of_Registration = data.modeof_presentation;
                     pat.Patient_Type = data.pat_category;
@@ -1285,8 +1291,28 @@ namespace PMS.Modules.PatientManagement
                     pat.Remarks = data.Remarks;
                     pat.mr_no_sequence = data.patient_no;
                     pat.Admitted_Status = "Waiting";
+                    pat.Employee_Name = data.EmployeeName;
+                    //pat.EmployeeDept = data.EmployeeDept;
 
-                    // 💰 Fee & Discount
+                    // Save Panel and Private specific fields
+                    if (data.pat_category == "03") // Panel
+                    {
+                        if (!string.IsNullOrEmpty(data.panel))
+                            pat.PanelCompany = Convert.ToInt32(data.panel);
+                        pat.Doctor_ID = data.doctor;
+                    }
+                    else if (data.pat_category == "02") // Private
+                    {
+                        pat.Doctor_ID = data.doctor;
+                        pat.PanelCompany = 0;
+                    }
+                    else if (data.pat_category == "01") // General
+                    {
+                        pat.Doctor_ID = "";
+                        pat.PanelCompany = 0;
+                    }
+
+                    // Fee & Discount
                     if (data.Fees >= 0)
                     {
                         pat.Receipt_Amount = data.Fees;
@@ -1296,7 +1322,7 @@ namespace PMS.Modules.PatientManagement
                     if (!string.IsNullOrEmpty(data.discount) && decimal.TryParse(data.discount, out decimal disc))
                         pat.discount_amt = disc;
 
-                    // 💸 Share Calculation
+                    // Share Calculation
                     decimal netAmount = data.Fees;
                     if (data.pat_category == "11")
                     {
@@ -1309,9 +1335,7 @@ namespace PMS.Modules.PatientManagement
                         pat.doc_share = Math.Round((netAmount * data.Doc_Share) / 100, 2).ToString("F2");
                     }
 
-                    //pat.Share_Transfered = (data.pat_category == "02");
-
-                    // 📋 Other numeric fields
+                    // Other numeric fields
                     if (!string.IsNullOrEmpty(data.rollno) && int.TryParse(data.rollno, out int roll))
                         pat.RollNo = roll;
 
@@ -1321,7 +1345,6 @@ namespace PMS.Modules.PatientManagement
                     if (!string.IsNullOrEmpty(data.accountid) && int.TryParse(data.accountid, out int accId))
                         pat.AccountID = accId;
 
-                    // ➕ Insert if new
                     if (isNew)
                         db.Emergencies.InsertOnSubmit(pat);
 
@@ -1331,8 +1354,7 @@ namespace PMS.Modules.PatientManagement
             }
             catch (Exception ex)
             {
-                // 📝 Log ex.ToString() to file/event log in production
-                return "ERROR: Failed to save OPD record. Please try again.";
+                return "ERROR: Failed to save Emergency record. Please try again.";
             }
         }
         private static PolicySlot GetCurrentActivePolicySlot(string doctorIdStr)
@@ -2351,18 +2373,19 @@ namespace PMS.Modules.PatientManagement
 
         public class MasterList
         {
-            public int regid { get; set; }
-            public int? employee_id { get; set; }
+            public string regid { get; set; }
             public string appid { get; set; }
+            public string emer_id { get; set; }
             public string patient_no { get; set; }
             public string modeof_presentation { get; set; }
             public string pat_category { get; set; }
             public string hdnDepartment { get; set; }
             public string employee { get; set; }
+            public string employee_id { get; set; }
             public string EmployeeName { get; set; }
             public string StudentName { get; set; }
-            public int Fees { get; set; }
-            public int Actual_Fees { get; set; }
+            public decimal Fees { get; set; }
+            public decimal Actual_Fees { get; set; }
             public string discount { get; set; }
             public decimal Doc_Share { get; set; }
             public decimal Hosp_share { get; set; }
@@ -2371,6 +2394,9 @@ namespace PMS.Modules.PatientManagement
             public string accountid { get; set; }
             public string Remarks { get; set; }
             public string AntiForgeryToken { get; set; }
+            public string panel { get; set; }        // Panel company ID
+            public string doctor { get; set; }       // Doctor ID
+            public string EmployeeDept { get; set; } // Employee department
         }
 
 
