@@ -3312,7 +3312,7 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
         </div>
         <div class="col-lg-6 col-md-3 sm-6" id="PendingRadiologylist">
              <div >
-                  <h1>Results Ready - Pending Approval</h1>
+                  <h1>Prelim Ready - Pending Approval</h1>
                  </div>
             <div class="row">
 

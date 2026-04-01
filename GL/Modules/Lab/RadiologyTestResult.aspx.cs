@@ -1731,6 +1731,7 @@ namespace PMS.Modules.Lab
                       (bill.isCancel == false || bill.isCancel == null) &&
                        bill.Bill_Date >= startDate &&
                         bill.Bill_Date <= endDate
+                         && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
                 orderby bill.Bill_Date descending
                 select new
                 {
@@ -1787,6 +1788,7 @@ namespace PMS.Modules.Lab
                          (bill.isCancel == false || bill.isCancel == null) &&
                                                 bill.Bill_Date >= startDate &&
                         bill.Bill_Date <= endDate
+                         && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
                    orderby bill.Bill_Date descending
                    select new
                    {
@@ -1829,6 +1831,7 @@ namespace PMS.Modules.Lab
                          (bill.isCancel == false || bill.isCancel == null) &&
                         bill.Bill_Date >= startDate &&
                         bill.Bill_Date <= endDate
+                         && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
                          && hr.userid == Convert.ToString(userid)
                    orderby bill.Bill_Date descending
                    select new
