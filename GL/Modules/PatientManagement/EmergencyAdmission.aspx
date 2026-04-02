@@ -20,6 +20,8 @@
             margin-top: 10px;
         }
 
+
+
     </style>
     <script type="text/javascript">
         var currentEmergencyID = 0;
@@ -578,43 +580,12 @@
 
 
             
-      <%--function FillWardBeds() {
-            var wardID = $('#<%= ddlWard_No.ClientID %>').val();
-            if (!wardID || wardID === '0') {
-                $('#tblWards tbody').empty();
-                return;
-            }
-
-            PageMethods.FillWardBeds(parseInt(wardID), function (response) {
-                var beds = JSON.parse(response);
-                if (beds.error) {
-                    console.error('Error loading beds:', beds.error);
-                    return;
-                }
-
-                var tbody = $('#tblWards tbody');
-                tbody.empty();
-
-                $.each(beds, function (i, bed) {
-                    var mrNo = bed.PatientNo > 0 ? bed.PatientNo : 'Available';
-                    var rowClass = bed.PatientNo > 0 ? 'table-danger' : 'table-success';
-                    var row = '<tr class="' + rowClass + '">' +
-                        '<td>' + mrNo + '</td>' +
-                        '<td><a  onclick="SelectBed(' + bed.WardID + ',' + bed.BedNo + ')"> ' + bed.BedNo + '</td>' +
-                        '</tr>';
-                    tbody.append(row);
-                });
-            }, function (error) {
-                console.error('Error:', error);
-            });
-        }--%>
+      
 
         function checkPatientCondition(element) {
-            // Can add custom logic for triage area selection if needed
         }
 
         function chkIssuance_Of_Select() {
-            // Can add custom logic for admit to selection if needed
         }
 
         function populateRoomTypes() {
@@ -917,7 +888,7 @@
                         </div>
 
 
-                        <div class="table-responsive previewTable">
+                        <div class="table-responsive previewTable" style="max-height: 400px; overflow-y: auto;">
                             <table class="table table-bordered table-custom" id="tblEmergencyWaitingList">
                                 <thead id="ihead">
                                     <tr>
@@ -933,7 +904,6 @@
                                 <tbody id="ibody">
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>

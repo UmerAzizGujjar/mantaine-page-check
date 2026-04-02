@@ -45,6 +45,7 @@
 
                 var cmp_nameV = $("#txtCompanyName");
                 var panelrate = $("#txtpanelrate").val();
+                var panelrateEmergency = $("#txtpanelrateEmergency").val();
                 var no_of_empV = $("#txtEmpNo");
                 var emailV = $("#txtEmail");
                 var Glcode = $("#ddlGlAccount").val();
@@ -123,6 +124,7 @@
                                 'address': address,
                                 'discount': discount,
                                 'panelrate': panelrate,
+                                'panelrateEmergency': panelrateEmergency,
                                 "btnValue": btnValue,
                                 "Glcode": Glcode,
                                 "id": id,
@@ -205,6 +207,7 @@
                         $("#txtAddress").val(parsed_Data.Address || '');
                         $("#txtDiscount").val(parsed_Data.Discount || '');
                         $("#txtpanelrate").val(parsed_Data.Panel_Rate || '');
+                        $("#txtpanelrateEmergency").val(parsed_Data.Panel_Rate_Emergency || '');
                         setTimeout(() => {
                             $('#ddlGlAccount').val(parsed_Data.gl_account || '0').trigger('change');
                         }, 1000);
@@ -572,9 +575,13 @@
             <input type="text" name="txtEmail" class="input_width form-control" id="txtEmail" />
         </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <label>Panel Rate OPD</label>
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <label>Rate OPD</label>
             <input type="text" name="txtrate" class="input_width form-control" id="txtpanelrate" />
+        </div>
+        <div class="col-lg-1 col-md-6 col-sm-12">
+            <label>Rate Emergency</label>
+            <input type="text" name="txtrate" class="input_width form-control" id="txtpanelrateEmergency" />
         </div>
     </div>
 

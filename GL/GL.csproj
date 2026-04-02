@@ -364,6 +364,7 @@
     <Content Include="Modules\PatientManagement\OPDApproval.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyRefund.aspx" />
     <Content Include="Modules\PatientManagement\OPD_Refund.aspx" />
+    <Content Include="Modules\PatientManagement\ERRefundView.aspx" />
     <Content Include="Modules\PatientManagement\OPD_Refund_List.aspx" />
     <Content Include="Modules\PatientManagement\RegisterPatient.aspx" />
     <Content Include="Modules\StudentAffair\AddStudent.aspx" />
@@ -26978,6 +26979,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD_Refund.aspx.designer.cs">
       <DependentUpon>OPD_Refund.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\ERRefundView.aspx.cs">
+      <DependentUpon>ERRefundView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\ERRefundView.aspx.designer.cs">
+      <DependentUpon>ERRefundView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD_Refund_List.aspx.cs">
       <DependentUpon>OPD_Refund_List.aspx</DependentUpon>

@@ -233,9 +233,15 @@ namespace PMS
                     var qry = (from a in db.Igp_masters
                                join igpd in db.Igp_Details on a.Igp_Id equals igpd.Igp_Id
                                join apoi in db.AP_Purchase_Order_Items on Convert.ToInt32(igpd.PO_Item_ID) equals apoi.PO_Item_ID
-                               join prd in db.Purchase_Requisition_Details on Convert.ToInt32(apoi.PRDetailId) equals prd.PR_Detail_ID
-                               join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
-                               where (a.Inspec_Status == null || a.Inspec_Status == "Created" || a.Inspec_Status == "Pending") && a.IsDeleted == false && userDepartments.Contains(pr.Department)
+                               join prd in db.Purchase_Requisition_Details
+                                on Convert.ToInt32(apoi.PRDetailId) equals prd.PR_Detail_ID into prdGroup
+                               from prd in prdGroup.DefaultIfEmpty()
+
+                                   // LEFT JOIN Purchase_Requisitions
+                               join pr in db.Purchase_Requisitions
+                                    on prd.PR_ID equals pr.PR_Id into prGroup
+                               from pr in prGroup.DefaultIfEmpty()
+                               where (a.Inspec_Status == null || a.Inspec_Status == "Created" || a.Inspec_Status == "Pending") && a.IsDeleted == false &&   (pr == null || userDepartments.Contains(pr.Department))
                                group new { a, apoi, pr, prd } by new
                                {
                                    a.Igp_Id,

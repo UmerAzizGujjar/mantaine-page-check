@@ -135,10 +135,10 @@
              "columns": [
                  { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                  { "data": "Emer_id", "name": "Emer_id", "visible": false, "width": "0%", "orderable": false },
-                 { "data": "Emergency_No", "name": "Emergency_No", "width": "12%", "orderable": true },
-                 { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "12%", "orderable": true },
+                 { "data": "Emergency_No", "name": "Emergency_No", "width": "4%", "orderable": true },
+                 { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
            
-                 { "data": "Full_Name", "width": "20%", "orderable": false },
+                 { "data": "Full_Name", "width": "16%", "orderable": false },
                  { 
                      "data": "Amount", 
                      "name": "Amount", 
@@ -146,9 +146,11 @@
                      "orderable": true,
                      "render": (data, type, full) => data ? parseFloat(data).toFixed(2) : "0.00"
                  },
-                 { "data": "Type", "width": "12%", "orderable": false },
-                 { "data": "NIC", "width": "12%", "orderable": false },
-                 { "data": "Mobile1", "width": "12%", "orderable": false },
+
+                 { "data": "Type", "width": "10%", "orderable": false },
+                 { "data": "Patient_Type", "width": "6%", "orderable": false },
+                 { "data": "NIC", "width": "10%", "orderable": false },
+                 { "data": "Mobile1", "width": "10%", "orderable": false },
                  {
                      "data": "Created_Time", "name": "Created_Time",
                      "render": (data, type, full) => moment(full.Created_Time).format('DD-MMM-YYYY'),
@@ -161,7 +163,7 @@
                          let print = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="Print(${full.Emer_id})"><i class="fa fa-print"></i></a>`;
                          return res + Del + print;
                      },
-                     "width": "18%",
+                     "width": "20%",
                      "orderable": false
                  }
              ],
@@ -202,7 +204,8 @@
                 
                      <th style="width: 17%;">Name</th>
                      <th style="width: 12%;">Amount</th>
-                     <th style="width: 12%;">Type</th>
+                     <th style="width: 12%;">Department</th>
+                     <th style="width: 12%;">Patient Type</th>
                      <th style="width: 12%;">CNIC</th>
                      <th style="width: 12%;">Mobile</th>
                      <th style="width: 10%;">Date</th>

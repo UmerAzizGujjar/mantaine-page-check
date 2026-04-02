@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI.WebControls;
+using System.Windows;
 using static PMS.DonorReceivingForm;
 
 namespace PMS
@@ -28,6 +29,8 @@ namespace PMS
                         where lbt.System_Generated == true
                               && bill_details.Test_Main_Department != "001"
                               && (bill.isCancel == false || bill.isCancel == null)
+                              && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+
                         orderby bill.Bill_No descending
                         let dept = (from ipd in db.In_Patients
                                     where ipd.Patient_ID == pat.pat_id

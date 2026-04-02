@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Script.Services;
@@ -92,6 +93,16 @@ namespace PMS.Modules.Lab
             var ups = (from St in db.aspnet_Users
                        where St.UserId == AppConfig.UserID
                        select St.Radiology_result_Approval).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+        [WebMethod]
+        public static string CheckRadiologyAllListRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Allow_RadiologyAllList).FirstOrDefault();
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
@@ -1698,15 +1709,15 @@ namespace PMS.Modules.Lab
 
 
         [WebMethod]
-        public static string AllUltraSoundTest(string departmentCode = "")
+        public static string AllUltraSoundTest(string departmentCode , string startdate, string endtdate)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             db.CommandTimeout = 180;
             JavaScriptSerializer serl = new JavaScriptSerializer();
             serl.MaxJsonLength = 2147483647;
 
-            DateTime startDate = System.DateTime.Now.AddMonths(-2);
-            DateTime endDate = System.DateTime.Now.Date;
+            DateTime startDate = Convert.ToDateTime(startdate).Date;
+            DateTime endDate = Convert.ToDateTime(endtdate).Date.AddDays(1).AddTicks(-1);
 
             var query = (
                 from pat in db.Reg_patients
@@ -1718,7 +1729,9 @@ namespace PMS.Modules.Lab
                       (labtest_detail.Is_Result == false || labtest_detail.Is_Result == null) &&
                       bill_details.Test_Main_Department != "001" &&
                       (bill.isCancel == false || bill.isCancel == null) &&
-                      bill.Bill_Date >= startDate
+                       bill.Bill_Date >= startDate &&
+                        bill.Bill_Date <= endDate
+                         && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
                 orderby bill.Bill_Date descending
                 select new
                 {
@@ -1734,10 +1747,12 @@ namespace PMS.Modules.Lab
                     pat.Full_Name,
                     bill_details.Bill_Details_ID,
                     bill.Remarks,
+                    labtest_detail.IsAcknowledge,
+                    Doctor = (from hr in db.HR_Employees where hr.Emp_ID == Convert.ToInt32(bill_details.Doctor_id ?? "0") select hr.Emp_Name).FirstOrDefault(),
                     RawDeptCode = bill_details.Test_Main_Department
                 }
             );
-            if (!string.IsNullOrEmpty(departmentCode))
+            if (!string.IsNullOrEmpty(departmentCode) && departmentCode != "0")
             {
                 query = query.Where(x => x.RawDeptCode == departmentCode);
             }
@@ -1748,44 +1763,105 @@ namespace PMS.Modules.Lab
         }
 
         [WebMethod]
-        public static string GetRadiologyResultsReady()  
+        public static string GetRadiologyResultsReady(string departmentCode, string startdate, string endtdate)  
         {
             DataBaseDataContext db = new DataBaseDataContext();
             db.CommandTimeout = 180;
             JavaScriptSerializer serl = new JavaScriptSerializer();
             serl.MaxJsonLength = 2147483647;
 
-            DateTime startDate = System.DateTime.Now.AddMonths(-2);
-
-            var resultsReadyList = (
-                from pat in db.Reg_patients
-                join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
-                join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
-                join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
-                join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
-                where labtest_detail.Is_Result == true &&   
-                      (labtest_detail.isApproved == false || labtest_detail.isApproved == null) && 
-                      bill_details.Test_Main_Department != "001" &&
-                      (bill.isCancel == false || bill.isCancel == null) &&
-                      bill.Bill_Date >= startDate
-                orderby bill.Bill_Date descending
-                select new
+            DateTime startDate = Convert.ToDateTime(startdate).Date;
+            DateTime endDate = Convert.ToDateTime(endtdate).Date.AddDays(1).AddTicks(-1);
+            var userid = AppConfig.UserID;
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Allow_RadiologyAllList).FirstOrDefault();
+            if (ups == true) {
+                var resultsReadyList = (
+                   from pat in db.Reg_patients
+                   join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+                   join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+                   join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
+                   join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
+                   where labtest_detail.Is_Result == true &&
+                         (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
+                         bill_details.Test_Main_Department != "001" &&
+                         (bill.isCancel == false || bill.isCancel == null) &&
+                                                bill.Bill_Date >= startDate &&
+                        bill.Bill_Date <= endDate
+                         && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+                   orderby bill.Bill_Date descending
+                   select new
+                   {
+                       bill.Bill_Date,
+                       bill.Bill_No,
+                       bill.Bill_ID,
+                       bill_details.Category_ID,
+                       bill_details.Item_Name,
+                       pat.Patient_No,
+                       pat.pat_id,
+                       pat.Full_Name,
+                       bill_details.Bill_Details_ID,
+                       bill.Remarks,
+                       Test_Main_Department = db.GetDataValueName("Main Test Departments", bill_details.Test_Main_Department),
+                       Doctor = (from hr in db.HR_Employees where hr.Emp_ID == Convert.ToInt32(labtest_detail.Refer_Doctor ?? "0") select hr.Emp_Name).FirstOrDefault(),
+                       RawDeptCode = bill_details.Test_Main_Department
+                   }
+               );        
+               if (!string.IsNullOrEmpty(departmentCode) && departmentCode != "0")
                 {
-                    bill.Bill_Date,
-                    bill.Bill_No,
-                    bill.Bill_ID,
-                    bill_details.Category_ID,
-                    bill_details.Item_Name,
-                    pat.Patient_No,
-                    pat.pat_id,
-                    pat.Full_Name,
-                    bill_details.Bill_Details_ID,
-                    bill.Remarks,
-                    Doctor = (from hr in db.HR_Employees where hr.Emp_ID == Convert.ToInt32(labtest_detail.Refer_Doctor ?? "0") select hr.Emp_Name).FirstOrDefault(),
+                    resultsReadyList = resultsReadyList.Where(x => x.RawDeptCode == departmentCode);
                 }
-            ).ToList();
 
-            return serl.Serialize(resultsReadyList);
+                var testDetails_Billing_Sample = resultsReadyList.ToList();
+                return serl.Serialize(resultsReadyList);
+            }
+
+            else
+            {
+                var resultsReadyList = (
+                   from pat in db.Reg_patients
+                   join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
+                   join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
+                   join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
+                   join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
+                   join hr in db.HR_Employees on labtest_detail.Refer_Doctor equals Convert.ToString( hr.Emp_ID) 
+                   where labtest_detail.Is_Result == true &&
+                         (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
+                         bill_details.Test_Main_Department != "001" &&
+                         (bill.isCancel == false || bill.isCancel == null) &&
+                        bill.Bill_Date >= startDate &&
+                        bill.Bill_Date <= endDate
+                         && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+                         && hr.userid == Convert.ToString(userid)
+                   orderby bill.Bill_Date descending
+                   select new
+                   {
+                       bill.Bill_Date,
+                       bill.Bill_No,
+                       bill.Bill_ID,
+                       bill_details.Category_ID,
+                       bill_details.Item_Name,
+                       pat.Patient_No,
+                       pat.pat_id,
+                       pat.Full_Name,
+                       bill_details.Bill_Details_ID,
+                       bill.Remarks,
+                       Test_Main_Department = db.GetDataValueName("Main Test Departments", bill_details.Test_Main_Department),
+                       Doctor = (from hr in db.HR_Employees where hr.Emp_ID == Convert.ToInt32(labtest_detail.Refer_Doctor ?? "0") select hr.Emp_Name).FirstOrDefault(),
+                       RawDeptCode = bill_details.Test_Main_Department
+                   }
+                );
+                if (!string.IsNullOrEmpty(departmentCode) && departmentCode != "0")
+                {
+                    resultsReadyList = resultsReadyList.Where(x => x.RawDeptCode == departmentCode);
+                }
+
+                var testDetails_Billing_Sample = resultsReadyList.ToList();
+                return serl.Serialize(resultsReadyList);
+
+            }
+           
         }
 
         [WebMethod]

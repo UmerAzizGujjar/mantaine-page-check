@@ -68,7 +68,7 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string Save(string cmp_name, string no_of_emp, string email, string contact_no, string Glcode, string address, string discount, decimal panelrate, string btnValue, string id, string[][] rateDetail)
+        public static string Save(string cmp_name, string no_of_emp, string email, string contact_no, string Glcode, string address, string discount, decimal panelrate, decimal panelrateEmergency, string btnValue, string id, string[][] rateDetail)
         {
             int lstid = 0;
             Panel panel;
@@ -102,6 +102,7 @@ namespace PMS
             panel.Discount = Convert.ToDecimal(discount);
             panel.Email = email;
             panel.Panel_Rate = panelrate;
+            panel.Panel_Rate_Emergency = panelrateEmergency;
             panel.No_Of_Employees = Convert.ToInt32(no_of_emp);
 
             if (btnValue == "Save")
