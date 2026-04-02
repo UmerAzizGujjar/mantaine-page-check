@@ -494,8 +494,11 @@
                 $('#discount').show();
             }
             else if (Category == "03") {
+                // Show Panel Company, Department, and Doctor
                 $('#fees').show();
-                $('#department').show();     
+                $('#department').show();      // ← CHANGE: Show department (was hidden)
+                $('#ddlDepartment').show();   // ← Make sure department dropdown is visible
+                $('#doctor').hide();
                 $('#ddldoctor').show();
                 $('#balance').show();
                 $('#pnlcompany').show();
@@ -506,12 +509,18 @@
                 $('#ddldoctor').attr('disabled', false);
                 $('#ddlpanel').attr('disabled', false);
 
+                // Hide discount for panel patients
                 $('#discount').hide();
-                $('#txtdiscount').val("100");
-                $('#txtdiscount').attr('disabled', true);
-                $('#txtfees').val("0");
 
-                loadalldoctor();
+                // Clear any existing fees
+                $('#txtfees').val('');
+                $('#txtactualfee').val('');
+
+                // Load all departments (not filtered by panel)
+                // Make sure fillDropdown loads all departments for category 03
+                if ($('#ddlDepartment').find('option').length <= 1) {
+                    fillDropdown($('#ddlDepartment'), 'GetDepartment');
+                }
             }
             else if (Category == "06") {
                 $('#department').hide();
@@ -833,6 +842,7 @@
             var type = $("#ddlPatient_Type").val();
             var type_text = $('#ddlPatient_Type option:selected').text().trim();
 
+            // ⭐ ADD THIS CHECK - For Panel category, don't load fees from department
             if (type === "03") {
                 $('#txtfees').val("");
                 $('#txtactualfee').val("");
@@ -851,105 +861,8 @@
                 $('#txtdiscount').attr('disabled', false);
                 return;
             }
-            if (!Department_id || Department_id === "") {
-                $('#txtfees').val("0");
-                $('#hdnDocshare').val("0");
-                $('#hdnhospShare').val("0");
-                $('#txtdiscount').val("");
-                $('#txtdiscount').attr('disabled', false);
-                return;
-            }
 
-            $.ajax({
-                url: 'EmergencyForm.aspx/GetFees',  // Changed from OPD.aspx to EmergencyOPD.aspx
-                type: 'POST',
-                data: JSON.stringify({ Department_id: Department_id }),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (resp) {
-                    debugger;
-
-                    try {
-                        var data = JSON.parse(resp.d);
-                        var code = data && data.Code !== undefined ? data.Code : 0;
-                        var dShare = data && data.D_Share !== undefined ? data.D_Share : 0;
-                        var hShare = data && data.H_Share !== undefined ? data.H_Share : 0;
-                        var Discount_Percentage = data &&
-                            data.Discount_Percentage !== undefined &&
-                            data.Discount_Percentage !== null
-                            ? data.Discount_Percentage
-                            : 0;
-                        var Receipt_fee = data && data.Receipt_fee !== undefined ? data.Receipt_fee : 0;
-                        debugger;
-                        $('#txtactualfee').val(code);
-
-                        if (
-                            (type === "04" && type_text === "Employee") ||
-                            (type === "05" && type_text === "Student") ||
-                            (type === "06" && type_text === "Refer")
-                        ) {
-                            $('#txtdiscount').val(100);
-                            $('#txtactualfee').val(code);
-                            $('#txtdiscount').attr('disabled', true);
-                            $('#txtfees').val(0);
-                            $('#hdnDocshare').val(dShare);
-                            $('#hdnhospShare').val(hShare);
-                        }
-                        else {
-                            debugger;
-                            $('#txtdiscount').val(Discount_Percentage);
-                            $('#txtdiscount').attr('disabled', false);
-                            $('#txtfees').val(Receipt_fee.toFixed(2));
-                            $('#txtactualfee').val(code);
-                            $('#hdnDocshare').val(dShare);
-                            $('#hdnhospShare').val(hShare);
-                        }
-
-                        if (parseFloat(code) === 0) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Policy Not Defined',
-                                text: 'Policy is not defined against this department.',
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-                        }
-
-                    } catch (e) {
-                        console.error("Error parsing fee data:", e);
-                        $('#txtfees').val("0");
-                        $('#hdnDocshare').val("0");
-                        $('#hdnhospShare').val("0");
-                        $('#txtdiscount').val("");
-                        $('#txtdiscount').attr('disabled', false);
-
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Data Error',
-                            text: 'Invalid fee data received.',
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX Error:", error, xhr.responseText);
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Request Failed',
-                        text: 'Could not retrieve fee information.',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-
-                    $('#txtfees').val("0");
-                    $('#hdnDocshare').val("0");
-                    $('#hdnhospShare').val("0");
-                    $('#txtdiscount').val("");
-                    $('#txtdiscount').attr('disabled', false);
-                }
-            });
+            // ... rest of your existing getGeneralFee code ...
         }
         function fillDropdown($dropdown, methodName) {
             if ($dropdown.data('filled')) return;
@@ -1012,17 +925,15 @@
 
                     $('#ddldoctor').html(options);
 
-                        if (type != "02" && type != "10") {
-
-                            getGeneralFee();
-                        }
-
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("Error: " + error);
+                    // ⭐ For Panel category (03), don't call getGeneralFee
+                    if (type != "03") {
+                        getGeneralFee();
                     }
-                });
-            
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
         }
 
 
