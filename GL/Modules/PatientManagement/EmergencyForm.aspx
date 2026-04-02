@@ -842,8 +842,19 @@
             var type = $("#ddlPatient_Type").val();
             var type_text = $('#ddlPatient_Type option:selected').text().trim();
 
-            // ⭐ ADD THIS CHECK - For Panel category, don't load fees from department
+            // For Panel category, don't load fees from department
             if (type === "03") {
+                $('#txtfees').val("");
+                $('#txtactualfee').val("");
+                $('#hdnDocshare').val("");
+                $('#hdnhospShare').val("");
+                $('#txtdiscount').val("");
+                $('#txtdiscount').attr('disabled', false);
+                return;
+            }
+
+            // For category 02, don't load general fees (will load from doctor instead)
+            if (type === "02") {
                 $('#txtfees').val("");
                 $('#txtactualfee').val("");
                 $('#hdnDocshare').val("");
@@ -862,8 +873,98 @@
                 return;
             }
 
-            // ... rest of your existing getGeneralFee code ...
-        }
+            $.ajax({
+                url: 'EmergencyForm.aspx/GetFees',
+                type: 'POST',
+                data: JSON.stringify({ Department_id: Department_id }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (resp) {
+                    debugger;
+
+                    try {
+                        var data = JSON.parse(resp.d);
+                        var code = data && data.Code !== undefined ? data.Code : 0;
+                        var dShare = data && data.D_Share !== undefined ? data.D_Share : 0;
+                        var hShare = data && data.H_Share !== undefined ? data.H_Share : 0;
+                        var Discount_Percentage = data &&
+                            data.Discount_Percentage !== undefined &&
+                            data.Discount_Percentage !== null
+                            ? data.Discount_Percentage
+                            : 0;
+                        var Receipt_fee = data && data.Receipt_fee !== undefined ? data.Receipt_fee : 0;
+                        debugger;
+                        $('#txtactualfee').val(code);
+
+                        if (
+                            (type === "04" && type_text === "Employee") ||
+                            (type === "05" && type_text === "Student") ||
+                            (type === "06" && type_text === "Refer")
+                        ) {
+                            $('#txtdiscount').val(100);
+                            $('#txtactualfee').val(code);
+                            $('#txtdiscount').attr('disabled', true);
+                            $('#txtfees').val(0);
+                            $('#hdnDocshare').val(dShare);
+                            $('#hdnhospShare').val(hShare);
+                        }
+                        else {
+                            debugger;
+                            $('#txtdiscount').val(Discount_Percentage);
+                            $('#txtdiscount').attr('disabled', false);
+                            $('#txtfees').val(Receipt_fee.toFixed(2));
+                            $('#txtactualfee').val(code);
+                            $('#hdnDocshare').val(dShare);
+                            $('#hdnhospShare').val(hShare);
+                        }
+
+                        if (parseFloat(code) === 0) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Policy Not Defined',
+                                text: 'Policy is not defined against this department.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+
+                    } catch (e) {
+                        console.error("Error parsing fee data:", e);
+                        $('#txtfees').val("0");
+                        $('#hdnDocshare').val("0");
+                        $('#hdnhospShare').val("0");
+                        $('#txtdiscount').val("");
+                        $('#txtdiscount').attr('disabled', false);
+
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Data Error',
+                            text: 'Invalid fee data received.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error, xhr.responseText);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Request Failed',
+                        text: 'Could not retrieve fee information.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    $('#txtfees').val("0");
+                    $('#hdnDocshare').val("0");
+                    $('#hdnhospShare').val("0");
+                    $('#txtdiscount').val("");
+                    $('#txtdiscount').attr('disabled', false);
+                }
+            });
+        }  // ← This closing brace was missing!
+     
         function fillDropdown($dropdown, methodName) {
             if ($dropdown.data('filled')) return;
 
@@ -924,9 +1025,19 @@
                     });
 
                     $('#ddldoctor').html(options);
+                    var selectedPatientType = $('#ddlPatient_Type').val();
 
-                    // ⭐ For Panel category (03), don't call getGeneralFee
-                    if (type != "03") {
+                    // For category "02", don't call getGeneralFee - fees will load from doctor selection
+                    if (selectedPatientType === "02") {
+                        // Clear fees initially
+                        $('#txtfees').val('');
+                        $('#txtactualfee').val('');
+                        $('#txtdiscount').val('');
+                        return;
+                    }
+
+                    // For other categories (01, etc.), load general fee
+                    if (selectedPatientType !== "03" && selectedPatientType !== "02") {
                         getGeneralFee();
                     }
                 },
@@ -934,7 +1045,7 @@
                     console.log("Error: " + error);
                 }
             });
-        }
+        }  // ← This closing brace was missing!
 
 
         //function loadalldoctor() {
