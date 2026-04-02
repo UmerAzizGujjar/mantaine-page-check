@@ -16,13 +16,39 @@ namespace PMS.Modules.Lab
         }
 
         [WebMethod]
-        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
+        public static object GetDoctors()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var doctors = (from emp in db.HR_Employees
+                                   where emp.IsDoctor == true
+                                   select new
+                                   {
+                                       id = emp.Emp_ID,
+                                       text = emp.Emp_Name
+                                   }).ToList();
+                    return doctors;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new List<object>();
+            }
+        }
+
+        [WebMethod]
+        public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string startdate, string endtdate, string doctorId)
         {
             try
             {
                 using (var db = new DataBaseDataContext())
                 {
                     db.CommandTimeout = 180;
+
+                    DateTime startDate = Convert.ToDateTime(startdate).Date;
+                    DateTime endDate = Convert.ToDateTime(endtdate).Date.AddDays(1).AddTicks(-1);
 
                     var TotalCount = (from lt in db.Laboratory_Tests
                                       join ltd in db.Lab_Test_Details on lt.Lab_Test_ID equals ltd.Lab_Test_ID
@@ -34,6 +60,8 @@ namespace PMS.Modules.Lab
                                           && (bd.Is_Group_Category == null || bd.Is_Group_Category == false)
                                           && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
                                           && (ar.isCancel == false || ar.isCancel == null)
+                                          && ltd.Approved_Time >= startDate
+                                          && ltd.Approved_Time <= endDate
                                           && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                                       select ltd).Count();
 
@@ -47,12 +75,14 @@ namespace PMS.Modules.Lab
                                     && (bd.Is_Group_Category == null || bd.Is_Group_Category == false)
                                     && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
                                     && (ar.isCancel == false || ar.isCancel == null)
+                                    && ltd.Approved_Time >= startDate
+                                    && ltd.Approved_Time <= endDate
                                     && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                                 select new
                                 {
                                     ar.Bill_No,
                                     ar.Bill_ID,
-                                    pa.mr_no_sequence,
+                                    mr_no_sequence = pa.mr_no_sequence,
                                     pa.pat_id,
                                     pa.Full_Name,
                                     pa.Father_Name,
@@ -67,8 +97,18 @@ namespace PMS.Modules.Lab
                                     ltd.isApproved,
                                     Test_Main_Department = db.GetDataValueName("Main Test Departments", bd.Test_Main_Department),
                                     bd.Service_Date,
-                                    ar.Bill_Date
+                                    ar.Bill_Date,
+                                    Refer_Doctor = ltd.Refer_Doctor,
+                                    Doctor_Name = (from hr in db.HR_Employees
+                                                   where hr.Emp_ID.ToString() == ltd.Refer_Doctor
+                                                   select hr.Emp_Name).FirstOrDefault()
                                 };
+
+                    // Apply doctor filter
+                    if (!string.IsNullOrEmpty(doctorId) && doctorId != "0")
+                    {
+                        query = query.Where(x => x.Refer_Doctor == doctorId);
+                    }
 
                     // Apply search filter
                     if (!string.IsNullOrEmpty(searchValue))
@@ -98,6 +138,9 @@ namespace PMS.Modules.Lab
                             break;
                         case "Test_Main_Department":
                             query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Test_Main_Department) : query.OrderByDescending(x => x.Test_Main_Department);
+                            break;
+                        case "Doctor_Name":
+                            query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Doctor_Name) : query.OrderByDescending(x => x.Doctor_Name);
                             break;
                         case "Approved_By":
                             query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Approved_By) : query.OrderByDescending(x => x.Approved_By);
