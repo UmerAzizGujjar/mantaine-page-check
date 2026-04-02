@@ -237,6 +237,7 @@
     <Content Include="Modules\Administrator\Shift__Policy_View.aspx" />
     <Content Include="Modules\Administrator\SurveyForm.aspx" />
     <Content Include="Modules\Administrator\UserWiseDoctor.aspx" />
+    <Content Include="Modules\Administrator\UserWiseDoctorList.aspx" />
     <Content Include="Modules\Administrator\User_BranchWise.aspx" />
     <Content Include="Modules\Administrator\User_BranchWiseList.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
@@ -25966,6 +25967,13 @@
     </Compile>
     <Compile Include="Modules\Administrator\UserWiseDoctor.aspx.designer.cs">
       <DependentUpon>UserWiseDoctor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\UserWiseDoctorList.aspx.cs">
+      <DependentUpon>UserWiseDoctorList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\UserWiseDoctorList.aspx.designer.cs">
+      <DependentUpon>UserWiseDoctorList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Administrator\User_BranchWise.aspx.cs">
       <DependentUpon>User_BranchWise.aspx</DependentUpon>

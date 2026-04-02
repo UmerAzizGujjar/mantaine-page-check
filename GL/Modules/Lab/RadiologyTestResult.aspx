@@ -791,6 +791,18 @@
                 LoadRadiologyPatientsList(); 
             });
 
+            $('#chkXRay_level').change(function () {
+                var selectedOption = $(this).find('option:selected');
+                var fixValues = selectedOption.data('fixvalues');
+
+                if (fixValues && fixValues !== "") {
+                    // Decode HTML entities back to HTML
+                    var decodedFixValues = $('<textarea/>').html(fixValues).text();
+                    CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                } else if ($(this).val() === "") {
+                    CKEDITOR.instances.txtfixedType.setData("");
+                }
+            });
         });
         function GetTestDepartment() {
             var options = '<option value="">Select Department</option>';
@@ -2075,10 +2087,31 @@
 
                             var MainDept = data[2];
 
+                            // Show/hide Ultrasound level dropdown
                             if (CheckLevel == "True") {
-
                                 $("#chkUltraSound_level").show();
                                 getAllLevels(TestID);
+                            } else {
+                                $("#chkUltraSound_level").hide();
+                            }
+
+                            // Show/hide X-Ray level dropdown based on department
+                            if (MainDept == "X-Ray" || MainDept == "003") {
+                                $("#chkXRay_level").show();
+                                // Load X-Ray levels if not already loaded
+                                if ($('#chkXRay_level option').length <= 1) {
+                                    LoadXRayLevels();
+                                }
+                            } else {
+                                $("#chkXRay_level").hide();
+                            }
+
+                            // Set the X-Ray level value if exists
+                            var xrayLevels = data[25]; // Assuming you add this to your GetTestDetail return
+                            if (xrayLevels && xrayLevels != "") {
+                                setTimeout(function () {
+                                    $('#chkXRay_level').val(xrayLevels);
+                                }, 1000);
                             }
                             console.log("Data " + data);
                             $('#txtfixedType').val(fixedValue);
@@ -2880,6 +2913,33 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
 }
 
 
+        function LoadXRayLevels() {
+            PageMethods.GetAll_XRayLevel(function (response) {
+                var levels = JSON.parse(response);
+                var $xraySelect = $('#chkXRay_level');
+
+                $xraySelect.empty();
+                $xraySelect.append('<option value="">Select X-Ray Level</option>');
+
+                $.each(levels, function (key, level) {
+                    $xraySelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.Levels + '</option>');
+                });
+            }, function (error) {
+                console.error("Error loading X-Ray levels:", error);
+            });
+        }
+
+        // Helper function to escape HTML
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
     </script>
 
 
@@ -3150,6 +3210,11 @@ function GetSingleLabTestByBillDetailId(Bill_Details_ID) {
                                     <textarea id="txtfixedType" name="txtfixedType"></textarea>
                                     <div style="margin-top: 25px;">
                                         <select id="chkUltraSound_level" class="wgtmsr"></select>
+                                    </div>
+                                    <div style="margin-top: 15px;">
+                                        <select id="chkXRay_level" class="wgtmsr">
+                                            <option value="">Select X-Ray Level</option>
+                                        </select>
                                     </div>
                                 </td>
                                 <td data-label="Patient Result">

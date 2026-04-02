@@ -957,6 +957,12 @@ namespace PMS
         partial void InsertXRayLevel(XRayLevel instance);
         partial void UpdateXRayLevel(XRayLevel instance);
         partial void DeleteXRayLevel(XRayLevel instance);
+        partial void InsertUser_Wise_Template(User_Wise_Template instance);
+        partial void UpdateUser_Wise_Template(User_Wise_Template instance);
+        partial void DeleteUser_Wise_Template(User_Wise_Template instance);
+        partial void InsertUser_Wise_Template_Detail(User_Wise_Template_Detail instance);
+        partial void UpdateUser_Wise_Template_Detail(User_Wise_Template_Detail instance);
+        partial void DeleteUser_Wise_Template_Detail(User_Wise_Template_Detail instance);
         #endregion
 
         public DataBaseDataContext() :
@@ -964,7 +970,6 @@ namespace PMS
         {
             OnCreated();
         }
-
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -3490,6 +3495,22 @@ namespace PMS
             get
             {
                 return this.GetTable<XRayLevel>();
+            }
+        }
+
+        public System.Data.Linq.Table<User_Wise_Template> User_Wise_Templates
+        {
+            get
+            {
+                return this.GetTable<User_Wise_Template>();
+            }
+        }
+
+        public System.Data.Linq.Table<User_Wise_Template_Detail> User_Wise_Template_Details
+        {
+            get
+            {
+                return this.GetTable<User_Wise_Template_Detail>();
             }
         }
 
@@ -168343,6 +168364,394 @@ namespace PMS
                     this._Updated_Time = value;
                     this.SendPropertyChanged("Updated_Time");
                     this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.User_Wise_Template")]
+    public partial class User_Wise_Template : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _User_Wise_Template_Id;
+
+        private System.Nullable<System.Guid> _User_Id;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        private System.Nullable<bool> _is_cancel;
+
+        private System.Nullable<System.Guid> _cancel_by;
+
+        private System.Nullable<System.DateTime> _cancel_date;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnUser_Wise_Template_IdChanging(int value);
+        partial void OnUser_Wise_Template_IdChanged();
+        partial void OnUser_IdChanging(System.Nullable<System.Guid> value);
+        partial void OnUser_IdChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        partial void Onis_cancelChanging(System.Nullable<bool> value);
+        partial void Onis_cancelChanged();
+        partial void Oncancel_byChanging(System.Nullable<System.Guid> value);
+        partial void Oncancel_byChanged();
+        partial void Oncancel_dateChanging(System.Nullable<System.DateTime> value);
+        partial void Oncancel_dateChanged();
+        #endregion
+
+        public User_Wise_Template()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_User_Wise_Template_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int User_Wise_Template_Id
+        {
+            get
+            {
+                return this._User_Wise_Template_Id;
+            }
+            set
+            {
+                if ((this._User_Wise_Template_Id != value))
+                {
+                    this.OnUser_Wise_Template_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._User_Wise_Template_Id = value;
+                    this.SendPropertyChanged("User_Wise_Template_Id");
+                    this.OnUser_Wise_Template_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_User_Id", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> User_Id
+        {
+            get
+            {
+                return this._User_Id;
+            }
+            set
+            {
+                if ((this._User_Id != value))
+                {
+                    this.OnUser_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._User_Id = value;
+                    this.SendPropertyChanged("User_Id");
+                    this.OnUser_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_is_cancel", DbType = "Bit")]
+        public System.Nullable<bool> is_cancel
+        {
+            get
+            {
+                return this._is_cancel;
+            }
+            set
+            {
+                if ((this._is_cancel != value))
+                {
+                    this.Onis_cancelChanging(value);
+                    this.SendPropertyChanging();
+                    this._is_cancel = value;
+                    this.SendPropertyChanged("is_cancel");
+                    this.Onis_cancelChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_cancel_by", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> cancel_by
+        {
+            get
+            {
+                return this._cancel_by;
+            }
+            set
+            {
+                if ((this._cancel_by != value))
+                {
+                    this.Oncancel_byChanging(value);
+                    this.SendPropertyChanging();
+                    this._cancel_by = value;
+                    this.SendPropertyChanged("cancel_by");
+                    this.Oncancel_byChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_cancel_date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> cancel_date
+        {
+            get
+            {
+                return this._cancel_date;
+            }
+            set
+            {
+                if ((this._cancel_date != value))
+                {
+                    this.Oncancel_dateChanging(value);
+                    this.SendPropertyChanging();
+                    this._cancel_date = value;
+                    this.SendPropertyChanged("cancel_date");
+                    this.Oncancel_dateChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.User_Wise_Template_Detail")]
+    public partial class User_Wise_Template_Detail : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _User_Wise_Template_Detail_Id;
+
+        private System.Nullable<int> _User_Wise_Template_Id;
+
+        private System.Nullable<int> _DataValue_ID;
+
+        private System.Nullable<System.Guid> _User_Id;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnUser_Wise_Template_Detail_IdChanging(int value);
+        partial void OnUser_Wise_Template_Detail_IdChanged();
+        partial void OnUser_Wise_Template_IdChanging(System.Nullable<int> value);
+        partial void OnUser_Wise_Template_IdChanged();
+        partial void OnDataValue_IDChanging(System.Nullable<int> value);
+        partial void OnDataValue_IDChanged();
+        partial void OnUser_IdChanging(System.Nullable<System.Guid> value);
+        partial void OnUser_IdChanged();
+        #endregion
+
+        public User_Wise_Template_Detail()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_User_Wise_Template_Detail_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int User_Wise_Template_Detail_Id
+        {
+            get
+            {
+                return this._User_Wise_Template_Detail_Id;
+            }
+            set
+            {
+                if ((this._User_Wise_Template_Detail_Id != value))
+                {
+                    this.OnUser_Wise_Template_Detail_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._User_Wise_Template_Detail_Id = value;
+                    this.SendPropertyChanged("User_Wise_Template_Detail_Id");
+                    this.OnUser_Wise_Template_Detail_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_User_Wise_Template_Id", DbType = "Int")]
+        public System.Nullable<int> User_Wise_Template_Id
+        {
+            get
+            {
+                return this._User_Wise_Template_Id;
+            }
+            set
+            {
+                if ((this._User_Wise_Template_Id != value))
+                {
+                    this.OnUser_Wise_Template_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._User_Wise_Template_Id = value;
+                    this.SendPropertyChanged("User_Wise_Template_Id");
+                    this.OnUser_Wise_Template_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DataValue_ID", DbType = "Int")]
+        public System.Nullable<int> DataValue_ID
+        {
+            get
+            {
+                return this._DataValue_ID;
+            }
+            set
+            {
+                if ((this._DataValue_ID != value))
+                {
+                    this.OnDataValue_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._DataValue_ID = value;
+                    this.SendPropertyChanged("DataValue_ID");
+                    this.OnDataValue_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_User_Id", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> User_Id
+        {
+            get
+            {
+                return this._User_Id;
+            }
+            set
+            {
+                if ((this._User_Id != value))
+                {
+                    this.OnUser_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._User_Id = value;
+                    this.SendPropertyChanged("User_Id");
+                    this.OnUser_IdChanged();
                 }
             }
         }
