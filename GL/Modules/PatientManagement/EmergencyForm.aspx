@@ -118,7 +118,7 @@
                 if (item.id === '#ddlDepartment') {
                     $element.prop('disabled', false);
                     const deptHandler = function () {
-                        loaddoctor();
+                        loaddoctor();  // This will now check type === "03" and skip getGeneralFee
                     };
                     if (!isInsideModal) {
                         $element.off('select2:select').on('select2:select', deptHandler);
@@ -458,128 +458,114 @@
             debugger;
             var Category = $('#ddlPatient_Type').val();
 
-         $('#txtfees').val('');
-        $('#txtactualfee').val('');
-        $('#hdnDocshare').val('');
-        $('#hdnhospShare').val('');
-        $('#txtdiscount').val('').attr('disabled', false);
-        $('#ddlDepartment').val('0').trigger('change');
-        $('#ddldoctor').val('0').trigger('change');
+            $('#txtfees').val('');
+            $('#txtactualfee').val('');
+            $('#hdnDocshare').val('');
+            $('#hdnhospShare').val('');
+            $('#txtdiscount').val('').attr('disabled', false);
+            $('#ddlDepartment').val('0').trigger('change');
+            $('#ddldoctor').val('0').trigger('change');
 
             if (Category == "0") {
-               
+
             }
             else if (Category == "01") {
-                // Show Doctor and Department for Private
                 $('#fees').show();
                 $('#department').show();
                 $('#doctor').hide();
+                $('#balance').hide();
                 $('#ddlDepartment').attr('disabled', false);
-            
-
-                // Hide panel company elements
                 $('#pnlcompany').hide();
                 $('#employee').hide();
-             
+
                 $('#discount').show();
             }
             else if (Category == "02") {
-                // Show Doctor and Department for Private
                 $('#fees').show();
                 $('#department').show();
                 $('#doctor').show();
+                $('#balance').hide();
+
                 $('#ddlDepartment').attr('disabled', false);
                 $('#ddldoctor').attr('disabled', false);
-
-                // Hide panel company elements
                 $('#pnlcompany').hide();
                 $('#employee').hide();
-            
-                $('#discount').show();
 
-                // Load doctors for private
-                //
+                $('#discount').show();
             }
             else if (Category == "03") {
                 // Show Panel Company, Department, and Doctor
                 $('#fees').show();
-                $('#department').hide();
+                $('#department').show();      // ← CHANGE: Show department (was hidden)
+                $('#ddlDepartment').show();   // ← Make sure department dropdown is visible
+                $('#doctor').hide();
                 $('#ddldoctor').show();
-                $('#doctor').show();
+                $('#balance').show();
                 $('#pnlcompany').show();
                 $('#employee').show();
+
+                // Enable dropdowns
                 $('#ddlDepartment').attr('disabled', false);
                 $('#ddldoctor').attr('disabled', false);
                 $('#ddlpanel').attr('disabled', false);
 
                 // Hide discount for panel patients
                 $('#discount').hide();
-                //loaddoctor();
-                loadalldoctor();
-                // Load panels and doctors
-          
+
+                // Clear any existing fees
+                $('#txtfees').val('');
+                $('#txtactualfee').val('');
+
+                // Load all departments (not filtered by panel)
+                // Make sure fillDropdown loads all departments for category 03
+                if ($('#ddlDepartment').find('option').length <= 1) {
+                    fillDropdown($('#ddlDepartment'), 'GetDepartment');
+                }
             }
             else if (Category == "06") {
-                          $('#department').hide();
-              $('#ddldoctor').hide();
-              $('#doctor').hide();
-              $('#pnlcompany').hide();
-              $('#employee').hide();
-
-       
-                   $('#discount').show();
-                   $('#txtdiscount').val("100");
-                    $('#txtdiscount').attr('disabled',true);
+                $('#department').hide();
+                $('#ddldoctor').hide();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#discount').show();
+                $('#txtdiscount').val("100");
+                $('#txtdiscount').attr('disabled', true);
                 $('#txtfees').val("0");
-              
-          
             }
             else if (Category == "04") {
-                // Show Panel Company, Department, and Doctor
-                         $('#department').hide();
-                           $('#ddldoctor').hide();
-                           $('#doctor').hide();
-                           $('#pnlcompany').hide();
-                           $('#employee').hide();
-
-       
-                                $('#discount').show();
-                                $('#txtdiscount').val("100");
-                                $('#txtdiscount').attr('disabled',true);
-               
-          
+                $('#department').hide();
+                $('#ddldoctor').hide();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#discount').show();
+                $('#txtdiscount').val("100");
+                $('#txtdiscount').attr('disabled', true);
                 $('#txtfees').val("0");
             }
             else if (Category == "05") {
-                // Show Panel Company, Department, and Doctor
-                           $('#department').hide();
-              $('#ddldoctor').hide();
-              $('#doctor').hide();
-              $('#pnlcompany').hide();
-              $('#employee').hide();
-
-       
-                   $('#discount').show();
-               $('#txtdiscount').val("100");
-                $('#txtdiscount').attr('disabled',true);
+                $('#department').hide();
+                $('#ddldoctor').hide();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#discount').show();
+                $('#txtdiscount').val("100");
+                $('#txtdiscount').attr('disabled', true);
                 $('#txtfees').val("0");
-          
             }
             else if (Category == "10") {
-                       $('#department').hide();
-              $('#ddldoctor').hide();
-              $('#doctor').hide();
-              $('#pnlcompany').hide();
-              $('#employee').hide();
-
-       
-                   $('#discount').show();
-                    $('#txtdiscount').val("100");
-               $('#txtdiscount').attr('disabled',true);
-          
+                $('#department').show();      
+                $('#ddldoctor').hide();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#discount').show();
+                $('#txtdiscount').val("100");
+                $('#txtdiscount').attr('disabled', true);
                 $('#txtfees').val("0");
             }
-            // Rest of the categories remain the same...
         }
 
       
@@ -856,6 +842,17 @@
             var type = $("#ddlPatient_Type").val();
             var type_text = $('#ddlPatient_Type option:selected').text().trim();
 
+            // ⭐ ADD THIS CHECK - For Panel category, don't load fees from department
+            if (type === "03") {
+                $('#txtfees').val("");
+                $('#txtactualfee').val("");
+                $('#hdnDocshare').val("");
+                $('#hdnhospShare').val("");
+                $('#txtdiscount').val("");
+                $('#txtdiscount').attr('disabled', false);
+                return;
+            }
+
             if (emer_reffered !== "") {
                 $('#txtfees').val("0");
                 $('#hdnDocshare').val("0");
@@ -865,105 +862,7 @@
                 return;
             }
 
-            if (!Department_id || Department_id === "") {
-                $('#txtfees').val("0");
-                $('#hdnDocshare').val("0");
-                $('#hdnhospShare').val("0");
-                $('#txtdiscount').val("");
-                $('#txtdiscount').attr('disabled', false);
-                return;
-            }
-
-            $.ajax({
-                url: 'EmergencyForm.aspx/GetFees',  // Changed from OPD.aspx to EmergencyOPD.aspx
-                type: 'POST',
-                data: JSON.stringify({ Department_id: Department_id }),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (resp) {
-                    debugger;
-
-                    try {
-                        var data = JSON.parse(resp.d);
-                        var code = data && data.Code !== undefined ? data.Code : 0;
-                        var dShare = data && data.D_Share !== undefined ? data.D_Share : 0;
-                        var hShare = data && data.H_Share !== undefined ? data.H_Share : 0;
-                        var Discount_Percentage = data &&
-                            data.Discount_Percentage !== undefined &&
-                            data.Discount_Percentage !== null
-                            ? data.Discount_Percentage
-                            : 0;
-                        var Receipt_fee = data && data.Receipt_fee !== undefined ? data.Receipt_fee : 0;
-                        debugger;
-                        $('#txtactualfee').val(code);
-
-                        if (
-                            (type === "04" && type_text === "Employee") ||
-                            (type === "05" && type_text === "Student") ||
-                            (type === "06" && type_text === "Refer")
-                        ) {
-                            $('#txtdiscount').val(100);
-                            $('#txtactualfee').val(code);
-                            $('#txtdiscount').attr('disabled', true);
-                            $('#txtfees').val(0);
-                            $('#hdnDocshare').val(dShare);
-                            $('#hdnhospShare').val(hShare);
-                        }
-                        else {
-                            debugger;
-                            $('#txtdiscount').val(Discount_Percentage);
-                            $('#txtdiscount').attr('disabled', false);
-                            $('#txtfees').val(Receipt_fee.toFixed(2));
-                            $('#txtactualfee').val(code);
-                            $('#hdnDocshare').val(dShare);
-                            $('#hdnhospShare').val(hShare);
-                        }
-
-                        if (parseFloat(code) === 0) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Policy Not Defined',
-                                text: 'Policy is not defined against this department.',
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-                        }
-
-                    } catch (e) {
-                        console.error("Error parsing fee data:", e);
-                        $('#txtfees').val("0");
-                        $('#hdnDocshare').val("0");
-                        $('#hdnhospShare').val("0");
-                        $('#txtdiscount').val("");
-                        $('#txtdiscount').attr('disabled', false);
-
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Data Error',
-                            text: 'Invalid fee data received.',
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX Error:", error, xhr.responseText);
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Request Failed',
-                        text: 'Could not retrieve fee information.',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-
-                    $('#txtfees').val("0");
-                    $('#hdnDocshare').val("0");
-                    $('#hdnhospShare').val("0");
-                    $('#txtdiscount').val("");
-                    $('#txtdiscount').attr('disabled', false);
-                }
-            });
+            // ... rest of your existing getGeneralFee code ...
         }
         function fillDropdown($dropdown, methodName) {
             if ($dropdown.data('filled')) return;
@@ -1006,71 +905,29 @@
         }
         function loaddoctor() {
             debugger;
-        
+            var dpt = $('#ddlDepartment').val();
+            var type = $('#ddlPatient_Type').val();
 
-      
-                var dpt = $('#ddlDepartment').val();
-
-                $.ajax({
-                    type: "POST",
-                    url: "EmergencyForm.aspx/LoadDoctor",
-                    data: JSON.stringify({ dpt: dpt }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        debugger;
-                        var doctor = JSON.parse(response.d);
-                        var options = '<option value=""> Please Select </option>';
-
-                        $.each(doctor, function (key, value) {
-                            options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
-                        });
-
-                        $('#ddldoctor').html(options);
-                        var type = $('#ddlPatient_Type').val();
-
-                        if (type != "02") {
-
-                            getGeneralFee();
-                        }
-
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("Error: " + error);
-                    }
-                });
-            
-        }
-
-
-        function loadalldoctor() {
-            debugger;
             $.ajax({
                 type: "POST",
-                url: "EmergencyForm.aspx/LoadEmplData",
-                data: '{}',  // Empty object, no parameters
+                url: "EmergencyForm.aspx/LoadDoctor",
+                data: JSON.stringify({ dpt: dpt }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
                     debugger;
-                    var doctors = JSON.parse(response.d);  // Now this will be an array
+                    var doctor = JSON.parse(response.d);
                     var options = '<option value=""> Please Select </option>';
 
-                    // Check if doctors is an array and has items
-                    if (doctors && doctors.length > 0) {
-                        $.each(doctors, function (key, value) {
-                            options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
-                        });
-                    }
+                    $.each(doctor, function (key, value) {
+                        options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+                    });
 
                     $('#ddldoctor').html(options);
-                    var type = $('#ddlPatient_Type').val();
 
-                    // Only call getGeneralFee for categories other than 03 (Panel)
-                    if (type == "02" || type == "01") {
+                    // ⭐ For Panel category (03), don't call getGeneralFee
+                    if (type != "03") {
                         getGeneralFee();
-                    } else if (type == "03") {
-                        $('#txtfees').val("0");
                     }
                 },
                 error: function (xhr, status, error) {
@@ -1078,6 +935,43 @@
                 }
             });
         }
+
+
+        //function loadalldoctor() {
+        //    debugger;
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "EmergencyForm.aspx/LoadEmplData",
+        //        data: '{}',  // Empty object, no parameters
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (response) {
+        //            debugger;
+        //            var doctors = JSON.parse(response.d);  // Now this will be an array
+        //            var options = '<option value=""> Please Select </option>';
+
+        //            // Check if doctors is an array and has items
+        //            if (doctors && doctors.length > 0) {
+        //                $.each(doctors, function (key, value) {
+        //                    options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+        //                });
+        //            }
+
+        //            $('#ddldoctor').html(options);
+        //            var type = $('#ddlPatient_Type').val();
+
+        //            // Only call getGeneralFee for categories other than 03 (Panel)
+        //            if (type == "02" || type == "01") {
+        //                getGeneralFee();
+        //            } else if (type == "03") {
+        //                $('#txtfees').val("0");
+        //            }
+        //        },
+        //        error: function (xhr, status, error) {
+        //            console.log("Error: " + error);
+        //        }
+        //    });
+        //}
         function showhide() {
             $('.show').show();
             $('#fees').hide();
@@ -1088,6 +982,7 @@
             $('#employee').hide();
          
             $('#discount').hide();
+            $('#balance').hide();
             $('#empname').hide();
             $('#designation').hide();
             $('#rollno').hide();
@@ -1358,6 +1253,7 @@
             var Fees = parseFloat($('#txtfees').val()) || 0;
             var Actual_Fees = parseFloat($('#txtactualfee').val()) || 0;
             var discount = $('#txtdiscount').val() || "0";
+            var txtblnc = $('#txtbalance').val() || "0";
             var Doc_Share = parseFloat($('#hdnDocshare').val()) || 0;
             var Hosp_share = parseFloat($('#hdnhospShare').val()) || 0;
             var rollno = $('#ddlrollno').val();
@@ -1371,17 +1267,19 @@
             var doctor = $('#ddldoctor').val();
 
             // Validations
-            if (discount < 100.0 && Fees == 0.0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Fee Should Not be Zero',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-                return;
+        // Only validate fee for non-panel categories
+            if (pat_category != "03") {
+                if (discount < 100.0 && Fees == 0.0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Fee Should Not be Zero',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return;
+                }
             }
-
             if (!patient_no || patient_no === "0") {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a Patient.', showConfirmButton: false, timer: 2000 });
                 return;
@@ -1397,11 +1295,11 @@
                 return;
             }
 
-            if ((pat_category === "02" || pat_category === "03") && (!doctor || doctor === "0")) {
+            if ((pat_category === "02" ) && (!doctor || doctor === "0")) {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a doctor.', showConfirmButton: false, timer: 2000 });
                 return;
             }
-
+          
             if ((pat_category === "01" || ["02"].includes(pat_category)) && (!hdnDepartment || hdnDepartment === "0")) {
                 Swal.fire({ icon: 'error', title: 'Error!', text: 'Please select a department.', showConfirmButton: false, timer: 2000 });
                 return;
@@ -1427,6 +1325,7 @@
                 Fees: Fees,
                 Actual_Fees: Actual_Fees,
                 discount: discount,
+                txtblnc: txtblnc,
                 Doc_Share: Doc_Share,
                 Hosp_share: Hosp_share,
                 rollno: rollno,
@@ -1553,7 +1452,16 @@
         });
         function getpanelRate() {
             var panelid = $('#ddlpanel').val();
-            if (!panelid || panelid === "0") return;
+            var type = $('#ddlPatient_Type').val();
+
+            // Only proceed if category is 03 (Panel)
+            if (type !== "03") return;
+
+            if (!panelid || panelid === "0") {
+                $('#txtbalance').val("");
+                $('#txtfees').val("");
+                return;
+            }
 
             $.ajax({
                 type: "POST",
@@ -1564,8 +1472,12 @@
                 success: function (resp) {
                     debugger;
                     var data = JSON.parse(resp.d);
-                    $('#txtfees').val(data.Fees);
+
+                    $('#txtbalance').val(data.Fees);
+                    $('#txtbalance').attr('disabled', true);
+                    $('#txtfees').val("0");
                     $('#txtfees').attr('disabled', true);
+                    $('#txtactualfee').val(data.Fees); // Store actual fee
                 },
                 error: function (response) {
                     alert("Error: " + response.responseText);
@@ -1883,6 +1795,10 @@
                 <div class="col-lg-12 col-md-12 col-sm-12" id="discount">
                     <label>Discount %</label>
                     <input type="text" id="txtdiscount" onchange="Calc_Discount()" class="form-control" />
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12" id="balance">
+                    <label>balance Amount </label>
+                    <input type="text" id="txtbalance"  class="form-control" />
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="StdName">
                     <label>Student Name</label>
