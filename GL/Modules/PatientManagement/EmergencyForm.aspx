@@ -458,52 +458,41 @@
             debugger;
             var Category = $('#ddlPatient_Type').val();
 
-         $('#txtfees').val('');
-        $('#txtactualfee').val('');
-        $('#hdnDocshare').val('');
-        $('#hdnhospShare').val('');
-        $('#txtdiscount').val('').attr('disabled', false);
-        $('#ddlDepartment').val('0').trigger('change');
-        $('#ddldoctor').val('0').trigger('change');
+            $('#txtfees').val('');
+            $('#txtactualfee').val('');
+            $('#hdnDocshare').val('');
+            $('#hdnhospShare').val('');
+            $('#txtdiscount').val('').attr('disabled', false);
+            $('#ddlDepartment').val('0').trigger('change');
+            $('#ddldoctor').val('0').trigger('change');
 
             if (Category == "0") {
-               
+
             }
             else if (Category == "01") {
-                // Show Doctor and Department for Private
                 $('#fees').show();
                 $('#department').show();
                 $('#doctor').hide();
                 $('#ddlDepartment').attr('disabled', false);
-            
-
-                // Hide panel company elements
                 $('#pnlcompany').hide();
                 $('#employee').hide();
-             
+
                 $('#discount').show();
             }
             else if (Category == "02") {
-                // Show Doctor and Department for Private
                 $('#fees').show();
                 $('#department').show();
                 $('#doctor').show();
                 $('#ddlDepartment').attr('disabled', false);
                 $('#ddldoctor').attr('disabled', false);
-
-                // Hide panel company elements
                 $('#pnlcompany').hide();
                 $('#employee').hide();
-            
-                $('#discount').show();
 
-                // Load doctors for private
-                //
+                $('#discount').show();
             }
             else if (Category == "03") {
-                // Show Panel Company, Department, and Doctor
                 $('#fees').show();
-                $('#department').hide();
+                $('#department').show();     
                 $('#ddldoctor').show();
                 $('#doctor').show();
                 $('#pnlcompany').show();
@@ -512,74 +501,57 @@
                 $('#ddldoctor').attr('disabled', false);
                 $('#ddlpanel').attr('disabled', false);
 
-                // Hide discount for panel patients
                 $('#discount').hide();
-                //loaddoctor();
+                $('#txtdiscount').val("100");
+                $('#txtdiscount').attr('disabled', true);
+                $('#txtfees').val("0");
+
                 loadalldoctor();
-                // Load panels and doctors
-          
             }
             else if (Category == "06") {
-                          $('#department').hide();
-              $('#ddldoctor').hide();
-              $('#doctor').hide();
-              $('#pnlcompany').hide();
-              $('#employee').hide();
-
-       
-                   $('#discount').show();
-                   $('#txtdiscount').val("100");
-                    $('#txtdiscount').attr('disabled',true);
+                $('#department').hide();
+                $('#ddldoctor').hide();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#discount').show();
+                $('#txtdiscount').val("100");
+                $('#txtdiscount').attr('disabled', true);
                 $('#txtfees').val("0");
-              
-          
             }
             else if (Category == "04") {
-                // Show Panel Company, Department, and Doctor
-                         $('#department').hide();
-                           $('#ddldoctor').hide();
-                           $('#doctor').hide();
-                           $('#pnlcompany').hide();
-                           $('#employee').hide();
-
-       
-                                $('#discount').show();
-                                $('#txtdiscount').val("100");
-                                $('#txtdiscount').attr('disabled',true);
-               
-          
+                $('#department').hide();
+                $('#ddldoctor').hide();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#discount').show();
+                $('#txtdiscount').val("100");
+                $('#txtdiscount').attr('disabled', true);
                 $('#txtfees').val("0");
             }
             else if (Category == "05") {
-                // Show Panel Company, Department, and Doctor
-                           $('#department').hide();
-              $('#ddldoctor').hide();
-              $('#doctor').hide();
-              $('#pnlcompany').hide();
-              $('#employee').hide();
-
-       
-                   $('#discount').show();
-               $('#txtdiscount').val("100");
-                $('#txtdiscount').attr('disabled',true);
+                $('#department').hide();
+                $('#ddldoctor').hide();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#discount').show();
+                $('#txtdiscount').val("100");
+                $('#txtdiscount').attr('disabled', true);
                 $('#txtfees').val("0");
-          
             }
             else if (Category == "10") {
-                       $('#department').hide();
-              $('#ddldoctor').hide();
-              $('#doctor').hide();
-              $('#pnlcompany').hide();
-              $('#employee').hide();
-
-       
-                   $('#discount').show();
-                    $('#txtdiscount').val("100");
-               $('#txtdiscount').attr('disabled',true);
-          
+                $('#department').show();      
+                $('#ddldoctor').hide();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#discount').show();
+                $('#txtdiscount').val("100");
+                $('#txtdiscount').attr('disabled', true);
                 $('#txtfees').val("0");
             }
-            // Rest of the categories remain the same...
         }
 
       
@@ -1029,7 +1001,7 @@
                         $('#ddldoctor').html(options);
                         var type = $('#ddlPatient_Type').val();
 
-                        if (type != "02") {
+                        if (type != "02" && type != "10") {
 
                             getGeneralFee();
                         }
