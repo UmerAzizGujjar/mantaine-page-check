@@ -28,11 +28,11 @@ namespace PMS
             {
                 Session["is_admin"] = false;
             }
-            
+
             is_admin_Test_Rate = Convert.ToBoolean(DBClass.getField("Select AllowTestRate from aspnet_Users where UserId='" + AppConfig.UserID + "'"));
 
             is_admin_Test_box = Convert.ToBoolean(DBClass.getField("Select allowtestbox from aspnet_Users where UserId='" + AppConfig.UserID + "'"));
-           
+
         }
         [WebMethod]
         public static string FillTestMainDepartment()
@@ -42,9 +42,9 @@ namespace PMS
                        join v in db.ValueSets
                        on d.ValueSet_ID equals v.ValueSet_ID
                        where v.ValueSet_Name == "Main Test Departments"
-                       
+
                        where d.DataValue_Description != "Lab Test"
-                    
+
                        select new
                        {
                            d.DataValue_Name,
@@ -58,51 +58,51 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var dpt = (from d in db.DataValues
-                          join v in db.ValueSets
-                          on d.ValueSet_ID equals v.ValueSet_ID
-                          where v.ValueSet_Name == "Test Main Department"
-                          select new
-                          {
-                              d.DataValue_Name,
-                              d.DataValue_Description
-                          }).ToList();
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Test Main Department"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
 
             return (new JavaScriptSerializer().Serialize(dpt));
         }
- [WebMethod]
+        [WebMethod]
         public static string FillGroupHeaderLevel1()
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
             var dpt = (from d in db.DataValues
-                          join v in db.ValueSets
-                          on d.ValueSet_ID equals v.ValueSet_ID
-                          where v.ValueSet_Name == "Test Group Header L1"
-                          select new
-                          {
-                              d.DataValue_Name,
-                              d.DataValue_Description
-                          }).ToList();
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Test Group Header L1"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
 
             return (new JavaScriptSerializer().Serialize(dpt));
         }
- [WebMethod]
- public static string FillAltrasound_level()
- {
-     DataBaseDataContext db = new DataBaseDataContext();
+        [WebMethod]
+        public static string FillAltrasound_level()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
 
-     var dpt = (from d in db.DataValues
-                join v in db.ValueSets
-                on d.ValueSet_ID equals v.ValueSet_ID
-                where v.ValueSet_Name == "Ultrasound level"
-                select new
-                {
-                    d.DataValue_Name,
-                    d.DataValue_Description
-                }).ToList();
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Ultrasound level"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
 
-     return (new JavaScriptSerializer().Serialize(dpt));
- }
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
         [WebMethod]
         public static string TestMainDepartmentDrpdwn()
         {
@@ -137,22 +137,26 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
             var test = (from t in db.Lab_Tests
                         where t.Test_ID == id
-                        select new { 
-                            t, 
+                        select new
+                        {
+                            t,
                             t.Group_Header_L0,
-                            v = (from tv in db.Test_Values where tv.Test_ID == id 
-                                 select new { 
-                                     tv.TestValue_ID,                                    
-                                     tv.Patient_Type, 
-                                     
-                                     Patient_Type_Name = (from d in db.DataValues join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID where v.ValueSet_Name == "Test Patient Types" && d.DataValue_Name == tv.Patient_Type select d.DataValue_Description).FirstOrDefault(), 
-                                     tv.Start_Range, 
+                            v = (from tv in db.Test_Values
+                                 where tv.Test_ID == id
+                                 select new
+                                 {
+                                     tv.TestValue_ID,
+                                     tv.Patient_Type,
+
+                                     Patient_Type_Name = (from d in db.DataValues join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID where v.ValueSet_Name == "Test Patient Types" && d.DataValue_Name == tv.Patient_Type select d.DataValue_Description).FirstOrDefault(),
+                                     tv.Start_Range,
                                      tv.End_Range
-                                     
-                                 }).ToList(), 
+
+                                 }).ToList(),
                             IPDTestRate = (from rate in db.Test_Defination_Detail_Rates
                                            where rate.Test_ID == id && rate.Patient_Type.Equals("IPD")
-                                           select new {
+                                           select new
+                                           {
                                                rate.Patient_Type,
                                                Patient_Category_Name = db.GetDataValueName("Patient Type", rate.Patient_Category),
                                                rate.Patient_Category,
@@ -160,20 +164,21 @@ namespace PMS
                                            }).ToList(),
                             OPDTestRate = (from rate in db.Test_Defination_Detail_Rates
                                            where rate.Test_ID == id && rate.Patient_Type.Equals("OPD")
-                                           select new{
+                                           select new
+                                           {
                                                rate.Patient_Type,
                                                Patient_Category_Name = db.GetDataValueName("Patient Type", rate.Patient_Category),
                                                rate.Patient_Category,
                                                rate.Test_Rate,
                                                Out_Source_Lab_ID = (from d in db.DataValues
-                                                       join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID
-                                                       where v.ValueSet_Name == "Out Source Labs" && d.DataValue_Name == t.Out_Source_Lab_ID
-                                                       select d.DataValue_Description).FirstOrDefault(),
+                                                                    join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID
+                                                                    where v.ValueSet_Name == "Out Source Labs" && d.DataValue_Name == t.Out_Source_Lab_ID
+                                                                    select d.DataValue_Description).FirstOrDefault(),
                                                Group_Header_L1 = (from d in db.DataValues
                                                                   join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID
                                                                   where v.ValueSet_Name == "Test Group Header L1" && d.DataValue_Name == t.Group_Header_L1
                                                                   select d.DataValue_Description).FirstOrDefault(),
-                                          
+
                                            }).ToList(),
                         }).FirstOrDefault();
 
@@ -187,7 +192,7 @@ namespace PMS
                       join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
                       where vs.ValueSet_Name == "Test Departments"
                       select new { dv.DataValue_Name, dv.DataValue_Description };
-            
+
             return (new JavaScriptSerializer()).Serialize(dep);
         }
         [WebMethod]
@@ -240,9 +245,9 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var units = from dv in db.DataValues
-                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
-                      where vs.ValueSet_Name == "Test Units"
-                      select new { dv.DataValue_Name, dv.DataValue_Description };
+                        join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                        where vs.ValueSet_Name == "Test Units"
+                        select new { dv.DataValue_Name, dv.DataValue_Description };
 
             return (new JavaScriptSerializer()).Serialize(units);
         }
@@ -286,7 +291,79 @@ namespace PMS
                 return (new JavaScriptSerializer()).Serialize(PatientsCategory);
             }
         }
-        public class TestValue 
+
+        [WebMethod]
+        public static string FillXRayLevel()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "X-Ray Format" 
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+        [WebMethod]
+        public static string GetXRayss()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            var xrayVal = from dv in db.XRayLevels
+                          select new
+                          {
+                              dv.Test_ID,
+                              dv.Levels,
+                              dv.XRayLevel_ID,
+                              dv.FixValues
+                          };
+
+            return (new JavaScriptSerializer()).Serialize(xrayVal);
+        }
+
+        [WebMethod]
+        public static void SaveXRay(List<XRayValue> xray_values)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            foreach (var item in xray_values)
+            {
+                if (!string.IsNullOrEmpty(item.XRayLevelID))
+                {
+                    var itemToUpdate = (from i in db.XRayLevels
+                                        where i.XRayLevel_ID == Convert.ToInt32(item.XRayLevelID)
+                                        select i).FirstOrDefault();
+                    if (itemToUpdate != null)
+                    {
+                        itemToUpdate.Levels = item.Levels;
+                        itemToUpdate.FixValues = item.FixValues;
+                    }
+                }
+                else
+                {
+                    XRayLevel obj = new XRayLevel();
+                    obj.Created_By = AppConfig.UserID;
+                    obj.Levels = item.Levels;
+                    obj.FixValues = item.FixValues;
+                    obj.Created_Time = DateTime.Now;
+                    db.XRayLevels.InsertOnSubmit(obj);
+                }
+            }
+            db.SubmitChanges();
+        }
+
+        public class XRayValue
+        {
+            public string Levels { get; set; }
+            public string FixValues { get; set; }
+            public string XRayLevelID { get; set; }
+        }
+        public class TestValue
         {
             public string ID { get; set; }
             public string Type { get; set; }
@@ -297,7 +374,7 @@ namespace PMS
         {
             public string Value { get; set; }
         }
-        public class IPDTestRate 
+        public class IPDTestRate
         {
             public string Patient_Type { get; set; }
             public string Patient_Category { get; set; }
@@ -375,14 +452,14 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var ultraVal = from dv in db.UltraSoundLevels
-                             where dv.Test_ID == id.ToString()
-                             select new
-                             {
-                                 dv.Test_ID,
-                                 dv.Levels,
-                                 dv.UltraSoundLevel_ID,
-                                 dv.FixValues
-                             };
+                           where dv.Test_ID == id.ToString()
+                           select new
+                           {
+                               dv.Test_ID,
+                               dv.Levels,
+                               dv.UltraSoundLevel_ID,
+                               dv.FixValues
+                           };
 
             return (new JavaScriptSerializer()).Serialize(ultraVal);
         }
@@ -439,7 +516,7 @@ namespace PMS
                           }).ToList();
             return (new JavaScriptSerializer()).Serialize(result);
         }
-        
+
         [WebMethod]
         public static void SaveTest(string test_values, List<test_extra_values> test_extra_values)
         {
@@ -470,14 +547,14 @@ namespace PMS
                 test.Active = record.Active;
                 test.Is_Cultural = record.cultural;
                 test.Report_Colum = record.reportColums;
-               
+
                 test.Created_By = AppConfig.UserID;
-                test.Created_Time = DateTime.Now ;
+                test.Created_Time = DateTime.Now;
                 if (is_admin)
                 {
                     test.Rate = Convert.ToDecimal(record.Rate == "" ? "0.0" : record.Rate);
                 }
-               
+
                 test.Out_Source_Lab_ID = record.out_source_lab_id;
                 test.Genre = record.Genre;
                 test.Qty = record.Qty;
@@ -511,7 +588,7 @@ namespace PMS
                     Rates.Created_By = AppConfig.UserID.ToString();
                     Rates.Created_Time = DateTime.Now;
                     db.Test_Defination_Detail_Rates.InsertOnSubmit(Rates);
-                    
+
                     db.SubmitChanges();
                 }
 
@@ -536,14 +613,14 @@ namespace PMS
                     db.Lab_Test_Multiple_Values.InsertOnSubmit(tests);
                     db.SubmitChanges();
                 }
-               
+
             }
             else
             {
                 var test = (from t in db.Lab_Tests
                             where t.Test_ID == int.Parse(record.ID)
                             select t).FirstOrDefault();
-                
+
                 test.Test_Name = record.Name;
                 test.Main_Department = record.MainDepartment;
                 test.Group_Department = record.GroupDepartment;
@@ -577,7 +654,7 @@ namespace PMS
                 {
                     test.Rate = Convert.ToDecimal(record.Rate == "" ? "0.0" : record.Rate);
                 }
-              
+
                 test.Fixed_Value = record.FixedValue;
                 test.WaitingTime = int.TryParse(record.WaitingTime, out var temp) ? temp : (int?)0;
                 db.SubmitChanges();
@@ -604,8 +681,8 @@ namespace PMS
                   where ultraVal.Test_ID == test.Test_ID.ToString()
                   select ultraVal));
                 db.SubmitChanges();
-               
-              
+
+
                 db.Test_Defination_Detail_Rates.DeleteAllOnSubmit((
                     from rate in db.Test_Defination_Detail_Rates
                     where rate.Test_ID == int.Parse(record.ID) && rate.Patient_Type.Equals("IPD")
