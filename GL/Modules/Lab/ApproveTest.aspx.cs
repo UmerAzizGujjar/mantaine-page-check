@@ -16,6 +16,29 @@ namespace PMS.Modules.Lab
         }
 
         [WebMethod]
+        public static object GetDoctors()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    var doctors = (from emp in db.HR_Employees
+                                   where emp.IsDoctor == true
+                                   select new
+                                   {
+                                       id = emp.Emp_ID,
+                                       text = emp.Emp_Name
+                                   }).ToList();
+                    return doctors;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new List<object>();
+            }
+        }
+
+        [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string startdate, string endtdate, string doctorId)
         {
             try
@@ -59,7 +82,7 @@ namespace PMS.Modules.Lab
                                 {
                                     ar.Bill_No,
                                     ar.Bill_ID,
-                                    pa.mr_no_sequence,
+                                    mr_no_sequence = pa.mr_no_sequence,
                                     pa.pat_id,
                                     pa.Full_Name,
                                     pa.Father_Name,
