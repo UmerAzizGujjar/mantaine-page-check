@@ -236,6 +236,7 @@
     <Content Include="Modules\Administrator\Shift_Assign_Policy.aspx" />
     <Content Include="Modules\Administrator\Shift__Policy_View.aspx" />
     <Content Include="Modules\Administrator\SurveyForm.aspx" />
+    <Content Include="Modules\Administrator\UserWiseDoctor.aspx" />
     <Content Include="Modules\Administrator\User_BranchWise.aspx" />
     <Content Include="Modules\Administrator\User_BranchWiseList.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
@@ -278,6 +279,7 @@
     <Content Include="Modules\Lab\RadiologyResultsPreview.aspx" />
     <Content Include="Modules\Lab\RadiologyTestResult.aspx" />
     <Content Include="Modules\Lab\SampleView.aspx" />
+    <Content Include="Modules\Lab\ApproveTest.aspx" />
     <Content Include="Modules\Lab\WaitingList.aspx" />
     <Content Include="Modules\Others\About.aspx" />
     <Content Include="Modules\Others\CustomError.aspx" />
@@ -25959,6 +25961,13 @@
     <Compile Include="Modules\Administrator\SurveyForm.aspx.designer.cs">
       <DependentUpon>SurveyForm.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Administrator\UserWiseDoctor.aspx.cs">
+      <DependentUpon>UserWiseDoctor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\UserWiseDoctor.aspx.designer.cs">
+      <DependentUpon>UserWiseDoctor.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Administrator\User_BranchWise.aspx.cs">
       <DependentUpon>User_BranchWise.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -26252,6 +26261,13 @@
     </Compile>
     <Compile Include="Modules\Lab\SampleView.aspx.designer.cs">
       <DependentUpon>SampleView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\ApproveTest.aspx.cs">
+      <DependentUpon>ApproveTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\ApproveTest.aspx.designer.cs">
+      <DependentUpon>ApproveTest.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Lab\WaitingList.aspx.cs">
       <DependentUpon>WaitingList.aspx</DependentUpon>

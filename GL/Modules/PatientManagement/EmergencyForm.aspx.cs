@@ -1222,8 +1222,7 @@ namespace PMS.Modules.PatientManagement
                 if (string.IsNullOrWhiteSpace(data.panel) || data.panel == "0")
                     errors.Add("Please select a panel company.");
 
-                if (string.IsNullOrWhiteSpace(data.doctor) || data.doctor == "0")
-                    errors.Add("Please select a doctor.");
+            
             }
             else if (data.pat_category == "02") // Private
             {
@@ -1300,6 +1299,7 @@ namespace PMS.Modules.PatientManagement
                         if (!string.IsNullOrEmpty(data.panel))
                             pat.PanelCompany = Convert.ToInt32(data.panel);
                         pat.Doctor_ID = data.doctor;
+                        pat.balance_amount = Convert.ToDecimal(data.txtblnc);
                     }
                     else if (data.pat_category == "02") // Private
                     {
@@ -1311,6 +1311,7 @@ namespace PMS.Modules.PatientManagement
                         pat.Doctor_ID = "";
                         pat.PanelCompany = 0;
                     }
+                
 
                     // Fee & Discount
                     if (data.Fees >= 0)
@@ -2387,6 +2388,7 @@ namespace PMS.Modules.PatientManagement
             public decimal Fees { get; set; }
             public decimal Actual_Fees { get; set; }
             public string discount { get; set; }
+            public string txtblnc { get; set; }
             public decimal Doc_Share { get; set; }
             public decimal Hosp_share { get; set; }
             public string rollno { get; set; }

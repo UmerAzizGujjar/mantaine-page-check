@@ -146,6 +146,13 @@
                      "orderable": true,
                      "render": (data, type, full) => data ? parseFloat(data).toFixed(2) : "0.00"
                  },
+                 { 
+                     "data": "balance_amount", 
+                     "name": "balance_amount", 
+                     "width": "4%", 
+                     "orderable": true,
+                     "render": (data, type, full) => data ? parseFloat(data).toFixed(2) : "0.00"
+                 },
 
                  { "data": "Type", "width": "10%", "orderable": false },
                  { "data": "Patient_Type", "width": "6%", "orderable": false },
@@ -204,6 +211,7 @@
                 
                      <th style="width: 17%;">Name</th>
                      <th style="width: 12%;">Amount</th>
+                     <th style="width: 12%;">Balance Amount</th>
                      <th style="width: 12%;">Department</th>
                      <th style="width: 12%;">Patient Type</th>
                      <th style="width: 12%;">CNIC</th>
