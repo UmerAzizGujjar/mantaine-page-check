@@ -20,10 +20,29 @@
 
         });
         function PrintTest(Receipt_ID) {
+            var locationInfo = window.location;
+            var user_name = '<%= AppConfig.Company_Name %>';
+            var reportPath;  // ✅ declared properly
 
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx';
+            }
 
-            var url = '/ReportViewer.aspx?ReportName=ReceiptbasePrint&ReportTitle=Cash  Receipt ' + '&Receipt_ID=' + Receipt_ID;
-            //var url = '../../ReportViewer.aspx?ReportName=PrinAllReceiptDetail&ReportTitle=Bill Detail (IPD)  ' + '&PatientID=' + Receipt_ID;
+            var url;
+
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +
+                    '?ReportName=ReceiptbasePrint&ReportTitle=Cash  Receipt ' + '&Receipt_ID=' + Receipt_ID;  // ✅ was using undefined `id`
+            } else {
+                url = '/' + reportPath +
+                    '?ReportName=ReceiptbasePrint&ReportTitle=Cash  Receipt ' + '&Receipt_ID=' + Receipt_ID;  // ✅ fixed localhost URL + uses reportPath
+            }
+
             window.open(url, '_blank');
 
         }
