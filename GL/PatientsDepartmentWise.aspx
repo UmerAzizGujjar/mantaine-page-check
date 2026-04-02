@@ -243,7 +243,7 @@
             });
             $(document).ready(function () {
                 var ReportTitle = '<%= Request.QueryString["rptTitle"]%>';
-                if (ReportTitle === "Operator_Wise_Billing_Report") {
+                if (ReportTitle === "Operator_Wise_Billing_Report" || ReportTitle === "Receipt_Operator_Wise_Report" ) {
                     $('#lblAllPatientRecord').text("Detailed Summary");
                 }
             });
@@ -688,6 +688,13 @@
                     else if (rptTitle == "Service_Wise_Summary_Report") {
                        //<%-- var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;--%>
                         var url = 'ReportViewer.aspx?ReportName=Service_Wise_Summary_Report&ReportTitle=Service Wise Summary from  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ($("#ctl00_MainContent_ddlDepartments").val() || "0")  + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0"); //+ '&Summary=' + summary ;
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == "Receipt_Operator_Wise_Report") {
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var DetailedSummary = document.getElementById('<%= chkAllPatientRecord.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Receipt_Operator_Wise_Report&ReportTitle=Operator Wise Receipts Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Summary=' + summary + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0") + '&Patient_Type=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") + '&AllPatientsRecords=' + DetailedSummary + '&ExportPDF=' + exporttopdf; //+ '&Summary=' + summary ;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Operator_Wise_Billing_Report") {
