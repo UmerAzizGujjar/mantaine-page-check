@@ -149,7 +149,7 @@
                     },
                     {
                         "render": (data, type, full) => {
-                            return `<button type="button" class="btn-preview" onclick="PreviewReport(${full.Lab_Test_Detail_ID}, ${full.Lab_Test_ID}, '${full.Report_Colum}', ${full.Bill_Details_ID}, ${full.Test_ID})">Preview Report</button>`;
+                            return `<button type="button" class="btn-preview" onclick="PreviewReport(${full.Lab_Test_Detail_ID}, ${full.Lab_Test_ID},  ${full.pat_id}, '${full.Report_Colum}', ${full.Bill_Details_ID}, ${full.Test_ID})">Preview Report</button>`;
                         },
                         "width": "10%",
                         "orderable": false
@@ -181,7 +181,7 @@
             window.open('../../ReportViewer.aspx?ReportName=TestResultQ' +
                 '&ReportTitle=Department Of Pathology' +
                 '&Test_IDs=' + Test_ID +
-                '&test_wise_ids=' + Lab_Test_ID +
+                '&test_wise_ids=' + pat_id +
                 '&TransID=' + Lab_Test_ID +
                 '&labTDetailsID=' + Lab_Test_Detail_ID +
                 '&BillDetailID=' + Bill_Details_ID +

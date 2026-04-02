@@ -86,14 +86,15 @@ namespace PMS.Inventory
                     var Total_IGP = _dbContext.Igp_masters.Count();
                     var IGP = from Igp in _dbContext.Igp_masters
                               join V in _dbContext.AP_Vendors on Convert.ToInt32(Igp.Vendor) equals V.Vendor_ID
-                              where
-                            ((Igp.Igp_num.ToString().Contains(searchValue) || _dbContext.GetPONum(Igp.Igp_Id).ToString().Contains(searchValue) || Igp.Igp_num.ToString().Contains(searchValue) || V.Vendor_Name.ToString().Contains(searchValue) || Igp.Inspec_Status.ToString().Contains(searchValue) || Igp.Status.ToString().Contains(searchValue) || Igp.Inspec_Status.ToString().Contains(searchValue) || Igp.Inspec_Status.ToString().Contains(searchValue)))
+                              where (Igp.Igp_num.ToString().Contains(searchValue) ||
+                                     V.Vendor_Name.ToString().Contains(searchValue) ||
+                                     Igp.Status.ToString().Contains(searchValue))
                               select new
                               {
                                   Igp_Id = Igp.Igp_Id,
                                   Igp_num = Igp.Igp_num,
                                   VendorName = V.Vendor_Name,
-                                  PONum = _dbContext.GetPONum(Igp.Igp_Id),
+                                  PONum = "", // Empty string since not needed
                                   BilityNum = Igp.BilityNum,
                                   Remarks = Igp.Remarks,
                                   VehicleNum = Igp.VehicleNum,
@@ -107,10 +108,7 @@ namespace PMS.Inventory
                                   Igp_date = Igp.Igp_date,
                                   IsAuto = DBClass.getField("Select isnull(IsAutoGenerate,0) from GRN_Master where IGP_Id =" + Igp.Igp_Id),
                                   Grn_ID = DBClass.getField("select GRN_ID from GRN_Master where IGP_Id=" + Igp.Igp_Id)
-
                               };
-
-                    
 
                     var FilteredCount = IGP.Count();
                     switch (sortColumn)
@@ -118,23 +116,19 @@ namespace PMS.Inventory
                         case "Igp_num":
                             IGP = sortColumnDirection == "asc" ? IGP.OrderBy(a => a.Igp_num) : IGP.OrderByDescending(a => a.Igp_num);
                             break;
-                        case "PONum":
-                            IGP = sortColumnDirection == "asc" ? IGP.OrderBy(b => b.PONum) : IGP.OrderByDescending(a => a.PONum);
-                            break;
                         default:
                             IGP = IGP.OrderByDescending(a => a.Igp_Id);
                             break;
                     }
 
                     var IGPList = IGP.Skip(start).Take(length).ToList();
-
                     var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_IGP, data = IGPList };
                     return jsonData;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching Purchase Order list", ex);
+                throw new Exception("Error fetching Inversion Gate Pass list", ex);
             }
         }
 
