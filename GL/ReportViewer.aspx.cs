@@ -779,6 +779,7 @@ namespace PMS
                 string itemName = Request.QueryString["Item"].ToString();
                 string companyName = Request.QueryString["Company"].ToString();
                 string operatorName = Request.QueryString["Operator"].ToString();
+                string warehouse = Request.QueryString["WareHouse"].ToString();
                 reportPath += rptFileName;
 
                 rd.Load(reportPath);
@@ -790,12 +791,15 @@ namespace PMS
                 rd.SetParameterValue("@operator", operatorName);
                 rd.SetParameterValue("@companyId", companyName);
                 rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@Warehouse", warehouse);
+
 
                 rd.SetParameterValue("@startDate", sqlStartDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@endDate", sqlEndDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@itemId", itemName, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@operator", operatorName, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@companyId", companyName, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Warehouse", warehouse, rd.Subreports[0].Name.ToString());
             }
 
 
@@ -2584,6 +2588,51 @@ namespace PMS
             }
 
             //replica of Lab cash Collection
+            else if (reportName == "Receipt_Operator_Wise_Report")
+            {
+
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                string rptFileName = "Billings/rptOperatorWise_Receipt_Report.rpt";
+                string CheckSummary = Request.QueryString["Summary"].ToString();
+                string CheckDetailSummary = Request.QueryString["AllPatientsRecords"].ToString();
+
+                if (CheckSummary == "true")
+                {
+                    rptFileName = "Billings/rptOperatorWise_Receipt_Report_Summary.rpt";
+                    reportTitle = "Operator Wise Billing Summary From " + Request.QueryString["sDate"].ToString() + "to" + Request.QueryString["eDate"].ToString();
+                }
+                if (CheckDetailSummary == "true")
+                {
+                    rptFileName = "Billings/rptOperatorWise_Receipt_Report_Summary_Detailed.rpt";
+                    reportTitle = "Operator Wise Billing Summary From " + Request.QueryString["sDate"].ToString() + "to" + Request.QueryString["eDate"].ToString();
+                }
+                reportPath += rptFileName;
+                rd.Load(reportPath);
+
+                string stDate = Request.QueryString["sDate"].ToString();
+                string stTime = Request.QueryString["STime"].ToString();
+                string endDate = Request.QueryString["eDate"].ToString();
+                string endTime = Request.QueryString["ETime"].ToString();
+                string Operator = Request.QueryString["Operator"].ToString();
+                string PatType = Request.QueryString["Patient_Type"].ToString();
+
+                string parameterStDate = string.Empty;
+                string parameterEndDate = string.Empty;
+
+                this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
+                this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
+                rd.SetParameterValue("@Department", Request.QueryString["Department"]);
+                rd.SetParameterValue("@stDate", parameterStDate);
+                rd.SetParameterValue("@endDate", parameterEndDate);
+                rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", "Operator Wise Billing");
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Patient_Type", PatType);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "Operator_Wise_Billing_Report")
             {
 
@@ -8736,7 +8785,7 @@ namespace PMS
             connectionInfo.Password = Password;
             connectionInfo.UserID = UserID;
             rd.Database.Tables[0].ApplyLogOnInfo(logOnInfo);
-            if (reportName == "Asset_Depreciation_Report" || reportName == "OPD_Department_Wise_Report" || reportName == "Operator_Wise_Billing_Report" || reportName == "HospitalServices" || reportName == "StockCategoryValuationReport" || reportName == "OPDDetailReport" || reportName == "DoctorShare_Report" || reportName == "Discharge_Detail" || reportName == "BloodBankCashCollection" || reportName == "Lab_Test_Investigation" || reportName == "TotalPatientRegsreport" || reportName == "DeptWisePatientsCardDetails" || reportName == "MER" || reportName == "AllCashReport" || reportName == "DoctorWisePatients" || reportName == "DeptWisePatients" || reportName == "PatientsTypesDetails" || reportName == "rptPatientInvestigationBilling" || reportName == "rptInPatientDetail" || reportName == "AllDoctorShareDetail" || reportName == "GOP_Details" || reportName == "GOP_Summary" || reportName == "BedAllocationReport" || reportName == "DepartmentwiseCashSummary" || reportName == "AdmissionDetail" || reportName == "Discharge Detail" || reportName == "DepartmentConversion" || reportName == "Procedure_Detail" || reportName == "Services_List" || reportName == "InsuranceCompanies" || reportName == "MainTestDepartments" || reportName == "GroupMainTestDepartments" || reportName == "SehatSahulatWise" || reportName == "SehatSahulatWiseExpensive" || reportName == "Patient_Transaction_Detail_Type" || reportName == "Patient_Transaction_Detail_SehatSahulatCard" || reportName == "OutPatientsINP" || reportName == "DeptWisePatients" || reportName == "PackageDetailReport" || reportName == "ProcedureDetail" || reportName == "PrivateAdmitionDetail" || reportName == "OPDPrivateDetail" || reportName == "AdvanceDetail" || reportName == "DailyRevenue" || reportName == "OutSourceTestDetail" || reportName == "ConsolidateMedicalSubsidy" || reportName == "PrivateProcedureDetail" || reportName == "TestResultStatus" || reportName == "LabTestDetailCollection" || reportName == "LabTestWiseSummary" || reportName == "Procedure_Service_List" || reportName == "ChargePolicyWiseSummary" || reportName == "LabCashReceivingCollection" || reportName == "BloodIssuance" || reportName == "WholeBloodStockLedger" || reportName == "ComponentBloodStockLedger" || reportName == "CBloodBankStockLedger" || reportName == "LabResultPending" || reportName == "BloodBankLabTest_Details" || reportName == "Blood_Bank_Cash_Collection_Details" || reportName == "NonCashBloodBankRevenue" || reportName == "ComponentBloodBankStockLedger" || reportName == "BloodBankStockLedger" || reportName == "BloodResultPending" || reportName == "OPDTimeLine" || reportName == "WardAllocationTimeLine" || reportName == "ProcedureTimeLine" || reportName == "ProcedureTimeLineDetail" || reportName == "BedOccupancy" || reportName == "AverageLengthOfStay" || reportName == "DepartmentWiseProcedureTimeLine" || reportName == "TestWiseMonthly" || reportName == "TestWiseMonthlyLabTestDepartment" || reportName == "Discharge Time Line Detail")
+            if (reportName == "Asset_Depreciation_Report" || reportName == "OPD_Department_Wise_Report" || reportName == "Operator_Wise_Billing_Report" ||reportName == "Receipt_Operator_Wise_Report" || reportName == "HospitalServices" || reportName == "StockCategoryValuationReport" || reportName == "OPDDetailReport" || reportName == "DoctorShare_Report" || reportName == "Discharge_Detail" || reportName == "BloodBankCashCollection" || reportName == "Lab_Test_Investigation" || reportName == "TotalPatientRegsreport" || reportName == "DeptWisePatientsCardDetails" || reportName == "MER" || reportName == "AllCashReport" || reportName == "DoctorWisePatients" || reportName == "DeptWisePatients" || reportName == "PatientsTypesDetails" || reportName == "rptPatientInvestigationBilling" || reportName == "rptInPatientDetail" || reportName == "AllDoctorShareDetail" || reportName == "GOP_Details" || reportName == "GOP_Summary" || reportName == "BedAllocationReport" || reportName == "DepartmentwiseCashSummary" || reportName == "AdmissionDetail" || reportName == "Discharge Detail" || reportName == "DepartmentConversion" || reportName == "Procedure_Detail" || reportName == "Services_List" || reportName == "InsuranceCompanies" || reportName == "MainTestDepartments" || reportName == "GroupMainTestDepartments" || reportName == "SehatSahulatWise" || reportName == "SehatSahulatWiseExpensive" || reportName == "Patient_Transaction_Detail_Type" || reportName == "Patient_Transaction_Detail_SehatSahulatCard" || reportName == "OutPatientsINP" || reportName == "DeptWisePatients" || reportName == "PackageDetailReport" || reportName == "ProcedureDetail" || reportName == "PrivateAdmitionDetail" || reportName == "OPDPrivateDetail" || reportName == "AdvanceDetail" || reportName == "DailyRevenue" || reportName == "OutSourceTestDetail" || reportName == "ConsolidateMedicalSubsidy" || reportName == "PrivateProcedureDetail" || reportName == "TestResultStatus" || reportName == "LabTestDetailCollection" || reportName == "LabTestWiseSummary" || reportName == "Procedure_Service_List" || reportName == "ChargePolicyWiseSummary" || reportName == "LabCashReceivingCollection" || reportName == "BloodIssuance" || reportName == "WholeBloodStockLedger" || reportName == "ComponentBloodStockLedger" || reportName == "CBloodBankStockLedger" || reportName == "LabResultPending" || reportName == "BloodBankLabTest_Details" || reportName == "Blood_Bank_Cash_Collection_Details" || reportName == "NonCashBloodBankRevenue" || reportName == "ComponentBloodBankStockLedger" || reportName == "BloodBankStockLedger" || reportName == "BloodResultPending" || reportName == "OPDTimeLine" || reportName == "WardAllocationTimeLine" || reportName == "ProcedureTimeLine" || reportName == "ProcedureTimeLineDetail" || reportName == "BedOccupancy" || reportName == "AverageLengthOfStay" || reportName == "DepartmentWiseProcedureTimeLine" || reportName == "TestWiseMonthly" || reportName == "TestWiseMonthlyLabTestDepartment" || reportName == "Discharge Time Line Detail")
             {
                 string Export_To_Excel = Request.QueryString["ExportPDF"].ToString();
                 //rd.ExportToHttpResponse(ExportFormatType.Excel, Response, true, "ExportedReport");
