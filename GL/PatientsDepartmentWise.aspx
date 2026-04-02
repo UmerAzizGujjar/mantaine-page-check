@@ -967,7 +967,7 @@
                         var Procedure = ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         var url = 'ReportViewer.aspx?ReportName=PCRS&ReportTitle=Pharmacy Cash Report Summary from ' + startDateTime + ' to ' + endDateTime +
                             '&StartDateTime=' + encodeURIComponent(startDateTime) +
-                            '&EndDateTime=' + encodeURIComponent(endDateTime) + '&Item=' + $("#ctl00_MainContent_ddlMainDepartment").val() + '&Operator=' + Procedure + '&Company=' + $("#ctl00_MainContent_ddlDepartments").val();// + '&ExportPDF=' + exporttopdf;
+                            '&EndDateTime=' + encodeURIComponent(endDateTime) + '&Item=' + $("#ctl00_MainContent_ddlMainDepartment").val() + '&Operator=' + Procedure + '&Company=' + $("#ctl00_MainContent_ddlDepartments").val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();// + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
 

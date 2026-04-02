@@ -779,6 +779,7 @@ namespace PMS
                 string itemName = Request.QueryString["Item"].ToString();
                 string companyName = Request.QueryString["Company"].ToString();
                 string operatorName = Request.QueryString["Operator"].ToString();
+                string warehouse = Request.QueryString["WareHouse"].ToString();
                 reportPath += rptFileName;
 
                 rd.Load(reportPath);
@@ -790,12 +791,15 @@ namespace PMS
                 rd.SetParameterValue("@operator", operatorName);
                 rd.SetParameterValue("@companyId", companyName);
                 rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@Warehouse", warehouse);
+
 
                 rd.SetParameterValue("@startDate", sqlStartDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@endDate", sqlEndDateTime, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@itemId", itemName, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@operator", operatorName, rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@companyId", companyName, rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Warehouse", warehouse, rd.Subreports[0].Name.ToString());
             }
 
 
