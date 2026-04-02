@@ -151,12 +151,7 @@ namespace PMS.Inventory
                         case "GRN_Num":
                             GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.GRN_Num) : GRNS.OrderByDescending(a => a.GRN_Num);
                             break;
-                        case "po_Number":
-                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(b => b.po_Number) : GRNS.OrderByDescending(a => a.po_Number);
-                            break;
-                        case "Igp_Number":
-                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.Igp_Number) : GRNS.OrderByDescending(a => a.Igp_Number);
-                            break;
+                     
                         default:
                             GRNS = GRNS.OrderByDescending(a => a.GRN_ID);
                             break;

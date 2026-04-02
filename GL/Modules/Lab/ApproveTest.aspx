@@ -149,7 +149,7 @@
                     },
                     {
                         "render": (data, type, full) => {
-                            return `<button type="button" class="btn-preview" onclick="PreviewReport(${full.Lab_Test_Detail_ID}, ${full.Lab_Test_ID},  ${full.pat_id}, '${full.Report_Colum}', ${full.Bill_Details_ID}, ${full.Test_ID})">Preview Report</button>`;
+                            return `<button type="button" class="btn-preview" onclick="PreviewReport(${full.Lab_Test_Detail_ID}, ${full.Lab_Test_ID}, ${full.pat_id}, '${full.Report_Colum}', ${full.Bill_Details_ID}, ${full.Test_ID})">Preview Report</button>`;
                         },
                         "width": "10%",
                         "orderable": false
@@ -177,7 +177,7 @@
             });
         }
 
-        function PreviewReport(Lab_Test_Detail_ID, Lab_Test_ID, Report_Colum, Bill_Details_ID, Test_ID) {
+        function PreviewReport(Lab_Test_Detail_ID, Lab_Test_ID, pat_id, Report_Colum, Bill_Details_ID, Test_ID) {
             window.open('../../ReportViewer.aspx?ReportName=TestResultQ' +
                 '&ReportTitle=Department Of Pathology' +
                 '&Test_IDs=' + Test_ID +
@@ -185,7 +185,8 @@
                 '&TransID=' + Lab_Test_ID +
                 '&labTDetailsID=' + Lab_Test_Detail_ID +
                 '&BillDetailID=' + Bill_Details_ID +
-                '&ReportColumn=' + Report_Colum);
+                '&ReportColumn=' + Report_Colum +
+                '&PatientID=' + pat_id);  // Added pat_id explicitly
         }
     </script>
 </asp:Content>
