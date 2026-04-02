@@ -873,7 +873,7 @@ namespace PMS.Modules.Lab
 
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
-                pt.Age = pat.Age_years.ToString();
+                pt.Age = pat.Age_years?.ToString() ?? "";
                 if (pat.Created_time.HasValue)
                     pt.Entry_Date = pat.Created_time.ToString();
 
@@ -1553,7 +1553,7 @@ namespace PMS.Modules.Lab
                 pt.Patient_No = Convert.ToInt32(pat.pat_id).ToString();
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
-                pt.Age = pat.Age_years.ToString();
+                pt.Age = pat.Age_years?.ToString() ?? "";
                 if (pat.Created_time.HasValue)
                     pt.Entry_Date = pat.Created_time.ToString();
 
@@ -1726,7 +1726,15 @@ namespace PMS.Modules.Lab
                 join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
                 join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
                 where (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
-                      (labtest_detail.Is_Result == false || labtest_detail.Is_Result == null) &&
+                      (
+                         labtest_detail.Is_Result == false
+                         || labtest_detail.Is_Result == null
+                         || (
+                             labtest_detail.Is_Result == true &&
+                             (labtest_detail.Refer_Doctor == null || labtest_detail.Refer_Doctor == "" || labtest_detail.Refer_Doctor == "0")
+                            )
+                        ) &&
+
                       bill_details.Test_Main_Department != "001" &&
                       (bill.isCancel == false || bill.isCancel == null) &&
                        bill.Bill_Date >= startDate &&
@@ -1785,6 +1793,7 @@ namespace PMS.Modules.Lab
                    join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
                    where labtest_detail.Is_Result == true &&
                          (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
+                         (labtest_detail.Refer_Doctor != null || labtest_detail.Refer_Doctor != "" || labtest_detail.Refer_Doctor != "0") &&
                          bill_details.Test_Main_Department != "001" &&
                          (bill.isCancel == false || bill.isCancel == null) &&
                                                 bill.Bill_Date >= startDate &&
