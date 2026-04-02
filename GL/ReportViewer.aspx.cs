@@ -570,6 +570,9 @@ namespace PMS
             else if (reportName == "Emergencypatient")
             {
                 string Emergency_ID = Request.QueryString["Emergency_ID"].ToString();
+                var user_id = AppConfig.UserID;
+                var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+
 
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
@@ -578,6 +581,7 @@ namespace PMS
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID));
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("UserName", userName);
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[0].Name.ToString());
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[1].Name.ToString());
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[2].Name.ToString());
