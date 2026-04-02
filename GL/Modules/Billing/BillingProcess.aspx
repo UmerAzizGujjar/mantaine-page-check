@@ -208,7 +208,13 @@
                 });
             }
 
-
+            function handleDiscountChange() {
+                var value = $('#txtDisPer').val();
+                // Ensure we have the latest value
+                setTimeout(function () {
+                    CalculateSummariesMaster(false);
+                }, 50);
+            }
             function BackToPrintPatient() {
                 var Bill_ID = '<%= Request.QueryString["Bill_ID"]%>'
                 var PatID = document.getElementById('<%=hdfPatient_ID.ClientID%>').value;
@@ -3184,6 +3190,79 @@
             //}
 
 
+            //function CalculateSummariesMaster(AmtWise) {
+            //    debugger;
+            //    AssignValue(txtDisPer, 0);
+            //    AssignValue(txtDisAmt, 0);
+            //    AssignValue(txtAmountReceived, 0);
+            //    var PerDisable = $('#txtDisPer').val();
+            //    var amoutDisable = $('#txtDisAmt').val();
+            //    var doctorShare = 0;
+            //    var Amount = 0;
+            //    var DisPer = 0;
+            //    var DisAmt = 0;
+            //    var NetAmount = 0;
+            //    var TotalAmount = 0;
+            //    var TotalDiscountAmount = 0;
+            //    var TotalNetAmount = 0;
+            //    var TotalDiscountAmount_Entered = 0;
+            //    var Qty = 0;
+            //    if (AmtWise) {
+            //        $.each($('#tblDetails tbody tr'), function (key, value) {
+            //            if (amoutDisable != "0") {
+            //                $('#txtDisPer').attr("disabled", true);
+            //            }
+            //            else {
+            //                $('#txtDisPer').attr("disabled", false);
+            //            }
+            //            Qty = $(value).find('input[name="txtQty"]').val();
+            //            TotalDiscountAmount_Entered = $('#txtDisAmt').val();
+            //            DisPer = 100 / parseFloat($('#txtTotalPayable').val()) * TotalDiscountAmount_Entered;
+            //            DisPer = parseFloat(DisPer.toFixed(6));
+            //            $(value).find('input[name="DisPer"]').val(DisPer.toFixed(2));
+            //            $(value).find('input[name="hdnDisPer"]').val(DisPer.toFixed(6));
+            //            Amount = $($(value).find('td')[5]).text();
+            //            DisAmt = DisPer * (Amount * Qty) / 100;
+            //            $(value).find('input[name="DisAmount"]').val(DisAmt.toFixed(2));
+            //            $(value).find('input[name="hdnDisAmount"]').val(DisAmt.toFixed(6));
+            //            NetAmount = (Qty * Amount) - DisAmt;
+            //            $($(value).find('td')[8]).text(NetAmount.toFixed(0));
+            //            $(value).find('input[name="hdnNet_Amount"]').val(NetAmount.toFixed(6));
+            //            TotalAmount += parseFloat(Amount);
+            //            TotalDiscountAmount += parseFloat(DisAmt);
+            //            TotalNetAmount += parseFloat(NetAmount);
+            //        });
+            //        $('#txtDisPer').val(DisPer.toFixed(2));
+            //        $('#hdntxtDisPer').val(DisPer.toFixed(6));
+            //    }
+            //    else {
+            //        debugger;
+            //        let Total = parseFloat($('#txtTotalPayable').val()) || 0;
+
+            //        TotalAmount = Total;
+            //        TotalDiscountAmount = (TotalAmount * PerDisable) / 100;
+            //        TotalNetAmount = TotalAmount - TotalDiscountAmount
+            //    }
+            //    $('#txtTotalPayable').val(TotalAmount.toFixed(0));
+            //    $('#txtDisAmt').val(TotalDiscountAmount.toFixed(0));
+            //    $('#hdnBaseNetPayable').val(TotalNetAmount.toFixed(0));
+            //    $('#txtNetPayable').val(TotalNetAmount.toFixed(0));
+            //    var AmtReceived = $('#txtAmountReceived').val();
+
+            //    if ($('#txtTotalPayable').val() != '') {
+            //        if (AmtReceived != '') {
+            //            $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed(0));
+            //        }
+            //        else
+            //            $('#txtBalances').val(TotalNetAmount.toFixed(0));
+            //    }
+            //    else {
+            //        $('#txtBalances').val(TotalNetAmount.toFixed(0));
+            //    }
+
+            //    CalculateSalesTax();
+
+            //}
             function CalculateSummariesMaster(AmtWise) {
                 debugger;
                 AssignValue(txtDisPer, 0);
@@ -3201,6 +3280,7 @@
                 var TotalNetAmount = 0;
                 var TotalDiscountAmount_Entered = 0;
                 var Qty = 0;
+
                 if (AmtWise) {
                     $.each($('#tblDetails tbody tr'), function (key, value) {
                         if (amoutDisable != "0") {
@@ -3231,12 +3311,52 @@
                 }
                 else {
                     debugger;
-                    let Total = parseFloat($('#txtTotalPayable').val()) || 0;
+                    // Get the current value directly without setTimeout
+                    var currentDisPer = parseFloat($('#txtDisPer').val()) || 0;
+                    var Total = parseFloat($('#txtTotalPayable').val()) || 0;
 
                     TotalAmount = Total;
-                    TotalDiscountAmount = (TotalAmount * PerDisable) / 100;
-                    TotalNetAmount = TotalAmount - TotalDiscountAmount
+                    TotalDiscountAmount = (TotalAmount * currentDisPer) / 100;
+                    TotalNetAmount = TotalAmount - TotalDiscountAmount;
+
+                    // Update summary fields
+                    $('#txtTotalPayable').val(TotalAmount.toFixed(0));
+                    $('#txtDisAmt').val(TotalDiscountAmount.toFixed(0));
+                    $('#hdnBaseNetPayable').val(TotalNetAmount.toFixed(0));
+                    $('#txtNetPayable').val(TotalNetAmount.toFixed(0));
+
+                    // Update each row's discount values
+                    $.each($('#tblDetails tbody tr'), function (key, value) {
+                        var qty = parseFloat($(value).find('input[name="txtQty"]').val()) || 1;
+                        var amount = parseFloat($($(value).find('td')[5]).text()) || 0;
+                        var rowTotal = amount * qty;
+                        var rowDisAmt = (rowTotal * currentDisPer) / 100;
+                        var rowNetAmount = rowTotal - rowDisAmt;
+
+                        $(value).find('input[name="DisPer"]').val(currentDisPer.toFixed(2));
+                        $(value).find('input[name="hdnDisPer"]').val(currentDisPer.toFixed(6));
+                        $(value).find('input[name="DisAmount"]').val(rowDisAmt.toFixed(2));
+                        $(value).find('input[name="hdnDisAmount"]').val(rowDisAmt.toFixed(6));
+                        $($(value).find('td')[8]).text(rowNetAmount.toFixed(0));
+                        $(value).find('input[name="hdnNet_Amount"]').val(rowNetAmount.toFixed(6));
+                    });
+
+                    var AmtReceived = $('#txtAmountReceived').val();
+                    if ($('#txtTotalPayable').val() != '') {
+                        if (AmtReceived != '') {
+                            $('#txtBalances').val((TotalNetAmount - AmtReceived).toFixed(0));
+                        }
+                        else
+                            $('#txtBalances').val(TotalNetAmount.toFixed(0));
+                    }
+                    else {
+                        $('#txtBalances').val(TotalNetAmount.toFixed(0));
+                    }
+
+                    CalculateSalesTax();
+                    return;
                 }
+
                 $('#txtTotalPayable').val(TotalAmount.toFixed(0));
                 $('#txtDisAmt').val(TotalDiscountAmount.toFixed(0));
                 $('#hdnBaseNetPayable').val(TotalNetAmount.toFixed(0));
@@ -3255,9 +3375,7 @@
                 }
 
                 CalculateSalesTax();
-
             }
-
             var isQty = 0;
             var Tmp_ITem = 0;
             var s = 0;
@@ -4140,10 +4258,18 @@
                     /* else {*/
                 /*    $('input[name="DisAmount"]').attr('disabled', true);*/
                     //}
+
+                    // Add this in your document.ready function
                     $('#txtDisPer').on('keyup', function () {
-                        $('#tblDetails').find('input[name="DisPer"]').prop('disabled', true);
-                        $('#tblDetails').find('input[name="DisAmount"]').prop('disabled', true);
+                        clearTimeout($(this).data('timeout'));
+                        $(this).data('timeout', setTimeout(function () {
+                            CalculateSummariesMaster(false);
+                        }, 100));
                     });
+                    //$('#txtDisPer').on('keyup', function () {
+                    //    $('#tblDetails').find('input[name="DisPer"]').prop('disabled', true);
+                    //    $('#tblDetails').find('input[name="DisAmount"]').prop('disabled', true);
+                    //});
                     $(document).on('keyup', 'input[name="DisPer"]', function () {
                         $('#txtDisPer').prop('disabled', true);
                         $('#txtDisAmt').prop('disabled', true);
@@ -7152,7 +7278,7 @@
             <label class="summary-label">Discount :</label>
         </div>
         <div class="col-lg-6 col-md-8 col-sm-12 discount-section">
-            <input type="text" id="txtDisPer" class="summary-input" style="width: 30% !important;height: 30px; text-align: right; font-size: 22px;" onkeyup="CalculateSummariesMaster(false)" />
+       <input type="text" id="txtDisPer" class="summary-input" style="width: 30% !important;height: 30px; text-align: right; font-size: 22px;" oninput="CalculateSummariesMaster(false)" />
             
             <input type="text" id="txtDisAmt" class="summary-input" style="width: 33% !important;height: 30px; text-align: right; font-size: 22px;" readonly onkeyup="CalculateSummariesMaster(true)" />
             <label>%</label>
