@@ -26,7 +26,25 @@ namespace PMS.Modules.Administrator
                 return new JavaScriptSerializer().Serialize(users);
             }
         }
+        [WebMethod]
+        public static string FillTestMainDepartment()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "Main Test Departments"
 
+                       where d.DataValue_Description != "Lab Test"
+
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
         [WebMethod]
         public static string LoadTemplates()
         {
