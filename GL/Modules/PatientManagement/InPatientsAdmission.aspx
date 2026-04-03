@@ -5485,10 +5485,10 @@
 
         }
         function FillRooms() {
-
+            debugger;
             var RoomType = $('#ctl00_MainContent_txtRoom_Type').val();
             PageMethods.FillRooms(RoomType, function (res) {
-
+                debugger;
                 var item = JSON.parse(res);
                 if (item != "") {
                     var rows = '';

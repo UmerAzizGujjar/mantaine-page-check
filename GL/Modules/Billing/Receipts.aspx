@@ -652,8 +652,6 @@
                     TotalBill_Amount += parseFloat(value.Balance_Amount);
                     $('#tblBills tbody').append(row);
 
-
-
                     var DischargeAmount = $('#txtDischageCharges').val();
                     if (DischargeAmount == '')
                         DischargeAmount = 0;
@@ -666,23 +664,29 @@
                 });
 
                 var id = '<%= Request.QueryString["Bill_ID"]%>';
-                if (id != "") { }
-                else {
-                    var Pending_Amount = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
-                    $('#txtNetBalance').val(Pending_Amount);
-                    $('#txtNetReceivable').val(Pending_Amount);
-                    $('#txtNetReceivable').css('background-color', 'red');
-                    $('#lblTotalBillsmsg').text('Total Bill Amount:- ');
+        if (id != "") { }
+        else {
+            var Pending_Amount = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
+            $('#txtNetBalance').val(Pending_Amount);
+            $('#txtNetReceivable').val(Pending_Amount);
+            $('#txtNetReceivable').css('background-color', 'red');
+            $('#lblTotalBillsmsg').text('Total Bill Amount:- ');
 
+            // ONLY AUTO-FILL IF SETTING IS 1
+            if (AutoFillReceiptAmount === 1) {
+                var netReceivable = parseFloat($('#txtNetReceivable').val());
+                if (netReceivable > 0 && !isNaN(netReceivable)) {
+                    $('#txtReceiptAmount').val(netReceivable);
+                    // Call CountNetAmount to update calculations
+                    CountNetAmount();
                 }
-                LoadReceipts(BillID);
-            }, function (error) {
-                alert(error.get_message());
-            });
-
-
-
+            }
         }
+        LoadReceipts(BillID);
+    }, function (error) {
+        alert(error.get_message());
+    });
+       }
         function LoadAdvance() {
             debugger;
             PageMethods.LoadAdvances(Patient_ID, function (resp) {
@@ -692,12 +696,9 @@
                 $.each(JSON.parse(resp), function (key, value) {
                     var TrnsDate = new Date(parseInt(value.Advance_Date.substr(6)));
                     TrnsDate = moment(TrnsDate).format('DD-MMM-YYYY');
-                    var row = '<tr> <td> <a href="javascript:void(0)"  onclick="OpenAdvance(' + value.Advance_ID + ')" >' + value.Advance_ID + ' </a> </td> <td> ' + TrnsDate + ' </td> <td> ' + value.Remarks + ' </td>  <td> ' + value.Amount + ' </td> </tr>';
+                    var row = '<tr> <td> <a href="javascript:void(0)"  onclick="OpenAdvance(' + value.Advance_ID + ')" >' + value.Advance_ID + ' </a> </td> <td> ' + TrnsDate + ' </td> <td> ' + value.Remarks + ' </td>  <td> ' + value.Amount + ' </td> <tr>';
                     TotalAmount += parseFloat(value.Amount);
                     $('#tblAdvance tbody').append(row);
-
-
-
 
                     var DischargeAmount = $('#txtDischageCharges').val();
                     if (DischargeAmount == '')
@@ -716,12 +717,20 @@
                 $('#txtNetReceivable').val(Total_amt);
                 $('#txtNetReceivable').css('background-color', 'red');
                 $('#lblTotalBillsmsg').text('Total Bill Amount:- ');
+
+                // ONLY AUTO-FILL IF SETTING IS 1
+                if (AutoFillReceiptAmount === 1) {
+                    var netReceivable = parseFloat($('#txtNetReceivable').val());
+                    if (netReceivable > 0 && !isNaN(netReceivable)) {
+                        $('#txtReceiptAmount').val(netReceivable);
+                        CountNetAmount();
+                    }
+                }
             });
         }
 
         function LoadReceipts(BillID) {
             debugger;
-
             PageMethods.LoadReceipts(BillID, function (resp) {
                 debugger;
                 $('#tblReceipts tbody tr').remove();
@@ -731,9 +740,9 @@
                 if (NoOf_Bills <= 0) {
                     $('#totalReceipt').val('0');
                     $('#txtNetBalance').val('0');
+                    $('#txtNetReceivable').val('0');
                     return;
                 }
-
 
                 $('#txtNetBalance').val(JSON.parse(resp));
                 var TotalReceiptAmount = 0;
@@ -751,7 +760,7 @@
 
                         TotalReceiptAmount += parseFloat(value.Amount);
                         $('#tblReceipts tbody').append(row);
-                       TotalReceipt_Amount = TotalReceiptAmount
+                        TotalReceipt_Amount = TotalReceiptAmount
                         var Total_amt = parseInt(AllTotalAmount) - (parseInt(TotalAmount) + parseInt(TotalReceipt_Amount));
                         $('#txtNetBalance').val(Total_amt);
                         $('#txtNetReceivable').val(Total_amt);
@@ -760,6 +769,14 @@
                 $('#lblTotalReceiptsmsg').text('Total Receipt Amount:- ');
                 $('#totalReceipt').val(TotalReceiptAmount);
 
+                // ONLY AUTO-FILL IF SETTING IS 1 AND RECEIPT AMOUNT IS EMPTY
+                if (AutoFillReceiptAmount === 1) {
+                    var netReceivable = parseFloat($('#txtNetReceivable').val());
+                    if (netReceivable > 0 && !isNaN(netReceivable) && $('#txtReceiptAmount').val() == '') {
+                        $('#txtReceiptAmount').val(netReceivable);
+                        CountNetAmount();
+                    }
+                }
             }, function (error) {
                 alert(error.get_message());
             });
@@ -1310,7 +1327,7 @@
             $("#txtDateTo").val($.datepicker.formatDate('dd M yy', new Date()));
             $("#txtReceiptDate").val($.datepicker.formatDate('dd M yy', new Date()));
 
-
+            LoadAutoFillSetting();
             var RcptID = '<%= Request.QueryString["Receipt_ID"]%>';
 
             if (RcptID != "") {
@@ -1338,6 +1355,15 @@
             GetBoxesVisibility();
 
         });
+        var AutoFillReceiptAmount = 0; // Global variable to store setting
+        function LoadAutoFillSetting() {
+            PageMethods.GetAutoFillReceiptSetting(function (resp) {
+                AutoFillReceiptAmount = parseInt(resp);
+            }, function (error) {
+                console.log(error.get_message());
+                AutoFillReceiptAmount = 0; // Default to 0 if error
+            });
+        }
         function PrinAllReceiptDetail() {
             var MrNo = $('#txtMRNo').val();
             var chkSummary = document.getElementById('chkSummary').checked;
