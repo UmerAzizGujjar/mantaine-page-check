@@ -601,7 +601,7 @@ namespace PMS.Modules.Lab
                             td.Levels,
                             t.Result_Type_Image,
                             Is_Approve = td.isApproved == null ? false : true,
-                            td.Refer_Doctor,
+                            td.Refer_Doctor
 
 
                         }).ToList();
@@ -1892,6 +1892,43 @@ namespace PMS.Modules.Lab
             catch (Exception ex)
             {
                 return "[]";
+            }
+        }
+
+        [WebMethod]
+        public static string GetAll_XRayLevel()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (AppConfig.UserID == Guid.Empty)
+                {
+                    return (new JavaScriptSerializer()).Serialize(new List<object>());
+                }
+
+                Guid currentUserIdGuid = AppConfig.UserID;
+
+                var levels = (from uwt in db.User_Wise_Templates
+                              join uwtDetail in db.User_Wise_Template_Details
+                                  on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
+                              join xr in db.XRayLevels
+                                  on uwtDetail.DataValue_ID equals xr.Levels
+                              join dv in db.DataValues on xr.Levels equals dv.DataValue_Name
+                              join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                              where uwt.User_Id == currentUserIdGuid
+                                    && uwtDetail.User_Id == currentUserIdGuid
+                                    && uwt.is_cancel == false
+                                    && uwtDetail.DataValue_ID != null
+                                    && uwtDetail.DataValue_ID != ""
+                                    && vs.ValueSet_Name == "X-Ray Format"
+                              select new
+                              {
+                                  xr.XRayLevel_ID,
+                                  xr.Levels,
+                                  xr.FixValues,
+                                  DataValue_Description = dv.DataValue_Description
+                              }).Distinct().ToList();
+
+                return (new JavaScriptSerializer()).Serialize(levels);
             }
         }
     }

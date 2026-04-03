@@ -18,42 +18,40 @@ namespace PMS.Inventory
         {
 
         }
+
         [WebMethod]
         public static bool isDeleteAllow()
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-
-            bool value = Convert.ToBoolean(DBClass.getField("select  isnull(AllowPatientDelete,0) from aspnet_users where username='" + AppConfig.UserName + "'"));
+            bool value = Convert.ToBoolean(DBClass.getField("select isnull(AllowPatientDelete,0) from aspnet_users where username='" + AppConfig.UserName + "'"));
             return value;
-
         }
+
         [WebMethod]
         public static List<object> GetAuditInfo(int invoiceId)
         {
-            string result = string.Empty;
-
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var query = db.spGetAuditRecordAginstGRN(invoiceId).ToList<object>();
-
                 return query;
             }
-
         }
+
         [WebMethod]
         public static object GetMasterAndDetail(int invoiceId)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                // Master record
+                // Master record - optimized without DBClass.getField
                 var master = (from m in db.GRN_Masters
+                              join v in db.AP_Vendors on m.VendorId equals v.Vendor_ID.ToString()
                               where m.GRN_ID == invoiceId
                               select new
                               {
                                   m.GRN_ID,
                                   m.GRN_Num,
                                   m.GRN_Date,
-                                  VendorName = DBClass.getField("select Vendor_Name from AP_Vendors where Vendor_ID=" + m.VendorId),
+                                  VendorName = v.Vendor_Name,
                                   m.Status,
                                   m.Remarks
                               }).FirstOrDefault();
@@ -69,8 +67,6 @@ namespace PMS.Inventory
                                   d.GRNQty,
                                   d.Rate,
                                   d.Amount,
-                                 // d.BounusQty
-
                               }).ToList();
 
                 return new
@@ -80,6 +76,7 @@ namespace PMS.Inventory
                 };
             }
         }
+
         [WebMethod]
         public static bool DeleteRecord(string GRNID)
         {
@@ -95,7 +92,6 @@ namespace PMS.Inventory
                               select itm.GRN_ID).FirstOrDefault();
                 if (GRN_Id != 0)
                 {
-
                     DBClass.exectueQuery("Update GRN_Master set Status='Cancelled',IsDeleted=1,Deleted_By='" + AppConfig.UserID + "',Deleted_Time=GetDate() where GRN_ID =" + GRN_Id, tranObj, con);
                     tranObj.Commit();
                 }
@@ -105,9 +101,7 @@ namespace PMS.Inventory
                     return false;
                 }
             }
-#pragma warning disable CS0168 // The variable 'ex' is declared but never used
             catch (Exception ex)
-#pragma warning restore CS0168 // The variable 'ex' is declared but never used
             {
                 if (tranObj != null)
                     tranObj.Rollback();
@@ -115,6 +109,7 @@ namespace PMS.Inventory
             }
             return true;
         }
+
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
@@ -122,43 +117,56 @@ namespace PMS.Inventory
             {
                 using (var _dbContext = new DataBaseDataContext())
                 {
-                    string userId = HttpContext.Current.Session["UserId"].ToString();
+                    _dbContext.CommandTimeout = 180;
 
                     var Total_GRNS = _dbContext.GRN_Masters.Count();
+
+                    // Optimized query following IGP structure
                     var GRNS = from GRN in _dbContext.GRN_Masters
-                               where
-                                    ((GRN.GRN_Num.ToString().Contains(searchValue) || GRN.Remarks.ToString().Contains(searchValue) || _dbContext.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(GRN.VendorId)).Select(po => po.Vendor_Name).FirstOrDefault().ToString().Contains(searchValue) || GRN.Status.Contains(searchValue) || _dbContext.GetPONumberagainstGRNID(GRN.GRN_ID).Contains(searchValue) || _dbContext.GetIGPNumberagainstGRNID(GRN.GRN_ID).Contains(searchValue)))
-                                  select new
-                                  {
-                                      GRN_ID = GRN.GRN_ID,
-                                      GRN_Num = GRN.GRN_Num,
-                                      Remarks = GRN.Remarks,
-                                      Approved_Date = GRN.Approved_Date,
-                                      Vendor_Name = _dbContext.AP_Vendors.Where(po => po.Vendor_ID == Convert.ToInt32(GRN.VendorId)).Select(po => po.Vendor_Name).FirstOrDefault().ToString(),
-                                      Status = GRN.Status,
-                                      Creation_Date = GRN.Creation_Date,
-                                      Update_Date = GRN.Update_Date,
-                                      CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == GRN.Created_By).Select(x => x.UserName).FirstOrDefault(),
-                                      Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == GRN.Updated_By).Select(x => x.UserName).FirstOrDefault(),
-                                     
-                                      po_Number = _dbContext.GetPONumberagainstGRNID(GRN.GRN_ID),
-                                      Igp_Number = _dbContext.GetIGPNumberagainstGRNID(GRN.GRN_ID),
-                                  };
+                               join V in _dbContext.AP_Vendors on GRN.VendorId equals V.Vendor_ID.ToString()
+                               where (GRN.GRN_Num.ToString().Contains(searchValue) ||
+                                      V.Vendor_Name.ToString().Contains(searchValue) ||
+                                      GRN.Status.ToString().Contains(searchValue) ||
+                                      GRN.Remarks.ToString().Contains(searchValue))
+                               select new
+                               {
+                                   GRN_ID = GRN.GRN_ID,
+                                   GRN_Num = GRN.GRN_Num,
+                                   Vendor_Name = V.Vendor_Name,
+                                   Remarks = GRN.Remarks,
+                                   Status = GRN.Status,
+                                   Approved_Date = GRN.Approved_Date,
+                                   Creation_Date = GRN.Creation_Date,
+                                   Update_Date = GRN.Update_Date,
+                                   CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == GRN.Created_By).Select(x => x.UserName).FirstOrDefault(),
+                                   Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == GRN.Updated_By).Select(x => x.UserName).FirstOrDefault(),
+                                   // These fields are kept for compatibility but not displayed
+                                   po_Number = "",
+                                   Igp_Number = ""
+                               };
 
                     var FilteredCount = GRNS.Count();
+
                     switch (sortColumn)
                     {
                         case "GRN_Num":
                             GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.GRN_Num) : GRNS.OrderByDescending(a => a.GRN_Num);
                             break;
-                     
+                        case "Vendor_Name":
+                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.Vendor_Name) : GRNS.OrderByDescending(a => a.Vendor_Name);
+                            break;
+                        case "Status":
+                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.Status) : GRNS.OrderByDescending(a => a.Status);
+                            break;
+                        case "CreatedBy":
+                            GRNS = sortColumnDirection == "asc" ? GRNS.OrderBy(a => a.CreatedBy) : GRNS.OrderByDescending(a => a.CreatedBy);
+                            break;
                         default:
                             GRNS = GRNS.OrderByDescending(a => a.GRN_ID);
                             break;
                     }
 
                     var GRNLIST = GRNS.Skip(start).Take(length).ToList();
-
                     var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_GRNS, data = GRNLIST };
                     return jsonData;
                 }
@@ -168,7 +176,6 @@ namespace PMS.Inventory
                 throw new Exception("Error fetching GRN list", ex);
             }
         }
-
 
         [WebMethod]
         public static string GetUserColumnPreferences()

@@ -1039,14 +1039,14 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
 
                                         <!-- Logout with icon -->
-                                   <a href="javascript:void(0);" 
-                                       onclick="if(confirm('Are you sure you want to log out?')) document.getElementById('<%= HeadLoginStatus.ClientID %>').click(); return false;"
-                                       style="text-decoration: none; color: black !important" 
-                                       class="dropdown-item">
-                                        <i class="fa fa-sign-out mr-2" aria-hidden="true"></i>Log Out
-                                    </a>
+                               <a href="javascript:void(0);" 
+                                   onclick="handleLogout(); return false;"
+                                   style="text-decoration: none; color: black !important" 
+                                   class="dropdown-item">
+                                   <i class="fa fa-sign-out mr-2" aria-hidden="true"></i>Log Out
+                                </a>
 
-                                        <!-- Hidden actual logout control -->
+<!-- Hidden actual logout control -->
                                         <asp:LoginStatus ID="HeadLoginStatus" runat="server"
                                             LogoutAction="Redirect"
                                             LogoutText=""
@@ -1203,6 +1203,15 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
         });
 
         $("#ctl00_lblMessage").hide();
+    </script>
+    <script type="text/javascript">
+        function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                // Direct redirect to logout page - most reliable
+                window.location.href = '<%= ResolveUrl("~/Login.aspx?logout=true") %>';
+            }
+            return false;
+        }
     </script>
     <script type="text/javascript">
         if ('ontouchstart' in document.documentElement) document.write("<script src='wwwroot/Tibbit_theme/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
