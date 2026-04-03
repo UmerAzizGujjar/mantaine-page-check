@@ -11,8 +11,7 @@
 
             $('#btnsaveprint').click(function () {
 
-                //$('#btnsaveprint').attr('disabled', true);
-                //$('#btnsaveprint').attr('disabled', true);
+  
 
                 $("#ctl00_MainContent_panelshow").hide();
             });
