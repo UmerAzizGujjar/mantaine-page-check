@@ -252,7 +252,7 @@
                         "orderable": false
                     },
                     { "data": "VendorName", "orderable": false },
-                    { "data": "PONum", "name": "PONum", "orderable": true },
+                
                     { "data": "Remarks", "orderable": false },
                     { "data": "VehicleNum", "orderable": false },  // ← NEW
                     { "data": "CreatedBy", "orderable": false },   // ← NEW
@@ -513,7 +513,7 @@
                     <th>Igp #</th>
                     <th>Igp Date</th>
                     <th>Vendor Name</th>
-                    <th>PO #</th>
+             
                     <th>Remarks</th>
                     <th>Vehicle #</th>
                     <th>Created By</th>

@@ -118,7 +118,7 @@
                 $('#ddlTestDpt').html(options);
                 var id = $('#ddlTestDpt').val();
                 if (id == "005") $('#GropuCategoryRow').show();
-                
+
             });
         }
         function FillGroupHeaderLevel1() {
@@ -130,7 +130,7 @@
                 });
 
                 $('#ddlGroupHeader').html(options);
-               
+
             });
         }
         function Altrasound_level() {
@@ -143,7 +143,7 @@
 
                 $('#ddlAltrasound_level').html(options);
                 levelType = options;
-              
+
             });
         }
         $(document).ready(function () {
@@ -195,12 +195,13 @@
                 GetGroups();
             }
 
+            LoadXRayLevel();
         });
         $(document).ready(function () {
             if (CKEDITOR) {
-               
+
                 CKEDITOR.replace('fixed_value');
-                
+
 
             }
             //temparory data store
@@ -215,6 +216,9 @@
             });
             $("#btnSaveUltrasound").on('click', function () {
                 save_ultraSound();
+            });
+            $("#btnSaveXRay").on('click', function () {
+                save_xray();
             });
             $("#loadultraSounds").on('click', function () {
                 debugger;
@@ -246,6 +250,41 @@
                         $('#ddllevelvalue' + (i + 1) + '').val(loadval[i].Levels);
                     }
                     $("#loadultraSounds").attr('Disabled', true);
+                });
+            });
+
+            $("#loadXRays").on('click', function () {
+
+                PageMethods.GetXRayss(function (res) {
+                    var test = JSON.parse(res);
+                    var ckeditor = test;
+                    var loadval = test;
+                    var row = '';
+                    var i = 0;
+
+                    for (i = 0; i < test.length; i++) {
+                        row += '<tr><td><input type="hidden" name="xrayLevel_ID" value="' + test[i].XRayLevel_ID + '" />' +
+                            '<select name="xraylevelvalue" id="ddlXRaylevelvalue' + (i + 1) + '">' + xrayLevelType + '</select></td>';
+
+                        row += '<td><textarea id="txtXRayFixedValueType' + (i + 1) + '" name="txtXRayFixedValueType">' + test[i].FixValues + '</textarea></td>';
+
+                        row += '<td style="width: 127px;"><input type="hidden" name="xray_value_id" value="">' +
+                            '<a href="javascript:void(0)" onclick="value_delete(this)" style="pointer-events: none;">Delete</a></td></tr>';
+                    }
+
+                    $('#TblXRay_Value').append(row);
+
+                    for (var k = 0; k < ckeditor.length; k++) {
+                        var id = 'txtXRayFixedValueType' + (k + 1);
+                        CKEDITOR.replace(id, { height: 50 });
+                        CKEDITOR.instances[id].setData(ckeditor[k].FixValues);
+                    }
+
+                    for (i = 0; i < loadval.length; i++) {
+                        $('#ddlXRaylevelvalue' + (i + 1)).val(loadval[i].Levels);
+                    }
+
+                    $("#loadXRays").attr('disabled', true);
                 });
             });
         });
@@ -349,13 +388,13 @@
                 else {
                     $('#ddlOutSourceLabs').val(data.Out_Source_Lab_ID);
                 }
-              
+
 
                 $('#Rpt_Time').val(data.Reporting_Time);
                 $('#Rpt_Day').val(data.Reporting_Day);
 
                 $('#txtOrder').val(data.Group_Order);
-                
+
                 // Set waiting time
                 if (data.WaitingTime != null && data.WaitingTime != '') {
                     $('#waiting_time').val(data.WaitingTime);
@@ -378,14 +417,14 @@
                 if (!data.Active) {
                     $('#test_active')[0].checked = false;
                 }
-                
-                
+
+
                 $('input:radio[value=fixed]').click();
                 $('#fixed_value').val(data.Fixed_Value);
 
                 CKEDITOR.instances.fixed_value.setData(data.Fixed_Value);
 
-              
+
                 var rows = '';
                 $.each(values, function (key, value) {
                     rows += '<tr><td><input type="hidden" name="type" value="' + value.Patient_Type + '">' + value.Patient_Type_Name + '</td><td><input type="hidden" name="start" value="' + value.Start_Range + '">' + value.Start_Range + '</td><td><input type="hidden" name="end" value="' + value.End_Range + '">' + value.End_Range + '</td><td style="width:127px;"><input type="hidden" name="value_id" value="' + value.TestValue_ID + '"><a href="javascript:void(0)" onclick="value_edit(this)">Edit</a> | <a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td></tr>';
@@ -539,7 +578,7 @@
             var GroupOrder = $("#txtOrder").val();
             if ($(txtOrder).val() == '')
                 GroupOrder = 0;
-            
+
             var waitingTimeValue = $(waiting_time).val();
             if (waitingTimeValue == '' || waitingTimeValue == null)
                 waitingTimeValue = "0";
@@ -558,7 +597,7 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                     return;
+                    return;
                 }
             }
 
@@ -620,10 +659,10 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-                     location.href = "TestDefinationList.aspx";
-                    
+                    location.href = "TestDefinationList.aspx";
+
                 });
-            
+
         }
         function GetGroups(d) {
             var options = '<option value="">Select Group</option>';
@@ -777,7 +816,7 @@
             var Row = $(reference).parents('tr')[0];
             var PatientCategory = $(Row).find('#IPDPatientCategory');
             var TestRate = $(Row).find('#IPDTestRate');
-            
+
             PatientCategory.parent().html('<select style="width: 115px !important;">' + Patients_Categories + '</select>');
             TestRate.parent().html('<input type="text" id="IPDTestRate" style="width: 65px !important;" value="' + TestRate.val() + '"/>');
             $(reference).parent().html('<a href="javascript:void(0)" onclick="SaveIPDTestRates(this)">Save</a> | <a href="javascript:void(0)" onclick="DeleteIPDTestRates(this)">Delete</a>');
@@ -803,7 +842,7 @@
                     $($(reference).parents('tr')[0]).remove();
                 }
             });
-            
+
         }
         function OPD_value() {
             debugger;
@@ -860,11 +899,75 @@
                     $($(reference).parents('tr')[0]).remove();
                 }
             });
-            
+
         }
         $(function () {
             $("#tabs").tabs();
         });
+
+
+        var xrayLevelType = "";
+
+        function LoadXRayLevel() {
+            PageMethods.FillXRayLevel(function (resp) {
+                var options = '<option value="">Select Format</option>';
+                $.each(JSON.parse(resp), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '"> ' + value.DataValue_Description + ' </option>';
+                });
+                $('#ddlXRay_level').html(options);
+                xrayLevelType = options;
+            });
+        }
+
+        function XRay_value() {
+            var html = '';
+            var rowlength = document.getElementById('TblXRay_Value').rows.length;
+            var fixedValRow = 'txtXRayFixedValueType' + rowlength;
+
+            html += '<tr><td><select style="margin-left: 20px;" name="xraylevelvalue" id="ddlXRaylevelvalue' + rowlength + '">' + xrayLevelType + '</select></td>';
+            html += '<td><textarea id="txtXRayFixedValueType' + rowlength + '" name="txtXRayFixedValueType"></textarea></td>';
+            html += '<td style="width: 127px;"><input type="hidden" name="xray_value_id" value=""><a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td></tr>';
+
+            $('.XRay_values_table table tbody').append(html);
+            CKEDITOR.replace(fixedValRow, { height: 50 });
+        }
+
+        
+
+        function save_xray() {
+            var XRay_value = [];
+            $('#TblXRay_Value tbody tr').each(function (key, value) {
+                var myArray = {};
+                var Data = CKEDITOR.instances['txtXRayFixedValueType' + (key + 1) + '']?.getData() || '';
+                var Levels = $(value).find('select[name="xraylevelvalue"]').val();
+                var XRayLevelID = $(value).find('[name="xrayLevel_ID"]').val();
+                var FixValues = Data;
+
+                myArray.Levels = Levels;
+                myArray.FixValues = FixValues;
+                myArray.XRayLevelID = XRayLevelID;
+                XRay_value.push(myArray);
+            });
+
+            PageMethods.SaveXRay(XRay_value, function (res) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'X-Ray Data Has been Successfully Saved.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            });
+        }
+
+        
+
+
     </script>
 
 
@@ -1084,7 +1187,29 @@
                             <li><a href="#Tab-3">List Choose  Result</a></li>
                             <li><a href="#Tab-4">Image Upload</a></li>
                             <li><a href="#Tab-5">Ultrasound Format</a></li>
+                            <li><a href="#Tab-6">X-Ray Format</a></li>
                         </ul>
+                        <div id="Tab-6">
+                            <div class="XRay_values_table">
+                                <fieldset>
+                                    <input type="button" class="btn btn-primry" id="loadXRays" value="X-Ray Format" style="width: auto !important;" />
+                                    <a href="javascript:void(0)" style="font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="XRay_value()"></a>
+                                    <table id="TblXRay_Value" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 229px;">Format</th>
+                                                <th style="width: 458px;">Fix Value</th>
+                                                <th style="width: 103px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <div class="col-lg-3">
+                                        <input type="button" class="btn btn-primry" name="Save" id="btnSaveXRay" value="Save" />
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
                         <div id="Tab-5">
                             <div class="Ultra_values_table">
                                 <fieldset>

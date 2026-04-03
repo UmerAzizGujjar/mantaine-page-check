@@ -220,9 +220,8 @@
                 },
                 "columns": [
                     { "data": "GRN_ID", "visible": false, },
-                    { "data": "po_Number", "name": "po_Number", "orderable": true },
+                
                     { "data": "GRN_Num", "name": "GRN_Num", "orderable": true },
-                    { "data": "Igp_Number", "name": "Igp_Number", "orderable": true },
                     {
                         "data": "Approved_Date",
                         "render": function (data, type, full) {
@@ -454,8 +453,7 @@
             <thead id="ihead">
                 <tr>              
                     <th>GRN ID</th>
-                    <th>PO Num</th>
-                    <th>GRN Num</th>
+                    
                     <th>IGP Num</th>
                     <th>Approval Date</th>
                     <th>Vendor Name</th>
