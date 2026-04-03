@@ -32,12 +32,13 @@ namespace PMS.Modules.Administrator
         {
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
             {
-                var templateList = (from xr in db.XRayLevels
-                                    where xr.Levels != null && xr.FixValues != null
+                var templateList = (from dv in db.DataValues
+                                    join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                    where vs.ValueSet_Name == "X-Ray Format"
                                     select new
                                     {
-                                        TemplateValue = xr.XRayLevel_ID,  
-                                        DataValue_Description = xr.Levels  
+                                        TemplateValue = dv.DataValue_Name,  // "001", "002" as string
+                                        DataValue_Description = dv.DataValue_Description
                                     }).ToList();
 
                 return new JavaScriptSerializer().Serialize(templateList);
@@ -47,7 +48,7 @@ namespace PMS.Modules.Administrator
         public class TemplateDetailItem
         {
             public string userid { get; set; }
-            public int templateId { get; set; } 
+            public string templateId { get; set; }  // Will receive "001", "002"
         }
 
         [WebMethod]
@@ -96,10 +97,11 @@ namespace PMS.Modules.Administrator
                         .Where(x => x.User_Wise_Template_Id == masterID)
                         .ToList();
 
-                    var newTemplateIds = new HashSet<int>(AllItemDetail.Select(x => x.templateId));
+                    var newTemplateIds = new HashSet<string>(AllItemDetail.Select(x => x.templateId));
 
+                    // Delete removed templates
                     var toDelete = existingDetails
-                        .Where(ed => ed.DataValue_ID.HasValue && !newTemplateIds.Contains(ed.DataValue_ID.Value))
+                        .Where(ed => !string.IsNullOrEmpty(ed.DataValue_ID) && !newTemplateIds.Contains(ed.DataValue_ID))
                         .ToList();
 
                     if (toDelete.Any())
@@ -110,7 +112,7 @@ namespace PMS.Modules.Administrator
                     foreach (var newItem in AllItemDetail)
                     {
                         var existing = existingDetails
-                            .FirstOrDefault(ed => ed.DataValue_ID.HasValue && ed.DataValue_ID.Value == newItem.templateId);
+                            .FirstOrDefault(ed => ed.DataValue_ID == newItem.templateId);
 
                         if (existing != null)
                         {
@@ -118,11 +120,12 @@ namespace PMS.Modules.Administrator
                         }
                         else
                         {
+                            // Save DataValue_Name directly as string
                             db.User_Wise_Template_Details.InsertOnSubmit(new User_Wise_Template_Detail
                             {
                                 User_Wise_Template_Id = masterID,
                                 User_Id = userGuid,
-                                DataValue_ID = newItem.templateId  // Stores XRayLevel_ID
+                                DataValue_ID = newItem.templateId  // Saves "001", "002"
                             });
                         }
                     }
@@ -142,39 +145,73 @@ namespace PMS.Modules.Administrator
         {
             using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
             {
-                // Get all X-Ray Levels from XRayLevels table
-                var allTemplates = (from xr in db.XRayLevels
+                // Get all X-Ray Format DataValues
+                var allTemplates = (from dv in db.DataValues
+                                    join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                    where vs.ValueSet_Name == "X-Ray Format"
                                     select new
                                     {
-                                        TemplateId = xr.XRayLevel_ID,
-                                        Levels = xr.Levels,
-                                        FixValues = xr.FixValues
+                                        TemplateId = dv.DataValue_Name,  // "001", "002"
+                                        TemplateDescription = dv.DataValue_Description
                                     }).ToList();
 
-                // Get saved details from User_Wise_Template_Details
+                // Get saved details - remove IsNullOrEmpty, use != null and != ""
                 var details = (from detail in db.User_Wise_Template_Details
                                join usr in db.aspnet_Users on detail.User_Id equals usr.UserId
                                where detail.User_Wise_Template_Id == id
-                                     && detail.DataValue_ID.HasValue
+                                     && detail.DataValue_ID != null
+                                     && detail.DataValue_ID != ""
                                select new
                                {
                                    detail.User_Id,
                                    user_name = usr.UserName,
-                                   SavedValue = detail.DataValue_ID.Value
+                                   SavedValue = detail.DataValue_ID  // Gets "001", "002"
                                }).ToList();
 
-                // Join in memory: match SavedValue (XRayLevel_ID) with TemplateId
+                // Join to get template descriptions
                 var result = (from d in details
                               join t in allTemplates on d.SavedValue equals t.TemplateId
                               select new
                               {
                                   User_Id = d.User_Id,
                                   user_name = d.user_name,
-                                  Template_Id = t.TemplateId,
-                                  Template_Description = t.Levels  // Show Levels as template name
+                                  Template_Id = t.TemplateId,  // "001", "002"
+                                  Template_Description = t.TemplateDescription
                               }).ToList();
 
                 return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string GetAll_XRayLevel()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (AppConfig.UserID == Guid.Empty)
+                {
+                    return (new JavaScriptSerializer()).Serialize(new List<object>());
+                }
+
+                Guid currentUserIdGuid = AppConfig.UserID;
+
+                var levels = (from uwt in db.User_Wise_Templates
+                              join uwtDetail in db.User_Wise_Template_Details
+                                  on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
+                              join xr in db.XRayLevels
+                                  on uwtDetail.DataValue_ID equals xr.Levels  // "001" = "001"
+                              where uwt.User_Id == currentUserIdGuid
+                                    && uwtDetail.User_Id == currentUserIdGuid
+                                    && uwt.is_cancel == false
+                                    && !string.IsNullOrEmpty(uwtDetail.DataValue_ID)
+                              select new
+                              {
+                                  xr.XRayLevel_ID,
+                                  xr.Levels,
+                                  xr.FixValues
+                              }).Distinct().ToList();
+
+                return (new JavaScriptSerializer()).Serialize(levels);
             }
         }
     }

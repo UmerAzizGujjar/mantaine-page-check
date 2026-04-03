@@ -112,7 +112,8 @@
 
            $('#tblItemDescriptionDetail tr').each(function () {
                var tmplIdVal = $(this).find('input[name=txt_template_id]').val();
-               AllItemDetail.push({ userid: userid, templateId: parseInt(tmplIdVal) });
+               // REMOVE parseInt() - keep as string to preserve "001", "002"
+               AllItemDetail.push({ userid: userid, templateId: tmplIdVal });
            });
 
            $.ajax({

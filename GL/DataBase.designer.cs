@@ -970,6 +970,7 @@ namespace PMS
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -168653,7 +168654,7 @@ namespace PMS
 
         private System.Nullable<int> _User_Wise_Template_Id;
 
-        private System.Nullable<int> _DataValue_ID;
+        private string _DataValue_ID;
 
         private System.Nullable<System.Guid> _User_Id;
 
@@ -168665,7 +168666,7 @@ namespace PMS
         partial void OnUser_Wise_Template_Detail_IdChanged();
         partial void OnUser_Wise_Template_IdChanging(System.Nullable<int> value);
         partial void OnUser_Wise_Template_IdChanged();
-        partial void OnDataValue_IDChanging(System.Nullable<int> value);
+        partial void OnDataValue_IDChanging(string value);
         partial void OnDataValue_IDChanged();
         partial void OnUser_IdChanging(System.Nullable<System.Guid> value);
         partial void OnUser_IdChanged();
@@ -168716,8 +168717,8 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DataValue_ID", DbType = "Int")]
-        public System.Nullable<int> DataValue_ID
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_DataValue_ID", DbType = "NVarChar(10)")]
+        public string DataValue_ID
         {
             get
             {

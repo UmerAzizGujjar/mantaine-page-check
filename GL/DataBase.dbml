@@ -7556,7 +7556,7 @@
     <Type Name="User_Wise_Template_Detail">
       <Column Name="User_Wise_Template_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="User_Wise_Template_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DataValue_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DataValue_ID" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
       <Column Name="User_Id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
     </Type>
   </Table>
