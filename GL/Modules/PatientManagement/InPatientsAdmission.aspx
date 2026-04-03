@@ -6,6 +6,49 @@
     <script type="text/javascript">
         var btnVal = '';
         localStorage.IsDischarge = 0;
+        function autoSelectGender() {
+            var prefix = $('#ddl_name').val();
+            var $gender = $('#ddl_Gender');
+            var MALE_VALUE = 'M';
+            var FEMALE_VALUE = 'F';
+
+            var targetValue = '';
+
+            if (prefix === 'Mr.') {
+                targetValue = MALE_VALUE;
+            } else if (prefix === 'Mrs.' || prefix === 'Ms.') {
+                targetValue = FEMALE_VALUE;
+            }
+
+            if (!targetValue || $gender.length === 0) return;
+            var optionsCount = $gender.find('option').length;
+
+            if (optionsCount <= 1) {
+                console.log("Gender list not loaded yet. Waiting for data...");
+                var checkInterval = setInterval(function () {
+                    var newOptionsCount = $gender.find('option').length;
+                    if (newOptionsCount > 1) {
+                        clearInterval(checkInterval);
+                        $gender.val(targetValue).trigger('change');
+                        if ($gender.hasClass('select2-hidden-accessible')) {
+                            $gender.trigger('select2:select');
+                        }
+                        console.log("Gender set to: " + targetValue);
+                    }
+                }, 100);
+                setTimeout(function () {
+                    clearInterval(checkInterval);
+                }, 5000);
+                return;
+            }
+
+            $gender.val(targetValue).trigger('change');
+            if ($gender.hasClass('select2-hidden-accessible')) {
+                $gender.trigger('select2:select');
+            }
+
+            console.log("Gender set to: " + targetValue);
+        }
         $(document).ready(function () {
             getprvpat_id();
 
@@ -214,6 +257,24 @@
                     });
                 });
             });
+
+
+                $('#ddl_name').off('change').on('change', function () {
+                    autoSelectGender();
+                });
+
+                $('#PatientModel').on('shown.bs.modal', function () {
+                    setTimeout(function () {
+                        var $gender = $('#ddl_Gender');
+                        if ($gender.find('option').length <= 1) {
+                            fillGenderDropdown(function () {
+                                autoSelectGender();
+                            });
+                        } else {
+                            autoSelectGender();
+                        }
+                    }, 300);
+                });
         });
             // Initialize birth certificate date pickers
             $("#ctl00_MainContent_txtBirthDate").datepicker({ dateFormat: 'mm/dd/yy' });
