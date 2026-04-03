@@ -1115,8 +1115,10 @@ function scheduleCalcTotal(delay) {
     }, wait);
 }
 
-function calcTotal(forceNow) {
-    if (forceNow === true) {
+        function calcTotal(forceNow) {
+            debugger;
+            if (forceNow === true) {
+                debugger;
         runCalcTotalCore();
         return;
     }
@@ -1619,6 +1621,8 @@ function calcTotal(forceNow) {
                 var Rate = parseFloat($row.find('input[name=txtRate]').val()) || 0;
                 var Qty = parseFloat($row.find('input[name=txtQty]').val()) || 0;
                 var amountExclusiveTaxes = Qty * Rate;
+                var UomQty = parseFloat($row.find('input[name=txtUOMQty]').val()) || 0;
+                var PerPice = Rate / UomQty;
 
                 // Calculate discount percentage for this row
                 var discpercent = 0;
@@ -1666,7 +1670,7 @@ function calcTotal(forceNow) {
                 var isByDefault = $('#chkByDefault').is(':checked');
 
                 if (BonusQty > 0 && !isByDefault) {
-                    var bonusBase = BonusQty * Rate;
+                    var bonusBase = BonusQty * PerPice;
                     var bonusST = (STpercent / 100) * bonusBase;
                     var bonusAdv = (AdvPercent / 100) * bonusBase;
                     bonusTaxTotal = bonusST + bonusAdv;
@@ -1730,6 +1734,8 @@ function calcTotal(forceNow) {
                 var Rate = parseFloat($row.find('input[name=txtRate]').val()) || 0;
                 var Qty = parseFloat($row.find('input[name=txtQty]').val()) || 0;
                 var amountExclusiveTaxes = Qty * Rate;
+                var UomQty = parseFloat($row.find('input[name=txtUOMQty]').val()) || 0;
+                var PerPice = Rate / UomQty;
 
                 if (amountExclusiveTaxes > 0) {
                     discpercent = parseFloat((DiscAmount / amountExclusiveTaxes) * 100).toFixed(2);
@@ -1778,7 +1784,7 @@ function calcTotal(forceNow) {
                 var isByDefault = $('#chkByDefault').is(':checked');
 
                 if (BonusQty > 0 && !isByDefault) {
-                    var bonusBase = BonusQty * Rate;
+                    var bonusBase = BonusQty * PerPice;
                     var bonusST = (STpercent / 100) * bonusBase;
                     var bonusAdv = (AdvPercent / 100) * bonusBase;
                     bonusTaxTotal = bonusST + bonusAdv;

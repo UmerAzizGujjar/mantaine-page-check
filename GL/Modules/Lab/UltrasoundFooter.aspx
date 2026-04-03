@@ -8,9 +8,15 @@
              debugger;
              var Labfooter = CKEDITOR.instances.labFooter.getData();
              var LabfooterTwo = CKEDITOR.instances.labFooterTwo.getData();
+             var DoctorName = $('#ddlDoctor option:selected').text();
+             var DoctorId = $('#ddlDoctor').val();
+             var TemplateName = $('#templateName').val();
              var dataToPass = JSON.stringify({
                  "Labfooter": Labfooter,
-                 "LabfooterTwo": LabfooterTwo
+                 "LabfooterTwo": LabfooterTwo,
+                 "DoctorName": DoctorName,
+                 "DoctorId": DoctorId,
+                 "TemplateName": TemplateName
              });
              $.ajax({
                  type: "POST",
@@ -29,20 +35,44 @@
                  }
              });
          });
-     loadLabFooter();
-     loadLabFooterTwo();
-     });
-
-     function loadLabFooter() {
-         PageMethods.LoadLabFooter(function (data) {
+         FillDoctors();
+         debugger;
+         var id = '<%= Request.QueryString["id"] %>'
+         if (id != "") {
              debugger;
-             var result = JSON.parse(data);
-             $('#labFooter').text(result);
-             CKEDITOR.instances.labFooter.setData(result);
+             loadLabFooter(id);
+             loadLabFooterTwo(id);
+         }
+     });
+     function FillDoctors() {
+
+         var options = '<option value="0">Select Doctor</option>';
+
+         PageMethods.GetDoctors(function (data) {
+             $.each(JSON.parse(data), function (key, value) {
+                 options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+             });
+             $('#ddlDoctor').html(options);
+             $('#ddlDoctor').select2(); 
+             //$('#ddlDoctor').attr('disabled', true); 
          });
      }
-     function loadLabFooterTwo() {
-         PageMethods.LoadLabFooterTwo(function (data) {
+     function loadLabFooter(id) {
+         PageMethods.LoadLabFooter(id,function (data) {
+             debugger;
+             var res = JSON.parse(data);
+
+             // Set footer
+             $('#labFooterTwo').text(res.DataValue_Description);
+             CKEDITOR.instances.labFooterTwo.setData(res.DataValue_Description);
+
+             $('#TemplateName').val(res.TemplateName);
+
+             $('#ddlDoctor').val(res.DoctorId).trigger('change');
+         });
+     }
+     function loadLabFooterTwo(id) {
+         PageMethods.LoadLabFooterTwo(id,function (data) {
              debugger;
              var Footertwo = JSON.parse(data);
              $('#labFooterTwo').text(Footertwo);
@@ -50,7 +80,7 @@
          });
 
      }
-         </script>
+ </script>
         <style type="text/css">
             .ckeditor3 {
                 width: 50%;
@@ -66,17 +96,33 @@
     <div class="row" style="margin-top:20px">
         <div class="col">
             <legend>Ultrasound Footer</legend>
-            <div class="ckeditor3">
-                    <textarea name="labFooter" id="labFooter" rows="10" cols="80"></textarea>
-                     <script type="text/javascript">
-                         CKEDITOR.replace('labFooter');
-              </script>
+            <div class="row">
+
+                <div class="col-lg-2">
+                    <label>Doctor</label>
+                    <select id="ddlDoctor">
+
+                    </select>
+                </div>
+                
+                <div class="col-lg-2">
+                    <label>Template Name</label>
+                    <input type="text" id="templateName" />
+                </div>
             </div>
-            <div class="ckeditor4">
+            <div class="row">
+                <div class="ckeditor3">
+                    <textarea name="labFooter" id="labFooter" rows="10" cols="80"></textarea>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('labFooter');
+                    </script>
+                </div>
+                <div class="ckeditor4">
                     <textarea name="labFooterTwo" id="labFooterTwo" rows="10" cols="80"></textarea>
-                     <script type="text/javascript">
-                         CKEDITOR.replace('labFooterTwo');
-              </script>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('labFooterTwo');
+                    </script>
+                </div>
             </div>
         </div>
     </div>
