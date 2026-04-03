@@ -2649,22 +2649,53 @@
                     tbody.empty();
 
                     if (data && data.length > 0) {
+                        //$.each(data, function (index, item) {
+                        //    var formattedDate = '';
+                        //    if (item.Bill_Date) {
+                        //        var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
+                        //        formattedDate = billDate.toLocaleDateString();
+                        //    }
+                        //    var status = item.IsAcknowledge
+                        //    var statuss;
+                        //    if (status == true) {
+                        //        statuss = 'Acknowledge'
+                        //    }
+                        //    else {
+                        //        statuss = 'Waiting'
+                        //    }
+
+                        //    var row = '<tr>' +
+                        //        '<td>' + formattedDate + '</td>' +
+                        //        '<td>' + item.Bill_No + '</td>' +
+                        //        '<td>' + item.Full_Name + '</td>' +
+                        //        '<td>' + item.Item_Name + '</td>' +
+                        //        '<td>' + item.Doctor + '</td>' +
+                        //        '<td>' + item.Test_Main_Department + '</td>' +
+                        //        '<td>' + statuss + '</td>' +
+                        //        '<td><button type="button" class="btn btn-sm btn-primary" ' +
+                        //        'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
+                        //        '</tr>';
+                        //    tbody.append(row);
+                        //});
                         $.each(data, function (index, item) {
+                            debugger;
                             var formattedDate = '';
                             if (item.Bill_Date) {
                                 var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
                                 formattedDate = billDate.toLocaleDateString();
                             }
-                            var status = item.IsAcknowledge
-                            var statuss;
-                            if (status == true) {
-                                statuss = 'Acknowledge'
-                            }
-                            else {
-                                statuss = 'Waiting'
+
+                            var status = item.IsAcknowledge;
+                            var statuss = status == true ? 'Acknowledge' : 'Waiting';
+
+                            // ✅ CONDITION FOR LIGHT RED ROW
+                            var rowStyle = '';
+                            if (item.Is_Result == true &&
+                                (item.Refer_Doctor == null || item.Refer_Doctor == "" || item.Refer_Doctor == "0")) {
+                                rowStyle = 'style="background-color:#f8d7da;"'; // light red
                             }
 
-                            var row = '<tr>' +
+                            var row = '<tr ' + rowStyle + '>' +
                                 '<td>' + formattedDate + '</td>' +
                                 '<td>' + item.Bill_No + '</td>' +
                                 '<td>' + item.Full_Name + '</td>' +
@@ -2675,6 +2706,7 @@
                                 '<td><button type="button" class="btn btn-sm btn-primary" ' +
                                 'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
                                 '</tr>';
+
                             tbody.append(row);
                         });
                     } else {

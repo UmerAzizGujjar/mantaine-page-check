@@ -1758,6 +1758,7 @@ namespace PMS.Modules.Lab
                     labtest_detail.IsAcknowledge,
                     Doctor = (from hr in db.HR_Employees where hr.Emp_ID == Convert.ToInt32(bill_details.Doctor_id ?? "0") select hr.Emp_Name).FirstOrDefault(),
                     labtest_detail.Refer_Doctor,
+                    labtest_detail.Is_Result,
                     RawDeptCode = bill_details.Test_Main_Department
                 }
             );

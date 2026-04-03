@@ -278,6 +278,7 @@
     <Content Include="Modules\Lab\RadiologyTestResult.aspx" />
     <Content Include="Modules\Lab\SampleView.aspx" />
     <Content Include="Modules\Lab\ApproveTest.aspx" />
+    <Content Include="Modules\Lab\UltraSoundfooterList.aspx" />
     <Content Include="Modules\Lab\WaitingList.aspx" />
     <Content Include="Modules\Others\About.aspx" />
     <Content Include="Modules\Others\CustomError.aspx" />
@@ -26252,6 +26253,13 @@
     </Compile>
     <Compile Include="Modules\Lab\ApproveTest.aspx.designer.cs">
       <DependentUpon>ApproveTest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\UltraSoundfooterList.aspx.cs">
+      <DependentUpon>UltraSoundfooterList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\UltraSoundfooterList.aspx.designer.cs">
+      <DependentUpon>UltraSoundfooterList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Lab\WaitingList.aspx.cs">
       <DependentUpon>WaitingList.aspx</DependentUpon>
