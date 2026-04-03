@@ -1026,23 +1026,26 @@ namespace PMS
 
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
-                string rptFileName = "Emergency/Emergency_Detail_Report.rpt";
-                string CheckSummary = Request.QueryString["Summary"].ToString();
-                if (CheckSummary == "true")
-                {
-                    rptFileName = "Emergency/Reg_Emergency_Detail_Report_Summary.rpt";
-                    reportTitle = "Emergency Detail Summary From " + Request.QueryString["StartDateTime"].ToString() + "to" + Request.QueryString["EndDateTime"].ToString();
-                }
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
 
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
-
                 string Operator = Request.QueryString["Operator"].ToString();
+
+                string rptFileName = "Emergency/Emergency_Detail_Report.rpt";
+                string CheckSummary = Request.QueryString["Summary"].ToString();
+
+                if (CheckSummary == "true")
+                {
+                    rptFileName = "Emergency/Emergency_Detail_Report_Summary.rpt";
+                    reportTitle = "Emergency Detail Summary From " + sqlStartDateTime + "to" + sqlEndDateTime;
+                }
+
                 reportPath += rptFileName;
                 rd.Load(reportPath);
+
                 rd.SetParameterValue("@Company_ID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("CompanyAddress", companyAddress);
@@ -1061,8 +1064,8 @@ namespace PMS
                 string CheckSummary = Request.QueryString["Summary"].ToString();
                 if (CheckSummary == "true")
                 {
-                    rptFileName = "Emergency/Emergency_Detail_Report_Summary.rpt";
-                    reportTitle = "Emergency Detail Summary From " + Request.QueryString["StartDateTime"].ToString() + "to" + Request.QueryString["EndDateTime"].ToString();
+                    rptFileName = "Emergency/Reg_Emergency_Detail_Report_Summary.rpt";
+                    reportTitle = "Registered Emergency Summary From " + Request.QueryString["StartDateTime"].ToString() + "to" + Request.QueryString["EndDateTime"].ToString();
                 }
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
