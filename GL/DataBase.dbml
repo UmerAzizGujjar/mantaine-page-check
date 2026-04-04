@@ -7552,12 +7552,37 @@
       <Column Name="cancel_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.CTScanLevels" Member="CTScanLevels">
+    <Type Name="CTScanLevel">
+      <Column Name="CTScanLevel_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Test_ID" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Levels" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="FixValues" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MRILevels" Member="MRILevels">
+    <Type Name="MRILevel">
+      <Column Name="MRILevel_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Test_ID" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Levels" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="FixValues" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.User_Wise_Template_Detail" Member="User_Wise_Template_Details">
     <Type Name="User_Wise_Template_Detail">
       <Column Name="User_Wise_Template_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="User_Wise_Template_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="DataValue_ID" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
       <Column Name="User_Id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Department" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">

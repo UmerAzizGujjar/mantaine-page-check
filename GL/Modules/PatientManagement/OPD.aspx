@@ -500,7 +500,7 @@
             else if (Category == "11") {
                 $('#fees').show();
                 $('#department').show();
-                $('#doctor').show();
+                $('#doctor').hide();
                 $('#pnlcompany').hide();
                 $('#employee').hide();
                 $('#refference').hide();
@@ -768,6 +768,7 @@
                         if (
                             (type === "04" && type_text === "Employee") ||
                             (type === "05" && type_text === "Student") ||
+                            (type === "11" && type_text === "CAMP") ||
                             (type === "06" && type_text === "Refer")
                         ) {
                             $('#txtdiscount').val(100);
@@ -878,7 +879,7 @@
 
                         $('#ddldoctor').html(options);
                         var type = $('#ddlPatient_Type').val();
-                        if (type !== "02" && type !== "11") {
+                        if (type !== "02" ) {
 
                             getGeneralFee();
                         }

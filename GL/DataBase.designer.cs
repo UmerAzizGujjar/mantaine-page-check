@@ -960,6 +960,12 @@ namespace PMS
         partial void InsertUser_Wise_Template(User_Wise_Template instance);
         partial void UpdateUser_Wise_Template(User_Wise_Template instance);
         partial void DeleteUser_Wise_Template(User_Wise_Template instance);
+        partial void InsertCTScanLevel(CTScanLevel instance);
+        partial void UpdateCTScanLevel(CTScanLevel instance);
+        partial void DeleteCTScanLevel(CTScanLevel instance);
+        partial void InsertMRILevel(MRILevel instance);
+        partial void UpdateMRILevel(MRILevel instance);
+        partial void DeleteMRILevel(MRILevel instance);
         partial void InsertUser_Wise_Template_Detail(User_Wise_Template_Detail instance);
         partial void UpdateUser_Wise_Template_Detail(User_Wise_Template_Detail instance);
         partial void DeleteUser_Wise_Template_Detail(User_Wise_Template_Detail instance);
@@ -970,7 +976,6 @@ namespace PMS
         {
             OnCreated();
         }
-
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -3504,6 +3509,22 @@ namespace PMS
             get
             {
                 return this.GetTable<User_Wise_Template>();
+            }
+        }
+
+        public System.Data.Linq.Table<CTScanLevel> CTScanLevels
+        {
+            get
+            {
+                return this.GetTable<CTScanLevel>();
+            }
+        }
+
+        public System.Data.Linq.Table<MRILevel> MRILevels
+        {
+            get
+            {
+                return this.GetTable<MRILevel>();
             }
         }
 
@@ -168644,6 +168665,466 @@ namespace PMS
         }
     }
 
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.CTScanLevels")]
+    public partial class CTScanLevel : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _CTScanLevel_ID;
+
+        private string _Test_ID;
+
+        private string _Levels;
+
+        private string _FixValues;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnCTScanLevel_IDChanging(int value);
+        partial void OnCTScanLevel_IDChanged();
+        partial void OnTest_IDChanging(string value);
+        partial void OnTest_IDChanged();
+        partial void OnLevelsChanging(string value);
+        partial void OnLevelsChanged();
+        partial void OnFixValuesChanging(string value);
+        partial void OnFixValuesChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        #endregion
+
+        public CTScanLevel()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CTScanLevel_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int CTScanLevel_ID
+        {
+            get
+            {
+                return this._CTScanLevel_ID;
+            }
+            set
+            {
+                if ((this._CTScanLevel_ID != value))
+                {
+                    this.OnCTScanLevel_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._CTScanLevel_ID = value;
+                    this.SendPropertyChanged("CTScanLevel_ID");
+                    this.OnCTScanLevel_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_ID", DbType = "NVarChar(50)")]
+        public string Test_ID
+        {
+            get
+            {
+                return this._Test_ID;
+            }
+            set
+            {
+                if ((this._Test_ID != value))
+                {
+                    this.OnTest_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Test_ID = value;
+                    this.SendPropertyChanged("Test_ID");
+                    this.OnTest_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Levels", DbType = "NVarChar(50)")]
+        public string Levels
+        {
+            get
+            {
+                return this._Levels;
+            }
+            set
+            {
+                if ((this._Levels != value))
+                {
+                    this.OnLevelsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Levels = value;
+                    this.SendPropertyChanged("Levels");
+                    this.OnLevelsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FixValues", DbType = "NVarChar(MAX)")]
+        public string FixValues
+        {
+            get
+            {
+                return this._FixValues;
+            }
+            set
+            {
+                if ((this._FixValues != value))
+                {
+                    this.OnFixValuesChanging(value);
+                    this.SendPropertyChanging();
+                    this._FixValues = value;
+                    this.SendPropertyChanged("FixValues");
+                    this.OnFixValuesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.MRILevels")]
+    public partial class MRILevel : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _MRILevel_ID;
+
+        private string _Test_ID;
+
+        private string _Levels;
+
+        private string _FixValues;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnMRILevel_IDChanging(int value);
+        partial void OnMRILevel_IDChanged();
+        partial void OnTest_IDChanging(string value);
+        partial void OnTest_IDChanged();
+        partial void OnLevelsChanging(string value);
+        partial void OnLevelsChanged();
+        partial void OnFixValuesChanging(string value);
+        partial void OnFixValuesChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        #endregion
+
+        public MRILevel()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MRILevel_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int MRILevel_ID
+        {
+            get
+            {
+                return this._MRILevel_ID;
+            }
+            set
+            {
+                if ((this._MRILevel_ID != value))
+                {
+                    this.OnMRILevel_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._MRILevel_ID = value;
+                    this.SendPropertyChanged("MRILevel_ID");
+                    this.OnMRILevel_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_ID", DbType = "NVarChar(50)")]
+        public string Test_ID
+        {
+            get
+            {
+                return this._Test_ID;
+            }
+            set
+            {
+                if ((this._Test_ID != value))
+                {
+                    this.OnTest_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Test_ID = value;
+                    this.SendPropertyChanged("Test_ID");
+                    this.OnTest_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Levels", DbType = "NVarChar(50)")]
+        public string Levels
+        {
+            get
+            {
+                return this._Levels;
+            }
+            set
+            {
+                if ((this._Levels != value))
+                {
+                    this.OnLevelsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Levels = value;
+                    this.SendPropertyChanged("Levels");
+                    this.OnLevelsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_FixValues", DbType = "NVarChar(MAX)")]
+        public string FixValues
+        {
+            get
+            {
+                return this._FixValues;
+            }
+            set
+            {
+                if ((this._FixValues != value))
+                {
+                    this.OnFixValuesChanging(value);
+                    this.SendPropertyChanging();
+                    this._FixValues = value;
+                    this.SendPropertyChanged("FixValues");
+                    this.OnFixValuesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.User_Wise_Template_Detail")]
     public partial class User_Wise_Template_Detail : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -168658,6 +169139,8 @@ namespace PMS
 
         private System.Nullable<System.Guid> _User_Id;
 
+        private string _Department;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -168670,6 +169153,8 @@ namespace PMS
         partial void OnDataValue_IDChanged();
         partial void OnUser_IdChanging(System.Nullable<System.Guid> value);
         partial void OnUser_IdChanged();
+        partial void OnDepartmentChanging(string value);
+        partial void OnDepartmentChanged();
         #endregion
 
         public User_Wise_Template_Detail()
@@ -168753,6 +169238,26 @@ namespace PMS
                     this._User_Id = value;
                     this.SendPropertyChanged("User_Id");
                     this.OnUser_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "NVarChar(50)")]
+        public string Department
+        {
+            get
+            {
+                return this._Department;
+            }
+            set
+            {
+                if ((this._Department != value))
+                {
+                    this.OnDepartmentChanging(value);
+                    this.SendPropertyChanging();
+                    this._Department = value;
+                    this.SendPropertyChanged("Department");
+                    this.OnDepartmentChanged();
                 }
             }
         }

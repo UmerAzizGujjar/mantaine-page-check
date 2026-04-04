@@ -170,15 +170,16 @@
                 });
 
                 $('#PatientModel').on('shown.bs.modal', function () {
+                    // Force load gender options if not already loaded
+                    var $gender = $('#ddl_Gender');
+                    if ($gender.find('option').length <= 1) {
+                        fillDropdown($gender, 'GetGender');
+                    }
+
+                    // Wait for options to load then auto-select
                     setTimeout(function () {
-                        var $gender = $('#ddl_Gender');
-                        if ($gender.find('option').length <= 1) {
-                            $gender.trigger('focus');
-                            setTimeout(autoSelectGender, 600);
-                        } else {
-                            autoSelectGender();
-                        }
-                    }, 300);
+                        autoSelectGender();
+                    }, 500);
                 });
 
             });
@@ -409,14 +410,29 @@
             } else if (prefix === 'Mrs.' || prefix === 'Ms.') {
                 targetValue = FEMALE_VALUE;
             }
-            if (!targetValue || $gender.length === 0) return;
 
-            if ($gender.find('option').length <= 1) {
-                console.log("Gender list not loaded yet. Triggering focus to load...");
-                $gender.trigger('focus');
-                setTimeout(autoSelectGender, 500);
+            if (!targetValue || $gender.length === 0) return;
+            var optionsCount = $gender.find('option').length;
+
+            if (optionsCount <= 1) {
+                console.log("Gender list not loaded yet. Waiting for data...");
+                var checkInterval = setInterval(function () {
+                    var newOptionsCount = $gender.find('option').length;
+                    if (newOptionsCount > 1) {
+                        clearInterval(checkInterval);
+                        $gender.val(targetValue).trigger('change');
+                        if ($gender.hasClass('select2-hidden-accessible')) {
+                            $gender.trigger('select2:select');
+                        }
+                        console.log("Gender set to: " + targetValue);
+                    }
+                }, 100);
+                setTimeout(function () {
+                    clearInterval(checkInterval);
+                }, 5000);
                 return;
             }
+
             $gender.val(targetValue).trigger('change');
             if ($gender.hasClass('select2-hidden-accessible')) {
                 $gender.trigger('select2:select');
@@ -966,13 +982,16 @@
         }  // ← This closing brace was missing!
      
         function fillDropdown($dropdown, methodName) {
-            if ($dropdown.data('filled')) return;
+            if ($dropdown.data('filled')) {
+                autoSelectGender();
+                return;
+            }
 
             $dropdown.data('filled', false);
 
             $.ajax({
                 type: "POST",
-                url: "EmergencyForm.aspx/" + methodName,  // Changed from OPD.aspx to EmergencyOPD.aspx
+                url: "EmergencyForm.aspx/" + methodName,
                 data: '{}',
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -983,15 +1002,20 @@
 
                         $.each(data, function (key, value) {
                             options += `<option value="${value.DataValue_Name}">
-                                    ${value.DataValue_Description}
-                                </option>`;
+                            ${value.DataValue_Description}
+                        </option>`;
                         });
 
                         $dropdown.html(options)
                             .data('filled', true)
                             .trigger('change');
+
                         if ($dropdown.hasClass('select2-hidden-accessible')) {
                             $dropdown.select2('close').select2('open');
+                        }
+
+                        if ($dropdown.attr('id') === 'ddl_Gender') {
+                            autoSelectGender();
                         }
                     } catch (e) {
                         console.error(`Error parsing data from ${methodName}:`, e);

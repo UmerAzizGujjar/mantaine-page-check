@@ -3286,7 +3286,12 @@ namespace PMS
 
             if (pat != null)
             {
-               var patient = (from tbl in db.Patients join opd in db.Out_Patients
+               var patient = (from tbl in db.Patients 
+                              where tbl.Reg_PatId == pat.pat_id
+                              //&& (opd.Discharge == false || opd.Discharge == null)
+                              orderby tbl.Patient_ID descending
+                       select tbl).FirstOrDefault();
+               var patientOPD = (from tbl in db.Patients join opd in db.Out_Patients
                               on tbl.Patient_ID equals opd.Patient_ID
                               where tbl.Reg_PatId == pat.pat_id
                               && (opd.Discharge == false || opd.Discharge == null)
@@ -3336,7 +3341,18 @@ namespace PMS
                 {
                     pt.Entry_Date = pat.Created_time.ToString();
                 }
-                if (inpat != null)
+                if (patient != null)
+                {
+                    pt.Patient_Type = db.GetDataValueName("Patient Type", patient.Patient_Type);
+                    pt.Patient_Type_id = patient.Patient_Type;
+                    pt.Admission_Date = "";
+                    pt.Discharge_On = "";
+                    pt.Ward_Name = "";
+                    pt.Bed_No = "";
+                    pt.Room_Name = "";
+                    pt.MainDepartment = "01";
+                }
+                else if (inpat != null)
                 {
                     if (inpat.Discharge == null || inpat.Discharge == false)
                     {
@@ -3393,10 +3409,10 @@ namespace PMS
                         pt.Department = "";
                     } 
                 }
-                else if (patient != null)
+                else if (patientOPD != null)
                 {
-                    pt.Patient_Type = db.GetDataValueName("Patient Type", patient.Patient_Type);
-                    pt.Patient_Type_id = patient.Patient_Type;
+                    pt.Patient_Type = db.GetDataValueName("Patient Type", patientOPD.Patient_Type);
+                    pt.Patient_Type_id = patientOPD.Patient_Type;
                     pt.Admission_Date = "";
                     pt.Discharge_On = "";
                     pt.Ward_Name = "";

@@ -1327,7 +1327,7 @@ namespace PMS
             {
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
-                pt.Age = pat.Age_years.ToString();
+                pt.Age = pat.Age_years?.ToString() ?? ""; 
                 pt.Patient_No = pat.Patient_No.ToString();
 
                 if (pat.Created_time.HasValue)
@@ -1760,7 +1760,16 @@ namespace PMS
 
             return dept;
         }
+        [WebMethod]
+        public static string GetAutoFillReceiptSetting()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var setting = (from sp in db.sys_Parms
+                           where sp.Name == "AutoFillReceiptAmount"
+                           select sp.Code).FirstOrDefault();
 
+            return setting ?? "0";
+        }
         [WebMethod]
         public static decimal GetTotalPrivateCash()
         {

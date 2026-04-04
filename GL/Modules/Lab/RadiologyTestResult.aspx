@@ -453,10 +453,18 @@
                     PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
 
                         //alert(response)
-                        $("[id$='_btnRefresh']").trigger('click');
-                        $('#myModal').modal('hide');
-                        $("#myModal tbody").empty();
-                        $("#tblsingleTest tbody").empty();
+                        if (typeof currentlyEditingElement !== 'undefined') {
+                            EditData(currentlyEditingElement);
+                        }
+                        var storageBillNo = localStorage.Bill_No;
+                        if (storageBillNo != "(New)") {
+                            $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+                            loadPatientDataUsingBillId();
+
+
+                        }
+                       
                     }, function (onfailure) {
 
                         alert(onfailure);
@@ -489,10 +497,18 @@
                 if (test_list.length > 0) {
                     PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
 
-                        $("[id$='_btnRefresh']").trigger('click');
-                        $('#myModal').modal('hide');
-                        $("#myModal tbody").empty();
-                        $("#tblsingleTest tbody").empty();
+                        if (typeof currentlyEditingElement !== 'undefined') {
+                            EditData(currentlyEditingElement);
+                        }
+                        var storageBillNo = localStorage.Bill_No;
+                        if (storageBillNo != "(New)") {
+                            $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+                            loadPatientDataUsingBillId();
+
+
+                        }
+                      
                     }, function (onfailure) {
 
                         alert(onfailure);
@@ -573,8 +589,17 @@
                     PageMethods.SaveGroupTest(Lab_ID, test_list, function (response) {
 
 
-                        $('#myModal').modal('hide');
-                        $("[id$='_btnRefresh']").trigger('click');
+                        if (typeof currentlyEditingElement !== 'undefined') {
+                            EditData(currentlyEditingElement);
+                        }
+                        var storageBillNo = localStorage.Bill_No;
+                        if (storageBillNo != "(New)") {
+                            $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+                            loadPatientDataUsingBillId();
+
+
+                        }
 
                     });
                 }
@@ -606,7 +631,25 @@
                     });
                     PageMethods.SaveOrganismList(Organism_List, Lab_ID, bill_detailid, function (response) {
                     });
+                    // 2. Prepare Image Data for AJAX (New Way)
+                    var filesComplete = $("#ctl00_MainContent_fileUploadMultiple").get(0).files;
+                    if (filesComplete.length > 0) {
+                        var dataImgs = new FormData();
+                        for (var f = 0; f < filesComplete.length; f++) {
+                            dataImgs.append(filesComplete[f].name, filesComplete[f]);
+                        }
+                        dataImgs.append('lab_test_Detail_id', lab_test_Detail_id);
 
+                        // SILENT IMAGE UPLOAD (No Postback)
+                        $.ajax({
+                            url: "RadiologyImageUpload.ashx",
+                            type: "POST",
+                            data: dataImgs,
+                            contentType: false,
+                            processData: false,
+                            success: function (res) { console.log("Images Uploaded Successfully"); }
+                        });
+                    }
                     var valueofTemplate = CKEDITOR.instances.txtfixedType.getData();
                     var Master_Remarks = CKEDITOR.instances.txtMaster_Remarks.getData();
                     var valuetype = $("#txtvaluetype").val();
@@ -633,7 +676,7 @@
                     if (chkBillID == "(New)") {
                         localStorage.Bill_No = chkBillID;
                     }
-                    $("[id$='_buttonimageuploadNotes']").trigger('click');
+                   
                     arr = [];
                     $("#ddllistType option").each(function (key, index) {
                         list = {};
@@ -680,7 +723,20 @@
                                 });
 
                             }
-                            setTimeout(function () { $('#myModal').modal('hide'); }, 3000);
+                            setTimeout(function () {
+                                if (typeof currentlyEditingElement !== 'undefined') {
+                                    EditData(currentlyEditingElement);
+
+                                }
+                                var storageBillNo = localStorage.Bill_No;
+                                if (storageBillNo != "(New)") {
+                                    $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+                                    loadPatientDataUsingBillId();
+
+
+                                }
+                            }, 3000);
                         },
                         failure: function (response) {
                             alert(response.d);
@@ -1985,8 +2041,10 @@
         var arrayTemp = '';
         var bill_detailid = '';
         var detail_id = '';
+        var currentlyEditingElement;
         function EditData($this) {
             debugger;
+            currentlyEditingElement = $this; // Store the clicked <a> tag
             var Lab_Test_Detail_ID = '';
             var LabID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             var LabID = $($($this).parents('tr')[0]).find('td:nth-child(2)')[0].innerText;
@@ -2017,7 +2075,7 @@
             }
             //setTimeout(function () { 
 
-            $('#myModal').modal('hide');
+            
             PageMethods.LoadTestCatogry(LabID, CatID, billDetailID, function (res) {
 
                 debugger;
@@ -2682,22 +2740,53 @@
                     tbody.empty();
 
                     if (data && data.length > 0) {
+                        //$.each(data, function (index, item) {
+                        //    var formattedDate = '';
+                        //    if (item.Bill_Date) {
+                        //        var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
+                        //        formattedDate = billDate.toLocaleDateString();
+                        //    }
+                        //    var status = item.IsAcknowledge
+                        //    var statuss;
+                        //    if (status == true) {
+                        //        statuss = 'Acknowledge'
+                        //    }
+                        //    else {
+                        //        statuss = 'Waiting'
+                        //    }
+
+                        //    var row = '<tr>' +
+                        //        '<td>' + formattedDate + '</td>' +
+                        //        '<td>' + item.Bill_No + '</td>' +
+                        //        '<td>' + item.Full_Name + '</td>' +
+                        //        '<td>' + item.Item_Name + '</td>' +
+                        //        '<td>' + item.Doctor + '</td>' +
+                        //        '<td>' + item.Test_Main_Department + '</td>' +
+                        //        '<td>' + statuss + '</td>' +
+                        //        '<td><button type="button" class="btn btn-sm btn-primary" ' +
+                        //        'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
+                        //        '</tr>';
+                        //    tbody.append(row);
+                        //});
                         $.each(data, function (index, item) {
+                            debugger;
                             var formattedDate = '';
                             if (item.Bill_Date) {
                                 var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
                                 formattedDate = billDate.toLocaleDateString();
                             }
-                            var status = item.IsAcknowledge
-                            var statuss;
-                            if (status == true) {
-                                statuss = 'Acknowledge'
-                            }
-                            else {
-                                statuss = 'Waiting'
+
+                            var status = item.IsAcknowledge;
+                            var statuss = status == true ? 'Acknowledge' : 'Waiting';
+
+                            // ✅ CONDITION FOR LIGHT RED ROW
+                            var rowStyle = '';
+                            if (item.Is_Result == true &&
+                                (item.Refer_Doctor == null || item.Refer_Doctor == "" || item.Refer_Doctor == "0")) {
+                                rowStyle = 'style="background-color:#f8d7da;"'; // light red
                             }
 
-                            var row = '<tr>' +
+                            var row = '<tr ' + rowStyle + '>' +
                                 '<td>' + formattedDate + '</td>' +
                                 '<td>' + item.Bill_No + '</td>' +
                                 '<td>' + item.Full_Name + '</td>' +
@@ -2708,6 +2797,7 @@
                                 '<td><button type="button" class="btn btn-sm btn-primary" ' +
                                 'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
                                 '</tr>';
+
                             tbody.append(row);
                         });
                     } else {
@@ -3327,6 +3417,9 @@
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input type="button" id="btnReject" class="btn btn-primry" name="btnReject" value="Reject" />
                         </div>
+                        <div class="col-lg-2 col-md-6 col-sm-12">
+    <input type="button" class="btn btn-primry" data-dismiss="modal" value="Close" style="border-radius: 5px; height: 35px;" />
+</div>
                         <asp:Button ID="buttonimageuploadNotes" runat="server" OnClick="buttonimageuploadNotes_Click" Text=" " Style="display: none;" />
                         <asp:Button ID="btnRefresh" runat="server" OnClick="btnRefresh_Click" Style="display: none" />
                         <asp:HiddenField ID="session_obejct" runat="server" />
