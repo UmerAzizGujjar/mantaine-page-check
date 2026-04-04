@@ -1760,7 +1760,16 @@ namespace PMS
 
             return dept;
         }
+        [WebMethod]
+        public static string GetAutoFillReceiptSetting()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var setting = (from sp in db.sys_Parms
+                           where sp.Name == "AutoFillReceiptAmount"
+                           select sp.Code).FirstOrDefault();
 
+            return setting ?? "0";
+        }
         [WebMethod]
         public static decimal GetTotalPrivateCash()
         {

@@ -6,13 +6,55 @@
     <script type="text/javascript">
         var btnVal = '';
         localStorage.IsDischarge = 0;
+        function autoSelectGender() {
+            var prefix = $('#ddl_name').val();
+            var $gender = $('#ddl_Gender');
+            var MALE_VALUE = 'M';
+            var FEMALE_VALUE = 'F';
+
+            var targetValue = '';
+
+            if (prefix === 'Mr.') {
+                targetValue = MALE_VALUE;
+            } else if (prefix === 'Mrs.' || prefix === 'Ms.') {
+                targetValue = FEMALE_VALUE;
+            }
+
+            if (!targetValue || $gender.length === 0) return;
+            var optionsCount = $gender.find('option').length;
+
+            if (optionsCount <= 1) {
+                console.log("Gender list not loaded yet. Waiting for data...");
+                var checkInterval = setInterval(function () {
+                    var newOptionsCount = $gender.find('option').length;
+                    if (newOptionsCount > 1) {
+                        clearInterval(checkInterval);
+                        $gender.val(targetValue).trigger('change');
+                        if ($gender.hasClass('select2-hidden-accessible')) {
+                            $gender.trigger('select2:select');
+                        }
+                        console.log("Gender set to: " + targetValue);
+                    }
+                }, 100);
+                setTimeout(function () {
+                    clearInterval(checkInterval);
+                }, 5000);
+                return;
+            }
+
+            $gender.val(targetValue).trigger('change');
+            if ($gender.hasClass('select2-hidden-accessible')) {
+                $gender.trigger('select2:select');
+            }
+
+            console.log("Gender set to: " + targetValue);
+        }
         $(document).ready(function () {
             getprvpat_id();
 
             $('#btnsaveprint').click(function () {
 
-                //$('#btnsaveprint').attr('disabled', true);
-                //$('#btnsaveprint').attr('disabled', true);
+  
 
                 $("#ctl00_MainContent_panelshow").hide();
             });
@@ -214,6 +256,24 @@
                     });
                 });
             });
+
+
+                $('#ddl_name').off('change').on('change', function () {
+                    autoSelectGender();
+                });
+
+                $('#PatientModel').on('shown.bs.modal', function () {
+                    setTimeout(function () {
+                        var $gender = $('#ddl_Gender');
+                        if ($gender.find('option').length <= 1) {
+                            fillGenderDropdown(function () {
+                                autoSelectGender();
+                            });
+                        } else {
+                            autoSelectGender();
+                        }
+                    }, 300);
+                });
         });
             // Initialize birth certificate date pickers
             $("#ctl00_MainContent_txtBirthDate").datepicker({ dateFormat: 'mm/dd/yy' });
@@ -3502,22 +3562,7 @@
 
                             return false;
                         }
-                        if (Complain == "") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Please Enter Health Complaint',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-
-                            return false;
-                        }
+                     
                         var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
                         var refer_to = $('#ctl00_MainContent_ddlReferTo').val();
                         if (refer_to != "0") {
@@ -5440,10 +5485,10 @@
 
         }
         function FillRooms() {
-
+            debugger;
             var RoomType = $('#ctl00_MainContent_txtRoom_Type').val();
             PageMethods.FillRooms(RoomType, function (res) {
-
+                debugger;
                 var item = JSON.parse(res);
                 if (item != "") {
                     var rows = '';
@@ -7036,9 +7081,9 @@ function fillNationality(callback) {
                                         <asp:TextBox ID="txtprocedurename"   runat="server" Enabled="true"></asp:TextBox>
                                 </div>
                                      <div class="col-lg-6 col-md-7 col-sm-9">
-                                    <asp:Label ID="LblHealth_Complaints" runat="server" Text="Health Complaint *"></asp:Label>
+                                    <asp:Label ID="LblHealth_Complaints" runat="server" Text="Health Complaint "></asp:Label>
                                         <asp:TextBox ID="txtHealth_Complaints" Rows="1" runat="server" TextMode="MultiLine" Style="width:100%" ></asp:TextBox>
-                                        <asp:RequiredFieldValidator ID="rfvHealth_Complaints" ControlToValidate="txtHealth_Complaints" runat="server" ErrorMessage="Enter Health Complaint" Text="*"></asp:RequiredFieldValidator>
+                                        <%--<asp:RequiredFieldValidator ID="rfvHealth_Complaints" ControlToValidate="txtHealth_Complaints" runat="server" ErrorMessage="Enter Health Complaint" Text="*"></asp:RequiredFieldValidator>--%>
                                 </div>
                               
                                 
@@ -7721,6 +7766,44 @@ function fillNationality(callback) {
                         </div>
     </div>
 </div>
+ <div id="Tab-NextOfKin" >
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-8">
+        <h2>Next of Kin Details :</h2>
+    </div>
+</div>
+<div class="row mt">
+    <div class="col-lg-12 col-md-9 col-sm-9">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <asp:Label ID="LblGuardianName" runat="server" Text="Guardian Name"></asp:Label>
+                <asp:TextBox ID="txtGuardianName" runat="server" placeholder="Enter full name"></asp:TextBox>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <asp:Label ID="LblG_Relationship" runat="server" Text="Relationship"></asp:Label>
+                <asp:TextBox ID="txtG_Relationship" runat="server" placeholder="e.g., Father, Mother, Spouse"></asp:TextBox>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <asp:Label ID="LblG_CNIC" runat="server" Text="CNIC"></asp:Label>
+                <asp:TextBox ID="txtG_CNIC" runat="server" placeholder="XXXXX-XXXXXXX-X" MaxLength="15"></asp:TextBox>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <asp:Label ID="LblG_Phone" runat="server" Text="Phone Number"></asp:Label>
+                <asp:TextBox ID="txtG_Phone" runat="server" placeholder="03XX-XXXXXXX" MaxLength="15"></asp:TextBox>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <asp:Label ID="LblG_Address" runat="server" Text="Address"></asp:Label>
+                <asp:TextBox ID="txtG_Address" runat="server" TextMode="MultiLine" Rows="1" Style="width:100%" placeholder="Complete address"></asp:TextBox>
+            </div>                
+        </div>
+        <div class="row mt">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <asp:Label ID="lblNextOfKinMessage" runat="server" Style="font-weight: bold; padding: 10px; border-radius: 4px; display: none;"></asp:Label>
+            </div>
+        </div>
+    </div>
+</div>
+            </div>
 </div>
                 <div class="row">
     <div class="col-lg-9 col-md-12 col-sm-12">
@@ -9729,7 +9812,8 @@ function fillNationality(callback) {
                                 </table>
                             </div>
                     </div>
-
+            
+     
 
                     <div id="Tab-15" style="display: none;">
                             <table>
@@ -9870,44 +9954,6 @@ function fillNationality(callback) {
                         </table>
                     </div>
 
-     <div id="Tab-NextOfKin" style="display:none;">
-    <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-8">
-            <h2>Next of Kin Details :</h2>
-        </div>
-    </div>
-    <div class="row mt">
-        <div class="col-lg-12 col-md-9 col-sm-9">
-            <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <asp:Label ID="LblGuardianName" runat="server" Text="Guardian Name"></asp:Label>
-                    <asp:TextBox ID="txtGuardianName" runat="server" placeholder="Enter full name"></asp:TextBox>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <asp:Label ID="LblG_Relationship" runat="server" Text="Relationship"></asp:Label>
-                    <asp:TextBox ID="txtG_Relationship" runat="server" placeholder="e.g., Father, Mother, Spouse"></asp:TextBox>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <asp:Label ID="LblG_CNIC" runat="server" Text="CNIC"></asp:Label>
-                    <asp:TextBox ID="txtG_CNIC" runat="server" placeholder="XXXXX-XXXXXXX-X" MaxLength="15"></asp:TextBox>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <asp:Label ID="LblG_Phone" runat="server" Text="Phone Number"></asp:Label>
-                    <asp:TextBox ID="txtG_Phone" runat="server" placeholder="03XX-XXXXXXX" MaxLength="15"></asp:TextBox>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <asp:Label ID="LblG_Address" runat="server" Text="Address"></asp:Label>
-                    <asp:TextBox ID="txtG_Address" runat="server" TextMode="MultiLine" Rows="1" Style="width:100%" placeholder="Complete address"></asp:TextBox>
-                </div>                
-            </div>
-            <div class="row mt">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <asp:Label ID="lblNextOfKinMessage" runat="server" Style="font-weight: bold; padding: 10px; border-radius: 4px; display: none;"></asp:Label>
-                </div>
-            </div>
-        </div>
-    </div>
-                </div>
                 <div>
                     
 
