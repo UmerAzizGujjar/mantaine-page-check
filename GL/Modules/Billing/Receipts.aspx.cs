@@ -1327,7 +1327,7 @@ namespace PMS
             {
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
-                pt.Age = pat.Age_years.ToString();
+                pt.Age = pat.Age_years?.ToString() ?? ""; 
                 pt.Patient_No = pat.Patient_No.ToString();
 
                 if (pat.Created_time.HasValue)
