@@ -453,10 +453,18 @@
                     PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
 
                         //alert(response)
-                        $("[id$='_btnRefresh']").trigger('click');
-                        $('#myModal').modal('hide');
-                        $("#myModal tbody").empty();
-                        $("#tblsingleTest tbody").empty();
+                        if (typeof currentlyEditingElement !== 'undefined') {
+                            EditData(currentlyEditingElement);
+                        }
+                        var storageBillNo = localStorage.Bill_No;
+                        if (storageBillNo != "(New)") {
+                            $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+                            loadPatientDataUsingBillId();
+
+
+                        }
+                       
                     }, function (onfailure) {
 
                         alert(onfailure);
@@ -489,10 +497,18 @@
                 if (test_list.length > 0) {
                     PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
 
-                        $("[id$='_btnRefresh']").trigger('click');
-                        $('#myModal').modal('hide');
-                        $("#myModal tbody").empty();
-                        $("#tblsingleTest tbody").empty();
+                        if (typeof currentlyEditingElement !== 'undefined') {
+                            EditData(currentlyEditingElement);
+                        }
+                        var storageBillNo = localStorage.Bill_No;
+                        if (storageBillNo != "(New)") {
+                            $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+                            loadPatientDataUsingBillId();
+
+
+                        }
+                      
                     }, function (onfailure) {
 
                         alert(onfailure);
@@ -573,8 +589,17 @@
                     PageMethods.SaveGroupTest(Lab_ID, test_list, function (response) {
 
 
-                        $('#myModal').modal('hide');
-                       $("[id$='_btnRefresh']").trigger('click');
+                        if (typeof currentlyEditingElement !== 'undefined') {
+                            EditData(currentlyEditingElement);
+                        }
+                        var storageBillNo = localStorage.Bill_No;
+                        if (storageBillNo != "(New)") {
+                            $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+                            loadPatientDataUsingBillId();
+
+
+                        }
 
                     });
                 }
@@ -606,7 +631,25 @@
                     });
                     PageMethods.SaveOrganismList(Organism_List, Lab_ID, bill_detailid, function (response) {
                     });
+                    // 2. Prepare Image Data for AJAX (New Way)
+                    var filesComplete = $("#ctl00_MainContent_fileUploadMultiple").get(0).files;
+                    if (filesComplete.length > 0) {
+                        var dataImgs = new FormData();
+                        for (var f = 0; f < filesComplete.length; f++) {
+                            dataImgs.append(filesComplete[f].name, filesComplete[f]);
+                        }
+                        dataImgs.append('lab_test_Detail_id', lab_test_Detail_id);
 
+                        // SILENT IMAGE UPLOAD (No Postback)
+                        $.ajax({
+                            url: "RadiologyImageUpload.ashx",
+                            type: "POST",
+                            data: dataImgs,
+                            contentType: false,
+                            processData: false,
+                            success: function (res) { console.log("Images Uploaded Successfully"); }
+                        });
+                    }
                     var valueofTemplate = CKEDITOR.instances.txtfixedType.getData();
                     var Master_Remarks = CKEDITOR.instances.txtMaster_Remarks.getData();
                     var valuetype = $("#txtvaluetype").val();
@@ -633,7 +676,7 @@
                     if (chkBillID == "(New)") {
                         localStorage.Bill_No = chkBillID;
                     }
-                    $("[id$='_buttonimageuploadNotes']").trigger('click');
+                   
                     arr = [];
                     $("#ddllistType option").each(function (key, index) {
                         list = {};
@@ -680,7 +723,20 @@
                                 });
 
                             }
-                            setTimeout(function () { $('#myModal').modal('hide'); }, 3000);
+                            setTimeout(function () {
+                                if (typeof currentlyEditingElement !== 'undefined') {
+                                    EditData(currentlyEditingElement);
+
+                                }
+                                var storageBillNo = localStorage.Bill_No;
+                                if (storageBillNo != "(New)") {
+                                    $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+                                    loadPatientDataUsingBillId();
+
+
+                                }
+                            }, 3000);
                         },
                         failure: function (response) {
                             alert(response.d);
@@ -1973,8 +2029,10 @@
         var arrayTemp = '';
         var bill_detailid = '';
         var detail_id = '';
+        var currentlyEditingElement;
         function EditData($this) {
             debugger;
+            currentlyEditingElement = $this; // Store the clicked <a> tag
             var Lab_Test_Detail_ID = '';
             var LabID = $("#<%= hdnLab_Test_ID.ClientID %>").val();
             var LabID = $($($this).parents('tr')[0]).find('td:nth-child(2)')[0].innerText;
@@ -2005,7 +2063,7 @@
             }
             //setTimeout(function () { 
 
-            $('#myModal').modal('hide');
+            
             PageMethods.LoadTestCatogry(LabID, CatID, billDetailID, function (res) {
 
                 debugger;
