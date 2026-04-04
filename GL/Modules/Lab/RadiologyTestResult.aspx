@@ -3417,6 +3417,9 @@
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input type="button" id="btnReject" class="btn btn-primry" name="btnReject" value="Reject" />
                         </div>
+                        <div class="col-lg-2 col-md-6 col-sm-12">
+    <input type="button" class="btn btn-primry" data-dismiss="modal" value="Close" style="border-radius: 5px; height: 35px;" />
+</div>
                         <asp:Button ID="buttonimageuploadNotes" runat="server" OnClick="buttonimageuploadNotes_Click" Text=" " Style="display: none;" />
                         <asp:Button ID="btnRefresh" runat="server" OnClick="btnRefresh_Click" Style="display: none" />
                         <asp:HiddenField ID="session_obejct" runat="server" />
