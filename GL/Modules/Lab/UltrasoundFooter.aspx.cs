@@ -79,7 +79,7 @@ namespace PMS
             dtf.ValueSet_ID = 2127;
             dtf.DataValue_Name = DoctorId;
             dtf.Segment1 = DoctorName;
-            dt.Segment2 = TemplateName;
+            dtf.Segment2 = TemplateName;
             dtf.DataValue_Description = LabfooterTwo.ToString();
             db.DataValues.InsertOnSubmit(dtf);
             db.SubmitChanges();
