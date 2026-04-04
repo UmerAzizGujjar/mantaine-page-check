@@ -299,7 +299,7 @@ namespace PMS
             var dpt = (from d in db.DataValues
                        join v in db.ValueSets
                        on d.ValueSet_ID equals v.ValueSet_ID
-                       where v.ValueSet_Name == "X-Ray Format" 
+                       where v.ValueSet_Name == "X-Ray Format"
                        select new
                        {
                            d.DataValue_Name,
@@ -737,6 +737,146 @@ namespace PMS
                     db.SubmitChanges();
                 }
             }
+        }
+
+        [WebMethod]
+        public static string FillMRILevel()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "MRI Format"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+        [WebMethod]
+        public static string FillCTScanLevel()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var dpt = (from d in db.DataValues
+                       join v in db.ValueSets
+                       on d.ValueSet_ID equals v.ValueSet_ID
+                       where v.ValueSet_Name == "CTScan Format"
+                       select new
+                       {
+                           d.DataValue_Name,
+                           d.DataValue_Description
+                       }).ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+        [WebMethod]
+        public static string GetMRIs()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var mriVal = from dv in db.MRILevels
+                         select new
+                         {
+                             dv.Test_ID,
+                             dv.Levels,
+                             dv.MRILevel_ID,
+                             dv.FixValues
+                         };
+            return (new JavaScriptSerializer()).Serialize(mriVal);
+        }
+
+        [WebMethod]
+        public static string GetCTScans()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var ctScanVal = from dv in db.CTScanLevels
+                            select new
+                            {
+                                dv.Test_ID,
+                                dv.Levels,
+                                dv.CTScanLevel_ID,
+                                dv.FixValues
+                            };
+            return (new JavaScriptSerializer()).Serialize(ctScanVal);
+        }
+
+        [WebMethod]
+        public static void SaveMRI(List<MRIValue> mri_values)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            foreach (var item in mri_values)
+            {
+                if (!string.IsNullOrEmpty(item.MRILevelID))
+                {
+                    var itemToUpdate = (from i in db.MRILevels
+                                        where i.MRILevel_ID == Convert.ToInt32(item.MRILevelID)
+                                        select i).FirstOrDefault();
+                    if (itemToUpdate != null)
+                    {
+                        itemToUpdate.Levels = item.Levels;
+                        itemToUpdate.FixValues = item.FixValues;
+                    }
+                }
+                else
+                {
+                    MRILevel obj = new MRILevel();
+                    obj.Created_By = AppConfig.UserID;
+                    obj.Levels = item.Levels;
+                    obj.FixValues = item.FixValues;
+                    obj.Created_Time = DateTime.Now;
+                    db.MRILevels.InsertOnSubmit(obj);
+                }
+            }
+            db.SubmitChanges();
+        }
+
+        [WebMethod]
+        public static void SaveCTScan(List<CTScanValue> ctscan_values)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+            foreach (var item in ctscan_values)
+            {
+                if (!string.IsNullOrEmpty(item.CTScanLevelID))
+                {
+                    var itemToUpdate = (from i in db.CTScanLevels
+                                        where i.CTScanLevel_ID == Convert.ToInt32(item.CTScanLevelID)
+                                        select i).FirstOrDefault();
+                    if (itemToUpdate != null)
+                    {
+                        itemToUpdate.Levels = item.Levels;
+                        itemToUpdate.FixValues = item.FixValues;
+                    }
+                }
+                else
+                {
+                    CTScanLevel obj = new CTScanLevel();
+                    obj.Created_By = AppConfig.UserID;
+                    obj.Levels = item.Levels;
+                    obj.FixValues = item.FixValues;
+                    obj.Created_Time = DateTime.Now;
+                    db.CTScanLevels.InsertOnSubmit(obj);
+                }
+            }
+            db.SubmitChanges();
+        }
+
+        public class MRIValue
+        {
+            public string Levels { get; set; }
+            public string FixValues { get; set; }
+            public string MRILevelID { get; set; }
+        }
+
+        public class CTScanValue
+        {
+            public string Levels { get; set; }
+            public string FixValues { get; set; }
+            public string CTScanLevelID { get; set; }
         }
     }
 }
