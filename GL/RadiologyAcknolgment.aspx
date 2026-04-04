@@ -104,6 +104,7 @@
             { "data": "mr_no_sequence", "name": "mr_no_sequence" },
             { "data": "Full_Name" },
             { "data": "Item_Name" },
+            { "data": "Lab_Test_Detail_ID" },
             { "data": "Main_Test_Departments" },
             { "data": "WardName" },
             { "data": "BedNo" },
@@ -346,6 +347,7 @@
                                             <th>MR No</th>
                                             <th>Name</th>
                                             <th>Test Name</th>
+                                            <th>Accession #</th>
                                             <th>Main Test Department</th>
                                             <th>Ward No</th>
                                             <th>Bed No</th>

@@ -7,6 +7,7 @@
        $(document).ready(function () {
            FillUsers();
            LoadTemplates();
+           loadRadiologyDepartment()
            $('#ddl_users').select2();
            $('#ddl_template').select2();
 
@@ -25,6 +26,18 @@
                    options += '<option value="' + value.TemplateValue + '">' + value.DataValue_Description + '</option>';
                });
                $('#ddl_template').html(options);
+           }, function (error) {
+               console.log("Error loading templates");
+           });
+       }
+       function loadRadiologyDepartment() {
+           var options = '<option value="0">Please Select</option>';
+           PageMethods.FillTestMainDepartment(function (result) {
+               var templates = JSON.parse(result);
+               $.each(templates, function (key, value) {
+                   options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+               });
+               $('#ddlDepartment').html(options);
            }, function (error) {
                console.log("Error loading templates");
            });
@@ -246,6 +259,10 @@
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <label for="ddl_template">X-Ray Template</label>
                 <select id="ddl_template" class="form-control"></select>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label for="ddlDepartment">Department</label>
+                <select id="ddlDepartment" class="form-control"></select>
             </div>
             <div class="col-lg-1 col-md-4 col-sm-6">
                 <input type="button" onclick="Addrow()" value="+" class="btn btn-primry" style="margin-top: 20px;" />
