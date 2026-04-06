@@ -134,11 +134,9 @@
                     {
                         "data": "Bill_Date",
                         "name": "Bill_Date",
-                        "render": function (data) {
-                            if (!data) return '';
-                            var date = new Date(data);
-                            return $.datepicker.formatDate('dd-mm-yy', date);
-                        }
+                       "render": function (data) {
+                            return moment(data).format("DD-MMM-YYYY");
+                            }
                     },
                     { "data": "Bill_No", "name": "Bill_No" },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence" },
@@ -191,13 +189,13 @@
                         "name": "IsAcknowledge",
                         "render": function (data, type, row) {
                             if (row.IsApproved === true) {
-                                return '<span class="label label-success">Approved</span>';
+                                return '<span class="">Approved</span>';
                             }
                             else if (row.IsAcknowledge === true) {
-                                return '<span class="label label-info">Acknowledged</span>';
+                                return '<span class="">Acknowledged</span>';
                             }
                             else {
-                                return '<span class="label label-warning">Not Approved</span>';
+                                return '<span class="">Not Approved</span>';
                             }
                         }
                     },
