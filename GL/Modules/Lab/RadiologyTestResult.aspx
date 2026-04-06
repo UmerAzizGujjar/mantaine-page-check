@@ -460,31 +460,110 @@
                     });
                 }
             });
+            //$('#btnReject').click(function () {
+            //    localStorage.isSaved = 1;
+            //    test_list = [];
+            //    var tbl = $("#tblgroupTestlist tbody tr");
+            //    $.each(tbl, function (key, val) {
+
+            //        var name = $(val).find('input[name="testDepartment"]').attr('name');
+            //        if (name == "testDepartment") {
+            //        }
+            //        //});
+            //        else {
+            //            var Ids = $(val).find('td:eq(0)').text();
+            //            //$(val).find('td[id=testDetailID]').text();
+            //            test_list.push({ 'TestDID': Ids });
+            //        }
+            //    });
+            //    //For Single Tests
+            //    var testID = $('#hdtestdetailid').val();
+            //    if (testID != null && testID > 0) {
+            //        test_list.push({ 'TestDID': testID });
+            //    }
+            //    var Lab_ID = 0;
+            //    var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
+            //    if (test_list.length > 0) {
+            //        PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
+
+            //            if (typeof currentlyEditingElement !== 'undefined') {
+            //                EditData(currentlyEditingElement);
+            //            }
+            //            var storageBillNo = localStorage.Bill_No;
+            //            if (storageBillNo != "(New)") {
+            //                $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+            //                loadPatientDataUsingBillId();
+
+
+            //            }
+
+            //        }, function (onfailure) {
+
+            //            alert(onfailure);
+            //        });
+            //    }
+
+            //});
+
             $('#btnReject').click(function () {
+                // Show the rejection modal instead of directly rejecting
+                $('#rejectionModal').modal('show');
+            });
+
+            // Handle confirm rejection
+            $('#btnConfirmReject').click(function () {
+                var rejectionRemarks = $('#txtRejectionRemarks').val().trim();
+
+                if (rejectionRemarks === "") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Please enter rejection remarks',
+                        showConfirmButton: true,
+                        timer: 2000
+                    });
+                    return;
+                }
+
+                // Close the rejection modal
+                $('#rejectionModal').modal('hide');
+
+                // Clear the textarea for next use
+                $('#txtRejectionRemarks').val('');
+
+                // Proceed with rejection
                 localStorage.isSaved = 1;
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
                 $.each(tbl, function (key, val) {
-
                     var name = $(val).find('input[name="testDepartment"]').attr('name');
                     if (name == "testDepartment") {
                     }
-                    //});
                     else {
                         var Ids = $(val).find('td:eq(0)').text();
-                        //$(val).find('td[id=testDetailID]').text();
                         test_list.push({ 'TestDID': Ids });
                     }
                 });
-                //For Single Tests
+
+                // For Single Tests
                 var testID = $('#hdtestdetailid').val();
                 if (testID != null && testID > 0) {
                     test_list.push({ 'TestDID': testID });
                 }
+
                 var Lab_ID = 0;
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
+
                 if (test_list.length > 0) {
-                    PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
+                    PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), rejectionRemarks, function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Test rejected successfully',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
 
                         if (typeof currentlyEditingElement !== 'undefined') {
                             EditData(currentlyEditingElement);
@@ -492,18 +571,17 @@
                         var storageBillNo = localStorage.Bill_No;
                         if (storageBillNo != "(New)") {
                             $("#ctl00_MainContent_txtBilling").val(storageBillNo);
-
                             loadPatientDataUsingBillId();
-
-
                         }
-                      
                     }, function (onfailure) {
-
-                        alert(onfailure);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: onfailure,
+                            showConfirmButton: true
+                        });
                     });
                 }
-
             });
             debugger;
             $('#saveTest').click(function () {
@@ -2031,6 +2109,26 @@
 
             });
         }
+        function updateModalPatientDetails() {
+            // Get values from the main page patient cards
+            var patientName = $('#<%= vlblPatients_Name.ClientID %>').text() || '--';
+            var age = $('#<%= vLbl_Age.ClientID %>').text() || '--';
+            var gender = $('#<%= vLbl_Gender.ClientID %>').text() || '--';
+            var mrNo = $('#<%= hdnPatient_ID.ClientID %>').val() || '--';
+            var billNo = $('#<%= hdnBill_No.ClientID %>').val() || '--';
+            var billDate = $('#<%= vLbl_RegDate.ClientID %>').text() || '--';
+            var department = $('#<%= vPatient_Category.ClientID %>').text() || '--';
+            $('#modal_MRNo').text(mrNo);
+            $('#modal_PatientName').text(patientName);
+            $('#modal_Age').text(age);
+            $('#modal_Gender').text(gender);
+            $('#modal_BillNo').text(billNo);
+            if (department === '--' || department === '') {
+                department = $('#<%= vPatient_Category.ClientID %>').text() || '--';
+            }
+            $('#modal_Category').text(department);
+            $('#modal_BillDate').text(billDate);
+        }
         function EditValue() {
 
             // document.getElementById("mTestTemplate").disabled = false;
@@ -2088,7 +2186,7 @@
 
             var billDetailID = $($(row).find('td input[name=Bill_Details_ID]')[0]).val();
             bill_detailid = billDetailID;
-
+            updateModalPatientDetails();
             if (Group_Categroy == "") {
                 $("#tblgroupTestlist").hide();
                 $("#tblsingleTest").show();
@@ -3434,6 +3532,18 @@
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title" id="titleee">Add Test Result</h4>
                 </div>
+                <!-- Patient Basic Details Section - Small compact view -->
+                <div class="patient-basic-info" style="background: #f8f9fa; padding: 8px 15px; margin: 0 15px; border-radius: 6px; border-left: 4px solid #007bff;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; font-size: 13px;">
+                       <div><strong>MR No:</strong> <span id="modal_MRNo">--</span></div>
+                        <div><strong>Name:</strong> <span id="modal_PatientName">--</span></div>
+                        <div><strong>Age:</strong> <span id="modal_Age">--</span></div>
+                        <div><strong>Gender:</strong> <span id="modal_Gender">--</span></div>
+                        <div><strong>Category:</strong> <span id="modal_Category">--</span></div>
+                        <div><strong>Bill No:</strong> <span id="modal_BillNo">--</span></div>
+                        <div><strong>Date:</strong> <span id="modal_BillDate">--</span></div>
+                    </div>
+                </div>
                 <div id="dvSingleTestName">
                     <p id="pTestName" style="margin-left: 29px; font-size: 20px; color: blue;"></p>
                 </div>
@@ -3555,7 +3665,7 @@
                 <div class="modal-footer">
                     <div class="row" style="width: 100%; margin-bottom: 10px;">
                         <div class="col-lg-3">
-                            <label style="display: block; text-align: left;">Refer Doctor:</label>
+                            <label style="display: block; text-align: left;">Performing Doctor:</label>
                             <select id="ddlReferDoctor" class="form-control"></select>
                         </div>
                     </div>
@@ -3710,4 +3820,25 @@
             </div>
         </div>
     </div>
+    <!-- Rejection Remarks Modal -->
+<div id="rejectionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 500px;">
+            <div class="modal-header">
+                <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Reject Test Result</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtRejectionRemarks">Rejection Remarks:</label>
+                    <textarea id="txtRejectionRemarks" rows="5" cols="50" class="form-control" style="width: 100%;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
+                <input type="button" id="btnConfirmReject" class="btn btn-danger" value="Confirm Reject" />
+            </div>
+        </div>
+    </div>
+</div>
 </asp:Content>

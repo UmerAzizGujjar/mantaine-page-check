@@ -362,7 +362,7 @@ namespace PMS.Modules.Lab
             return "";
         }
         [WebMethod]
-        public static string RejectTestDetail(int Lab_ID, string TesttDetails)
+        public static string RejectTestDetail(int Lab_ID, string TesttDetails, string RejectionRemarks)
         {
             try
             {
@@ -383,6 +383,7 @@ namespace PMS.Modules.Lab
                         labtest.UnApproved_Time = DateTime.Now;
                         labtest.isApproved = null;
                         labtest.Approved_By = null;
+                        labtest.Rejected_Reason = RejectionRemarks;
 
                         db.SubmitChanges();
                     }
@@ -606,7 +607,8 @@ namespace PMS.Modules.Lab
                             td.Levels,
                             t.Result_Type_Image,
                             Is_Approve = td.isApproved == null ? false : true,
-                            td.Refer_Doctor
+                            td.Refer_Doctor,
+
 
 
                         }).ToList();
@@ -632,6 +634,7 @@ namespace PMS.Modules.Lab
             listObj.Add(data[0].Is_Cultural.ToString()); //18
             listObj.Add(data[0].Ranges);//19
             listObj.Add(data[0].AllRange);//20
+          
 
             var Test_ID = db.Lab_Test_Details.Where(m => m.Lab_Test_Detail_ID == Convert.ToInt32(TestDetailID)).Select(m => m.Test_ID).FirstOrDefault();
 
@@ -750,7 +753,6 @@ namespace PMS.Modules.Lab
                                                      pm.Organism_Type,
                                                      pm.Master_Remarks,
                                                      b.Bill_Details_ID,
-
 
                                                      resultValueList = (from p in db.Lab_Test_Multiple_Values where p.Test_ID == t.Test_ID select p.Value).ToList(),
                                                      FixedValue = (from dt in db.DataValues where dt.ValueSet_ID == 70 && dt.DataValue_Name == t.Group_Category select dt.Fixed_Value).FirstOrDefault(),
