@@ -34,7 +34,8 @@
             LoadWarehouses();
             LoadWarehousesforSaleReturn();
             
-             LoadPatientNo();
+            LoadPatientNo();
+            AllowadjustmentEdit();
             
         });
         window.addEventListener('keydown', function (event) {
@@ -3051,7 +3052,38 @@
                         //alert("Error loading invoices: " + error);
                     }
                 });
-            }
+        }
+
+        var editrights;
+        function AllowadjustmentEdit() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/CheckEditAdjustment",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    editrights = data.d;
+
+                    if (editrights == "true") {
+
+                        $('#txtFlatDisc').attr('disabled', false);
+                    }
+                    else {
+                        $('#txtFlatDisc').attr('disabled', true);
+                    }
+
+                },
+                failure: function () {
+                    alert("Error");
+                }
+            });
+
+
+        }
 
         //function getInvoiceNo_PatWise() {
 
