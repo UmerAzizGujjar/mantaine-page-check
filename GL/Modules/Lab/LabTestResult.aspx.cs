@@ -839,7 +839,7 @@ namespace PMS
 
                 pt.Name = pat.Full_Name;
                 pt.Gender = pat.Gender;
-                pt.Age = pat.Age_years.ToString();
+                pt.Age = pat.Age_years?.ToString() ?? "";
                 if (pat.Created_time.HasValue)
                     pt.Entry_Date = pat.Created_time.ToString();
 
