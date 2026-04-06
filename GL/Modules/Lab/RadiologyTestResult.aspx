@@ -431,42 +431,31 @@
                         test_list.push({ 'TestDID': testDetailId });
                     }
                 });
-                //$.each(tbl, function (key, val) {
 
-                //    var name = $(val).find('input[name="testDepartment"]').attr('name');
-                //    if (name == "testDepartment") {
-                //    }
-                //    else {
-                //        var Ids = $(val).find('td:eq(0)').text();
-                //        //$(val).find('td[id=testDetailID]').text();
-                //        test_list.push({ 'TestDID': Ids });
-                //    }
-                //});
-                //For Single Tests
                 var testID = $('#hdtestdetailid').val();
                 if (testID != null && testID > 0) {
                     test_list.push({ 'TestDID': testID });
                 }
-                var Lab_ID = 0;
-                var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
-                if (test_list.length > 0) {
-                    PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
 
-                        //alert(response)
+                var Lab_ID = 0;
+
+                // Get the selected doctor ID
+                var selectedDoctorId = $("#ddlReferDoctor").val();
+
+                var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
+
+                if (test_list.length > 0) {
+                    // Pass the doctor ID as the third parameter
+                    PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), selectedDoctorId, function (response) {
                         if (typeof currentlyEditingElement !== 'undefined') {
                             EditData(currentlyEditingElement);
                         }
                         var storageBillNo = localStorage.Bill_No;
                         if (storageBillNo != "(New)") {
                             $("#ctl00_MainContent_txtBilling").val(storageBillNo);
-
                             loadPatientDataUsingBillId();
-
-
                         }
-                       
                     }, function (onfailure) {
-
                         alert(onfailure);
                     });
                 }

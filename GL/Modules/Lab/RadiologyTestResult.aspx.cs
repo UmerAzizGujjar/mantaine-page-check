@@ -399,7 +399,7 @@ namespace PMS.Modules.Lab
             return "Not Successfull";
         }
         [WebMethod]
-        public static string ApproveTestDetailCat(int Lab_ID, string TesttDetails)
+        public static string ApproveTestDetailCat(int Lab_ID, string TesttDetails, int ReferDoctorId = 0)
         {
             try
             {
@@ -413,31 +413,36 @@ namespace PMS.Modules.Lab
                                                where t.Lab_Test_Detail_ID == int.Parse(test.TestDID)
                                                select t).FirstOrDefault();
 
-
-                    labtest.Result_ID = "0";
-                    labtest.Approved_By = AppConfig.UserID;
-                    labtest.Approved_Time = DateTime.Now;
-                    labtest.isApproved = true;
-                    labtest.Is_Result = true;
-                    var PR = (from tbl in db.Lab_Test_Details
-                              where tbl.Recieved_ID == test.TestDID && tbl.Is_Result == false
-                              select tbl).FirstOrDefault();
-                    if (PR != null)
+                    if (labtest != null)
                     {
-                        PR.Is_Result = true;
-                        db.SubmitChanges();
+                        labtest.Result_ID = "0";
+                        labtest.Approved_By = AppConfig.UserID;
+                        labtest.Approved_Time = DateTime.Now;
+                        labtest.isApproved = true;
+                        labtest.Is_Result = true;
+
+                        // Update Refer Doctor ID
+                        if (ReferDoctorId > 0)
+                        {
+                            labtest.DoctorID = ReferDoctorId;
+                        }
+
+                        var PR = (from tbl in db.Lab_Test_Details
+                                  where tbl.Recieved_ID == test.TestDID && tbl.Is_Result == false
+                                  select tbl).FirstOrDefault();
+                        if (PR != null)
+                        {
+                            PR.Is_Result = true;
+                        }
                     }
                     db.SubmitChanges();
                 }
                 return "Successfull";
-
             }
             catch (Exception ex)
             {
-
+                return "Error: " + ex.Message;
             }
-
-            return "";
         }
         [WebMethod]
         public static string DeleteImage(string imagSrc)
@@ -1896,43 +1901,7 @@ namespace PMS.Modules.Lab
             }
         }
 
-        //[WebMethod]
-        //public static string GetAll_XRayLevel()
-        //{
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        if (AppConfig.UserID == Guid.Empty)
-        //        {
-        //            return (new JavaScriptSerializer()).Serialize(new List<object>());
-        //        }
-
-        //        Guid currentUserIdGuid = AppConfig.UserID;
-
-        //        var levels = (from uwt in db.User_Wise_Templates
-        //                      join uwtDetail in db.User_Wise_Template_Details
-        //                          on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
-        //                      join xr in db.XRayLevels
-        //                          on uwtDetail.DataValue_ID equals xr.Levels
-        //                      join dv in db.DataValues on xr.Levels equals dv.DataValue_Name
-        //                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
-        //                      where uwt.User_Id == currentUserIdGuid
-        //                            && uwtDetail.User_Id == currentUserIdGuid
-        //                            && uwt.is_cancel == false
-        //                            && uwtDetail.DataValue_ID != null
-        //                            && uwtDetail.DataValue_ID != ""
-        //                            && vs.ValueSet_Name == "X-Ray Format"
-        //                      select new
-        //                      {
-        //                          xr.XRayLevel_ID,
-        //                          xr.Levels,
-        //                          xr.FixValues,
-        //                          DataValue_Description = dv.DataValue_Description
-        //                      }).Distinct().ToList();
-
-        //        return (new JavaScriptSerializer()).Serialize(levels);
-        //    }
-        //}
-
+      
         private const string DEPT_ULTRASOUND = "002";
         private const string DEPT_XRAY = "003";
         private const string DEPT_CTSCAN = "004";
