@@ -3727,7 +3727,7 @@
                 </div>
             </div>
 
-            <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+            <div style="height: 400px; overflow-y: auto; overflow-x: auto;">
                 <table class="table test-table" id="tblradilogy">
                     <thead>
                         <tr>
