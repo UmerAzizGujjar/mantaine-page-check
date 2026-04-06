@@ -879,10 +879,11 @@
 
 
             $("#ddlReferDoctor").select2({
-                placeholder: "Select Doctor",
-                allowClear: true,
-                width: '100%'
-            });
+    placeholder: "Select Doctor",
+    allowClear: true,
+    width: '100%',
+    dropdownParent: $('#myModal')  // Appends to modal instead of body
+});
 
             $.ajax({
                 type: "POST",
