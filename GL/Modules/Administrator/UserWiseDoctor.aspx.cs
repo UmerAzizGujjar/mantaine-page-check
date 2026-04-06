@@ -120,105 +120,93 @@ namespace PMS.Modules.Administrator
                 {
                     Guid userGuid = Guid.Parse(userid);
 
-                    User_Wise_Template master;
-
-                    if (btnSave == "Save")
+                    // For each department in the list, save separately
+                    foreach (var item in AllItemDetail)
                     {
-                        // Check if user already has a master record
-                        var existingUserMaster = db.User_Wise_Templates
-                            .FirstOrDefault(x => x.User_Id == userGuid && x.is_cancel == false);
+                        // Check if this user already has a template for this specific department
+                        var existingForDepartment = (from uwt in db.User_Wise_Templates
+                                                     join uwtDetail in db.User_Wise_Template_Details
+                                                     on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
+                                                     where uwt.User_Id == userGuid
+                                                           && uwt.is_cancel == false
+                                                           && uwtDetail.Department == item.department
+                                                     select uwt).FirstOrDefault();
 
-                        if (existingUserMaster != null)
+                        if (existingForDepartment != null && btnSave == "Save")
                         {
-                            // User already has a master record, check if they're trying to add same department
-                            var existingDepts = db.User_Wise_Template_Details
-                                .Where(x => x.User_Wise_Template_Id == existingUserMaster.User_Wise_Template_Id)
-                                .Select(x => x.Department)
-                                .Distinct()
-                                .ToList();
+                            // User already has a template for this department, update it
+                            var existingDetail = db.User_Wise_Template_Details
+                                .FirstOrDefault(x => x.User_Wise_Template_Id == existingForDepartment.User_Wise_Template_Id
+                                      && x.Department == item.department);
 
-                            // Check if any of the new departments already exist
-                            foreach (var newItem in AllItemDetail)
+                            if (existingDetail != null)
                             {
-                                if (existingDepts.Contains(newItem.department))
-                                {
-                                    return "DepartmentExists"; // Return specific error for duplicate department
-                                }
+                                existingDetail.DataValue_ID = item.templateId;
+                                existingDetail.User_Id = userGuid;
+                                db.SubmitChanges();
                             }
-
-                            // Update existing master
-                            master = existingUserMaster;
-                            master.Updated_By = AppConfig.UserID;
-                            master.Updated_Time = DateTime.Now;
-                            db.SubmitChanges();
-                            masterID = master.User_Wise_Template_Id;
+                            masterID = existingForDepartment.User_Wise_Template_Id;
                         }
                         else
                         {
-                            // Create new master record
-                            master = new User_Wise_Template
+                            // Check if there's an existing master record for this user (any department)
+                            var existingMaster = db.User_Wise_Templates
+                                .FirstOrDefault(x => x.User_Id == userGuid && x.is_cancel == false);
+
+                            if (existingMaster != null)
                             {
-                                User_Id = userGuid,
-                                Created_By = AppConfig.UserID,
-                                Created_Time = DateTime.Now,
-                                is_cancel = false
-                            };
-                            db.User_Wise_Templates.InsertOnSubmit(master);
-                            db.SubmitChanges();
-                            masterID = master.User_Wise_Template_Id;
-                        }
-                    }
-                    else // Update mode
-                    {
-                        master = db.User_Wise_Templates.FirstOrDefault(x => x.User_Wise_Template_Id == EditId);
-                        if (master == null) return "-1";
+                                // Use existing master
+                                masterID = existingMaster.User_Wise_Template_Id;
 
-                        master.User_Id = userGuid;
-                        master.Updated_By = AppConfig.UserID;
-                        master.Updated_Time = DateTime.Now;
-                        db.SubmitChanges();
-                        masterID = EditId;
-                    }
+                                // Check if detail for this department already exists
+                                var existingDetail = db.User_Wise_Template_Details
+                                    .FirstOrDefault(x => x.User_Wise_Template_Id == masterID
+                                          && x.Department == item.department);
 
-                    var existingDetails = db.User_Wise_Template_Details
-                        .Where(x => x.User_Wise_Template_Id == masterID)
-                        .ToList();
-
-                    var newItemsSet = new HashSet<string>(AllItemDetail.Select(x => $"{x.templateId}_{x.department}"));
-
-                    var toDelete = existingDetails
-                        .Where(ed => !string.IsNullOrEmpty(ed.DataValue_ID) &&
-                                    !newItemsSet.Contains($"{ed.DataValue_ID}_{ed.Department}"))
-                        .ToList();
-
-                    if (toDelete.Any())
-                    {
-                        db.User_Wise_Template_Details.DeleteAllOnSubmit(toDelete);
-                    }
-
-                    foreach (var newItem in AllItemDetail)
-                    {
-                        var existing = existingDetails
-                            .FirstOrDefault(ed => ed.DataValue_ID == newItem.templateId && ed.Department == newItem.department);
-
-                        if (existing != null)
-                        {
-                            existing.User_Id = userGuid;
-                            existing.Department = newItem.department;
-                        }
-                        else
-                        {
-                            db.User_Wise_Template_Details.InsertOnSubmit(new User_Wise_Template_Detail
+                                if (existingDetail != null)
+                                {
+                                    // Update existing detail
+                                    existingDetail.DataValue_ID = item.templateId;
+                                    existingDetail.User_Id = userGuid;
+                                }
+                                else
+                                {
+                                    // Add new detail for this department
+                                    db.User_Wise_Template_Details.InsertOnSubmit(new User_Wise_Template_Detail
+                                    {
+                                        User_Wise_Template_Id = masterID,
+                                        User_Id = userGuid,
+                                        DataValue_ID = item.templateId,
+                                        Department = item.department
+                                    });
+                                }
+                                db.SubmitChanges();
+                            }
+                            else
                             {
-                                User_Wise_Template_Id = masterID,
-                                User_Id = userGuid,
-                                DataValue_ID = newItem.templateId,
-                                Department = newItem.department
-                            });
+                                // Create new master and detail
+                                var master = new User_Wise_Template
+                                {
+                                    User_Id = userGuid,
+                                    Created_By = AppConfig.UserID,
+                                    Created_Time = DateTime.Now,
+                                    is_cancel = false
+                                };
+                                db.User_Wise_Templates.InsertOnSubmit(master);
+                                db.SubmitChanges();
+                                masterID = master.User_Wise_Template_Id;
+
+                                db.User_Wise_Template_Details.InsertOnSubmit(new User_Wise_Template_Detail
+                                {
+                                    User_Wise_Template_Id = masterID,
+                                    User_Id = userGuid,
+                                    DataValue_ID = item.templateId,
+                                    Department = item.department
+                                });
+                                db.SubmitChanges();
+                            }
                         }
                     }
-
-                    db.SubmitChanges();
                     return masterID.ToString();
                 }
             }

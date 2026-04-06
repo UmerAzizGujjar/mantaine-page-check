@@ -230,95 +230,72 @@
            });
        }
 
-       function Addrow() {
-    var user_id = $('#ddl_users').val();
-    var username = $('#ddl_users :selected').text();
-    var template_id = $('#ddl_template').val();
-    var template_display = $('#ddl_template :selected').text();
-    var department = $('#ddlDepartment').val();
-    var department_display = $('#ddlDepartment :selected').text();
+        function Addrow() {
+            var user_id = $('#ddl_users').val();
+            var username = $('#ddl_users :selected').text();
+            var template_id = $('#ddl_template').val();
+            var template_display = $('#ddl_template :selected').text();
+            var department = $('#ddlDepartment').val();
+            var department_display = $('#ddlDepartment :selected').text();
 
-    if (user_id == "0" || user_id == "") {
-        Swal.fire({
-            icon: 'error', title: 'Error!', text: 'Please Select User', timer: 2000, showConfirmButton: false
-        });
-        return;
-    }
+            if (user_id == "0" || user_id == "") {
+                Swal.fire({
+                    icon: 'error', title: 'Error!', text: 'Please Select User', timer: 2000, showConfirmButton: false
+                });
+                return;
+            }
 
-    if (department == "0" || department == "") {
-        Swal.fire({
-            icon: 'error', title: 'Error!', text: 'Please Select Department', timer: 2000, showConfirmButton: false
-        });
-        return;
-    }
+            if (department == "0" || department == "") {
+                Swal.fire({
+                    icon: 'error', title: 'Error!', text: 'Please Select Department', timer: 2000, showConfirmButton: false
+                });
+                return;
+            }
 
-    if (template_id == "0" || template_id == "") {
-        Swal.fire({
-            icon: 'error', title: 'Error!', text: 'Please Select Template', timer: 2000, showConfirmButton: false
-        });
-        return;
-    }
+            if (template_id == "0" || template_id == "") {
+                Swal.fire({
+                    icon: 'error', title: 'Error!', text: 'Please Select Template', timer: 2000, showConfirmButton: false
+                });
+                return;
+            }
 
-    // CRITICAL: Check if user already has ANY template for this department
-    var hasDepartmentTemplate = false;
-    $('#tblItemDescriptionDetail tr').each(function () {
-        var existingDept = $(this).find('input[name=txt_department]').val();
-        
-        if (existingDept == department) {
-            hasDepartmentTemplate = true;
-            return false; // break the loop
+            // Check if this department is already added (only ONE template per department)
+            var departmentExists = false;
+            $('#tblItemDescriptionDetail tr').each(function () {
+                var existingDept = $(this).find('input[name=txt_department]').val();
+
+                if (existingDept == department) {
+                    departmentExists = true;
+                    return false;
+                }
+            });
+
+            if (departmentExists) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'This department already has a template assigned. Only one template per department is allowed.',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            var rows = '<tr>' +
+                '<td style="display:none;">' + user_id + '</td>' +
+                '<td style="display:none;"><input type="text" name="txt_department" value="' + department + '" /></td>' +
+                '<td><input type="text" name="txt_UserName" style="width:100%;" readonly value="' + username + '" /></td>' +
+                '<td style="display:none;"><input type="text" name="txt_template_id" value="' + template_id + '" /></td>' +
+                '<td><input type="text" name="txt_template_display" style="width:100%;" readonly value="' + template_display + '" /></td>' +
+                '<td><input type="text" name="txt_department_display" style="width:100%;" readonly value="' + department_display + '" /></td>' +
+                '<td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="color:#f30a0a;"></i></a></td>' +
+                '</tr>';
+
+            $('#tblItemDescriptionDetail').append(rows);
+            $('#ddl_users').attr('disabled', 'disabled');
+
+            $('#ddl_template').val('0').trigger('change');
         }
-    });
-
-    if (hasDepartmentTemplate) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Cannot Add Template!',
-            text: 'This user already has a template for the selected department. Only one template per department is allowed.',
-            timer: 3000,
-            showConfirmButton: true
-        });
-        return;
-    }
-
-    // Check for duplicate template (same template and same department)
-    var exists = false;
-    $('#tblItemDescriptionDetail tr').each(function () {
-        var existingTemplateId = $(this).find('input[name=txt_template_id]').val();
-        var existingDept = $(this).find('input[name=txt_department]').val();
-        
-        if (existingTemplateId == template_id && existingDept == department) {
-            exists = true;
-            return false;
-        }
-    });
-
-    if (exists) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Warning!',
-            text: 'Template already added to list for this department',
-            timer: 2000,
-            showConfirmButton: false
-        });
-        return;
-    }
-
-    var rows = '<tr>' +
-        '<td style="display:none;">' + user_id + '</td>' +
-        '<td style="display:none;"><input type="text" name="txt_department" value="' + department + '" /></td>' +
-        '<td><input type="text" name="txt_UserName" style="width:100%;" readonly value="' + username + '" /></td>' +
-        '<td style="display:none;"><input type="text" name="txt_template_id" value="' + template_id + '" /></td>' +
-        '<td><input type="text" name="txt_template_display" style="width:100%;" readonly value="' + template_display + '" /></td>' +
-        '<td><input type="text" name="txt_department_display" style="width:100%;" readonly value="' + department_display + '" /></td>' +
-        '<td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="color:#f30a0a;"></i></a></td>' +
-        '</tr>';
-    
-    $('#tblItemDescriptionDetail').append(rows);
-    $('#ddl_users').attr('disabled', 'disabled');
-    
-    $('#ddl_template').val('0').trigger('change');
-}
     </script>
 
 </asp:Content>

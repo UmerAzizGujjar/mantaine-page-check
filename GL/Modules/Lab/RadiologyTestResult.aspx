@@ -409,17 +409,17 @@
                 $("#ddlOrganism").select2('open');
 
             });
-            $('#chkUltraSound_level').change(function () {
+            //$('#chkUltraSound_level').change(function () {
 
-                var getVal = this.value;
-                if (getVal == "") {
-                    CKEDITOR.instances.txtfixedType.setData("");
-                }
-                PageMethods.FillUltrasound_level(getVal, function (resp) {
-                    var fixedVal = JSON.parse(resp);
-                    CKEDITOR.instances.txtfixedType.setData(fixedVal);
-                });
-            });
+            //    var getVal = this.value;
+            //    if (getVal == "") {
+            //        CKEDITOR.instances.txtfixedType.setData("");
+            //    }
+            //    PageMethods.FillUltrasound_level(getVal, function (resp) {
+            //        var fixedVal = JSON.parse(resp);
+            //        CKEDITOR.instances.txtfixedType.setData(fixedVal);
+            //    });
+            //});
             $('#btnApprove').click(function () {
                 debugger;
                 test_list = [];
@@ -431,42 +431,31 @@
                         test_list.push({ 'TestDID': testDetailId });
                     }
                 });
-                //$.each(tbl, function (key, val) {
 
-                //    var name = $(val).find('input[name="testDepartment"]').attr('name');
-                //    if (name == "testDepartment") {
-                //    }
-                //    else {
-                //        var Ids = $(val).find('td:eq(0)').text();
-                //        //$(val).find('td[id=testDetailID]').text();
-                //        test_list.push({ 'TestDID': Ids });
-                //    }
-                //});
-                //For Single Tests
                 var testID = $('#hdtestdetailid').val();
                 if (testID != null && testID > 0) {
                     test_list.push({ 'TestDID': testID });
                 }
-                var Lab_ID = 0;
-                var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
-                if (test_list.length > 0) {
-                    PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
 
-                        //alert(response)
+                var Lab_ID = 0;
+
+                // Get the selected doctor ID
+                var selectedDoctorId = $("#ddlReferDoctor").val();
+
+                var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
+
+                if (test_list.length > 0) {
+                    // Pass the doctor ID as the third parameter
+                    PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), selectedDoctorId, function (response) {
                         if (typeof currentlyEditingElement !== 'undefined') {
                             EditData(currentlyEditingElement);
                         }
                         var storageBillNo = localStorage.Bill_No;
                         if (storageBillNo != "(New)") {
                             $("#ctl00_MainContent_txtBilling").val(storageBillNo);
-
                             loadPatientDataUsingBillId();
-
-
                         }
-                       
                     }, function (onfailure) {
-
                         alert(onfailure);
                     });
                 }
@@ -853,6 +842,44 @@
 
                 if (fixValues && fixValues !== "") {
                     // Decode HTML entities back to HTML
+                    var decodedFixValues = $('<textarea/>').html(fixValues).text();
+                    CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                } else if ($(this).val() === "") {
+                    CKEDITOR.instances.txtfixedType.setData("");
+                }
+            });
+
+            $('#chkMRILevel').change(function () {
+                var selectedOption = $(this).find('option:selected');
+                var fixValues = selectedOption.data('fixvalues');
+
+                if (fixValues && fixValues !== "") {
+                    var decodedFixValues = $('<textarea/>').html(fixValues).text();
+                    CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                } else if ($(this).val() === "") {
+                    CKEDITOR.instances.txtfixedType.setData("");
+                }
+            });
+
+            // CTScan change handler (same as X-Ray)
+            $('#chkCTScanLevel').change(function () {
+                var selectedOption = $(this).find('option:selected');
+                var fixValues = selectedOption.data('fixvalues');
+
+                if (fixValues && fixValues !== "") {
+                    var decodedFixValues = $('<textarea/>').html(fixValues).text();
+                    CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                } else if ($(this).val() === "") {
+                    CKEDITOR.instances.txtfixedType.setData("");
+                }
+            });
+
+            // Ultrasound change handler (same as X-Ray)
+            $('#chkUltraSound_level').change(function () {
+                var selectedOption = $(this).find('option:selected');
+                var fixValues = selectedOption.data('fixvalues');
+
+                if (fixValues && fixValues !== "") {
                     var decodedFixValues = $('<textarea/>').html(fixValues).text();
                     CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
                 } else if ($(this).val() === "") {
@@ -2146,22 +2173,57 @@
                             var MainDept = data[2];
 
                             // Show/hide Ultrasound level dropdown
-                            if (CheckLevel == "True") {
+                            $("#chkUltraSound_level").hide();
+                            $("#chkXRay_level").hide();
+                            $("#chkMRILevel").hide();
+                            $("#chkCTScanLevel").hide();
+
+                            // Show/hide department-specific level dropdowns based on department
+                            if (MainDept == "Ultrasound" || MainDept == "002") {
                                 $("#chkUltraSound_level").show();
-                                getAllLevels(TestID);
-                            } else {
-                                $("#chkUltraSound_level").hide();
+                                LoadUltrasoundLevelsUserWise();
+                                var UltraLevels = data[25];  // CHANGED from 24 to 25
+                                if (UltraLevels && UltraLevels != "") {
+                                    setTimeout(function () {
+                                        $('#chkUltraSound_level').val(UltraLevels);
+                                    }, 1000);
+                                }
                             }
 
-                            // Show/hide X-Ray level dropdown based on department
-                            if (MainDept == "X-Ray" || MainDept == "003") {
+                            // X-Ray - Keep as is (works)
+                            else if (MainDept == "X-Ray" || MainDept == "003") {
                                 $("#chkXRay_level").show();
-                                // Load X-Ray levels if not already loaded
-                                if ($('#chkXRay_level option').length <= 1) {
-                                    LoadXRayLevels();
+                                LoadXRayLevels();
+                                var xrayLevels = data[25];  // This is correct - index 25
+                                if (xrayLevels && xrayLevels != "") {
+                                    setTimeout(function () {
+                                        $('#chkXRay_level').val(xrayLevels);
+                                    }, 500);
                                 }
-                            } else {
-                                $("#chkXRay_level").hide();
+                            }
+
+                            // CT Scan - CHANGE FROM data[26] TO data[25]
+                            else if (MainDept == "CT Scan" || MainDept == "004") {
+                                $("#chkCTScanLevel").show();
+                                LoadCTScanLevels();
+                                var ctScanLevels = data[25];  // CHANGED from 26 to 25
+                                if (ctScanLevels && ctScanLevels != "") {
+                                    setTimeout(function () {
+                                        $('#chkCTScanLevel').val(ctScanLevels);
+                                    }, 1000);
+                                }
+                            }
+
+                            // MRI - CHANGE FROM data[27] TO data[25]
+                            else if (MainDept == "MRI" || MainDept == "006") {
+                                $("#chkMRILevel").show();
+                                LoadMRILevels();
+                                var mriLevels = data[25];  // CHANGED from 27 to 25
+                                if (mriLevels && mriLevels != "") {
+                                    setTimeout(function () {
+                                        $('#chkMRILevel').val(mriLevels);
+                                    }, 1000);
+                                }
                             }
 
                             // Set the X-Ray level value if exists
@@ -2284,11 +2346,11 @@
                                 $("#btnReject").show();
                             }
 
-                            setTimeout(function () {
+                            //setTimeout(function () {
 
-                                $('#chkUltraSound_level').val(UltraLevels)
-                            }
-                                , 1000);
+                            //    $('#chkUltraSound_level').val(UltraLevels)
+                            //}
+                            //    , 1000);
 
 
                             if (Ranges == null || Ranges == '') {
@@ -3030,6 +3092,89 @@
             });
         }
 
+        function LoadMRILevels() {
+            PageMethods.GetAll_MRILevel(function (response) {
+                var levels = JSON.parse(response);
+                var $mriSelect = $('#chkMRILevel');
+
+                $mriSelect.empty();
+
+                if (levels && levels.length > 0) {
+                    $.each(levels, function (key, level) {
+                        $mriSelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                    });
+
+                    var firstLevel = levels[0];
+                    $mriSelect.val(firstLevel.Levels);
+                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
+                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
+                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                    }
+                } else {
+                    $mriSelect.append('<option value="">No MRI Levels Assigned</option>');
+                    $mriSelect.prop('disabled', true);
+                }
+            }, function (error) {
+                console.error("Error loading MRI levels:", error);
+            });
+        }
+
+        // Load CTScan Levels (simplified - same pattern as X-Ray)
+        function LoadCTScanLevels() {
+            PageMethods.GetAll_CTScanLevel(function (response) {
+                var levels = JSON.parse(response);
+                var $ctSelect = $('#chkCTScanLevel');
+
+                $ctSelect.empty();
+
+                if (levels && levels.length > 0) {
+                    $.each(levels, function (key, level) {
+                        $ctSelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                    });
+
+                    var firstLevel = levels[0];
+                    $ctSelect.val(firstLevel.Levels);
+                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
+                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
+                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                    }
+                } else {
+                    $ctSelect.append('<option value="">No CTScan Levels Assigned</option>');
+                    $ctSelect.prop('disabled', true);
+                }
+            }, function (error) {
+                console.error("Error loading CTScan levels:", error);
+            });
+        }
+
+        // Load Ultrasound Levels (simplified - same pattern as X-Ray)
+        function LoadUltrasoundLevelsUserWise() {
+            PageMethods.GetAll_UltrasoundLevelUserWise(function (response) {
+                var levels = JSON.parse(response);
+                var $usSelect = $('#chkUltraSound_level');
+
+                $usSelect.empty();
+
+                if (levels && levels.length > 0) {
+                    $.each(levels, function (key, level) {
+                        $usSelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                    });
+
+                    var firstLevel = levels[0];
+                    $usSelect.val(firstLevel.Levels);
+                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
+                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
+                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                    }
+                } else {
+                    $usSelect.append('<option value="">No Ultrasound Levels Assigned</option>');
+                    $usSelect.prop('disabled', true);
+                }
+            }, function (error) {
+                console.error("Error loading Ultrasound levels:", error);
+            });
+        }
+
         // Helper function to escape HTML
         function escapeHtml(unsafe) {
             if (!unsafe) return '';
@@ -3315,6 +3460,16 @@
                                     <div style="margin-top: 15px;">
                                         <select id="chkXRay_level" class="wgtmsr">
                                             <option value="">Select X-Ray Level</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-top: 15px;">
+                                        <select id="chkMRILevel" class="wgtmsr">
+                                            <option value="">Select MRI Level</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-top: 15px;">
+                                        <select id="chkCTScanLevel" class="wgtmsr" >
+                                            <option value="">Select CTScan Level</option>
                                         </select>
                                     </div>
                                 </td>

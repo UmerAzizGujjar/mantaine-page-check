@@ -399,7 +399,7 @@ namespace PMS.Modules.Lab
             return "Not Successfull";
         }
         [WebMethod]
-        public static string ApproveTestDetailCat(int Lab_ID, string TesttDetails)
+        public static string ApproveTestDetailCat(int Lab_ID, string TesttDetails, int ReferDoctorId = 0)
         {
             try
             {
@@ -413,31 +413,36 @@ namespace PMS.Modules.Lab
                                                where t.Lab_Test_Detail_ID == int.Parse(test.TestDID)
                                                select t).FirstOrDefault();
 
-
-                    labtest.Result_ID = "0";
-                    labtest.Approved_By = AppConfig.UserID;
-                    labtest.Approved_Time = DateTime.Now;
-                    labtest.isApproved = true;
-                    labtest.Is_Result = true;
-                    var PR = (from tbl in db.Lab_Test_Details
-                              where tbl.Recieved_ID == test.TestDID && tbl.Is_Result == false
-                              select tbl).FirstOrDefault();
-                    if (PR != null)
+                    if (labtest != null)
                     {
-                        PR.Is_Result = true;
-                        db.SubmitChanges();
+                        labtest.Result_ID = "0";
+                        labtest.Approved_By = AppConfig.UserID;
+                        labtest.Approved_Time = DateTime.Now;
+                        labtest.isApproved = true;
+                        labtest.Is_Result = true;
+
+                        // Update Refer Doctor ID
+                        if (ReferDoctorId > 0)
+                        {
+                            labtest.DoctorID = ReferDoctorId;
+                        }
+
+                        var PR = (from tbl in db.Lab_Test_Details
+                                  where tbl.Recieved_ID == test.TestDID && tbl.Is_Result == false
+                                  select tbl).FirstOrDefault();
+                        if (PR != null)
+                        {
+                            PR.Is_Result = true;
+                        }
                     }
                     db.SubmitChanges();
                 }
                 return "Successfull";
-
             }
             catch (Exception ex)
             {
-
+                return "Error: " + ex.Message;
             }
-
-            return "";
         }
         [WebMethod]
         public static string DeleteImage(string imagSrc)
@@ -1669,16 +1674,16 @@ namespace PMS.Modules.Lab
         }
 
 
-        [WebMethod]
-        public static string FillUltrasound_level(string valID)
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            var result = (from i in db.UltraSoundLevels
-                          where i.Levels == valID
-                          select i.FixValues).FirstOrDefault();
+        //[WebMethod]
+        //public static string FillUltrasound_level(string valID)
+        //{
+        //    DataBaseDataContext db = new DataBaseDataContext();
+        //    var result = (from i in db.UltraSoundLevels
+        //                  where i.Levels == valID
+        //                  select i.FixValues).FirstOrDefault();
 
-            return (new JavaScriptSerializer().Serialize(result));
-        }
+        //    return (new JavaScriptSerializer().Serialize(result));
+        //}
 
 
 
@@ -1896,6 +1901,12 @@ namespace PMS.Modules.Lab
             }
         }
 
+      
+        private const string DEPT_ULTRASOUND = "002";
+        private const string DEPT_XRAY = "003";
+        private const string DEPT_CTSCAN = "004";
+        private const string DEPT_MRI = "006";
+
         [WebMethod]
         public static string GetAll_XRayLevel()
         {
@@ -1921,6 +1932,7 @@ namespace PMS.Modules.Lab
                                     && uwtDetail.DataValue_ID != null
                                     && uwtDetail.DataValue_ID != ""
                                     && vs.ValueSet_Name == "X-Ray Format"
+                                    && uwtDetail.Department == DEPT_XRAY
                               select new
                               {
                                   xr.XRayLevel_ID,
@@ -1931,6 +1943,152 @@ namespace PMS.Modules.Lab
 
                 return (new JavaScriptSerializer()).Serialize(levels);
             }
+        }
+
+        [WebMethod]
+        public static string GetAll_MRILevel()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (AppConfig.UserID == Guid.Empty)
+                {
+                    return (new JavaScriptSerializer()).Serialize(new List<object>());
+                }
+
+                Guid currentUserIdGuid = AppConfig.UserID;
+
+                var levels = (from uwt in db.User_Wise_Templates
+                              join uwtDetail in db.User_Wise_Template_Details
+                                  on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
+                              join mri in db.MRILevels
+                                  on uwtDetail.DataValue_ID equals mri.Levels
+                              join dv in db.DataValues on mri.Levels equals dv.DataValue_Name
+                              join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                              where uwt.User_Id == currentUserIdGuid
+                                    && uwtDetail.User_Id == currentUserIdGuid
+                                    && uwt.is_cancel == false
+                                    && uwtDetail.DataValue_ID != null
+                                    && uwtDetail.DataValue_ID != ""
+                                    && vs.ValueSet_Name == "MRI Format"
+                                    && uwtDetail.Department == DEPT_MRI
+                              select new
+                              {
+                                  mri.MRILevel_ID,
+                                  mri.Levels,
+                                  mri.FixValues,
+                                  DataValue_Description = dv.DataValue_Description
+                              }).Distinct().ToList();
+
+                return (new JavaScriptSerializer()).Serialize(levels);
+            }
+        }
+
+        [WebMethod]
+        public static string GetAll_CTScanLevel()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (AppConfig.UserID == Guid.Empty)
+                {
+                    return (new JavaScriptSerializer()).Serialize(new List<object>());
+                }
+
+                Guid currentUserIdGuid = AppConfig.UserID;
+
+                var levels = (from uwt in db.User_Wise_Templates
+                              join uwtDetail in db.User_Wise_Template_Details
+                                  on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
+                              join ct in db.CTScanLevels
+                                  on uwtDetail.DataValue_ID equals ct.Levels
+                              join dv in db.DataValues on ct.Levels equals dv.DataValue_Name
+                              join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                              where uwt.User_Id == currentUserIdGuid
+                                    && uwtDetail.User_Id == currentUserIdGuid
+                                    && uwt.is_cancel == false
+                                    && uwtDetail.DataValue_ID != null
+                                    && uwtDetail.DataValue_ID != ""
+                                    && vs.ValueSet_Name == "CTScan Format"
+                                    && uwtDetail.Department == DEPT_CTSCAN
+                              select new
+                              {
+                                  ct.CTScanLevel_ID,
+                                  ct.Levels,
+                                  ct.FixValues,
+                                  DataValue_Description = dv.DataValue_Description
+                              }).Distinct().ToList();
+
+                return (new JavaScriptSerializer()).Serialize(levels);
+            }
+        }
+
+        [WebMethod]
+        public static string GetAll_UltrasoundLevelUserWise()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (AppConfig.UserID == Guid.Empty)
+                {
+                    return (new JavaScriptSerializer()).Serialize(new List<object>());
+                }
+
+                Guid currentUserIdGuid = AppConfig.UserID;
+
+                var levels = (from uwt in db.User_Wise_Templates
+                              join uwtDetail in db.User_Wise_Template_Details
+                                  on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
+                              join us in db.UltraSoundLevels
+                                  on uwtDetail.DataValue_ID equals us.Levels
+                              join dv in db.DataValues on us.Levels equals dv.DataValue_Name
+                              join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                              where uwt.User_Id == currentUserIdGuid
+                                    && uwtDetail.User_Id == currentUserIdGuid
+                                    && uwt.is_cancel == false
+                                    && uwtDetail.DataValue_ID != null
+                                    && uwtDetail.DataValue_ID != ""
+                                    && vs.ValueSet_Name == "Ultrasound level"
+                                    && uwtDetail.Department == DEPT_ULTRASOUND
+                              select new
+                              {
+                                  us.UltraSoundLevel_ID,
+                                  us.Levels,
+                                  us.FixValues,
+                                  DataValue_Description = dv.DataValue_Description
+                              }).Distinct().ToList();
+
+                return (new JavaScriptSerializer()).Serialize(levels);
+            }
+        }
+
+        [WebMethod]
+        public static string FillUltrasound_level(string valID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var result = (from i in db.UltraSoundLevels
+                          where i.Levels == valID
+                          select i.FixValues).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
+
+        // Add methods for MRI and CTScan fixed values
+        [WebMethod]
+        public static string FillMRILevel(string valID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var result = (from i in db.MRILevels
+                          where i.Levels == valID
+                          select i.FixValues).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
+
+        [WebMethod]
+        public static string FillCTScanLevel(string valID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var result = (from i in db.CTScanLevels
+                          where i.Levels == valID
+                          select i.FixValues).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(result);
         }
     }
 }
