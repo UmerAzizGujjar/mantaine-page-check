@@ -84,6 +84,7 @@ namespace PMS.Modules.Lab
                                     ar.Bill_ID,
                                     mr_no_sequence = pa.mr_no_sequence,
                                     pa.pat_id,
+                                    pa.Mobile1,
                                     pa.Full_Name,
                                     pa.Father_Name,
                                     bd.Bill_Details_ID,
@@ -92,7 +93,7 @@ namespace PMS.Modules.Lab
                                     ltd.Test_ID,
                                     tdef.Test_Name,
                                     tdef.Report_Colum,
-                                    ltd.Approved_By,
+                                    Approved_By_Name = ltd.Approved_By != null ? db.getUserName(ltd.Approved_By.ToString()) : null,
                                     ltd.Approved_Time,
                                     ltd.isApproved,
                                     Test_Main_Department = db.GetDataValueName("Main Test Departments", bd.Test_Main_Department),
@@ -143,7 +144,7 @@ namespace PMS.Modules.Lab
                             query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Doctor_Name) : query.OrderByDescending(x => x.Doctor_Name);
                             break;
                         case "Approved_By":
-                            query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Approved_By) : query.OrderByDescending(x => x.Approved_By);
+                            query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Approved_By_Name) : query.OrderByDescending(x => x.Approved_By_Name);
                             break;
                         case "Approved_Time":
                             query = sortColumnDirection == "asc" ? query.OrderBy(x => x.Approved_Time) : query.OrderByDescending(x => x.Approved_Time);
