@@ -216,7 +216,6 @@
         }
 
 
-
         function httpGet(theUrl) {
 
             var xmlHttp = null;
