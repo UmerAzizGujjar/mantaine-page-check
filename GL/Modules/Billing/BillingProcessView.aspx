@@ -1,17 +1,20 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingProcessView.aspx.cs" Inherits="PMS.BillingProcessView" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
-      <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
     <style>
         .detail-container {
             padding: 15px;
         }
+
         .clickable-row {
             cursor: pointer;
         }
-        .clickable-row:hover {
-            background-color: #f0f8ff;
-        }
+
+            .clickable-row:hover {
+                background-color: #f0f8ff;
+            }
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -26,30 +29,135 @@
         function PrintBilling(Bill_ID) {
             var locationInfo = window.location;
             var user_name = '<%= AppConfig.Company_Name %>';
-    var reportPath;  // ✅ declared properly
+            var reportPath;  // ✅ declared properly
 
-    if (user_name == 'As-Siraat Serving Humanity') {
-        reportPath = '../../ReportViewer.aspx';
-    } else {
-        reportPath = 'ReportViewer.aspx';
-    }
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx';
+            }
 
-    var url;
+            var url;
 
-    if (!locationInfo.origin.includes('localhost')) {
-        var urlInfo = window.location.href.split('/');
-        var ip = urlInfo[2];
-        var foldername = urlInfo[3];
-        url = 'http://' + ip + '/' + foldername + '/' + reportPath +
-            '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + Bill_ID;  // ✅ was using undefined `id`
-    } else {
-        url = '/' + reportPath +
-            '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + Bill_ID;  // ✅ fixed localhost URL + uses reportPath
-    }
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +
+                    '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + Bill_ID;  // ✅ was using undefined `id`
+            } else {
+                url = '/' + reportPath +
+                    '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + Bill_ID;  // ✅ fixed localhost URL + uses reportPath
+            }
 
-    window.open(url, '_blank');
-}
+            window.open(url, '_blank');
+        }
+        function PrintBilling1(Bill_ID) {
+            var locationInfo = window.location;
+            var user_name = '<%= AppConfig.Company_Name %>';
+            var reportPath;  // ✅ declared properly
 
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx';
+            }
+
+            var url;
+
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +
+                    '?ReportName=BillingBaseReport_Thermal&ReportTitle=Billing Base Report&Bill_ID=' + Bill_ID;  // ✅ was using undefined `id`
+            } else {
+                url = '/' + reportPath +
+                    '?ReportName=BillingBaseReport_Thermal&ReportTitle=Billing Base Report&Bill_ID=' + Bill_ID;  // ✅ fixed localhost URL + uses reportPath
+            }
+
+            window.open(url, '_blank');
+        }
+
+        ////////function PrintBilling2(Bill_ID) {
+        ////////    var locationInfo = window.location;
+        //////////////    //var user_name = '<%= AppConfig.Company_Name %>';
+        //////    //var reportPath;  // ✅ declared properly
+
+        //////    //var locationInfo = window.location;
+
+        //////////////  //  var user_name = '<% =AppConfig.Company_Name %>';
+        ////////    var reportPath;
+        ////////    if (user_name == 'As-Siraat Serving Humanity') {
+        ////////        reportPath = '../../ReportViewer.aspx';
+        ////////    } else {
+        ////////        reportPath = 'ReportViewer.aspx';
+        ////////    }
+
+        ////////    // Build URL — different report name based on whether doctorId is passed
+        ////////    function buildUrl(doctorId) {
+        ////////        var base;
+        ////////        if (!locationInfo.origin.includes('localhost')) {
+        ////////            var urlInfo = window.location.href.split('/');
+        ////////            var ip = urlInfo[2];
+        ////////            var foldername = urlInfo[3];
+        ////////            base = 'http://' + ip + '/' + foldername + '/' + reportPath;
+        ////////        } else {
+        ////////            base = '/ReportViewer.aspx';
+        ////////        }
+
+        ////////        var reportName, reportTitle;
+
+        ////////        if (doctorId != null) {
+        ////////            // Doctor rows  → Consultant report
+        ////////            reportName = 'BillingBaseReport_Consultant';
+        ////////            reportTitle = 'Consultant%20Billing%20Report';
+        ////////        } else {
+        ////////            // No-doctor rows → Hospital Services report
+        ////////            reportName = 'BillingBaseReport_Hospital_Services';
+        ////////            reportTitle = 'Hospital%20Services%20Billing%20Report';
+        ////////        }
+
+        ////////        var url = base + '?ReportName=' + reportName
+        ////////            + '&ReportTitle=' + reportTitle
+        ////////            + '&Bill_ID=' + id;
+
+        ////////        if (doctorId != null) {
+        ////////            url += '&Doctor_ID=' + doctorId;
+        ////////        }
+
+        ////////        return url;
+
+        ////////    }
+        ////////    $.ajax({
+        ////////        type: "POST",
+        ////////        url: "BillingProcessView.aspx/GetDistinctDoctorsByBillId",
+        ////////        data: JSON.stringify({ 'Bill_Id': id }),
+        ////////        contentType: "application/json; charset=utf-8",
+        ////////        dataType: "json",
+        ////////        success: function (response) {
+        ////////            debugger;
+        ////////            var doctorIds = JSON.parse(response.d);
+
+        ////////            // Step 2: Open Hospital Services report (no doctor = NULL/0 rows)
+        ////////            setTimeout(function () {
+        ////////                window.open(buildUrl(null), '_blank');
+        ////////            }, 0);
+
+        ////////            // Step 3: Open one Consultant report per distinct doctor
+        ////////            $.each(doctorIds, function (index, item) {
+        ////////                setTimeout(function () {
+        ////////                    window.open(buildUrl(item.Doctor_ID), '_blank');
+        ////////                }, (index + 1) * 700);
+        ////////            });
+        ////////        },
+        ////////        error: function (err) {
+        ////////            console.error("Failed to fetch doctor IDs", err);
+        ////////            alert("Could not load doctor information for this bill.");
+        ////////        }
+        ////////    });
+        ////////}
+      
         function LoadPage() {
             let savedVisibility = null;
 
@@ -141,11 +249,11 @@
                     { "data": "Total_Amount", "width": "7%", "orderable": false },
                     { "data": "Discount_Percentage", "width": "8%", "orderable": false },
                     { "data": "Discount_Amount", "width": "8%", "orderable": false },
-                    { "data": "Net_Amount", "width": "8%", "orderable": false  },
+                    { "data": "Net_Amount", "width": "8%", "orderable": false },
                     { "data": "Received_Amount", "name": "Received_Amount", "width": "8%", "orderable": false },
                     { "data": "Balance_Amount", "width": "8%", "orderable": false },
                     { "data": "Operator", "width": "9%", "orderable": false },
-                    
+
                     {
                         render: function (data, type, full) {
                             debugger;
@@ -154,10 +262,12 @@
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=cancelPatient(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            var print1 = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling1(' + full.Bill_ID + ')" id="btnprint1"><i class="fa fa-print"></i></a>';
+                            //var print2 = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling2(' + full.Bill_ID + ')" id="btnprint2"><i class="fa fa-print"></i></a>';
                             var result;
-                            result = res + Del + print;
+                            result = res + Del + print + print1;
                             return result;
-;
+                            ;
                         }, "width": "23%", "orderable": false
                     }
 
@@ -354,7 +464,7 @@
             var row = $(anchorTag).parents('tr')[0];
             var Bill_No = $($(row).find('td')[0]).text();
             if (confirm('Are you sure want to Cancel this Bill:- ' + Bill_No)) {
-                PageMethods.CancelPatient(Bill_No,  function (msg) {
+                PageMethods.CancelPatient(Bill_No, function (msg) {
                     if (msg == "Allowdlt") {
                         alert('You have no right to Cancel. ')
 
@@ -369,7 +479,7 @@
 
                 },
 
-                    );
+                );
             }
 
             window.location.href = "BillingProcessView.aspx";
