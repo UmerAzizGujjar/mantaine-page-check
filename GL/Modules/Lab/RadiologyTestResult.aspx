@@ -2357,11 +2357,11 @@
                                 $("#btnReject").show();
                             }
 
-                            setTimeout(function () {
+                            //setTimeout(function () {
 
-                                $('#chkUltraSound_level').val(UltraLevels)
-                            }
-                                , 1000);
+                            //    $('#chkUltraSound_level').val(UltraLevels)
+                            //}
+                            //    , 1000);
 
 
                             if (Ranges == null || Ranges == '') {
