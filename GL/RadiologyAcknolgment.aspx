@@ -33,25 +33,13 @@
         $(document).ready(function () {
             loadDoctors();
             loadDoctorsforFilter();
-            loadRadiologyAcknowledgment();
             FillMainTestDepartment();
-
-            // Initialize date pickers with current date as default
-            var today = new Date();
-            var formattedDate = $.datepicker.formatDate('dd-mm-yy', today);
-
-            $("#startDate, #endDate").datepicker({
-                dateFormat: 'dd-mm-yy',
-                changeMonth: true,
-                changeYear: true,
-                autoclose: true,
-                todayHighlight: true,
-                maxDate: today
-            });
-
-            // Set both start and end date to today's date
-            $('#startDate').datepicker('setDate', today);
-            $('#endDate').datepicker('setDate', today);
+            
+            // Initialize date pickers first
+            initializeDatePickers();
+            
+            // Then load the table after dates are set
+            loadRadiologyAcknowledgment();
 
             // Apply filter on any filter change
             $('.filter-control').on('change', function () {
@@ -61,6 +49,25 @@
                 }
             });
         });
+        
+        function initializeDatePickers() {
+            var today = new Date();
+            var yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+            
+            $("#startDate, #endDate").datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true,
+                autoclose: true,
+                todayHighlight: true,
+                maxDate: today
+            });
+            
+            // Set default dates: yesterday to today (last 24 hours)
+            $('#startDate').datepicker('setDate', yesterday);
+            $('#endDate').datepicker('setDate', today);
+        }
 
         function loadDoctors() {
             $.ajax({
@@ -92,6 +99,10 @@
                     }
                 }, 'copy', 'excel', 'pdf'],
                 "ajax": function (data, callback, settings) {
+                    // Get date values - they will have values from the initialized date pickers
+                    var startDateVal = $('#startDate').val() || '';
+                    var endDateVal = $('#endDate').val() || '';
+                    
                     $.ajax({
                         type: "POST",
                         url: "RadiologyAcknolgment.aspx/GetRadiologyAcknowledgment",
@@ -106,8 +117,8 @@
                             statusFilter: $('#statusFilter').val() || 'All',
                             ddlDoctorFilter: $('#ddlDoctorFilter').val() || '0',
                             mainTestDepartmentFilter: $('#ddlMainTestDepartment').val() || 'All',
-                            startDate: $('#startDate').val() || '',
-                            endDate: $('#endDate').val() || ''
+                            startDate: startDateVal,
+                            endDate: endDateVal
                         }),
                         contentType: "application/json; charset=utf-8",
                         success: function (response) {
@@ -134,9 +145,10 @@
                     {
                         "data": "Bill_Date",
                         "name": "Bill_Date",
-                       "render": function (data) {
+                        "render": function (data) {
+                            if (!data) return '';
                             return moment(data).format("DD-MMM-YYYY");
-                            }
+                        }
                     },
                     { "data": "Bill_No", "name": "Bill_No" },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence" },
@@ -365,10 +377,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>Radiology Acknowledgment</h4>
-                </div>
+          
+                
                 <div class="panel-body">
                     <!-- Filter Row 1 -->
                     <div class="row filter-row">
@@ -405,11 +415,11 @@
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-6">
                             <label>Start Date:</label>
-                            <input type="text" id="startDate" class="form-control filter-control datepicker" placeholder="DD-MM-YYYY" autocomplete="off">
+                            <input type="text" id="startDate" class="form-control filter-control" placeholder="DD-MM-YYYY" autocomplete="off">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-6">
                             <label>End Date:</label>
-                            <input type="text" id="endDate" class="form-control filter-control datepicker" placeholder="DD-MM-YYYY" autocomplete="off">
+                            <input type="text" id="endDate" class="form-control filter-control" placeholder="DD-MM-YYYY" autocomplete="off">
                         </div>
                     </div>
 
@@ -442,7 +452,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+         
         </div>
     </div>
 

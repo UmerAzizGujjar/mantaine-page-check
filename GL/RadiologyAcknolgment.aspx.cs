@@ -21,18 +21,20 @@ namespace PMS
             {
                 DataBaseDataContext db = new DataBaseDataContext();
 
-                // Parse dates with proper null handling
-                DateTime? parsedStartDate = null;
-                DateTime? parsedEndDate = null;
+                // Parse dates - if empty, use yesterday to today (last 24 hours)
+                DateTime startDateTime;
+                DateTime endDateTime;
 
-                if (!string.IsNullOrEmpty(startDate))
+                if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
                 {
-                    parsedStartDate = DateTime.ParseExact(startDate, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                    // Default: last 24 hours (yesterday to today)
+                    endDateTime = DateTime.Now.Date.AddDays(1); // Today end (midnight next day)
+                    startDateTime = DateTime.Now.Date.AddDays(-1); // Yesterday start
                 }
-
-                if (!string.IsNullOrEmpty(endDate))
+                else
                 {
-                    parsedEndDate = DateTime.ParseExact(endDate, "dd-MM-yyyy", CultureInfo.InvariantCulture).AddDays(1);
+                    startDateTime = DateTime.ParseExact(startDate, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                    endDateTime = DateTime.ParseExact(endDate, "dd-MM-yyyy", CultureInfo.InvariantCulture).AddDays(1);
                 }
 
                 var query = from pat in db.Reg_patients
@@ -44,8 +46,8 @@ namespace PMS
                                   && bill_details.Test_Main_Department != "001"
                                   && (bill.isCancel == false || bill.isCancel == null)
                                   && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
-                                  && (parsedStartDate == null || bill.Bill_Date >= parsedStartDate.Value)
-                                  && (parsedEndDate == null || bill.Bill_Date < parsedEndDate.Value)
+                                  && bill.Bill_Date >= startDateTime
+                                  && bill.Bill_Date < endDateTime
                             let dept = (from ipd in db.In_Patients
                                         where ipd.Patient_ID == pat.pat_id
                                         orderby ipd.In_Patient_ID descending
