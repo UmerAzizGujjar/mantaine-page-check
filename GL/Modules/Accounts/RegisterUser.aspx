@@ -78,6 +78,7 @@
                     $('#AllowStudentUpdate').prop('checked', data.AllowStudentUpdate);
                     $('#RadiologyAllList').prop('checked', data.RadiologyAllList);
                     $('#AllowRadiologyApproval').prop('checked', data.Radiology_result_Approval);
+                    $('#AllowAdjustment').prop('checked', data.AllowAdjustment);
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                 },
                 error: function (xhr, status, error) {
@@ -131,6 +132,7 @@
             var AllowStudentUpdate = $('#AllowStudentUpdate').prop('checked');
             var RadiologyAllList = $('#RadiologyAllList').prop('checked');
             var AllowRadiologyApproval = $('#AllowRadiologyApproval').prop('checked');
+            var AllowAdjustment = $('#AllowAdjustment').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var EmpCode = $('#EmpCode').val();
             var ddlcasher = $('#ddlcasher').val();
@@ -257,6 +259,7 @@
                 "AllowStudentUpdate": AllowStudentUpdate,
                 "RadiologyAllList": RadiologyAllList,
                 "AllowRadiologyApproval": AllowRadiologyApproval,
+                "AllowAdjustment": AllowAdjustment,
                 "AllowRateEdit": AllowRateEdit,
                 "ddlcasher": ddlcasher
 
@@ -620,6 +623,9 @@
                                                    <div class="form-check">
                                                          <input type="checkbox" class="form-check-input" id="AllowRadiologyApproval" name="AllowRadiologyApproval" style="" />
                                                      </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowAdjustment" name="AllowAdjustment" style="" />
+                                                    </div>
                                              
 
 
@@ -683,6 +689,9 @@
                                                        <div class="form-check">
                                                           <label class="form-check-label" for="EmpCode">Radiology Approval List</label>
                                                       </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="Ajustmentallow">Adjustment Allow</label>
+                                                    </div>
                                                  
                                                  
 

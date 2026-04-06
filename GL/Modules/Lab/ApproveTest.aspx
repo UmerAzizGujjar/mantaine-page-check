@@ -138,10 +138,11 @@
                     { "data": "Bill_No", "name": "Bill_No", "width": "8%", "orderable": true },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
                     { "data": "Full_Name", "name": "Full_Name", "width": "12%", "orderable": true },
+                    { "data": "Mobile1", "name": "Mobile1", "width": "4%", "orderable": true },
                     { "data": "Test_Name", "name": "Test_Name", "width": "15%", "orderable": true },
                     { "data": "Test_Main_Department", "name": "Test_Main_Department", "width": "10%", "orderable": true },
                     { "data": "Doctor_Name", "name": "Doctor_Name", "width": "10%", "orderable": true },  /* Changed from Doctor_id to Doctor_Name */
-                    { "data": "Approved_By", "name": "Approved_By", "width": "8%", "orderable": true },
+                    { "data": "Approved_By_Name", "name": "Approved_By_Name", "width": "8%", "orderable": true },
                     {
                         "data": "Approved_Time", "name": "Approved_Time",
                         "render": (data, type, full) => moment(full.Approved_Time).format('DD-MMM-YYYY HH:mm'),
@@ -227,6 +228,7 @@
                             <th>Bill No</th>
                             <th>MR No</th>
                             <th>Patient Name</th>
+                            <th>Phone #</th>
                             <th>Test Name</th>
                             <th>Department</th>
                             <th>Doctor</th>

@@ -1057,7 +1057,9 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
 
                                         <div class="dropdown-divider"></div>
                                         <!-- Change Password -->
-                                        <a href="/Modules/Accounts/PasswordChange.aspx" style="text-decoration: none; color: Black !important" class="dropdown-item">
+                                        <a href="<%= ResolveUrl("~/Modules/Accounts/PasswordChange.aspx") %>"
+                                            style="text-decoration: none; color: Black !important"
+                                            class="dropdown-item">
                                             <i class="fa fa-key mr-2" aria-hidden="true"></i>Change Password
                                         </a>
                                     </div>
