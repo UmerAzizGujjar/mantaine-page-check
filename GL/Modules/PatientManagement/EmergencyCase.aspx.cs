@@ -2949,7 +2949,7 @@ namespace PMS
                           where d.Pharmacy_Item == true
                           select new
                           {
-                              d.Item_Code,
+                              d.Item_ID,
                               Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
                           }).ToList().Take(20);
 
