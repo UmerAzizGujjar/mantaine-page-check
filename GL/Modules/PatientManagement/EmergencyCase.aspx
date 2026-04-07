@@ -4574,6 +4574,15 @@
                 $('#txtPharmacyItem').html(options);
                 $('#txtPharmacyItem').select2();
 
+                $('#txtPharmacyItem').select2({
+                    width: '100%',
+                    dropdownAutoWidth: false,
+                    minimumResultsForSearch: 0,
+                    dropdownParent: $('#MedicationModel'),
+                    placeholder: 'Select Medicine',
+                    allowClear: true
+                });
+
 
             });
         }
