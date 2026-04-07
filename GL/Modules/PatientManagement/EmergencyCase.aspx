@@ -267,11 +267,11 @@
             });
 
             if ($('#txtPharmacyItem').length > 0) {
-        $('#txtPharmacyItem').select2({
+            $('#txtPharmacyItem').select2({
             width: '100%',
             placeholder: 'Select Medicine',
             allowClear: true
-        });
+               });
 
         // 2. Attach the event listener to load template on selection
         $('#txtPharmacyItem').on('select2:select', function (e) {
@@ -4601,31 +4601,40 @@ function setDropdownText(selector, text) {
         }
 
         $(document).on('keyup', '.select2-search__field', function () {
-            var searchString = $(this).val();
-
-            var options;
-            $.ajax({
-                url: 'EmergencyCase.aspx/getpharmacyitems',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ searchString: searchString }),
-                success: function (response) {
-                    var options = '';
-                    try {
-                        var pharmacyItems = JSON.parse(response.d);
-                        $.each(pharmacyItems, function (key, value) {
-                            options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
-                        });
-                        $('#txtPharmacyItem').append(options).trigger('change');
-                    } catch (error) {
-                        console.error('Error parsing response:', error);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching data:', error);
+          var searchString = $(this).val();
+    
+                if (searchString.length < 2) {
+                    return;
                 }
-            });
-        });
+
+              $.ajax({
+              url: 'EmergencyCase.aspx/getpharmacyitems',
+            method: 'POST',
+           contentType: 'application/json',
+             data: JSON.stringify({ searchString: searchString }),
+            success: function (response) {
+            try {
+                var pharmacyItems = JSON.parse(response.d);
+                var $select = $('#txtPharmacyItem');
+                
+                $.each(pharmacyItems, function (key, value) {
+                    var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
+                    if (!optionExists) {
+                        $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+                    }
+                });
+                
+                $select.trigger('change');
+                
+            } catch (error) {
+                console.error('Error parsing response:', error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+});
 
         function FillPharmacyItem() {
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {

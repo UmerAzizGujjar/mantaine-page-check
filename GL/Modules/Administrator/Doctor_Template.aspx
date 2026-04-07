@@ -409,17 +409,34 @@
         $(document).on('keyup', '.select2-search__field', function () {
             debugger;
             var searchString = $(this).val();
+
+            // Don't search if less than 2 characters
+            if (searchString.length < 2) {
+                return;
+            }
+
             if (activeSelect2Id) {
                 console.log('Working on Select2 element with ID:', activeSelect2Id);
-                var optionsUser = '';
+                var $select = $('#' + activeSelect2Id);
+
                 PageMethods.getpharmacyitems(searchString, function (resp) {
-                    optionsUser = '<option value="0">Please Select</option>';
-                    $.each(JSON.parse(resp), function (key, value) {
-                        debugger;
-                        optionsUser += '<option value="' + value.Item_Code + '" >' + value.Description + '</option>';
-                    })
-                    debugger;
-                    $('#' + activeSelect2Id).append(optionsUser);
+                    try {
+                        var pharmacyItems = JSON.parse(resp);
+
+                        // Only add items that don't already exist (prevents duplicates)
+                        $.each(pharmacyItems, function (key, value) {
+                            var optionExists = $select.find('option[value="' + value.Item_Code + '"]').length > 0;
+                            if (!optionExists) {
+                                $select.append('<option value="' + value.Item_Code + '">' + value.Description + '</option>');
+                            }
+                        });
+
+                        // Refresh Select2
+                        $select.trigger('change');
+
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
+                    }
                 });
             } else {
                 console.error('No active Select2 element ID found.');
