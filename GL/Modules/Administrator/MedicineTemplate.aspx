@@ -181,7 +181,7 @@
 
                             var pharmacyItems = JSON.parse(response.d); // Parse the response
                             $.each(pharmacyItems, function (key, value) {
-                                options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                                options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                             });
                             $('#txtPharmacyItem').append(options).trigger('change'); // Update dropdown options and trigger change event
                         } catch (error) {
@@ -208,7 +208,7 @@
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {
                 var options = '<option value=""> Select Medicine  </option>'
                 $.each(JSON.parse(Medicine), function (key, value) {
-                    options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                    options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                 });
 
                 $('#txtPharmacyItem').html(options);
