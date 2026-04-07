@@ -266,7 +266,57 @@
 
             });
 
+            $('#txtPharmacyItem').on('select2:select', function (e) {
+                debugger;
+                getTemplate();
+            });
+
         });
+
+
+        function getTemplate() {
+            var item_id = $('#txtPharmacyItem').val();
+            if (!item_id || item_id == "0" || item_id == "") return;
+
+            PageMethods.loadtemplate(item_id, function (resp) {
+                debugger;
+                var data = JSON.parse(resp);
+
+                if (data && data.length > 0) {
+                    var templateData = data[0];
+                    debugger;
+                    setDropdownText('#ddlDosage_Qty', templateData.Dosage_Qty);
+                    setDropdownText('#ddlDosage_From', templateData.Dosage_From);
+                    setDropdownText('#txtRecomended_Dosage', templateData.Frequency);
+                    setDropdownText('#txtInjection', templateData.Injections);
+                    setDropdownText('#Routes', templateData.Oral);
+                    $('#AttendingParamedicalStaff').val(templateData.AttendingParamedical_Staff);
+                    setDropdownText('#ddlOther_Instruction', templateData.Other_Instruction);
+                }
+            },
+                function (error) {
+                    console.error("Error loading template:", error);
+                });
+        }
+
+        function setDropdownText(selector, text) {
+            if (!text || text.trim() === "") return;
+
+            var dropdown = $(selector);
+            var matchFound = false;
+
+            dropdown.find('option').each(function () {
+                if ($(this).text().trim().toLowerCase() === text.trim().toLowerCase()) {
+                    dropdown.val($(this).val()).trigger('change');
+                    matchFound = true;
+                    return false; 
+                }
+            });
+
+            if (!matchFound) {
+                console.warn(`No matching option found for text: "${text}" in ${selector}`);
+            }
+        }
 
         var tabsEmr;
         function AllowEMRGTabs() {
@@ -4556,7 +4606,7 @@
                         options += '<option value="">Select Medicine</option>';
 
                         $.each(pharmacyItems, function (key, value) {
-                            options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                            options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                         });
 
                         $('#txtPharmacyItem').html(options).trigger('change');
@@ -4569,6 +4619,17 @@
                 }
             });
         });
+
+        $('#txtPharmacyItem').on('select2:close', function () {
+            $(this).html('<option value="">Select Medicine</option>').trigger('change');
+        });
+
+        $('#txtPharmacyItem').on('select2:open', function () {
+            setTimeout(function () {
+                $('.select2-search__field').val('');
+            }, 10);
+        });
+
 
 
         function FillPharmacyItem() {

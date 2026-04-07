@@ -7363,6 +7363,25 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(dpt));
         }
 
+        [WebMethod]
+        public static string loadtemplate(string item_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var data = (from td in db.Medicines_Templates
+                        where td.Item_Code == Convert.ToString(item_id)
+                        select new
+                        {
+                            td.Dosage_From,
+                            td.Dosage_Qty,
+                            td.Oral,
+                            td.Other_Instruction,
+                            td.Frequency,
+                            td.Injections,
+                            td.AttendingParamedical_Staff
+                        }).ToList();
+            return (new JavaScriptSerializer().Serialize(data));
+        }
+
 
 
         [WebMethod]
