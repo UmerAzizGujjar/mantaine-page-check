@@ -2959,16 +2959,24 @@ namespace PMS
         [WebMethod]
         public static string getpharmacyitems(string searchString)
         {
+            if (string.IsNullOrEmpty(searchString))
+                return "[]";
+
+            searchString = searchString.Trim();
+
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+
                 var pharmacyItems = (from d in db.INV_Items
-                                     where d.Pharmacy_Item == true && d.Description.Contains(searchString)
-                                     orderby d.Item_Code descending
+                                     where d.Pharmacy_Item == true
+                                     && d.Description.Contains(searchString) 
+                                     orderby d.Item_ID descending
                                      select new
                                      {
-                                         d.Item_Code,
+                                         d.Item_ID,
                                          Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
                                      }).Take(20).ToList();
+
                 return (new JavaScriptSerializer().Serialize(pharmacyItems));
             }
         }

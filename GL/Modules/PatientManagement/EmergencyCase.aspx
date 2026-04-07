@@ -99,6 +99,7 @@
             LoadInvestigationDoctor();
             LoadTemplate();
             LoadTemplateForTest();
+            LoadDischargeTemplate();
 
 
 
@@ -4539,21 +4540,26 @@
 
         $(document).on('keyup', '.select2-search__field', function () {
             var searchString = $(this).val();
+            if (searchString.length < 2) return;
 
-            var options;
+            var options = '';
+
             $.ajax({
                 url: 'EmergencyCase.aspx/getpharmacyitems',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ searchString: searchString }),
                 success: function (response) {
-                    var options = '';
                     try {
                         var pharmacyItems = JSON.parse(response.d);
+                        $('#txtPharmacyItem').empty(); 
+                        options += '<option value="">Select Medicine</option>';
+
                         $.each(pharmacyItems, function (key, value) {
-                            options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
+                            options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
                         });
-                        $('#txtPharmacyItem').append(options).trigger('change');
+
+                        $('#txtPharmacyItem').html(options).trigger('change');
                     } catch (error) {
                         console.error('Error parsing response:', error);
                     }
@@ -4563,6 +4569,7 @@
                 }
             });
         });
+
 
         function FillPharmacyItem() {
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {
@@ -6497,6 +6504,54 @@
         }
 
 
+        function LoadDischargeTemplate() {
+            var options = '<option value="0" >Select Template</option>';
+            PageMethods.GetTemplate(function (Tests) {
+                $.each(JSON.parse(Tests), function (key, value) {
+                    options += '<option value="' + value.Template_Id + '" >' + value.Template_Name + '</option>';
+                });
+                $('#ddlDischargeTemplate').html(options);
+                if ($.fn.select2) {
+                    $('#ddlDischargeTemplate').select2();
+                }
+            });
+        }
+
+        function LoadDischargeTemplateMedicine() {
+            var Templateid = $('#ddlDischargeTemplate').val();
+            if (!Templateid || Templateid == "0") return;
+
+            PageMethods.GetTemplateMedicine(Templateid, function (res) {
+                var Medicines = JSON.parse(res);
+                var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy h:m:s A")%>';
+            var datetimeValue = '<%= DateTime.Now%>';
+
+            $.each(Medicines, function (key, value) {
+                var dosage_from = value.Dosage_From || '';
+                var dosage_Qty = value.Dosage_Qty || '';
+                var routes = value.Oral || ''; 
+                var other_Instruction = value.Other_Instruction || '';
+                var frequency = value.Frequency || '';
+                var row = '<tr> ' +
+                    '<td><input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime + '</td>' +
+                    '<td><input type="hidden" name="hdnItemCode" value="' + value.Item_Code + '"> ' + value.Medicine_Name + '</td> ' +
+                    '<td>' + frequency + '</td> ' +
+                    '<td>' + routes + '</td> ' +
+                    '<td>' + value.Injections + '</td> ' + 
+                    '<td>' + value.AttendingParamedical_Staff + '</td> ' + 
+                    '<td>' + dosage_from + '</td> ' +
+                    '<td>' + dosage_Qty + '</td> ' +
+                    '<td>' + other_Instruction + '</td> ' +
+                    '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /></td>' +
+                    '<td style="display:none;">' + value.Item_Code + '</td>' +
+                    '</tr>';
+
+                $('#tblDischargeMedication tbody').append(row);
+            });
+        });
+       }
+
+
     </script>
 
     <style type="text/css">
@@ -6882,7 +6937,7 @@
                                     <input type="button" class="btn btn-primry" id="btnSaveMedicine" name="btnSaveMedicine" value="Save" tabindex="7" />
                                 </td>
                                  <td>
-                                    <input type="button" id="Add_Unlisted_Medicine" value="Add Unlisted Medicine" style="margin-left: 110px; background-color:#438eb9  !important;width:67% !important; color:white !important;" onclick="NewMedicine()" />
+                                    <input type="button" id="Add_Unlisted_Medicine" class="btn btn-primry" value="Add Unlisted Medicine" style="margin-left: 110px;width:67% !important; color:white !important;" onclick="NewMedicine()" />
                                         </td>
                                 <td></td>
                             </tr>
@@ -7608,6 +7663,12 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <td style="width: 20%; padding: 5px;">
+                                                    <asp:Label ID="lblDischargeTemplate" runat="server" Text="Template"></asp:Label>
+                                                    <select id="ddlDischargeTemplate" class="form-select" onchange="LoadDischargeTemplateMedicine()" style="width: 100%;">
+                                                        <option value="">Select Template</option>
+                                                    </select>
+                                                </td>
                                                 <td style="width:20%;padding:5px;">
                                                      <asp:Label ID="lblReferredTo" runat="server" Text="Referred To"></asp:Label>
                                                     <asp:DropDownList runat="server" ID="ddlReferredTo" AppendDataBoundItems="true"></asp:DropDownList>
@@ -7637,13 +7698,14 @@
                                             </tr>
                                         
                                             <tr>
-                                   
-                                                <td>
-                                                    <input type="button" class="btn btn-primry" value="Add Medicine" id="btnDischarge" onclick="AddDischageMedication(this)" style="width:55% !important" /> &nbsp   
-                                                    </td>  
-                                                <td>
-                                                    <input type="button" id="btnDischargeSummary" class="btn-gray" value="Print" name="name" onclick="DischargeSummary();" style="width:55% !important"  disabled="disabled" /> 
-                                                    </td>
+                                                <td colspan="2">                                                    
+                                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                                            <input type="button" class="btn btn-primry" value="Add Medicine" id="btnDischarge" onclick="AddDischageMedication(this)" style="width: 100% !important" />
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                                            <input type="button" id="btnDischargeSummary" class="btn-gray" value="Print" name="name" onclick="DischargeSummary();" style="width: 100% !important" disabled="disabled" />
+                                                        </div>
+                                                </td>
                                             </tr>
                                             <tr>
                                                
