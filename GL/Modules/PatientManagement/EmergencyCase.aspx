@@ -7352,6 +7352,7 @@ function setDropdownText(selector, text) {
                 <asp:Label ID="lblSaturation" runat="server" Text="O2 Saturation"></asp:Label>
                 <asp:TextBox ID="txtSaturation_Oxygen2" runat="server" TabIndex="5" CssClass="form-control"></asp:TextBox>
             </div>
+           <div class="col-lg-1 col-md-4 col-sm-6"></div>
          <div class="col-lg-2 col-md-4 col-sm-6">
              <asp:Label ID="lblbsr" runat="server" Text="BSR"></asp:Label>
               <asp:TextBox ID="txtbsr" runat="server" CssClass="form-control" ></asp:TextBox>
@@ -7390,7 +7391,7 @@ function setDropdownText(selector, text) {
           
            </div>
        <div class="row">
-            <div class="col-lg-1 col-md-4 co-sm-6"></div>
+          
  <div class="col-lg-2 col-md-4 co-sm-6">
      <asp:Label ID="lblRN_Special_Instruction" runat="server" Text="Special Instruction"></asp:Label>
      <asp:TextBox ID="txtRN_Special_Instruction" runat="server" TabIndex="9" TextMode="MultiLine" CssClass="form-control" onchange="FillInstruction()"></asp:TextBox>
