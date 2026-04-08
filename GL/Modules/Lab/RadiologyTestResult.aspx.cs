@@ -2098,5 +2098,27 @@ namespace PMS.Modules.Lab
                           select i.FixValues).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(result);
         }
+
+        [WebMethod]
+        public static string CheckApprovalrights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Approve_radiology).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
+        [WebMethod]
+        public static string Checkrejectrights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Reject_radiology).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
     }
 }
