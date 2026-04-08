@@ -26,6 +26,7 @@ namespace PMS.Modules.Administrator
                 return new JavaScriptSerializer().Serialize(users);
             }
         }
+
         [WebMethod]
         public static string FillTestMainDepartment()
         {
@@ -34,9 +35,10 @@ namespace PMS.Modules.Administrator
                        join v in db.ValueSets
                        on d.ValueSet_ID equals v.ValueSet_ID
                        where v.ValueSet_Name == "Main Test Departments"
-
-                       where d.DataValue_Description != "Lab Test"
-
+                       where d.DataValue_Description == "X-Ray"
+                          || d.DataValue_Description == "MRI"
+                          || d.DataValue_Description == "CT Scan"
+                          || d.DataValue_Description == "Ultrasound"
                        select new
                        {
                            d.DataValue_Name,
@@ -45,6 +47,45 @@ namespace PMS.Modules.Administrator
 
             return (new JavaScriptSerializer().Serialize(dpt));
         }
+
+        [WebMethod]
+        public static string LoadTemplatesByDepartment(string department)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                string valueSetName = "";
+
+                switch (department)
+                {
+                    case "X-Ray":
+                        valueSetName = "X-Ray Format";
+                        break;
+                    case "MRI":
+                        valueSetName = "MRI Format";
+                        break;
+                    case "CT Scan":
+                        valueSetName = "CTScan Format";
+                        break;
+                    case "Ultrasound":
+                        valueSetName = "Ultrasound level"; 
+                        break;
+                    default:
+                        return new JavaScriptSerializer().Serialize(new List<object>());
+                }
+
+                var templateList = (from dv in db.DataValues
+                                    join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                    where vs.ValueSet_Name == valueSetName
+                                    select new
+                                    {
+                                        TemplateValue = dv.DataValue_Name,
+                                        DataValue_Description = dv.DataValue_Description
+                                    }).ToList();
+
+                return new JavaScriptSerializer().Serialize(templateList);
+            }
+        }
+
         [WebMethod]
         public static string LoadTemplates()
         {
@@ -55,7 +96,7 @@ namespace PMS.Modules.Administrator
                                     where vs.ValueSet_Name == "X-Ray Format"
                                     select new
                                     {
-                                        TemplateValue = dv.DataValue_Name,  // "001", "002" as string
+                                        TemplateValue = dv.DataValue_Name,
                                         DataValue_Description = dv.DataValue_Description
                                     }).ToList();
 
@@ -66,7 +107,8 @@ namespace PMS.Modules.Administrator
         public class TemplateDetailItem
         {
             public string userid { get; set; }
-            public string templateId { get; set; }  // Will receive "001", "002"
+            public string templateId { get; set; }
+            public string department { get; set; }
         }
 
         [WebMethod]
@@ -78,77 +120,93 @@ namespace PMS.Modules.Administrator
                 {
                     Guid userGuid = Guid.Parse(userid);
 
-                    if (btnSave == "Save")
+                    // For each department in the list, save separately
+                    foreach (var item in AllItemDetail)
                     {
-                        var existingUserEntry = db.User_Wise_Templates
-                            .FirstOrDefault(x => x.User_Id == userGuid && x.is_cancel == false);
-                        if (existingUserEntry != null) return "-1";
-                    }
+                        // Check if this user already has a template for this specific department
+                        var existingForDepartment = (from uwt in db.User_Wise_Templates
+                                                     join uwtDetail in db.User_Wise_Template_Details
+                                                     on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
+                                                     where uwt.User_Id == userGuid
+                                                           && uwt.is_cancel == false
+                                                           && uwtDetail.Department == item.department
+                                                     select uwt).FirstOrDefault();
 
-                    User_Wise_Template master;
-                    if (btnSave == "Save")
-                    {
-                        master = new User_Wise_Template
+                        if (existingForDepartment != null && btnSave == "Save")
                         {
-                            User_Id = userGuid,
-                            Created_By = AppConfig.UserID,
-                            Created_Time = DateTime.Now,
-                            is_cancel = false
-                        };
-                        db.User_Wise_Templates.InsertOnSubmit(master);
-                        db.SubmitChanges();
-                        masterID = master.User_Wise_Template_Id;
-                    }
-                    else
-                    {
-                        master = db.User_Wise_Templates.FirstOrDefault(x => x.User_Wise_Template_Id == EditId);
-                        if (master == null) return "-1";
+                            // User already has a template for this department, update it
+                            var existingDetail = db.User_Wise_Template_Details
+                                .FirstOrDefault(x => x.User_Wise_Template_Id == existingForDepartment.User_Wise_Template_Id
+                                      && x.Department == item.department);
 
-                        master.User_Id = userGuid;
-                        master.Updated_By = AppConfig.UserID;
-                        master.Updated_Time = DateTime.Now;
-                        db.SubmitChanges();
-                        masterID = EditId;
-                    }
-
-                    var existingDetails = db.User_Wise_Template_Details
-                        .Where(x => x.User_Wise_Template_Id == masterID)
-                        .ToList();
-
-                    var newTemplateIds = new HashSet<string>(AllItemDetail.Select(x => x.templateId));
-
-                    // Delete removed templates
-                    var toDelete = existingDetails
-                        .Where(ed => !string.IsNullOrEmpty(ed.DataValue_ID) && !newTemplateIds.Contains(ed.DataValue_ID))
-                        .ToList();
-
-                    if (toDelete.Any())
-                    {
-                        db.User_Wise_Template_Details.DeleteAllOnSubmit(toDelete);
-                    }
-
-                    foreach (var newItem in AllItemDetail)
-                    {
-                        var existing = existingDetails
-                            .FirstOrDefault(ed => ed.DataValue_ID == newItem.templateId);
-
-                        if (existing != null)
-                        {
-                            existing.User_Id = userGuid;
+                            if (existingDetail != null)
+                            {
+                                existingDetail.DataValue_ID = item.templateId;
+                                existingDetail.User_Id = userGuid;
+                                db.SubmitChanges();
+                            }
+                            masterID = existingForDepartment.User_Wise_Template_Id;
                         }
                         else
                         {
-                            // Save DataValue_Name directly as string
-                            db.User_Wise_Template_Details.InsertOnSubmit(new User_Wise_Template_Detail
+                            // Check if there's an existing master record for this user (any department)
+                            var existingMaster = db.User_Wise_Templates
+                                .FirstOrDefault(x => x.User_Id == userGuid && x.is_cancel == false);
+
+                            if (existingMaster != null)
                             {
-                                User_Wise_Template_Id = masterID,
-                                User_Id = userGuid,
-                                DataValue_ID = newItem.templateId  // Saves "001", "002"
-                            });
+                                // Use existing master
+                                masterID = existingMaster.User_Wise_Template_Id;
+
+                                // Check if detail for this department already exists
+                                var existingDetail = db.User_Wise_Template_Details
+                                    .FirstOrDefault(x => x.User_Wise_Template_Id == masterID
+                                          && x.Department == item.department);
+
+                                if (existingDetail != null)
+                                {
+                                    // Update existing detail
+                                    existingDetail.DataValue_ID = item.templateId;
+                                    existingDetail.User_Id = userGuid;
+                                }
+                                else
+                                {
+                                    // Add new detail for this department
+                                    db.User_Wise_Template_Details.InsertOnSubmit(new User_Wise_Template_Detail
+                                    {
+                                        User_Wise_Template_Id = masterID,
+                                        User_Id = userGuid,
+                                        DataValue_ID = item.templateId,
+                                        Department = item.department
+                                    });
+                                }
+                                db.SubmitChanges();
+                            }
+                            else
+                            {
+                                // Create new master and detail
+                                var master = new User_Wise_Template
+                                {
+                                    User_Id = userGuid,
+                                    Created_By = AppConfig.UserID,
+                                    Created_Time = DateTime.Now,
+                                    is_cancel = false
+                                };
+                                db.User_Wise_Templates.InsertOnSubmit(master);
+                                db.SubmitChanges();
+                                masterID = master.User_Wise_Template_Id;
+
+                                db.User_Wise_Template_Details.InsertOnSubmit(new User_Wise_Template_Detail
+                                {
+                                    User_Wise_Template_Id = masterID,
+                                    User_Id = userGuid,
+                                    DataValue_ID = item.templateId,
+                                    Department = item.department
+                                });
+                                db.SubmitChanges();
+                            }
                         }
                     }
-
-                    db.SubmitChanges();
                     return masterID.ToString();
                 }
             }
@@ -163,17 +221,6 @@ namespace PMS.Modules.Administrator
         {
             using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
             {
-                // Get all X-Ray Format DataValues
-                var allTemplates = (from dv in db.DataValues
-                                    join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
-                                    where vs.ValueSet_Name == "X-Ray Format"
-                                    select new
-                                    {
-                                        TemplateId = dv.DataValue_Name,  // "001", "002"
-                                        TemplateDescription = dv.DataValue_Description
-                                    }).ToList();
-
-                // Get saved details - remove IsNullOrEmpty, use != null and != ""
                 var details = (from detail in db.User_Wise_Template_Details
                                join usr in db.aspnet_Users on detail.User_Id equals usr.UserId
                                where detail.User_Wise_Template_Id == id
@@ -183,22 +230,72 @@ namespace PMS.Modules.Administrator
                                {
                                    detail.User_Id,
                                    user_name = usr.UserName,
-                                   SavedValue = detail.DataValue_ID  // Gets "001", "002"
+                                   TemplateId = detail.DataValue_ID,
+                                   DepartmentCode = detail.Department  // This is "002", "003", etc.
                                }).ToList();
 
-                // Join to get template descriptions
-                var result = (from d in details
-                              join t in allTemplates on d.SavedValue equals t.TemplateId
-                              select new
-                              {
-                                  User_Id = d.User_Id,
-                                  user_name = d.user_name,
-                                  Template_Id = t.TemplateId,  // "001", "002"
-                                  Template_Description = t.TemplateDescription
-                              }).ToList();
+                var result = new List<object>();
+
+                foreach (var detail in details)
+                {
+                    // First convert department code to actual department name
+                    string departmentName = GetDepartmentNameFromCode(db, detail.DepartmentCode);
+
+                    // Now get template description using the actual department name
+                    string templateDescription = GetTemplateDescription(db, departmentName, detail.TemplateId);
+
+                    result.Add(new
+                    {
+                        User_Id = detail.User_Id,
+                        user_name = detail.user_name,
+                        Template_Id = detail.TemplateId,
+                        Template_Description = templateDescription,
+                        Department = departmentName,  // Send actual name for display
+                        DepartmentCode = detail.DepartmentCode  // Keep code if needed
+                    });
+                }
 
                 return new JavaScriptSerializer().Serialize(result);
             }
+        }
+
+        // New method to convert department code to actual department name
+        private static string GetDepartmentNameFromCode(DataBaseDataContext db, string departmentCode)
+        {
+            var department = db.DataValues
+                .FirstOrDefault(dv => dv.ValueSet_ID == 72 && dv.DataValue_Name == departmentCode);
+
+            return department != null ? department.DataValue_Description : departmentCode;
+        }
+
+        private static string GetTemplateDescription(DataBaseDataContext db, string departmentName, string templateId)
+        {
+            string valueSetName = "";
+
+            switch (departmentName)  // Now this receives actual names like "X-Ray", "MRI", etc.
+            {
+                case "X-Ray":
+                    valueSetName = "X-Ray Format";
+                    break;
+                case "MRI":
+                    valueSetName = "MRI Format";
+                    break;
+                case "CT Scan":
+                    valueSetName = "CTScan Format";
+                    break;
+                case "Ultrasound":
+                    valueSetName = "Ultrasound level";
+                    break;
+                default:
+                    return "";
+            }
+
+            var template = (from dv in db.DataValues
+                            join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                            where vs.ValueSet_Name == valueSetName && dv.DataValue_Name == templateId
+                            select dv.DataValue_Description).FirstOrDefault();
+
+            return template ?? "";
         }
 
         [WebMethod]
@@ -217,16 +314,50 @@ namespace PMS.Modules.Administrator
                               join uwtDetail in db.User_Wise_Template_Details
                                   on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
                               join xr in db.XRayLevels
-                                  on uwtDetail.DataValue_ID equals xr.Levels  // "001" = "001"
+                                  on uwtDetail.DataValue_ID equals xr.Levels
                               where uwt.User_Id == currentUserIdGuid
                                     && uwtDetail.User_Id == currentUserIdGuid
                                     && uwt.is_cancel == false
                                     && !string.IsNullOrEmpty(uwtDetail.DataValue_ID)
+                                    && uwtDetail.Department == "X-Ray"
                               select new
                               {
                                   xr.XRayLevel_ID,
                                   xr.Levels,
                                   xr.FixValues
+                              }).Distinct().ToList();
+
+                return (new JavaScriptSerializer()).Serialize(levels);
+            }
+        }
+
+        [WebMethod]
+        public static string GetAll_UltrasoundLevel()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (AppConfig.UserID == Guid.Empty)
+                {
+                    return (new JavaScriptSerializer()).Serialize(new List<object>());
+                }
+
+                Guid currentUserIdGuid = AppConfig.UserID;
+
+                var levels = (from uwt in db.User_Wise_Templates
+                              join uwtDetail in db.User_Wise_Template_Details
+                                  on uwt.User_Wise_Template_Id equals uwtDetail.User_Wise_Template_Id
+                              join us in db.UltraSoundLevels  
+                                  on uwtDetail.DataValue_ID equals us.Levels
+                              where uwt.User_Id == currentUserIdGuid
+                                    && uwtDetail.User_Id == currentUserIdGuid
+                                    && uwt.is_cancel == false
+                                    && !string.IsNullOrEmpty(uwtDetail.DataValue_ID)
+                                    && uwtDetail.Department == "Ultrasound"
+                              select new
+                              {
+                                  us.UltraSoundLevel_ID,
+                                  us.Levels,
+                                  us.FixValues
                               }).Distinct().ToList();
 
                 return (new JavaScriptSerializer()).Serialize(levels);

@@ -216,7 +216,6 @@
         }
 
 
-
         function httpGet(theUrl) {
 
             var xmlHttp = null;
@@ -295,6 +294,7 @@
 
             $("#ddlrptColumns").val(4);
             AllowLabRights();
+            LoadDoctorsForWaitingList();
             var PatientID = '<%=Request.QueryString["PatientID"]%>';
             if (PatientID != "") {
                 fillTokenInput(PatientID);
@@ -409,17 +409,17 @@
                 $("#ddlOrganism").select2('open');
 
             });
-            $('#chkUltraSound_level').change(function () {
+            //$('#chkUltraSound_level').change(function () {
 
-                var getVal = this.value;
-                if (getVal == "") {
-                    CKEDITOR.instances.txtfixedType.setData("");
-                }
-                PageMethods.FillUltrasound_level(getVal, function (resp) {
-                    var fixedVal = JSON.parse(resp);
-                    CKEDITOR.instances.txtfixedType.setData(fixedVal);
-                });
-            });
+            //    var getVal = this.value;
+            //    if (getVal == "") {
+            //        CKEDITOR.instances.txtfixedType.setData("");
+            //    }
+            //    PageMethods.FillUltrasound_level(getVal, function (resp) {
+            //        var fixedVal = JSON.parse(resp);
+            //        CKEDITOR.instances.txtfixedType.setData(fixedVal);
+            //    });
+            //});
             $('#btnApprove').click(function () {
                 debugger;
                 test_list = [];
@@ -431,71 +431,139 @@
                         test_list.push({ 'TestDID': testDetailId });
                     }
                 });
-                //$.each(tbl, function (key, val) {
 
-                //    var name = $(val).find('input[name="testDepartment"]').attr('name');
-                //    if (name == "testDepartment") {
-                //    }
-                //    else {
-                //        var Ids = $(val).find('td:eq(0)').text();
-                //        //$(val).find('td[id=testDetailID]').text();
-                //        test_list.push({ 'TestDID': Ids });
-                //    }
-                //});
-                //For Single Tests
                 var testID = $('#hdtestdetailid').val();
                 if (testID != null && testID > 0) {
                     test_list.push({ 'TestDID': testID });
                 }
-                var Lab_ID = 0;
-                var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
-                if (test_list.length > 0) {
-                    PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), function (response) {
 
-                        //alert(response)
+                var Lab_ID = 0;
+
+                // Get the selected doctor ID
+                var selectedDoctorId = $("#ddlReferDoctor").val();
+
+                var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
+
+                if (test_list.length > 0) {
+                    // Pass the doctor ID as the third parameter
+                    PageMethods.ApproveTestDetailCat(Lab_ID, JSON.stringify(TesttDetails), selectedDoctorId, function (response) {
                         if (typeof currentlyEditingElement !== 'undefined') {
                             EditData(currentlyEditingElement);
                         }
                         var storageBillNo = localStorage.Bill_No;
                         if (storageBillNo != "(New)") {
                             $("#ctl00_MainContent_txtBilling").val(storageBillNo);
-
                             loadPatientDataUsingBillId();
-
-
                         }
-                       
                     }, function (onfailure) {
-
                         alert(onfailure);
                     });
                 }
             });
+            //$('#btnReject').click(function () {
+            //    localStorage.isSaved = 1;
+            //    test_list = [];
+            //    var tbl = $("#tblgroupTestlist tbody tr");
+            //    $.each(tbl, function (key, val) {
+
+            //        var name = $(val).find('input[name="testDepartment"]').attr('name');
+            //        if (name == "testDepartment") {
+            //        }
+            //        //});
+            //        else {
+            //            var Ids = $(val).find('td:eq(0)').text();
+            //            //$(val).find('td[id=testDetailID]').text();
+            //            test_list.push({ 'TestDID': Ids });
+            //        }
+            //    });
+            //    //For Single Tests
+            //    var testID = $('#hdtestdetailid').val();
+            //    if (testID != null && testID > 0) {
+            //        test_list.push({ 'TestDID': testID });
+            //    }
+            //    var Lab_ID = 0;
+            //    var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
+            //    if (test_list.length > 0) {
+            //        PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
+
+            //            if (typeof currentlyEditingElement !== 'undefined') {
+            //                EditData(currentlyEditingElement);
+            //            }
+            //            var storageBillNo = localStorage.Bill_No;
+            //            if (storageBillNo != "(New)") {
+            //                $("#ctl00_MainContent_txtBilling").val(storageBillNo);
+
+            //                loadPatientDataUsingBillId();
+
+
+            //            }
+
+            //        }, function (onfailure) {
+
+            //            alert(onfailure);
+            //        });
+            //    }
+
+            //});
+
             $('#btnReject').click(function () {
+                // Show the rejection modal instead of directly rejecting
+                $('#rejectionModal').modal('show');
+            });
+
+            // Handle confirm rejection
+            $('#btnConfirmReject').click(function () {
+                var rejectionRemarks = $('#txtRejectionRemarks').val().trim();
+
+                if (rejectionRemarks === "") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Please enter rejection remarks',
+                        showConfirmButton: true,
+                        timer: 2000
+                    });
+                    return;
+                }
+
+                // Close the rejection modal
+                $('#rejectionModal').modal('hide');
+
+                // Clear the textarea for next use
+                $('#txtRejectionRemarks').val('');
+
+                // Proceed with rejection
                 localStorage.isSaved = 1;
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
                 $.each(tbl, function (key, val) {
-
                     var name = $(val).find('input[name="testDepartment"]').attr('name');
                     if (name == "testDepartment") {
                     }
-                    //});
                     else {
                         var Ids = $(val).find('td:eq(0)').text();
-                        //$(val).find('td[id=testDetailID]').text();
                         test_list.push({ 'TestDID': Ids });
                     }
                 });
-                //For Single Tests
+
+                // For Single Tests
                 var testID = $('#hdtestdetailid').val();
                 if (testID != null && testID > 0) {
                     test_list.push({ 'TestDID': testID });
                 }
+
                 var Lab_ID = 0;
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
+
                 if (test_list.length > 0) {
-                    PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), function (response) {
+                    PageMethods.RejectTestDetail(Lab_ID, JSON.stringify(TesttDetails), rejectionRemarks, function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Test rejected successfully',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
 
                         if (typeof currentlyEditingElement !== 'undefined') {
                             EditData(currentlyEditingElement);
@@ -503,18 +571,17 @@
                         var storageBillNo = localStorage.Bill_No;
                         if (storageBillNo != "(New)") {
                             $("#ctl00_MainContent_txtBilling").val(storageBillNo);
-
                             loadPatientDataUsingBillId();
-
-
                         }
-                      
                     }, function (onfailure) {
-
-                        alert(onfailure);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: onfailure,
+                            showConfirmButton: true
+                        });
                     });
                 }
-
             });
             debugger;
             $('#saveTest').click(function () {
@@ -813,10 +880,11 @@
 
 
             $("#ddlReferDoctor").select2({
-                placeholder: "Select Doctor",
-                allowClear: true,
-                width: '100%'
-            });
+    placeholder: "Select Doctor",
+    allowClear: true,
+    width: '100%',
+    dropdownParent: $('#myModal')  // Appends to modal instead of body
+});
 
             $.ajax({
                 type: "POST",
@@ -859,6 +927,44 @@
                     CKEDITOR.instances.txtfixedType.setData("");
                 }
             });
+
+            $('#chkMRILevel').change(function () {
+                var selectedOption = $(this).find('option:selected');
+                var fixValues = selectedOption.data('fixvalues');
+
+                if (fixValues && fixValues !== "") {
+                    var decodedFixValues = $('<textarea/>').html(fixValues).text();
+                    CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                } else if ($(this).val() === "") {
+                    CKEDITOR.instances.txtfixedType.setData("");
+                }
+            });
+
+            // CTScan change handler (same as X-Ray)
+            $('#chkCTScanLevel').change(function () {
+                var selectedOption = $(this).find('option:selected');
+                var fixValues = selectedOption.data('fixvalues');
+
+                if (fixValues && fixValues !== "") {
+                    var decodedFixValues = $('<textarea/>').html(fixValues).text();
+                    CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                } else if ($(this).val() === "") {
+                    CKEDITOR.instances.txtfixedType.setData("");
+                }
+            });
+
+            // Ultrasound change handler (same as X-Ray)
+            $('#chkUltraSound_level').change(function () {
+                var selectedOption = $(this).find('option:selected');
+                var fixValues = selectedOption.data('fixvalues');
+
+                if (fixValues && fixValues !== "") {
+                    var decodedFixValues = $('<textarea/>').html(fixValues).text();
+                    CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                } else if ($(this).val() === "") {
+                    CKEDITOR.instances.txtfixedType.setData("");
+                }
+            });
         });
         function GetTestDepartment() {
             var options = '<option value="">Select Department</option>';
@@ -869,6 +975,27 @@
                 $('#ddlTestDepartment').html(options);
             });
             return options;
+        }
+
+        function LoadDoctorsForWaitingList() {
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/GetDoctors",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                    var options = '<option value="">All Doctors</option>';
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.id + '">' + value.text + '</option>';
+                    });
+                    $("#ddlDoctorFilter").html(options);
+                    $("#ddlDoctorFilter").select2();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading doctors:", error);
+                }
+            });
         }
         function readIMG(input) {
 
@@ -2004,6 +2131,26 @@
 
             });
         }
+        function updateModalPatientDetails() {
+            // Get values from the main page patient cards
+            var patientName = $('#<%= vlblPatients_Name.ClientID %>').text() || '--';
+            var age = $('#<%= vLbl_Age.ClientID %>').text() || '--';
+            var gender = $('#<%= vLbl_Gender.ClientID %>').text() || '--';
+            var mrNo = $('#<%= hdnPatient_ID.ClientID %>').val() || '--';
+            var billNo = $('#<%= hdnBill_No.ClientID %>').val() || '--';
+            var billDate = $('#<%= vLbl_RegDate.ClientID %>').text() || '--';
+            var department = $('#<%= vPatient_Category.ClientID %>').text() || '--';
+            $('#modal_MRNo').text(mrNo);
+            $('#modal_PatientName').text(patientName);
+            $('#modal_Age').text(age);
+            $('#modal_Gender').text(gender);
+            $('#modal_BillNo').text(billNo);
+            if (department === '--' || department === '') {
+                department = $('#<%= vPatient_Category.ClientID %>').text() || '--';
+            }
+            $('#modal_Category').text(department);
+            $('#modal_BillDate').text(billDate);
+        }
         function EditValue() {
 
             // document.getElementById("mTestTemplate").disabled = false;
@@ -2061,7 +2208,7 @@
 
             var billDetailID = $($(row).find('td input[name=Bill_Details_ID]')[0]).val();
             bill_detailid = billDetailID;
-
+            updateModalPatientDetails();
             if (Group_Categroy == "") {
                 $("#tblgroupTestlist").hide();
                 $("#tblsingleTest").show();
@@ -2146,22 +2293,57 @@
                             var MainDept = data[2];
 
                             // Show/hide Ultrasound level dropdown
-                            if (CheckLevel == "True") {
+                            $("#chkUltraSound_level").hide();
+                            $("#chkXRay_level").hide();
+                            $("#chkMRILevel").hide();
+                            $("#chkCTScanLevel").hide();
+
+                            // Show/hide department-specific level dropdowns based on department
+                            if (MainDept == "Ultrasound" || MainDept == "002") {
                                 $("#chkUltraSound_level").show();
-                                getAllLevels(TestID);
-                            } else {
-                                $("#chkUltraSound_level").hide();
+                                LoadUltrasoundLevelsUserWise();
+                                var UltraLevels = data[25];  // CHANGED from 24 to 25
+                                if (UltraLevels && UltraLevels != "") {
+                                    setTimeout(function () {
+                                        $('#chkUltraSound_level').val(UltraLevels);
+                                    }, 1000);
+                                }
                             }
 
-                            // Show/hide X-Ray level dropdown based on department
-                            if (MainDept == "X-Ray" || MainDept == "003") {
+                            // X-Ray - Keep as is (works)
+                            else if (MainDept == "X-Ray" || MainDept == "003") {
                                 $("#chkXRay_level").show();
-                                // Load X-Ray levels if not already loaded
-                                if ($('#chkXRay_level option').length <= 1) {
-                                    LoadXRayLevels();
+                                LoadXRayLevels();
+                                var xrayLevels = data[25];  // This is correct - index 25
+                                if (xrayLevels && xrayLevels != "") {
+                                    setTimeout(function () {
+                                        $('#chkXRay_level').val(xrayLevels);
+                                    }, 500);
                                 }
-                            } else {
-                                $("#chkXRay_level").hide();
+                            }
+
+                            // CT Scan - CHANGE FROM data[26] TO data[25]
+                            else if (MainDept == "CT Scan" || MainDept == "004") {
+                                $("#chkCTScanLevel").show();
+                                LoadCTScanLevels();
+                                var ctScanLevels = data[25];  // CHANGED from 26 to 25
+                                if (ctScanLevels && ctScanLevels != "") {
+                                    setTimeout(function () {
+                                        $('#chkCTScanLevel').val(ctScanLevels);
+                                    }, 1000);
+                                }
+                            }
+
+                            // MRI - CHANGE FROM data[27] TO data[25]
+                            else if (MainDept == "MRI" || MainDept == "006") {
+                                $("#chkMRILevel").show();
+                                LoadMRILevels();
+                                var mriLevels = data[25];  // CHANGED from 27 to 25
+                                if (mriLevels && mriLevels != "") {
+                                    setTimeout(function () {
+                                        $('#chkMRILevel').val(mriLevels);
+                                    }, 1000);
+                                }
                             }
 
                             // Set the X-Ray level value if exists
@@ -2284,11 +2466,11 @@
                                 $("#btnReject").show();
                             }
 
-                            setTimeout(function () {
+                            //setTimeout(function () {
 
-                                $('#chkUltraSound_level').val(UltraLevels)
-                            }
-                                , 1000);
+                            //    $('#chkUltraSound_level').val(UltraLevels)
+                            //}
+                            //    , 1000);
 
 
                             if (Ranges == null || Ranges == '') {
@@ -2720,6 +2902,7 @@
 
         function LoadRadiologyPatientsList() {
             var deptFilter = $('#ddlDepartment').val();
+            var doctorFilter = $('#ddlDoctorFilter').val();
             var startdate = $('#sdate').val();
             var endtdate = $('#edate').val();
 
@@ -2728,6 +2911,7 @@
                 url: "RadiologyTestResult.aspx/AllUltraSoundTest",
                 data: JSON.stringify({
                     departmentCode: deptFilter,
+                    doctorId: doctorFilter,
                     startdate: startdate,
                     endtdate: endtdate
                 }),
@@ -2740,34 +2924,6 @@
                     tbody.empty();
 
                     if (data && data.length > 0) {
-                        //$.each(data, function (index, item) {
-                        //    var formattedDate = '';
-                        //    if (item.Bill_Date) {
-                        //        var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
-                        //        formattedDate = billDate.toLocaleDateString();
-                        //    }
-                        //    var status = item.IsAcknowledge
-                        //    var statuss;
-                        //    if (status == true) {
-                        //        statuss = 'Acknowledge'
-                        //    }
-                        //    else {
-                        //        statuss = 'Waiting'
-                        //    }
-
-                        //    var row = '<tr>' +
-                        //        '<td>' + formattedDate + '</td>' +
-                        //        '<td>' + item.Bill_No + '</td>' +
-                        //        '<td>' + item.Full_Name + '</td>' +
-                        //        '<td>' + item.Item_Name + '</td>' +
-                        //        '<td>' + item.Doctor + '</td>' +
-                        //        '<td>' + item.Test_Main_Department + '</td>' +
-                        //        '<td>' + statuss + '</td>' +
-                        //        '<td><button type="button" class="btn btn-sm btn-primary" ' +
-                        //        'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
-                        //        '</tr>';
-                        //    tbody.append(row);
-                        //});
                         $.each(data, function (index, item) {
                             debugger;
                             var formattedDate = '';
@@ -2779,11 +2935,10 @@
                             var status = item.IsAcknowledge;
                             var statuss = status == true ? 'Acknowledge' : 'Waiting';
 
-                            // ✅ CONDITION FOR LIGHT RED ROW
                             var rowStyle = '';
                             if (item.Is_Result == true &&
                                 (item.Refer_Doctor == null || item.Refer_Doctor == "" || item.Refer_Doctor == "0")) {
-                                rowStyle = 'style="background-color:#f8d7da;"'; // light red
+                                rowStyle = 'style="background-color:#f8d7da;"';
                             }
 
                             var row = '<tr ' + rowStyle + '>' +
@@ -2791,7 +2946,7 @@
                                 '<td>' + item.Bill_No + '</td>' +
                                 '<td>' + item.Full_Name + '</td>' +
                                 '<td>' + item.Item_Name + '</td>' +
-                                '<td>' + item.Doctor + '</td>' +
+                                '<td>' + (item.DoctorName || '') + '</td>' +
                                 '<td>' + item.Test_Main_Department + '</td>' +
                                 '<td>' + statuss + '</td>' +
                                 '<td><button type="button" class="btn btn-sm btn-primary" ' +
@@ -2801,7 +2956,7 @@
                             tbody.append(row);
                         });
                     } else {
-                        tbody.append('<tr><td colspan="6" class="text-center">No pending radiology tests found for this department.</td></tr>');
+                        tbody.append('<tr><td colspan="7" class="text-center">No pending radiology tests found.</td></tr>');
                     }
                 },
                 error: function (xhr, status, error) {
@@ -3027,6 +3182,89 @@
                 }
             }, function (error) {
                 console.error("Error loading X-Ray levels:", error);
+            });
+        }
+
+        function LoadMRILevels() {
+            PageMethods.GetAll_MRILevel(function (response) {
+                var levels = JSON.parse(response);
+                var $mriSelect = $('#chkMRILevel');
+
+                $mriSelect.empty();
+
+                if (levels && levels.length > 0) {
+                    $.each(levels, function (key, level) {
+                        $mriSelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                    });
+
+                    var firstLevel = levels[0];
+                    $mriSelect.val(firstLevel.Levels);
+                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
+                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
+                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                    }
+                } else {
+                    $mriSelect.append('<option value="">No MRI Levels Assigned</option>');
+                    $mriSelect.prop('disabled', true);
+                }
+            }, function (error) {
+                console.error("Error loading MRI levels:", error);
+            });
+        }
+
+        // Load CTScan Levels (simplified - same pattern as X-Ray)
+        function LoadCTScanLevels() {
+            PageMethods.GetAll_CTScanLevel(function (response) {
+                var levels = JSON.parse(response);
+                var $ctSelect = $('#chkCTScanLevel');
+
+                $ctSelect.empty();
+
+                if (levels && levels.length > 0) {
+                    $.each(levels, function (key, level) {
+                        $ctSelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                    });
+
+                    var firstLevel = levels[0];
+                    $ctSelect.val(firstLevel.Levels);
+                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
+                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
+                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                    }
+                } else {
+                    $ctSelect.append('<option value="">No CTScan Levels Assigned</option>');
+                    $ctSelect.prop('disabled', true);
+                }
+            }, function (error) {
+                console.error("Error loading CTScan levels:", error);
+            });
+        }
+
+        // Load Ultrasound Levels (simplified - same pattern as X-Ray)
+        function LoadUltrasoundLevelsUserWise() {
+            PageMethods.GetAll_UltrasoundLevelUserWise(function (response) {
+                var levels = JSON.parse(response);
+                var $usSelect = $('#chkUltraSound_level');
+
+                $usSelect.empty();
+
+                if (levels && levels.length > 0) {
+                    $.each(levels, function (key, level) {
+                        $usSelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                    });
+
+                    var firstLevel = levels[0];
+                    $usSelect.val(firstLevel.Levels);
+                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
+                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
+                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
+                    }
+                } else {
+                    $usSelect.append('<option value="">No Ultrasound Levels Assigned</option>');
+                    $usSelect.prop('disabled', true);
+                }
+            }, function (error) {
+                console.error("Error loading Ultrasound levels:", error);
             });
         }
 
@@ -3289,6 +3527,18 @@
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title" id="titleee">Add Test Result</h4>
                 </div>
+                <!-- Patient Basic Details Section - Small compact view -->
+                <div class="patient-basic-info" style="background: #f8f9fa; padding: 8px 15px; margin: 0 15px; border-radius: 6px; border-left: 4px solid #007bff;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; font-size: 13px;">
+                       <div><strong>MR No:</strong> <span id="modal_MRNo">--</span></div>
+                        <div><strong>Name:</strong> <span id="modal_PatientName">--</span></div>
+                        <div><strong>Age:</strong> <span id="modal_Age">--</span></div>
+                        <div><strong>Gender:</strong> <span id="modal_Gender">--</span></div>
+                        <div><strong>Category:</strong> <span id="modal_Category">--</span></div>
+                        <div><strong>Bill No:</strong> <span id="modal_BillNo">--</span></div>
+                        <div><strong>Date:</strong> <span id="modal_BillDate">--</span></div>
+                    </div>
+                </div>
                 <div id="dvSingleTestName">
                     <p id="pTestName" style="margin-left: 29px; font-size: 20px; color: blue;"></p>
                 </div>
@@ -3315,6 +3565,16 @@
                                     <div style="margin-top: 15px;">
                                         <select id="chkXRay_level" class="wgtmsr">
                                             <option value="">Select X-Ray Level</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-top: 15px;">
+                                        <select id="chkMRILevel" class="wgtmsr">
+                                            <option value="">Select MRI Level</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-top: 15px;">
+                                        <select id="chkCTScanLevel" class="wgtmsr" >
+                                            <option value="">Select CTScan Level</option>
                                         </select>
                                     </div>
                                 </td>
@@ -3400,7 +3660,7 @@
                 <div class="modal-footer">
                     <div class="row" style="width: 100%; margin-bottom: 10px;">
                         <div class="col-lg-3">
-                            <label style="display: block; text-align: left;">Refer Doctor:</label>
+                            <label style="display: block; text-align: left;">Performing Doctor:</label>
                             <select id="ddlReferDoctor" class="form-control"></select>
                         </div>
                     </div>
@@ -3434,35 +3694,39 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 23px">
                 <h1 style="margin: 0;">Patients Waiting List</h1>
             </div>
-            <div class="row">
-
-                <div class="col-lg-2">
-                    <label>Start Date </label>
-                    <input type="text" id="sdate" />
-                </div>
-                <div class="col-lg-2">
-                    <label>End Date </label>
-                    <input type="text" id="edate" />
-                </div>
-                <div class="col-lg-3">
-                    <label>Departemnt </label>
-                    <select id="ddlDepartment" class="form-control">
-                        <option value="0">All Departments</option>
-                        <option value="002">Ultrasound</option>
-                        <option value="003">X-Ray</option>
-                        <option value="004">CTScan</option>
-                        <option value="005">Physiotherapy</option>
-                        <option value="006">MRI</option>
-                        <option value="008">Cardiology</option>
-                    </select>
-                </div>
-                <div class="col-lg-2">
-
-                    <input type="button" id="searchpendding" class="btn btn-primry" onclick="reloadPendingList();" value="Search" />
-                </div>
+          <div class="row">
+            <div class="col-lg-2">
+                <label>Start Date </label>
+                <input type="text" id="sdate" />
             </div>
+            <div class="col-lg-2">
+                <label>End Date </label>
+                <input type="text" id="edate" />
+            </div>
+            <div class="col-lg-3">
+                <label>Department </label>
+                <select id="ddlDepartment" class="form-control">
+                    <option value="0">All Departments</option>
+                    <option value="002">Ultrasound</option>
+                    <option value="003">X-Ray</option>
+                    <option value="004">CTScan</option>
+                    <option value="005">Physiotherapy</option>
+                    <option value="006">MRI</option>
+                    <option value="008">Cardiology</option>
+                </select>
+            </div>
+            <div class="col-lg-3">
+                <label>Doctor:</label>
+                <select id="ddlDoctorFilter"  onchange ="LoadRadiologyPatientsList();" class="form-control">
+                    <option value="">All Doctors</option>
+                </select>
+            </div>
+            <div class="col-lg-2">
+                <input type="button" id="searchpendding" class="btn btn-primry" onclick="reloadPendingList();" value="Search" />
+            </div>
+        </div>
 
-            <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+            <div style="height: 400px; overflow-y: auto; overflow-x: auto;">
                 <table class="table test-table" id="tblradilogy">
                     <thead>
                         <tr>
@@ -3555,4 +3819,25 @@
             </div>
         </div>
     </div>
+    <!-- Rejection Remarks Modal -->
+<div id="rejectionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 500px;">
+            <div class="modal-header">
+                <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Reject Test Result</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtRejectionRemarks">Rejection Remarks:</label>
+                    <textarea id="txtRejectionRemarks" rows="5" cols="50" class="form-control" style="width: 100%;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
+                <input type="button" id="btnConfirmReject" class="btn btn-danger" value="Confirm Reject" />
+            </div>
+        </div>
+    </div>
+</div>
 </asp:Content>

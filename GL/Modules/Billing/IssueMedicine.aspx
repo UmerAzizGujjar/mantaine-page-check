@@ -34,7 +34,8 @@
             LoadWarehouses();
             LoadWarehousesforSaleReturn();
             
-             LoadPatientNo();
+            LoadPatientNo();
+            AllowadjustmentEdit();
             
         });
         window.addEventListener('keydown', function (event) {
@@ -391,28 +392,46 @@
 
         //}
         function loadInvoiceNumbers() {
+            // Destroy existing select2 if any
+            if ($('#ddlInvoiceNumber').data('select2')) {
+                $('#ddlInvoiceNumber').select2('destroy');
+            }
 
-            $.ajax({
-                type: "POST",
-                url: "IssueMedicine.aspx/AllInvoiceNumbers",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: JSON.stringify({ searchTerm: "" }),
+            // Clear the dropdown
+            $('#ddlInvoiceNumber').empty();
 
-                success: function (response) {
+            // Initialize Select2 with AJAX search
+            $('#ddlInvoiceNumber').select2({
+                placeholder: "Search Invoice Number",
+                allowClear: true,
+                minimumInputLength: 1, // Start searching after 1 character
+                ajax: {
+                    url: 'IssueMedicine.aspx/AllInvoiceNumbers',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function (params) {
+                        return JSON.stringify({
+                            searchTerm: params.term || ""
+                        });
+                    },
+                    processResults: function (response) {
+                        var data = [];
+                        try {
+                            if (response.d) {
+                                data = JSON.parse(response.d);
+                            }
+                        } catch (e) {
+                            console.log("Parse error:", e);
+                            data = [];
+                        }
 
-                    var data = JSON.parse(response.d);
-
-                    // Clear and add empty option for placeholder
-                    $('#ddlInvoiceNumber').empty();
-                    $('#ddlInvoiceNumber').append('<option></option>');
-
-                    $('#ddlInvoiceNumber').select2({
-                        placeholder: "Please Select",
-                        allowClear: true,
-                        data: data
-                    });
-
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
                 }
             });
         }
@@ -3155,7 +3174,38 @@
                         //alert("Error loading invoices: " + error);
                     }
                 });
-            }
+        }
+
+        var editrights;
+        function AllowadjustmentEdit() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/CheckEditAdjustment",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    editrights = data.d;
+
+                    if (editrights == "true") {
+
+                        $('#txtFlatDisc').attr('disabled', false);
+                    }
+                    else {
+                        $('#txtFlatDisc').attr('disabled', true);
+                    }
+
+                },
+                failure: function () {
+                    alert("Error");
+                }
+            });
+
+
+        }
 
         //function getInvoiceNo_PatWise() {
 

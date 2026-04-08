@@ -13,8 +13,6 @@
             var NewPassword = $('#NewPassword').val();
             var ConfirmNewPassword = $('#ConfirmNewPassword').val();
 
-
-            
             var dataObj = {
                 "OldPassword": OldPassword,
                 "NewPassword": NewPassword,
@@ -22,7 +20,7 @@
             };
             var data = JSON.stringify({ data: dataObj });
             console.log(data);
-            debugger;
+
             if (ConfirmNewPassword == null || ConfirmNewPassword == "") {
                 $("#failureNotification2").show();
                 valid = false;
@@ -42,16 +40,37 @@
                     success: function (data) {
                         var result = data.d;
                         if (result == "Password changed successfully!") {
-                            toasterMessage(false, result);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: result,
+                                timer: 2000,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            }).then(function () {
+                                window.location.reload();
+                            });
                         }
                         else {
-                            toasterMessage(true, result);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: result,
+                                timer: 2000,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
                         }
-                        window.location.reload();
-
-
-
-
                     },
                     error: function (xhr, status, error) {
                         console.log("XHR:", xhr);
@@ -59,9 +78,19 @@
                         console.log("Error:", error);
 
                         if (xhr.responseText) {
-                            alert("Server Error: " + xhr.responseText);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Server Error!',
+                                text: xhr.responseText,
+                                confirmButtonText: 'OK'
+                            });
                         } else {
-                            alert("AJAX Error: " + error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'AJAX Error!',
+                                text: error,
+                                confirmButtonText: 'OK'
+                            });
                         }
                     }
                 });

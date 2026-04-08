@@ -377,7 +377,7 @@
 
                     'ddl_feetype': $(value).find('td input[name=ddl_feetype]').val(),
 
-                    'txt_fee': $(value).find('td input[name=txt_fee]').val(),
+                    'txt_fee': $(value).find('td input[name=txt_fee]').val() || 0,
 
 
                 });

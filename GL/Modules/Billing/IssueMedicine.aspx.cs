@@ -55,6 +55,17 @@ namespace PMS
 
         }
 
+        [WebMethod]
+        public static string CheckEditAdjustment()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.adjustment_Allow).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
         [WebMethod(EnableSession = true)]
         public static List<object> GetUserWarehouses()
         {

@@ -663,22 +663,22 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtSaturation_Oxygen2;
 
         /// <summary>
-        /// lblOthersReceiveNote control.
+        /// lblbsr control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblOthersReceiveNote;
+        protected global::System.Web.UI.WebControls.Label lblbsr;
 
         /// <summary>
-        /// txtOthersRcvNote control.
+        /// txtbsr control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtOthersRcvNote;
+        protected global::System.Web.UI.WebControls.TextBox txtbsr;
 
         /// <summary>
         /// txtSaturation control.
@@ -733,6 +733,24 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtReceiving_Date;
+
+        /// <summary>
+        /// lblOthersReceiveNote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOthersReceiveNote;
+
+        /// <summary>
+        /// txtOthersRcvNote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOthersRcvNote;
 
         /// <summary>
         /// lblRN_Special_Instruction control.
@@ -1201,6 +1219,15 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCauseOfReferral;
+
+        /// <summary>
+        /// lblDischargeTemplate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDischargeTemplate;
 
         /// <summary>
         /// lblReferredTo control.

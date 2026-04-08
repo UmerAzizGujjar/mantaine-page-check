@@ -99,6 +99,7 @@
             LoadInvestigationDoctor();
             LoadTemplate();
             LoadTemplateForTest();
+            LoadDischargeTemplate();
 
 
 
@@ -265,7 +266,69 @@
 
             });
 
+            if ($('#txtPharmacyItem').length > 0) {
+            $('#txtPharmacyItem').select2({
+            width: '100%',
+            placeholder: 'Select Medicine',
+            allowClear: true
+               });
+
+        // 2. Attach the event listener to load template on selection
+        $('#txtPharmacyItem').on('select2:select', function (e) {
+            getTemplate();
         });
+    }
+
+        });
+
+        function getTemplate() {
+    var item_id = $('#txtPharmacyItem').val();
+    
+    // Validate if a valid item is selected
+    if (!item_id || item_id === "0" || item_id === "") {
+        return;
+    }
+
+    PageMethods.loadtemplate(item_id, function (resp) {
+        try {
+            var data = JSON.parse(resp);
+            if (data && data.length > 0) {
+                var templateData = data[0];
+                
+                // Use helper function to set dropdowns by text match
+                setDropdownText('#ddlDosage_Qty', templateData.Dosage_Qty);
+                setDropdownText('#ddlDosage_From', templateData.Dosage_From);
+                setDropdownText('#txtRecomended_Dosage', templateData.Frequency);
+                setDropdownText('#Routes', templateData.Oral);
+                
+                // Set text inputs directly
+                $('#txtInjection').val(templateData.Injections || '');
+                $('#AttendingParamedicalStaff').val(templateData.AttendingParamedical_Staff || '');
+                setDropdownText('#ddlOther_Instruction', templateData.Other_Instruction);
+            }
+        } catch (e) {
+            console.error("Error parsing template data", e);
+        }
+    }, function (error) {
+        console.error("Error loading template", error.get_message ? error.get_message() : error);
+    });
+}
+
+function setDropdownText(selector, text) {
+    var dropdown = $(selector);
+    if (!text) return;
+
+    var matchFound = false;
+    dropdown.find('option').each(function () {
+        if ($(this).text().trim().toLowerCase() === text.trim().toLowerCase()) {
+            dropdown.val($(this).val()).trigger('change');
+            matchFound = true;
+            return false; 
+        }
+    });
+    if (!matchFound) {
+    }
+}
 
         var tabsEmr;
         function AllowEMRGTabs() {
@@ -1225,7 +1288,7 @@
                 var rows = '';
                 $('#tblTestrpt tr').remove();
                 $.each(Medicines, function (key, value) {
-                    rows += '<tr><td>*</td><td>' + value.Medicine_Name + '</td> <td> ' + value.Frequency + '</td><td style="width:1px">دن</td><td>' + value.Injections + ' </td></tr>';
+                    rows += '<tr><td>*</td><td>' + value.Medicine_Name + '</td> <td> ' + value.Frequency + '</td><td style="width:1px">??</td><td>' + value.Injections + ' </td></tr>';
                 });
                 $('#tblTestrpt').html(rows);
                 LoadExamrpt();
@@ -1761,6 +1824,7 @@
                 return;
             }
             var RateBeats = $("#ctl00_MainContent_txtRateBeats").val();
+            var txtbsr = $("#ctl00_MainContent_txtbsr").val();
             var Saturation = $("#ctl00_MainContent_txtSaturation").val();
             var OthersRN = $("#ctl00_MainContent_txtOthersRcvNote").val();
             var DischargeStatus = $("#ctl00_MainContent_ddlDischargeStatus").val();
@@ -1948,7 +2012,7 @@
             // TreatmentTime,txtAdmission_Date, ddlDepartment, ddlDoctor, ddlWard_No, txtBed_No, discount,patientcateg, Remarks,ddlIssuance_Of,ddlPatientCondition,
 
             var ID = '<%= Request.QueryString["ID"]%>';
-            PageMethods.SaveRecord(Patient_ID, btnsave, ddlCallToDoctor, txtHealth_Complaints, RateBeats, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory, txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb, DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane, DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit, txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo, CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD,
+            PageMethods.SaveRecord(Patient_ID, btnsave, ddlCallToDoctor, txtHealth_Complaints, RateBeats, txtbsr, BP_mm_Hg, Temp_C, Respiration_Min, txtRN_Special_Instruction, txtReceiving_Date, Provisional_Diagnosis, Reffer_To, HistoryOfPeresentIllness, HistoryOfFamily, HistoryOfPastIllness, SocioEconomicHistory, Birth_History, Reffer_No, Drug_History, Personal_History, ObstetricHistory, AllergiesHistory, TreatmentHistory, VaccinationHistory, AnyOtherHistory, ENT_Throat_IDL, ENT_Throat_Nose, ENT_Ear_Right, Ent_Ear_Left, ENT_Rinnes_Right_PosNeg, ENT_Rinnes_Lft_PosNeg, ENT_Rinnes_Right_FalseNeg, ENT_Rinnes_Lft_FalseNeg, ENT_Webber_Central, ENT_Webber_Lateralized, ENT_Investigation_PTA, ENT_Investigation_Tympanometry, ENT_Rinnes_Right_Neg, ENT_Rinnes_Lft_Neg, ENT_Rinnes_Right_FNeg, ENT_Rinnes_Lft_FNeg, txtInformant, txtSourceOfReferral, chkNeckHolding, chkWalking, chkTalking, chkOthers, txtMenarche, txtMenstrual, txtAttachmentSeparationfromParents, txtHealth, chkNailBiting, chkTemperTantrums, chkBedWetting, txtAcademics, txtPeerRelationship, txtBehaviour, txtOccupationalHistory, txtMaritalRelationshipSexualHistory, txtSubstanceUse, txtForensicUse, txtRelationship, txtLeisureActivities, txtAttitudetoSelfandStandards, txtPrevallingMood, txtReactionPattrentoStress, txtReligiousPracticesAttitute, txtFather, txtMother, txtSiblings, txtHomeAtmosphererelationshipsocialclass, txtFamilialIllness, txtActualandapparentage, txtRace, txtTattoosbodypiercingandscars, txtBodyHabitus, txtDress, txtHygiene, txtPsychomotorActivity, txtInvoluntarymovements, txtDystoniaEPS, txtTardivedyskinesia, txtTics, txtTremors, txtAttentivenesstointerview, txtEyeContact, txtLevelofConsciousness, txtRate, txtRhythm, txtVolume, txtTone, txtModulationvar, txtDepressed, txtElated, txtIrritable, txtLabile, txtIncongruent, txtbluntingflatteningapathy, txtThinkingPremeditation, txtPlans, txtActions, txtPreservative, txtLoosAssociation, txtTangentiaility, txtCircumstantiality, txtFlightofIdeas, txtThoughtInsertion, txtThoughtWithdrawal, txtThoughBroadcasting, txtThoughControl, txtDellusion, txtovervaluedideas, txtDepresonalization, txtDerealization, txtthrougObsession, txtthrougPhobies, txtthrougHomocidialIdeas, txtillusion, txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, txtorientationtime, txtplace, txtperson, txtAttentionConcentrationSerial7Test, txtOrDaysOfWeekReverseOrder, txtImmediatememory, txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb, DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane, DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtDischarge_On, ddlDischarge_By, txtNext_Visit, txtAdvice, chkdischarge, patienttype, Saturation, OthersRN, DischargeStatus, ddlEmrgRhythm, ddlEmrgVolume, Procedure_Recommended, IdentificationMarks, Diagnosis, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, TreatmentGiven, PhysicalFinding, GeneralPhysicalExamination, ClinicalSummary, TreatmentAtDischarge, FollowUpPlanInstructions, CauseOfReferral, ReferredTo, CallingDoctorDepartment, CallingDoctorMobile, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, Murmur, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, FurtherExplanation, ID, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, PulseRate, BPDischarge, Rhythmdischarge, Tempdisch, volumedisc, RespRateDesc, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, Receiving_DateDesc, remrks_call_to_doc, ReferToOPD,
                 function (response) {
                     debugger;
 
@@ -1972,7 +2036,7 @@
             data.append('ID', ID);
             $.ajax({
                 type: 'POST',
-                url: '<%= ResolveUrl("~/upload/UploadEmergency.ashx") %>',  // ✅ FIXED HERE
+                url: '<%= ResolveUrl("~/upload/UploadEmergency.ashx") %>',  // ? FIXED HERE
                 data: data,
                 processData: false,
                 contentType: false,
@@ -2293,7 +2357,7 @@
                         var TrnsDateRec = parseInt(value.Receiving_date.substr(6, 10));
                         var retdateRec = moment.unix(TrnsDateRec).format('M/D/YYYY h:m:s A');
                         rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.Rate_Beats
-                            + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Rhythm + ' </td><td> ' + value.Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRcvNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.user + '</td></tr>';
+                            + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.BSR + ' </td> <td> ' + value.Rhythm + ' </td><td> ' + value.Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRcvNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.user + '</td></tr>';
                     });
                     $('#tblVitalParametersHistoryDesc tbody tr').remove();
                     $('#tblVitalParametersHistoryDesc tbody').html(rows);
@@ -2321,13 +2385,14 @@
                         var retdateRec = moment.unix(TrnsDateRec).format('M/D/YYYY h:m:s A');
                         console.log(rows);
                         rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.Rate_Beats
-                            + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Rhythm + ' </td><td> ' + value.Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRcvNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.user + '</td></tr>';
+                            + ' </td> <td> ' + value.Temp_C + ' </td><td> ' + value.BSR + ' </td> <td> ' + value.Rhythm + ' </td><td> ' + value.Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRcvNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.user + '</td></tr>';
                     });
                     $('#tblVitalParametersHistory tbody tr').remove();
                     $('#tblVitalParametersHistory tbody').html(rows);
                     $('#tblHistoryHeader').html('<h2>Previous History</h2>')
 
                     $("#ctl00_MainContent_txtRateBeats").val("");
+                    $("#ctl00_MainContent_txtbsr").val("");
                     //$("#ctl00_MainContent_ddlRhythm").val("");
                     //$("#ctl00_MainContent_ddlVolume").val("");
                     $("#ctl00_MainContent_txtOthersRcvNote").val("");
@@ -4538,41 +4603,59 @@
         }
 
         $(document).on('keyup', '.select2-search__field', function () {
-            var searchString = $(this).val();
-
-            var options;
-            $.ajax({
-                url: 'EmergencyCase.aspx/getpharmacyitems',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ searchString: searchString }),
-                success: function (response) {
-                    var options = '';
-                    try {
-                        var pharmacyItems = JSON.parse(response.d);
-                        $.each(pharmacyItems, function (key, value) {
-                            options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
-                        });
-                        $('#txtPharmacyItem').append(options).trigger('change');
-                    } catch (error) {
-                        console.error('Error parsing response:', error);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching data:', error);
+          var searchString = $(this).val();
+    
+                if (searchString.length < 2) {
+                    return;
                 }
-            });
-        });
+
+              $.ajax({
+              url: 'EmergencyCase.aspx/getpharmacyitems',
+            method: 'POST',
+           contentType: 'application/json',
+             data: JSON.stringify({ searchString: searchString }),
+            success: function (response) {
+            try {
+                var pharmacyItems = JSON.parse(response.d);
+                var $select = $('#txtPharmacyItem');
+                
+                $.each(pharmacyItems, function (key, value) {
+                    var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
+                    if (!optionExists) {
+                        $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+                    }
+                });
+                
+                $select.trigger('change');
+                
+            } catch (error) {
+                console.error('Error parsing response:', error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+});
 
         function FillPharmacyItem() {
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {
                 var options = '<option value=""> Select Medicine  </option>'
                 $.each(JSON.parse(Medicine), function (key, value) {
-                    options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                    options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                 });
 
                 $('#txtPharmacyItem').html(options);
                 $('#txtPharmacyItem').select2();
+
+                $('#txtPharmacyItem').select2({
+                    width: '100%',
+                    dropdownAutoWidth: false,
+                    minimumResultsForSearch: 0,
+                    dropdownParent: $('#MedicationModel'),
+                    placeholder: 'Select Medicine',
+                    allowClear: true
+                });
 
 
             });
@@ -5255,7 +5338,7 @@
             function showError(errorMessage) {
                 searchResults.innerHTML = `
             <div class="no-results" style="color: #ff6b6b;">
-                ⚠️ Error: ${errorMessage}
+                ?? Error: ${errorMessage}
             </div>`;
                 searchResults.classList.add('active');
             }
@@ -5278,7 +5361,7 @@
                 }
             });
 
-            // ✅ Hide results if click happens outside input or results
+            // ? Hide results if click happens outside input or results
             document.addEventListener('click', function (e) {
                 if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
                     hideResults();
@@ -6219,7 +6302,7 @@
     var test = CheckTest;
     console.log("Adding Lab Test:", test);
     
-    // ✅ FIXED: Only pass 'test' parameter, then callbacks
+    // ? FIXED: Only pass 'test' parameter, then callbacks
     PageMethods.GetLabTestDDLDetails(test, function (res) {
         try {
             console.log("Lab test response:", res);
@@ -6488,6 +6571,55 @@
         }
 
 
+
+        function LoadDischargeTemplate() {
+            var options = '<option value="0" >Select Template</option>';
+            PageMethods.GetTemplate(function (Tests) {
+                $.each(JSON.parse(Tests), function (key, value) {
+                    options += '<option value="' + value.Template_Id + '" >' + value.Template_Name + '</option>';
+                });
+                $('#ddlDischargeTemplate').html(options);
+                if ($.fn.select2) {
+                    $('#ddlDischargeTemplate').select2();
+                }
+            });
+        }
+
+        function LoadDischargeTemplateMedicine() {
+            var Templateid = $('#ddlDischargeTemplate').val();
+            if (!Templateid || Templateid == "0") return;
+
+            PageMethods.GetTemplateMedicine(Templateid, function (res) {
+                var Medicines = JSON.parse(res);
+                var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy h:m:s A")%>';
+            var datetimeValue = '<%= DateTime.Now%>';
+
+            $.each(Medicines, function (key, value) {
+                var dosage_from = value.Dosage_From || '';
+                var dosage_Qty = value.Dosage_Qty || '';
+                var routes = value.Oral || ''; 
+                var other_Instruction = value.Other_Instruction || '';
+                var frequency = value.Frequency || '';
+                var row = '<tr> ' +
+                    '<td><input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime + '</td>' +
+                    '<td><input type="hidden" name="hdnItemCode" value="' + value.Item_Code + '"> ' + value.Medicine_Name + '</td> ' +
+                    '<td>' + frequency + '</td> ' +
+                    '<td>' + routes + '</td> ' +
+                    '<td>' + value.Injections + '</td> ' + 
+                    '<td>' + value.AttendingParamedical_Staff + '</td> ' + 
+                    '<td>' + dosage_from + '</td> ' +
+                    '<td>' + dosage_Qty + '</td> ' +
+                    '<td>' + other_Instruction + '</td> ' +
+                    '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /></td>' +
+                    '<td style="display:none;">' + value.Item_Code + '</td>' +
+                    '</tr>';
+
+                $('#tblDischargeMedication tbody').append(row);
+            });
+        });
+       }
+
+
     </script>
 
     <style type="text/css">
@@ -6545,7 +6677,7 @@
                                 id="searchInput"
                                 autocomplete="off"
                                 style="height: 45px; width: 100% !important; padding: 16px 50px 16px 20px !important; border: 1.5px solid #ccc !important; border-radius: 25px !important; background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) !important; color: black !important; font-size: 16px !important; box-shadow: none !important" />
-                            <div class="search-icon">🔍</div>
+                            <div class="search-icon">??</div>
                         </div>
                         <div class="search-results" id="searchResults"></div>
                     </div>
@@ -6873,7 +7005,7 @@
                                     <input type="button" class="btn btn-primry" id="btnSaveMedicine" name="btnSaveMedicine" value="Save" tabindex="7" />
                                 </td>
                                  <td>
-                                    <input type="button" id="Add_Unlisted_Medicine" value="Add Unlisted Medicine" style="margin-left: 110px; background-color:#438eb9  !important;width:67% !important; color:white !important;" onclick="NewMedicine()" />
+                                    <input type="button" id="Add_Unlisted_Medicine" class="btn btn-primry" value="Add Unlisted Medicine" style="margin-left: 110px;width:67% !important; color:white !important;" onclick="NewMedicine()" />
                                         </td>
                                 <td></td>
                             </tr>
@@ -6901,7 +7033,7 @@
             <div class="row mb-2">
                 <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                     <div class="image-container">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Emergency.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
+                        <img src="~../../../../wwwroot/ASsiratTheme/images/dashboard_Icons/Emergency.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                     </div>
                 </div>
                     <div class="row mb-2"  style="display:none">
@@ -7221,10 +7353,11 @@
                 <asp:TextBox ID="txtSaturation_Oxygen2" runat="server" TabIndex="5" CssClass="form-control"></asp:TextBox>
             </div>
            <div class="col-lg-1 col-md-4 col-sm-6"></div>
-           <div class="col-lg-2 col-md-4 col-sm-6">
-               <asp:Label ID="lblOthersReceiveNote" runat="server" Text="Others"></asp:Label>
-               <asp:TextBox ID="txtOthersRcvNote" runat="server" TabIndex="6" CssClass="form-control"></asp:TextBox>
-           </div>
+         <div class="col-lg-2 col-md-4 col-sm-6">
+             <asp:Label ID="lblbsr" runat="server" Text="BSR"></asp:Label>
+              <asp:TextBox ID="txtbsr" runat="server" CssClass="form-control" ></asp:TextBox>
+         </div>
+        
            </div>
        <div class="row">
            <div class="col-lg-1 col-md-4 col-sm-6">
@@ -7250,19 +7383,27 @@
                 <asp:Label ID="lblRecieving_Time" runat="server" Text="Receiving Date & Time"></asp:Label>
                  <asp:TextBox ID="txtReceiving_Date" runat="server" ReadOnly="true" CssClass="form-control"></asp:TextBox>
            </div>
-           <div class="col-lg-1 col-md-4 co-sm-6"></div>
-           <div class="col-lg-2 col-md-4 co-sm-6">
-               <asp:Label ID="lblRN_Special_Instruction" runat="server" Text="Special Instruction"></asp:Label>
-               <asp:TextBox ID="txtRN_Special_Instruction" runat="server" TabIndex="9" TextMode="MultiLine" CssClass="form-control" onchange="FillInstruction()"></asp:TextBox>
+              <div class="col-lg-1 col-md-4 col-sm-6"></div>
+              <div class="col-lg-2 col-md-4 col-sm-6">
+       <asp:Label ID="lblOthersReceiveNote" runat="server" Text="Others"></asp:Label>
+       <asp:TextBox ID="txtOthersRcvNote" runat="server" TabIndex="6" CssClass="form-control"></asp:TextBox>
+   </div>
+          
            </div>
-           </div>
+       <div class="row">
+          
+ <div class="col-lg-2 col-md-4 co-sm-6">
+     <asp:Label ID="lblRN_Special_Instruction" runat="server" Text="Special Instruction"></asp:Label>
+     <asp:TextBox ID="txtRN_Special_Instruction" runat="server" TabIndex="9" TextMode="MultiLine" CssClass="form-control" onchange="FillInstruction()"></asp:TextBox>
+ </div>
+       </div>
        <div>
         <div class="col-12">
             <div class="table-responsive">
                 <table class="table table-bordered" id="tblVitalParametersHistory">
                     <thead>
                         <tr>
-                            <td colspan="14">
+                            <td colspan="15  ">
                                 <h2 class="heading">Previous History</h2>
                             </td>
                         </tr>
@@ -7271,6 +7412,7 @@
                             <th>Status</th>
                             <th>Rate_Beats</th>
                             <th>Temperature</th>
+                            <th>BSR</th>
                             <th>Rhythm</th>
                             <th>Volume</th>
                             <th>Blood Pressure</th>
@@ -7599,6 +7741,12 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                 <td style="width: 20%; padding: 5px;">
+                                                    <asp:Label ID="lblDischargeTemplate" runat="server" Text="Template"></asp:Label>
+                                                    <select id="ddlDischargeTemplate" class="form-select" onchange="LoadDischargeTemplateMedicine()" style="width: 100%;">
+                                                        <option value="">Select Template</option>
+                                                    </select>
+                                                </td>
                                                 <td style="width:20%;padding:5px;">
                                                      <asp:Label ID="lblReferredTo" runat="server" Text="Referred To"></asp:Label>
                                                     <asp:DropDownList runat="server" ID="ddlReferredTo" AppendDataBoundItems="true"></asp:DropDownList>
@@ -9153,6 +9301,7 @@
                                                 <th style="width: 84px;">Status</th>
                                                 <th>Rate_Beats</th>
                                                 <th>Temperature</th>
+                                                <th>BSR</th>
                                                 <th>Rhythm</th>
                                                 <th>Volume</th>
                                                 <th>Blood Pressure</th>
@@ -11406,10 +11555,10 @@
         </table>
         <table style="margin-top: 30px; margin-left: 60px;" id="urdulineshow">
             <tr>
-                <td>لاءيں</td>
-                <td>تشریف      
+                <td>?????</td>
+                <td>?????      
                 </td>
-                <td>میں</td>
+                <td>???</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -11418,7 +11567,7 @@
                 <td>
                     <span>OPD</span>
                 </td>
-                <td>کو</td>
+                <td>??</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -11430,7 +11579,7 @@
                 <td></td>
                 <td ></td>
                 <td></td>
-                <td>دوبارہ</td>
+                <td>??????</td>
             </tr>
         </table>
         <h6 style="width: 500px; margin-top: 300px; font-size: 14px; margin-left: 70px;">This is a Computer Generated Image and does not require Signature </h6>
@@ -12102,3 +12251,4 @@
          <button class="yes">OK</button>
       </div>
 </asp:Content>
+

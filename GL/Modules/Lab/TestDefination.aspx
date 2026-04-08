@@ -287,6 +287,76 @@
                     $("#loadXRays").attr('disabled', true);
                 });
             });
+
+            LoadMRILevel();
+            LoadCTScanLevel();
+
+            $("#btnSaveMRI").on('click', function () {
+                save_mri();
+            });
+            $("#btnSaveCTScan").on('click', function () {
+                save_ctscan();
+            });
+
+            $("#loadMRIs").on('click', function () {
+                PageMethods.GetMRIs(function (res) {
+                    var test = JSON.parse(res);
+                    var row = '';
+                    var i = 0;
+
+                    for (i = 0; i < test.length; i++) {
+                        row += '<tr><td><input type="hidden" name="mriLevel_ID" value="' + test[i].MRILevel_ID + '" />' +
+                            '<select name="mrilevelvalue" id="ddlMRIlevelvalue' + (i + 1) + '">' + mriLevelType + '</select></td>';
+                        row += '<td><textarea id="txtMRIFixedValueType' + (i + 1) + '" name="txtMRIFixedValueType">' + test[i].FixValues + '</textarea></td>';
+                        row += '<td style="width: 127px;"><input type="hidden" name="mri_value_id" value="">' +
+                            '<a href="javascript:void(0)" onclick="value_delete(this)" style="pointer-events: none;">Delete</a></td></tr>';
+                    }
+
+                    $('#TblMRI_Value').append(row);
+
+                    for (var k = 0; k < test.length; k++) {
+                        var id = 'txtMRIFixedValueType' + (k + 1);
+                        CKEDITOR.replace(id, { height: 50 });
+                        CKEDITOR.instances[id].setData(test[k].FixValues);
+                    }
+
+                    for (i = 0; i < test.length; i++) {
+                        $('#ddlMRIlevelvalue' + (i + 1)).val(test[i].Levels);
+                    }
+
+                    $("#loadMRIs").attr('disabled', true);
+                });
+            });
+
+            $("#loadCTScans").on('click', function () {
+                PageMethods.GetCTScans(function (res) {
+                    var test = JSON.parse(res);
+                    var row = '';
+                    var i = 0;
+
+                    for (i = 0; i < test.length; i++) {
+                        row += '<tr><td><input type="hidden" name="ctscanLevel_ID" value="' + test[i].CTScanLevel_ID + '" />' +
+                            '<select name="ctscanlevelvalue" id="ddlCTScanlevelvalue' + (i + 1) + '">' + ctScanLevelType + '</select></td>';
+                        row += '<td><textarea id="txtCTScanFixedValueType' + (i + 1) + '" name="txtCTScanFixedValueType">' + test[i].FixValues + '</textarea></td>';
+                        row += '<td style="width: 127px;"><input type="hidden" name="ctscan_value_id" value="">' +
+                            '<a href="javascript:void(0)" onclick="value_delete(this)" style="pointer-events: none;">Delete</a></td></tr>';
+                    }
+
+                    $('#TblCTScan_Value').append(row);
+
+                    for (var k = 0; k < test.length; k++) {
+                        var id = 'txtCTScanFixedValueType' + (k + 1);
+                        CKEDITOR.replace(id, { height: 50 });
+                        CKEDITOR.instances[id].setData(test[k].FixValues);
+                    }
+
+                    for (i = 0; i < test.length; i++) {
+                        $('#ddlCTScanlevelvalue' + (i + 1)).val(test[i].Levels);
+                    }
+
+                    $("#loadCTScans").attr('disabled', true);
+                });
+            });
         });
         function save_ultraSound() {
             debugger;
@@ -932,7 +1002,7 @@
             CKEDITOR.replace(fixedValRow, { height: 50 });
         }
 
-        
+
 
         function save_xray() {
             var XRay_value = [];
@@ -965,7 +1035,116 @@
             });
         }
 
-        
+
+        function LoadMRILevel() {
+            PageMethods.FillMRILevel(function (resp) {
+                var options = '<option value="">Select Format</option>';
+                $.each(JSON.parse(resp), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '"> ' + value.DataValue_Description + ' </option>';
+                });
+                $('#ddlMRI_level').html(options);
+                mriLevelType = options;
+            });
+        }
+
+        function MRI_value() {
+            var html = '';
+            var rowlength = document.getElementById('TblMRI_Value').rows.length;
+            var fixedValRow = 'txtMRIFixedValueType' + rowlength;
+
+            html += '<tr><td><select style="margin-left: 20px;" name="mrilevelvalue" id="ddlMRIlevelvalue' + rowlength + '">' + mriLevelType + '</select></td>';
+            html += '<td><textarea id="txtMRIFixedValueType' + rowlength + '" name="txtMRIFixedValueType"></textarea></td>';
+            html += '<td style="width: 127px;"><input type="hidden" name="mri_value_id" value=""><a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td></tr>';
+
+            $('.MRI_values_table table tbody').append(html);
+            CKEDITOR.replace(fixedValRow, { height: 50 });
+        }
+
+        function save_mri() {
+            var MRI_value = [];
+            $('#TblMRI_Value tbody tr').each(function (key, value) {
+                var myArray = {};
+                var Data = CKEDITOR.instances['txtMRIFixedValueType' + (key + 1) + '']?.getData() || '';
+                var Levels = $(value).find('select[name="mrilevelvalue"]').val();
+                var MRILevelID = $(value).find('[name="mriLevel_ID"]').val();
+                var FixValues = Data;
+
+                myArray.Levels = Levels;
+                myArray.FixValues = FixValues;
+                myArray.MRILevelID = MRILevelID;
+                MRI_value.push(myArray);
+            });
+
+            PageMethods.SaveMRI(MRI_value, function (res) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'MRI Data Has been Successfully Saved.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            });
+        }
+
+        function LoadCTScanLevel() {
+            PageMethods.FillCTScanLevel(function (resp) {
+                var options = '<option value="">Select Format</option>';
+                $.each(JSON.parse(resp), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '"> ' + value.DataValue_Description + ' </option>';
+                });
+                $('#ddlCTScan_level').html(options);
+                ctScanLevelType = options;
+            });
+        }
+
+        function CTScan_value() {
+            var html = '';
+            var rowlength = document.getElementById('TblCTScan_Value').rows.length;
+            var fixedValRow = 'txtCTScanFixedValueType' + rowlength;
+
+            html += '<tr><td><select style="margin-left: 20px;" name="ctscanlevelvalue" id="ddlCTScanlevelvalue' + rowlength + '">' + ctScanLevelType + '</select></td>';
+            html += '<td><textarea id="txtCTScanFixedValueType' + rowlength + '" name="txtCTScanFixedValueType"></textarea></td>';
+            html += '<td style="width: 127px;"><input type="hidden" name="ctscan_value_id" value=""><a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td></tr>';
+
+            $('.CTScan_values_table table tbody').append(html);
+            CKEDITOR.replace(fixedValRow, { height: 50 });
+        }
+
+        function save_ctscan() {
+            var CTScan_value = [];
+            $('#TblCTScan_Value tbody tr').each(function (key, value) {
+                var myArray = {};
+                var Data = CKEDITOR.instances['txtCTScanFixedValueType' + (key + 1) + '']?.getData() || '';
+                var Levels = $(value).find('select[name="ctscanlevelvalue"]').val();
+                var CTScanLevelID = $(value).find('[name="ctscanLevel_ID"]').val();
+                var FixValues = Data;
+
+                myArray.Levels = Levels;
+                myArray.FixValues = FixValues;
+                myArray.CTScanLevelID = CTScanLevelID;
+                CTScan_value.push(myArray);
+            });
+
+            PageMethods.SaveCTScan(CTScan_value, function (res) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'CTScan Data Has been Successfully Saved.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            });
+        }
 
 
     </script>
@@ -1188,7 +1367,51 @@
                             <li><a href="#Tab-4">Image Upload</a></li>
                             <li><a href="#Tab-5">Ultrasound Format</a></li>
                             <li><a href="#Tab-6">X-Ray Format</a></li>
+                            <li><a href="#Tab-7">MRI Format</a></li> 
+                            <li><a href="#Tab-8">CTScan Format</a></li>
                         </ul>
+                        <div id="Tab-8">
+                            <div class="CTScan_values_table">
+                                <fieldset>
+                                    <input type="button" class="btn btn-primry" id="loadCTScans" value="CTScan Format" style="width: auto !important;" />
+                                    <a href="javascript:void(0)" style="font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="CTScan_value()"></a>
+                                    <table id="TblCTScan_Value" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 229px;">Format</th>
+                                                <th style="width: 458px;">Fix Value</th>
+                                                <th style="width: 103px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <div class="col-lg-3">
+                                        <input type="button" class="btn btn-primry" name="Save" id="btnSaveCTScan" value="Save" />
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div id="Tab-7">
+                            <div class="MRI_values_table">
+                                <fieldset>
+                                    <input type="button" class="btn btn-primry" id="loadMRIs" value="MRI Format" style="width: auto !important;" />
+                                    <a href="javascript:void(0)" style="font-size: 20px; float: right;" class="fa fa-plus iconAdd" onclick="MRI_value()"></a>
+                                    <table id="TblMRI_Value" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 229px;">Format</th>
+                                                <th style="width: 458px;">Fix Value</th>
+                                                <th style="width: 103px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <div class="col-lg-3">
+                                        <input type="button" class="btn btn-primry" name="Save" id="btnSaveMRI" value="Save" />
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
                         <div id="Tab-6">
                             <div class="XRay_values_table">
                                 <fieldset>
