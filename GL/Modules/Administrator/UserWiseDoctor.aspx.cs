@@ -231,14 +231,18 @@ namespace PMS.Modules.Administrator
                                    detail.User_Id,
                                    user_name = usr.UserName,
                                    TemplateId = detail.DataValue_ID,
-                                   Department = detail.Department
+                                   DepartmentCode = detail.Department  // This is "002", "003", etc.
                                }).ToList();
 
                 var result = new List<object>();
 
                 foreach (var detail in details)
                 {
-                    string templateDescription = GetTemplateDescription(db, detail.Department, detail.TemplateId);
+                    // First convert department code to actual department name
+                    string departmentName = GetDepartmentNameFromCode(db, detail.DepartmentCode);
+
+                    // Now get template description using the actual department name
+                    string templateDescription = GetTemplateDescription(db, departmentName, detail.TemplateId);
 
                     result.Add(new
                     {
@@ -246,7 +250,8 @@ namespace PMS.Modules.Administrator
                         user_name = detail.user_name,
                         Template_Id = detail.TemplateId,
                         Template_Description = templateDescription,
-                        Department = detail.Department
+                        Department = departmentName,  // Send actual name for display
+                        DepartmentCode = detail.DepartmentCode  // Keep code if needed
                     });
                 }
 
@@ -254,11 +259,20 @@ namespace PMS.Modules.Administrator
             }
         }
 
-        private static string GetTemplateDescription(DataBaseDataContext db, string department, string templateId)
+        // New method to convert department code to actual department name
+        private static string GetDepartmentNameFromCode(DataBaseDataContext db, string departmentCode)
+        {
+            var department = db.DataValues
+                .FirstOrDefault(dv => dv.ValueSet_ID == 72 && dv.DataValue_Name == departmentCode);
+
+            return department != null ? department.DataValue_Description : departmentCode;
+        }
+
+        private static string GetTemplateDescription(DataBaseDataContext db, string departmentName, string templateId)
         {
             string valueSetName = "";
 
-            switch (department)
+            switch (departmentName)  // Now this receives actual names like "X-Ray", "MRI", etc.
             {
                 case "X-Ray":
                     valueSetName = "X-Ray Format";
@@ -270,7 +284,7 @@ namespace PMS.Modules.Administrator
                     valueSetName = "CTScan Format";
                     break;
                 case "Ultrasound":
-                    valueSetName = "Ultrasound level";  
+                    valueSetName = "Ultrasound level";
                     break;
                 default:
                     return "";
