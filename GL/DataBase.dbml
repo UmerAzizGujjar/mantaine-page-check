@@ -4885,32 +4885,6 @@
       <Column Name="Updated_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.ReceivingNotes" Member="ReceivingNotes">
-    <Type Name="ReceivingNote">
-      <Column Name="ReceivingNoteID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Emergency_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="RateBeats" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Emergency_Rhythm" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Emergency_Volume" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="OthersRecieveNote" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="O2_Saturation" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="BloodPressure" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Temperature" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="RespirationRate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="RN_Special_Instruction" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Receiving_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="O2_Saturation_Oxygen1" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="O2_Saturation_Oxygen2" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="Type_Nursing" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Blood_Suger" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="Weight_Kg" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="Height_cm" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="BMI" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.inv_bom" Member="inv_boms">
     <Type Name="inv_bom">
       <Column Name="BOMID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7584,6 +7558,33 @@
       <Column Name="Emergency_No" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="Patient_Category" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="emer_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BSR" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ReceivingNotes" Member="ReceivingNotes">
+    <Type Name="ReceivingNote">
+      <Column Name="ReceivingNoteID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Emergency_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RateBeats" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Emergency_Rhythm" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Emergency_Volume" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="OthersRecieveNote" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="O2_Saturation" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="BloodPressure" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Temperature" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="RespirationRate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="RN_Special_Instruction" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Receiving_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="O2_Saturation_Oxygen1" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="O2_Saturation_Oxygen2" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Type_Nursing" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="BMI" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Blood_Suger" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Weight_Kg" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Height_cm" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="BSR" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </Type>
   </Table>
