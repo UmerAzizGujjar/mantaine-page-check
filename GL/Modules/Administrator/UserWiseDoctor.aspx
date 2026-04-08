@@ -113,35 +113,35 @@
            return proceed;
        }
 
-       function LoadDetail(id) {
-           var rows = '';
-           PageMethods.LoadDetail(id, function (res) {
-               var result = JSON.parse(res);
-               $.each(result, function (key, value) {
-                   setTimeout(function () {
-                       $("#ddl_users").val(value.User_Id).trigger('change').attr('disabled', 'disabled');
-                   }, 1000);
+        function LoadDetail(id) {
+            var rows = '';
+            PageMethods.LoadDetail(id, function (res) {
+                var result = JSON.parse(res);
+                $.each(result, function (key, value) {
+                    setTimeout(function () {
+                        $("#ddl_users").val(value.User_Id).trigger('change').attr('disabled', 'disabled');
+                    }, 1000);
 
-                   rows +=
-                       '<tr>' +
-                       '<td class="th_Sp_Color" style="display:none;">' + value.User_Id + '</td>' +
-                       '<td style="display:none;"><input type="text" name="txt_department" value="' + value.Department + '" /></td>' +
-                       '<td class="th_Sp_Color">' +
-                       '<input type="text" name="txt_UserName" style="width: 100%;" readonly value="' + value.user_name + '" />' +
-                       '</td>' +
-                       '<td class="th_Sp_Color" style="display:none;"><input type="text" name="txt_template_id" value="' + value.Template_Id + '" /></td>' +
-                       '<td class="th_Sp_Color">' +
-                       '<input type="text" name="txt_template_display" style="width: 100%;" value="' + value.Template_Description + '" readonly/>' +
-                       '</td>' +
-                       '<td class="th_Sp_Color">' +
-                       '<input type="text" name="txt_department_display" style="width: 100%;" value="' + value.Department + '" readonly/>' +
-                       '</td>' +
-                       '<td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="color:#f30a0a;"></i></a></td>' +
-                       '</tr>';
-               });
-               $('#tblItemDescriptionDetail').append(rows);
-           });
-       }
+                    rows +=
+                        '<tr>' +
+                        '<td style="display:none;">' + value.User_Id + '</td>' +
+                        '<td style="display:none;"><input type="text" name="txt_department_code" value="' + value.DepartmentCode + '" /></td>' +
+                        '<td>' +
+                        '<input type="text" name="txt_UserName" style="width: 100%;" readonly value="' + value.user_name + '" />' +
+                        '</td>' +
+                        '<td style="display:none;"><input type="text" name="txt_template_id" value="' + value.Template_Id + '" /></td>' +
+                        '<td>' +
+                        '<input type="text" name="txt_template_display" style="width: 100%;" value="' + value.Template_Description + '" readonly/>' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="text" name="txt_department_display" style="width: 100%;" value="' + value.Department + '" readonly/>' +
+                        '</td>' +
+                        '<td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="color:#f30a0a;"></i></a></td>' +
+                        '</tr>';
+                });
+                $('#tblItemDescriptionDetail').append(rows);
+            });
+        }
 
        function Delete(row) {
            if (confirm("Are you sure you want to delete?")) {

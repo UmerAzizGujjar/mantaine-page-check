@@ -88,6 +88,8 @@ namespace PMS.Modules.Accounts
                              RadiologyAllList = p.Allow_RadiologyAllList,
                              Radiology_result_Approval = p.Radiology_result_Approval,
                              AllowAdjustment = p.adjustment_Allow,
+                             Allowradiologyapprove = p.Approve_radiology,
+                             Rejectradiology = p.Reject_radiology,
                              AllowActiveItems = p.AllowActiveItems,
                              AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
@@ -200,6 +202,8 @@ namespace PMS.Modules.Accounts
                     user.Allow_RadiologyAllList = data.RadiologyAllList;
                     user.Radiology_result_Approval = data.AllowRadiologyApproval;
                     user.adjustment_Allow = data.AllowAdjustment;
+                    user.Approve_radiology = data.Allowradiologyapprove;
+                    user.Reject_radiology = data.Rejectradiology;
                     user.AllowActiveItems = data.AllowActiveItems;
                     user.cashier = data.ddlcasher;
                     user.AllowRateEdit = data.AllowRateEdit;
@@ -278,6 +282,8 @@ namespace PMS.Modules.Accounts
                 newuser.Allow_RadiologyAllList = data.RadiologyAllList;
                 newuser.Radiology_result_Approval = data.AllowRadiologyApproval;
                 newuser.adjustment_Allow = data.AllowAdjustment;
+                newuser.Approve_radiology = data.Allowradiologyapprove;
+                newuser.Reject_radiology = data.Rejectradiology;
                 newuser.AllowActiveItems = data.AllowActiveItems;
                 newuser.cashier = data.ddlcasher;
                 newuser.AllowRateEdit = data.AllowRateEdit;
@@ -392,6 +398,8 @@ namespace PMS.Modules.Accounts
             public bool RadiologyAllList { get; set; }
             public bool AllowRadiologyApproval { get; set; }
             public bool AllowAdjustment { get; set; }
+            public bool Allowradiologyapprove { get; set; }
+            public bool Rejectradiology { get; set; }
             public bool AllowRateEdit { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }

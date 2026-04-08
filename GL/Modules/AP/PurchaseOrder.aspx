@@ -1340,9 +1340,9 @@ function scheduleCalcTotal(delay) {
             });
         }
         // Keep original functions for backward compatibility
-        function populateTaxddl(rowId) {
-            populateTaxddlWithPromise(rowId, null);
-        }
+        //function populateTaxddl(rowId) {
+        //    populateTaxddlWithPromise(rowId, null);
+        //}
 
         function populateAdvanceTaxddl(rowId, callback) {
             populateAdvanceTaxddlWithPromise(rowId, callback);
@@ -2358,7 +2358,7 @@ function scheduleCalcTotal(delay) {
                 '<td style="display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
                 '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
                 '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
-                '<td><input type="text" name="txtddate' + length + '" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
+                '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
                 '</tr>';
 
