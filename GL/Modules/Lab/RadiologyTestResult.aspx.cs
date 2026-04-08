@@ -1716,7 +1716,7 @@ namespace PMS.Modules.Lab
 
 
         [WebMethod]
-        public static string AllUltraSoundTest(string departmentCode , string startdate, string endtdate)
+        public static string AllUltraSoundTest(string departmentCode, string doctorId, string startdate, string endtdate)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             db.CommandTimeout = 180;
@@ -1741,7 +1741,6 @@ namespace PMS.Modules.Lab
                              (labtest_detail.Refer_Doctor == null || labtest_detail.Refer_Doctor == "" || labtest_detail.Refer_Doctor == "0")
                             )
                         ) &&
-
                       bill_details.Test_Main_Department != "001" &&
                       (bill.isCancel == false || bill.isCancel == null) &&
                        bill.Bill_Date >= startDate &&
@@ -1763,19 +1762,26 @@ namespace PMS.Modules.Lab
                     bill_details.Bill_Details_ID,
                     bill.Remarks,
                     labtest_detail.IsAcknowledge,
-                    Doctor = (from hr in db.HR_Employees where hr.Emp_ID == Convert.ToInt32(bill_details.Doctor_id ?? "0") select hr.Emp_Name).FirstOrDefault(),
+                    DoctorId = bill_details.Doctor_id,
+                    DoctorName = (from hr in db.HR_Employees where hr.Emp_ID == Convert.ToInt32(bill_details.Doctor_id ?? "0") select hr.Emp_Name).FirstOrDefault(),
                     labtest_detail.Refer_Doctor,
                     labtest_detail.Is_Result,
                     RawDeptCode = bill_details.Test_Main_Department
                 }
             );
+
             if (!string.IsNullOrEmpty(departmentCode) && departmentCode != "0")
             {
                 query = query.Where(x => x.RawDeptCode == departmentCode);
             }
 
-            var testDetails_Billing_Sample = query.ToList();
+            if (!string.IsNullOrEmpty(doctorId))
+            {
+                int docId = Convert.ToInt32(doctorId);
+                query = query.Where(x => x.DoctorId == docId.ToString() || x.Refer_Doctor == docId.ToString());
+            }
 
+            var testDetails_Billing_Sample = query.ToList();
             return serl.Serialize(testDetails_Billing_Sample);
         }
 

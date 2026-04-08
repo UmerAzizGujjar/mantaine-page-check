@@ -798,21 +798,29 @@ function Calc_Discount() {
     debugger;
 
     var disc_perc = $('#txtdiscount').val();
-    var currentFee = $('#txtfees').val();
-    var actualfees = $('#txtactualfee').val(currentFee);
-
-    if (!originalFee) {
-        originalFee = Number(currentFee);
+    var actualFee = $('#txtactualfee').val();
+    if (!actualFee || actualFee == 0) {
+        actualFee = $('#txtfees').val();
+        $('#txtactualfee').val(actualFee);
     }
 
-    if (disc_perc && !isNaN(disc_perc) && originalFee && !isNaN(originalFee)) {
+    if (disc_perc && !isNaN(disc_perc) && disc_perc !== "" && actualFee && !isNaN(actualFee) && parseFloat(actualFee) > 0) {
+        var discountPercent = parseFloat(disc_perc);
+        var originalFee = parseFloat(actualFee);
+        if (discountPercent > 100) {
+            discountPercent = 100;
+            $('#txtdiscount').val(100);
+        }
 
-        var discountAmount = (Number(disc_perc) / 100) * originalFee;
+        var discountAmount = (discountPercent / 100) * originalFee;
         var discountedFee = originalFee - discountAmount;
+        discountedFee = Math.round(discountedFee * 100) / 100;
 
-        $('#txtfees').val(discountedFee.toFixed(0));
+        $('#txtfees').val(discountedFee.toFixed(2));
+    } else if (actualFee && !isNaN(actualFee)) {
+        $('#txtfees').val(parseFloat(actualFee).toFixed(2));
     } else {
-        $('#txtfees').val(originalFee.toFixed(0));
+        $('#txtfees').val('0');
     }
 }
 

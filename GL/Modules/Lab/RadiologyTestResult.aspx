@@ -294,6 +294,7 @@
 
             $("#ddlrptColumns").val(4);
             AllowLabRights();
+            LoadDoctorsForWaitingList();
             var PatientID = '<%=Request.QueryString["PatientID"]%>';
             if (PatientID != "") {
                 fillTokenInput(PatientID);
@@ -974,6 +975,27 @@
                 $('#ddlTestDepartment').html(options);
             });
             return options;
+        }
+
+        function LoadDoctorsForWaitingList() {
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/GetDoctors",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                    var options = '<option value="">All Doctors</option>';
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.id + '">' + value.text + '</option>';
+                    });
+                    $("#ddlDoctorFilter").html(options);
+                    $("#ddlDoctorFilter").select2();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading doctors:", error);
+                }
+            });
         }
         function readIMG(input) {
 
@@ -2880,6 +2902,7 @@
 
         function LoadRadiologyPatientsList() {
             var deptFilter = $('#ddlDepartment').val();
+            var doctorFilter = $('#ddlDoctorFilter').val();
             var startdate = $('#sdate').val();
             var endtdate = $('#edate').val();
 
@@ -2888,6 +2911,7 @@
                 url: "RadiologyTestResult.aspx/AllUltraSoundTest",
                 data: JSON.stringify({
                     departmentCode: deptFilter,
+                    doctorId: doctorFilter,
                     startdate: startdate,
                     endtdate: endtdate
                 }),
@@ -2900,34 +2924,6 @@
                     tbody.empty();
 
                     if (data && data.length > 0) {
-                        //$.each(data, function (index, item) {
-                        //    var formattedDate = '';
-                        //    if (item.Bill_Date) {
-                        //        var billDate = new Date(parseInt(item.Bill_Date.replace(/\/Date\((\d+)\)\//, '$1')));
-                        //        formattedDate = billDate.toLocaleDateString();
-                        //    }
-                        //    var status = item.IsAcknowledge
-                        //    var statuss;
-                        //    if (status == true) {
-                        //        statuss = 'Acknowledge'
-                        //    }
-                        //    else {
-                        //        statuss = 'Waiting'
-                        //    }
-
-                        //    var row = '<tr>' +
-                        //        '<td>' + formattedDate + '</td>' +
-                        //        '<td>' + item.Bill_No + '</td>' +
-                        //        '<td>' + item.Full_Name + '</td>' +
-                        //        '<td>' + item.Item_Name + '</td>' +
-                        //        '<td>' + item.Doctor + '</td>' +
-                        //        '<td>' + item.Test_Main_Department + '</td>' +
-                        //        '<td>' + statuss + '</td>' +
-                        //        '<td><button type="button" class="btn btn-sm btn-primary" ' +
-                        //        'onclick="selectRadiologyPatient(' + item.Bill_ID + ', ' + item.Bill_Details_ID + ', ' + item.Bill_No + ')">Select</button></td>' +
-                        //        '</tr>';
-                        //    tbody.append(row);
-                        //});
                         $.each(data, function (index, item) {
                             debugger;
                             var formattedDate = '';
@@ -2939,11 +2935,10 @@
                             var status = item.IsAcknowledge;
                             var statuss = status == true ? 'Acknowledge' : 'Waiting';
 
-                            // ✅ CONDITION FOR LIGHT RED ROW
                             var rowStyle = '';
                             if (item.Is_Result == true &&
                                 (item.Refer_Doctor == null || item.Refer_Doctor == "" || item.Refer_Doctor == "0")) {
-                                rowStyle = 'style="background-color:#f8d7da;"'; // light red
+                                rowStyle = 'style="background-color:#f8d7da;"';
                             }
 
                             var row = '<tr ' + rowStyle + '>' +
@@ -2951,7 +2946,7 @@
                                 '<td>' + item.Bill_No + '</td>' +
                                 '<td>' + item.Full_Name + '</td>' +
                                 '<td>' + item.Item_Name + '</td>' +
-                                '<td>' + item.Doctor + '</td>' +
+                                '<td>' + (item.DoctorName || '') + '</td>' +
                                 '<td>' + item.Test_Main_Department + '</td>' +
                                 '<td>' + statuss + '</td>' +
                                 '<td><button type="button" class="btn btn-sm btn-primary" ' +
@@ -2961,7 +2956,7 @@
                             tbody.append(row);
                         });
                     } else {
-                        tbody.append('<tr><td colspan="6" class="text-center">No pending radiology tests found for this department.</td></tr>');
+                        tbody.append('<tr><td colspan="7" class="text-center">No pending radiology tests found.</td></tr>');
                     }
                 },
                 error: function (xhr, status, error) {
@@ -3699,33 +3694,37 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 23px">
                 <h1 style="margin: 0;">Patients Waiting List</h1>
             </div>
-            <div class="row">
-
-                <div class="col-lg-2">
-                    <label>Start Date </label>
-                    <input type="text" id="sdate" />
-                </div>
-                <div class="col-lg-2">
-                    <label>End Date </label>
-                    <input type="text" id="edate" />
-                </div>
-                <div class="col-lg-3">
-                    <label>Departemnt </label>
-                    <select id="ddlDepartment" class="form-control">
-                        <option value="0">All Departments</option>
-                        <option value="002">Ultrasound</option>
-                        <option value="003">X-Ray</option>
-                        <option value="004">CTScan</option>
-                        <option value="005">Physiotherapy</option>
-                        <option value="006">MRI</option>
-                        <option value="008">Cardiology</option>
-                    </select>
-                </div>
-                <div class="col-lg-2">
-
-                    <input type="button" id="searchpendding" class="btn btn-primry" onclick="reloadPendingList();" value="Search" />
-                </div>
+          <div class="row">
+            <div class="col-lg-2">
+                <label>Start Date </label>
+                <input type="text" id="sdate" />
             </div>
+            <div class="col-lg-2">
+                <label>End Date </label>
+                <input type="text" id="edate" />
+            </div>
+            <div class="col-lg-3">
+                <label>Department </label>
+                <select id="ddlDepartment" class="form-control">
+                    <option value="0">All Departments</option>
+                    <option value="002">Ultrasound</option>
+                    <option value="003">X-Ray</option>
+                    <option value="004">CTScan</option>
+                    <option value="005">Physiotherapy</option>
+                    <option value="006">MRI</option>
+                    <option value="008">Cardiology</option>
+                </select>
+            </div>
+            <div class="col-lg-3">
+                <label>Doctor:</label>
+                <select id="ddlDoctorFilter"  onchange ="LoadRadiologyPatientsList();" class="form-control">
+                    <option value="">All Doctors</option>
+                </select>
+            </div>
+            <div class="col-lg-2">
+                <input type="button" id="searchpendding" class="btn btn-primry" onclick="reloadPendingList();" value="Search" />
+            </div>
+        </div>
 
             <div style="height: 400px; overflow-y: auto; overflow-x: auto;">
                 <table class="table test-table" id="tblradilogy">

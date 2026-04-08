@@ -2949,7 +2949,7 @@ namespace PMS
                           where d.Pharmacy_Item == true
                           select new
                           {
-                              d.Item_Code,
+                              d.Item_ID,
                               Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
                           }).ToList().Take(20);
 
@@ -2959,16 +2959,24 @@ namespace PMS
         [WebMethod]
         public static string getpharmacyitems(string searchString)
         {
+            if (string.IsNullOrEmpty(searchString))
+                return "[]";
+
+            searchString = searchString.Trim();
+
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+
                 var pharmacyItems = (from d in db.INV_Items
-                                     where d.Pharmacy_Item == true && d.Description.Contains(searchString)
-                                     orderby d.Item_Code descending
+                                     where d.Pharmacy_Item == true
+                                     && d.Description.Contains(searchString) 
+                                     orderby d.Item_ID descending
                                      select new
                                      {
-                                         d.Item_Code,
+                                         d.Item_ID,
                                          Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
                                      }).Take(20).ToList();
+
                 return (new JavaScriptSerializer().Serialize(pharmacyItems));
             }
         }
@@ -7353,6 +7361,25 @@ namespace PMS
                            mt.Oral,
                        }).ToList();
             return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+        [WebMethod]
+        public static string loadtemplate(string item_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var data = (from td in db.Medicines_Templates
+                        where td.Item_Code == Convert.ToString(item_id)
+                        select new
+                        {
+                            td.Dosage_From,
+                            td.Dosage_Qty,
+                            td.Oral,
+                            td.Other_Instruction,
+                            td.Frequency,
+                            td.Injections,
+                            td.AttendingParamedical_Staff
+                        }).ToList();
+            return (new JavaScriptSerializer().Serialize(data));
         }
 
 
