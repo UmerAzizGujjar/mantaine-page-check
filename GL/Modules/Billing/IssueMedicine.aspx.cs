@@ -1181,7 +1181,8 @@ namespace PMS
                     Disc_Amount = decimal.Parse(item.DisAmt),
                     Net_Amount = decimal.Parse(item.NetAmt),
                     Batch_No = item.Batch_No,
-                    CGS = item.CGSAmount
+                    CGS = item.CGSAmount,
+                    //LineDiscount = item.LineDiscount
                 };
                 db.Pharmacy_SaleReturn_Details.InsertOnSubmit(detail);
                 db.SubmitChanges();
@@ -1216,6 +1217,7 @@ namespace PMS
             public string NetAmt { get; set; }
             public string Batch_No { get; set; }
             public decimal CGSAmount { get; set; }
+            public string LineDiscount { get; set; }
         }
 
     }
