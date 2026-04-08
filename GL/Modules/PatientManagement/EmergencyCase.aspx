@@ -7003,7 +7003,7 @@ function setDropdownText(selector, text) {
                                     <input type="button" class="btn btn-primry" id="btnSaveMedicine" name="btnSaveMedicine" value="Save" tabindex="7" />
                                 </td>
                                  <td>
-                                    <input type="button" id="Add_Unlisted_Medicine" value="Add Unlisted Medicine" style="margin-left: 110px; background-color:#438eb9  !important;width:67% !important; color:white !important;" onclick="NewMedicine()" />
+                                    <input type="button" id="Add_Unlisted_Medicine" class="btn btn-primry" value="Add Unlisted Medicine" style="margin-left: 110px;width:67% !important; color:white !important;" onclick="NewMedicine()" />
                                         </td>
                                 <td></td>
                             </tr>
