@@ -553,6 +553,7 @@
                                 '<td style="display: none"><input type="hidden" value="' + item.Item_ID + '" name="txtRItemID" id="txtRItemID"></td>' +
                                 '<td style="display: none"><input type="hidden" value="' + item.CGSRate + '" name="txtRCGSRate" id="txtRCGSRate"></td>' +
                                 '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
+                                '<td><input type="text" name="txtLineTotal" value="0" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
                                 '</tr>';
                             $('#saleReturnTableBody').append(row);
@@ -563,6 +564,7 @@
                             $('#txtSaleReturnFlatDisc').val(0)
 
                         });
+                        CalculateSaleReturnLineDiscounts();
                         setTimeout(function () {
                             $('#ddlSaleReturnItems').select2('close');
                             $('input[name="txtRQty"]').focus().select();
@@ -615,12 +617,14 @@
                                 '<td style="display:none;"><input type="text"  id="txtRBatch_No' + (rowIndex + 1) + '" name="txtRBatch_No"  value=""/> </td>' +
                                 '<td  style="display:none;"><input type="hidden"  name="txtRCGSRate" value="' + data[0].CGSRate + '" id="txtRCGSRate' + (rowIndex + 1) + '"></td>' +
                                 '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
+                                '<td><input type="text" name="txtLineTotal" value="0" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 //'<td><input type="text" name="txtRBatch_No" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
                                 '</tr>';
                         },
                     });
                     $('#saleReturnTableBody').append(rows);
+                    CalculateSaleReturnLineDiscounts();
                     $('#ddlInvoiceNumber').val(0);
                     $('#ddlInvoiceNumber').prop('disabled', true);
                     $("#txtSaleReturnDisPer").prop('readonly', false);
@@ -806,17 +810,109 @@
 
 
         function CalCulateReturnDisc() {
-            var total = $('#txtSaleReturnTotalPayable').val() || 0;
-            var linedisamt = $('#txtSaleReturnLineDisc').val() || 0;
-            var disper = $('#txtSaleReturnDisPer').val() || 0;
+            var total = parseFloat($('#txtSaleReturnTotalPayable').val()) || 0;
+            var linedisamt = parseFloat($('#txtSaleReturnLineDisc').val()) || 0;
+            var disPerRaw = ($('#txtSaleReturnDisPer').val() || '').toString().trim();
+
+            if (disPerRaw === '') {
+                $('#txtSaleReturnDisAmt').val(0);
+                CalculateSaleReturnLineDiscounts();
+                return;
+            }
+
+            var disper = parseFloat(disPerRaw);
+            if (isNaN(disper)) {
+                return;
+            }
+
             var disamt = ((total - linedisamt) * disper) / 100;
             $('#txtSaleReturnDisAmt').val(disamt.toFixed(0));
-            var adjustamt = $('#txtSaleReturnFlatDisc').val() || 0;
+            var adjustamt = parseFloat($('#txtSaleReturnFlatDisc').val()) || 0;
             var net = parseFloat(total - disamt - linedisamt - adjustamt).toFixed();
             if (net > -1) {
                 net = Math.abs(net);
                 $('#txtSaleReturnTotal').val(net);
             }
+            CalculateSaleReturnLineDiscounts();
+        }
+
+        function CalculateSaleReturnLineDiscounts() {
+            var $rows = $('#saleReturnTableBody tr');
+            if ($rows.length === 0) {
+                return;
+            }
+
+            var disPerRaw = ($('#txtSaleReturnDisPer').val() || '').toString().trim();
+
+            if (disPerRaw === '' || parseFloat(disPerRaw) === 0) {
+                $rows.each(function () {
+                    $(this).find('input[name="txtLineTotal"]').val(0);
+                });
+                return;
+            }
+
+            var disPer = parseFloat(disPerRaw);
+            if (isNaN(disPer)) {
+                return;
+            }
+
+            var targetTotalDiscount = Math.floor(parseFloat($('#txtSaleReturnDisAmt').val()) || 0);
+            if (targetTotalDiscount <= 0) {
+                $rows.each(function () {
+                    $(this).find('input[name="txtLineTotal"]').val(0);
+                });
+                return;
+            }
+
+            var allocations = [];
+            $rows.each(function (index) {
+                var $row = $(this);
+                var netAmount = parseFloat($row.find('input[name="txtRnet"]').val()) || 0;
+                var rawLineDiscount = (netAmount * disPer) / 100;
+                var baseDiscount = Math.floor(rawLineDiscount);
+
+                allocations.push({
+                    index: index,
+                    row: $row,
+                    fractional: rawLineDiscount - baseDiscount,
+                    discount: baseDiscount
+                });
+            });
+
+            var allocatedSum = 0;
+            $.each(allocations, function (_, item) {
+                allocatedSum += item.discount;
+            });
+
+            if (allocatedSum > targetTotalDiscount) {
+                var excess = allocatedSum - targetTotalDiscount;
+                allocations.sort(function (a, b) { return a.fractional - b.fractional; });
+                while (excess > 0) {
+                    var reduced = false;
+                    for (var i = 0; i < allocations.length && excess > 0; i++) {
+                        if (allocations[i].discount > 0) {
+                            allocations[i].discount -= 1;
+                            excess -= 1;
+                            reduced = true;
+                        }
+                    }
+                    if (!reduced) {
+                        break;
+                    }
+                }
+            } else if (allocatedSum < targetTotalDiscount) {
+                var remaining = targetTotalDiscount - allocatedSum;
+                allocations.sort(function (a, b) { return b.fractional - a.fractional; });
+                for (var j = 0; j < allocations.length && remaining > 0; j++) {
+                    allocations[j].discount += 1;
+                    remaining -= 1;
+                }
+            }
+
+            allocations.sort(function (a, b) { return a.index - b.index; });
+            $.each(allocations, function (_, item) {
+                item.row.find('input[name="txtLineTotal"]').val(item.discount);
+            });
         }
 
 
@@ -830,7 +926,13 @@
                     calculateNetAmount($(this));
                 });
             } else {
+                $('#txtSaleReturnTotalPayable').val(0);
+                $('#txtSaleReturnLineDisc').val(0);
+                $('#txtSaleReturnDisAmt').val(0);
+                $('#txtSaleReturnTotal').val(0);
             }
+            CalCulateReturnDisc();
+            CalculateSaleReturnAdj();
         }
 
         function validateSaleReturn() {
@@ -1012,6 +1114,7 @@
                             var netAmt = $(this).find('input[name="txtRnet"]').val() || 0;
                             var Batch_No = $(this).find('input[name="txtRBatch_No"]').val();
                             var CGSRate = $(this).find('input[name="txtRCGSRate"]').val() || 0;
+                            var lineDiscount = $(this).find('input[name="txtLineTotal"]').val() || 0;
 
                             debugger;
                             var CGSAmount = CGSRate * qty;
@@ -1045,6 +1148,7 @@
                                 'NetAmt': netAmt,
                                 'Batch_No': Batch_No,
                                 'CGSAmount': CGSAmount
+                                //,'LineDiscount': lineDiscount
                             });
                         });
                         if (!isValid) {
@@ -3485,6 +3589,7 @@
                                 <th style="width: 13%;">Dis Amount</th>
                                 <th style="width: 13%;">Net Amount</th>
                                 <th style="width: 15%;">Batch_No</th>
+                                <th style="width: 12%;">Line Discount</th>
                                 <th style="width: 10%;">Action</th>
                             </tr>
                         </thead>
