@@ -169,21 +169,29 @@
             $(document).on('keyup', '.select2-search__field', function () {
                 var searchString = $(this).val();
 
-                var options;
+                if (searchString.length < 2) {
+                    return;
+                }
+
                 $.ajax({
-                    url: 'OutPatients.aspx/getpharmacyitems',
+                    url: 'MedicineTemplate.aspx/getpharmacyitems',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ searchString: searchString }),
                     success: function (response) {
-                        var options = ''; // Initialize options variable
                         try {
+                            var pharmacyItems = JSON.parse(response.d);
+                            var $select = $('#txtPharmacyItem');
 
-                            var pharmacyItems = JSON.parse(response.d); // Parse the response
                             $.each(pharmacyItems, function (key, value) {
-                                options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                                var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
+                                if (!optionExists) {
+                                    $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+                                }
                             });
-                            $('#txtPharmacyItem').append(options).trigger('change'); // Update dropdown options and trigger change event
+
+                            $select.trigger('change');
+
                         } catch (error) {
                             console.error('Error parsing response:', error);
                         }
@@ -208,11 +216,20 @@
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {
                 var options = '<option value=""> Select Medicine  </option>'
                 $.each(JSON.parse(Medicine), function (key, value) {
-                    options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                    options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                 });
 
                 $('#txtPharmacyItem').html(options);
                 $('#txtPharmacyItem').select2();
+
+                $('#txtPharmacyItem').select2({
+                    width: '100%',
+                    dropdownAutoWidth: false,
+                    minimumResultsForSearch: 0,
+                    dropdownParent: $('#MedicationModel'),
+                    placeholder: 'Select Medicine',
+                    allowClear: true
+                });
 
 
             });

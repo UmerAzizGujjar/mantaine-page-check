@@ -99,6 +99,7 @@
             LoadInvestigationDoctor();
             LoadTemplate();
             LoadTemplateForTest();
+            LoadDischargeTemplate();
 
 
 
@@ -265,7 +266,69 @@
 
             });
 
+            if ($('#txtPharmacyItem').length > 0) {
+            $('#txtPharmacyItem').select2({
+            width: '100%',
+            placeholder: 'Select Medicine',
+            allowClear: true
+               });
+
+        // 2. Attach the event listener to load template on selection
+        $('#txtPharmacyItem').on('select2:select', function (e) {
+            getTemplate();
         });
+    }
+
+        });
+
+        function getTemplate() {
+    var item_id = $('#txtPharmacyItem').val();
+    
+    // Validate if a valid item is selected
+    if (!item_id || item_id === "0" || item_id === "") {
+        return;
+    }
+
+    PageMethods.loadtemplate(item_id, function (resp) {
+        try {
+            var data = JSON.parse(resp);
+            if (data && data.length > 0) {
+                var templateData = data[0];
+                
+                // Use helper function to set dropdowns by text match
+                setDropdownText('#ddlDosage_Qty', templateData.Dosage_Qty);
+                setDropdownText('#ddlDosage_From', templateData.Dosage_From);
+                setDropdownText('#txtRecomended_Dosage', templateData.Frequency);
+                setDropdownText('#Routes', templateData.Oral);
+                
+                // Set text inputs directly
+                $('#txtInjection').val(templateData.Injections || '');
+                $('#AttendingParamedicalStaff').val(templateData.AttendingParamedical_Staff || '');
+                setDropdownText('#ddlOther_Instruction', templateData.Other_Instruction);
+            }
+        } catch (e) {
+            console.error("Error parsing template data", e);
+        }
+    }, function (error) {
+        console.error("Error loading template", error.get_message ? error.get_message() : error);
+    });
+}
+
+function setDropdownText(selector, text) {
+    var dropdown = $(selector);
+    if (!text) return;
+
+    var matchFound = false;
+    dropdown.find('option').each(function () {
+        if ($(this).text().trim().toLowerCase() === text.trim().toLowerCase()) {
+            dropdown.val($(this).val()).trigger('change');
+            matchFound = true;
+            return false; 
+        }
+    });
+    if (!matchFound) {
+    }
+}
 
         var tabsEmr;
         function AllowEMRGTabs() {
@@ -1225,7 +1288,7 @@
                 var rows = '';
                 $('#tblTestrpt tr').remove();
                 $.each(Medicines, function (key, value) {
-                    rows += '<tr><td>*</td><td>' + value.Medicine_Name + '</td> <td> ' + value.Frequency + '</td><td style="width:1px">دن</td><td>' + value.Injections + ' </td></tr>';
+                    rows += '<tr><td>*</td><td>' + value.Medicine_Name + '</td> <td> ' + value.Frequency + '</td><td style="width:1px">??</td><td>' + value.Injections + ' </td></tr>';
                 });
                 $('#tblTestrpt').html(rows);
                 LoadExamrpt();
@@ -1972,7 +2035,7 @@
             data.append('ID', ID);
             $.ajax({
                 type: 'POST',
-                url: '<%= ResolveUrl("~/upload/UploadEmergency.ashx") %>',  // ✅ FIXED HERE
+                url: '<%= ResolveUrl("~/upload/UploadEmergency.ashx") %>',  // ? FIXED HERE
                 data: data,
                 processData: false,
                 contentType: false,
@@ -4538,41 +4601,59 @@
         }
 
         $(document).on('keyup', '.select2-search__field', function () {
-            var searchString = $(this).val();
-
-            var options;
-            $.ajax({
-                url: 'EmergencyCase.aspx/getpharmacyitems',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ searchString: searchString }),
-                success: function (response) {
-                    var options = '';
-                    try {
-                        var pharmacyItems = JSON.parse(response.d);
-                        $.each(pharmacyItems, function (key, value) {
-                            options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
-                        });
-                        $('#txtPharmacyItem').append(options).trigger('change');
-                    } catch (error) {
-                        console.error('Error parsing response:', error);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching data:', error);
+          var searchString = $(this).val();
+    
+                if (searchString.length < 2) {
+                    return;
                 }
-            });
-        });
+
+              $.ajax({
+              url: 'EmergencyCase.aspx/getpharmacyitems',
+            method: 'POST',
+           contentType: 'application/json',
+             data: JSON.stringify({ searchString: searchString }),
+            success: function (response) {
+            try {
+                var pharmacyItems = JSON.parse(response.d);
+                var $select = $('#txtPharmacyItem');
+                
+                $.each(pharmacyItems, function (key, value) {
+                    var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
+                    if (!optionExists) {
+                        $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+                    }
+                });
+                
+                $select.trigger('change');
+                
+            } catch (error) {
+                console.error('Error parsing response:', error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+});
 
         function FillPharmacyItem() {
             PageMethods.FillPharmacyItemDropDown(function (Medicine) {
                 var options = '<option value=""> Select Medicine  </option>'
                 $.each(JSON.parse(Medicine), function (key, value) {
-                    options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                    options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                 });
 
                 $('#txtPharmacyItem').html(options);
                 $('#txtPharmacyItem').select2();
+
+                $('#txtPharmacyItem').select2({
+                    width: '100%',
+                    dropdownAutoWidth: false,
+                    minimumResultsForSearch: 0,
+                    dropdownParent: $('#MedicationModel'),
+                    placeholder: 'Select Medicine',
+                    allowClear: true
+                });
 
 
             });
@@ -5255,7 +5336,7 @@
             function showError(errorMessage) {
                 searchResults.innerHTML = `
             <div class="no-results" style="color: #ff6b6b;">
-                ⚠️ Error: ${errorMessage}
+                ?? Error: ${errorMessage}
             </div>`;
                 searchResults.classList.add('active');
             }
@@ -5278,7 +5359,7 @@
                 }
             });
 
-            // ✅ Hide results if click happens outside input or results
+            // ? Hide results if click happens outside input or results
             document.addEventListener('click', function (e) {
                 if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
                     hideResults();
@@ -6219,7 +6300,7 @@
     var test = CheckTest;
     console.log("Adding Lab Test:", test);
     
-    // ✅ FIXED: Only pass 'test' parameter, then callbacks
+    // ? FIXED: Only pass 'test' parameter, then callbacks
     PageMethods.GetLabTestDDLDetails(test, function (res) {
         try {
             console.log("Lab test response:", res);
@@ -6488,6 +6569,55 @@
         }
 
 
+
+        function LoadDischargeTemplate() {
+            var options = '<option value="0" >Select Template</option>';
+            PageMethods.GetTemplate(function (Tests) {
+                $.each(JSON.parse(Tests), function (key, value) {
+                    options += '<option value="' + value.Template_Id + '" >' + value.Template_Name + '</option>';
+                });
+                $('#ddlDischargeTemplate').html(options);
+                if ($.fn.select2) {
+                    $('#ddlDischargeTemplate').select2();
+                }
+            });
+        }
+
+        function LoadDischargeTemplateMedicine() {
+            var Templateid = $('#ddlDischargeTemplate').val();
+            if (!Templateid || Templateid == "0") return;
+
+            PageMethods.GetTemplateMedicine(Templateid, function (res) {
+                var Medicines = JSON.parse(res);
+                var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy h:m:s A")%>';
+            var datetimeValue = '<%= DateTime.Now%>';
+
+            $.each(Medicines, function (key, value) {
+                var dosage_from = value.Dosage_From || '';
+                var dosage_Qty = value.Dosage_Qty || '';
+                var routes = value.Oral || ''; 
+                var other_Instruction = value.Other_Instruction || '';
+                var frequency = value.Frequency || '';
+                var row = '<tr> ' +
+                    '<td><input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime + '</td>' +
+                    '<td><input type="hidden" name="hdnItemCode" value="' + value.Item_Code + '"> ' + value.Medicine_Name + '</td> ' +
+                    '<td>' + frequency + '</td> ' +
+                    '<td>' + routes + '</td> ' +
+                    '<td>' + value.Injections + '</td> ' + 
+                    '<td>' + value.AttendingParamedical_Staff + '</td> ' + 
+                    '<td>' + dosage_from + '</td> ' +
+                    '<td>' + dosage_Qty + '</td> ' +
+                    '<td>' + other_Instruction + '</td> ' +
+                    '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' /></td>' +
+                    '<td style="display:none;">' + value.Item_Code + '</td>' +
+                    '</tr>';
+
+                $('#tblDischargeMedication tbody').append(row);
+            });
+        });
+       }
+
+
     </script>
 
     <style type="text/css">
@@ -6545,7 +6675,7 @@
                                 id="searchInput"
                                 autocomplete="off"
                                 style="height: 45px; width: 100% !important; padding: 16px 50px 16px 20px !important; border: 1.5px solid #ccc !important; border-radius: 25px !important; background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) !important; color: black !important; font-size: 16px !important; box-shadow: none !important" />
-                            <div class="search-icon">🔍</div>
+                            <div class="search-icon">??</div>
                         </div>
                         <div class="search-results" id="searchResults"></div>
                     </div>
@@ -6873,7 +7003,7 @@
                                     <input type="button" class="btn btn-primry" id="btnSaveMedicine" name="btnSaveMedicine" value="Save" tabindex="7" />
                                 </td>
                                  <td>
-                                    <input type="button" id="Add_Unlisted_Medicine" value="Add Unlisted Medicine" style="margin-left: 110px; background-color:#438eb9  !important;width:67% !important; color:white !important;" onclick="NewMedicine()" />
+                                    <input type="button" id="Add_Unlisted_Medicine" class="btn btn-primry" value="Add Unlisted Medicine" style="margin-left: 110px;width:67% !important; color:white !important;" onclick="NewMedicine()" />
                                         </td>
                                 <td></td>
                             </tr>
@@ -6901,7 +7031,7 @@
             <div class="row mb-2">
                 <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                     <div class="image-container">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Emergency.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
+                        <img src="~../../../../wwwroot/ASsiratTheme/images/dashboard_Icons/Emergency.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                     </div>
                 </div>
                     <div class="row mb-2"  style="display:none">
@@ -7599,6 +7729,12 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                 <td style="width: 20%; padding: 5px;">
+                                                    <asp:Label ID="lblDischargeTemplate" runat="server" Text="Template"></asp:Label>
+                                                    <select id="ddlDischargeTemplate" class="form-select" onchange="LoadDischargeTemplateMedicine()" style="width: 100%;">
+                                                        <option value="">Select Template</option>
+                                                    </select>
+                                                </td>
                                                 <td style="width:20%;padding:5px;">
                                                      <asp:Label ID="lblReferredTo" runat="server" Text="Referred To"></asp:Label>
                                                     <asp:DropDownList runat="server" ID="ddlReferredTo" AppendDataBoundItems="true"></asp:DropDownList>
@@ -11406,10 +11542,10 @@
         </table>
         <table style="margin-top: 30px; margin-left: 60px;" id="urdulineshow">
             <tr>
-                <td>لاءيں</td>
-                <td>تشریف      
+                <td>?????</td>
+                <td>?????      
                 </td>
-                <td>میں</td>
+                <td>???</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -11418,7 +11554,7 @@
                 <td>
                     <span>OPD</span>
                 </td>
-                <td>کو</td>
+                <td>??</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -11430,7 +11566,7 @@
                 <td></td>
                 <td ></td>
                 <td></td>
-                <td>دوبارہ</td>
+                <td>??????</td>
             </tr>
         </table>
         <h6 style="width: 500px; margin-top: 300px; font-size: 14px; margin-left: 70px;">This is a Computer Generated Image and does not require Signature </h6>
@@ -12102,3 +12238,4 @@
          <button class="yes">OK</button>
       </div>
 </asp:Content>
+
