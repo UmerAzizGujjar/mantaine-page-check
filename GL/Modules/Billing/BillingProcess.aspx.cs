@@ -3414,8 +3414,8 @@ namespace PMS
                 }
                 else
                 {
-                    pt.Patient_Type = db.GetDataValueName("Patient Type", patient.Patient_Type);
-                    pt.Patient_Type_id = patient.Patient_Type;
+                   // pt.Patient_Type = db.GetDataValueName("Patient Type", patient.Patient_Type);
+                   // pt.Patient_Type_id = patient.Patient_Type;
                     pt.Admission_Date = "";
                     pt.Discharge_On = "";
                     pt.Ward_Name = "";
