@@ -422,6 +422,24 @@
             //});
             $('#btnApprove').click(function () {
                 debugger;
+                var hasApprovalRights = checkApprovalRights();
+
+                if (!hasApprovalRights) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Access Denied!',
+                        text: 'You do not have permission to approve radiology tests. Please contact administrator.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return false;
+                }
+
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
 
@@ -439,8 +457,23 @@
 
                 var Lab_ID = 0;
 
-                // Get the selected doctor ID
                 var selectedDoctorId = $("#ddlReferDoctor").val();
+
+                if (!selectedDoctorId || selectedDoctorId === "" || selectedDoctorId === "0" || selectedDoctorId === "null") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Please select referring doctor',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return false;
+                }
 
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
 
@@ -507,6 +540,23 @@
             //});
 
             $('#btnReject').click(function () {
+                var hasRejectRights = checkrejectRights();
+
+                if (!hasRejectRights) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Access Denied!',
+                        text: 'You do not have permission to reject radiology tests. Please contact administrator.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return false;
+                }
                 // Show the rejection modal instead of directly rejecting
                 $('#rejectionModal').modal('show');
             });
@@ -910,6 +960,8 @@
             GetTestDepartment();
             LoadRadiologyPatientsList();
             LoadRadiologyResultsReadyList();
+            checkApprovalRights();
+            checkrejectRights();
 
             $('#ddlDepartment').on('change', function () {
                 LoadRadiologyPatientsList();
@@ -3277,6 +3329,48 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#39;");
+        }
+
+        function checkApprovalRights() {
+            var hasRights = false;
+
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/CheckApprovalrights",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false, 
+                success: function (response) {
+                    hasRights = response.d === true || response.d === "true";
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking approval rights: ", error);
+                    hasRights = false;
+                }
+            });
+
+            return hasRights;
+        }
+
+        function checkrejectRights() {
+            var hasRights = false;
+
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/Checkrejectrights",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    hasRights = response.d === true || response.d === "true";
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking rejects rights: ", error);
+                    hasRights = false;
+                }
+            });
+
+            return hasRights;
         }
 
     </script>
