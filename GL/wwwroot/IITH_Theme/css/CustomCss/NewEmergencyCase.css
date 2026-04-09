@@ -166,15 +166,15 @@
      position: relative;
  }
 
- .spinner-ring {
-     position: absolute;
-     width: 100%;
-     height: 100%;
-     border: 3px solid rgba(239, 166, 62, 0.1); /* Very subtle orange */
-     border-top: 3px solid #EFA63E; /* Bright orange */
-     border-radius: 50%;
-     animation: spin 1s linear infinite;
- }
+.spinner-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(239, 166, 62, 0.1); /* Very subtle orange */
+    border-top: 3px solid #438eb9; /* Bright orange */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
 
      .spinner-ring:nth-child(2) {
          border-top-color: rgba(239, 166, 62, 0.7);
@@ -195,17 +195,17 @@
          left: 20%;
      }
 
- .loading-text {
-     font-size: 18px;
-     font-weight: 600;
-     margin-bottom: 10px;
-     background: linear-gradient(45deg, #EFA63E, #d18d2f, #EFA63E);
-     background-size: 200% 200%;
-     -webkit-background-clip: text;
-     -webkit-text-fill-color: transparent;
-     background-clip: text;
-     animation: gradientShift 3s ease infinite;
- }
+.loading-text {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #438eb9, #d18d2f, #438eb9);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+}
 
  .loading-subtext {
      font-size: 14px;
@@ -222,12 +222,12 @@
      position: relative;
  }
 
- .progress-fill {
-     height: 100%;
-     background: linear-gradient(90deg, transparent, #EFA63E, transparent);
-     border-radius: 2px;
-     animation: progressMove 2s ease-in-out infinite;
- }
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #438eb9, transparent);
+    border-radius: 2px;
+    animation: progressMove 2s ease-in-out infinite;
+}
 
  /* Floating particles - adjusted for light background */
  .particle {
@@ -358,17 +358,17 @@
      font-weight: bold !important
  }
 
- .mybutton2-wrapper {
-     display: inline-block;
-     padding: 10px 20px;
-     background-color: #EFA63E;
-     color: black;
-     border-radius: 4px;
-     cursor: pointer;
-     user-select: none;
-     position: relative;
-     transition: background-color 0.3s;
- }
+.mybutton2-wrapper {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #438eb9;
+    color: black;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: background-color 0.3s;
+}
 
      .mybutton2-wrapper input[type="checkbox"] {
          display: none;
@@ -421,10 +421,10 @@
          align-items: center;
      }
 
-         .card-header h4 i {
-             margin-right: 10px;
-             color: #EFA63E;
-         }
+        .card-header h4 i {
+            margin-right: 10px;
+            color: #438eb9;
+        }
 
  .fa {
      color: black
@@ -603,10 +603,10 @@
 
 
 
-     .menu-item.selected {
-         background-color: #EFA63E;
-         color: black !important;
-     }
+    .menu-item.selected {
+        background-color: #438eb9;
+        color: black !important;
+    }
 
          .menu-item.selected img {
              filter: brightness(0);
@@ -699,10 +699,10 @@
      font-size: 15px
  }
 
-     .menu-item:hover {
-         background-color: #EFA63E;
-         color: black !important;
-     }
+    .menu-item:hover {
+        background-color: #438eb9;
+        color: black !important;
+    }
 
      .menu-item img {
          filter: sepia(100%) saturate(450%) hue-rotate(330deg) brightness(1);
@@ -823,14 +823,14 @@
      height: 65px !important;
  }
 
-     .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover,
-     .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover,
-     .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover, .diagnosticTest-row:hover, .Medicene-row:hover, .FollowUp-Row:hover, .Disposal-row:hover {
-         background-color: #EFA63E;
-         color: black !important;
-         transform: scale(1.02);
-         transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-     }
+    .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover,
+    .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover,
+    .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover, .diagnosticTest-row:hover, .Medicene-row:hover, .FollowUp-Row:hover, .Disposal-row:hover {
+        background-color: #438eb9;
+        color: black !important;
+        transform: scale(1.02);
+        transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    }
 
          .labtest-row:hover .labtest-label {
              color: white !important;
@@ -854,22 +854,22 @@
      margin-bottom: 0;
  }
 
- .mybutton {
-     font-size: 19px !important;
-     width: fit-content !important;
-     background-color: #f0f1f3;
-     padding: 3px 12px;
-     border-radius: 8px;
-     margin: 0;
-     color: #EFA63E !important;
-     font-weight: bold !important;
-     font-size: 16px;
-     transition: all 0.3s ease;
-     margin-bottom: 5px;
-     border: 0px !important;
-     margin-left: 5px;
-     margin-right: 5px;
- }
+.mybutton {
+    font-size: 19px !important;
+    width: fit-content !important;
+    background-color: #f0f1f3;
+    padding: 3px 12px;
+    border-radius: 8px;
+    margin: 0;
+    color: #438eb9 !important;
+    font-weight: bold !important;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-bottom: 5px;
+    border: 0px !important;
+    margin-left: 5px;
+    margin-right: 5px;
+}
 
 
  .btn-primry {

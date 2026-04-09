@@ -1961,15 +1961,18 @@ namespace PMS
                 SET BillDetailID = {billDetail.Bill_Details_ID} 
                 WHERE Actual_Patient_ID = {(newBill.Patient_ID.HasValue ? newBill.Patient_ID.Value.ToString() : "NULL")}";
 
+
                     if (testId.HasValue)
                         sqls += $" AND Test_ID = {testId.Value}";
                     else
                         sqls += " AND Test_ID IS NULL";
+                        //sqls += " AND Catagory_ID = ''";
 
                     if (categoryId.HasValue)
                         sqls += $" AND Catagory_ID = {categoryId.Value}";
                     else
                         sqls += " AND Catagory_ID IS NULL";
+                        //sqls += " AND Catagory_ID = ''";
 
                     dbContext.ExecuteCommand(sqls);
                 }
@@ -3341,18 +3344,7 @@ namespace PMS
                 {
                     pt.Entry_Date = pat.Created_time.ToString();
                 }
-                if (patient != null)
-                {
-                    pt.Patient_Type = db.GetDataValueName("Patient Type", patient.Patient_Type);
-                    pt.Patient_Type_id = patient.Patient_Type;
-                    pt.Admission_Date = "";
-                    pt.Discharge_On = "";
-                    pt.Ward_Name = "";
-                    pt.Bed_No = "";
-                    pt.Room_Name = "";
-                    pt.MainDepartment = "01";
-                }
-                else if (inpat != null)
+        if (inpat != null)
                 {
                     if (inpat.Discharge == null || inpat.Discharge == false)
                     {
@@ -3422,6 +3414,8 @@ namespace PMS
                 }
                 else
                 {
+                    pt.Patient_Type = db.GetDataValueName("Patient Type", patient.Patient_Type);
+                    pt.Patient_Type_id = patient.Patient_Type;
                     pt.Admission_Date = "";
                     pt.Discharge_On = "";
                     pt.Ward_Name = "";
