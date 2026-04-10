@@ -308,39 +308,5 @@ namespace PMS
 
             return (new JavaScriptSerializer().Serialize(dpt));
         }
-
-        public class PatientBalanceInfo
-        {
-            public int Bill_ID { get; set; }
-            public string Bill_No { get; set; }
-            public string PatientName { get; set; }
-            public decimal Balance_Amount { get; set; }
-        }
-
-        [WebMethod]
-        public static string CheckWalkinPatientBalances(List<int> billIds)
-        {
-            try
-            {
-                DataBaseDataContext db = new DataBaseDataContext();
-
-                var result = (from bill in db.Ar_Billings
-                              join pat in db.Reg_patients on bill.Patient_ID equals pat.pat_id
-                              where billIds.Contains(bill.Bill_ID)
-                              select new PatientBalanceInfo
-                              {
-                                  Bill_ID = bill.Bill_ID,
-                                  Bill_No = bill.Bill_No,
-                                  PatientName = pat.Full_Name,
-                                  Balance_Amount = bill.Balance_Amount ?? 0
-                              }).ToList();
-
-                return (new JavaScriptSerializer()).Serialize(result);
-            }
-            catch (Exception ex)
-            {
-                return (new JavaScriptSerializer()).Serialize(new List<PatientBalanceInfo>());
-            }
-        }
     }
 }

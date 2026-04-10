@@ -287,24 +287,11 @@
             var tableDT = $("#tblradilogy").DataTable();
             var Testlist = [];
             var isChkZero = true;
-            var walkinPatientsWithBalance = [];
 
             $('#tblradilogy tbody input.rowSelect:checked').each(function () {
                 isChkZero = false;
                 var row = $(this).closest('tr');
                 var rowData = tableDT.row(row).data();
-                var mainDepartment = rowData.ParentTrans_Name;
-                var isWalkIn = (!mainDepartment || mainDepartment === "");
-                var billId = rowData.Bill_ID;
-
-                if (isWalkIn) {
-                    walkinPatientsWithBalance.push({
-                        Bill_ID: billId,
-                        Bill_No: rowData.Bill_No,
-                        PatientName: rowData.Full_Name
-                    });
-                }
-
                 var status = row.find('.priority-select').val();
                 var Lab_Test_Detail_ID = rowData.Lab_Test_Detail_ID;
                 var Doctor_ID = row.find('.doctor-select').val() || 0;
@@ -314,69 +301,15 @@
                     'status': status,
                     'Lab_Test_Detail_ID': Lab_Test_Detail_ID,
                     'Doctor_ID': parseInt(Doctor_ID),
-                    'History': History,
-                    'Bill_ID': billId 
+                    'History': History
                 });
             });
 
             if (isChkZero) {
-                Swal.fire({
-                    title: 'No Selection',
-                    text: 'Select Checkbox Which Test Do You Want To Acknowledge',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                });
+                alert("Select Checkbox Which Test Do You Want To Acknowledge");
                 return;
             }
 
-            if (walkinPatientsWithBalance.length > 0) {
-                $.ajax({
-                    type: "POST",
-                    url: "RadiologyAcknolgment.aspx/CheckWalkinPatientBalances",
-                    data: JSON.stringify({
-                        billIds: walkinPatientsWithBalance.map(p => p.Bill_ID)
-                    }),
-                    contentType: "application/json; charset=utf-8",
-                    success: function (response) {
-                        var balanceData = JSON.parse(response.d);
-                        var patientsWithPendingBalance = balanceData.filter(p => p.Balance_Amount > 0);
-
-                        if (patientsWithPendingBalance.length > 0) {
-                            var patientList = patientsWithPendingBalance.map(p =>
-                                `Bill #${p.Bill_No} - ${p.PatientName} (Balance: ${p.Balance_Amount})`
-                            ).join('\n');
-
-                            Swal.fire({
-                                title: 'Pending Balance Warning!',
-                                html: `The following Walk-In patients have pending balances:<br><br>
-                               <strong>${patientList}</strong><br><br>
-                               Do you still want to proceed with acknowledgment?`,
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonText: 'Yes, Proceed',
-                                cancelButtonText: 'No, Cancel',
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    saveAcknowledgmentData(Testlist);
-                                }
-                            });
-                        } else {
-                            saveAcknowledgmentData(Testlist);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error checking balances:", error);
-                        saveAcknowledgmentData(Testlist);
-                    }
-                });
-            } else {
-                saveAcknowledgmentData(Testlist);
-            }
-        }
-
-        function saveAcknowledgmentData(Testlist) {
             $.ajax({
                 type: "POST",
                 url: "RadiologyAcknolgment.aspx/SaveRecord",
@@ -384,30 +317,14 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
                     if (response.d === "Update Data") {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Records saved successfully!',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            location.reload();
-                        });
+                        alert("Records saved successfully!");
+                        location.reload();
                     } else {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Error: ' + response.d,
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
+                        alert("Error: " + response.d);
                     }
                 },
                 error: function (xhr, status, error) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Error saving data: ' + error,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
+                    alert("Error saving data: " + error);
                 }
             });
         }
