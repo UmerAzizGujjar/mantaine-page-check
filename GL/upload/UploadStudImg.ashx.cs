@@ -6,24 +6,22 @@ using System.Web;
 
 namespace PMS
 {
+    /// <summary>
+    /// Summary description for UploadStudImg
+    /// </summary>
     public class UploadStudImg : IHttpHandler
     {
+
         public void ProcessRequest(HttpContext context)
         {
             DataBaseDataContext db = new DataBaseDataContext();
+            Reg_Student obj = new Reg_Student();
+            int Studid = Convert.ToInt32(context.Request.Form["ID"]);
 
             context.Response.ContentType = "text/plain";
 
             try
             {
-                string studentIdStr = context.Request.Form["ID"];
-                if (string.IsNullOrEmpty(studentIdStr))
-                {
-                    context.Response.Write("Error: Student ID is missing");
-                    return;
-                }
-
-                int Studid = Convert.ToInt32(studentIdStr);
                 string dirFullPath = context.Server.MapPath("~/wwwroot/images/StudentImages/");
 
                 if (!Directory.Exists(dirFullPath))
@@ -31,20 +29,13 @@ namespace PMS
                     Directory.CreateDirectory(dirFullPath);
                 }
 
-                if (context.Request.Files.Count == 0)
-                {
-                    context.Response.Write("No file uploaded");
-                    return;
-                }
-
                 string str_image = "";
                 string image_path = "";
-                bool fileSaved = false;
 
                 var query = db.Reg_Students.FirstOrDefault(x => x.Student_Id == Studid);
                 if (query == null)
                 {
-                    context.Response.Write("Error: Student not found");
+                    context.Response.Write("Student not found");
                     return;
                 }
 
@@ -53,67 +44,47 @@ namespace PMS
                 foreach (string s in context.Request.Files)
                 {
                     HttpPostedFile file = context.Request.Files[s];
-                    if (file != null && file.ContentLength > 0)
+                    string fileName = file.FileName;
+                    if (!string.IsNullOrEmpty(fileName))
                     {
-                        string fileName = file.FileName;
-                        if (!string.IsNullOrEmpty(fileName))
+                        string fileExtension = Path.GetExtension(fileName);
+                        str_image = $"{Studid}{fileExtension}";
+                        string pathToSave = Path.Combine(dirFullPath, str_image);
+                        image_path = $"~../../../../wwwroot/images/StudentImages/{str_image}";
+
+                        if (!string.IsNullOrEmpty(oldpath))
                         {
-                            string fileExtension = Path.GetExtension(fileName);
-                            str_image = $"{Studid}{fileExtension}";
-                            string pathToSave = Path.Combine(dirFullPath, str_image);
-                            image_path = "/wwwroot/images/StudentImages/" + str_image;
-
-                            if (!string.IsNullOrEmpty(oldpath))
+                            string oldFilePath = context.Server.MapPath("~" + oldpath);
+                            if (File.Exists(oldFilePath))
                             {
-                                try
-                                {
-                                    string cleanOldPath = oldpath.TrimStart('~', '/');
-                                    string oldFilePath = context.Server.MapPath("~/" + cleanOldPath);
-                                    if (File.Exists(oldFilePath))
-                                    {
-                                        File.Delete(oldFilePath);
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    context.Response.Write($"Warning: {ex.Message}\n");
-                                }
-                            }
-
-                            file.SaveAs(pathToSave);
-                            fileSaved = true;
-                            if (File.Exists(pathToSave))
-                            {
-                                query.Picture = image_path;
-                            }
-                            else
-                            {
-                                context.Response.Write($"Error: File not saved at {pathToSave}");
-                                return;
+                                File.Delete(oldFilePath);
                             }
                         }
+
+                        file.SaveAs(pathToSave);
+
+                        query.Picture = image_path;
                     }
                 }
 
-                if (fileSaved)
-                {
-                    db.SubmitChanges();
-                    context.Response.Write($"{Studid}|{str_image}");
-                }
-                else
-                {
-                    context.Response.Write("Error: No valid file processed");
-                }
+                db.SubmitChanges();
+
+                context.Response.Write(str_image);
             }
             catch (Exception ex)
             {
-                context.Response.Write($"Error: {ex.Message}");
+                context.Response.Write("Error: " + ex.Message);
             }
         }
 
+
+
         public bool IsReusable
         {
-            get { return false; }
+            get
+            {
+                return false;
+            }
         }
     }
 }
