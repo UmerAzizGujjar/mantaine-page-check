@@ -6799,6 +6799,18 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(add_ddl);
 
         }
+
+        [WebMethod]
+        public static string checkDeathDetails()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.IPD_ALlow_Death_Details).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
         private class ddlInsVol
         {
             public string DataValueName;

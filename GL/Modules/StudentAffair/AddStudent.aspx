@@ -34,7 +34,7 @@
             data.append('ID', ID);
             $.ajax({
                 type: 'post',
-                url: '/../upload/UploadStudImg.ashx',
+                url: 'upload/UploadStudImg.ashx',
                 data: data,
                 success: function (status) {
                     console.log("Upload Successful:", status);
