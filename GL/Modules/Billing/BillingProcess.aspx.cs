@@ -1939,6 +1939,7 @@ namespace PMS
             var Bill_Detail_List = db.Ar_Billing_Details
                 .Where(abd => abd.Bill_ID == newBill.Bill_ID && abd.ParentTrans_Type == "Test")
                 .ToList();
+
             using (DataBaseDataContext dbContext = new DataBaseDataContext())
             {
                 var Bill_Detail_Lists = dbContext.Ar_Billing_Details
@@ -1948,35 +1949,73 @@ namespace PMS
                 foreach (var billDetail in Bill_Detail_Lists)
                 {
                     int? testId = null;
-                    int? categoryId = null;
+                    string categoryId = null;
 
                     if (billDetail.Item_ID != null && int.TryParse(billDetail.Item_ID.ToString(), out int parsedTestId))
                         testId = parsedTestId;
 
-                    if (billDetail.Category_ID != null && int.TryParse(billDetail.Category_ID.ToString(), out int parsedCategoryId))
-                        categoryId = parsedCategoryId;
+                    if (billDetail.Category_ID != null)
+                        categoryId = billDetail.Category_ID.ToString().Trim();
 
                     string sqls = $@"
-                UPDATE Lab_Test_Detail 
-                SET BillDetailID = {billDetail.Bill_Details_ID} 
-                WHERE Actual_Patient_ID = {(newBill.Patient_ID.HasValue ? newBill.Patient_ID.Value.ToString() : "NULL")}";
+        UPDATE Lab_Test_Detail 
+        SET BillDetailID = {billDetail.Bill_Details_ID} 
+        WHERE Actual_Patient_ID = {(newBill.Patient_ID.HasValue ? newBill.Patient_ID.Value.ToString() : "NULL")}";
 
-
+                    // Test_ID condition
                     if (testId.HasValue)
                         sqls += $" AND Test_ID = {testId.Value}";
                     else
                         sqls += " AND Test_ID IS NULL";
-                        //sqls += " AND Catagory_ID = ''";
 
-                    if (categoryId.HasValue)
-                        sqls += $" AND Catagory_ID = {categoryId.Value}";
+                    // Category_ID condition (STRING FIX)
+                    if (!string.IsNullOrEmpty(categoryId))
+                        sqls += $" AND Catagory_ID = '{categoryId}'";   // 👈 string must be in quotes
                     else
-                        sqls += " AND Catagory_ID IS NULL";
-                        //sqls += " AND Catagory_ID = ''";
+                        sqls += " AND (Catagory_ID IS NULL OR Catagory_ID = '')";
 
                     dbContext.ExecuteCommand(sqls);
                 }
             }
+            //using (DataBaseDataContext dbContext = new DataBaseDataContext())
+            //{
+            //    var Bill_Detail_Lists = dbContext.Ar_Billing_Details
+            //        .Where(abd => abd.Bill_ID == newBill.Bill_ID && abd.ParentTrans_Type == "Test Group Category")
+            //        .ToList();
+
+            //    foreach (var billDetail in Bill_Detail_Lists)
+            //    {
+            //        int? testId = null;
+            //        int? categoryId = null;
+
+            //        if (billDetail.Item_ID != null && int.TryParse(billDetail.Item_ID.ToString(), out int parsedTestId))
+            //            testId = parsedTestId;
+
+            //        if (billDetail.Category_ID != null && int.TryParse(billDetail.Category_ID.ToString(), out int parsedCategoryId))
+            //            categoryId = parsedCategoryId;
+
+            //        string sqls = $@"
+            //    UPDATE Lab_Test_Detail 
+            //    SET BillDetailID = {billDetail.Bill_Details_ID} 
+            //    WHERE Actual_Patient_ID = {(newBill.Patient_ID.HasValue ? newBill.Patient_ID.Value.ToString() : "NULL")}";
+
+
+            //        if (testId.HasValue)
+            //            sqls += $" AND Test_ID = {testId.Value}";
+            //        else
+            //            sqls += " AND Test_ID IS NULL";
+            //            //sqls += " AND Catagory_ID = ''";
+
+            //        if (categoryId.HasValue)
+            //            sqls += $" AND Catagory_ID =  '{categoryId}'";
+            //            sqls += $" AND Catagory_ID =  '{categoryId}'";
+            //        else
+            //            sqls += " AND Catagory_ID IS NULL";
+            //            //sqls += " AND Catagory_ID = ''";
+
+            //        dbContext.ExecuteCommand(sqls);
+            //    }
+            //}
 
             foreach (var billDetail in Bill_Detail_List)
             {
