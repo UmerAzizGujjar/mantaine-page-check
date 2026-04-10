@@ -22,7 +22,7 @@ namespace PMS
 
             try
             {
-                string dirFullPath = context.Server.MapPath("~/wwwroot/images/StudentImages/");
+                string dirFullPath = context.Server.MapPath("~../../../../wwwroot/images/StudentImages/");
 
                 if (!Directory.Exists(dirFullPath))
                 {
