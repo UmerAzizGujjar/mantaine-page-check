@@ -5749,6 +5749,17 @@ namespace PMS
             {
                 return "Error saving Next of Kin details: " + ex.Message;
             }
-        }       
+        }
+
+        [WebMethod]
+        public static string CheckBirthCertificateTab()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.IPD_Allow_birth_Certifcate).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
     }
 }

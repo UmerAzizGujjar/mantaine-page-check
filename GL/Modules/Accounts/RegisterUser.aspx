@@ -74,6 +74,8 @@
                     $('#AllowReferIPD').prop('checked', data.AllowReferIPD);
                     $('#AllowRecipe').prop('checked', data.Allow_Recipe);
                     $('#AllowActiveItems').prop('checked', data.AllowActiveItems);
+                    $('#AllowBirthCertificate').prop('checked', data.AllowBirthCertificate);
+                    $('#AllowDeathDetails').prop('checked', data.AllowDeathDetails);
                     $('#AllowSaleReturn').prop('checked', data.AllowSaleReturn);
                     $('#AllowStudentUpdate').prop('checked', data.AllowStudentUpdate);
                     $('#RadiologyAllList').prop('checked', data.RadiologyAllList);
@@ -130,6 +132,8 @@
             var AllowReferIPD = $('#AllowReferIPD').prop('checked');
             var AllowRecipe = $('#AllowRecipe').prop('checked');
             var AllowActiveItems = $('#AllowActiveItems').prop('checked');
+            var AllowBirthCertificate = $('#AllowBirthCertificate').prop('checked');
+            var AllowDeathDetails = $('#AllowDeathDetails').prop('checked');
             var AllowSaleReturn = $('#AllowSaleReturn').prop('checked');
             var AllowStudentUpdate = $('#AllowStudentUpdate').prop('checked');
             var RadiologyAllList = $('#RadiologyAllList').prop('checked');
@@ -259,6 +263,8 @@
                 "AllowReferIPD": AllowReferIPD,
                 "AllowRecipe": AllowRecipe,
                 "AllowActiveItems": AllowActiveItems,
+                "AllowBirthCertificate": AllowBirthCertificate,
+                "AllowDeathDetails": AllowDeathDetails,
                 "AllowSaleReturn": AllowSaleReturn,
                 "AllowStudentUpdate": AllowStudentUpdate,
                 "RadiologyAllList": RadiologyAllList,
@@ -506,9 +512,15 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowActiveItems" name="AllowActiveitem" />
                                                     </div>
-                                                          <div class="form-check">
-                                                                    <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
-                                                                </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowBirthCertificate" name="AllowBirthCertificate" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowDeathDetails" name="AllowDeathDetails" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
+                                                    </div>
 
                                                 </div>
 
@@ -563,6 +575,12 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowActiveItems">Allow Active Items</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowBirthCertificate">Allow Birth Certificate</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowDeathDetails">Allow Death Details</label>
                                                     </div>
                                                      <div class="form-check">
                                                        <label class="form-check-label" for="EmpCode">Employee Code</label>

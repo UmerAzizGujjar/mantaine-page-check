@@ -150,6 +150,7 @@
             debugger;
             $("#tabs").tabs();
             CheckReferIPDPermission();
+            AllowDeathDetails();
             
 
             $('#ctl00_MainContent_ctl00_MainContent_txtEOR').on('focus click', function () {
@@ -420,7 +421,7 @@
                 localStorage.DeptID = $('#ctl00_MainContent_ddlDepartments').find('option:selected')[0].value;
                 fillPendingPatientsList();
             });
-
+            
         });
         function check() {
             debugger;
@@ -6633,6 +6634,32 @@
             debugger;
             $("#ctl00_MainContent_DischargeRequest").val('true')
             SaveInPatientAllRecord();
+        }
+
+        var editrights;
+        function AllowDeathDetails() {
+            $('#Tab-11').hide();
+            $.ajax({
+                type: "POST",
+                url: "InPatientsCase.aspx/checkDeathDetails",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var result = data.d;
+                    if (result === true || result === "true") {
+                        $('#ui-id-15').show();
+                    }
+                    else {
+                        $('#ui-id-15').hide();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking death details:", error);
+                    $('#Tab-11').hide();
+                }
+            });
         }
 
     </script>
