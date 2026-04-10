@@ -91,6 +91,8 @@ namespace PMS.Modules.Accounts
                              Allowradiologyapprove = p.Approve_radiology,
                              Rejectradiology = p.Reject_radiology,
                              AllowActiveItems = p.AllowActiveItems,
+                             AllowBirthCertificate = p.IPD_Allow_birth_Certifcate,
+                             AllowDeathDetails = p.IPD_ALlow_Death_Details,
                              AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
                              AllowReferIPD = p.Refer_IPD, 
@@ -205,6 +207,8 @@ namespace PMS.Modules.Accounts
                     user.Approve_radiology = data.Allowradiologyapprove;
                     user.Reject_radiology = data.Rejectradiology;
                     user.AllowActiveItems = data.AllowActiveItems;
+                    user.IPD_Allow_birth_Certifcate = data.AllowBirthCertificate;
+                    user.IPD_ALlow_Death_Details = data.AllowDeathDetails;
                     user.cashier = data.ddlcasher;
                     user.AllowRateEdit = data.AllowRateEdit;
                     membership.mobileno = data.Mobile;
@@ -285,6 +289,8 @@ namespace PMS.Modules.Accounts
                 newuser.Approve_radiology = data.Allowradiologyapprove;
                 newuser.Reject_radiology = data.Rejectradiology;
                 newuser.AllowActiveItems = data.AllowActiveItems;
+                newuser.IPD_Allow_birth_Certifcate = data.AllowBirthCertificate;
+                newuser.IPD_ALlow_Death_Details = data.AllowDeathDetails;
                 newuser.cashier = data.ddlcasher;
                 newuser.AllowRateEdit = data.AllowRateEdit;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
@@ -393,6 +399,8 @@ namespace PMS.Modules.Accounts
             public bool AllowReferIPD { get; set; }
             public bool AllowRecipe { get; set; }
             public bool AllowActiveItems { get; set; }
+            public bool AllowBirthCertificate { get; set; }
+            public bool AllowDeathDetails { get; set; }
             public bool AllowSaleReturn { get; set; }
             public bool AllowStudentUpdate { get; set; }
             public bool RadiologyAllList { get; set; }

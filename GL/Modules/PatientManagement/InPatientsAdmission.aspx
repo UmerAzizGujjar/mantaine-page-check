@@ -72,6 +72,8 @@
             });
             debugger;
 
+            AllowBirthCertificate();
+
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_txtCNIC'),
                 format: '_____-_______-_',
@@ -276,17 +278,29 @@
                 });
             });
             // Initialize birth certificate date pickers
-            $("#ctl00_MainContent_txtBirthDate").datepicker({ dateFormat: 'mm/dd/yy' });
+          //  $("#ctl00_MainContent_txtBirthDate").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#ctl00_MainContent_txtBirthTime").datetimepicker({
                 format: 'h:i A',
                 step: 15
             });
 
             // Set registration date to current date
-            $("#ctl00_MainContent_txtBirthRegDate").val(new Date().toLocaleDateString('en-US'));
+            //$("#ctl00_MainContent_txtBirthRegDate").val(new Date().toLocaleDateString('en-US'));
 
-            // Generate registration number
-            var regNumber = 'B-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            $("#ctl00_MainContent_txtBirthRegDate").datepicker({
+                dateFormat: "mm/dd/yy",
+                changeMonth: true,
+                changeYear: true
+            }).datepicker("setDate", new Date());
+
+            $("#ctl00_MainContent_txtBirthDate").datepicker({
+                dateFormat: "mm/dd/yy",
+                changeMonth: true,
+                changeYear: true
+            }).datepicker("setDate", new Date());
+
+            
+            var regNumber = 'NH-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
             $("#ctl00_MainContent_txtBirthRegNumber").val(regNumber);
             jQuery(function ($) {
                 MaskedInput({
@@ -314,6 +328,8 @@
         function GenrateCertificate() {
             debugger;
             var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+
+            
 
             // Validate required fields
             var childName = $('#ctl00_MainContent_txtBirthChildName').val();
@@ -4276,17 +4292,30 @@
                     dataType: "json",
                     success: function (response) {
                         debugger;
-                        if (response.d && response.d !== "null" && response.d !== "Error") {
-                            var data = JSON.parse(response.d);
+                        var data = response.d;
+                        if (typeof data === "string") {
+                            if (data === "null" || data === "Error") return;
+                            try {
+                                data = JSON.parse(data);
+                            } catch (e) {
+                                console.error("Error parsing JSON", e);
+                                return;
+                            }
+                        }
 
+                        if (data) {
                             $('#ctl00_MainContent_txtBirthChildName').val(data.Birth_Child_Name || '');
 
                             var genderDropdown = $('#ctl00_MainContent_ddlBirthGender');
                             genderDropdown.val(data.Birth_Gender || '');
-
                             if (data.Birth_Date) {
-                                var date = new Date(parseInt(data.Birth_Date.substr(6)));
-                                $('#ctl00_MainContent_txtBirthDate').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+                                var birthDate = new Date(data.Birth_Date);
+                                if (!isNaN(birthDate.getTime())) {
+                                    var mm = birthDate.getMonth() + 1;
+                                    var dd = birthDate.getDate();
+                                    var yyyy = birthDate.getFullYear();
+                                    $('#ctl00_MainContent_txtBirthDate').val(mm + '/' + dd + '/' + yyyy);
+                                }
                             }
 
                             $('#ctl00_MainContent_txtBirthTime').val(data.Birth_Time || '');
@@ -4308,8 +4337,13 @@
                             $('#ctl00_MainContent_txtBirthRegNumber').val(data.Birth_Reg_Number || '');
 
                             if (data.Birth_Reg_Date) {
-                                var regDate = new Date(parseInt(data.Birth_Reg_Date.substr(6)));
-                                $('#ctl00_MainContent_txtBirthRegDate').val((regDate.getMonth() + 1) + '/' + regDate.getDate() + '/' + regDate.getFullYear());
+                                var regDate = new Date(data.Birth_Reg_Date);
+                                if (!isNaN(regDate.getTime())) {
+                                    var mm = regDate.getMonth() + 1;
+                                    var dd = regDate.getDate();
+                                    var yyyy = regDate.getFullYear();
+                                    $('#ctl00_MainContent_txtBirthRegDate').val(mm + '/' + dd + '/' + yyyy);
+                                }
                             }
 
                             $('#ctl00_MainContent_txtBirthRegistrar').val(data.Birth_Registrar || '');
@@ -6580,6 +6614,30 @@
             });
         }
 
+        
+        function AllowBirthCertificate() {
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/CheckBirthCertificateTab",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var result = data.d;
+                    if (result === true || result === "true") {
+                        $('#ui-id-3').show();
+                    }
+                    else {
+                        $('#ui-id-3').hide();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking death details:", error);
+                    $('#Tab-11').hide();
+                }
+            });
+        }
 
 
 
