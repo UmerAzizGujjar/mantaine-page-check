@@ -116,20 +116,29 @@
         $(document).on('keyup', '.select2-search__field', function () {
             var searchString = $(this).val();
 
-            var options;
+            if (searchString.length < 2) {
+                return;
+            }
+
             $.ajax({
                 url: 'InPatientsCase.aspx/getpharmacyitems',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ searchString: searchString }),
                 success: function (response) {
-                    var options = '';
                     try {
                         var pharmacyItems = JSON.parse(response.d);
+                        var $select = $('#txtPharmacyItem');
+
                         $.each(pharmacyItems, function (key, value) {
-                            options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                            var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
+                            if (!optionExists) {
+                                $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+                            }
                         });
-                        $('#txtPharmacyItem').append(options).trigger('change');
+
+                        $select.trigger('change');
+
                     } catch (error) {
                         console.error('Error parsing response:', error);
                     }
@@ -421,6 +430,12 @@
                 localStorage.DeptID = $('#ctl00_MainContent_ddlDepartments').find('option:selected')[0].value;
                 fillPendingPatientsList();
             });
+
+            $('#txtPharmacyItem').on('change', function () {
+                GetMedicineStock();
+            });
+
+            
             
         });
         function check() {
@@ -4989,7 +5004,7 @@
 
                 var options = '<option value="' + 0 + '"> Select Medicine  </option>'
                 $.each(JSON.parse(Medicine), function (key, value) {
-                    options += '<option value="' + value.Item_Code + '"> ' + value.Description + ' </option>';
+                    options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
                 });
                 $('#txtPharmacyItem').html(options);
                 $('#txtPharmacyItem').select2();
@@ -6662,6 +6677,41 @@
             });
         }
 
+        function GetMedicineStock() {
+            var selectedItem = $('#txtPharmacyItem').find('option:selected');
+            var itemId = selectedItem.val(); 
+            var itemName = selectedItem.text();
+
+            if (itemId && itemId != '0' && itemId != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsCase.aspx/GetMedicineStock",
+                    data: JSON.stringify({ itemId: itemId }),  
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var stock = response.d;
+                        $('#txtStock').val(stock);
+
+                        if (parseInt(stock) <= 0) {
+                            $('#txtStock').css('color', 'red');
+                            $('#txtStock').css('font-weight', 'bold');
+                            $('#txtStock').css('background-color', '#ffe6e6');
+                        } else {
+                            $('#txtStock').css('color', 'green');
+                            $('#txtStock').css('background-color', '#e6ffe6');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching stock:', error);
+                        $('#txtStock').val('Error loading stock');
+                    }
+                });
+            } else {
+                $('#txtStock').val('');
+            }
+        }
+
     </script>
 
 </asp:Content>
@@ -6742,6 +6792,10 @@
                                             <select style="" id="ddlOther_Instruction" name="OtherInstruction">
                                                 <option>Please Select</option>
                                             </select>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-4">
+                                            <span>Available Stock:</span>
+                                            <input type="text" id="txtStock" readonly="readonly" style="background-color: #f5f5f5; font-weight: bold; width: 100%;" />
                                         </div>
                                     </div>
                                    </form>

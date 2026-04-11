@@ -1977,7 +1977,6 @@ namespace PMS.Modules.PatientManagement
             {
                 IQueryable<INV_Item> query = db.INV_Items.Where(d => d.Pharmacy_Item == true);
 
-                // Only apply the search filter if searchString is not empty
                 if (!string.IsNullOrEmpty(searchString))
                 {
                     query = query.Where(d => d.Description.Contains(searchString));
@@ -1987,11 +1986,27 @@ namespace PMS.Modules.PatientManagement
                                        .Select(d => new
                                        {
                                            Item_Code = d.Item_ID,
-                                           Description = d.Description
+                                           Description = d.Description,
+                                           InventoryOrg = d.InventoryOrg 
                                        }).Take(10)
                                        .ToList();
 
-                return (new JavaScriptSerializer().Serialize(pharmacyItems));
+                var result = new List<object>();
+                foreach (var item in pharmacyItems)
+                {
+                    decimal totalStock = db.GetInvenrtoryItemUomTotalStock(item.Item_Code, item.InventoryOrg) ?? 0;
+
+                    result.Add(new
+                    {
+                        Item_Code = item.Item_Code,
+                        Description = item.Description,
+                        TotalStock = totalStock,
+                        StockDisplay = totalStock > 0 ? totalStock.ToString("0.##") : "Out of Stock",
+                        StockStatus = totalStock > 0 ? "In Stock" : "Out of Stock"
+                    });
+                }
+
+                return (new JavaScriptSerializer().Serialize(result));
             }
         }
         [WebMethod]

@@ -2465,7 +2465,7 @@ namespace PMS
                                      orderby d.Item_ID descending
                                      select new
                                      {
-                                         d.Item_Code,
+                                         d.Item_ID,
                                          Description = d.Description
                                      }).Take(20).ToList();
 
@@ -2481,7 +2481,7 @@ namespace PMS
                           where d.Pharmacy_Item == true
                           select new
                           {
-                              d.Item_Code,
+                              d.Item_ID,
                               Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
                           }).ToList().Take(20);
 
@@ -6782,6 +6782,33 @@ namespace PMS
                              }).ToList();
             return (new JavaScriptSerializer()).Serialize(infspharm);
 
+        }
+
+        [WebMethod]
+        public static string GetMedicineStock(string itemId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    // Parse the Item_ID
+                    if (int.TryParse(itemId, out int itemID))
+                    {
+                        var item = db.INV_Items.FirstOrDefault(i => i.Item_ID == itemID);
+                        if (item != null)
+                        {
+                            // Call your stock function
+                            var stockTotal = db.GetInvenrtoryItemUomTotalStock(item.Item_ID, item.InventoryOrg);
+                            return stockTotal.ToString();
+                        }
+                    }
+                    return "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
         }
 
         [WebMethod]

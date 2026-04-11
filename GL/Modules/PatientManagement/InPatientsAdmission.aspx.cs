@@ -5761,5 +5761,66 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
+
+        [WebMethod]
+        public static List<PatientsResult> GetOPDReferPatients(string SearchString)
+        {
+            if (string.IsNullOrWhiteSpace(SearchString))
+            {
+                SearchString = "";
+            }
+            else
+            {
+                SearchString = SearchString.Replace("'", "''").Trim();
+            }
+            string baseSql = @"
+        SELECT TOP 20  
+            rg.pat_id,
+            ISNULL(rg.mr_no_sequence, '') AS Patient_No,
+            ISNULL(rg.Full_Name, '') AS Full_Name,
+            ISNULL(rg.NIC, '') AS NIC,
+            ISNULL(rg.Mobile1, '') AS ContactNo,
+            ISNULL(rg.Father_Name, '') AS Father_Name
+        FROM reg_patient rg
+        INNER JOIN Out_Patient op ON rg.pat_id = op.Reg_PatId
+        WHERE 
+            rg.Patient_No <> 0 
+            AND rg.Patient_No IS NOT NULL 
+            AND ISNULL(rg.isCancel, 0) != 1 
+            AND op.Follow_Up = '001'  -- This condition filters for OPD Referrals/Follow-ups
+            AND (op.Discharge = 0 OR op.Discharge IS NULL)";
+
+            string whereClause = "";
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                whereClause = $@" AND (
+            LTRIM(RTRIM(rg.mr_no_sequence)) LIKE '%{SearchString}%' OR
+            LTRIM(RTRIM(rg.Full_Name)) LIKE '%{SearchString}%' OR
+            LTRIM(RTRIM(rg.NIC)) LIKE '%{SearchString}%' OR
+            LTRIM(RTRIM(rg.Mobile1)) LIKE '%{SearchString}%'
+        )";
+            }
+
+            string sql = baseSql + whereClause + " ORDER BY op.Created_Time DESC";
+
+            DataTable dt = DBClass.getDataTable(sql);
+
+            List<PatientsResult> list = new List<PatientsResult>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                PatientsResult rslt = new PatientsResult()
+                {
+                    Reg_Patient_ID = dr["pat_id"]?.ToString() ?? "",
+                    Patient_No = dr["Patient_No"]?.ToString() ?? "",
+                    Full_Name = dr["Full_Name"]?.ToString() ?? "",
+                    NIC = dr["NIC"]?.ToString() ?? "",
+                    Mobile1 = dr["ContactNo"]?.ToString() ?? "",
+                    Father_Name = dr["Father_Name"]?.ToString() ?? "",
+                };
+                list.Add(rslt);
+            }
+
+            return list;
+        }
     }
 }

@@ -6371,8 +6371,24 @@
             $('#ReferredPatientsModal').modal({
                 backdrop: 'static'
             });
+            if ($("#ReferTabsContainer").hasClass("ui-tabs")) {
+                $("#ReferTabsContainer").tabs("destroy");
+            }
+
+            $("#ReferTabsContainer").tabs({
+                activate: function (event, ui) {
+                    var index = ui.newTab.index();
+                    if (index === 1) {
+                        LoadOPDReferPatients();
+                    }
+                }
+            });
             FillReferredPatientsList();
         }
+
+        $(document).on('click', '#tabOPDReferLink', function () {
+            LoadOPDReferPatients();
+        });
 
         function FillReferredPatientsList() {
             var SearchString = $('#txtReferredSearch').val().trim();
@@ -6639,6 +6655,77 @@
             });
         }
 
+        // Function to load data for the OPD Refer tab
+        function LoadOPDReferPatients() {
+            // Clear previous results
+            $('#iOPDReferPatientsBody').empty();
+            var SearchString = $('#txtOPDReferSearch').val() || '';
+
+            // Call the PageMethod
+            PageMethods.GetOPDReferPatients(SearchString, OnOPDReferSuccess, OnFailPatients);
+        }
+
+        // Success callback for OPD Refer
+        function OnOPDReferSuccess(data) {
+            $('#iOPDReferPatientsBody').empty();
+            if (data && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    AddOPDReferPatientRow(
+                        data[i].Reg_Patient_ID,
+                        data[i].Patient_No,
+                        data[i].Full_Name,
+                        data[i].NIC,
+                        data[i].Mobile1,
+                        data[i].Father_Name
+                    );
+                }
+            } else {
+                $('#iOPDReferPatientsBody').html('<tr><td colspan="7" class="text-center">No records found</td></tr>');
+            }
+        }
+
+        // Helper to add rows to the OPD Refer table
+        function AddOPDReferPatientRow(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
+            var row = document.getElementById('iOPDReferPatientsBody').insertRow(-1);
+            var cell;
+
+            // Hidden Patient ID
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span>' + Reg_Patient_ID + '</span>';
+            cell.className = "hide";
+
+            // MR No
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Patient_No + '</span>';
+
+            // Name
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Full_Name + '</span>';
+
+            // Father Name
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Father_Name + '</span>';
+
+            // CNIC
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + NIC + '</span>';
+
+            // Contact
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
+
+            // Actions
+            cell = row.insertCell(-1);
+            var actions = '';
+            actions += '<a style="color:#438eb9;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick="AddPatientDetail(' + Reg_Patient_ID + ')"><i class="fa fa-plus-circle"></i></a>&nbsp;|&nbsp;&nbsp;';
+            actions += '<a style="color:#FDC303;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick="EditPatientDetail(' + Reg_Patient_ID + ')"><i class="fa fa-pencil-square-o"></i></a>';
+            cell.innerHTML = actions;
+        }
+
+        function FillOPDReferPatientsList() {
+            LoadOPDReferPatients();
+        }
+
 
 
     </script>
@@ -6764,7 +6851,7 @@
                 <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
             </div>
             <div class="col-lg-2 col-md-3 col-sm-3">
-                <input type="button" value="Refer Admissions" id="btnReferAdmissions" onclick="OpenReferredModal()" class="btn-primry" />
+                <input type="button" value="Admission Queue" id="btnReferAdmissions" onclick="OpenReferredModal()" class="btn-primry" />
             </div>
         </div>
     </div>
@@ -6772,30 +6859,75 @@
     <div id="ReferredPatientsModal" data-backdrop="static" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
-            <fieldset style="padding-top: 20px; padding-left: 14px;">
-                <div class="col-lg-3 col-md-4 col-sm-6">                           
-                    <label id="lblReferredSearch">Referred Patients:</label>
-                    <input type="text" id="txtReferredSearch" style="margin-left: 2px;"  autocomplete="off"
-                        placeholder="Search by MR No, Name, CNIC, or Contact..."  oninput="FillReferredPatientsList()" />
-                </div>
-            </fieldset>
-            <div style="overflow: scroll; height: 460px; padding: 10px;">
-                <table class="table table-hover table-striped table-bordered" id="tblReferredPatients" style="width:100%;">
-                    <thead>
-                        <tr>
-                            <th style="display: none;">Patient ID</th>
-                            <th>MR No</th>
-                            <th>Patient Name</th>
-                            <th>Father Name</th>
-                            <th>CNIC</th>
-                            <th>Contact No</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="iReferredPatientsBody">
-                    </tbody>
-                </table>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Referred Patients</h4>
             </div>
+            
+            <!-- jQuery UI Tabs Structure -->
+            <div id="ReferTabsContainer" style="padding: 10px;">
+                <ul>
+                    <li><a href="#TabExistingReferrals">Existing Referrals</a></li>
+                    <li><a href="#TabOPDRefer">OPD Refer</a></li>
+                </ul>
+
+                <!-- Tab 1: Existing Referrals -->
+                <div id="TabExistingReferrals">
+                    <fieldset style="padding-top: 10px; padding-left: 14px;">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label id="lblReferredSearch">Search Patients:</label>
+                            <input type="text" id="txtReferredSearch" style="margin-left: 2px;" autocomplete="off"
+                                   placeholder="Search by MR No, Name, CNIC, or Contact..." oninput="FillReferredPatientsList()" />
+                        </div>
+                    </fieldset>
+                    <div style="overflow: scroll; height: 380px; padding: 10px;">
+                        <table class="table table-hover table-striped table-bordered" id="tblReferredPatients" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;">Patient ID</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Contact No</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="iReferredPatientsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 2: OPD Refer -->
+                <div id="TabOPDRefer">
+                    <fieldset style="padding-top: 10px; padding-left: 14px;">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label id="lblOPDReferSearch">Search OPD Refer:</label>
+                            <input type="text" id="txtOPDReferSearch" style="margin-left: 2px;" autocomplete="off"
+                                   placeholder="Search by MR No, Name, CNIC, or Contact..." oninput="FillOPDReferPatientsList()" />
+                        </div>
+                    </fieldset>
+                    <div style="overflow: scroll; height: 380px; padding: 10px;">
+                        <table class="table table-hover table-striped table-bordered" id="tblOPDReferPatients" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;">Patient ID</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Contact No</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="iOPDReferPatientsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <input type="button" style="width:13% !important" class="btn-gray" value="Close" data-dismiss="modal" />
             </div>
