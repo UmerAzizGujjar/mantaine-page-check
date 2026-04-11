@@ -1337,6 +1337,22 @@ namespace PMS.Modules.PatientManagement
                             }
                         }
 
+                        string departmentForToken = !string.IsNullOrEmpty(data.Department) && data.Department != "0" ? data.Department : data.hdnDepartment;
+
+                        if (!string.IsNullOrEmpty(departmentForToken) && departmentForToken != "0")
+                        {
+                            int deptTokenCount = db.Patients.Count(p =>
+                                p.Created_Time.HasValue &&
+                                p.Created_Time.Value.Date == DateTime.Now.Date &&
+                                p.Patient_Main_Category == departmentForToken);
+
+                            pat.Dept_Token = deptTokenCount + 1;
+                        }
+                        else
+                        {
+                            pat.Dept_Token = 0;
+                        }
+
                         pat.Created_By = Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId) ? userId : Guid.Empty;
                         pat.Created_Time = DateTime.Now;
                         pat.Entry_Date = DateTime.Now;
@@ -2505,5 +2521,18 @@ namespace PMS.Modules.PatientManagement
             public int Actual_Fees { get; set; }
             public string Remarks { get; set; }
         }
+
+        [WebMethod]
+        public static int GetDepartmentTokenCount(string departmentId)
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                return db.Patients.Count(p =>
+                    p.Created_Time.HasValue &&
+                    p.Created_Time.Value.Date == DateTime.Now.Date &&
+                    p.Patient_Main_Category == departmentId) + 1;
+            }
+        }
     }
+
 }

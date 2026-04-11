@@ -2792,7 +2792,7 @@ function LoadLabResultrpt() {
                 url: 'NewOutPatient.aspx/getpharmacyitems',
                 method: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ searchString: searchValue || '' }), // Send empty string if searchValue is falsy
+                data: JSON.stringify({ searchString: searchValue || '' }),
                 success: function (response) {
                     try {
                         var pharmacyItems = JSON.parse(response.d);
@@ -2800,21 +2800,29 @@ function LoadLabResultrpt() {
                             html = '<div style="padding: 10px; color: #666; font-style: italic;">No items found</div>';
                         } else {
                             $.each(pharmacyItems, function (key, value) {
+                                var stockColor = value.TotalStock > 0 ? '#28a745' : '#dc3545';
+                                var stockText = value.TotalStock > 0 ? 'Stock: ' + value.StockDisplay : 'Out of Stock';
+
                                 html += '<div class="Medicene-row" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer;" ' +
-                                    'onclick="ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\')">' +
-                                    '<div style="display: flex; align-items: center;">' +
+                                    'onclick="ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\', false, {}, ' + (value.TotalStock || 0) + ')">' +
+                                    '<div style="display: flex; align-items: center; flex: 1;">' +
                                     '<input style="display:none" type="checkbox" id="Medicenechk_' + value.Item_Code + '" class="Medicene-checkbox" ' +
                                     'style="margin-right: 8px; cursor: pointer;">' +
                                     '<label class="Medicene-label" for="Medicenechk_' + value.Item_Code + '" ' +
-                                    'style="margin-left: 8px; font-size: 14px; color: #333; cursor: pointer;">' +
+                                    'style="margin-left: 8px; font-size: 14px; color: #333; cursor: pointer; flex: 1;">' +
                                     value.Description +
                                     '</label>' +
                                     '</div>' +
+                                    '<div style="display: flex; align-items: center; gap: 10px;">' +
+                                    '<span style="font-size: 12px; color: ' + stockColor + '; font-weight: 500; min-width: 80px; text-align: right;">' +
+                                    stockText +
+                                    '</span>' +
                                     '<button type="button" class="Medicene-dropdown-btn" ' +
-                                    'onclick="event.stopPropagation(); ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\')" ' +
+                                    'onclick="event.stopPropagation(); ShowMediceneDetails(\'' + value.Item_Code + '\', \'' + value.Description.replace(/'/g, "\\'") + '\', false, {}, ' + (value.TotalStock || 0) + ')" ' +
                                     'style="background: none; border: none; cursor: pointer; padding: 2px 8px; margin-left: 8px;">' +
                                     '<i class="fa fa-chevron-down" style="font-size: 12px; color: #888;"></i>' +
                                     '</button>' +
+                                    '</div>' +
                                     '</div>';
                             });
                         }
@@ -2830,7 +2838,7 @@ function LoadLabResultrpt() {
                 }
             });
         }
-        function ShowMediceneDetails(serialNo, testName, isEditMode = false, existingValues = {}) {
+        function ShowMediceneDetails(serialNo, testName, isEditMode = false, existingValues = {}, totalStock = 0) {
             $('#11').click();
             const $row = $(`#Medicenechk_${serialNo}`).closest('.Medicene-row');
             const $detailsDiv = $(`#MediceneDetails_${serialNo}`);
@@ -2852,6 +2860,11 @@ function LoadLabResultrpt() {
                     $(this).remove();
                 });
             });
+
+            // Determine stock status for display
+            var stockColor = totalStock > 0 ? '#28a745' : '#dc3545';
+            var stockStatus = totalStock > 0 ? 'In Stock' : 'Out of Stock';
+            var stockDisplay = totalStock > 0 ? totalStock.toFixed(2) : '0';
 
             const detailsHtml = `
 <div id="MediceneDetails_${serialNo}" class="Medicene-details" style="display: none; padding: 10px; background: #f5f5f5; margin-top: 5px;">
@@ -2883,12 +2896,19 @@ function LoadLabResultrpt() {
         </div>
     </div>
     
-    <!-- Third Row - 1 field -->
+    <!-- Third Row - Frequency and Stock (2 fields) -->
     <div class="row">
-        <div class="col-md-12" style="margin-bottom: 8px;">
+        <div class="col-md-6" style="margin-bottom: 8px;">
             <label style="display: block; margin-bottom: 4px; font-size: 13px;">Frequency</label>
             <select id="medicenefrequency_${serialNo}" class="form-control" style="width: 100%; padding: 5px;">
              </select>
+        </div>
+        <div class="col-md-6" style="margin-bottom: 8px;">
+            <label style="display: block; margin-bottom: 4px; font-size: 13px;">Available Stock</label>
+            <input type="text" id="availableStock_${serialNo}" class="form-control" 
+                  style="width: 100%; padding: 5px; background-color: #f8f9fa; color: ${stockColor}; font-weight: bold;"
+                  value="${stockDisplay}" readonly>
+            <small style="color: ${stockColor}; font-size: 11px;">${stockStatus}</small>
         </div>
     </div>
     
@@ -2925,7 +2945,9 @@ function LoadLabResultrpt() {
             } else {
                 $row.after(detailsHtml);
             }
+
             const $newDetailsDiv = $(`#MediceneDetails_${serialNo}`);
+
             // Populate Dose dropdown and set existing value
             PageMethods.FillDosageQty(function (Dosage) {
                 var options = '<option value="">Select Dose</option>';
@@ -2939,6 +2961,7 @@ function LoadLabResultrpt() {
                     $(`#mediceneDose_${serialNo}`).val(existingValues.dose);
                 }
             });
+
             // Populate all dropdowns and set values
             PageMethods.FillDosageDropDown(function (Dosage) {
                 var options = '<option value="">Select Dosage Form</option>';
@@ -2947,7 +2970,6 @@ function LoadLabResultrpt() {
                 });
                 $(`#mediceneDosageFrom_${serialNo}`).html(options);
 
-                // Set existing value after dropdown is populated
                 if (isEditMode && existingValues.dosageFrom) {
                     $(`#mediceneDosageFrom_${serialNo}`).val(existingValues.dosageFrom);
                 }
@@ -2960,7 +2982,6 @@ function LoadLabResultrpt() {
                 });
                 $(`#mediceneroute_${serialNo}`).html(options);
 
-                // Set existing value after dropdown is populated
                 if (isEditMode && existingValues.route) {
                     $(`#mediceneroute_${serialNo}`).val(existingValues.route);
                 }
@@ -2974,7 +2995,6 @@ function LoadLabResultrpt() {
                 });
                 $(`#medicenefrequency_${serialNo}`).html(options);
 
-                // Set existing value after dropdown is populated
                 if (isEditMode && existingValues.frequency) {
                     $(`#medicenefrequency_${serialNo}`).val(existingValues.frequency);
                 }
@@ -2987,7 +3007,6 @@ function LoadLabResultrpt() {
                 });
                 $(`#otherinstructions_${serialNo}`).html(options);
 
-                // Set existing value after dropdown is populated
                 if (isEditMode && existingValues.otherInstruction) {
                     $(`#otherinstructions_${serialNo}`).val(existingValues.otherInstruction);
                 }
@@ -3007,10 +3026,10 @@ function LoadLabResultrpt() {
             $newDetailsDiv.slideDown(300, function () {
                 $(`#mediceneDose_${serialNo}`).focus();
             });
+
             // Toggle chevron icon
             $icon.toggleClass('fa-chevron-down fa-chevron-up');
         }
-
 
 
         function deleteMedicine(AnchorTag) {
@@ -4704,7 +4723,7 @@ function LoadLabResultrpt() {
                 </div>
                 <div class="col-lg-10">
                     <div style="display: flex; justify-content: flex-end;">
-                        <input type="button" class="btn btn-primry" value="History" onclick="ShowHistory()" />
+                        <input type="button" class="btn btn-primry" value="EMR" onclick="ShowHistory()" />
                         <input type="button" class="btn btn-primry" value="Queue" onclick="openQueue()" />
                         <label class="mybutton2-wrapper">
                             <input type="checkbox" id="DischargeCheckBox" onchange="toggleDischarge(this)" />
