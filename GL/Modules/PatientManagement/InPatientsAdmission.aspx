@@ -6867,7 +6867,7 @@
             <!-- jQuery UI Tabs Structure -->
             <div id="ReferTabsContainer" style="padding: 10px;">
                 <ul>
-                    <li><a href="#TabExistingReferrals">Existing Referrals</a></li>
+                    <li><a href="#TabExistingReferrals">Emergency Refer</a></li>
                     <li><a href="#TabOPDRefer">OPD Refer</a></li>
                 </ul>
 
