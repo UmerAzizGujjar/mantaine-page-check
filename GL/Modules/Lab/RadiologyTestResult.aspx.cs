@@ -2120,7 +2120,17 @@ namespace PMS.Modules.Lab
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
-
+        [WebMethod]
+        public static string GetReportToCall()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Radiology Reporting"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
 
         [WebMethod]
         public static string GetDynamicReportHTML(string Test_IDs, string Trans_IDs, int Patient_ID, string Bill_Details_IDs)
