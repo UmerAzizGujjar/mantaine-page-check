@@ -1658,7 +1658,9 @@ namespace PMS.Modules.PatientManagement
                                           where d.Emp_ID == Convert.ToInt32(p.Doctor_ID)
                                           select d.Emp_Name).FirstOrDefault(),
                             Department = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
-                            FilterClinic = db.GetDataValueName("Filter Clinic", p.filter_clinic),
+                            //FilterClinic = db.GetDataValueName("Filter Clinic", p.filter_clinic),
+                            Dep_token= p.Dept_Token,
+                            doc_token= p.Doc_Token,
                             Gender = db.GetDataValueName("Gender", p.Gender),
                             p.Created_Time,
                             u.UserName,
@@ -1670,13 +1672,14 @@ namespace PMS.Modules.PatientManagement
                                         where op.Patient_ID == p.Patient_ID
                                         && op.Doctor_ID != null && op.Doctor_ID != ""
                                         select op.Doctor_ID).FirstOrDefault()),
-                            Token_No = (from t in db.Patients
-                                        where t.Patient_ID < p.Patient_ID
-                                           && t.Created_Time.Value.Date == p.Created_Time.Value.Date
-                                           && t.Created_Time.Value.Month == p.Created_Time.Value.Month
-                                           && t.Created_Time.Value.Year == p.Created_Time.Value.Year
-                                           && t.Patient_Main_Category == p.Patient_Main_Category
-                                        select t).Count() + 1
+                            //Token_No = (from t in db.Patients
+                            //            where t.Patient_ID < p.Patient_ID
+                            //               && t.Created_Time.Value.Date == p.Created_Time.Value.Date
+                            //               && t.Created_Time.Value.Month == p.Created_Time.Value.Month
+                            //               && t.Created_Time.Value.Year == p.Created_Time.Value.Year
+                            //               && t.Patient_Main_Category == p.Patient_Main_Category
+                            //            select t).Count() + 1
+                            Token_No = p.Doc_Token
                         });
 
             if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "" && doc_name == "")
