@@ -59,7 +59,7 @@ namespace PMS.Modules.Billing
                 try
                 {
                     int billNo = Convert.ToInt32(Bill_No);
-                    var pat = db.spGetIPD_Distribution(billNo).ToList();
+                    var pat = db.spGetIPD_Distribution(Bill_No).ToList();
                     return (new JavaScriptSerializer().Serialize(pat));
                 }
                 catch (Exception ex)
