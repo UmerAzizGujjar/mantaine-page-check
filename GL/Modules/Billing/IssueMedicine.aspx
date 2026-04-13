@@ -1687,7 +1687,9 @@
                     var NtAmt = (Amount * Qty);
                     TDis = DisAmt;
                     $(value).find('input[name="DisAmount"]').val(DisAmt.toFixed(0));
-                    NetAmount = (Amount * Qty) - DisAmt;
+                    var disafterFixed = parseInt(DisAmt.toFixed(0)) || 0;
+                    NetAmount = (Amount * Qty) - disafterFixed;
+                    //NetAmount = (Amount * Qty) - DisAmt;
                     $($(value).find('td')[11]).text(NetAmount.toFixed(0));
                 }
                 if (parseInt(TDis) >= NtAmt && NegQty == false) {
@@ -2993,6 +2995,7 @@
                     console.log("Error fetching stock: " + error);
                 }
             });
+            CalculateSummarieDiscountPerWise(rowIndex);
         }
         function SearchPop() {
             debugger;

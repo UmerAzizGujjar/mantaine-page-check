@@ -1457,7 +1457,6 @@
                         <label for="lblfollowup" class="ml-2">Follow Up</label>
                         <span id="follow_up"></span>
                     </div>
-                    <
                 </div>
             </div>
         </div>
