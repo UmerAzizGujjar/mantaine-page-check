@@ -67,6 +67,22 @@ namespace PMS.Modules.PatientManagement
             return new JavaScriptSerializer().Serialize(availableDates);
         }
         [WebMethod]
+        public static string GetSidebarPolicy()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var policies = (from data in db.company_opd_policies
+                                where data.field_name.StartsWith("OutPatient_")
+                                && data.is_enabled == true
+                                select data.field_name).ToList();
+
+                // This removes "OutPatient_" and returns the rest (e.g., "primary_diagnosis")
+                var result = policies.Select(x => x.Substring(x.IndexOf('_') + 1)).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+        [WebMethod]
         public static string GetSharingPolicy()
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());

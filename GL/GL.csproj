@@ -363,6 +363,7 @@
     <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OldOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OPD.aspx" />
+    <Content Include="Modules\PatientManagement\OutPatientPolicy.aspx" />
     <Content Include="Modules\PatientManagement\OPDPolicy.aspx" />
     <Content Include="Modules\PatientManagement\OPDView.aspx" />
     <Content Include="Modules\PatientManagement\OPDDischarge.aspx" />
@@ -26978,6 +26979,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD.aspx.designer.cs">
       <DependentUpon>OPD.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OutPatientPolicy.aspx.cs">
+      <DependentUpon>OutPatientPolicy.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OutPatientPolicy.aspx.designer.cs">
+      <DependentUpon>OutPatientPolicy.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\OPDPolicy.aspx.cs">
       <DependentUpon>OPDPolicy.aspx</DependentUpon>

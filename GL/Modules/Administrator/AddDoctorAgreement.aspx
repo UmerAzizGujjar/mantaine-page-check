@@ -27,6 +27,8 @@
                 $("#btnValue").hide();
             }
             $('select').select2();
+            initDocShareEnhancement();
+            observeAgreementTables();
 
         });
         $(function () {
@@ -53,187 +55,195 @@
             window.location = "DoctorAgreementView.aspx";
         }
 
+        var docShareTabConfig = [
+            { table: '#tblResult_Opd', dropdown: '#discount_Opd', amount: '#docShareAmt_Opd', percent: '#docSharePer_Opd' },
+            { table: '#tblResult', dropdown: '#discount_lab', amount: '#docShareAmt_lab', percent: '#docSharePer_lab' },
+            { table: '#tblResults', dropdown: '#discount_xray', amount: '#docShareAmt_xray', percent: '#docSharePer_xray' },
+            { table: '#tblResult_ultra', dropdown: '#discount_ultra', amount: '#docShareAmt_ultra', percent: '#docSharePer_ultra' },
+            { table: '#tblResult_ctscan', dropdown: '#discount', amount: '#docShareAmt_ctscan', percent: '#docSharePer_ctscan' },
+            { table: '#tblResult_bloodbank', dropdown: '#discount_blood', amount: '#docShareAmt_blood', percent: '#docSharePer_blood' },
+            { table: '#tblResult_mri', dropdown: '#discount_mir', amount: '#docShareAmt_mri', percent: '#docSharePer_mri' },
+            { table: '#tblResult_services', dropdown: '#discount_service', amount: '#docShareAmt_service', percent: '#docSharePer_service' }
+        ];
 
-        function ddldiscount() {
-            debugger;
-            var ddlsDisc = parseFloat($('#discount').val()) || 0;
-            var rows = $('table#tblResult_ctscan tbody tr');
-            if (rows.length === 0) {
-                return; // Exit the function if no rows
+        function safeNumber(value) {
+            var n = parseFloat(value);
+            return isNaN(n) ? 0 : n;
+        }
+
+        function ensureSharePercentageColumn(tableSelector) {
+            var table = $(tableSelector);
+            if (table.find('thead th.doc-share-per-header').length === 0) {
+                table.find('thead tr th').each(function () {
+                    if ($(this).text().trim() === 'Net Amount') {
+                        $('<th class="doc-share-per-header">Doc_Share %</th>').insertAfter($(this));
+                        return false;
+                    }
+                });
             }
-
-            rows.each(function () {
-                debugger;
-                var test_rate_ctscan = parseFloat($(this).find('input[name="txtrate"]').val()) || 0;
-                var disc_test_ctscan = parseFloat($(this).find('input[name="txtdiscount"]').val()) || 0;
-                var Dis_amt = Math.round((test_rate_ctscan * disc_test_ctscan) / 100);
-                var amt = test_rate_ctscan - Dis_amt;
-                var calc_test_rate_ct_doc = Math.round((amt * ddlsDisc) / 100);
-                var calc_test_rate_ct_hos = amt - calc_test_rate_ct_doc;
-                $(this).find('input[name="txtnetamount"]').val(amt.toFixed(2));
-                $(this).find('input[name="Txtdocshare"]').val(calc_test_rate_ct_doc.toFixed(2));
-                $(this).find('input[name="Txthocshare"]').val(calc_test_rate_ct_hos.toFixed(2));
+            table.find('tbody tr').each(function () {
+                var row = $(this);
+                if (row.find('input[name="Txtdocshareper"]').length === 0) {
+                    var docCell = row.find('input[name="Txtdocshare"]').closest('td');
+                    if (docCell.length > 0) {
+                        $('<td><input type="text" name="Txtdocshareper" id="Txtdocshareper" onchange="hosp_doc_per(this);" value="0" /></td>').insertBefore(docCell);
+                    }
+                }
             });
         }
 
-        function ddldiscount_Opd() {
-            debugger;
-            var ddlsDisc = parseFloat($('#discount_Opd').val()) || 0;
-
-            var rows = $('table#tblResult_Opd tbody tr');
-            if (rows.length === 0) {
-                return; // Exit the function if no rows
+        function syncRowFromAmount(row, keepAsIsWhenAmountGreater) {
+            var netAmount = safeNumber(row.find('input[name="txtnetamount"]').val());
+            var docShareInput = row.find('input[name="Txtdocshare"]');
+            var hosShareInput = row.find('input[name="Txthocshare"]');
+            var perInput = row.find('input[name="Txtdocshareper"]');
+            var docShare = safeNumber(docShareInput.val());
+            if (keepAsIsWhenAmountGreater && docShare > netAmount) {
+                return;
             }
-            rows.each(function () {
-                debugger;
-                var test_rate_opd = parseFloat($(this).find('input[name="txtrate"]').val()) || 0;
-                var disc_test_opd = parseFloat($(this).find('input[name="txtdiscount"]').val()) || 0;
-                var Dis_amt = Math.round((test_rate_opd * disc_test_opd) / 100);
-                var amt = test_rate_opd - Dis_amt;
-                var calc_test_rate_opd_doc = Math.round((amt * ddlsDisc) / 100);
-                var calc_test_rate_opd_hos = amt - calc_test_rate_opd_doc;
-                $(this).find('input[name="txtnetamount"]').val(amt.toFixed(2));
-                $(this).find('input[name="Txtdocshare"]').val(calc_test_rate_opd_doc.toFixed(2));
-                $(this).find('input[name="Txthocshare"]').val(calc_test_rate_opd_hos.toFixed(2));
+            if (docShare > netAmount) {
+                docShare = netAmount;
+            }
+            if (docShare < 0) {
+                docShare = 0;
+            }
+            var hosShare = netAmount - docShare;
+            var sharePer = netAmount > 0 ? (docShare * 100 / netAmount) : 0;
+            docShareInput.val(docShare.toFixed(2));
+            hosShareInput.val(hosShare.toFixed(2));
+            perInput.val(sharePer.toFixed(2));
+        }
+
+        function syncRowFromPercentage(row) {
+            var netAmount = safeNumber(row.find('input[name="txtnetamount"]').val());
+            var perInput = row.find('input[name="Txtdocshareper"]');
+            var docShareInput = row.find('input[name="Txtdocshare"]');
+            var hosShareInput = row.find('input[name="Txthocshare"]');
+            var per = safeNumber(perInput.val());
+            if (per < 0) per = 0;
+            if (per > 100) per = 100;
+            var docShare = (netAmount * per) / 100;
+            var hosShare = netAmount - docShare;
+            perInput.val(per.toFixed(2));
+            docShareInput.val(docShare.toFixed(2));
+            hosShareInput.val(hosShare.toFixed(2));
+        }
+
+        function applyDocShareAmountToTable(tableSelector, amount) {
+            ensureSharePercentageColumn(tableSelector);
+            var enteredAmount = safeNumber(amount);
+            $(tableSelector + ' tbody tr').each(function () {
+                var row = $(this);
+                var netAmount = safeNumber(row.find('input[name="txtnetamount"]').val());
+                if (enteredAmount > netAmount) {
+                    row.find('input[name="Txtdocshare"]').val('0');
+                    syncRowFromAmount(row, false);
+                    return;
+                }
+                row.find('input[name="Txtdocshare"]').val(enteredAmount.toFixed(2));
+                syncRowFromAmount(row, true);
             });
+        }
+
+        function applyDocSharePercentageToTable(tableSelector, percentage) {
+            ensureSharePercentageColumn(tableSelector);
+            var per = safeNumber(percentage);
+            $(tableSelector + ' tbody tr').each(function () {
+                var row = $(this);
+                row.find('input[name="Txtdocshareper"]').val(per);
+                syncRowFromPercentage(row);
+            });
+        }
+
+        function addDocShareInputsNearDropdown(cfg) {
+            if ($(cfg.amount).length > 0) {
+                return;
+            }
+            var wrapper = $('<div class="doc-share-extra-inputs" style="margin-top:4px;"></div>');
+            wrapper.append('<input type="text" id="' + cfg.amount.replace('#', '') + '" placeholder="Doc Share Amt" style="width:92px;margin-right:4px;" />');
+            $(cfg.dropdown).after(wrapper);
+            $(document).on('keyup change', cfg.amount, function () {
+                applyDocShareAmountToTable(cfg.table, $(this).val());
+            });
+            $(document).on('keyup change', cfg.percent, function () {
+                applyDocSharePercentageToTable(cfg.table, $(this).val());
+            });
+        }
+
+        function initDocShareEnhancement() {
+            $.each(docShareTabConfig, function (_, cfg) {
+                addDocShareInputsNearDropdown(cfg);
+                ensureSharePercentageColumn(cfg.table);
+            });
+        }
+
+        function observeAgreementTables() {
+            $.each(docShareTabConfig, function (_, cfg) {
+                var target = $(cfg.table + ' tbody').get(0);
+                if (!target || target._docObserverAttached) {
+                    return;
+                }
+                var observer = new MutationObserver(function () {
+                    ensureSharePercentageColumn(cfg.table);
+                    $(cfg.table + ' tbody tr').each(function () {
+                        syncRowFromAmount($(this), false);
+                    });
+                });
+                observer.observe(target, { childList: true });
+                target._docObserverAttached = true;
+            });
+        }
+
+
+        function ddldiscount() {
+            var ddlsDisc = parseFloat($('#discount').val()) || 0;
+            $('#docSharePer_ctscan').val(ddlsDisc);
+            applyDocSharePercentageToTable('#tblResult_ctscan', ddlsDisc);
+        }
+
+        function ddldiscount_Opd() {
+            var ddlsDisc = parseFloat($('#discount_Opd').val()) || 0;
+            $('#docSharePer_Opd').val(ddlsDisc);
+            applyDocSharePercentageToTable('#tblResult_Opd', ddlsDisc);
         }
 
 
         function ddldiscount_lab() {
-            debugger;
             var ddlsDisc_lab = parseFloat($('#discount_lab').val()) || 0;
-
-            var rows = $('table#tblResult tbody tr');
-            if (rows.length === 0) {
-                return; // Exit the function if no rows
-            }
-            rows.each(function () {
-                debugger;
-                var test_rate = parseFloat($(this).find('input[name="txtrate"]').val()) || 0;
-                var disc_test = parseFloat($(this).find('input[name="txtdiscount"]').val()) || 0;
-                var Dis_amt = Math.round((test_rate * disc_test) / 100);
-                var amt = test_rate - Dis_amt;
-
-                var doc_per_amt = Math.round((amt * ddlsDisc_lab) / 100);
-                var cal_hos = amt - doc_per_amt;
-                $(this).find('input[name="txtnetamount"]').val(amt.toFixed(2));
-                $(this).find('input[name="Txtdocshare"]').val(doc_per_amt.toFixed(2));
-                $(this).find('input[name="Txthocshare"]').val(cal_hos.toFixed(2));
-            });
+            $('#docSharePer_lab').val(ddlsDisc_lab);
+            applyDocSharePercentageToTable('#tblResult', ddlsDisc_lab);
         }
 
         function ddldiscount_xray() {
-            debugger;
             var ddlsDisc_xray = parseFloat($('#discount_xray').val()) || 0;
-
-            var rows = $('table#tblResults tbody tr');
-            if (rows.length === 0) {
-                return;
-            }
-            rows.each(function () {
-                debugger;
-                var test_rate = parseFloat($(this).find('input[name="txtrate"]').val()) || 0;
-                var calc_test_rate_doc = Math.round((test_rate * ddlsDisc_xray) / 100);
-                var total_amt_test_hos = test_rate - calc_test_rate_doc;
-                $(this).find('input[name="txtnetamount"]').val(test_rate.toFixed(2));
-                $(this).find('input[name="Txtdocshare"]').val(calc_test_rate_doc.toFixed(2));
-                $(this).find('input[name="Txthocshare"]').val(total_amt_test_hos.toFixed(2));
-            });
+            $('#docSharePer_xray').val(ddlsDisc_xray);
+            applyDocSharePercentageToTable('#tblResults', ddlsDisc_xray);
         }
 
 
         function ddldiscount_ultra() {
-            debugger;
             var ddlsDiscs = parseFloat($('#discount_ultra').val()) || 0;
-
-            var rows = $('table#tblResult_ultra tbody tr');
-            if (rows.length === 0) {
-                return; // Exit the function if no rows
-            }
-            rows.each(function () {
-                debugger;
-                var test_rate_ultra_hos = parseFloat($(this).find('input[name="txtrate"]').val()) || 0;
-                var disc_test_utlra = parseFloat($(this).find('input[name="txtdiscount"]').val()) || 0;
-                var Dis_amt = Math.round((test_rate_ultra_hos * disc_test_utlra) / 100);
-                var amt = test_rate_ultra_hos - Dis_amt;
-
-                var calc_test_rate_ultra_doc = Math.round((amt * ddlsDiscs) / 100);
-                var calc_test_rate_ultra_hos = amt - calc_test_rate_ultra_doc;
-                $(this).find('input[name="txtnetamount"]').val(amt.toFixed(2));
-                $(this).find('input[name="Txtdocshare"]').val(calc_test_rate_ultra_doc.toFixed(2));
-                $(this).find('input[name="Txthocshare"]').val(calc_test_rate_ultra_hos.toFixed(2));
-            });
+            $('#docSharePer_ultra').val(ddlsDiscs);
+            applyDocSharePercentageToTable('#tblResult_ultra', ddlsDiscs);
         }
 
         function ddldiscount_mir() {
-            debugger;
-            var ddlsDiscs = $('#discount_mir').val() || 0;
-
-            debugger;
-            var rows = $('table#tblResult_mri tbody tr');
-            if (rows.length === 0) {
-                return; // Exit the function if no rows
-            }
-            rows.each(function () {
-                var test_rate_mir_hos = parseFloat($(this).find('input[name="txtrate"]').val()) || 0;
-                var disc_test_utlra = parseFloat($(this).find('input[name="txtdiscount"]').val()) || 0;
-                var Dis_amt = Math.round((test_rate_mir_hos * disc_test_utlra) / 100);
-                var amt = test_rate_mir_hos - Dis_amt;
-
-                var calc_test_rate_mir_doc = Math.round((amt * ddlsDiscs) / 100);
-                var calc_test_rate_mir_hos = amt - calc_test_rate_mir_doc;
-                $(this).find('input[name="txtnetamount"]').val(amt.toFixed(2));
-                $(this).find('input[name="Txtdocshare"]').val(calc_test_rate_mir_doc.toFixed(2));
-                $(this).find('input[name="Txthocshare"]').val(calc_test_rate_mir_hos.toFixed(2));
-            });
+            var ddlsDiscs = parseFloat($('#discount_mir').val()) || 0;
+            $('#docSharePer_mri').val(ddlsDiscs);
+            applyDocSharePercentageToTable('#tblResult_mri', ddlsDiscs);
         }
 
 
         function ddldiscount_blood() {
-            debugger;
             var ddlsDisc_blood = parseFloat($('#discount_blood').val()) || 0;
-
-            var rows = $('table#tblResult_bloodbank tbody tr');
-            if (rows.length === 0) {
-                return; // Exit the function if no rows
-            }
-            rows.each(function () {
-                debugger;
-                var test_rate_bld = parseFloat($(this).find('input[name="txtrate"]').val()) || 0;
-                var disc_test = parseFloat($(this).find('input[name="txtdiscount"]').val()) || 0;
-                var Dis_amt = Math.round((test_rate_bld * disc_test) / 100);
-                var amt = test_rate_bld - Dis_amt;
-
-                var calc_test_rate_doc = Math.round((amt * ddlsDisc_blood) / 100);
-                var calc_test_rate_hos = amt - calc_test_rate_doc;
-                $(this).find('input[name="txtnetamount"]').val(amt.toFixed(2));
-                $(this).find('input[name="Txtdocshare"]').val(calc_test_rate_doc.toFixed(2));
-                $(this).find('input[name="Txthocshare"]').val(calc_test_rate_hos.toFixed(2));
-            });
+            $('#docSharePer_blood').val(ddlsDisc_blood);
+            applyDocSharePercentageToTable('#tblResult_bloodbank', ddlsDisc_blood);
         }
 
         function ddldiscount_service() {
-            debugger;
             var ddlsDisc_service = parseFloat($('#discount_service').val()) || 0;
-
-            var rows = $('table#tblResult_services tbody tr');
-            if (rows.length === 0) {
-                return; // Exit the function if no rows
-            }
-            rows.each(function () {
-                debugger;
-                var test_rate_ser = parseFloat($(this).find('input[name="txtrate"]').val()) || 0;
-                var disc_test = parseFloat($(this).find('input[name="txtdiscount"]').val()) || 0;
-
-                var Dis_amt = Math.round((test_rate_ser * disc_test) / 100);
-                var amt = test_rate_ser - Dis_amt;
-
-                var calc_ser_doc = Math.round((amt * ddlsDisc_service) / 100);
-                var calc_ser_hos = amt - calc_ser_doc;
-                $(this).find('input[name="txtnetamount"]').val(amt.toFixed(2));
-                $(this).find('input[name="Txtdocshare"]').val(calc_ser_doc.toFixed(2));
-                $(this).find('input[name="Txthocshare"]').val(calc_ser_hos.toFixed(2));
-            });
+            $('#docSharePer_service').val(ddlsDisc_service);
+            applyDocSharePercentageToTable('#tblResult_services', ddlsDisc_service);
         }
 
         //validation for persentage
@@ -517,8 +527,9 @@
                     var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
                     var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
                     var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    var txt_Doc_share_percentage = $($(value).find('td input[name=Txtdocshareper]')[0]).val() || 0;
                     save_opd.push({
-                        hdn_test_id: hdn_test_id, txtdep: txtdep, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                        hdn_test_id: hdn_test_id, txtdep: txtdep, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share, txt_Doc_share_percentage: txt_Doc_share_percentage
                     });
                 });
             }
@@ -536,8 +547,9 @@
                     var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
                     var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
                     var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    var txt_Doc_share_percentage = $($(value).find('td input[name=Txtdocshareper]')[0]).val() || 0;
                     Save_list.push({
-                        hdn_test_id: hdn_test_id, txtdep: txtdep, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                        hdn_test_id: hdn_test_id, txtdep: txtdep, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share, txt_Doc_share_percentage: txt_Doc_share_percentage
                     });
                 });
             }
@@ -555,8 +567,9 @@
                     var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
                     var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
                     var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    var txt_Doc_share_percentage = $($(value).find('td input[name=Txtdocshareper]')[0]).val() || 0;
                     save_xray.push({
-                        hdn_test_id: hdn_test_id, txtdep_xray: txtdep_xray, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                        hdn_test_id: hdn_test_id, txtdep_xray: txtdep_xray, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share, txt_Doc_share_percentage: txt_Doc_share_percentage
                     });
                 });
             }
@@ -574,8 +587,9 @@
                     var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
                     var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
                     var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    var txt_Doc_share_percentage = $($(value).find('td input[name=Txtdocshareper]')[0]).val() || 0;
                     save_ultra.push({
-                        hdn_test_id: hdn_test_id, txtdep_ultra: txtdep_ultra, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                        hdn_test_id: hdn_test_id, txtdep_ultra: txtdep_ultra, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share, txt_Doc_share_percentage: txt_Doc_share_percentage
                     });
                 });
             }
@@ -593,8 +607,9 @@
                     var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
                     var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
                     var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    var txt_Doc_share_percentage = $($(value).find('td input[name=Txtdocshareper]')[0]).val() || 0;
                     save_Ct_Scan.push({
-                        hdn_test_id: hdn_test_id, txtdep_ctscan: txtdep_ctscan, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                        hdn_test_id: hdn_test_id, txtdep_ctscan: txtdep_ctscan, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share, txt_Doc_share_percentage: txt_Doc_share_percentage
                     });
                 });
             }
@@ -612,8 +627,9 @@
                     var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
                     var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
                     var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    var txt_Doc_share_percentage = $($(value).find('td input[name=Txtdocshareper]')[0]).val() || 0;
                     save_blood_bank.push({
-                        hdn_test_id: hdn_test_id, txtdep_bloodbank: txtdep_bloodbank, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                        hdn_test_id: hdn_test_id, txtdep_bloodbank: txtdep_bloodbank, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share, txt_Doc_share_percentage: txt_Doc_share_percentage
                     });
                 });
             }
@@ -631,8 +647,9 @@
                     var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
                     var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
                     var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    var txt_Doc_share_percentage = $($(value).find('td input[name=Txtdocshareper]')[0]).val() || 0;
                     save_mri.push({
-                        hdn_test_id: hdn_test_id, txtdep_mir: txtdep_mir, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                        hdn_test_id: hdn_test_id, txtdep_mir: txtdep_mir, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share, txt_Doc_share_percentage: txt_Doc_share_percentage
                     });
                 });
             }
@@ -650,8 +667,9 @@
                     var Net_amount = $($(value).find('td input[name=txtnetamount]')[0]).val();
                     var txt_Doc_share = $($(value).find('td input[name=Txtdocshare]')[0]).val();
                     var txt_hos_share = $($(value).find('td input[name=Txthocshare]')[0]).val();
+                    var txt_Doc_share_percentage = $($(value).find('td input[name=Txtdocshareper]')[0]).val() || 0;
                     save_Services.push({
-                        hdn_test_id: hdn_test_id, hdn_services: hdn_services, txtdep_bloodbank: txtdep_bloodbank, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share
+                        hdn_test_id: hdn_test_id, hdn_services: hdn_services, txtdep_bloodbank: txtdep_bloodbank, Description: Description, hdn_agremntTypeId: hdn_agremntTypeId, hdn_agremntDeptId: hdn_agremntDeptId, test_Rate: test_Rate, Discount: Discount, Net_amount: Net_amount, txt_Doc_share: txt_Doc_share, txt_hos_share: txt_hos_share, txt_Doc_share_percentage: txt_Doc_share_percentage
                     });
                 });
             }
@@ -671,6 +689,8 @@
             var percent = (test_rate * discamount) / 100;
             var totalnet = test_rate - percent;
             $(row).closest('tr').find('td input[name=txtnetamount]').val(totalnet);
+            ensureSharePercentageColumn('#' + $(row).closest('table').attr('id'));
+            syncRowFromAmount($(row).closest('tr'), false);
 
             var ddlsDiscdiscount = parseFloat($('#discount').val()) || 0;
             if (ddlsDiscdiscount > 0) {
@@ -712,11 +732,12 @@
         debugger;
         function hosp_doc(row) {
             debugger;
-            var doc_share = $(row).closest('tr').find('td input[name=Txtdocshare]').val();
-            var hos_share = $(row).closest('tr').find('td input[name=Txthocshare]').val();
-            var txtnetamount = $(row).closest('tr').find('td input[name=txtnetamount]').val();
-            var dfltamount = txtnetamount - doc_share;
-            $(row).closest('tr').find('td input[name=Txthocshare]').val(dfltamount);
+            syncRowFromAmount($(row).closest('tr'), false);
+        }
+
+        function hosp_doc_per(row) {
+            debugger;
+            syncRowFromPercentage($(row).closest('tr'));
         }
 
         $(document).ready(function () {
