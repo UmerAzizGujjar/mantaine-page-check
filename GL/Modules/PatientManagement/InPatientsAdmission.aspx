@@ -6632,6 +6632,11 @@
 
         
         function AllowBirthCertificate() {
+            if (!$("#tabs").hasClass("ui-tabs")) {
+                setTimeout(AllowBirthCertificate, 200);
+                return;
+            }
+
             $.ajax({
                 type: "POST",
                 url: "InPatientsAdmission.aspx/CheckBirthCertificateTab",
@@ -6641,16 +6646,43 @@
                 async: true,
                 success: function (data) {
                     var result = data.d;
+
+                    var $tab1Header = $('#ui-id-1'); 
+                    var $tab2Header = $('#ui-id-2'); 
+                    var $tab3Header = $('#ui-id-3'); 
+
+                    var $tab1Panel = $('#Tab-1');
+                    var $tab2Panel = $('#Tab-NextOfKin');
+                    var $tab3Panel = $('#Tab-14');
+
                     if (result === true || result === "true") {
-                        $('#ui-id-3').show();
+                        $tab1Header.hide();
+                        $tab2Header.hide();
+                        $tab3Header.show();
+                        $tab1Panel.hide();
+                        $tab2Panel.hide();
+                        $tab3Panel.show();
+                        $("#tabs").tabs("option", "active", $("#tabs").tabs("option", "panels").index($tab3Panel[0]));
+
+                    } else {
+                        $tab1Header.show();
+                        $tab2Header.show();
+                        $tab3Header.hide();
+                        $tab1Panel.show();
+                        $tab2Panel.show();
+                        $tab3Panel.hide();
+                        $("#tabs").tabs("option", "active", 0);
                     }
-                    else {
-                        $('#ui-id-3').hide();
-                    }
+                    $("#tabs").tabs("refresh");
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error checking death details:", error);
-                    $('#Tab-11').hide();
+                    console.error("Error checking birth certificate tab:", error);
+                    $('#ui-id-1, #ui-id-2').show();
+                    $('#ui-id-3').hide();
+                    $('#Tab-1, #Tab-NextOfKin').show();
+                    $('#Tab-14').hide();
+                    $("#tabs").tabs("option", "active", 0);
+                    $("#tabs").tabs("refresh");
                 }
             });
         }
