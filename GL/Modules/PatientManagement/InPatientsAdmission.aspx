@@ -54,7 +54,7 @@
 
             $('#btnsaveprint').click(function () {
 
-  
+
 
                 $("#ctl00_MainContent_panelshow").hide();
             });
@@ -71,6 +71,8 @@
 
             });
             debugger;
+
+            AllowBirthCertificate();
 
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_txtCNIC'),
@@ -244,18 +246,18 @@
             });
             fillmartial();
             fillgender();
-            fillBirthGender(function() {
-            fillBirthType(function() {
-                fillReligion(function() {
-                    fillProvince(function() {
-                        fillNationality(function() {
-                            if ($('#ctl00_MainContent_txtIn_Patient_ID').val() != '(New)') {
-                                LoadBirthCertificateData();
-                            }
+            fillBirthGender(function () {
+                fillBirthType(function () {
+                    fillReligion(function () {
+                        fillProvince(function () {
+                            fillNationality(function () {
+                                if ($('#ctl00_MainContent_txtIn_Patient_ID').val() != '(New)') {
+                                    LoadBirthCertificateData();
+                                }
+                            });
                         });
                     });
                 });
-            });
 
 
                 $('#ddl_name').off('change').on('change', function () {
@@ -274,19 +276,31 @@
                         }
                     }, 300);
                 });
-        });
+            });
             // Initialize birth certificate date pickers
-            $("#ctl00_MainContent_txtBirthDate").datepicker({ dateFormat: 'mm/dd/yy' });
+          //  $("#ctl00_MainContent_txtBirthDate").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#ctl00_MainContent_txtBirthTime").datetimepicker({
                 format: 'h:i A',
                 step: 15
             });
 
             // Set registration date to current date
-            $("#ctl00_MainContent_txtBirthRegDate").val(new Date().toLocaleDateString('en-US'));
+            //$("#ctl00_MainContent_txtBirthRegDate").val(new Date().toLocaleDateString('en-US'));
 
-            // Generate registration number
-            var regNumber = 'B-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            $("#ctl00_MainContent_txtBirthRegDate").datepicker({
+                dateFormat: "mm/dd/yy",
+                changeMonth: true,
+                changeYear: true
+            }).datepicker("setDate", new Date());
+
+            $("#ctl00_MainContent_txtBirthDate").datepicker({
+                dateFormat: "mm/dd/yy",
+                changeMonth: true,
+                changeYear: true
+            }).datepicker("setDate", new Date());
+
+            
+            var regNumber = 'NH-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
             $("#ctl00_MainContent_txtBirthRegNumber").val(regNumber);
             jQuery(function ($) {
                 MaskedInput({
@@ -314,6 +328,8 @@
         function GenrateCertificate() {
             debugger;
             var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+
+            
 
             // Validate required fields
             var childName = $('#ctl00_MainContent_txtBirthChildName').val();
@@ -855,6 +871,13 @@
             var PATID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
             if (PATID != "") {
                 window.open('../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + PATID);
+            }
+        }
+        function PrintGenrateCertificate() {
+            debugger;
+            var PATID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            if (PATID != "") {
+                window.open('../../ReportViewer.aspx?ReportName=Birth_Certificate&ReportTitle=Birth Certificate &Inpatient_ID=' + PATID);
             }
         }
         <%--function PrintAdmisionDetail() {
@@ -1432,13 +1455,13 @@
         }
 
         function saveAllRecord() {
-           // $('#btnSave').attr('disabled', true);
+            // $('#btnSave').attr('disabled', true);
             debugger;
             var btnsave = $('#btnSave').val();
 
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID%>").val();
 
-       
+
 
 
             var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
@@ -2020,18 +2043,18 @@
                             }
                         });
 
-                          if (isCertificateGenrate) {
+                        if (isCertificateGenrate) {
                             callNADRAAPI(response);
                         } else {
                             window.location = "InPatientsAdmission.aspx?ID=" + response;
                         }
-                
+
                         $('#btnSave').val("Update");
                     }
                     else if (btn == 'btnsaveprint') {
                         debugger;
                         window.open('ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
-                       // PrintAdmisionDetails(response);
+                        // PrintAdmisionDetails(response);
                         $('#btnSave').val("Update");
 
                     }
@@ -2039,62 +2062,62 @@
         }
 
         function callNADRAAPI(inPatientID) {
-    debugger;
-    
-    Swal.fire({
-        title: 'Sending to NADRA...',
-        text: 'Please wait while we send the birth certificate to NADRA.',
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
-    
-    $.ajax({
-        type: "POST",
-        url: "InPatientsAdmission.aspx/SendToNADRA",
-        data: JSON.stringify({ InPatientID: inPatientID }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            var result = response.d;
-            
-            if (result.startsWith("SUCCESS")) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    html: `<p>Record saved and ${result.replace("SUCCESS: ", "")}</p>`,
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    $('#genrateCerti').prop('disabled', true);
-                    $('#genrateCerti').val('Certificate Sent');
-                    window.location = "InPatientsAdmission.aspx?ID=" + inPatientID;
-                });
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Partial Success',
-                    html: `<p>Record saved successfully but NADRA submission failed.</p>
+            debugger;
+
+            Swal.fire({
+                title: 'Sending to NADRA...',
+                text: 'Please wait while we send the birth certificate to NADRA.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/SendToNADRA",
+                data: JSON.stringify({ InPatientID: inPatientID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = response.d;
+
+                    if (result.startsWith("SUCCESS")) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            html: `<p>Record saved and ${result.replace("SUCCESS: ", "")}</p>`,
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $('#genrateCerti').prop('disabled', true);
+                            $('#genrateCerti').val('Certificate Sent');
+                            window.location = "InPatientsAdmission.aspx?ID=" + inPatientID;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Partial Success',
+                            html: `<p>Record saved successfully but NADRA submission failed.</p>
                            <p>Error: ${result.replace("ERROR: ", "")}</p>
                            <p>You can try sending again later.</p>`,
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    window.location = "InPatientsAdmission.aspx?ID=" + inPatientID;
-                });
-            }
-        },
-        error: function (error) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Record Saved',
-                html: '<p>Record saved successfully but could not connect to NADRA.</p><p>Please try sending the certificate again later.</p>',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.location = "InPatientsAdmission.aspx?ID=" + inPatientID;
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location = "InPatientsAdmission.aspx?ID=" + inPatientID;
+                        });
+                    }
+                },
+                error: function (error) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Record Saved',
+                        html: '<p>Record saved successfully but could not connect to NADRA.</p><p>Please try sending the certificate again later.</p>',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location = "InPatientsAdmission.aspx?ID=" + inPatientID;
+                    });
+                }
             });
         }
-    });
-}
         function ShowDermaModel() {
             $('#myModalDerma').modal({
                 backdrop: 'static'
@@ -3282,112 +3305,112 @@
             var btnsave = $('#btnSave').val();
             var Patient_ID = $("#<%=txtPatient_ID.ClientID%>").val();
 
-           var patient_name = $('#ctl00_MainContent_vlblPatients_Name').text();
-           var patient_age = $('#ctl00_MainContent_vLbl_Age').text();
-           var patient_number = $('#ctl00_MainContent_vLbl_Contact').text();
-           var idofpat = parseInt(Patient_ID);
+            var patient_name = $('#ctl00_MainContent_vlblPatients_Name').text();
+            var patient_age = $('#ctl00_MainContent_vLbl_Age').text();
+            var patient_number = $('#ctl00_MainContent_vLbl_Contact').text();
+            var idofpat = parseInt(Patient_ID);
 
-           debugger;
-           if (btnsave == "Save" || btnsave == 'Save') {
-               debugger;
-               if (name_pat == patient_name && patient_age == age_pat && patient_number == num_pat && idofpat == parseInt(Patientid_tocheck)) {
-                   debugger;
-                   return false;
-               }
-           }
+            debugger;
+            if (btnsave == "Save" || btnsave == 'Save') {
+                debugger;
+                if (name_pat == patient_name && patient_age == age_pat && patient_number == num_pat && idofpat == parseInt(Patientid_tocheck)) {
+                    debugger;
+                    return false;
+                }
+            }
 
-           var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
-           var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
-           var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
+            var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
+            var ddlDepartment = $('#ctl00_MainContent_ddlDepartment').val();
+            var ddlDoctor = $('#ctl00_MainContent_ddlDoctor').val();
 
-           var main_department = $('#ctl00_MainContent_ddl_mainCategory').val();
-           var packagetype = $('#ctl00_MainContent_ddlpacakagetype').val();
-           var packagetypename = $('#ctl00_MainContent_ddlpacakagetype option:selected').text();
-           var packagename = $('#ctl00_MainContent_ddlpackagename').val();
-           var packagenamess = $('#ctl00_MainContent_ddlpackagename option:selected').text();
-           var ipdProcedures = $('#ctl00_MainContent_ddlipdProcedures').val();
-           var proc_name = $('#ctl00_MainContent_txtprocedurename').val();
-           var panelcompanys = $('#ctl00_MainContent_ddlpanelcompanys').val();
+            var main_department = $('#ctl00_MainContent_ddl_mainCategory').val();
+            var packagetype = $('#ctl00_MainContent_ddlpacakagetype').val();
+            var packagetypename = $('#ctl00_MainContent_ddlpacakagetype option:selected').text();
+            var packagename = $('#ctl00_MainContent_ddlpackagename').val();
+            var packagenamess = $('#ctl00_MainContent_ddlpackagename option:selected').text();
+            var ipdProcedures = $('#ctl00_MainContent_ddlipdProcedures').val();
+            var proc_name = $('#ctl00_MainContent_txtprocedurename').val();
+            var panelcompanys = $('#ctl00_MainContent_ddlpanelcompanys').val();
 
-           var txtHealth_Complaints = $('#ctl00_MainContent_txtHealth_Complaints').val();
-           var txtExpected_Discharge_Date = $('#ctl00_MainContent_txtExpected_Discharge_Date').val();
-           var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
-           var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
-           var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
+            var txtHealth_Complaints = $('#ctl00_MainContent_txtHealth_Complaints').val();
+            var txtExpected_Discharge_Date = $('#ctl00_MainContent_txtExpected_Discharge_Date').val();
+            var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
+            var ddlWard_No = $('#ctl00_MainContent_ddlWard_No').val();
+            var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
 
-           var panelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-           var CardNo = $('#ctl00_MainContent_cardno').val();
-           var Cardholdername = $('#ctl00_MainContent_txtcardHolderName').val();
-           var CompanyName = $('#ctl00_MainContent_txtcompanyname').val();
-           var Approvelimit = $('#ctl00_MainContent_txtapprovelimit').val();
-           var Roomlimit = $('#ctl00_MainContent_txtroomlimit').val();
-           var Cardlimit = $('#ctl00_MainContent_txtcardlimit').val();
-           var ApproveDays = $('#ctl00_MainContent_txtapprovedays').val();
-           var Privatecharges = $('#ctl00_MainContent_txtpvtcharges').val();
+            var panelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
+            var CardNo = $('#ctl00_MainContent_cardno').val();
+            var Cardholdername = $('#ctl00_MainContent_txtcardHolderName').val();
+            var CompanyName = $('#ctl00_MainContent_txtcompanyname').val();
+            var Approvelimit = $('#ctl00_MainContent_txtapprovelimit').val();
+            var Roomlimit = $('#ctl00_MainContent_txtroomlimit').val();
+            var Cardlimit = $('#ctl00_MainContent_txtcardlimit').val();
+            var ApproveDays = $('#ctl00_MainContent_txtapprovedays').val();
+            var Privatecharges = $('#ctl00_MainContent_txtpvtcharges').val();
 
-           var ddl_IPD_Procedure = 0;
+            var ddl_IPD_Procedure = 0;
 
-           if (typeof panelCompany == 'undefined') {
-               panelCompany = '0';
-           }
-           var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
-           var ddlRoom_No = $('#ctl00_MainContent_ddlRoom_No').val();
-           var txtRoom_Type = $('#ctl00_MainContent_txtRoom_Type').val();
+            if (typeof panelCompany == 'undefined') {
+                panelCompany = '0';
+            }
+            var txtBed_No = $('#ctl00_MainContent_txtBed_No').val();
+            var ddlRoom_No = $('#ctl00_MainContent_ddlRoom_No').val();
+            var txtRoom_Type = $('#ctl00_MainContent_txtRoom_Type').val();
 
-           var admissionType = "0";
-           var sehatCardNo = "0";
-           var visitId = "0";
+            var admissionType = "0";
+            var sehatCardNo = "0";
+            var visitId = "0";
 
-           var CardHolderName = "";
-           var InsuranceCardNo = "";
-           var PolicyHolderName = "";
-           var Sehat_Holder = "";
-           if ($('#ctl00_MainContent_ddlPatientType').val() === "12") {
-               admissionType = $('#ctl00_MainContent_ddl_AdmissionType').val();
-               sehatCardNo = $("#ctl00_MainContent_txtSehatCardNo").val();
-               visitId = $("#ctl00_MainContent_txtVisitId").val();
-               Sehat_Holder = $("#ctl00_MainContent_txtSehatHolder").val();
-           }
+            var CardHolderName = "";
+            var InsuranceCardNo = "";
+            var PolicyHolderName = "";
+            var Sehat_Holder = "";
+            if ($('#ctl00_MainContent_ddlPatientType').val() === "12") {
+                admissionType = $('#ctl00_MainContent_ddl_AdmissionType').val();
+                sehatCardNo = $("#ctl00_MainContent_txtSehatCardNo").val();
+                visitId = $("#ctl00_MainContent_txtVisitId").val();
+                Sehat_Holder = $("#ctl00_MainContent_txtSehatHolder").val();
+            }
 
-           if ($('#ctl00_MainContent_ddlPatientType').val() === "10") {
-               CardHolderName = $("#ctl00_MainContent_txtcardHolderName").val();
-               InsuranceCardNo = $("#ctl00_MainContent_txtInsuranceCardNo").val();
-               PolicyHolderName = $("#ctl00_MainContent_txtPolicyHolderName").val();
-           }
-           var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
-           var pkg = $('#ctl00_MainContent_ddlpacakagetype').val();
-           var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
-           var Discount = $('#ctl00_MainContent_txtDiscount').val();
+            if ($('#ctl00_MainContent_ddlPatientType').val() === "10") {
+                CardHolderName = $("#ctl00_MainContent_txtcardHolderName").val();
+                InsuranceCardNo = $("#ctl00_MainContent_txtInsuranceCardNo").val();
+                PolicyHolderName = $("#ctl00_MainContent_txtPolicyHolderName").val();
+            }
+            var PatientDiscountType = $('#ctl00_MainContent_ddlPatientType').val();
+            var pkg = $('#ctl00_MainContent_ddlpacakagetype').val();
+            var PanelCompany = $('#ctl00_MainContent_ddlPanelCompany').val();
+            var Discount = $('#ctl00_MainContent_txtDiscount').val();
 
-           // Birth Certificate Fields
-           var BirthChildName = $('#ctl00_MainContent_txtBirthChildName').val();
-           var BirthGender = $('#ctl00_MainContent_ddlBirthGender').val();
-           var BirthDate = $('#ctl00_MainContent_txtBirthDate').val();
-           var BirthTime = $('#ctl00_MainContent_txtBirthTime').val();
-           var BirthPlace = $('#ctl00_MainContent_txtBirthPlace').val();
-           var BirthWeight = $('#ctl00_MainContent_txtBirthWeight').val();
-           var BirthType = $('#ctl00_MainContent_ddlBirthType').val();
-           var BirthOrder = $('#ctl00_MainContent_txtBirthOrder').val();
-           var BirthFatherName = $('#ctl00_MainContent_txtBirthFatherName').val();
-           var BirthFatherCNIC = $('#ctl00_MainContent_txtBirthFatherCNIC').val();
-           var BirthFatherOccupation = $('#ctl00_MainContent_txtBirthFatherOccupation').val();
-           var BirthFatherNationality = $('#ctl00_MainContent_txtBirthFatherNationality').val();
-           var BirthMotherName = $('#ctl00_MainContent_txtBirthMotherName').val();
-           var BirthMotherCNIC = $('#ctl00_MainContent_txtBirthMotherCNIC').val();
-           var BirthMotherOccupation = $('#ctl00_MainContent_txtBirthMotherOccupation').val();
-           var BirthMotherNationality = $('#ctl00_MainContent_txtBirthMotherNationality').val();
-           var BirthRegNumber = $('#ctl00_MainContent_txtBirthRegNumber').val();
-           var BirthRegDate = $('#ctl00_MainContent_txtBirthRegDate').val();
-           var BirthRegistrar = $('#ctl00_MainContent_txtBirthRegistrar').val();
-           var BirthUnionCouncil = $('#ctl00_MainContent_txtBirthUnionCouncil').val();
-           var BirthAddress = $('#ctl00_MainContent_txtBirthAddress').val();
-           var BirthCity = $('#ctl00_MainContent_txtBirthCity').val();
-           var BirthProvince = $('#ctl00_MainContent_ddlBirthProvince').val();
-           var BirthPostalCode = $('#ctl00_MainContent_txtBirthPostalCode').val();
-           var BirthReligion = $('#ctl00_MainContent_ddlBirthReligion').val();
-           var BirthAttendant = $('#ctl00_MainContent_txtBirthAttendant').val();
-           var BirthRemarks = $('#ctl00_MainContent_txtBirthRemarks').val();
-           var isCertificateGenrate = window.isCertificateGenrate || false;
+            // Birth Certificate Fields
+            var BirthChildName = $('#ctl00_MainContent_txtBirthChildName').val();
+            var BirthGender = $('#ctl00_MainContent_ddlBirthGender').val();
+            var BirthDate = $('#ctl00_MainContent_txtBirthDate').val();
+            var BirthTime = $('#ctl00_MainContent_txtBirthTime').val();
+            var BirthPlace = $('#ctl00_MainContent_txtBirthPlace').val();
+            var BirthWeight = $('#ctl00_MainContent_txtBirthWeight').val();
+            var BirthType = $('#ctl00_MainContent_ddlBirthType').val();
+            var BirthOrder = $('#ctl00_MainContent_txtBirthOrder').val();
+            var BirthFatherName = $('#ctl00_MainContent_txtBirthFatherName').val();
+            var BirthFatherCNIC = $('#ctl00_MainContent_txtBirthFatherCNIC').val();
+            var BirthFatherOccupation = $('#ctl00_MainContent_txtBirthFatherOccupation').val();
+            var BirthFatherNationality = $('#ctl00_MainContent_txtBirthFatherNationality').val();
+            var BirthMotherName = $('#ctl00_MainContent_txtBirthMotherName').val();
+            var BirthMotherCNIC = $('#ctl00_MainContent_txtBirthMotherCNIC').val();
+            var BirthMotherOccupation = $('#ctl00_MainContent_txtBirthMotherOccupation').val();
+            var BirthMotherNationality = $('#ctl00_MainContent_txtBirthMotherNationality').val();
+            var BirthRegNumber = $('#ctl00_MainContent_txtBirthRegNumber').val();
+            var BirthRegDate = $('#ctl00_MainContent_txtBirthRegDate').val();
+            var BirthRegistrar = $('#ctl00_MainContent_txtBirthRegistrar').val();
+            var BirthUnionCouncil = $('#ctl00_MainContent_txtBirthUnionCouncil').val();
+            var BirthAddress = $('#ctl00_MainContent_txtBirthAddress').val();
+            var BirthCity = $('#ctl00_MainContent_txtBirthCity').val();
+            var BirthProvince = $('#ctl00_MainContent_ddlBirthProvince').val();
+            var BirthPostalCode = $('#ctl00_MainContent_txtBirthPostalCode').val();
+            var BirthReligion = $('#ctl00_MainContent_ddlBirthReligion').val();
+            var BirthAttendant = $('#ctl00_MainContent_txtBirthAttendant').val();
+            var BirthRemarks = $('#ctl00_MainContent_txtBirthRemarks').val();
+            var isCertificateGenrate = window.isCertificateGenrate || false;
 
             PageMethods.SaveAllRecord(
                 Patient_ID, btnsave, txtAdmission_Date, patient_name, patient_age, patient_number,
@@ -3437,10 +3460,10 @@
                                     title: 'swal-big-title',
                                     htmlContainer: 'swal-big-text'
                                 }
-                               
+
                             })
-                              
-                          //  callNADRAAPI(response);
+
+                            //  callNADRAAPI(response);
                         }
                         $('#btnSave').val("Update");
                     }
@@ -3504,7 +3527,7 @@
                     }
                 }
             );
-       }
+        }
 
 
         function CheckExistInOutPatient() {
@@ -3562,7 +3585,7 @@
 
                             return false;
                         }
-                     
+
                         var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
                         var refer_to = $('#ctl00_MainContent_ddlReferTo').val();
                         if (refer_to != "0") {
@@ -4258,76 +4281,94 @@
         }
         debugger;
         function LoadBirthCertificateData() {
-    debugger;
-    var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
-    if (inPatientID && inPatientID !== '(New)') {
-        $.ajax({
-            type: "POST",
-            url: "InPatientsAdmission.aspx/LoadBirthCertificateData",
-            data: JSON.stringify({ InPatientID: inPatientID }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                debugger;
-                if (response.d && response.d !== "null" && response.d !== "Error") {
-                    var data = JSON.parse(response.d);
-                    
-                    $('#ctl00_MainContent_txtBirthChildName').val(data.Birth_Child_Name || '');
-                    
-                    var genderDropdown = $('#ctl00_MainContent_ddlBirthGender');
-                    genderDropdown.val(data.Birth_Gender || '');
-                    
-                    if (data.Birth_Date) {
-                        var date = new Date(parseInt(data.Birth_Date.substr(6)));
-                        $('#ctl00_MainContent_txtBirthDate').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+            debugger;
+            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            if (inPatientID && inPatientID !== '(New)') {
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsAdmission.aspx/LoadBirthCertificateData",
+                    data: JSON.stringify({ InPatientID: inPatientID }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var data = response.d;
+                        if (typeof data === "string") {
+                            if (data === "null" || data === "Error") return;
+                            try {
+                                data = JSON.parse(data);
+                            } catch (e) {
+                                console.error("Error parsing JSON", e);
+                                return;
+                            }
+                        }
+
+                        if (data) {
+                            $('#ctl00_MainContent_txtBirthChildName').val(data.Birth_Child_Name || '');
+
+                            var genderDropdown = $('#ctl00_MainContent_ddlBirthGender');
+                            genderDropdown.val(data.Birth_Gender || '');
+                            if (data.Birth_Date) {
+                                var birthDate = new Date(data.Birth_Date);
+                                if (!isNaN(birthDate.getTime())) {
+                                    var mm = birthDate.getMonth() + 1;
+                                    var dd = birthDate.getDate();
+                                    var yyyy = birthDate.getFullYear();
+                                    $('#ctl00_MainContent_txtBirthDate').val(mm + '/' + dd + '/' + yyyy);
+                                }
+                            }
+
+                            $('#ctl00_MainContent_txtBirthTime').val(data.Birth_Time || '');
+                            $('#ctl00_MainContent_txtBirthPlace').val(data.Birth_Place || '');
+                            $('#ctl00_MainContent_txtBirthWeight').val(data.Birth_Weight || '');
+
+                            var typeDropdown = $('#ctl00_MainContent_ddlBirthType');
+                            typeDropdown.val(data.Birth_Type || '');
+
+                            $('#ctl00_MainContent_txtBirthOrder').val(data.Birth_Order || '');
+                            $('#ctl00_MainContent_txtBirthFatherName').val(data.Birth_Father_Name || '');
+                            $('#ctl00_MainContent_txtBirthFatherCNIC').val(data.Birth_Father_CNIC || '');
+                            $('#ctl00_MainContent_txtBirthFatherOccupation').val(data.Birth_Father_Occupation || '');
+                            $('#ctl00_MainContent_txtBirthFatherNationality').val(data.Birth_Father_Nationality || '');
+                            $('#ctl00_MainContent_txtBirthMotherName').val(data.Birth_Mother_Name || '');
+                            $('#ctl00_MainContent_txtBirthMotherCNIC').val(data.Birth_Mother_CNIC || '');
+                            $('#ctl00_MainContent_txtBirthMotherOccupation').val(data.Birth_Mother_Occupation || '');
+                            $('#ctl00_MainContent_txtBirthMotherNationality').val(data.Birth_Mother_Nationality || '');
+                            $('#ctl00_MainContent_txtBirthRegNumber').val(data.Birth_Reg_Number || '');
+
+                            if (data.Birth_Reg_Date) {
+                                var regDate = new Date(data.Birth_Reg_Date);
+                                if (!isNaN(regDate.getTime())) {
+                                    var mm = regDate.getMonth() + 1;
+                                    var dd = regDate.getDate();
+                                    var yyyy = regDate.getFullYear();
+                                    $('#ctl00_MainContent_txtBirthRegDate').val(mm + '/' + dd + '/' + yyyy);
+                                }
+                            }
+
+                            $('#ctl00_MainContent_txtBirthRegistrar').val(data.Birth_Registrar || '');
+                            $('#ctl00_MainContent_txtBirthUnionCouncil').val(data.Birth_Union_Council || '');
+                            $('#ctl00_MainContent_txtBirthAddress').val(data.Birth_Address || '');
+                            $('#ctl00_MainContent_txtBirthCity').val(data.Birth_City || '');
+
+                            var provinceDropdown = $('#ctl00_MainContent_ddlBirthProvince');
+                            provinceDropdown.val(data.Birth_Province || '');
+
+                            $('#ctl00_MainContent_txtBirthPostalCode').val(data.Birth_Postal_Code || '');
+
+                            var religionDropdown = $('#ctl00_MainContent_ddlBirthReligion');
+                            religionDropdown.val(data.Birth_Religion || '');
+
+                            $('#ctl00_MainContent_txtBirthAttendant').val(data.Birth_Attendant || '');
+                            $('#ctl00_MainContent_txtBirthRemarks').val(data.Birth_Remarks || '');
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error loading birth certificate data: ", error);
                     }
-                    
-                    $('#ctl00_MainContent_txtBirthTime').val(data.Birth_Time || '');
-                    $('#ctl00_MainContent_txtBirthPlace').val(data.Birth_Place || '');
-                    $('#ctl00_MainContent_txtBirthWeight').val(data.Birth_Weight || '');
-                    
-                    var typeDropdown = $('#ctl00_MainContent_ddlBirthType');
-                    typeDropdown.val(data.Birth_Type || '');
-                    
-                    $('#ctl00_MainContent_txtBirthOrder').val(data.Birth_Order || '');
-                    $('#ctl00_MainContent_txtBirthFatherName').val(data.Birth_Father_Name || '');
-                    $('#ctl00_MainContent_txtBirthFatherCNIC').val(data.Birth_Father_CNIC || '');
-                    $('#ctl00_MainContent_txtBirthFatherOccupation').val(data.Birth_Father_Occupation || '');
-                    $('#ctl00_MainContent_txtBirthFatherNationality').val(data.Birth_Father_Nationality || '');
-                    $('#ctl00_MainContent_txtBirthMotherName').val(data.Birth_Mother_Name || '');
-                    $('#ctl00_MainContent_txtBirthMotherCNIC').val(data.Birth_Mother_CNIC || '');
-                    $('#ctl00_MainContent_txtBirthMotherOccupation').val(data.Birth_Mother_Occupation || '');
-                    $('#ctl00_MainContent_txtBirthMotherNationality').val(data.Birth_Mother_Nationality || '');
-                    $('#ctl00_MainContent_txtBirthRegNumber').val(data.Birth_Reg_Number || '');
-                    
-                    if (data.Birth_Reg_Date) {
-                        var regDate = new Date(parseInt(data.Birth_Reg_Date.substr(6)));
-                        $('#ctl00_MainContent_txtBirthRegDate').val((regDate.getMonth() + 1) + '/' + regDate.getDate() + '/' + regDate.getFullYear());
-                    }
-                    
-                    $('#ctl00_MainContent_txtBirthRegistrar').val(data.Birth_Registrar || '');
-                    $('#ctl00_MainContent_txtBirthUnionCouncil').val(data.Birth_Union_Council || '');
-                    $('#ctl00_MainContent_txtBirthAddress').val(data.Birth_Address || '');
-                    $('#ctl00_MainContent_txtBirthCity').val(data.Birth_City || '');
-                    
-                    var provinceDropdown = $('#ctl00_MainContent_ddlBirthProvince');
-                    provinceDropdown.val(data.Birth_Province || '');
-                    
-                    $('#ctl00_MainContent_txtBirthPostalCode').val(data.Birth_Postal_Code || '');
-                    
-                    var religionDropdown = $('#ctl00_MainContent_ddlBirthReligion');
-                    religionDropdown.val(data.Birth_Religion || '');
-                    
-                    $('#ctl00_MainContent_txtBirthAttendant').val(data.Birth_Attendant || '');
-                    $('#ctl00_MainContent_txtBirthRemarks').val(data.Birth_Remarks || '');
-                }
-            },
-            error: function (error) {
-                console.log("Error loading birth certificate data: ", error);
+                });
             }
-        });
-    }
-}
+        }
         function checkOPDTrasfer() {
             var patID = $('#<%= txtPatient_ID.ClientID%>').val();
             PageMethods.checkOPDTrasfer(patID, function (data) {
@@ -5272,60 +5313,60 @@
 
             var Issuance_Of = document.getElementById('<%= ddlIssuance_Of.ClientID%>').value;
 
-           var wardDiv = document.getElementById('<%= ddlWard_No.ClientID%>').closest('.col-lg-3');
-           var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
-           var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
-           var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
+            var wardDiv = document.getElementById('<%= ddlWard_No.ClientID%>').closest('.col-lg-3');
+            var bedDiv = document.getElementById('<%= txtBed_No.ClientID%>').closest('.col-lg-3');
+            var roomDiv = document.getElementById('<%= ddlRoom_No.ClientID%>').closest('.col-lg-3');
+            var roomTypeDiv = document.getElementById('<%= txtRoom_Type.ClientID%>').closest('.col-lg-3');
 
-           if (Issuance_Of == 0) {
-               document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
-        document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
-        document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
+            if (Issuance_Of == 0) {
+                document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
+                document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
+                document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
 
-        document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
-        document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
-        document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
+                document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
 
-        document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
-        document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
 
-        document.getElementById('tblWards').style.display = "none";
-        document.getElementById('tblRooms').style.display = "none";
+                document.getElementById('tblWards').style.display = "none";
+                document.getElementById('tblRooms').style.display = "none";
 
-        wardDiv.style.display = "none";
-        bedDiv.style.display = "none";
-        roomDiv.style.display = "none";
-        roomTypeDiv.style.display = "none";
-    }
-    else if (Issuance_Of == '001') {
-        document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
-        document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
+                wardDiv.style.display = "none";
+                bedDiv.style.display = "none";
+                roomDiv.style.display = "none";
+                roomTypeDiv.style.display = "none";
+            }
+            else if (Issuance_Of == '001') {
+                document.getElementById('<%= ddlRoom_No.ClientID%>').value = 0;
+                document.getElementById('<%= txtRoom_Type.ClientID%>').value = 0;
 
-        document.getElementById('<%= ddlWard_No.ClientID%>').disabled = false;
-        document.getElementById('<%= txtBed_No.ClientID%>').disabled = true;
-        document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
-        document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlWard_No.ClientID%>').disabled = false;
+                document.getElementById('<%= txtBed_No.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
+                document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = true;
 
-        document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
-        document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroudWhite";
+                document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroudWhite";
 
-        document.getElementById('tblWards').style.display = "table";
-        document.getElementById('tblRooms').style.display = "none";
+                document.getElementById('tblWards').style.display = "table";
+                document.getElementById('tblRooms').style.display = "none";
 
-        wardDiv.style.display = "block";
-        bedDiv.style.display = "block";
-        roomDiv.style.display = "none";
-        roomTypeDiv.style.display = "none";
-    }
-    else {
-        document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
+                wardDiv.style.display = "block";
+                bedDiv.style.display = "block";
+                roomDiv.style.display = "none";
+                roomTypeDiv.style.display = "none";
+            }
+            else {
+                document.getElementById('<%= ddlWard_No.ClientID%>').value = 0;
 
-        document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
-        document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = false;
-        document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
+                document.getElementById('<%= ddlWard_No.ClientID%>').disabled = true;
+                document.getElementById('<%= txtRoom_Type.ClientID%>').disabled = false;
+                document.getElementById('<%= ddlRoom_No.ClientID%>').disabled = true;
 
-        document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroudWhite";
-        document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
+                document.getElementById('<%= ddlRoom_No.ClientID%>').className = "dropdownBackgroudWhite";
+                document.getElementById('<%= ddlWard_No.ClientID%>').className = "dropdownBackgroud";
 
                 document.getElementById('tblWards').style.display = "none";
                 document.getElementById('tblRooms').style.display = "table";
@@ -5924,7 +5965,7 @@
                 data: "{'PatientID':" + Patient_ID + "}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                 success: OnSuccess,
+                success: OnSuccess,
                 failure: function (response) {
                     alert(response.d);
                 }
@@ -6162,7 +6203,7 @@
                 backdrop: 'static'
             });
             $("#ddl_name").focus();
-           
+
         }
 
         function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
@@ -6330,8 +6371,24 @@
             $('#ReferredPatientsModal').modal({
                 backdrop: 'static'
             });
+            if ($("#ReferTabsContainer").hasClass("ui-tabs")) {
+                $("#ReferTabsContainer").tabs("destroy");
+            }
+
+            $("#ReferTabsContainer").tabs({
+                activate: function (event, ui) {
+                    var index = ui.newTab.index();
+                    if (index === 1) {
+                        LoadOPDReferPatients();
+                    }
+                }
+            });
             FillReferredPatientsList();
         }
+
+        $(document).on('click', '#tabOPDReferLink', function () {
+            LoadOPDReferPatients();
+        });
 
         function FillReferredPatientsList() {
             var SearchString = $('#txtReferredSearch').val().trim();
@@ -6453,7 +6510,7 @@
 
         function showNextOfKinMessage(message, type) {
             var $msg = $('#<%= lblNextOfKinMessage.ClientID %>');
-            if ($msg.length === 0) return; 
+            if ($msg.length === 0) return;
 
             $msg.text(message);
             $msg.show();
@@ -6496,84 +6553,211 @@
             if (type === "success" || type === "info") {
                 setTimeout(function () {
                     if ($('#<%= lblNextOfKinMessage.ClientID %>').text() === message) {
-                $('#<%= lblNextOfKinMessage.ClientID %>').fadeOut();
+                        $('#<%= lblNextOfKinMessage.ClientID %>').fadeOut();
                     }
                 }, 5000);
             }
         }
 
-         function fillBirthGender(callback) {
-    var options = '<option value="0">Select</option>';
-    PageMethods.GetGender(function (data) {
-        if (data) {
-            var genderList = JSON.parse(data);
-            $.each(genderList, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+        function fillBirthGender(callback) {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetGender(function (data) {
+                if (data) {
+                    var genderList = JSON.parse(data);
+                    $.each(genderList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ctl00_MainContent_ddlBirthGender').html(options);
+                }
+                if (callback) callback();
             });
-            $('#ctl00_MainContent_ddlBirthGender').html(options);
         }
-        if (callback) callback();
-    });
-}
 
-function fillBirthType(callback) {
-    var options = '<option value="0">Select</option>';
-    PageMethods.GetBirthType(function (data) {
-        if (data) {
-            var typeList = JSON.parse(data);
-            $.each(typeList, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+        function fillBirthType(callback) {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetBirthType(function (data) {
+                if (data) {
+                    var typeList = JSON.parse(data);
+                    $.each(typeList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ctl00_MainContent_ddlBirthType').html(options);
+                }
+                if (callback) callback();
             });
-            $('#ctl00_MainContent_ddlBirthType').html(options);
         }
-        if (callback) callback();
-    });
-}
 
-function fillReligion(callback) {
-    var options = '<option value="0">Select</option>';
-    PageMethods.GetReligion(function (data) {
-        if (data) {
-            var religionList = JSON.parse(data);
-            $.each(religionList, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+        function fillReligion(callback) {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetReligion(function (data) {
+                if (data) {
+                    var religionList = JSON.parse(data);
+                    $.each(religionList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ctl00_MainContent_ddlBirthReligion').html(options);
+                }
+                if (callback) callback();
             });
-            $('#ctl00_MainContent_ddlBirthReligion').html(options);
         }
-        if (callback) callback();
-    });
-}
 
-function fillProvince(callback) {
-    var options = '<option value="0">Select</option>';
-    PageMethods.GetProvince(function (data) {
-        if (data) {
-            var provinceList = JSON.parse(data);
-            $.each(provinceList, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+        function fillProvince(callback) {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetProvince(function (data) {
+                if (data) {
+                    var provinceList = JSON.parse(data);
+                    $.each(provinceList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ctl00_MainContent_ddlBirthProvince').html(options);
+                }
+                if (callback) callback();
             });
-            $('#ctl00_MainContent_ddlBirthProvince').html(options);
         }
-        if (callback) callback();
-    });
-}
 
-function fillNationality(callback) {
-    var options = '<option value="0">Select</option>';
-    PageMethods.GetNationality(function (data) {
-        if (data) {
-            var nationalityList = JSON.parse(data);
-            $.each(nationalityList, function (key, value) {
-                options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+        function fillNationality(callback) {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetNationality(function (data) {
+                if (data) {
+                    var nationalityList = JSON.parse(data);
+                    $.each(nationalityList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ctl00_MainContent_txtBirthFatherNationality').html(options);
+                    $('#ctl00_MainContent_txtBirthMotherNationality').html(options);
+                }
+                if (callback) callback();
             });
-            $('#ctl00_MainContent_txtBirthFatherNationality').html(options);
-            $('#ctl00_MainContent_txtBirthMotherNationality').html(options);
         }
-        if (callback) callback();
-    });
-}
 
-           
+        
+        function AllowBirthCertificate() {
+            if (!$("#tabs").hasClass("ui-tabs")) {
+                setTimeout(AllowBirthCertificate, 200);
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/CheckBirthCertificateTab",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var result = data.d;
+
+                    var $tab1Header = $('#ui-id-1'); 
+                    var $tab2Header = $('#ui-id-2'); 
+                    var $tab3Header = $('#ui-id-3'); 
+
+                    var $tab1Panel = $('#Tab-1');
+                    var $tab2Panel = $('#Tab-NextOfKin');
+                    var $tab3Panel = $('#Tab-14');
+
+                    if (result === true || result === "true") {
+                        $tab1Header.hide();
+                        $tab2Header.hide();
+                        $tab3Header.show();
+                        $tab1Panel.hide();
+                        $tab2Panel.hide();
+                        $tab3Panel.show();
+                        $("#tabs").tabs("option", "active", $("#tabs").tabs("option", "panels").index($tab3Panel[0]));
+
+                    } else {
+                        $tab1Header.show();
+                        $tab2Header.show();
+                        $tab3Header.hide();
+                        $tab1Panel.show();
+                        $tab2Panel.show();
+                        $tab3Panel.hide();
+                        $("#tabs").tabs("option", "active", 0);
+                    }
+                    $("#tabs").tabs("refresh");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking birth certificate tab:", error);
+                    $('#ui-id-1, #ui-id-2').show();
+                    $('#ui-id-3').hide();
+                    $('#Tab-1, #Tab-NextOfKin').show();
+                    $('#Tab-14').hide();
+                    $("#tabs").tabs("option", "active", 0);
+                    $("#tabs").tabs("refresh");
+                }
+            });
+        }
+
+        // Function to load data for the OPD Refer tab
+        function LoadOPDReferPatients() {
+            // Clear previous results
+            $('#iOPDReferPatientsBody').empty();
+            var SearchString = $('#txtOPDReferSearch').val() || '';
+
+            // Call the PageMethod
+            PageMethods.GetOPDReferPatients(SearchString, OnOPDReferSuccess, OnFailPatients);
+        }
+
+        // Success callback for OPD Refer
+        function OnOPDReferSuccess(data) {
+            $('#iOPDReferPatientsBody').empty();
+            if (data && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    AddOPDReferPatientRow(
+                        data[i].Reg_Patient_ID,
+                        data[i].Patient_No,
+                        data[i].Full_Name,
+                        data[i].NIC,
+                        data[i].Mobile1,
+                        data[i].Father_Name
+                    );
+                }
+            } else {
+                $('#iOPDReferPatientsBody').html('<tr><td colspan="7" class="text-center">No records found</td></tr>');
+            }
+        }
+
+        // Helper to add rows to the OPD Refer table
+        function AddOPDReferPatientRow(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
+            var row = document.getElementById('iOPDReferPatientsBody').insertRow(-1);
+            var cell;
+
+            // Hidden Patient ID
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span>' + Reg_Patient_ID + '</span>';
+            cell.className = "hide";
+
+            // MR No
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Patient_No + '</span>';
+
+            // Name
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Full_Name + '</span>';
+
+            // Father Name
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Father_Name + '</span>';
+
+            // CNIC
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + NIC + '</span>';
+
+            // Contact
+            cell = row.insertCell(-1);
+            cell.innerHTML = '<span class="HRcontent">' + Mobile1 + '</span>';
+
+            // Actions
+            cell = row.insertCell(-1);
+            var actions = '';
+            actions += '<a style="color:#438eb9;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick="AddPatientDetail(' + Reg_Patient_ID + ')"><i class="fa fa-plus-circle"></i></a>&nbsp;|&nbsp;&nbsp;';
+            actions += '<a style="color:#FDC303;font-size:20px;padding:8px;border-radius:5px;text-decoration:none;" href="#" onclick="EditPatientDetail(' + Reg_Patient_ID + ')"><i class="fa fa-pencil-square-o"></i></a>';
+            cell.innerHTML = actions;
+        }
+
+        function FillOPDReferPatientsList() {
+            LoadOPDReferPatients();
+        }
+
 
 
     </script>
@@ -6611,40 +6795,40 @@ function fillNationality(callback) {
             color: #00ff21;
         }
         /* Birth Certificate Tab Styles */
-                 .compact-card {
+        .compact-card {
             margin-bottom: 15px;
-                border: 1px solid #999999;
+            border: 1px solid #999999;
             border-radius: 6px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        
-        .compact-card .card-header {
-            background-color: #f8f9fa;
-            padding: 8px 15px;
-            border-bottom: 1px solid #b9b9b9;
-            border-radius: 6px 6px 0 0;
-        }
-        
-        .compact-card .card-header h4 {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .compact-card .card-body {
-            padding: 12px 15px;
-        }
-        
+
+            .compact-card .card-header {
+                background-color: #f8f9fa;
+                padding: 8px 15px;
+                border-bottom: 1px solid #b9b9b9;
+                border-radius: 6px 6px 0 0;
+            }
+
+                .compact-card .card-header h4 {
+                    margin: 0;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #2c3e50;
+                }
+
+            .compact-card .card-body {
+                padding: 12px 15px;
+            }
+
         .compact-row {
             margin: 0 -8px;
         }
-        
-        .compact-row [class*="col-"] {
-            padding: 0 8px;
-            margin-bottom: 10px;
-        }
-        
+
+            .compact-row [class*="col-"] {
+                padding: 0 8px;
+                margin-bottom: 10px;
+            }
+
         .compact-card label {
             font-size: 12px;
             font-weight: 500;
@@ -6652,9 +6836,9 @@ function fillNationality(callback) {
             color: #555;
             display: block;
         }
-        
-        .compact-card input, 
-        .compact-card select, 
+
+        .compact-card input,
+        .compact-card select,
         .compact-card textarea {
             font-size: 13px;
             padding: 4px 8px;
@@ -6663,29 +6847,29 @@ function fillNationality(callback) {
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        
+
         .compact-card textarea {
             height: 60px;
             resize: vertical;
         }
-        
+
         .compact-card hr {
             margin: 8px 0;
         }
-        
+
         .compact-card .form-group {
             margin-bottom: 0;
         }
-        
+
         /* Remove extra spacing from parent containers */
         #Tab-14 .mt {
             margin-top: 0 !important;
         }
-        
+
         #Tab-14 .row {
             margin-bottom: 0;
         }
-        
+
         .section-divider {
             margin: 0 0 10px 0;
             border-top: 1px solid #eee;
@@ -6699,7 +6883,7 @@ function fillNationality(callback) {
                 <input type="button" value="Add Patient" id="btnSearchPatient" onclick="OpenModal()" class="btn-primry" />
             </div>
             <div class="col-lg-2 col-md-3 col-sm-3">
-                <input type="button" value="Refer Admissions" id="btnReferAdmissions" onclick="OpenReferredModal()" class="btn-primry" />
+                <input type="button" value="Admission Queue" id="btnReferAdmissions" onclick="OpenReferredModal()" class="btn-primry" />
             </div>
         </div>
     </div>
@@ -6707,30 +6891,75 @@ function fillNationality(callback) {
     <div id="ReferredPatientsModal" data-backdrop="static" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content" style="width: 1140px !important; margin-top: 116px; margin-left: -78px; height: 604px; position: relative;">
-            <fieldset style="padding-top: 20px; padding-left: 14px;">
-                <div class="col-lg-3 col-md-4 col-sm-6">                           
-                    <label id="lblReferredSearch">Referred Patients:</label>
-                    <input type="text" id="txtReferredSearch" style="margin-left: 2px;"  autocomplete="off"
-                        placeholder="Search by MR No, Name, CNIC, or Contact..."  oninput="FillReferredPatientsList()" />
-                </div>
-            </fieldset>
-            <div style="overflow: scroll; height: 460px; padding: 10px;">
-                <table class="table table-hover table-striped table-bordered" id="tblReferredPatients" style="width:100%;">
-                    <thead>
-                        <tr>
-                            <th style="display: none;">Patient ID</th>
-                            <th>MR No</th>
-                            <th>Patient Name</th>
-                            <th>Father Name</th>
-                            <th>CNIC</th>
-                            <th>Contact No</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="iReferredPatientsBody">
-                    </tbody>
-                </table>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Referred Patients</h4>
             </div>
+            
+            <!-- jQuery UI Tabs Structure -->
+            <div id="ReferTabsContainer" style="padding: 10px;">
+                <ul>
+                    <li><a href="#TabExistingReferrals">Emergency Refer</a></li>
+                    <li><a href="#TabOPDRefer">OPD Refer</a></li>
+                </ul>
+
+                <!-- Tab 1: Existing Referrals -->
+                <div id="TabExistingReferrals">
+                    <fieldset style="padding-top: 10px; padding-left: 14px;">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label id="lblReferredSearch">Search Patients:</label>
+                            <input type="text" id="txtReferredSearch" style="margin-left: 2px;" autocomplete="off"
+                                   placeholder="Search by MR No, Name, CNIC, or Contact..." oninput="FillReferredPatientsList()" />
+                        </div>
+                    </fieldset>
+                    <div style="overflow: scroll; height: 380px; padding: 10px;">
+                        <table class="table table-hover table-striped table-bordered" id="tblReferredPatients" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;">Patient ID</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Contact No</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="iReferredPatientsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 2: OPD Refer -->
+                <div id="TabOPDRefer">
+                    <fieldset style="padding-top: 10px; padding-left: 14px;">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label id="lblOPDReferSearch">Search OPD Refer:</label>
+                            <input type="text" id="txtOPDReferSearch" style="margin-left: 2px;" autocomplete="off"
+                                   placeholder="Search by MR No, Name, CNIC, or Contact..." oninput="FillOPDReferPatientsList()" />
+                        </div>
+                    </fieldset>
+                    <div style="overflow: scroll; height: 380px; padding: 10px;">
+                        <table class="table table-hover table-striped table-bordered" id="tblOPDReferPatients" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;">Patient ID</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Contact No</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="iOPDReferPatientsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <input type="button" style="width:13% !important" class="btn-gray" value="Close" data-dismiss="modal" />
             </div>
@@ -7761,8 +7990,11 @@ function fillNationality(callback) {
 
                             
                                        <div class="col-lg-2 col-md-4 col-sm-6" id="GenrateCertificate">
-              <input value="Genrate" class="btn-primry" id="genrateCerti" type="button" onclick="GenrateCertificate()"/>
+              <input value="Generate" class="btn-primry" id="genrateCerti" type="button" onclick="GenrateCertificate()"/>
            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6" id="Printbirth">
+                                <input value="Print Certificate" class="btn-primry" id="Printbirthcertificate" type="button" onclick="PrintGenrateCertificate()" />
+                            </div>
                         </div>
     </div>
 </div>

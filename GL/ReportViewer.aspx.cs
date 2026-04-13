@@ -443,6 +443,23 @@ namespace PMS
                 rd.SetParameterValue("@startDate", parameterStDate);
                 rd.SetParameterValue("@endDate", parameterEndDate);
             }
+            else if (reportName == "Birth_Certificate")
+            {
+                //var user_id = 
+                var in_patient_id = Request.QueryString["Inpatient_ID"].ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                var user_id = AppConfig.UserID;
+                var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+
+
+                reportPath += "InPatient/rptBirthCertificate.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("User_ID", userName);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@patientId", in_patient_id);
+            }
             else if (reportName == "AdminissionSlip")
             {
                 //var user_id = 
@@ -587,6 +604,7 @@ namespace PMS
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[2].Name.ToString());
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[3].Name.ToString());
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[4].Name.ToString());
+                rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[5].Name.ToString());
             }
             //else if (reportName == "CONSULTANT_Wise_Statistics")
             //{
@@ -1362,36 +1380,36 @@ namespace PMS
             }
             else if (reportName == "Emergency_Patient_Print")
             {
-                    var emer_id = Request.QueryString["Emergency_Id"].ToString();
-                    var user_id = AppConfig.UserID;
-                    var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+                var emer_id = Request.QueryString["Emergency_Id"].ToString();
+                var user_id = AppConfig.UserID;
+                var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
                 var address = DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
-                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
-                    reportPath += "Emergency/rpt_Emergency_Patient_Reg_Print.rpt";
-                    rd.Load(reportPath);
-                    rd.SetParameterValue("@Emergency_Id", emer_id);
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    rd.SetParameterValue("CompanyLogo", logoPath);
-                    rd.SetParameterValue("UserName", userName);
-                    rd.SetParameterValue("Address", address);
-                
+                reportPath += "Emergency/rpt_Emergency_Patient_Reg_Print.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("@Emergency_Id", emer_id);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("UserName", userName);
+                rd.SetParameterValue("Address", address);
+
             }
             else if (reportName == "Emergency_Patient_Print_LTR")
             {
-                    var emer_id = Request.QueryString["Emergency_Id"].ToString();
-                    var user_id = AppConfig.UserID;
-                    var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+                var emer_id = Request.QueryString["Emergency_Id"].ToString();
+                var user_id = AppConfig.UserID;
+                var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
                 var address = DBClass.getField("select Company_Address from Sys_Companys where Company_ID = " + AppConfig.Company_ID + "");
-                    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
-                    reportPath += "Emergency/rptEmergencyBasePrintHalf.rpt";
-                    rd.Load(reportPath);
-                    rd.SetParameterValue("@Emergency_Id", emer_id);
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    rd.SetParameterValue("CompanyLogo", logoPath);
-                    rd.SetParameterValue("UserName", userName);
-                    rd.SetParameterValue("Address", address);
+                reportPath += "Emergency/rptEmergencyBasePrintHalf.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("@Emergency_Id", emer_id);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("UserName", userName);
+                rd.SetParameterValue("Address", address);
 
                 try
                 {
@@ -1558,29 +1576,29 @@ namespace PMS
             }
             else if (reportName == "TotalIncome")
             {
-                    reportPath += "TransactionalDetails/rptTotal_Income.rpt";
-                    rd.Load(reportPath);
-                    rd.SummaryInfo.ReportTitle = reportTitle;
+                reportPath += "TransactionalDetails/rptTotal_Income.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
 
-                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                 //string stDate = Request.QueryString["StartDateTime"].ToString();
                 //string endDate = Request.QueryString["EndDateTime"].ToString();
                 //var edate = Convert.ToDateTime(endDate);
                 //var newEnddate = new DateTime(edate.Year, edate.Month, edate.Day, edate.Hour, edate.Minute, 59);
 
-                    string StartDateTime = Request.QueryString["StartDateTime"].ToString();
-                    string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
 
-                    string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
-                    string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
 
 
-                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                    rd.SetParameterValue("Address", companyAddress);
-                    rd.SetParameterValue("Title", reportTitle);
-                    rd.SetParameterValue("@StDate", sqlStartDateTime);
-                    rd.SetParameterValue("@endDate", sqlEndDateTime);
-                
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@StDate", sqlStartDateTime);
+                rd.SetParameterValue("@endDate", sqlEndDateTime);
+
             }
             else if (reportName == "Pharmacy_Profit_and_Loss_Report")
             {

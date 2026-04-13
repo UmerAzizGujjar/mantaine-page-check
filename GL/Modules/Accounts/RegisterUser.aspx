@@ -74,11 +74,15 @@
                     $('#AllowReferIPD').prop('checked', data.AllowReferIPD);
                     $('#AllowRecipe').prop('checked', data.Allow_Recipe);
                     $('#AllowActiveItems').prop('checked', data.AllowActiveItems);
+                    $('#AllowBirthCertificate').prop('checked', data.AllowBirthCertificate);
+                    $('#AllowDeathDetails').prop('checked', data.AllowDeathDetails);
                     $('#AllowSaleReturn').prop('checked', data.AllowSaleReturn);
                     $('#AllowStudentUpdate').prop('checked', data.AllowStudentUpdate);
                     $('#RadiologyAllList').prop('checked', data.RadiologyAllList);
                     $('#AllowRadiologyApproval').prop('checked', data.Radiology_result_Approval);
                     $('#AllowAdjustment').prop('checked', data.AllowAdjustment);
+                    $('#Allowradiologyapprove').prop('checked', data.Allowradiologyapprove);
+                    $('#Rejectradiology').prop('checked', data.Rejectradiology);
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                 },
                 error: function (xhr, status, error) {
@@ -128,11 +132,15 @@
             var AllowReferIPD = $('#AllowReferIPD').prop('checked');
             var AllowRecipe = $('#AllowRecipe').prop('checked');
             var AllowActiveItems = $('#AllowActiveItems').prop('checked');
+            var AllowBirthCertificate = $('#AllowBirthCertificate').prop('checked');
+            var AllowDeathDetails = $('#AllowDeathDetails').prop('checked');
             var AllowSaleReturn = $('#AllowSaleReturn').prop('checked');
             var AllowStudentUpdate = $('#AllowStudentUpdate').prop('checked');
             var RadiologyAllList = $('#RadiologyAllList').prop('checked');
             var AllowRadiologyApproval = $('#AllowRadiologyApproval').prop('checked');
             var AllowAdjustment = $('#AllowAdjustment').prop('checked');
+            var Allowradiologyapprove = $('#Allowradiologyapprove').prop('checked');
+            var Rejectradiology = $('#Rejectradiology').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var EmpCode = $('#EmpCode').val();
             var ddlcasher = $('#ddlcasher').val();
@@ -255,11 +263,15 @@
                 "AllowReferIPD": AllowReferIPD,
                 "AllowRecipe": AllowRecipe,
                 "AllowActiveItems": AllowActiveItems,
+                "AllowBirthCertificate": AllowBirthCertificate,
+                "AllowDeathDetails": AllowDeathDetails,
                 "AllowSaleReturn": AllowSaleReturn,
                 "AllowStudentUpdate": AllowStudentUpdate,
                 "RadiologyAllList": RadiologyAllList,
                 "AllowRadiologyApproval": AllowRadiologyApproval,
                 "AllowAdjustment": AllowAdjustment,
+                "Allowradiologyapprove": Allowradiologyapprove,
+                "Rejectradiology": Rejectradiology,
                 "AllowRateEdit": AllowRateEdit,
                 "ddlcasher": ddlcasher
 
@@ -500,9 +512,15 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowActiveItems" name="AllowActiveitem" />
                                                     </div>
-                                                          <div class="form-check">
-                                                                    <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
-                                                                </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowBirthCertificate" name="AllowBirthCertificate" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowDeathDetails" name="AllowDeathDetails" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
+                                                    </div>
 
                                                 </div>
 
@@ -557,6 +575,12 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowActiveItems">Allow Active Items</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowBirthCertificate">Allow Birth Certificate</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowDeathDetails">Allow Death Details</label>
                                                     </div>
                                                      <div class="form-check">
                                                        <label class="form-check-label" for="EmpCode">Employee Code</label>
@@ -626,6 +650,12 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllowAdjustment" name="AllowAdjustment" style="" />
                                                     </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="Allowradiologyapprove" name="Allowradiologyapprove" style="" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="Rejectradiology" name="Rejectradiology" style="" />
+                                                    </div>
                                              
 
 
@@ -691,15 +721,14 @@
                                                       </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="Ajustmentallow">Adjustment Allow</label>
+                                                    </div> 
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="Approveradiologyallow">Approve Radiology</label>
                                                     </div>
-                                                 
-                                                 
-
-
-
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="Rejectradiologyallow">Reject Radiology</label>
+                                                    </div>
                                                 </div>
-
-                                                <div class="col-md-2"></div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-check">

@@ -1338,6 +1338,7 @@
                         <label>Address</label>
                         <input type="text" id="txtAdrress" readonly="readonly" />
                     </div>
+                   
                        <div class="col-lg-3 col-md-8 col-sm-8" id="cashier" >
                        <label>Cashier</label>
                        <select id="ddlcashier" class="form-control">
@@ -1347,6 +1348,10 @@
                     <div class="col-lg-3 col-md-8 col-sm-8" id="remarks">
                         <label>Remarks</label>
                         <input type="text" id="txtremarks" />
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 fields" style="display:none" id="field_Dept_Token">
+                        <label>Dept Token No</label>
+                        <input type="text" id="txtDeptToken" readonly="readonly" />
                     </div>
                 </div>
 
@@ -1609,6 +1614,7 @@
                             <label for="lblfee">Fee<span style="color: red;">*</span></label>
                             <input type="text" tabindex="17" id="txtCardFee" class="form-control" />
                         </div>
+                        
                     </div>
                     <div class="form-group row" style="display: none;">
                         <label for="txt_Address" class="col-sm-3 col-form-label">Address<span style="color: red;">*</span></label>

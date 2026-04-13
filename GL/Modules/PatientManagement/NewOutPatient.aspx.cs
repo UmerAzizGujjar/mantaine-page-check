@@ -1674,7 +1674,9 @@ namespace PMS.Modules.PatientManagement
                                           where d.Emp_ID == Convert.ToInt32(p.Doctor_ID)
                                           select d.Emp_Name).FirstOrDefault(),
                             Department = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
-                            FilterClinic = db.GetDataValueName("Filter Clinic", p.filter_clinic),
+                            //FilterClinic = db.GetDataValueName("Filter Clinic", p.filter_clinic),
+                            Dep_token= p.Dept_Token,
+                            doc_token= p.Doc_Token,
                             Gender = db.GetDataValueName("Gender", p.Gender),
                             p.Created_Time,
                             u.UserName,
@@ -1686,13 +1688,14 @@ namespace PMS.Modules.PatientManagement
                                         where op.Patient_ID == p.Patient_ID
                                         && op.Doctor_ID != null && op.Doctor_ID != ""
                                         select op.Doctor_ID).FirstOrDefault()),
-                            Token_No = (from t in db.Patients
-                                        where t.Patient_ID < p.Patient_ID
-                                           && t.Created_Time.Value.Date == p.Created_Time.Value.Date
-                                           && t.Created_Time.Value.Month == p.Created_Time.Value.Month
-                                           && t.Created_Time.Value.Year == p.Created_Time.Value.Year
-                                           && t.Patient_Main_Category == p.Patient_Main_Category
-                                        select t).Count() + 1
+                            //Token_No = (from t in db.Patients
+                            //            where t.Patient_ID < p.Patient_ID
+                            //               && t.Created_Time.Value.Date == p.Created_Time.Value.Date
+                            //               && t.Created_Time.Value.Month == p.Created_Time.Value.Month
+                            //               && t.Created_Time.Value.Year == p.Created_Time.Value.Year
+                            //               && t.Patient_Main_Category == p.Patient_Main_Category
+                            //            select t).Count() + 1
+                            Token_No = p.Doc_Token
                         });
 
             if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "" && doc_name == "")
@@ -1993,7 +1996,6 @@ namespace PMS.Modules.PatientManagement
             {
                 IQueryable<INV_Item> query = db.INV_Items.Where(d => d.Pharmacy_Item == true);
 
-                // Only apply the search filter if searchString is not empty
                 if (!string.IsNullOrEmpty(searchString))
                 {
                     query = query.Where(d => d.Description.Contains(searchString));
@@ -2003,11 +2005,27 @@ namespace PMS.Modules.PatientManagement
                                        .Select(d => new
                                        {
                                            Item_Code = d.Item_ID,
-                                           Description = d.Description
+                                           Description = d.Description,
+                                           InventoryOrg = d.InventoryOrg 
                                        }).Take(10)
                                        .ToList();
 
-                return (new JavaScriptSerializer().Serialize(pharmacyItems));
+                var result = new List<object>();
+                foreach (var item in pharmacyItems)
+                {
+                    decimal totalStock = db.GetInvenrtoryItemUomTotalStock(item.Item_Code, item.InventoryOrg) ?? 0;
+
+                    result.Add(new
+                    {
+                        Item_Code = item.Item_Code,
+                        Description = item.Description,
+                        TotalStock = totalStock,
+                        StockDisplay = totalStock > 0 ? totalStock.ToString("0.##") : "Out of Stock",
+                        StockStatus = totalStock > 0 ? "In Stock" : "Out of Stock"
+                    });
+                }
+
+                return (new JavaScriptSerializer().Serialize(result));
             }
         }
         [WebMethod]

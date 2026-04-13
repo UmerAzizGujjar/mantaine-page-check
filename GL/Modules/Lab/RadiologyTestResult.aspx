@@ -422,6 +422,24 @@
             //});
             $('#btnApprove').click(function () {
                 debugger;
+                var hasApprovalRights = checkApprovalRights();
+
+                if (!hasApprovalRights) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Access Denied!',
+                        text: 'You do not have permission to approve radiology tests. Please contact administrator.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return false;
+                }
+
                 test_list = [];
                 var tbl = $("#tblgroupTestlist tbody tr");
 
@@ -439,8 +457,23 @@
 
                 var Lab_ID = 0;
 
-                // Get the selected doctor ID
                 var selectedDoctorId = $("#ddlReferDoctor").val();
+
+                if (!selectedDoctorId || selectedDoctorId === "" || selectedDoctorId === "0" || selectedDoctorId === "null") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Please select referring doctor',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return false;
+                }
 
                 var TesttDetails = { Lab_ID: Lab_ID == '(New)' ? 0 : Lab_ID, test_list: test_list }
 
@@ -507,6 +540,23 @@
             //});
 
             $('#btnReject').click(function () {
+                var hasRejectRights = checkrejectRights();
+
+                if (!hasRejectRights) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Access Denied!',
+                        text: 'You do not have permission to reject radiology tests. Please contact administrator.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return false;
+                }
                 // Show the rejection modal instead of directly rejecting
                 $('#rejectionModal').modal('show');
             });
@@ -743,7 +793,7 @@
                     if (chkBillID == "(New)") {
                         localStorage.Bill_No = chkBillID;
                     }
-                   
+
                     arr = [];
                     $("#ddllistType option").each(function (key, index) {
                         list = {};
@@ -880,11 +930,11 @@
 
 
             $("#ddlReferDoctor").select2({
-    placeholder: "Select Doctor",
-    allowClear: true,
-    width: '100%',
-    dropdownParent: $('#myModal')  // Appends to modal instead of body
-});
+                placeholder: "Select Doctor",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#myModal')  // Appends to modal instead of body
+            });
 
             $.ajax({
                 type: "POST",
@@ -910,6 +960,8 @@
             GetTestDepartment();
             LoadRadiologyPatientsList();
             LoadRadiologyResultsReadyList();
+            checkApprovalRights();
+            checkrejectRights();
 
             $('#ddlDepartment').on('change', function () {
                 LoadRadiologyPatientsList();
@@ -1548,6 +1600,30 @@
             });
 
         }
+        var radiologyReporting = null;
+         function CallRadiologyReport() {
+
+                  $.ajax({
+                      type: "POST",
+                      url: "RadiologyTestResult.aspx/GetReportToCall",
+                      data: JSON.stringify({}),
+                      contentType: "application/json; charset=utf-8",
+                      dataType: "json",
+                      success: function (response) {
+                          debugger;
+                          debugger;
+                          radiologyReporting = JSON.parse(response.d);
+                          if (radiologyReporting == '01') {
+                 
+                              radiologyReporting = '01'
+                          }
+
+                      },
+                      error: function (error) {
+                          console.error("Error fetching items", error);
+                      }
+                  });
+         }
         debugger;
         //function PreviewReport($this) {
         //    debugger;
@@ -1587,41 +1663,230 @@
 
         //}
 
-        function PreviewReport($this) {
-            debugger;
-            var $row = $($this).closest('tr');
+      function PreviewReport($this) {
+    var $row = $($this).closest('tr');
 
-            var ChkLetterHead = true;
+    var ListOfTestIDs = $row.find('input[name="List_Of_Test_IDs"]').val() || '';
+    var test_wise_ids = $row.find('input[name="test_wise_id"]').val() || '';
+    var ListTransID = $row.find('td').eq(1).contents().filter(function () {
+        return this.nodeType === 3;
+    }).text().trim();
+    var billdetailid = $row.find('input[name="Bill_Details_ID"]').val() || '';
+    var Patient_ID = $('#hdnPatient_ID').val();
 
-            var ListOfTestIDs = $row.find('input[name="List_Of_Test_IDs"]').val() || '';
-            var test_wise_ids = $row.find('input[name="test_wise_id"]').val() || '';
-            var Report_Column = $row.find('input[name="Report_Colum"]').val() || '';
-            var LabTestDetailsID = $row.find('td:eq(2)').text();
-            var ListTransID = $row.find('td').eq(1).contents().filter(function () {
-                return this.nodeType === 3;
-            }).text().trim();
+    if (!ListOfTestIDs || ListOfTestIDs === "null") {
+        ListOfTestIDs = $row.find('input[name="labtestDID"]').val() || '';
+    }
 
-            var billdetailid = $row.find('input[name="Bill_Details_ID"]').val() || '';
+    if (typeof radiologyReporting !== 'undefined' && radiologyReporting === "01") {
+        var ChkLetterHead = true;
+        var Report_Column = $row.find('input[name="Report_Colum"]').val() || '';
+        var LabTestDetailsID = $row.find('td:eq(2)').text();
+        var ListBillDetailID = (billdetailid || '').replace(', ', '');
 
-            if (!ListOfTestIDs || ListOfTestIDs === "null") {
-                var labTestDID = $row.find('input[name="labtestDID"]').val();
-                ListOfTestIDs = labTestDID || '';
-            }
+        window.open(
+            '../../ReportViewer.aspx?ReportName=TestResultQ' +
+            '&ReportTitle=Department Of Pathalogy' +
+            '&Test_IDs=' + encodeURIComponent(ListOfTestIDs) +
+            '&test_wise_ids=' + encodeURIComponent(test_wise_ids) +
+            '&TransID=' + encodeURIComponent(ListTransID) +
+            '&labTDetailsID=' + encodeURIComponent(LabTestDetailsID) +
+            '&BillDetailID=' + encodeURIComponent(ListBillDetailID) +
+            '&ReportColumn=' + encodeURIComponent(Report_Column) +
+            '&ChkLetterHead=' + ChkLetterHead
+        );
+    } 
+    else {
+        var reportWindow = window.open('', '_blank');
+        reportWindow.document.write(`
+            <!DOCTYPE html><html><head><title>Loading...</title>
+            <style>
+                body { font-family: Arial, sans-serif; display: flex; justify-content: center; 
+                       align-items: center; height: 100vh; margin: 0; background: #f5f5f5; }
+                .loader { text-align: center; }
+                .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; 
+                           border-radius: 50%; width: 50px; height: 50px; 
+                           animation: spin 1s linear infinite; margin: 0 auto 20px; }
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            </style></head>
+            <body><div class="loader">
+                <div class="spinner"></div>
+                <p style="color:#555; font-size:16px;">Loading Report, Please Wait...</p>
+            </div></body></html>
+        `);
 
-            var ListBillDetailID = (billdetailid || '').replace(', ', '');
+        $.ajax({
+            type: "POST",
+            url: "RadiologyTestResult.aspx/GetDynamicReportHTML",
+            data: JSON.stringify({
+                Test_IDs: ListOfTestIDs,
+                Trans_IDs: ListTransID,
+                Patient_ID: parseInt(Patient_ID) || 0,
+                Bill_Details_IDs: billdetailid
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var data;
+                try {
+                    data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                } catch (e) {
+                    reportWindow.document.write('<html><body style="color:red;padding:40px;">Error parsing response: ' + e.message + '</body></html>');
+                    reportWindow.document.close();
+                    return;
+                }
 
-            window.open(
-                '../../ReportViewer.aspx?ReportName=TestResultQ' +
-                '&ReportTitle=Department Of Pathalogy' +
-                '&Test_IDs=' + encodeURIComponent(ListOfTestIDs) +
-                '&test_wise_ids=' + encodeURIComponent(test_wise_ids) +
-                '&TransID=' + encodeURIComponent(ListTransID) +
-                '&labTDetailsID=' + encodeURIComponent(LabTestDetailsID) +
-                '&BillDetailID=' + encodeURIComponent(ListBillDetailID) +
-                '&ReportColumn=' + encodeURIComponent(Report_Column) +
-                '&ChkLetterHead=' + ChkLetterHead
-            );
+                if (data.error) {
+                    reportWindow.document.write('<html><body style="color:red;font-family:Arial;padding:40px;"><h3>Error Loading Report</h3><p>' + data.error + '</p></body></html>');
+                    reportWindow.document.close();
+                    return;
+                }
+
+                var logoHtml = '';
+                if (data.Company_Logo_Path && data.Company_Logo_Path !== '') {
+                    logoHtml = '<img src="' + data.Company_Logo_Path + '" alt="Logo" style="max-height:80px; max-width:150px; object-fit:contain;" onerror="this.style.display=\'none\'" />';
+                }
+
+                function formatDate(val) {
+                    if (!val) return '';
+                    try {
+                        var match = /\/Date\((\d+)\)\//.exec(val);
+                        if (match) {
+                            return new Date(parseInt(match[1])).toLocaleDateString('en-GB');
+                        }
+                        return new Date(val).toLocaleDateString('en-GB');
+                    } catch (e) { return val || ''; }
+                }
+
+                var html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report - ${data.Patient_No || ''}</title>
+    <style>
+        @page { size: A4; margin: 15mm 20mm; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; font-size: 11px; color: #000; background: #fff; line-height: 1.4; }
+        .page-wrapper { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 10mm 15mm; background: #fff; }
+        .report-header { display: flex; align-items: center; gap: 15px; padding-bottom: 10px; border-bottom: 2.5px solid #000; margin-bottom: 12px; }
+        .logo-wrap { flex-shrink: 0; width: 100px; display: flex; align-items: center; justify-content: center; }
+        .hospital-info { flex: 1; text-align: center; }
+        .hospital-info .name { font-size: 17px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .hospital-info .address { font-size: 9px; color: #333; margin-top: 3px; }
+        .patient-section { display: flex; gap: 20px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #ccc; }
+        .patient-col { flex: 1; }
+        .patient-col .patient-title { font-size: 13px; font-weight: bold; border-bottom: 1px solid #000; margin-bottom: 6px; padding-bottom: 3px; }
+        .info-row { display: flex; margin-bottom: 4px; font-size: 10.5px; gap: 5px; }
+        .info-label { font-weight: bold; min-width: 115px; flex-shrink: 0; }
+        .info-val { flex: 1; border-bottom: 1px dotted #bbb; padding-bottom: 1px; min-height: 14px; }
+        .test-banner { text-align: center; border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 7px 0; margin-bottom: 15px; }
+        .test-banner .test-title { font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .report-content { min-height: 350px; font-size: 11px; line-height: 1.7; margin-bottom: 20px; text-align: justify; }
+        .report-content p { margin-bottom: 6px; }
+        .report-content table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+        .report-content table td, .report-content table th { border: 1px solid #ccc; padding: 4px 6px; font-size: 10.5px; }
+        .signatures { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 10px; border-top: 1px solid #000; page-break-inside: avoid; }
+        .sig-block { width: 45%; }
+        .sig-block.right { text-align: right; }
+        .sig-name { font-weight: bold; font-size: 11px; }
+        .sig-qual { font-size: 9.5px; margin-top: 2px; color: #333; }
+        .sig-date { font-size: 9.5px; margin-top: 2px; }
+        .sig-note { font-style: italic; font-size: 8.5px; margin-top: 5px; color: #555; }
+        .sig-line { border-top: 1px solid #000; margin-top: 35px; padding-top: 5px; }
+        .page-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px; padding-top: 8px; border-top: 1.5px double #000; font-size: 9px; color: #444; page-break-inside: avoid; }
+        .footer-col { flex: 1; }
+        .footer-col.right { text-align: right; }
+        .print-btn { position: fixed; bottom: 25px; right: 25px; background: #1a1a2e; color: #fff; border: none; padding: 12px 28px; border-radius: 6px; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999; }
+        .print-btn:hover { background: #16213e; }
+        @media print {
+            @page { size: A4; margin: 15mm 20mm; margin-top: 0; margin-bottom: 0; }
+            body { margin: 15mm 20mm !important; padding: 0 !important; }
+            .print-btn { display: none !important; }
+            html, body { height: auto !important; overflow: visible !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
         }
+    </style>
+    <script>
+    function cleanPrint() {
+        var btn = document.querySelector('.print-btn');
+        if (btn) btn.style.display = 'none';
+        var style = document.createElement('style');
+        style.innerHTML = '@page { margin: 15mm 20mm; }';
+        document.head.appendChild(style);
+        window.print();
+        setTimeout(function() { if (btn) btn.style.display = 'block'; }, 1000);
+    }
+    <\/script>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="report-header">
+        <div class="logo-wrap">${logoHtml || ''}</div>
+        <div class="hospital-info">
+            <div class="name">${data.Company_Name || 'NATIONAL TESTING HOSPITAL & MEDICAL CENTRE'}</div>
+            <div class="address">${data.Company_Address || ''}</div>
+        </div>
+    </div>
+    <div class="patient-section">
+        <div class="patient-col">
+            <div class="patient-title">${data.Full_Name || ''} ${data.Age_years ? data.Age_years + 'Y,' : ''} ${data.Gender || ''}</div>
+            <div class="info-row"><span class="info-label">Contact :</span><span class="info-val">${data.Mobile1 || ''}</span></div>
+            <div class="info-row"><span class="info-label">Patient Type :</span><span class="info-val">${data.Patient_Type || ''}</span></div>
+            <div class="info-row"><span class="info-label">CNIC :</span><span class="info-val">${data.NIC || ''}</span></div>
+            <div class="info-row"><span class="info-label">Referring Doctor :</span><span class="info-val">${data.ReferredByDoctor || ''}</span></div>
+            <div class="info-row"><span class="info-label">Approved By :</span><span class="info-val">${data.Test_Approved_By_Doctor_name || ''}</span></div>
+        </div>
+        <div class="patient-col">
+            <div class="patient-title">MRN# ${data.Patient_No || ''}</div>
+            <div class="info-row"><span class="info-label">Reg Date :</span><span class="info-val">${formatDate(data.REg_Date)}</span></div>
+            <div class="info-row"><span class="info-label">Department :</span><span class="info-val">${data.Department || ''}</span></div>
+            <div class="info-row"><span class="info-label">Created At :</span><span class="info-val">${data.Billing_Date || ''}</span></div>
+            <div class="info-row"><span class="info-label">Reported At :</span><span class="info-val">${data.Approved_Time || ''}</span></div>
+            <div class="info-row"><span class="info-label">Accession # :</span><span class="info-val">${data.Bill_No || ''}</span></div>
+        </div>
+    </div>
+    <div class="test-banner">
+        <div class="test-title">${data.Test_Name || ''}</div>
+    </div>
+    <div class="report-content">
+        ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
+    </div>
+    <div class="signatures">
+        <div class="sig-block">
+            <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
+            <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
+            <div class="sig-date">Date &amp; Time: ${data.Test_Ready_On || ''}</div>
+            <div class="sig-note">No Signature(s) required, Electronically Verified</div>
+        </div>
+        <div class="sig-block right">
+            <div class="sig-line">
+                <div class="sig-name">${data.Test_Approved_By_Doctor_name || ''}</div>
+                <div class="sig-qual">${data.Test_Approved_By_Doctor_qualification || ''}</div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-col">${data.Report_Footer1 || ''}</div>
+        <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
+    </div>
+</div>
+<button class="print-btn" onclick="cleanPrint()">🖨 Print Report</button>
+</body>
+</html>`;
+
+                reportWindow.document.open();
+                reportWindow.document.write(html);
+                reportWindow.document.close();
+            },
+            error: function (xhr, status, error) {
+                reportWindow.document.open();
+                reportWindow.document.write('<html><body style="font-family:Arial;color:red;padding:40px;"><h3>AJAX Error</h3><p>' + (xhr.responseText || error) + '</p></body></html>');
+                reportWindow.document.close();
+            }
+        });
+    }
+}
 
         var test_wise_id;
         function GetLabDetail() {
@@ -2045,6 +2310,7 @@
                     }
                 }
             });
+          CallRadiologyReport()
             $("#chkUltraSound_level").hide();
             $('#SearchFilter').change(function (e) {
 
@@ -2222,7 +2488,7 @@
             }
             //setTimeout(function () { 
 
-            
+
             PageMethods.LoadTestCatogry(LabID, CatID, billDetailID, function (res) {
 
                 debugger;
@@ -3279,6 +3545,48 @@
                 .replace(/'/g, "&#39;");
         }
 
+        function checkApprovalRights() {
+            var hasRights = false;
+
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/CheckApprovalrights",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    hasRights = response.d === true || response.d === "true";
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking approval rights: ", error);
+                    hasRights = false;
+                }
+            });
+
+            return hasRights;
+        }
+
+        function checkrejectRights() {
+            var hasRights = false;
+
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/Checkrejectrights",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    hasRights = response.d === true || response.d === "true";
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking rejects rights: ", error);
+                    hasRights = false;
+                }
+            });
+
+            return hasRights;
+        }
+
     </script>
 
 
@@ -3530,7 +3838,7 @@
                 <!-- Patient Basic Details Section - Small compact view -->
                 <div class="patient-basic-info" style="background: #f8f9fa; padding: 8px 15px; margin: 0 15px; border-radius: 6px; border-left: 4px solid #007bff;">
                     <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; font-size: 13px;">
-                       <div><strong>MR No:</strong> <span id="modal_MRNo">--</span></div>
+                        <div><strong>MR No:</strong> <span id="modal_MRNo">--</span></div>
                         <div><strong>Name:</strong> <span id="modal_PatientName">--</span></div>
                         <div><strong>Age:</strong> <span id="modal_Age">--</span></div>
                         <div><strong>Gender:</strong> <span id="modal_Gender">--</span></div>
@@ -3573,7 +3881,7 @@
                                         </select>
                                     </div>
                                     <div style="margin-top: 15px;">
-                                        <select id="chkCTScanLevel" class="wgtmsr" >
+                                        <select id="chkCTScanLevel" class="wgtmsr">
                                             <option value="">Select CTScan Level</option>
                                         </select>
                                     </div>
@@ -3678,8 +3986,8 @@
                             <input type="button" id="btnReject" class="btn btn-primry" name="btnReject" value="Reject" />
                         </div>
                         <div class="col-lg-2 col-md-6 col-sm-12">
-    <input type="button" class="btn btn-primry" data-dismiss="modal" value="Close" style="border-radius: 5px; height: 35px;" />
-</div>
+                            <input type="button" class="btn btn-primry" data-dismiss="modal" value="Close" style="border-radius: 5px; height: 35px;" />
+                        </div>
                         <asp:Button ID="buttonimageuploadNotes" runat="server" OnClick="buttonimageuploadNotes_Click" Text=" " Style="display: none;" />
                         <asp:Button ID="btnRefresh" runat="server" OnClick="btnRefresh_Click" Style="display: none" />
                         <asp:HiddenField ID="session_obejct" runat="server" />
@@ -3694,37 +4002,37 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 23px">
                 <h1 style="margin: 0;">Patients Waiting List</h1>
             </div>
-          <div class="row">
-            <div class="col-lg-2">
-                <label>Start Date </label>
-                <input type="text" id="sdate" />
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>Start Date </label>
+                    <input type="text" id="sdate" />
+                </div>
+                <div class="col-lg-2">
+                    <label>End Date </label>
+                    <input type="text" id="edate" />
+                </div>
+                <div class="col-lg-3">
+                    <label>Department </label>
+                    <select id="ddlDepartment" class="form-control">
+                        <option value="0">All Departments</option>
+                        <option value="002">Ultrasound</option>
+                        <option value="003">X-Ray</option>
+                        <option value="004">CTScan</option>
+                        <option value="005">Physiotherapy</option>
+                        <option value="006">MRI</option>
+                        <option value="008">Cardiology</option>
+                    </select>
+                </div>
+                <div class="col-lg-3">
+                    <label>Doctor:</label>
+                    <select id="ddlDoctorFilter" onchange="LoadRadiologyPatientsList();" class="form-control">
+                        <option value="">All Doctors</option>
+                    </select>
+                </div>
+                <div class="col-lg-2">
+                    <input type="button" id="searchpendding" class="btn btn-primry" onclick="reloadPendingList();" value="Search" />
+                </div>
             </div>
-            <div class="col-lg-2">
-                <label>End Date </label>
-                <input type="text" id="edate" />
-            </div>
-            <div class="col-lg-3">
-                <label>Department </label>
-                <select id="ddlDepartment" class="form-control">
-                    <option value="0">All Departments</option>
-                    <option value="002">Ultrasound</option>
-                    <option value="003">X-Ray</option>
-                    <option value="004">CTScan</option>
-                    <option value="005">Physiotherapy</option>
-                    <option value="006">MRI</option>
-                    <option value="008">Cardiology</option>
-                </select>
-            </div>
-            <div class="col-lg-3">
-                <label>Doctor:</label>
-                <select id="ddlDoctorFilter"  onchange ="LoadRadiologyPatientsList();" class="form-control">
-                    <option value="">All Doctors</option>
-                </select>
-            </div>
-            <div class="col-lg-2">
-                <input type="button" id="searchpendding" class="btn btn-primry" onclick="reloadPendingList();" value="Search" />
-            </div>
-        </div>
 
             <div style="height: 400px; overflow-y: auto; overflow-x: auto;">
                 <table class="table test-table" id="tblradilogy">
@@ -3820,24 +4128,24 @@
         </div>
     </div>
     <!-- Rejection Remarks Modal -->
-<div id="rejectionModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content" style="width: 500px;">
-            <div class="modal-header">
-                <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Reject Test Result</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="txtRejectionRemarks">Rejection Remarks:</label>
-                    <textarea id="txtRejectionRemarks" rows="5" cols="50" class="form-control" style="width: 100%;"></textarea>
+    <div id="rejectionModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 500px;">
+                <div class="modal-header">
+                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Reject Test Result</h4>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
-                <input type="button" id="btnConfirmReject" class="btn btn-danger" value="Confirm Reject" />
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="txtRejectionRemarks">Rejection Remarks:</label>
+                        <textarea id="txtRejectionRemarks" rows="5" cols="50" class="form-control" style="width: 100%;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
+                    <input type="button" id="btnConfirmReject" class="btn btn-danger" value="Confirm Reject" />
+                </div>
             </div>
         </div>
     </div>
-</div>
 </asp:Content>

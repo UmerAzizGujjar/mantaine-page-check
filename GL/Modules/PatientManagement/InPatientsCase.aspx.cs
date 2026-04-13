@@ -1360,50 +1360,34 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
 
-            var selectedDepts = (from u in db.HR_Employees
-                                 join r in db.aspnet_Users
-                                 on u.userid equals Convert.ToString(r.UserId)
-
-                                 where r.UserId == UserID && u.Department != null
-                                 select new
-                                 {
-                                     u.Department,
-                                     Department_Name = (db.GetDataValueName("Patient Main Category", u.Department))
-                                 }
-                     ).ToList();
-
-            foreach (var datarow in selectedDepts)
-            {
-                if (datarow.Department == "All_Departments")
-                {
-                    var allDepts = (from d in db.DataValues
-                                    join v in db.ValueSets
-                                    on d.ValueSet_ID equals v.ValueSet_ID
-                                    where v.ValueSet_Name == "Patient Main Category"
-                                    select new { Department_ID = d.DataValue_Name, Department_Name = d.DataValue_Description }
+            var allDepts = (from d in db.DataValues
+                            join v in db.ValueSets on d.ValueSet_ID equals v.ValueSet_ID
+                            where v.ValueSet_Name == "Patient Main Category"
+                            select new { Department_ID = d.DataValue_Name, Department_Name = d.DataValue_Description }
                        ).ToList();
-                    return (new JavaScriptSerializer().Serialize(allDepts));
-                }
-            }
-            return (new JavaScriptSerializer().Serialize(selectedDepts));
+
+            allDepts.Insert(0, new { Department_ID = "0", Department_Name = "All Departments" });
+
+            return (new JavaScriptSerializer().Serialize(allDepts));
         }
 
         [WebMethod]
         public static string GetDoctors(int departmentId)
         {
             string data = string.Empty;
-            var userid = AppConfig.UserID;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var result = (from emp in db.HR_Employees
-                              where emp.IsDoctor == true && Convert.ToInt32(emp.Department) == departmentId && emp.userid ==Convert.ToString( userid)
-                              select new
-                              {
-                                  emp.Emp_ID,
-                                  emp.Emp_Name
-                              }).ToList();
+                var doctors = (from emp in db.HR_Employees
+                               where emp.IsDoctor == true && emp.userid == Convert.ToString(AppConfig.UserID)
+                               select new
+                               {
+                                   Emp_ID = (int)emp.Emp_ID, 
+                                   emp.Emp_Name
+                               }).ToList();
 
-                data = new JavaScriptSerializer().Serialize(result);
+                doctors.Insert(0, new { Emp_ID = 0, Emp_Name = "All Doctors" });
+
+                data = new JavaScriptSerializer().Serialize(doctors);
             }
             return data;
         }
@@ -1418,43 +1402,50 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
             DateTime startDate = System.DateTime.Now.AddDays(-5);
 
-            if (string.IsNullOrEmpty(DeptID))
+            var query = (from p in db.Reg_patients
+                         join ip in db.In_Patients
+                         on p.pat_id equals ip.Patient_ID
+                         join u in db.aspnet_Users
+                         on ip.Created_By equals u.UserId
+                         where ip.Created_Time.Value.Date >= startDate
+                         select new
+                         {
+                             p.pat_id,
+                             ip.In_Patient_ID,
+                             p.Patient_No,
+                             p.Full_Name,
+                             p.NIC,
+                             DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(ip.Doctor) select d.Emp_Name).FirstOrDefault(),
+                             DepartmentName = db.GetDataValueName("Patient Main Category", ip.Department),  // Changed from Department to DepartmentName
+                             Checked = ((from op in db.ReceivingNotes
+                                         where ip.In_Patient_ID == op.In_Patient_ID
+                                         && op.Type_Nursing == "IPD Receiving Note"
+                                         select op.In_Patient_ID).FirstOrDefault()),
+                             Gender = db.GetDataValueName("Gender", p.Gender),
+                             ip.Created_Time,
+                             u.UserName,
+                             p.Age_years,
+                             DepartmentID = ip.Department,  // For filtering
+                             DoctorID_Value = ip.Doctor,    // For filtering
+                             Patient_Type = (from dv in db.DataValues
+                                             join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                             where vs.ValueSet_Name == "Patient Type" && dv.DataValue_Name == ip.Patient_Discount_Type
+                                             select dv.DataValue_Description).FirstOrDefault()
+                         }).AsQueryable();
+
+            // Apply department filter if provided and not "0"
+            if (!string.IsNullOrEmpty(DeptID) && DeptID != "0")
             {
-                return "Invalid Department ID";
+                query = query.Where(x => x.DepartmentID == DeptID);
             }
-            var data = (from p in db.Reg_patients
-                        join ip in db.In_Patients
-                        on p.pat_id equals ip.Patient_ID
-                        join u in db.aspnet_Users
-                        on ip.Created_By equals u.UserId
-                        where  ip.Department == DeptID.ToString()
-                         && (string.IsNullOrEmpty(DoctorID) || ip.Doctor == DoctorID)
-                        && (ip.Created_Time.Value.Date >= startDate /*&& ip.Created_Time <= endData*/)
-                        orderby ip.Created_Time descending
-                        select new
-                        {
 
-                            p.pat_id,
-                            ip.In_Patient_ID,
-                            p.Patient_No,
-                            p.Full_Name,
-                            p.NIC,
-                            DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(ip.Doctor) select d.Emp_Name).FirstOrDefault(),
-                            //tibit
-                            Department = db.GetDataValueName("Patient Main Category", ip.Department),
-                            Checked = ((from op in db.ReceivingNotes
-                                        where ip.In_Patient_ID == op.In_Patient_ID
-                                        && op.Type_Nursing == "IPD Receiving Note"
-                                        select op.In_Patient_ID).FirstOrDefault()),
-                            Gender = db.GetDataValueName("Gender", p.Gender),
-                            ip.Created_Time,
-                            u.UserName,
-                            p.Age_years,
-                            //p.Patient_Type,
-                        }
-                       ).ToList();
+            // Apply doctor filter if provided and not "0"
+            if (!string.IsNullOrEmpty(DoctorID) && DoctorID != "0")
+            {
+                query = query.Where(x => x.DoctorID_Value == DoctorID);
+            }
 
-           
+            var data = query.OrderByDescending(x => x.Created_Time).ToList();
 
             return (new JavaScriptSerializer()).Serialize(data);
         }
@@ -2465,7 +2456,7 @@ namespace PMS
                                      orderby d.Item_ID descending
                                      select new
                                      {
-                                         d.Item_Code,
+                                         d.Item_ID,
                                          Description = d.Description
                                      }).Take(20).ToList();
 
@@ -2481,7 +2472,7 @@ namespace PMS
                           where d.Pharmacy_Item == true
                           select new
                           {
-                              d.Item_Code,
+                              d.Item_ID,
                               Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
                           }).ToList().Take(20);
 
@@ -6785,6 +6776,33 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string GetMedicineStock(string itemId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    // Parse the Item_ID
+                    if (int.TryParse(itemId, out int itemID))
+                    {
+                        var item = db.INV_Items.FirstOrDefault(i => i.Item_ID == itemID);
+                        if (item != null)
+                        {
+                            // Call your stock function
+                            var stockTotal = db.GetInvenrtoryItemUomTotalStock(item.Item_ID, item.InventoryOrg);
+                            return stockTotal.ToString();
+                        }
+                    }
+                    return "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        [WebMethod]
         public static string additive()
         {
 
@@ -6799,6 +6817,18 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(add_ddl);
 
         }
+
+        [WebMethod]
+        public static string checkDeathDetails()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.IPD_ALlow_Death_Details).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
         private class ddlInsVol
         {
             public string DataValueName;

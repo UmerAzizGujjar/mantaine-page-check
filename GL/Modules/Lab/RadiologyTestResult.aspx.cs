@@ -2098,5 +2098,145 @@ namespace PMS.Modules.Lab
                           select i.FixValues).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(result);
         }
+
+        [WebMethod]
+        public static string CheckApprovalrights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Approve_radiology).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
+        [WebMethod]
+        public static string Checkrejectrights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Reject_radiology).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+        [WebMethod]
+        public static string GetReportToCall()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Radiology Reporting"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+
+        [WebMethod]
+        public static string GetDynamicReportHTML(string Test_IDs, string Trans_IDs, int Patient_ID, string Bill_Details_IDs)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                var reportData = db.spLabReportQ(Test_IDs, Trans_IDs, Patient_ID, Bill_Details_IDs).ToList();
+
+                if (reportData == null || reportData.Count == 0)
+                    return "{\"error\":\"No data found\"}";
+
+                var data = reportData.First();
+
+                // Get the raw path from GetCompanyLogo (e.g. "C:\Projects\Images\11414.png")
+                // Get physical path from Segment1 + CompanyID + .png
+                string physicalFolder = DBClass.getField(
+                    "SELECT Segment1 FROM Sys_Parms WHERE Name = 'Project Image File Path'"
+                )?.ToString() ?? "";
+
+                string logoWebPath = "";
+                if (!string.IsNullOrEmpty(physicalFolder))
+                {
+                    try
+                    {
+                        string companyID = "11414";
+                        string fullImagePath = System.IO.Path.Combine(
+                            physicalFolder.TrimEnd('\\'),
+                            companyID + ".png"
+                        );
+
+                        // Read file and convert to Base64
+                        if (System.IO.File.Exists(fullImagePath))
+                        {
+                            byte[] imageBytes = System.IO.File.ReadAllBytes(fullImagePath);
+                            string base64String = Convert.ToBase64String(imageBytes);
+
+                            // Detect image type from extension
+                            string ext = System.IO.Path.GetExtension(fullImagePath)
+                                             .ToLower()
+                                             .TrimStart('.');
+                            string mimeType = ext == "png" ? "image/png"
+                                            : ext == "jpg" || ext == "jpeg" ? "image/jpeg"
+                                            : ext == "gif" ? "image/gif"
+                                            : "image/png";
+
+                            // Embed as data URI — works everywhere, no IIS config needed
+                            logoWebPath = "data:" + mimeType + ";base64," + base64String;
+                        }
+                    }
+                    catch
+                    {
+                        logoWebPath = "";
+                    }
+                }
+
+                var result = new
+                {
+                    Company_Name = DBClass.getField("SELECT TOP 1 Company_Name FROM sys_Companys WHERE Company_ID = 1")?.ToString() ?? "National Hospital & Medical Centre",
+                    Company_Address = DBClass.getField("SELECT TOP 1 Company_Address FROM sys_Companys WHERE Company_ID = 1")?.ToString() ?? "",
+                    Company_Logo_Path = logoWebPath,
+
+                    // Test
+                    Test_Name = data.Test_Name ?? data.Group_Department ?? "Radiology Report",
+                    Fixed_Value = data.Fixed_Value ?? "",
+
+                    // Patient
+                    Full_Name = data.Full_Name ?? "",
+                    Age_years = data.Age_years?.ToString() ?? "",
+                    Gender = data.Gender ?? "",
+                    Patient_No = data.Patient_No?.ToString() ?? "",
+                    REg_Date = data.REg_Date,
+                    Mobile1 = data.Mobile1 ?? "",
+                    NIC = data.NIC ?? "",
+                    Patient_Type = data.Patient_Type ?? "",
+                    ReferredByDoctor = data.ReferredByDoctor ?? "",
+                    Bill_No = data.Bill_No ?? "",
+                    Department = data.DepartMent ?? "",
+                    Billing_Date = data.Billing_Date?.ToString() ?? "",
+                    Approved_Time = data.Approved_Time?.ToString() ?? "",
+
+                    // Footer
+                    Report_Footer = data.Report_Footer ?? "",
+                    Report_Footer_tow = data.Report_Footer_tow ?? "",
+                    Report_Footer1 = data.Report_Footer1 ?? "",
+                    Report_Footer_tow1 = data.Report_Footer_tow1 ?? "",
+
+                    // Doctors
+                    Test_Approved_By_Doctor_name = data.Test_Approved_By_Doctor_name ?? "",
+                    Test_Approved_By_Doctor_qualification = data.Test_Approved_By_Doctor_qualification ?? "",
+                    Test_Performed_By_Doctor_name = data.Test_Performed_By_Doctor_name ?? "",
+                    Test_Performed_By_Doctor_qualification = data.Test_Performed_By_Doctor_qualification ?? "",
+                    Test_Ready_On = data.Test_Ready_On?.ToString() ?? "",
+                };
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+            catch (Exception ex)
+            {
+                // Return clean error — no path mapping calls here
+                return "{\"error\":\"" + ex.Message.Replace("\"", "'").Replace("\r", " ").Replace("\n", " ") + "\"}";
+            }
+        }
+
+        // code ends here
+
     }
 }
