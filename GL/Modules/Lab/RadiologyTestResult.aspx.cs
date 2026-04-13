@@ -2120,5 +2120,73 @@ namespace PMS.Modules.Lab
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
+        //[WebMethod]
+        //public static string GetDynamicReportHTML(string Test_IDs, string Trans_IDs, int Patient_ID, string Bill_Details_IDs)
+        //{
+        //    try
+        //    {
+        //        DataBaseDataContext db = new DataBaseDataContext();
+
+        //        var reportData = db.spLabReportQ(Test_IDs, Trans_IDs, Patient_ID, Bill_Details_IDs).ToList();
+
+        //        if (reportData == null || reportData.Count == 0)
+        //            return "{\"error\":\"No data found\"}";
+
+        //        var data = reportData.First();
+
+        //        // Get company logo path from sys_parms or company table
+        //        string logoPath = DBClass.getField("SELECT TOP 1 Company_Logo_Path FROM Company_Info")?.ToString() ?? "";
+        //        if (!string.IsNullOrEmpty(logoPath) && !logoPath.StartsWith("http"))
+        //        {
+        //            logoPath = HttpContext.Current.Server.MapPath(logoPath);
+        //        }
+
+        //        var result = new
+        //        {
+        //            Company_Name = data.Company_Name ?? "National Hospital & Medical Centre",
+        //            Company_Address = data.Company_Address ?? "132/3 L- Block phase-1 near sports stadium DHA, Lahore Cantt",
+        //            Company_Logo_Path = logoPath,  // ADD THIS LINE
+        //            Test_Name = data.Test_Name ?? data.Group_Department ?? "Radiology Report",
+        //            Fixed_Value = data.Fixed_Value ?? "",
+
+        //            // Patient Fields
+        //            Full_Name = data.Full_Name ?? "",
+        //            Age_years = data.Age_years?.ToString() ?? "",
+        //            Gender = data.Gender ?? "",
+        //            Patient_No = data.Patient_No?.ToString() ?? "",
+        //            REg_Date = data.REg_Date,
+        //            Mobile1 = data.Mobile1 ?? "",
+        //            NIC = data.NIC ?? "",
+        //            Patient_Type = data.Patient_Type ?? "",
+        //            ReferredByDoctor = data.ReferredByDoctor ?? "",
+        //            Bill_No = data.Bill_No ?? "",
+        //            Department = data.DepartMent ?? "",
+        //            Billing_Date = data.Billing_Date,
+        //            Approved_Time = data.Approved_Time,
+
+        //            // Footer Fields
+        //            Report_Footer = data.Report_Footer ?? "",
+        //            Report_Footer_tow = data.Report_Footer_tow ?? "",
+        //            Report_Footer1 = data.Report_Footer1 ?? "",
+        //            Report_Footer_tow1 = data.Report_Footer_tow1 ?? "",
+
+        //            // Doctor Fields
+        //            Test_Approved_By_Doctor_name = data.Test_Approved_By_Doctor_name ?? "",
+        //            Test_Approved_By_Doctor_qualification = data.Test_Approved_By_Doctor_qualification ?? "",
+        //            Test_Performed_By_Doctor_name = data.Test_Performed_By_Doctor_name ?? "",
+        //            Test_Performed_By_Doctor_qualification = data.Test_Performed_By_Doctor_qualification ?? "",
+        //            Test_Ready_On = data.Test_Ready_On,
+        //        };
+
+        //        return new JavaScriptSerializer().Serialize(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return "{\"error\":\"" + ex.Message.Replace("\"", "'") + "\"}";
+        //    }
+        //}
+
+        // code ends here
+
     }
 }

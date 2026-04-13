@@ -6246,14 +6246,15 @@
             var parsedData = JSON.parse(data);
             var options = '';
             $.each(parsedData, function (key, value) {
-                options += '<option value=' + value.Department + '> ' + value.Department_Name + '</option>';
+                options += '<option value=' + value.Department_ID + '> ' + value.Department_Name + '</option>';
             });
             $('#ctl00_MainContent_ddlDepartments').html(options);
             setTimeout(function () {
-
-                $('#ctl00_MainContent_ddlDepartments').val(localStorage.DeptID);
+                // Set to "All Departments" (value 0)
+                $('#ctl00_MainContent_ddlDepartments').val("0");
+                fillDoctors();
+                fillPendingPatientsList();
             }, 1000);
-            fillDoctors()
         }
         function select(inPatID) {
             debugger;
@@ -6277,11 +6278,6 @@
             debugger;
             var departmentId = $('#ctl00_MainContent_ddlDepartments').val();
 
-            if (!departmentId) {
-                $('#ddldoctors').html('<option value="">Select Doctor</option>');
-                return;
-            }
-
             var options = '';
 
             $.ajax({
@@ -6289,9 +6285,11 @@
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
-                data: JSON.stringify({ departmentId: departmentId }),
+                data: JSON.stringify({ departmentId: departmentId || '0' }),
                 success: function (response) {
                     var data = response.d ? JSON.parse(response.d) : response;
+
+                    $('#ddldoctors').empty();
 
                     $.each(data, function (key, value) {
                         options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
@@ -6303,7 +6301,6 @@
                     console.error('Error fetching doctor data:', error);
                 }
             });
-            fillPendingPatientsList()
         }
 
 
@@ -6311,16 +6308,18 @@
         function fillPendingPatientsList() {
             debugger;
             $(".se-pre-con").fadeIn("slow");
-            debugger;
-            /*      var SelectedDepartment = localStorage.DeptID;*/
+
             var SelectedDepartment = $("#ctl00_MainContent_ddlDepartments").val();
             var SelectedDoctor = $("#ddldoctors").val();
 
-            PageMethods.PendingPatients(SelectedDepartment, SelectedDoctor, function (data) {
+            var deptParam = (SelectedDepartment === "0" || SelectedDepartment === "" || !SelectedDepartment) ? "" : SelectedDepartment;
+            var doctorParam = (SelectedDoctor === "0" || SelectedDoctor === "" || !SelectedDoctor) ? "" : SelectedDoctor;
+
+            PageMethods.PendingPatients(deptParam, doctorParam, function (data) {
                 var parsedData = JSON.parse(data);
                 var rows = '';
                 $.each(parsedData, function (key, value) {
-                  
+
                     var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
                     var retdate = moment(TrnsDate).format('LLLL');
                     var status = value.Checked;
@@ -6330,22 +6329,46 @@
                     else {
                         status = "Unchecked"
                     }
-                  
+
                     var chkPrivate = document.getElementById("ctl00_MainContent_chkPrivate").checked;
                     if (chkPrivate == true) {
                         if (value.Patient_Type == "02") {
-                            rows += '<tr> <td>' + value.Patient_No + '</td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Gender + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.DoctorName + '</td> ' + '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=select(' + value.In_Patient_ID + ')>Select</a> </td> </tr>';
-                           
+                            rows += '<tr>' +
+                                '<td>' + value.Patient_No + '</td>' +
+                                '<td>' + value.Full_Name + '</td>' +
+                                '<td>' + value.Age_years + '</td>' +
+                                '<td>' + value.Gender + '</td>' +
+                                '<td>' + retdate + '</td>' +
+                                '<td>' + value.DepartmentName + '</td>' +
+                                '<td>' + value.DoctorName + '</td>' +
+                                '<td>' + value.UserName + '</td>' +
+                                '<td>' + status + '</td>' +
+                                '<td><a href="javascript:void(0)" onclick=select(' + value.In_Patient_ID + ')>Select</a></td>' +
+                                '</tr>';
                         }
                     }
                     else {
                         if (value.Patient_Type != "02") {
-                            rows += '<tr> <td>' + value.Patient_No + '</td>' + '<td>' + value.Full_Name + '</td> ' + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + value.Gender + '</td> ' + '<td>' + retdate + '</td> ' + '<td>' + value.Department + '</td> ' + '<td>' + value.DoctorName + '</td> '+ '<td>' + value.UserName + '</td> ' + '<td>' + status + '</td>' + ' <td> <a href="javascript:void(0)" onclick=select(' + value.In_Patient_ID + ')>Select</a> </td> </tr>';
+                            rows += '<tr>' +
+                                '<td>' + value.Patient_No + '</td>' +
+                                '<td>' + value.Full_Name + '</td>' +
+                                '<td>' + value.Age_years + '</td>' +
+                                '<td>' + value.Gender + '</td>' +
+                                '<td>' + retdate + '</td>' +
+                                '<td>' + value.DepartmentName + '</td>' +
+                                '<td>' + value.DoctorName + '</td>' +
+                                '<td>' + value.UserName + '</td>' +
+                                '<td>' + status + '</td>' +
+                                '<td><a href="javascript:void(0)" onclick=select(' + value.In_Patient_ID + ')>Select</a></td>' +
+                                '</tr>';
                         }
                     }
                 });
                 $('#tblPendingPatients tbody').html(rows);
-            }, function (exec) { })
+                $(".se-pre-con").fadeOut("slow");
+            }, function (exec) {
+                $(".se-pre-con").fadeOut("slow");
+            })
         }
 
         
