@@ -793,7 +793,7 @@
                     if (chkBillID == "(New)") {
                         localStorage.Bill_No = chkBillID;
                     }
-                   
+
                     arr = [];
                     $("#ddllistType option").each(function (key, index) {
                         list = {};
@@ -930,11 +930,11 @@
 
 
             $("#ddlReferDoctor").select2({
-    placeholder: "Select Doctor",
-    allowClear: true,
-    width: '100%',
-    dropdownParent: $('#myModal')  // Appends to modal instead of body
-});
+                placeholder: "Select Doctor",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#myModal')  // Appends to modal instead of body
+            });
 
             $.ajax({
                 type: "POST",
@@ -1639,424 +1639,498 @@
 
         //}
 
-        function PreviewReport($this) {
-            debugger;
-            var $row = $($this).closest('tr');
+        //function PreviewReport($this) {
+        //    debugger;
+        //    var $row = $($this).closest('tr');
 
-            var ChkLetterHead = true;
+        //    var ChkLetterHead = true;
+
+        //    var ListOfTestIDs = $row.find('input[name="List_Of_Test_IDs"]').val() || '';
+        //    var test_wise_ids = $row.find('input[name="test_wise_id"]').val() || '';
+        //    var Report_Column = $row.find('input[name="Report_Colum"]').val() || '';
+        //    var LabTestDetailsID = $row.find('td:eq(2)').text();
+        //    var ListTransID = $row.find('td').eq(1).contents().filter(function () {
+        //        return this.nodeType === 3;
+        //    }).text().trim();
+
+        //    var billdetailid = $row.find('input[name="Bill_Details_ID"]').val() || '';
+
+        //    if (!ListOfTestIDs || ListOfTestIDs === "null") {
+        //        var labTestDID = $row.find('input[name="labtestDID"]').val();
+        //        ListOfTestIDs = labTestDID || '';
+        //    }
+
+        //    var ListBillDetailID = (billdetailid || '').replace(', ', '');
+
+        //    window.open(
+        //        '../../ReportViewer.aspx?ReportName=TestResultQ' +
+        //        '&ReportTitle=Department Of Pathalogy' +
+        //        '&Test_IDs=' + encodeURIComponent(ListOfTestIDs) +
+        //        '&test_wise_ids=' + encodeURIComponent(test_wise_ids) +
+        //        '&TransID=' + encodeURIComponent(ListTransID) +
+        //        '&labTDetailsID=' + encodeURIComponent(LabTestDetailsID) +
+        //        '&BillDetailID=' + encodeURIComponent(ListBillDetailID) +
+        //        '&ReportColumn=' + encodeURIComponent(Report_Column) +
+        //        '&ChkLetterHead=' + ChkLetterHead
+        //    );
+        //}
+
+
+        function PreviewReport($this) {
+            var $row = $($this).closest('tr');
 
             var ListOfTestIDs = $row.find('input[name="List_Of_Test_IDs"]').val() || '';
             var test_wise_ids = $row.find('input[name="test_wise_id"]').val() || '';
-            var Report_Column = $row.find('input[name="Report_Colum"]').val() || '';
-            var LabTestDetailsID = $row.find('td:eq(2)').text();
             var ListTransID = $row.find('td').eq(1).contents().filter(function () {
                 return this.nodeType === 3;
             }).text().trim();
-
             var billdetailid = $row.find('input[name="Bill_Details_ID"]').val() || '';
+            var Patient_ID = $('#hdnPatient_ID').val();
 
             if (!ListOfTestIDs || ListOfTestIDs === "null") {
-                var labTestDID = $row.find('input[name="labtestDID"]').val();
-                ListOfTestIDs = labTestDID || '';
+                ListOfTestIDs = $row.find('input[name="labtestDID"]').val() || '';
             }
 
-            var ListBillDetailID = (billdetailid || '').replace(', ', '');
+            // Open loading window immediately
+            var reportWindow = window.open('', '_blank');
+            reportWindow.document.write(`
+        <!DOCTYPE html><html><head><title>Loading...</title>
+        <style>
+            body { font-family: Arial, sans-serif; display: flex; justify-content: center; 
+                   align-items: center; height: 100vh; margin: 0; background: #f5f5f5; }
+            .loader { text-align: center; }
+            .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; 
+                       border-radius: 50%; width: 50px; height: 50px; 
+                       animation: spin 1s linear infinite; margin: 0 auto 20px; }
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        </style></head>
+        <body><div class="loader">
+            <div class="spinner"></div>
+            <p style="color:#555; font-size:16px;">Loading Report, Please Wait...</p>
+        </div></body></html>
+    `);
 
-            window.open(
-                '../../ReportViewer.aspx?ReportName=TestResultQ' +
-                '&ReportTitle=Department Of Pathalogy' +
-                '&Test_IDs=' + encodeURIComponent(ListOfTestIDs) +
-                '&test_wise_ids=' + encodeURIComponent(test_wise_ids) +
-                '&TransID=' + encodeURIComponent(ListTransID) +
-                '&labTDetailsID=' + encodeURIComponent(LabTestDetailsID) +
-                '&BillDetailID=' + encodeURIComponent(ListBillDetailID) +
-                '&ReportColumn=' + encodeURIComponent(Report_Column) +
-                '&ChkLetterHead=' + ChkLetterHead
-            );
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/GetDynamicReportHTML",
+                data: JSON.stringify({
+                    Test_IDs: ListOfTestIDs,
+                    Trans_IDs: ListTransID,
+                    Patient_ID: parseInt(Patient_ID) || 0,
+                    Bill_Details_IDs: billdetailid
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data;
+                    try {
+                        data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                    } catch (e) {
+                        reportWindow.document.write('<html><body style="color:red;padding:40px;">Error parsing response: ' + e.message + '</body></html>');
+                        reportWindow.document.close();
+                        return;
+                    }
+
+                    if (data.error) {
+                        reportWindow.document.write('<html><body style="color:red;font-family:Arial;padding:40px;"><h3>Error Loading Report</h3><p>' + data.error + '</p></body></html>');
+                        reportWindow.document.close();
+                        return;
+                    }
+
+                    // Build logo HTML
+                    var logoHtml = '';
+                    if (data.Company_Logo_Path && data.Company_Logo_Path !== '') {
+                        logoHtml = '<img src="' + data.Company_Logo_Path + '" alt="Logo" style="max-height:80px; max-width:150px; object-fit:contain;" onerror="this.style.display=\'none\'" />';
+                    }
+
+                    // Format dates safely
+                    function formatDate(val) {
+                        if (!val) return '';
+                        try {
+                            // Handle /Date(xxxxx)/ format
+                            var match = /\/Date\((\d+)\)\//.exec(val);
+                            if (match) {
+                                return new Date(parseInt(match[1])).toLocaleDateString('en-GB');
+                            }
+                            return new Date(val).toLocaleDateString('en-GB');
+                        } catch (e) { return val || ''; }
+                    }
+
+                    var html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report - ${data.Patient_No || ''}</title>
+    <style>
+        @page { size: A4; margin: 15mm 20mm; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            color: #000;
+            background: #fff;
+            line-height: 1.4;
         }
 
+        .page-wrapper {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 10mm 15mm;
+            background: #fff;
+        }
 
-//        function PreviewReport($this) {
-//            debugger;
-//            var $row = $($this).closest('tr');
-//            var ListOfTestIDs = $row.find('input[name="List_Of_Test_IDs"]').val() || '';
-//            var test_wise_ids = $row.find('input[name="test_wise_id"]').val() || '';
-//            var ListTransID = $row.find('td').eq(1).contents().filter(function () {
-//                return this.nodeType === 3;
-//            }).text().trim();
-//            var billdetailid = $row.find('input[name="Bill_Details_ID"]').val() || '';
-//            var Patient_ID = $('#hdnPatient_ID').val();
+        /* ── HEADER ── */
+        .report-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2.5px solid #000;
+            margin-bottom: 12px;
+        }
+        .logo-wrap {
+            flex-shrink: 0;
+            width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hospital-info {
+            flex: 1;
+            text-align: center;
+        }
+        .hospital-info .name {
+            font-size: 17px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .hospital-info .address {
+            font-size: 9px;
+            color: #333;
+            margin-top: 3px;
+        }
 
-//            if (!ListOfTestIDs || ListOfTestIDs === "null") {
-//                var labTestDID = $row.find('input[name="labtestDID"]').val();
-//                ListOfTestIDs = labTestDID || '';
-//            }
+        /* ── PATIENT INFO ── */
+        .patient-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+        .patient-col { flex: 1; }
+        .patient-col .patient-title {
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            margin-bottom: 6px;
+            padding-bottom: 3px;
+        }
+        .info-row {
+            display: flex;
+            margin-bottom: 4px;
+            font-size: 10.5px;
+            gap: 5px;
+        }
+        .info-label {
+            font-weight: bold;
+            min-width: 115px;
+            flex-shrink: 0;
+        }
+        .info-val {
+            flex: 1;
+            border-bottom: 1px dotted #bbb;
+            padding-bottom: 1px;
+            min-height: 14px;
+        }
 
-//            // Show loading
-//            var reportWindow = window.open('', '_blank');
-//            reportWindow.document.write('<html><head><title>Loading Report...</title></head><body style="font-family:Arial;text-align:center;padding-top:100px;">Loading report, please wait...</body></html>');
+        /* ── TEST NAME BANNER ── */
+        .test-banner {
+            text-align: center;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 7px 0;
+            margin-bottom: 15px;
+        }
+        .test-banner .test-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-//            $.ajax({
-//                type: "POST",
-//                url: "RadiologyTestResult.aspx/GetDynamicReportHTML",
-//                data: JSON.stringify({
-//                    Test_IDs: ListOfTestIDs,
-//                    Trans_IDs: ListTransID,
-//                    Patient_ID: Patient_ID,
-//                    Bill_Details_IDs: billdetailid
-//                }),
-//                contentType: "application/json; charset=utf-8",
-//                dataType: "json",
-//                success: function (response) {
-//                    var data = JSON.parse(response.d);
-//                    var fixedValueHtml = data.Fixed_Value || 'No report content available';
+        /* ── REPORT CONTENT ── */
+        .report-content {
+            min-height: 350px;
+            font-size: 11px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .report-content p { margin-bottom: 6px; }
+        .report-content table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+        .report-content table td,
+        .report-content table th { border: 1px solid #ccc; padding: 4px 6px; font-size: 10.5px; }
 
-//                    // Fix logo path - handle both relative and absolute paths
-//                    var logoSrc = '';
-//                    if (data.Company_Logo_Path) {
-//                        if (data.Company_Logo_Path.startsWith('http')) {
-//                            logoSrc = data.Company_Logo_Path;
-//                        } else if (data.Company_Logo_Path.startsWith('~')) {
-//                            logoSrc = data.Company_Logo_Path.replace('~', window.location.origin);
-//                        } else if (data.Company_Logo_Path.startsWith('/')) {
-//                            logoSrc = window.location.origin + data.Company_Logo_Path;
-//                        } else {
-//                            logoSrc = data.Company_Logo_Path;
-//                        }
-//                    }
+        ///* ── SIGNATURES ── */
+        //.signatures {
+        //    display: flex;
+        //    justify-content: space-between;
+        //    margin-top: 30px;
+        //    padding-top: 10px;
+        //    border-top: 1px solid #000;
+        //    page-break-inside: avoid;
+        //}
+        //.sig-block { width: 45%; }
+        //.sig-block.right { text-align: right; }
+        //.sig-name { font-weight: bold; font-size: 11px; }
+        //.sig-qual { font-size: 9.5px; margin-top: 2px; color: #333; }
+        //.sig-date { font-size: 9.5px; margin-top: 2px; }
+        //.sig-note { font-style: italic; font-size: 8.5px; margin-top: 5px; color: #555; }
+        //.sig-line {
+        //    border-top: 1px solid #000;
+        //    margin-top: 35px;
+        //    padding-top: 5px;
+        //}
 
-//                    var html = `<!DOCTYPE html>
-//<html lang="en">
-//<head>
-//    <meta charset="UTF-8">
-//    <title>Radiology Report - ${data.Patient_No || 'Report'}</title>
-//    <style>
-//        @page { size: A4; margin: 0; }
-//        * { margin: 0; padding: 0; box-sizing: border-box; }
-//        body { 
-//            background: #fff; 
-//            font-family: 'Arial', sans-serif; 
-//            font-size: 11px; 
-//            color: #000;
-//            line-height: 1.4;
-//        }
-//        .report-container {
-//            width: 210mm;
-//            min-height: 297mm;
-//            margin: 0 auto;
-//            background: white;
-//            padding: 15mm 20mm;
-//        }
-        
-//        /* Header Section */
-//        .report-header {
-//            display: flex;
-//            justify-content: flex-start;
-//            align-items: center;
-//            margin-bottom: 15px;
-//            padding-bottom: 10px;
-//            border-bottom: 2px solid #000;
-//        }
-//        .logo-area {
-//            width: 100px;
-//            height: 80px;
-//            display: flex;
-//            align-items: center;
-//            justify-content: center;
-//            margin-right: 20px;
-//        }
-//        .hospital-logo {
-//            max-width: 90px;
-//            max-height: 75px;
-//            object-fit: contain;
-//        }
-//        .hospital-brand { 
-//            text-align: center; 
-//            flex-grow: 1;
-//        }
-//        .hospital-name { 
-//            font-size: 18px; 
-//            font-weight: bold; 
-//            text-transform: uppercase;
-//            margin-bottom: 3px;
-//        }
-//        .hospital-addr { 
-//            font-size: 9px;
-//            line-height: 1.3;
-//        }
-        
-//        /* Patient Info Section - Two Column Layout with LEFT alignment */
-//        .patient-info-section {
-//            display: flex;
-//            justify-content: space-between;
-//            margin-bottom: 15px;
-//            gap: 20px;
-//        }
-//        .patient-column {
-//            flex: 1;
-//        }
-//        .info-row { 
-//            display: flex;
-//            margin-bottom: 3px;
-//            font-size: 10.5px;
-//            align-items: flex-start;
-//        }
-//        .info-label { 
-//            font-weight: bold;
-//            min-width: 110px;
-//            flex-shrink: 0;
-//            text-align: left;
-//        }
-//        .info-val { 
-//            flex-grow: 1;
-//            text-align: left;
-//            border-bottom: 1px dotted #ccc;
-//            padding-bottom: 1px;
-//        }
-//        .name-age-gender {
-//            font-size: 12px;
-//            font-weight: bold;
-//            margin-bottom: 5px;
-//            padding-bottom: 3px;
-//            border-bottom: 1px solid #000;
-//            text-align: left;
-//        }
-//        .mrn-section {
-//            font-size: 12px;
-//            font-weight: bold;
-//            margin-bottom: 5px;
-//            padding-bottom: 3px;
-//            border-bottom: 1px solid #000;
-//            text-align: left;
-//        }
-        
-//        /* Test Name Section */
-//        .test-name-container {
-//            border-top: 2px solid #000;
-//            border-bottom: 2px solid #000;
-//            padding: 8px 0;
-//            margin: 15px 0;
-//            text-align: center;
-//        }
-//        .test-name-text { 
-//            font-size: 14px; 
-//            font-weight: bold; 
-//            text-transform: uppercase;
-//        }
-        
-//        /* Report Content */
-//        .report-content {
-//            margin-top: 15px;
-//            min-height: 400px;
-//            line-height: 1.6;
-//            font-size: 11px;
-//            text-align: justify;
-//        }
-        
-//        /* Signatures Section - Fixed to prevent breaking */
-//        .signatures-section {
-//            margin-top: 40px;
-//            display: flex;
-//            justify-content: space-between;
-//            padding-top: 10px;
-//            border-top: 1px solid #000;
-//            page-break-inside: avoid;
-//        }
-//        .signature-block {
-//            width: 45%;
-//            text-align: left;
-//        }
-//        .signature-block.right {
-//            text-align: right;
-//        }
-//        .signature-line {
-//            margin-top: 40px;
-//            border-top: 1px solid #000;
-//            padding-top: 5px;
-//            font-weight: bold;
-//            font-size: 11px;
-//        }
-//        .electronic-note { 
-//            font-style: italic; 
-//            font-size: 9px;
-//            margin-top: 5px;
-//            color: #333;
-//        }
-//        .doctor-info {
-//            font-size: 9px;
-//            margin-top: 3px;
-//        }
-        
-//        /* Footer - Fixed layout to prevent breaking */
-//        .page-footer {
-//            margin-top: 30px;
-//            display: flex;
-//            justify-content: space-between;
-//            font-size: 9px;
-//            border-top: 1px double #000;
-//            padding-top: 8px;
-//            page-break-inside: avoid;
-//        }
-//        .footer-text {
-//            flex: 1;
-//            text-align: left;
-//            padding: 0 5px;
-//        }
-        
-//        /* Print Button */
-//        .print-btn {
-//            position: fixed;
-//            bottom: 20px;
-//            right: 20px;
-//            background: #222;
-//            color: white;
-//            border: none;
-//            padding: 12px 24px;
-//            border-radius: 5px;
-//            cursor: pointer;
-//            font-size: 14px;
-//        }
-//        .print-btn:hover {
-//            background: #444;
-//        }
-        
-//        @media print {
-//            body { background: white; }
-//            .report-container { 
-//                margin: 0; 
-//                padding: 15mm 20mm;
-//                box-shadow: none;
-//                width: 100%;
-//            }
-//            .print-btn { display: none; }
-//            .info-val { border-bottom: none; }
-//        }
-//    </style>
-//</head>
-//<body>
-//    <div class="report-container">
-//        <!-- Header with Logo -->
-//        <div class="report-header">
-//            <div class="logo-area">
-//                ${logoSrc ?
-//                            '<img src="' + logoSrc + '" alt="Hospital Logo" class="hospital-logo" onerror="this.style.display=\'none\'" />' :
-//                            '<div style="width:90px;height:75px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;font-size:8px;text-align:center;">LOGO</div>'
-//                        }
-//            </div>
-//            <div class="hospital-brand">
-//                <div class="hospital-name">${data.Company_Name || 'NATIONAL HOSPITAL & MEDICAL CENTRE'}</div>
-//                <div class="hospital-addr">${data.Company_Address || '132/3 L- Block phase-1 near sports stadium DHA, Lahore Cantt'}</div>
-//            </div>
-//        </div>
+            <!-- SIGNATURES -->
+    <div class="signatures">
 
-//        <!-- Patient Information - Two Columns with LEFT alignment -->
-//        <div class="patient-info-section">
-//            <!-- Left Column -->
-//            <div class="patient-column">
-//                <div class="name-age-gender">
-//                    ${data.Full_Name || ''} &nbsp;&nbsp; ${data.Age_years || ''}Y, &nbsp; ${data.Gender || ''}
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Contact :</span>
-//                    <span class="info-val">${data.Mobile1 || ''}</span>
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Patient Type :</span>
-//                    <span class="info-val">${data.Patient_Type || ''}</span>
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">CNIC :</span>
-//                    <span class="info-val">${data.NIC || 'NIC Not Available'}</span>
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Referring Doctor :</span>
-//                    <span class="info-val">${data.ReferredByDoctor || ''}</span>
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Approved By :</span>
-//                    <span class="info-val">${data.Test_Approved_By_Doctor_name || ''}</span>
-//                </div>
-//            </div>
+        <!-- Left: Performing Doctor -->
+        <div class="sig-block">
+            <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
+            <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
+            <div class="sig-date">Date &amp; Time: ${data.Test_Ready_On || ''}</div>
+            <div class="sig-note">No Signature(s) required, Electronically Verified</div>
+        </div>
 
-//            <!-- Right Column -->
-//            <div class="patient-column">
-//                <div class="mrn-section">
-//                    MRN# ${data.Patient_No || ''}
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Reg Date :</span>
-//                    <span class="info-val">${data.REg_Date ? new Date(parseInt(data.REg_Date.replace('/Date(', '').replace(')/', ''))).toLocaleDateString() : ''}</span>
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Age :</span>
-//                    <span class="info-val">${data.Age_years || ''}</span>
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Department :</span>
-//                    <span class="info-val">${data.Department || ''}</span>
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Created At :</span>
-//                    <span class="info-val">${data.Billing_Date || ''}</span>
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Reported At :</span>
-//                    <span class="info-val">${data.Approved_Time || ''}</span>
-//                </div>
-//                <div class="info-row">
-//                    <span class="info-label">Accession # :</span>
-//                    <span class="info-val">${data.Bill_No || ''}</span>
-//                </div>
-//            </div>
-//        </div>
+        <!-- Right: Approving Doctor — fixed margin -->
+        <div class="sig-block right">
+            <div class="sig-line" style="margin-top:0; border-top:1px solid #000; 
+                 padding-top:5px; display:inline-block; min-width:200px; text-align:right;">
+                <div class="sig-name">
+                    ${data.Test_Approved_By_Doctor_name
+                            ? data.Test_Approved_By_Doctor_name
+                            : '&nbsp;'}
+                </div>
+                <div class="sig-qual">
+                    ${data.Test_Approved_By_Doctor_qualification || ''}
+                </div>
+            </div>
+        </div>
 
-//        <!-- Test Name -->
-//        <div class="test-name-container">
-//            <div class="test-name-text">${data.Test_Name || ''}</div>
-//        </div>
+    </div>
 
-//        <!-- Report Content -->
-//        <div class="report-content">
-//            ${fixedValueHtml}
-//        </div>
 
-//        <!-- Signatures -->
-//        <div class="signatures-section">
-//            <div class="signature-block">
-//                <div style="font-weight:bold;margin-bottom:5px;">${data.Test_Performed_By_Doctor_name || ''}</div>
-//                <div class="doctor-info">${data.Test_Performed_By_Doctor_qualification || ''}</div>
-//                <div class="doctor-info">Date & Time: ${data.Test_Ready_On || ''}</div>
-//                <div class="electronic-note">No Signature(s) required, Electronically Verified</div>
-//            </div>
-//            <div class="signature-block right">
-//                <div class="signature-line">
-//                    ${data.Test_Approved_By_Doctor_name || ''}<br>
-//                    <span style="font-weight:normal;font-size:10px;">${data.Test_Approved_By_Doctor_qualification || ''}</span>
-//                </div>
-//            </div>
-//        </div>
 
-//        <!-- Footer - Won't break fields -->
-//        <div class="page-footer">
-//            <div class="footer-text">${data.Report_Footer1 || ''}</div>
-//            <div class="footer-text">${data.Report_Footer_tow1 || ''}</div>
-//        </div>
-//    </div>
+        /* ── PAGE FOOTER ── */
+        .page-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1.5px double #000;
+            font-size: 9px;
+            color: #444;
+            page-break-inside: avoid;
+        }
+        .footer-col { flex: 1; }
+        .footer-col.right { text-align: right; }
 
-//    <button class="print-btn" onclick="window.print()">🖨 PRINT REPORT</button>
-//</body>
-//</html>`;
+        /* ── PRINT BUTTON ── */
+        .print-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #1a1a2e;
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+        }
+        .print-btn:hover { background: #16213e; }
 
-//                    reportWindow.document.write(html);
-//                    reportWindow.document.close();
-//                },
-//                error: function (err) {
-//                    reportWindow.document.write('<html><body style="font-family:Arial;text-align:center;padding-top:100px;color:red;">Error loading report: ' + (err.responseText || 'Please try again') + '</body></html>');
-//                    reportWindow.document.close();
-//                }
-//            });
-//        }
+        // Replace your @media print section with this:
 
+@media print {
+    /* Hide browser's default print header/footer */
+    @page {
+        size: A4;
+        margin: 15mm 20mm;
+        /* This removes the default header/footer in most browsers */
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    
+    /* Add back your own margins on body */
+    body {
+        margin: 15mm 20mm !important;
+        padding: 0 !important;
+    }
+    
+    .print-btn { 
+        display: none !important; 
+    }
+    
+    html, body {
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+}
+    </style>
+    <script>
+function cleanPrint() {
+    var btn = document.querySelector('.print-btn');
+    if (btn) btn.style.display = 'none';
+    
+    var style = document.createElement('style');
+    style.innerHTML = '@page { margin: 15mm 20mm; }';
+    document.head.appendChild(style);
+    
+    window.print();
+    
+    setTimeout(function() {
+        if (btn) btn.style.display = 'block';
+    }, 1000);
+}
+<\/script>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- HEADER -->
+    <div class="report-header">
+        <div class="logo-wrap">${logoHtml}</div>
+        <div class="hospital-info">
+            <div class="name">${data.Company_Name || 'NATIONAL TESTing HOSPITAL & MEDICAL CENTRE'}</div>
+            <div class="address">${data.Company_Address || ''}</div>
+        </div>
+    </div>
+
+    <!-- PATIENT INFO - TWO COLUMNS -->
+    <div class="patient-section">
+
+        <!-- LEFT COLUMN -->
+        <div class="patient-col">
+            <div class="patient-title">${data.Full_Name || ''} &nbsp; ${data.Age_years || ''}Y, &nbsp; ${data.Gender || ''}</div>
+            <div class="info-row">
+                <span class="info-label">Contact :</span>
+                <span class="info-val">${data.Mobile1 || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Patient Type :</span>
+                <span class="info-val">${data.Patient_Type || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">CNIC :</span>
+                <span class="info-val">${data.NIC || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Referring Doctor :</span>
+                <span class="info-val">${data.ReferredByDoctor || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Approved By :</span>
+                <span class="info-val">${data.Test_Approved_By_Doctor_name || ''}</span>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="patient-col">
+            <div class="patient-title">MRN# &nbsp; ${data.Patient_No || ''}</div>
+            <div class="info-row">
+                <span class="info-label">Reg Date :</span>
+                <span class="info-val">${formatDate(data.REg_Date)}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Department :</span>
+                <span class="info-val">${data.Department || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Created At :</span>
+                <span class="info-val">${data.Billing_Date || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Reported At :</span>
+                <span class="info-val">${data.Approved_Time || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Accession # :</span>
+                <span class="info-val">${data.Bill_No || ''}</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TEST NAME BANNER -->
+    <div class="test-banner">
+        <div class="test-title">${data.Test_Name || ''}</div>
+    </div>
+
+    <!-- REPORT CONTENT (Fixed_Value from CKEditor) -->
+    <div class="report-content">
+        ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
+    </div>
+
+    <!-- SIGNATURES -->
+    <div class="signatures">
+        <div class="sig-block">
+            <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
+            <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
+            <div class="sig-date">Date &amp; Time: ${data.Test_Ready_On || ''}</div>
+            <div class="sig-note">No Signature(s) required, Electronically Verified</div>
+        </div>
+        <div class="sig-block right">
+            <div class="sig-line">
+                <div class="sig-name">${data.Test_Approved_By_Doctor_name || ''}</div>
+                <div class="sig-qual">${data.Test_Approved_By_Doctor_qualification || ''}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE FOOTER -->
+    <div class="page-footer">
+        <div class="footer-col">${data.Report_Footer1 || ''}</div>
+        <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
+    </div>
+
+</div>
+
+<button class="print-btn" onclick="cleanPrint()">🖨 Print Report</button>
+
+
+
+</body>
+</html>`;
+
+
+                    reportWindow.document.open();
+                    reportWindow.document.write(html);
+                    reportWindow.document.close();
+                },
+                error: function (xhr, status, error) {
+                    reportWindow.document.open();
+                    reportWindow.document.write('<html><body style="font-family:Arial;color:red;padding:40px;"><h3>AJAX Error</h3><p>' + (xhr.responseText || error) + '</p></body></html>');
+                    reportWindow.document.close();
+                }
+            });
+        }
 
 
         var test_wise_id;
@@ -2658,7 +2732,7 @@
             }
             //setTimeout(function () { 
 
-            
+
             PageMethods.LoadTestCatogry(LabID, CatID, billDetailID, function (res) {
 
                 debugger;
@@ -3723,7 +3797,7 @@
                 url: "RadiologyTestResult.aspx/CheckApprovalrights",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                async: false, 
+                async: false,
                 success: function (response) {
                     hasRights = response.d === true || response.d === "true";
                 },
@@ -4008,7 +4082,7 @@
                 <!-- Patient Basic Details Section - Small compact view -->
                 <div class="patient-basic-info" style="background: #f8f9fa; padding: 8px 15px; margin: 0 15px; border-radius: 6px; border-left: 4px solid #007bff;">
                     <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; font-size: 13px;">
-                       <div><strong>MR No:</strong> <span id="modal_MRNo">--</span></div>
+                        <div><strong>MR No:</strong> <span id="modal_MRNo">--</span></div>
                         <div><strong>Name:</strong> <span id="modal_PatientName">--</span></div>
                         <div><strong>Age:</strong> <span id="modal_Age">--</span></div>
                         <div><strong>Gender:</strong> <span id="modal_Gender">--</span></div>
@@ -4051,7 +4125,7 @@
                                         </select>
                                     </div>
                                     <div style="margin-top: 15px;">
-                                        <select id="chkCTScanLevel" class="wgtmsr" >
+                                        <select id="chkCTScanLevel" class="wgtmsr">
                                             <option value="">Select CTScan Level</option>
                                         </select>
                                     </div>
@@ -4156,8 +4230,8 @@
                             <input type="button" id="btnReject" class="btn btn-primry" name="btnReject" value="Reject" />
                         </div>
                         <div class="col-lg-2 col-md-6 col-sm-12">
-    <input type="button" class="btn btn-primry" data-dismiss="modal" value="Close" style="border-radius: 5px; height: 35px;" />
-</div>
+                            <input type="button" class="btn btn-primry" data-dismiss="modal" value="Close" style="border-radius: 5px; height: 35px;" />
+                        </div>
                         <asp:Button ID="buttonimageuploadNotes" runat="server" OnClick="buttonimageuploadNotes_Click" Text=" " Style="display: none;" />
                         <asp:Button ID="btnRefresh" runat="server" OnClick="btnRefresh_Click" Style="display: none" />
                         <asp:HiddenField ID="session_obejct" runat="server" />
@@ -4172,37 +4246,37 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 23px">
                 <h1 style="margin: 0;">Patients Waiting List</h1>
             </div>
-          <div class="row">
-            <div class="col-lg-2">
-                <label>Start Date </label>
-                <input type="text" id="sdate" />
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>Start Date </label>
+                    <input type="text" id="sdate" />
+                </div>
+                <div class="col-lg-2">
+                    <label>End Date </label>
+                    <input type="text" id="edate" />
+                </div>
+                <div class="col-lg-3">
+                    <label>Department </label>
+                    <select id="ddlDepartment" class="form-control">
+                        <option value="0">All Departments</option>
+                        <option value="002">Ultrasound</option>
+                        <option value="003">X-Ray</option>
+                        <option value="004">CTScan</option>
+                        <option value="005">Physiotherapy</option>
+                        <option value="006">MRI</option>
+                        <option value="008">Cardiology</option>
+                    </select>
+                </div>
+                <div class="col-lg-3">
+                    <label>Doctor:</label>
+                    <select id="ddlDoctorFilter" onchange="LoadRadiologyPatientsList();" class="form-control">
+                        <option value="">All Doctors</option>
+                    </select>
+                </div>
+                <div class="col-lg-2">
+                    <input type="button" id="searchpendding" class="btn btn-primry" onclick="reloadPendingList();" value="Search" />
+                </div>
             </div>
-            <div class="col-lg-2">
-                <label>End Date </label>
-                <input type="text" id="edate" />
-            </div>
-            <div class="col-lg-3">
-                <label>Department </label>
-                <select id="ddlDepartment" class="form-control">
-                    <option value="0">All Departments</option>
-                    <option value="002">Ultrasound</option>
-                    <option value="003">X-Ray</option>
-                    <option value="004">CTScan</option>
-                    <option value="005">Physiotherapy</option>
-                    <option value="006">MRI</option>
-                    <option value="008">Cardiology</option>
-                </select>
-            </div>
-            <div class="col-lg-3">
-                <label>Doctor:</label>
-                <select id="ddlDoctorFilter"  onchange ="LoadRadiologyPatientsList();" class="form-control">
-                    <option value="">All Doctors</option>
-                </select>
-            </div>
-            <div class="col-lg-2">
-                <input type="button" id="searchpendding" class="btn btn-primry" onclick="reloadPendingList();" value="Search" />
-            </div>
-        </div>
 
             <div style="height: 400px; overflow-y: auto; overflow-x: auto;">
                 <table class="table test-table" id="tblradilogy">
@@ -4298,24 +4372,24 @@
         </div>
     </div>
     <!-- Rejection Remarks Modal -->
-<div id="rejectionModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content" style="width: 500px;">
-            <div class="modal-header">
-                <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Reject Test Result</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="txtRejectionRemarks">Rejection Remarks:</label>
-                    <textarea id="txtRejectionRemarks" rows="5" cols="50" class="form-control" style="width: 100%;"></textarea>
+    <div id="rejectionModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 500px;">
+                <div class="modal-header">
+                    <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Reject Test Result</h4>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
-                <input type="button" id="btnConfirmReject" class="btn btn-danger" value="Confirm Reject" />
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="txtRejectionRemarks">Rejection Remarks:</label>
+                        <textarea id="txtRejectionRemarks" rows="5" cols="50" class="form-control" style="width: 100%;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
+                    <input type="button" id="btnConfirmReject" class="btn btn-danger" value="Confirm Reject" />
+                </div>
             </div>
         </div>
     </div>
-</div>
 </asp:Content>
