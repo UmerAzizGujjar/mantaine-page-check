@@ -3020,26 +3020,6 @@
       <Column Name="MIR" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Doctor_agreement_detail" Member="Doctor_agreement_details">
-    <Type Name="Doctor_agreement_detail">
-      <Column Name="doc_detail_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Doc_agreement_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="test_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="item_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="test_description" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="service_description" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="Actual_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Net_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="dicount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="hos_share" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="doc_share" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Department" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
-      <Column Name="services" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
-      <Column Name="isactive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AgrementTypeId" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-      <Column Name="AgrementDepartmentId" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Reg_Student" Member="Reg_Students">
     <Type Name="Reg_Student">
       <Column Name="Student_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7593,6 +7573,27 @@
       <Column Name="Remarks" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
       <Column Name="Is_Refund" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Dept_Token" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Doctor_agreement_detail" Member="Doctor_agreement_details">
+    <Type Name="Doctor_agreement_detail">
+      <Column Name="doc_detail_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Doc_agreement_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="test_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="item_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="test_description" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="service_description" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="Actual_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Net_amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="dicount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="hos_share" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="doc_share" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Department" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="services" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="isactive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AgrementTypeId" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="AgrementDepartmentId" Type="System.String" DbType="NVarChar(450)" CanBeNull="true" />
+      <Column Name="doc_share_percentage" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
