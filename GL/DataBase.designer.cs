@@ -582,9 +582,6 @@ namespace PMS
         partial void InsertDoctor_Agreement(Doctor_Agreement instance);
         partial void UpdateDoctor_Agreement(Doctor_Agreement instance);
         partial void DeleteDoctor_Agreement(Doctor_Agreement instance);
-        partial void InsertDoctor_agreement_detail(Doctor_agreement_detail instance);
-        partial void UpdateDoctor_agreement_detail(Doctor_agreement_detail instance);
-        partial void DeleteDoctor_agreement_detail(Doctor_agreement_detail instance);
         partial void InsertReg_Student(Reg_Student instance);
         partial void UpdateReg_Student(Reg_Student instance);
         partial void DeleteReg_Student(Reg_Student instance);
@@ -969,13 +966,15 @@ namespace PMS
         partial void InsertPatient(Patient instance);
         partial void UpdatePatient(Patient instance);
         partial void DeletePatient(Patient instance);
+        partial void InsertDoctor_agreement_detail(Doctor_agreement_detail instance);
+        partial void UpdateDoctor_agreement_detail(Doctor_agreement_detail instance);
+        partial void DeleteDoctor_agreement_detail(Doctor_agreement_detail instance);
         #endregion
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
-
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -2504,14 +2503,6 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<Doctor_agreement_detail> Doctor_agreement_details
-        {
-            get
-            {
-                return this.GetTable<Doctor_agreement_detail>();
-            }
-        }
-
         public System.Data.Linq.Table<Reg_Student> Reg_Students
         {
             get
@@ -3533,6 +3524,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Patient>();
+            }
+        }
+
+        public System.Data.Linq.Table<Doctor_agreement_detail> Doctor_agreement_details
+        {
+            get
+            {
+                return this.GetTable<Doctor_agreement_detail>();
             }
         }
 
@@ -67083,428 +67082,6 @@ namespace PMS
                     this._MIR = value;
                     this.SendPropertyChanged("MIR");
                     this.OnMIRChanged();
-                }
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Doctor_agreement_detail")]
-    public partial class Doctor_agreement_detail : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _doc_detail_id;
-
-        private System.Nullable<int> _Doc_agreement_id;
-
-        private System.Nullable<int> _test_id;
-
-        private System.Nullable<int> _item_id;
-
-        private string _test_description;
-
-        private string _service_description;
-
-        private System.Nullable<decimal> _Actual_amount;
-
-        private System.Nullable<decimal> _Net_amount;
-
-        private System.Nullable<decimal> _dicount;
-
-        private System.Nullable<decimal> _hos_share;
-
-        private System.Nullable<decimal> _doc_share;
-
-        private string _Department;
-
-        private string _services;
-
-        private System.Nullable<bool> _isactive;
-
-        private string _AgrementTypeId;
-
-        private string _AgrementDepartmentId;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void Ondoc_detail_idChanging(int value);
-        partial void Ondoc_detail_idChanged();
-        partial void OnDoc_agreement_idChanging(System.Nullable<int> value);
-        partial void OnDoc_agreement_idChanged();
-        partial void Ontest_idChanging(System.Nullable<int> value);
-        partial void Ontest_idChanged();
-        partial void Onitem_idChanging(System.Nullable<int> value);
-        partial void Onitem_idChanged();
-        partial void Ontest_descriptionChanging(string value);
-        partial void Ontest_descriptionChanged();
-        partial void Onservice_descriptionChanging(string value);
-        partial void Onservice_descriptionChanged();
-        partial void OnActual_amountChanging(System.Nullable<decimal> value);
-        partial void OnActual_amountChanged();
-        partial void OnNet_amountChanging(System.Nullable<decimal> value);
-        partial void OnNet_amountChanged();
-        partial void OndicountChanging(System.Nullable<decimal> value);
-        partial void OndicountChanged();
-        partial void Onhos_shareChanging(System.Nullable<decimal> value);
-        partial void Onhos_shareChanged();
-        partial void Ondoc_shareChanging(System.Nullable<decimal> value);
-        partial void Ondoc_shareChanged();
-        partial void OnDepartmentChanging(string value);
-        partial void OnDepartmentChanged();
-        partial void OnservicesChanging(string value);
-        partial void OnservicesChanged();
-        partial void OnisactiveChanging(System.Nullable<bool> value);
-        partial void OnisactiveChanged();
-        partial void OnAgrementTypeIdChanging(string value);
-        partial void OnAgrementTypeIdChanged();
-        partial void OnAgrementDepartmentIdChanging(string value);
-        partial void OnAgrementDepartmentIdChanged();
-        #endregion
-
-        public Doctor_agreement_detail()
-        {
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_detail_id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int doc_detail_id
-        {
-            get
-            {
-                return this._doc_detail_id;
-            }
-            set
-            {
-                if ((this._doc_detail_id != value))
-                {
-                    this.Ondoc_detail_idChanging(value);
-                    this.SendPropertyChanging();
-                    this._doc_detail_id = value;
-                    this.SendPropertyChanged("doc_detail_id");
-                    this.Ondoc_detail_idChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doc_agreement_id", DbType = "Int")]
-        public System.Nullable<int> Doc_agreement_id
-        {
-            get
-            {
-                return this._Doc_agreement_id;
-            }
-            set
-            {
-                if ((this._Doc_agreement_id != value))
-                {
-                    this.OnDoc_agreement_idChanging(value);
-                    this.SendPropertyChanging();
-                    this._Doc_agreement_id = value;
-                    this.SendPropertyChanged("Doc_agreement_id");
-                    this.OnDoc_agreement_idChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_test_id", DbType = "Int")]
-        public System.Nullable<int> test_id
-        {
-            get
-            {
-                return this._test_id;
-            }
-            set
-            {
-                if ((this._test_id != value))
-                {
-                    this.Ontest_idChanging(value);
-                    this.SendPropertyChanging();
-                    this._test_id = value;
-                    this.SendPropertyChanged("test_id");
-                    this.Ontest_idChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_item_id", DbType = "Int")]
-        public System.Nullable<int> item_id
-        {
-            get
-            {
-                return this._item_id;
-            }
-            set
-            {
-                if ((this._item_id != value))
-                {
-                    this.Onitem_idChanging(value);
-                    this.SendPropertyChanging();
-                    this._item_id = value;
-                    this.SendPropertyChanged("item_id");
-                    this.Onitem_idChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_test_description", DbType = "NVarChar(450)")]
-        public string test_description
-        {
-            get
-            {
-                return this._test_description;
-            }
-            set
-            {
-                if ((this._test_description != value))
-                {
-                    this.Ontest_descriptionChanging(value);
-                    this.SendPropertyChanging();
-                    this._test_description = value;
-                    this.SendPropertyChanged("test_description");
-                    this.Ontest_descriptionChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_service_description", DbType = "NVarChar(450)")]
-        public string service_description
-        {
-            get
-            {
-                return this._service_description;
-            }
-            set
-            {
-                if ((this._service_description != value))
-                {
-                    this.Onservice_descriptionChanging(value);
-                    this.SendPropertyChanging();
-                    this._service_description = value;
-                    this.SendPropertyChanged("service_description");
-                    this.Onservice_descriptionChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Actual_amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Actual_amount
-        {
-            get
-            {
-                return this._Actual_amount;
-            }
-            set
-            {
-                if ((this._Actual_amount != value))
-                {
-                    this.OnActual_amountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Actual_amount = value;
-                    this.SendPropertyChanged("Actual_amount");
-                    this.OnActual_amountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Net_amount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Net_amount
-        {
-            get
-            {
-                return this._Net_amount;
-            }
-            set
-            {
-                if ((this._Net_amount != value))
-                {
-                    this.OnNet_amountChanging(value);
-                    this.SendPropertyChanging();
-                    this._Net_amount = value;
-                    this.SendPropertyChanged("Net_amount");
-                    this.OnNet_amountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_dicount", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> dicount
-        {
-            get
-            {
-                return this._dicount;
-            }
-            set
-            {
-                if ((this._dicount != value))
-                {
-                    this.OndicountChanging(value);
-                    this.SendPropertyChanging();
-                    this._dicount = value;
-                    this.SendPropertyChanged("dicount");
-                    this.OndicountChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_hos_share", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> hos_share
-        {
-            get
-            {
-                return this._hos_share;
-            }
-            set
-            {
-                if ((this._hos_share != value))
-                {
-                    this.Onhos_shareChanging(value);
-                    this.SendPropertyChanging();
-                    this._hos_share = value;
-                    this.SendPropertyChanged("hos_share");
-                    this.Onhos_shareChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_share", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> doc_share
-        {
-            get
-            {
-                return this._doc_share;
-            }
-            set
-            {
-                if ((this._doc_share != value))
-                {
-                    this.Ondoc_shareChanging(value);
-                    this.SendPropertyChanging();
-                    this._doc_share = value;
-                    this.SendPropertyChanged("doc_share");
-                    this.Ondoc_shareChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "NVarChar(200)")]
-        public string Department
-        {
-            get
-            {
-                return this._Department;
-            }
-            set
-            {
-                if ((this._Department != value))
-                {
-                    this.OnDepartmentChanging(value);
-                    this.SendPropertyChanging();
-                    this._Department = value;
-                    this.SendPropertyChanged("Department");
-                    this.OnDepartmentChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_services", DbType = "NVarChar(200)")]
-        public string services
-        {
-            get
-            {
-                return this._services;
-            }
-            set
-            {
-                if ((this._services != value))
-                {
-                    this.OnservicesChanging(value);
-                    this.SendPropertyChanging();
-                    this._services = value;
-                    this.SendPropertyChanged("services");
-                    this.OnservicesChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isactive", DbType = "Bit")]
-        public System.Nullable<bool> isactive
-        {
-            get
-            {
-                return this._isactive;
-            }
-            set
-            {
-                if ((this._isactive != value))
-                {
-                    this.OnisactiveChanging(value);
-                    this.SendPropertyChanging();
-                    this._isactive = value;
-                    this.SendPropertyChanged("isactive");
-                    this.OnisactiveChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AgrementTypeId", DbType = "NVarChar(450)")]
-        public string AgrementTypeId
-        {
-            get
-            {
-                return this._AgrementTypeId;
-            }
-            set
-            {
-                if ((this._AgrementTypeId != value))
-                {
-                    this.OnAgrementTypeIdChanging(value);
-                    this.SendPropertyChanging();
-                    this._AgrementTypeId = value;
-                    this.SendPropertyChanged("AgrementTypeId");
-                    this.OnAgrementTypeIdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AgrementDepartmentId", DbType = "NVarChar(450)")]
-        public string AgrementDepartmentId
-        {
-            get
-            {
-                return this._AgrementDepartmentId;
-            }
-            set
-            {
-                if ((this._AgrementDepartmentId != value))
-                {
-                    this.OnAgrementDepartmentIdChanging(value);
-                    this.SendPropertyChanging();
-                    this._AgrementDepartmentId = value;
-                    this.SendPropertyChanged("AgrementDepartmentId");
-                    this.OnAgrementDepartmentIdChanged();
                 }
             }
         }
@@ -169505,6 +169082,452 @@ namespace PMS
                     this._Dept_Token = value;
                     this.SendPropertyChanged("Dept_Token");
                     this.OnDept_TokenChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Doctor_agreement_detail")]
+    public partial class Doctor_agreement_detail : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _doc_detail_id;
+
+        private System.Nullable<int> _Doc_agreement_id;
+
+        private System.Nullable<int> _test_id;
+
+        private System.Nullable<int> _item_id;
+
+        private string _test_description;
+
+        private string _service_description;
+
+        private System.Nullable<decimal> _Actual_amount;
+
+        private System.Nullable<decimal> _Net_amount;
+
+        private System.Nullable<decimal> _dicount;
+
+        private System.Nullable<decimal> _hos_share;
+
+        private System.Nullable<decimal> _doc_share;
+
+        private string _Department;
+
+        private string _services;
+
+        private System.Nullable<bool> _isactive;
+
+        private string _AgrementTypeId;
+
+        private string _AgrementDepartmentId;
+
+        private decimal _doc_share_percentage;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void Ondoc_detail_idChanging(int value);
+        partial void Ondoc_detail_idChanged();
+        partial void OnDoc_agreement_idChanging(System.Nullable<int> value);
+        partial void OnDoc_agreement_idChanged();
+        partial void Ontest_idChanging(System.Nullable<int> value);
+        partial void Ontest_idChanged();
+        partial void Onitem_idChanging(System.Nullable<int> value);
+        partial void Onitem_idChanged();
+        partial void Ontest_descriptionChanging(string value);
+        partial void Ontest_descriptionChanged();
+        partial void Onservice_descriptionChanging(string value);
+        partial void Onservice_descriptionChanged();
+        partial void OnActual_amountChanging(System.Nullable<decimal> value);
+        partial void OnActual_amountChanged();
+        partial void OnNet_amountChanging(System.Nullable<decimal> value);
+        partial void OnNet_amountChanged();
+        partial void OndicountChanging(System.Nullable<decimal> value);
+        partial void OndicountChanged();
+        partial void Onhos_shareChanging(System.Nullable<decimal> value);
+        partial void Onhos_shareChanged();
+        partial void Ondoc_shareChanging(System.Nullable<decimal> value);
+        partial void Ondoc_shareChanged();
+        partial void OnDepartmentChanging(string value);
+        partial void OnDepartmentChanged();
+        partial void OnservicesChanging(string value);
+        partial void OnservicesChanged();
+        partial void OnisactiveChanging(System.Nullable<bool> value);
+        partial void OnisactiveChanged();
+        partial void OnAgrementTypeIdChanging(string value);
+        partial void OnAgrementTypeIdChanged();
+        partial void OnAgrementDepartmentIdChanging(string value);
+        partial void OnAgrementDepartmentIdChanged();
+        partial void Ondoc_share_percentageChanging(decimal value);
+        partial void Ondoc_share_percentageChanged();
+        #endregion
+
+        public Doctor_agreement_detail()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_detail_id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int doc_detail_id
+        {
+            get
+            {
+                return this._doc_detail_id;
+            }
+            set
+            {
+                if ((this._doc_detail_id != value))
+                {
+                    this.Ondoc_detail_idChanging(value);
+                    this.SendPropertyChanging();
+                    this._doc_detail_id = value;
+                    this.SendPropertyChanged("doc_detail_id");
+                    this.Ondoc_detail_idChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doc_agreement_id", DbType = "Int")]
+        public System.Nullable<int> Doc_agreement_id
+        {
+            get
+            {
+                return this._Doc_agreement_id;
+            }
+            set
+            {
+                if ((this._Doc_agreement_id != value))
+                {
+                    this.OnDoc_agreement_idChanging(value);
+                    this.SendPropertyChanging();
+                    this._Doc_agreement_id = value;
+                    this.SendPropertyChanged("Doc_agreement_id");
+                    this.OnDoc_agreement_idChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_test_id", DbType = "Int")]
+        public System.Nullable<int> test_id
+        {
+            get
+            {
+                return this._test_id;
+            }
+            set
+            {
+                if ((this._test_id != value))
+                {
+                    this.Ontest_idChanging(value);
+                    this.SendPropertyChanging();
+                    this._test_id = value;
+                    this.SendPropertyChanged("test_id");
+                    this.Ontest_idChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_item_id", DbType = "Int")]
+        public System.Nullable<int> item_id
+        {
+            get
+            {
+                return this._item_id;
+            }
+            set
+            {
+                if ((this._item_id != value))
+                {
+                    this.Onitem_idChanging(value);
+                    this.SendPropertyChanging();
+                    this._item_id = value;
+                    this.SendPropertyChanged("item_id");
+                    this.Onitem_idChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_test_description", DbType = "NVarChar(450)")]
+        public string test_description
+        {
+            get
+            {
+                return this._test_description;
+            }
+            set
+            {
+                if ((this._test_description != value))
+                {
+                    this.Ontest_descriptionChanging(value);
+                    this.SendPropertyChanging();
+                    this._test_description = value;
+                    this.SendPropertyChanged("test_description");
+                    this.Ontest_descriptionChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_service_description", DbType = "NVarChar(450)")]
+        public string service_description
+        {
+            get
+            {
+                return this._service_description;
+            }
+            set
+            {
+                if ((this._service_description != value))
+                {
+                    this.Onservice_descriptionChanging(value);
+                    this.SendPropertyChanging();
+                    this._service_description = value;
+                    this.SendPropertyChanged("service_description");
+                    this.Onservice_descriptionChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Actual_amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Actual_amount
+        {
+            get
+            {
+                return this._Actual_amount;
+            }
+            set
+            {
+                if ((this._Actual_amount != value))
+                {
+                    this.OnActual_amountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Actual_amount = value;
+                    this.SendPropertyChanged("Actual_amount");
+                    this.OnActual_amountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Net_amount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Net_amount
+        {
+            get
+            {
+                return this._Net_amount;
+            }
+            set
+            {
+                if ((this._Net_amount != value))
+                {
+                    this.OnNet_amountChanging(value);
+                    this.SendPropertyChanging();
+                    this._Net_amount = value;
+                    this.SendPropertyChanged("Net_amount");
+                    this.OnNet_amountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_dicount", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> dicount
+        {
+            get
+            {
+                return this._dicount;
+            }
+            set
+            {
+                if ((this._dicount != value))
+                {
+                    this.OndicountChanging(value);
+                    this.SendPropertyChanging();
+                    this._dicount = value;
+                    this.SendPropertyChanged("dicount");
+                    this.OndicountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_hos_share", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> hos_share
+        {
+            get
+            {
+                return this._hos_share;
+            }
+            set
+            {
+                if ((this._hos_share != value))
+                {
+                    this.Onhos_shareChanging(value);
+                    this.SendPropertyChanging();
+                    this._hos_share = value;
+                    this.SendPropertyChanged("hos_share");
+                    this.Onhos_shareChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_share", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> doc_share
+        {
+            get
+            {
+                return this._doc_share;
+            }
+            set
+            {
+                if ((this._doc_share != value))
+                {
+                    this.Ondoc_shareChanging(value);
+                    this.SendPropertyChanging();
+                    this._doc_share = value;
+                    this.SendPropertyChanged("doc_share");
+                    this.Ondoc_shareChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Department", DbType = "NVarChar(200)")]
+        public string Department
+        {
+            get
+            {
+                return this._Department;
+            }
+            set
+            {
+                if ((this._Department != value))
+                {
+                    this.OnDepartmentChanging(value);
+                    this.SendPropertyChanging();
+                    this._Department = value;
+                    this.SendPropertyChanged("Department");
+                    this.OnDepartmentChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_services", DbType = "NVarChar(200)")]
+        public string services
+        {
+            get
+            {
+                return this._services;
+            }
+            set
+            {
+                if ((this._services != value))
+                {
+                    this.OnservicesChanging(value);
+                    this.SendPropertyChanging();
+                    this._services = value;
+                    this.SendPropertyChanged("services");
+                    this.OnservicesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isactive", DbType = "Bit")]
+        public System.Nullable<bool> isactive
+        {
+            get
+            {
+                return this._isactive;
+            }
+            set
+            {
+                if ((this._isactive != value))
+                {
+                    this.OnisactiveChanging(value);
+                    this.SendPropertyChanging();
+                    this._isactive = value;
+                    this.SendPropertyChanged("isactive");
+                    this.OnisactiveChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AgrementTypeId", DbType = "NVarChar(450)")]
+        public string AgrementTypeId
+        {
+            get
+            {
+                return this._AgrementTypeId;
+            }
+            set
+            {
+                if ((this._AgrementTypeId != value))
+                {
+                    this.OnAgrementTypeIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._AgrementTypeId = value;
+                    this.SendPropertyChanged("AgrementTypeId");
+                    this.OnAgrementTypeIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AgrementDepartmentId", DbType = "NVarChar(450)")]
+        public string AgrementDepartmentId
+        {
+            get
+            {
+                return this._AgrementDepartmentId;
+            }
+            set
+            {
+                if ((this._AgrementDepartmentId != value))
+                {
+                    this.OnAgrementDepartmentIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._AgrementDepartmentId = value;
+                    this.SendPropertyChanged("AgrementDepartmentId");
+                    this.OnAgrementDepartmentIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_doc_share_percentage", DbType = "Decimal(18,2) NOT NULL")]
+        public decimal doc_share_percentage
+        {
+            get
+            {
+                return this._doc_share_percentage;
+            }
+            set
+            {
+                if ((this._doc_share_percentage != value))
+                {
+                    this.Ondoc_share_percentageChanging(value);
+                    this.SendPropertyChanging();
+                    this._doc_share_percentage = value;
+                    this.SendPropertyChanged("doc_share_percentage");
+                    this.Ondoc_share_percentageChanged();
                 }
             }
         }

@@ -67,6 +67,22 @@ namespace PMS.Modules.PatientManagement
             return new JavaScriptSerializer().Serialize(availableDates);
         }
         [WebMethod]
+        public static string GetSidebarPolicy()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var policies = (from data in db.company_opd_policies
+                                where data.field_name.StartsWith("OutPatient_")
+                                && data.is_enabled == true
+                                select data.field_name).ToList();
+
+                // This removes "OutPatient_" and returns the rest (e.g., "primary_diagnosis")
+                var result = policies.Select(x => x.Substring(x.IndexOf('_') + 1)).ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
+        }
+        [WebMethod]
         public static string GetSharingPolicy()
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -1658,7 +1674,9 @@ namespace PMS.Modules.PatientManagement
                                           where d.Emp_ID == Convert.ToInt32(p.Doctor_ID)
                                           select d.Emp_Name).FirstOrDefault(),
                             Department = db.GetDataValueName("Patient Main Category", p.Patient_Main_Category),
-                            FilterClinic = db.GetDataValueName("Filter Clinic", p.filter_clinic),
+                            //FilterClinic = db.GetDataValueName("Filter Clinic", p.filter_clinic),
+                            Dep_token= p.Dept_Token,
+                            doc_token= p.Doc_Token,
                             Gender = db.GetDataValueName("Gender", p.Gender),
                             p.Created_Time,
                             u.UserName,
@@ -1670,13 +1688,14 @@ namespace PMS.Modules.PatientManagement
                                         where op.Patient_ID == p.Patient_ID
                                         && op.Doctor_ID != null && op.Doctor_ID != ""
                                         select op.Doctor_ID).FirstOrDefault()),
-                            Token_No = (from t in db.Patients
-                                        where t.Patient_ID < p.Patient_ID
-                                           && t.Created_Time.Value.Date == p.Created_Time.Value.Date
-                                           && t.Created_Time.Value.Month == p.Created_Time.Value.Month
-                                           && t.Created_Time.Value.Year == p.Created_Time.Value.Year
-                                           && t.Patient_Main_Category == p.Patient_Main_Category
-                                        select t).Count() + 1
+                            //Token_No = (from t in db.Patients
+                            //            where t.Patient_ID < p.Patient_ID
+                            //               && t.Created_Time.Value.Date == p.Created_Time.Value.Date
+                            //               && t.Created_Time.Value.Month == p.Created_Time.Value.Month
+                            //               && t.Created_Time.Value.Year == p.Created_Time.Value.Year
+                            //               && t.Patient_Main_Category == p.Patient_Main_Category
+                            //            select t).Count() + 1
+                            Token_No = p.Doc_Token
                         });
 
             if (!string.IsNullOrEmpty(filterDepartment) && filterDepartment != "" && doc_name == "")

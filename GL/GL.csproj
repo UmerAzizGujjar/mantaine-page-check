@@ -216,6 +216,7 @@
     <Content Include="Modules\Administrator\AddHospital.aspx" />
     <Content Include="Modules\Administrator\AddPanel_Packages.aspx" />
     <Content Include="Modules\Administrator\ApproveGoodsReturn.aspx" />
+    <Content Include="Modules\Administrator\TokenListIITH.aspx" />
     <Content Include="Modules\Administrator\Token_List.aspx" />
     <Content Include="Modules\Administrator\API.aspx" />
     <Content Include="Modules\Administrator\AssetDepereciation.aspx" />
@@ -363,6 +364,7 @@
     <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OldOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OPD.aspx" />
+    <Content Include="Modules\PatientManagement\OutPatientPolicy.aspx" />
     <Content Include="Modules\PatientManagement\OPDPolicy.aspx" />
     <Content Include="Modules\PatientManagement\OPDView.aspx" />
     <Content Include="Modules\PatientManagement\OPDDischarge.aspx" />
@@ -25824,6 +25826,13 @@
     <Compile Include="Modules\Administrator\ApproveGoodsReturn.aspx.designer.cs">
       <DependentUpon>ApproveGoodsReturn.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Administrator\TokenListIITH.aspx.cs">
+      <DependentUpon>TokenListIITH.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\TokenListIITH.aspx.designer.cs">
+      <DependentUpon>TokenListIITH.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Administrator\Token_List.aspx.cs">
       <DependentUpon>Token_List.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -26978,6 +26987,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD.aspx.designer.cs">
       <DependentUpon>OPD.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OutPatientPolicy.aspx.cs">
+      <DependentUpon>OutPatientPolicy.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\OutPatientPolicy.aspx.designer.cs">
+      <DependentUpon>OutPatientPolicy.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\OPDPolicy.aspx.cs">
       <DependentUpon>OPDPolicy.aspx</DependentUpon>

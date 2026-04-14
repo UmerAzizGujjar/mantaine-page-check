@@ -604,6 +604,7 @@ namespace PMS
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[2].Name.ToString());
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[3].Name.ToString());
                 rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[4].Name.ToString());
+                rd.SetParameterValue("@emergencyid", Convert.ToInt32(Emergency_ID), rd.Subreports[5].Name.ToString());
             }
             //else if (reportName == "CONSULTANT_Wise_Statistics")
             //{

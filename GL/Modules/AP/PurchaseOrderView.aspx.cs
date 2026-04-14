@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infragistics.Documents.Reports.Report;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -93,6 +94,8 @@ namespace PMS
                                              VendorName = (from v in _dbContext.AP_Vendors where PO.Vendor_ID == v.Vendor_ID select new { vendor = v.Vendor_Name }).FirstOrDefault().vendor.ToString(),
                                              PO_Amount = PO.PO_Amount,
                                              Status = PO.Status,
+                                             CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == PO.Created_By).Select(x => x.UserName).FirstOrDefault(),
+                                             Approvedby = _dbContext.aspnet_Users.Where(x => x.UserId == PO.Approved_By).Select(x => x.UserName).FirstOrDefault(),
 
                                          };
 
