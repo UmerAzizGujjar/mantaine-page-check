@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "National_Hospital")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "ASsiraat_Standard")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -970,11 +970,13 @@ namespace PMS
         partial void UpdateDoctor_agreement_detail(Doctor_agreement_detail instance);
         partial void DeleteDoctor_agreement_detail(Doctor_agreement_detail instance);
         #endregion
+
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -5281,13 +5283,6 @@ namespace PMS
             return ((ISingleResult<sp_GetPODetailByPOIDResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetPRDetailByPRID")]
-        public ISingleResult<sp_GetPRDetailByPRIDResult> sp_GetPRDetailByPRID([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PRId", DbType = "Int")] System.Nullable<int> pRId)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pRId);
-            return ((ISingleResult<sp_GetPRDetailByPRIDResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetIGPDetailByIGPID")]
         public ISingleResult<sp_GetIGPDetailByIGPIDResult> sp_GetIGPDetailByIGPID([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "IGPId", DbType = "Int")] System.Nullable<int> iGPId)
         {
@@ -5405,6 +5400,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), test_IDs, trans_IDs, patient_ID, bill_Details_IDs);
             return ((ISingleResult<spLabReportQResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetPRDetailByPRID")]
+        public ISingleResult<sp_GetPRDetailByPRIDResult> sp_GetPRDetailByPRID([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "PRId", DbType = "Int")] System.Nullable<int> pRId)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pRId);
+            return ((ISingleResult<sp_GetPRDetailByPRIDResult>)(result.ReturnValue));
         }
     }
 
@@ -210671,212 +210673,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_GetPRDetailByPRIDResult
-    {
-
-        private long _PR_Detail_ID;
-
-        private System.Nullable<long> _PR_ID;
-
-        private System.Nullable<int> _PR_Num;
-
-        private System.Nullable<long> _Item_ID;
-
-        private System.Nullable<decimal> _Qty;
-
-        private System.Nullable<System.DateTime> _Required_Date;
-
-        private string _Item_Code;
-
-        private string _Description;
-
-        private string _Unit;
-
-        private System.Nullable<decimal> _UnitPrice;
-
-        private System.Nullable<decimal> _UOM_Qty;
-
-        public sp_GetPRDetailByPRIDResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Detail_ID", DbType = "BigInt NOT NULL")]
-        public long PR_Detail_ID
-        {
-            get
-            {
-                return this._PR_Detail_ID;
-            }
-            set
-            {
-                if ((this._PR_Detail_ID != value))
-                {
-                    this._PR_Detail_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_ID", DbType = "BigInt")]
-        public System.Nullable<long> PR_ID
-        {
-            get
-            {
-                return this._PR_ID;
-            }
-            set
-            {
-                if ((this._PR_ID != value))
-                {
-                    this._PR_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
-        public System.Nullable<int> PR_Num
-        {
-            get
-            {
-                return this._PR_Num;
-            }
-            set
-            {
-                if ((this._PR_Num != value))
-                {
-                    this._PR_Num = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "BigInt")]
-        public System.Nullable<long> Item_ID
-        {
-            get
-            {
-                return this._Item_ID;
-            }
-            set
-            {
-                if ((this._Item_ID != value))
-                {
-                    this._Item_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Required_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Required_Date
-        {
-            get
-            {
-                return this._Required_Date;
-            }
-            set
-            {
-                if ((this._Required_Date != value))
-                {
-                    this._Required_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
-        public string Item_Code
-        {
-            get
-            {
-                return this._Item_Code;
-            }
-            set
-            {
-                if ((this._Item_Code != value))
-                {
-                    this._Item_Code = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
-        public string Description
-        {
-            get
-            {
-                return this._Description;
-            }
-            set
-            {
-                if ((this._Description != value))
-                {
-                    this._Description = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "VarChar(150) NOT NULL", CanBeNull = false)]
-        public string Unit
-        {
-            get
-            {
-                return this._Unit;
-            }
-            set
-            {
-                if ((this._Unit != value))
-                {
-                    this._Unit = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UnitPrice", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> UnitPrice
-        {
-            get
-            {
-                return this._UnitPrice;
-            }
-            set
-            {
-                if ((this._UnitPrice != value))
-                {
-                    this._UnitPrice = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UOM_Qty", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> UOM_Qty
-        {
-            get
-            {
-                return this._UOM_Qty;
-            }
-            set
-            {
-                if ((this._UOM_Qty != value))
-                {
-                    this._UOM_Qty = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_GetIGPDetailByIGPIDResult
     {
 
@@ -222582,6 +222378,230 @@ namespace PMS
                 if ((this._Out_of_Range != value))
                 {
                     this._Out_of_Range = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetPRDetailByPRIDResult
+    {
+
+        private long _PR_Detail_ID;
+
+        private System.Nullable<long> _PR_ID;
+
+        private System.Nullable<int> _PR_Num;
+
+        private System.Nullable<long> _Item_ID;
+
+        private System.Nullable<decimal> _Qty;
+
+        private System.Nullable<System.DateTime> _Required_Date;
+
+        private string _Item_Code;
+
+        private string _Description;
+
+        private string _Unit;
+
+        private System.Nullable<decimal> _UnitPrice;
+
+        private System.Nullable<decimal> _UOM_Qty;
+
+        private System.Nullable<decimal> _TotalStock;
+
+        public sp_GetPRDetailByPRIDResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Detail_ID", DbType = "BigInt NOT NULL")]
+        public long PR_Detail_ID
+        {
+            get
+            {
+                return this._PR_Detail_ID;
+            }
+            set
+            {
+                if ((this._PR_Detail_ID != value))
+                {
+                    this._PR_Detail_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_ID", DbType = "BigInt")]
+        public System.Nullable<long> PR_ID
+        {
+            get
+            {
+                return this._PR_ID;
+            }
+            set
+            {
+                if ((this._PR_ID != value))
+                {
+                    this._PR_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_PR_Num", DbType = "Int")]
+        public System.Nullable<int> PR_Num
+        {
+            get
+            {
+                return this._PR_Num;
+            }
+            set
+            {
+                if ((this._PR_Num != value))
+                {
+                    this._PR_Num = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "BigInt")]
+        public System.Nullable<long> Item_ID
+        {
+            get
+            {
+                return this._Item_ID;
+            }
+            set
+            {
+                if ((this._Item_ID != value))
+                {
+                    this._Item_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Required_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Required_Date
+        {
+            get
+            {
+                return this._Required_Date;
+            }
+            set
+            {
+                if ((this._Required_Date != value))
+                {
+                    this._Required_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
+        public string Item_Code
+        {
+            get
+            {
+                return this._Item_Code;
+            }
+            set
+            {
+                if ((this._Item_Code != value))
+                {
+                    this._Item_Code = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
+        public string Description
+        {
+            get
+            {
+                return this._Description;
+            }
+            set
+            {
+                if ((this._Description != value))
+                {
+                    this._Description = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Unit", DbType = "VarChar(150) NOT NULL", CanBeNull = false)]
+        public string Unit
+        {
+            get
+            {
+                return this._Unit;
+            }
+            set
+            {
+                if ((this._Unit != value))
+                {
+                    this._Unit = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UnitPrice", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> UnitPrice
+        {
+            get
+            {
+                return this._UnitPrice;
+            }
+            set
+            {
+                if ((this._UnitPrice != value))
+                {
+                    this._UnitPrice = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UOM_Qty", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> UOM_Qty
+        {
+            get
+            {
+                return this._UOM_Qty;
+            }
+            set
+            {
+                if ((this._UOM_Qty != value))
+                {
+                    this._UOM_Qty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalStock", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> TotalStock
+        {
+            get
+            {
+                return this._TotalStock;
+            }
+            set
+            {
+                if ((this._TotalStock != value))
+                {
+                    this._TotalStock = value;
                 }
             }
         }
