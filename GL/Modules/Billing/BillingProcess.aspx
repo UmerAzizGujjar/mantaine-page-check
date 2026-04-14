@@ -92,6 +92,7 @@
                     reportPath = 'ReportViewer.aspx';
                 }
 
+
                 // Build URL — different report name based on whether doctorId is passed
                 function buildUrl(doctorId) {
                     var base;
@@ -157,6 +158,46 @@
                 });
             }
 
+            function ApproveBill() {
+                debugger;
+                var BillId = '<% =Request.QueryString["Bill_ID"] %>';
+                    PageMethods.approve_Bill(BillId, function (Tests) {
+                        debugger
+                        var result = JSON.parse(Tests);
+                        if (result.Success === true) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: result.Message,
+                                showConfirmButton: false,
+                                timer: 2500,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2500);
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: result.Message
+                            });
+                        }
+                    },
+
+                        function (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: error.get_message()
+                            });
+                        });
+                }
             var Appointment;
             function CheckAppointmentAllow() {
 
