@@ -2255,8 +2255,8 @@ namespace PMS
 
             List<HR_Employee> EmpList = new List<HR_Employee>();
             EmpList = (from tbl in db.HR_Employees
-                       where (tbl.IsDoctor == true
-                       && tbl.Department == DepartmentId && (tbl.Designation == "004" || tbl.Designation == "005" || tbl.Designation == "005" || tbl.Designation == "006" || tbl.Designation == "007" || tbl.Designation == "008"))
+                       where tbl.IsDoctor == true
+                       //&& tbl.Department == DepartmentId && (tbl.Designation == "004" || tbl.Designation == "005" || tbl.Designation == "005" || tbl.Designation == "006" || tbl.Designation == "007" || tbl.Designation == "008"))
                        select tbl).ToList();
             return (new JavaScriptSerializer().Serialize(EmpList));
 

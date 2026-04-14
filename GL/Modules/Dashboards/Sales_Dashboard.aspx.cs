@@ -71,7 +71,7 @@ namespace PMS.Modules.Dashboards
         {
             public string Item_Name { get; set; }
             public decimal TotalNetAmount { get; set; }
-            public int TotalQty { get; set; }
+            public decimal TotalQty { get; set; }
         }
 
         [WebMethod]
@@ -94,7 +94,7 @@ namespace PMS.Modules.Dashboards
         public class MedicineCategorySummary
         {
             public string MedicineCategory { get; set; }
-            public int TotalQty { get; set; }
+            public decimal TotalQty { get; set; }
             public decimal TotalNetAmount { get; set; }
         }
 
@@ -118,7 +118,7 @@ namespace PMS.Modules.Dashboards
         public class DailySales
         {
             public string SaleDate { get; set; }
-            public int TotalQty { get; set; }
+            public decimal TotalQty { get; set; }
             public decimal TotalNetAmount { get; set; }
         }
 

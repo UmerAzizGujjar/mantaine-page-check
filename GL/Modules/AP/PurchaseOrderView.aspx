@@ -210,10 +210,12 @@
                             return date;
                         }, "width": "10%", "orderable": false
                     },
-                    { "data": "RefNo", "width": "15%", "orderable": true },
-                    { "data": "VendorName", "width": "20%", "orderable": false },
-                    { "data": "PO_Amount", "width": "15%", className: "text-right", "orderable": false },
+                    { "data": "RefNo", "width": "10%", "orderable": true },
+                    { "data": "VendorName", "width": "10%", "orderable": false },
+                    { "data": "PO_Amount", "width": "10%", className: "text-right", "orderable": false },
                     { "data": "Status", "width": "10%", "orderable": false },
+                    { "data": "CreatedBy", "width": "10%", "orderable": false },
+                    { "data": "Approvedby", "width": "10%", "orderable": false },
                     {
                         "render": function (data, type, full) {
                             debugger;
@@ -433,6 +435,8 @@
             <th>Vendor Name</th>
             <th>Net Amount</th>
             <th>Status</th>
+            <th>Created By</th>
+            <th>Approved By</th>
             <th>Action</th>
         </tr>
     </thead>

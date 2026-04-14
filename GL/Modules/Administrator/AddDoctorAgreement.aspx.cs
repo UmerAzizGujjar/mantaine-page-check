@@ -70,6 +70,7 @@ namespace PMS.Inventory
             public decimal Discount { get; set; }
             public decimal Net_amount { get; set; }
             public decimal txt_Doc_share { get; set; }
+            public decimal txt_Doc_share_percentage { get; set; }
             public decimal txt_hos_share { get; set; }
             public string txtdep { get; set; }
             public bool active { get; set; }
@@ -87,6 +88,7 @@ namespace PMS.Inventory
             public decimal Discount { get; set; }
             public decimal Net_amount { get; set; }
             public decimal txt_Doc_share { get; set; }
+            public decimal txt_Doc_share_percentage { get; set; }
             public decimal txt_hos_share { get; set; }
             public string txtdep { get; set; }
             public bool active { get; set; }
@@ -104,6 +106,7 @@ namespace PMS.Inventory
             public decimal Discount { get; set; }
             public decimal Net_amount { get; set; }
             public decimal txt_Doc_share { get; set; }
+            public decimal txt_Doc_share_percentage { get; set; }
             public decimal txt_hos_share { get; set; }
             public string txtdep_xray { get; set; }
             public bool active { get; set; }
@@ -122,6 +125,7 @@ namespace PMS.Inventory
             public decimal Discount { get; set; }
             public decimal Net_amount { get; set; }
             public decimal txt_Doc_share { get; set; }
+            public decimal txt_Doc_share_percentage { get; set; }
             public decimal txt_hos_share { get; set; }
             public string txtdep_ultra { get; set; }
             public bool active { get; set; }
@@ -138,6 +142,7 @@ namespace PMS.Inventory
             public decimal Discount { get; set; }
             public decimal Net_amount { get; set; }
             public decimal txt_Doc_share { get; set; }
+            public decimal txt_Doc_share_percentage { get; set; }
             public decimal txt_hos_share { get; set; }
             public string txtdep_bloodbank { get; set; }
             public bool active { get; set; }
@@ -154,6 +159,7 @@ namespace PMS.Inventory
             public decimal Discount { get; set; }
             public decimal Net_amount { get; set; }
             public decimal txt_Doc_share { get; set; }
+            public decimal txt_Doc_share_percentage { get; set; }
             public decimal txt_hos_share { get; set; }
             public string txtdep_ctscan { get; set; }
             public bool active { get; set; }
@@ -171,6 +177,7 @@ namespace PMS.Inventory
             public decimal Discount { get; set; }
             public decimal Net_amount { get; set; }
             public decimal txt_Doc_share { get; set; }
+            public decimal txt_Doc_share_percentage { get; set; }
             public decimal txt_hos_share { get; set; }
             public string txtdep_mir { get; set; }
             public bool active { get; set; }
@@ -187,6 +194,7 @@ namespace PMS.Inventory
             public decimal Discount { get; set; }
             public decimal Net_amount { get; set; }
             public decimal txt_Doc_share { get; set; }
+            public decimal txt_Doc_share_percentage { get; set; }
             public decimal txt_hos_share { get; set; }
             public string hdn_services { get; set; }
             public bool active { get; set; }
@@ -271,6 +279,7 @@ namespace PMS.Inventory
                         std.dicount = record.Discount;
                         std.hos_share = record.txt_hos_share;
                         std.doc_share = record.txt_Doc_share;
+                        std.doc_share_percentage = record.txt_Doc_share_percentage;
                         std.service_description = "";
                         std.isactive = true;
                         std.item_id = 0;
@@ -294,6 +303,7 @@ namespace PMS.Inventory
                         std.dicount = record.Discount;
                         std.hos_share = record.txt_hos_share;
                         std.doc_share = record.txt_Doc_share;
+                        std.doc_share_percentage = record.txt_Doc_share_percentage;
                         std.service_description = "";
                         std.isactive = true;
                         std.item_id = 0;
@@ -318,6 +328,7 @@ namespace PMS.Inventory
                         std.dicount = record.Discount;
                         std.hos_share = record.txt_hos_share;
                         std.doc_share = record.txt_Doc_share;
+                        std.doc_share_percentage = record.txt_Doc_share_percentage;
                         std.service_description = "";
                         std.item_id = 0;
                         std.isactive = true;
@@ -341,6 +352,7 @@ namespace PMS.Inventory
                         std.dicount = record.Discount;
                         std.hos_share = record.txt_hos_share;
                         std.doc_share = record.txt_Doc_share;
+                        std.doc_share_percentage = record.txt_Doc_share_percentage;
                         std.service_description = "";
                         std.item_id = 0;
                         std.isactive = true;
@@ -364,6 +376,7 @@ namespace PMS.Inventory
                         std.dicount = record.Discount;
                         std.hos_share = record.txt_hos_share;
                         std.doc_share = record.txt_Doc_share;
+                        std.doc_share_percentage = record.txt_Doc_share_percentage;
                         std.service_description = "";
                         std.item_id = 0;
                         std.isactive = true;
@@ -387,6 +400,7 @@ namespace PMS.Inventory
                         std.dicount = record.Discount;
                         std.hos_share = record.txt_hos_share;
                         std.doc_share = record.txt_Doc_share;
+                        std.doc_share_percentage = record.txt_Doc_share_percentage;
                         std.service_description = "";
                         std.item_id = 0;
                         std.isactive = true;
@@ -410,6 +424,7 @@ namespace PMS.Inventory
                         std.dicount = record.Discount;
                         std.hos_share = record.txt_hos_share;
                         std.doc_share = record.txt_Doc_share;
+                        std.doc_share_percentage = record.txt_Doc_share_percentage;
                         std.service_description = "";
                         std.item_id = 0;
                         std.isactive = true;
@@ -433,6 +448,7 @@ namespace PMS.Inventory
                         std.dicount = record.Discount;
                         std.hos_share = record.txt_hos_share;
                         std.doc_share = record.txt_Doc_share;
+                        std.doc_share_percentage = record.txt_Doc_share_percentage;
                         std.test_description = "";
                         std.test_id = 0;
                         std.isactive = true;

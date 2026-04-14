@@ -229,7 +229,7 @@
     </script>
     <script id="DocumentReady">
         $(document).ready(function () {
-
+            loadPolicyVisibility();
             makeSelectsSelect2();
             loaddoctor_byDep();
             LoadSharingPolicy();
@@ -554,6 +554,30 @@
         });
     </script>
     <script id="functions" type="text/javascript">
+        function loadPolicyVisibility() {
+            $.ajax({
+                type: "POST",
+                url: "NewOutPatient.aspx/GetSidebarPolicy",  
+                data: '{}',  
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    
+                    var policyNames = (typeof response.d === "string") ? JSON.parse(response.d) : response.d;
+
+                    if (policyNames && policyNames.length > 0) {
+                        $.each(policyNames, function (index, val) {
+                            
+                            $('div[name="' + val + '"]').show();
+ 
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error: " + status + " - " + error);
+                }
+            });
+        }
         function loadPatientFormData(patientId) {
             // Show loading indicator
             showLoading();
@@ -4619,102 +4643,91 @@ function LoadLabResultrpt() {
 
         <div id="retract" class="col-lg-2 shrink-col">
             <div class="sidebarr">
-                <div class="menu-item no-submenu" id="06" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/complaints.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Complaints</span>
-                    </div>
-                </div>
-                <div class="menu-item no-submenu" id="01" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/symptoms.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Symptoms</span>
-                    </div>
-                </div>
-                <div class="menu-item no-submenu" id="02" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/vitals.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Vitals</span>
-                    </div>
-                </div>
-
-                <div class="menu-item no-submenu" id="03" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/history.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>History</span>
-                    </div>
-                </div>
-
-                <div class="menu-item no-submenu" id="04" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/examination.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Examination</span>
-                    </div>
-                </div>
-
-              
-
-                <div class="menu-item no-submenu" id="07" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/primarydiagnosis.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Primary Diagnosis</span>
-                    </div>
-                </div>
-
-                <div class="menu-item no-submenu" id="08" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/finaldiagnosis.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Final Diagnosis</span>
-                    </div>
-                </div>
-
-                <div class="menu-item no-submenu" id="09" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/investigation.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Investigation</span>
-                    </div>
-                </div>
-
-                <div class="menu-item no-submenu" id="10" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/diagnostics.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Diagnostics</span>
-                    </div>
-                </div>
-
-                <div class="menu-item no-submenu" id="11" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medication.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Medication</span>
-                    </div>
-                </div>
-                   <div class="menu-item no-submenu" id="14" onclick="navigateAction(this)">
-       <div class="menu-title">
-           <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medication.png" alt="Profile Picture" class="sidebarIcon">
-           <span>Services/Procedures</span>
-       </div>
-   </div>
-                <div class="menu-item no-submenu" id="12" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/followup.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Follow Up</span>
-                    </div>
-                </div>
-
-                <div class="menu-item no-submenu" id="13" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/disposal.png" alt="Profile Picture" class="sidebarIcon">
-                        <span>Disposal</span>
-                    </div>
-                </div>
-                <div class="menu-item no-submenu" id="05" onclick="navigateAction(this)">
-                    <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/refer.png" alt="Profile Picture" class="sidebarIcon" />
-                        <span>Refer To</span>
-                    </div>
-                </div>
-
-            </div>
+    <div class="menu-item no-submenu" name="complaints" style="display:none" id="06" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/complaints.png" class="sidebarIcon">
+            <span>Complaints</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="symptoms" style="display:none" id="01" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/symptoms.png" class="sidebarIcon">
+            <span>Symptoms</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="vitals" style="display:none" id="02" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/vitals.png" class="sidebarIcon">
+            <span>Vitals</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="history" style="display:none" id="03" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/history.png" class="sidebarIcon">
+            <span>History</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="examination" style="display:none" id="04" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/examination.png" class="sidebarIcon">
+            <span>Examination</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="primary_diagnosis" style="display:none" id="07" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/primarydiagnosis.png" class="sidebarIcon">
+            <span>Primary Diagnosis</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="final_diagnosis" style="display:none" id="08" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/finaldiagnosis.png" class="sidebarIcon">
+            <span>Final Diagnosis</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="investigation" style="display:none" id="09" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/investigation.png" class="sidebarIcon">
+            <span>Investigation</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="diagnostics" style="display:none" id="10" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/diagnostics.png" class="sidebarIcon">
+            <span>Diagnostics</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="medication" style="display:none" id="11" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medication.png" class="sidebarIcon">
+            <span>Medication</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="services_procedures" style="display:none" id="14" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medication.png" class="sidebarIcon">
+            <span>Services/Procedures</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="follow_up" style="display:none" id="12" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/followup.png" class="sidebarIcon">
+            <span>Follow Up</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="disposal" style="display:none" id="13" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/disposal.png" class="sidebarIcon">
+            <span>Disposal</span>
+        </div>
+    </div>
+    <div class="menu-item no-submenu" name="refer_to" style="display:none" id="05" onclick="navigateAction(this)">
+        <div class="menu-title">
+            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/refer.png" class="sidebarIcon" />
+            <span>Refer To</span>
+        </div>
+    </div>
+</div>
         </div>
         <div class="col-lg-10 grow-col" style="margin-top: 10px">
             <div class="row">
