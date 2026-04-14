@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ASsiraat_Standard" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -11131,22 +11131,6 @@
       <Column Name="Bonus_Qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetPRDetailByPRID" Method="sp_GetPRDetailByPRID">
-    <Parameter Name="PRId" Parameter="pRId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetPRDetailByPRIDResult">
-      <Column Name="PR_Detail_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="PR_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-      <Column Name="Required_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
-      <Column Name="UnitPrice" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetIGPDetailByIGPID" Method="sp_GetIGPDetailByIGPID">
     <Parameter Name="IGPId" Parameter="iGPId" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_GetIGPDetailByIGPIDResult">
@@ -11889,6 +11873,23 @@
       <Column Name="Ward_ID_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Contract_Number" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
       <Column Name="Out_of_Range" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetPRDetailByPRID" Method="sp_GetPRDetailByPRID">
+    <Parameter Name="PRId" Parameter="pRId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetPRDetailByPRIDResult">
+      <Column Name="PR_Detail_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="PR_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="PR_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+      <Column Name="Required_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="UnitPrice" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="TotalStock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
