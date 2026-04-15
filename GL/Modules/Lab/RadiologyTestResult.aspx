@@ -318,7 +318,7 @@
                 var hasRights = JSON.parse(response);
 
                 if (hasRights === true) {
-                    x
+                    
                     $('#PendingRadiologylist').show();
                     //UltraSoundTestDetail();
                 } else {
