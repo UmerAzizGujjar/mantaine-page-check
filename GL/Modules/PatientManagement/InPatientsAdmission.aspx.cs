@@ -1061,7 +1061,7 @@ namespace PMS
                     OPD.Issuance_Of = ddlIssuance_Of;
                     OPD.Patient_Discount_Type = PatientDiscountType;
                     OPD.Discharge = false;
-                    OPD.Panel_Company = panelCompany;
+         
                     OPD.InsuranceCardNo = CardNo;
                     OPD.CardHolderName = Cardholdername;
                     OPD.CompanyNAme = CompanyName;
