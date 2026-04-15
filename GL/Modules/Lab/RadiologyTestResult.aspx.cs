@@ -1947,7 +1947,7 @@ namespace PMS.Modules.Lab
                                   xr.Levels,
                                   xr.FixValues,
                                   DataValue_Description = dv.DataValue_Description
-                              }).Distinct().ToList();
+                              }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(levels);
             }
@@ -1985,7 +1985,7 @@ namespace PMS.Modules.Lab
                                   mri.Levels,
                                   mri.FixValues,
                                   DataValue_Description = dv.DataValue_Description
-                              }).Distinct().ToList();
+                              }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(levels);
             }
@@ -2023,7 +2023,7 @@ namespace PMS.Modules.Lab
                                   ct.Levels,
                                   ct.FixValues,
                                   DataValue_Description = dv.DataValue_Description
-                              }).Distinct().ToList();
+                              }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(levels);
             }
@@ -2061,7 +2061,7 @@ namespace PMS.Modules.Lab
                                   us.Levels,
                                   us.FixValues,
                                   DataValue_Description = dv.DataValue_Description
-                              }).Distinct().ToList();
+                              }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(levels);
             }
