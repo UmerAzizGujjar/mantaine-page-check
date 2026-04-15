@@ -117,7 +117,10 @@ namespace PMS.Modules.Lab
                         query = query.Where(x => x.Full_Name.Contains(searchValue) ||
                                                   x.mr_no_sequence.Contains(searchValue) ||
                                                   x.Test_Name.Contains(searchValue) ||
-                                                  x.Bill_No.Contains(searchValue));
+                                                  x.Bill_No.Contains(searchValue) ||
+                                                  x.Mobile1.Contains(searchValue) ||
+                                                   x.Doctor_Name.Contains(searchValue)); 
+                                                  
                     }
 
                     var FilteredCount = query.Count();
