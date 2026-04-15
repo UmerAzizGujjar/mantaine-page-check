@@ -260,26 +260,7 @@
             }
 
             // Check if this department is already added (only ONE template per department)
-            var departmentExists = false;
-            $('#tblItemDescriptionDetail tr').each(function () {
-                var existingDept = $(this).find('input[name=txt_department]').val();
-
-                if (existingDept == department) {
-                    departmentExists = true;
-                    return false;
-                }
-            });
-
-            if (departmentExists) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Warning!',
-                    text: 'This department already has a template assigned. Only one template per department is allowed.',
-                    timer: 3000,
-                    showConfirmButton: false
-                });
-                return;
-            }
+            
 
             var rows = '<tr>' +
                 '<td style="display:none;">' + user_id + '</td>' +

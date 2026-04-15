@@ -1581,10 +1581,6 @@ namespace PMS
                 rd.SummaryInfo.ReportTitle = reportTitle;
 
                 string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
-                //string stDate = Request.QueryString["StartDateTime"].ToString();
-                //string endDate = Request.QueryString["EndDateTime"].ToString();
-                //var edate = Convert.ToDateTime(endDate);
-                //var newEnddate = new DateTime(edate.Year, edate.Month, edate.Day, edate.Hour, edate.Minute, 59);
 
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
@@ -1598,6 +1594,30 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@StDate", sqlStartDateTime);
                 rd.SetParameterValue("@endDate", sqlEndDateTime);
+
+            }
+            else if (reportName == "Lab_Log_Report")
+            {
+                reportPath += "LabRadiology/rptlab_log_report.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string Operator = Convert.ToString(Request.QueryString["Operator"]);
+
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@stDate", sqlStartDateTime);
+                rd.SetParameterValue("@endDate", sqlEndDateTime);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
             else if (reportName == "Pharmacy_Profit_and_Loss_Report")
