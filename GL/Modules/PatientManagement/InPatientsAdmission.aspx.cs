@@ -5616,15 +5616,25 @@ namespace PMS
                     select op.Discharge
                 ).FirstOrDefault();
 
-                var latestEmergencyDischarge = (
+                // Get latest emergency patient where Admission_Date is NOT null
+                var latestEmergency = (
                     from ep in db.Emergency_Patients
-                    where ep.Patient_ID == patientId
+                    where ep.Patient_ID == patientId && ep.Admission_Date != null
                     orderby ep.Admission_Date descending
-                    select ep.Discharge
+                    select ep
                 ).FirstOrDefault();
 
                 bool blockedOpd = latestOutPatientDischarge == false;
-                bool blockedEmerg = latestEmergencyDischarge == false;
+
+                // Only block emergency if:
+                // 1. There is an emergency record with Admission_Date NOT null, AND
+                // 2. Discharge is false (or null treated as false/not discharged)
+                bool blockedEmerg = false;
+                if (latestEmergency != null)
+                {
+                    // If Discharge is false or null, patient is still admitted
+                    blockedEmerg = latestEmergency.Discharge == false || latestEmergency.Discharge == null;
+                }
 
                 if (blockedOpd && blockedEmerg)
                 {
