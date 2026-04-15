@@ -1131,6 +1131,22 @@ namespace PMS.Modules.PatientManagement
 
             return "Success";
         }
+
+        [WebMethod]
+        public static bool CheckComplains(string outpat)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                bool checkComplains = db.OutPatientComplaints
+                                        .Any(cm => cm.OutPatientID ==Convert.ToInt32(outpat));
+
+                bool checkDiagnosis = db.OutPatientPrimaryDiagnosis
+                                        .Any(cm => cm.OutPatientID == Convert.ToInt32(outpat));
+
+                return checkComplains || checkDiagnosis;
+
+            }
+        }
         [WebMethod]
         public static string SaveComplaintsOfPatient(string ComplaintsList)
         {
