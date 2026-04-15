@@ -301,6 +301,8 @@
             var itemcode = $($(row).find('td')[5]).text();
             var UOM_Qty = $($(row).find('td')[10]).text();
 
+            var total_stock = $($(row).find('td')[11]).text() || '0'; 
+
             if (unit == "null") unit = "";
             if (Rate == "null" || Rate == "NaN") Rate = "0";
             if (UOM_Qty == "null" || UOM_Qty == "") UOM_Qty = "0";
@@ -322,7 +324,7 @@
                 return false;
             } else {
                 // Build row
-                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id);
+                var newRow = buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id,total_stock);
                 $("#tblItemDescription tbody").append(newRow);
 
                 // Populate dropdowns for the new row
@@ -384,7 +386,7 @@
 }
 
         // Helper function to build row HTML
-        function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id) {
+        function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Rate, pr_detail_id,total_stock) {
             return '<tr>' +
                 '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="' + pr_detail_id + '" style="width: 75px !important;text-align:right" />' + length + '</td>' +
                 '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="' + PR_Num + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;padding-right: 3px!important;"/>' + PR_Num + '</td>' +
@@ -409,6 +411,7 @@
                 '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
                 '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
                 '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
+                '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
                 '</tr>';
         }
@@ -461,19 +464,27 @@
         function LoadPrNoDetail(pr_id) {
             debugger;
             PageMethods.getPurchaseByID(pr_id, function (data) {
-                debugger;
                 var Test = JSON.parse(data);
                 $('#tblPOItemstModelTable tbody tr').remove();
                 var rows = "";
                 for (var i = 0; i < Test.length; i++) {
-                    debugger;
-                    rows = '<tr><td><input class="chktd" id="chktd" name="chktd" type="checkbox" style=" margin-top: -2px;" onclick="append(this)"/></td><td style="display:none;">' + Test[i].PR_Num + '</td><td style="display:none;">' + Test[i].Item_ID + '</td><td>' + Test[i].Description + '</td><td>' + parseFloat(Test[i].Qty).toFixed(2)
-                        + '</td><td style="display:none;">' + Test[i].Item_Code + '</td><td style="display:none;">' + Test[i].Unit + '</td><td style="display:none;">' + parseFloat(Test[i].Pack_Quantity).toFixed(2) + '</td><td style="display:none;">' + parseFloat(Test[i].UnitPrice).toFixed(2) + '</td><td style="display:none;">' + Test[i].PR_Detail_ID + '</td><td style="display:none;">' + (Test[i].UOM_Qty != null ? Test[i].UOM_Qty : '0') + '</td></tr>';
+                    rows = '<tr>' +
+                        '<td><input class="chktd" type="checkbox" onclick="append(this)"/></td>' +
+                        '<td style="display:none;">' + Test[i].PR_Num + '</td>' +
+                        '<td style="display:none;">' + Test[i].Item_ID + '</td>' +
+                        '<td>' + Test[i].Description + '</td>' +
+                        '<td>' + parseFloat(Test[i].Qty).toFixed(2) + '</td>' +
+                        '<td style="display:none;">' + Test[i].Item_Code + '</td>' +
+                        '<td style="display:none;">' + Test[i].Unit + '</td>' +
+                        '<td style="display:none;">' + parseFloat(Test[i].Pack_Quantity).toFixed(2) + '</td>' +
+                        '<td style="display:none;">' + parseFloat(Test[i].UnitPrice).toFixed(2) + '</td>' +
+                        '<td style="display:none;">' + Test[i].PR_Detail_ID + '</td>' +
+                        '<td style="display:none;">' + (Test[i].UOM_Qty != null ? Test[i].UOM_Qty : '0') + '</td>' +
+                        '<td>' + (Test[i].TotalStock != null ? Test[i].TotalStock : '0') + '</td>' +
+                        '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                 }
-                $('#POItemsModel').modal({
-                    backdrop: 'static'
-                });
+                $('#POItemsModel').modal({ backdrop: 'static' });
             });
         }
         var optionsList = '';
@@ -850,9 +861,8 @@
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlPOType').val(data.PO_Type).trigger('change');
                 }, 1000)
-                setTimeout(function () {
-                    $('#ddlWarehouse').val(data.Ware_House).trigger('change');
-                }, 1000);
+            
+             
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlpayment').val(data.Payment_Terms).trigger('change');
                 }, 1000)
@@ -870,6 +880,12 @@
                 LoadPOItemDetail(PO_ID);
                 $('#txtAdv_amou').val(data.Total_Adv_Amt);
                 $('#txtFurther_amou').val(data.Total_Further_Amt);
+                $('#ddlWarehouse').html(
+                    $('<option>', {
+                        value: data.Ware_House,
+                        text: data.Ware_HouseText
+                    })
+                );
             },
                 function (error) {
                     alert(error.get_message());
@@ -1193,6 +1209,7 @@ function scheduleCalcTotal(delay) {
                             '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="' + parseFloat(safeVal(value.Bonus_Tax, 0)).toFixed(2) + '" id="txtBonusAmount' + idx + '" name="txtBonusAmount" /><\/td>' +
                             '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="' + safeVal(value.Amount, 0) + '" readonly="readonly" id="txtTotalAmount' + idx + '" name="txtTotalAmount"><\/input><\/td>' +
                             '<td><input type="text" name="txtddate" id="txtddate' + idx + '" value="' + TrnsDate + '" style="text-align:right ;width:64px !important;font-size:9px;height:20px;" /><\/td>' +
+                            '<td style="text-align:center; font-weight:bold; color:#555;">' + (value.TotalStock != null ? value.TotalStock : '0') + '</td>' +
                             '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"><\/i><\/a>  <\/td>' +
                             '<\/tr>';
                         rowsHTML.push(row);
@@ -2280,6 +2297,7 @@ function scheduleCalcTotal(delay) {
                             '<td>' + item.Unit + '</td>' +
                             '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
                             '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
+                            '<td>' + (item.TotalStock || 0) + '</td>' +
                             '</tr>';
                         tableBody.append(row);
                     });
@@ -2301,6 +2319,7 @@ function scheduleCalcTotal(delay) {
             var unit = $(row).find('td:eq(4)').text().trim();
             var rate = $(row).find('td:eq(5)').text().trim() || '0';
             var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
+            var total_stock = $(row).find('td:eq(7)').text().trim() || '0';
             var isChecked = $(anchor).prop('checked');
 
             if (!isChecked) {
@@ -2359,6 +2378,7 @@ function scheduleCalcTotal(delay) {
                 '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
                 '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
                 '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
+                '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
                 '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
                 '</tr>';
 
@@ -2366,8 +2386,23 @@ function scheduleCalcTotal(delay) {
 
             initializeDatePickers();
             populateTaxddl(length);
-            populateAdvanceTaxddl(length);
+            PageMethods.getAdvanceTaxType(function (response) {
+                var options = '<option value="0">0</option>';
+                try {
+                    var taxData = JSON.parse(response);
+                    $.each(taxData, function (key, value) {
+                        options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
+                    });
+                } catch (e) {
+                    console.error('Error parsing advance tax data:', e);
+                }
+                $('#ddlAdvanceTax' + length).html(options);
+            }, function (error) {
+                console.error('Error loading Advance Tax:', error);
+            });
+
             populateFurtherTaxddl(length);
+
             $('[data-toggle="tooltip"]').tooltip();
 
             setTimeout(function () {
@@ -2556,6 +2591,7 @@ function scheduleCalcTotal(delay) {
                     <th style="width: 75px;">Bonus Tax</th>
                     <th style="width: 75px;">Total</th>
                     <th style="width: 75px;">Delivery Date</th>
+                     <th style="width: 60px; text-align: center;">Stock</th>
                     <th style="width: 45px;">Action</th>
                 </tr>
             </thead>
@@ -2806,6 +2842,7 @@ function scheduleCalcTotal(delay) {
                                 <th style="display: none;"></th>
                                 <th style="display: none;"></th>
                                 <th style="display: none;"></th>
+                                <th>Stock</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2846,6 +2883,7 @@ function scheduleCalcTotal(delay) {
                                 <th>Unit</th>            <!-- td:eq(4) -->
                                 <th style="display:none;">Rate</th>      <!-- td:eq(5) -->
                                 <th style="display:none;">UOM Qty</th>   <!-- td:eq(6) -->
+                                <th>Stock</th> 
                             </tr>
                         </thead>
                         <tbody id="itemsTableBody">

@@ -91,6 +91,7 @@ namespace PMS
                                              PONo = PO.PO_No,
                                              Date = PO.PO_Date,
                                              RefNo = PO.Ref_No,
+                                             Ware_House  = _dbContext.GetDataValueName("Ware House", PO.Ware_House),
                                              VendorName = (from v in _dbContext.AP_Vendors where PO.Vendor_ID == v.Vendor_ID select new { vendor = v.Vendor_Name }).FirstOrDefault().vendor.ToString(),
                                              PO_Amount = PO.PO_Amount,
                                              Status = PO.Status,

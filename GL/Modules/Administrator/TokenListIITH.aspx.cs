@@ -46,23 +46,25 @@ namespace PMS.Modules.Administrator
                                     join op in db.Out_Patients on p.Patient_ID equals op.Patient_ID into opGroup
                                     from op in opGroup.DefaultIfEmpty()
                                     where
-                                        op.Doctor_ID == Convert.ToString(doctorEmpId)
+                                        p.Doctor_ID == Convert.ToString(doctorEmpId)
                                         && p.Patient_Type == "02"
                                         && p.Created_Time.HasValue
                                         && p.Created_Time.Value >= todayStart
                                         && p.Created_Time.Value < tomorrowStart
-
+                                        && (op == null || op.BP_mm_Hg == null || op.BP_mm_Hg == "")
                                     select new
                                     {
                                         Patient_ID = p.Patient_ID,
                                         Full_Name = p.Full_Name,
                                         Opd_No = p.Opd_No,
-                                        mr_no_sequence = p.mr_no_sequence,
+                                        mr_no_sequence = p.mr_no_sequence ?? "",
                                         tokenNo = p.Doc_Token,
-                                        filter_clinic = p.filter_clinic,
+
+                                        filter_clinic = p.filter_clinic ?? "",
                                         Created_Time = p.Created_Time,
-                                        Doctor_ID = op.Doctor_ID,
-                                        doc_name = doctorName 
+                                        Doctor_ID = p.Doctor_ID,
+
+                                        doc_name = doctorName
                                     }).OrderBy(x => x.tokenNo)
                                       .ToList();
 
@@ -71,8 +73,15 @@ namespace PMS.Modules.Administrator
             }
             catch (Exception ex)
             {
-                // Log error here
-                return new JavaScriptSerializer().Serialize(new { error = ex.Message });
+                System.Diagnostics.Debug.WriteLine($"=== ERROR LoadDoctorTokenPatients ===");
+                System.Diagnostics.Debug.WriteLine($"Message: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    error = ex.Message,
+                    stack = ex.StackTrace
+                });
             }
         }
 

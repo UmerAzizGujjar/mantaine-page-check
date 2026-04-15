@@ -168,6 +168,7 @@ namespace PMS.AP
                               m.CS_Master_ID,
                               m.PO_ID,
                               m.Ware_House,
+                              Ware_HouseText = (db.GetDataValueName("Ware House", m.Ware_House)),
                               m.PO_No,
                               m.PO_Date,
                               m.Due_Date,
@@ -233,7 +234,8 @@ namespace PMS.AP
                                d.AdvanceTax_ID,
                                d.Bonus_Tax,
                                d.Bonus_Qty,
-                               pr_id = DBClass.getField("select PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID = " + d.PRDetailId)
+                               pr_id = DBClass.getField("select PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID = " + d.PRDetailId),
+                               TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House)
                            }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(Details);
@@ -820,7 +822,8 @@ namespace PMS.AP
                         Description = x.Description,
                         Unit = db.GetDataValueName("UOM", x.Unit) ?? "",
                         Purchase_Rate = x.Purchase_Rate != null ? x.Purchase_Rate : 0,
-                        UOM_Qty = x.UOM_Qty != null ? x.UOM_Qty : 1
+                        UOM_Qty = x.UOM_Qty != null ? x.UOM_Qty : 1,
+                        TotalStock = db.GetInvenrtoryItemUomTotalStock(x.Item_ID, x.InventoryOrg)
                     })
                     .ToList();
 

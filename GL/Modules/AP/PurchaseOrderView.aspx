@@ -212,6 +212,7 @@
                     },
                     { "data": "RefNo", "width": "10%", "orderable": true },
                     { "data": "VendorName", "width": "10%", "orderable": false },
+                    { "data": "Ware_House", "width": "7%", "orderable": false },
                     { "data": "PO_Amount", "width": "10%", className: "text-right", "orderable": false },
                     { "data": "Status", "width": "10%", "orderable": false },
                     { "data": "CreatedBy", "width": "10%", "orderable": false },
@@ -433,6 +434,7 @@
             <th>PO Date</th>
             <th>Ref No</th>
             <th>Vendor Name</th>
+            <th>WareHouse</th>
             <th>Net Amount</th>
             <th>Status</th>
             <th>Created By</th>

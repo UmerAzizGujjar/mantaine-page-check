@@ -1786,7 +1786,7 @@ namespace PMS.Modules.Lab
         }
 
         [WebMethod]
-        public static string GetRadiologyResultsReady(string departmentCode, string startdate, string endtdate)  
+        public static string GetRadiologyResultsReady(string departmentCode, string startdate, string endtdate)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             db.CommandTimeout = 180;
@@ -1796,10 +1796,16 @@ namespace PMS.Modules.Lab
             DateTime startDate = Convert.ToDateTime(startdate).Date;
             DateTime endDate = Convert.ToDateTime(endtdate).Date.AddDays(1).AddTicks(-1);
             var userid = AppConfig.UserID;
+            string loggedInEmpId = (from hr in db.HR_Employees
+                                    where hr.userid == Convert.ToString(userid)
+                                    select Convert.ToString(hr.Emp_ID)).FirstOrDefault();
+
             var ups = (from St in db.aspnet_Users
                        where St.UserId == AppConfig.UserID
                        select St.Allow_RadiologyAllList).FirstOrDefault();
-            if (ups == true) {
+
+            if (ups == true)
+            {
                 var resultsReadyList = (
                    from pat in db.Reg_patients
                    join bill in db.Ar_Billings on pat.pat_id equals bill.Patient_ID
@@ -1808,12 +1814,12 @@ namespace PMS.Modules.Lab
                    join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
                    where labtest_detail.Is_Result == true &&
                          (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
-                         (labtest_detail.Refer_Doctor != null || labtest_detail.Refer_Doctor != "" || labtest_detail.Refer_Doctor != "0") &&
+                         (labtest_detail.Refer_Doctor != null && labtest_detail.Refer_Doctor != "" && labtest_detail.Refer_Doctor != "0") &&
                          bill_details.Test_Main_Department != "001" &&
                          (bill.isCancel == false || bill.isCancel == null) &&
-                                                bill.Bill_Date >= startDate &&
-                        bill.Bill_Date <= endDate
-                         && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
+                         bill.Bill_Date >= startDate &&
+                         bill.Bill_Date <= endDate &&
+                         !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
                    orderby bill.Bill_Date descending
                    select new
                    {
@@ -1831,16 +1837,14 @@ namespace PMS.Modules.Lab
                        Doctor = (from hr in db.HR_Employees where hr.Emp_ID == Convert.ToInt32(labtest_detail.Refer_Doctor ?? "0") select hr.Emp_Name).FirstOrDefault(),
                        RawDeptCode = bill_details.Test_Main_Department
                    }
-               );        
-               if (!string.IsNullOrEmpty(departmentCode) && departmentCode != "0")
+               );
+                if (!string.IsNullOrEmpty(departmentCode) && departmentCode != "0")
                 {
                     resultsReadyList = resultsReadyList.Where(x => x.RawDeptCode == departmentCode);
                 }
 
-                var testDetails_Billing_Sample = resultsReadyList.ToList();
-                return serl.Serialize(resultsReadyList);
+                return serl.Serialize(resultsReadyList.ToList());
             }
-
             else
             {
                 var resultsReadyList = (
@@ -1849,15 +1853,15 @@ namespace PMS.Modules.Lab
                    join bill_details in db.Ar_Billing_Details on bill.Bill_ID equals bill_details.Bill_ID
                    join labtest_detail in db.Lab_Test_Details on bill_details.Bill_Details_ID equals labtest_detail.Bill_Details_ID
                    join lbt in db.Laboratory_Tests on labtest_detail.Lab_Test_ID equals lbt.Lab_Test_ID
-                   join hr in db.HR_Employees on labtest_detail.Refer_Doctor equals Convert.ToString( hr.Emp_ID) 
                    where labtest_detail.Is_Result == true &&
                          (labtest_detail.isApproved == false || labtest_detail.isApproved == null) &&
+                         (labtest_detail.Refer_Doctor != null && labtest_detail.Refer_Doctor != "" && labtest_detail.Refer_Doctor != "0") &&
                          bill_details.Test_Main_Department != "001" &&
                          (bill.isCancel == false || bill.isCancel == null) &&
-                        bill.Bill_Date >= startDate &&
-                        bill.Bill_Date <= endDate
-                         && !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID)
-                         && hr.userid == Convert.ToString(userid)
+                         bill.Bill_Date >= startDate &&
+                         bill.Bill_Date <= endDate &&
+                         !db.Refunds.Any(r => r.Bill_ID == bill.Bill_ID) &&
+                         labtest_detail.Refer_Doctor == loggedInEmpId
                    orderby bill.Bill_Date descending
                    select new
                    {
@@ -1881,11 +1885,8 @@ namespace PMS.Modules.Lab
                     resultsReadyList = resultsReadyList.Where(x => x.RawDeptCode == departmentCode);
                 }
 
-                var testDetails_Billing_Sample = resultsReadyList.ToList();
-                return serl.Serialize(resultsReadyList);
-
+                return serl.Serialize(resultsReadyList.ToList());
             }
-           
         }
 
         [WebMethod]
@@ -1947,7 +1948,7 @@ namespace PMS.Modules.Lab
                                   xr.Levels,
                                   xr.FixValues,
                                   DataValue_Description = dv.DataValue_Description
-                              }).Distinct().ToList();
+                              }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(levels);
             }
@@ -1985,7 +1986,7 @@ namespace PMS.Modules.Lab
                                   mri.Levels,
                                   mri.FixValues,
                                   DataValue_Description = dv.DataValue_Description
-                              }).Distinct().ToList();
+                              }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(levels);
             }
@@ -2023,7 +2024,7 @@ namespace PMS.Modules.Lab
                                   ct.Levels,
                                   ct.FixValues,
                                   DataValue_Description = dv.DataValue_Description
-                              }).Distinct().ToList();
+                              }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(levels);
             }
@@ -2061,7 +2062,7 @@ namespace PMS.Modules.Lab
                                   us.Levels,
                                   us.FixValues,
                                   DataValue_Description = dv.DataValue_Description
-                              }).Distinct().ToList();
+                              }).ToList();
 
                 return (new JavaScriptSerializer()).Serialize(levels);
             }
