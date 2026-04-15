@@ -152,7 +152,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "LabReportPreview.aspx/GetSharingPolicy",
+                url: "NewOutPatient.aspx/GetSharingPolicy",
                 data: JSON.stringify({}),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -4096,13 +4096,9 @@ function LoadLabResultrpt() {
                         if (SharingPolicy == '001') {
 
                         
-                        var pat_id = response.d;
-                        if (
-                            data.Doctor_ID &&
-                            (data.pulse_Min !== "" || data.Respiration_Min !== "")
-                        ) {
-                            ApprovedOPDShare(pat_id);
-                            }
+                            var pat_id = response.d;
+                            CheckComplainsAndDaignosis(pat_id);
+                 
                         }
                         window.location = "NewOutPatient.aspx?ID=" + response.d;
                         $('#btnSave').val("Update");
@@ -4123,6 +4119,16 @@ function LoadLabResultrpt() {
                         showConfirmButton: true
                     });
                 }
+            });
+        }
+        function CheckComplainsAndDaignosis(pat_id) {
+            PageMethods.CheckComplains(pat_id, function (result) {
+
+                if (result === true) {
+                    ApprovedOPDShare(pat_id);
+                } 
+            }, function (error) {
+                console.error(error);
             });
         }
         function ApprovedOPDShare(pat_id) {
