@@ -514,6 +514,24 @@
                 $('#section').hide();
                 $('#emp_id').hide();
             }
+            else if (Category == "52") {
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').show();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+                $('#field_Clinic').hide();
+                $('#discount').show();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#dependent').hide();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#emp_id').hide();
+
+            }
         }
         function ApproveOPD() {
             var pat_id = '<% =Request.QueryString["OPDID"] %>';
@@ -646,47 +664,52 @@
             window.open(url, '_blank');
         }
 
-        function loaddoctor() {
-            debugger;
-            var appointmentid = $("#hdn_aptid").val();
-            var opdid = $('#hdn_opdId').val();
+        //function loaddoctor() {
+        //    debugger;
+        //    var appointmentid = $("#hdn_aptid").val();
+        //    var opdid = $('#hdn_opdId').val();
 
-            if (appointmentid != "" || opdid != "") {
+        //    if (appointmentid != "" || opdid != "") {
 
-            }
-            else {
-                var dpt = $('#ddlDepartment').val();
+        //    }
+        //    else {
+        //        debugger;
+        //        var dpt = $('#ddlDepartment').val();
 
-                $.ajax({
-                    type: "POST",
-                    url: "OPD.aspx/LoadDoctor",
-                    data: JSON.stringify({ dpt: dpt }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        debugger;
-                        var doctor = JSON.parse(response.d);
-                        var options = '<option value=""> Please Select </option>';
+        //        $.ajax({
+        //            type: "POST",
+        //            url: "OPD.aspx/LoadDoctor",
+        //            data: JSON.stringify({ dpt: dpt }),
+        //            contentType: "application/json; charset=utf-8",
+        //            dataType: "json",
+        //            success: function (response) {
+        //                debugger;
+        //                var doctor = JSON.parse(response.d);
+        //                var options = '<option value=""> Please Select </option>';
 
-                        $.each(doctor, function (key, value) {
-                            options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
-                        });
+        //                $.each(doctor, function (key, value) {
+        //                    options += '<option value="' + value.Emp_ID + '">' + value.Emp_Name + '</option>';
+        //                });
+        //                debugger;
 
-                        $('#ddldoctor').html(options);
-                        var type = $('#ddlPatient_Type').val();
+        //                $('#ddldoctor').html(options);
+        //                var type = $('#ddlPatient_Type').val();
 
-                        if (type != "02") {
+        //                if (type != "02" ) {
+        //                    debugger;
 
-                            getGeneralFee();
-                        }
-
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("Error: " + error);
-                    }
-                });
-            }
-        }
+        //                    getGeneralFee();
+        //                }
+        //                if (type != "52") {
+        //                    getGeneralFee();
+        //                }
+        //            },
+        //            error: function (xhr, status, error) {
+        //                console.log("Error: " + error);
+        //            }
+        //        });
+        //    }
+        //}
         function LoadDoc() {
             $.ajax({
                 type: "POST",
@@ -879,11 +902,11 @@
 
                         $('#ddldoctor').html(options);
                         var type = $('#ddlPatient_Type').val();
-                        if (type !== "02" ) {
-
+                        if (type != "02" && type != "52") {
+                            debugger;
                             getGeneralFee();
                         }
-
+                      
                     },
                     error: function (xhr, status, error) {
                         console.log("Error: " + error);
@@ -914,7 +937,7 @@
                     return;
                 }
 
-                if (selectedPatientType == '11') {
+                if (selectedPatientType == '52') {
                     getspecialfees(Doc);
                 } else {
                     if (opdid == "") {

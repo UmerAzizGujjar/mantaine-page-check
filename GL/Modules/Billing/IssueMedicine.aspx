@@ -412,8 +412,10 @@
                     dataType: 'json',
                     delay: 300,
                     data: function (params) {
+                        var regId = parseInt($('#ddlpat_no').val() || '0');
                         return JSON.stringify({
-                            searchTerm: params.term || ""
+                            searchTerm: params.term || "",
+                            reg_id: isNaN(regId) ? 0 : regId
                         });
                     },
                     processResults: function (response) {
@@ -473,14 +475,44 @@
         //}
         // Function to load Sale Return Items into the dropdown
         function loadSaleReturnItems() {
-            var optionInv = '';
-            PageMethods.SaleReturnItems(function (Tests) {
-                optionInv = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(Tests), function (key, value) {
-                    optionInv += '<option value="' + value.Item_ID + '" >' + value.Description + '</option>';
-                });
-                $('#ddlSaleReturnItems').html(optionInv);
-                $('#ddlSaleReturnItems').select2();
+            if ($('#ddlSaleReturnItems').data('select2')) {
+                $('#ddlSaleReturnItems').select2('destroy');
+            }
+
+            $('#ddlSaleReturnItems').empty();
+
+            $('#ddlSaleReturnItems').select2({
+                placeholder: "Search Item",
+                allowClear: true,
+                minimumInputLength: 1,
+                ajax: {
+                    url: 'IssueMedicine.aspx/SaleReturnItems',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function (params) {
+                        return JSON.stringify({
+                            searchTerm: params.term || ""
+                        });
+                    },
+                    processResults: function (response) {
+                        var data = [];
+                        try {
+                            if (response.d) {
+                                data = JSON.parse(response.d);
+                            }
+                        } catch (e) {
+                            console.log("Parse error:", e);
+                            data = [];
+                        }
+
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
             });
         }
         function AddSaleReturnInvoiceMaster() {
@@ -3134,49 +3166,8 @@
          }
          function getInvoiceNo_PatWise() 
          {
-             
-            var reg_id = $('#ddlpat_no').val();
-
-            if (reg_id == "" || reg_id == null) {
-              //  alert("Please select a patient");
-               // return;
-            }
-
-                $.ajax({
-                    type: "POST",
-                    url: "IssueMedicine.aspx/GetInvoiceNoByPatient",
-                    data: JSON.stringify({ reg_id: parseInt(reg_id) }),  // Ensure it's an integer
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        console.log("Response:", response.d);  // Check this in console
-                        debugger;
-                        // Clear existing options
-                        $('#ddlInvoiceNumber').empty();
-                        $('#ddlInvoiceNumber').append('<option value="">--Select Invoice--</option>');
-
-                        // Populate invoice dropdown
-                        if (response.d && response.d.length > 0) {
-                            $.each(response.d, function (index, item) {
-                                console.log("Item:", item);
-                                // Debug: check property names
-                                debugger;
-                                $('#ddlInvoiceNumber').append(
-                                  
-                                    '<option value="' + item.bill_id + '">' + 
-                                    item.Seq_InvoiceNo + '</option>'
-                                );
-                            });
-                        } else {
-                            $('#ddlInvoiceNumber').append('<option value="">No Invoices Found</option>');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                       // console.error("AJAX Error:", error);
-                        //console.error("Response Text:", xhr.responseText);
-                        //alert("Error loading invoices: " + error);
-                    }
-                });
+            $('#ddlInvoiceNumber').val(null).trigger('change');
+            loadInvoiceNumbers();
         }
 
         var editrights;
