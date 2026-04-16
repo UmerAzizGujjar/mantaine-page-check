@@ -5780,7 +5780,7 @@ namespace PMS
             {
                 string PatientID = Request.QueryString["PatientID"].ToString();
                 string Image_Id = Request.QueryString["Image_Id"].ToString();
-                reportPath += "rptTestResultQImg.rpt";
+                reportPath += "LabRadiology/rptTestResultQImg.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("@Image_Id", Image_Id);
                 rd.SetParameterValue("@PatientID", PatientID);

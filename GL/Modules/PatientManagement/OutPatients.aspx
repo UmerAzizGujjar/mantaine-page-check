@@ -3366,11 +3366,19 @@
 
         debugger;
         function ImgPreviewReport(img_Id) {
-            debugger;
-            var PatientID = $("#ctl00_MainContent_txtMRNO").val();
-            var Image_Id = img_Id;
-            window.open('ReportViewer.aspx?ReportName=TestResultQImg&ReportTitle=Department Of Pathalogy&PatientID=' + PatientID + '&Image_Id=' + Image_Id);
-        }
+            var PatientID = $('#<%= hdfReg_ID.ClientID %>').val();
+           if (!PatientID || PatientID === '(New)') {
+               Swal.fire({
+                   icon: 'error',
+                   title: 'Error!',
+                   text: 'Patient registration ID not found. Please select a patient first.',
+                   showConfirmButton: true
+               });
+               return;
+           }
+           var Image_Id = img_Id;
+           window.open('../../ReportViewer.aspx?ReportName=TestResultQImg&ReportTitle=Department Of Pathalogy&PatientID=' + PatientID + '&Image_Id=' + Image_Id);
+       }
         debugger;
         function PreviewReport($this) {
             debugger;
