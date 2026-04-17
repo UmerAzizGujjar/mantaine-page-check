@@ -842,6 +842,41 @@
             }, 3000);
 
         }
+        $(document).on('keyup', '.select2-search__field', function () {
+            var searchString = $(this).val();
+
+            if (searchString.length < 2) {
+                return;
+            }
+
+            $.ajax({
+                url: 'InPatientMonitoring.aspx/getpharmacyitems',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ searchString: searchString }),
+                success: function (response) {
+                    try {
+                        var pharmacyItems = JSON.parse(response.d);
+                        var $select = $('#txtPharmacyItem');
+
+                        $.each(pharmacyItems, function (key, value) {
+                            var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
+                            if (!optionExists) {
+                                $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+                            }
+                        });
+
+                        $select.trigger('change');
+
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
         function FillDosage() {
             PageMethods.FillDosageDropDown(function (Dosage) {
                 var options = '<option value="' + 0 + '"> Select</option>'
