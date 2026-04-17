@@ -1182,6 +1182,7 @@
                 backdrop: 'static'
             });
             $("#ddl_name").focus();
+            CheckAndLoadWalkinPatientRegFee();
 
         }
         function clearPatient() {
@@ -1236,7 +1237,7 @@
             var martail_status = $('#ddl_status').val();
             var Country = $('#ddlCountry :selected').val();
             var Province = $('#ddl_Province :selected').val();
-            var cardfee = $('#txtCardFee').val();
+            var cardfee = $('#txtcardfees').val();
 
             if ((PatientName == "" || Mobile == "")) {
                 Swal.fire({
@@ -1712,7 +1713,63 @@
                 }
             });
         }
+        function CheckAndLoadWalkinPatientRegFee() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/IsWalkinPatientRegFeeActive",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var isActive = response.d;
 
+                    if (isActive == "01") {
+
+                        $('#txtcardfees').show();
+                        $('#lblfee').show();
+
+
+                        // Now get the actual fee amount
+                        GetWalkinPatientRegFee();
+                    } else {
+                        // Hide the txtfees field
+                        $('#txtcardfees').hide(); // or $('#feesRow').hide();
+                        $('#lblfee').hide(); // or $('#feesRow').hide();
+                        $('#txtcardfees').val('0');
+                        $('#txtcardfees').prop('disabled', true);
+                    }
+                },
+                error: function (error) {
+                    console.error("Error checking registration fee status:", error);
+                    $('#txtcardfees').hide();
+                }
+            });
+        }
+
+        function GetWalkinPatientRegFee() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/GetWalkinPatientRegFee",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var fee = response.d;
+                    if (fee && fee != '0' && fee != 'null' && fee != '') {
+                        fee = fee.replace(/["']/g, '');
+                        $('#txtcardfees').val(fee);
+                    } else {
+                        $('#txtcardfees').val('0');
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching registration fee:", error);
+                    $('#txtcardfees').val('0');
+                }
+            });
+        }
 
         var originalFee;
         function Calc_Discount() {
@@ -2150,9 +2207,9 @@
                             <label for="txt_house">Address</label>
                             <input type="text" id="txt_house" class="form-control" />
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6" style="display: none">
-                            <label for="lblfee">Fee<span style="color: red;">*</span></label>
-                            <input type="text" tabindex="17" id="txtCardFee" class="form-control" />
+                        <div class="col-lg-3 col-md-4 col-sm-6" >
+                            <label for="lblfee" id="lblfee">Fee</label>
+                            <input type="text" disabled="disabled" tabindex="17" id="txtcardfees" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row" style="display: none;">
