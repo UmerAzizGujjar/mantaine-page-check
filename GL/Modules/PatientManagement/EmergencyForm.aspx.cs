@@ -29,6 +29,7 @@ namespace PMS.Modules.PatientManagement
                 hfAntiForgery.Value = token;
             }
         }
+
         [WebMethod]
         public static string GetUserAccount()
         {
@@ -52,7 +53,49 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
+        [WebMethod]
+        public static string IsWalkinPatientRegFeeActive()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var code = (from tbl in db.sys_Parms
+                                where tbl.Name == "Walkin Patient Reg Fee"
+                                select tbl.Code)
+                               .FirstOrDefault();
 
+                    // Return "01" if active, otherwise "0"
+                    return (code == "01") ? "01" : "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        // Second WebMethod: Get the actual fee amount
+        [WebMethod]
+        public static string GetWalkinPatientRegFee()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var fee = (from tbl in db.sys_Parms
+                               where tbl.Name == "OPD Fee"
+                               select tbl.Code)
+                              .FirstOrDefault();
+
+                    return fee ?? "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
         [WebMethod]
         public static string GetVisitDays(int regPatId)
         {
@@ -1090,7 +1133,7 @@ namespace PMS.Modules.PatientManagement
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
                 pat.Country = Country;
-                //pat.Card_fee = Convert.ToDecimal(cardfee);
+                pat.Card_fee = Convert.ToDecimal(cardfee);
                 pat.Province = Province;
 
                 var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);

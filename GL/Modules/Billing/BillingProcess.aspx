@@ -5104,7 +5104,64 @@
                     }
                 });
             }
+            // Main function that checks and populates the fee
+            function CheckAndLoadWalkinPatientRegFee() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/IsWalkinPatientRegFeeActive",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var isActive = response.d;
 
+                        if (isActive == "01") {
+              
+                            $('#txtfees').show(); 
+                            $('#lblfee').show();
+                            
+
+                            // Now get the actual fee amount
+                            GetWalkinPatientRegFee();
+                        } else {
+                            // Hide the txtfees field
+                            $('#txtfees').hide(); // or $('#feesRow').hide();
+                            $('#lblfee').hide(); // or $('#feesRow').hide();
+                            $('#txtfees').val('0');
+                            $('#txtfees').prop('disabled', true);
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error checking registration fee status:", error);
+                        $('#txtfees').hide();
+                    }
+                });
+            }
+
+            function GetWalkinPatientRegFee() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/GetWalkinPatientRegFee",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var fee = response.d;
+                        if (fee && fee != '0' && fee != 'null' && fee != '') {
+                            fee = fee.replace(/["']/g, '');
+                            $('#txtfees').val(fee);
+                        } else {
+                            $('#txtfees').val('0');
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching registration fee:", error);
+                        $('#txtfees').val('0');
+                    }
+                });
+            }
 
             function FetchRecommendedEmergencyPatDetails() {
                 debugger;
@@ -5984,6 +6041,7 @@
                 var CNIC = $('#txt_cnic').val();
                 var Address = $('#txt_Address').val();
                 var martail_status = $('#ddl_status').val();
+                var txtfees = $('#txtfees').val();
                 if ((PatientName == "" || Mobile == "")) {
 
 
@@ -6006,6 +6064,7 @@
                     "PatientID": PatientID,
                     "martail_status": martail_status,
                     "Age": Age,
+                    "txtfees": txtfees,
 
                 });
                 $.ajax({
@@ -6163,6 +6222,7 @@
                     $('#txt_mobile').val(unmaskedValue);
                 }, 100);
                 $('#txt_name').focus();
+                CheckAndLoadWalkinPatientRegFee();
             }
             var isAdd = false;
             function AddPatientDetail(Reg_Patient_ID) {
@@ -6504,7 +6564,7 @@
                 $("#btnPrint").hide();
                 debugger;
                 fillCasher();
-
+                
                 TotalAmountToday();
                 $("#txtSearch").keypress(function (event) {
 
@@ -7707,8 +7767,15 @@
                                     <label>Address<span style="color:red;">*</span></label>
                                 </div>
 
-                                <div class="col-lg-6 col-md-3 col-sm-4">
+                                <div class="col-lg-5 col-md-3 col-sm-4">
                                     <input type="text" tabindex="8" id="txt_Address"  />
+                                </div>
+                                    <div class="col-lg-2 col-md-3 col-sm-4" >
+                                    <label id="lblfee">Fees<span style="color:red;">*</span></label>
+                                </div>
+
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <input tabindex="9"  type="text" disabled="disabled" style="display:none" id="txtfees" />
                                 </div>
                             </div>
                         </div>
