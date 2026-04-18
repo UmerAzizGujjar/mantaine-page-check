@@ -7,6 +7,18 @@
                 LoadPage();
 
 
+                $(document).on('change', '#header-check', function () {
+                    var isChecked = $(this).prop('checked');
+                    $('#tblAdvanceView tbody .refund-checkbox').prop('checked', isChecked);
+                });
+
+                $(document).on('change', '.refund-checkbox', function () {
+                    var allChecked = $('#tblAdvanceView tbody .refund-checkbox:checked').length ===
+                        $('#tblAdvanceView tbody .refund-checkbox').length;
+                    $('#header-check').prop('checked', allChecked);
+                });
+
+
             });
             function EditAdvance(advId) {
                 debugger;
@@ -80,6 +92,68 @@
                                 window.location = 'Refund.aspx';
                             }
                         },
+                        {
+                            text: '<i class="fa fa-check"></i> Approve',
+                            className: 'dt-button buttons-copy buttons-html5',
+                            action: function (e, dt, node, config) {
+                                var selected = [];
+                                $('#tblAdvanceView tbody .refund-checkbox:checked').each(function () {
+                                    selected.push($(this).val());
+                                });
+                                if (selected.length === 0) {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'No Selection',
+                                        text: 'Please select at least one refund to approve.',
+                                        confirmButtonColor: '#3085d6'
+                                    });
+                                    return;
+                                }
+                                Swal.fire({
+                                    title: 'Approve Refunds?',
+                                    text: "You are about to approve " + selected.length + " record(s).",
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#28a745',
+                                    cancelButtonColor: '#d33',    
+                                    confirmButtonText: 'Yes, Approve it!'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        PageMethods.ApproveRefunds(selected,
+                                            function (response) {
+                                                var isSuccess = (typeof response.d !== 'undefined') ? response.d : response;
+
+                                                if (isSuccess) {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'Approved!',
+                                                        text: 'Selected refunds have been approved successfully.',
+                                                        timer: 2000,
+                                                        showConfirmButton: false
+                                                    }).then(() => {
+                                                        $('#tblAdvanceView').DataTable().ajax.reload();
+                                                        $('#header-check').prop('checked', false);
+                                                    });
+                                                } else {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Failed',
+                                                        text: 'Approval failed. Some records may be locked or invalid.'
+                                                    });
+                                                }
+                                            },
+                                            function (error) {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Error',
+                                                    text: 'An error occurred: ' + (error.get_message ? error.get_message() : error)
+                                                });
+                                            }
+                                        );
+                                    }
+                                });
+                            }
+                        },
                         'copy',
                         'excel',
                         'pdf',
@@ -120,6 +194,13 @@
                         });
                     },
                     "columns": [
+                        {"data": null,"width": "5%","orderable": false,"render": function (data, type, full) {
+                                return '<input type="checkbox" class="refund-checkbox" value="' + full.Refund_ID + '" />';
+                            },
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                $(td).css('text-align', 'center');
+                            }
+                        },
                         { "data": "Refund_ID", "visible": false, "width": "0%" },
                         { "data": "Bill_ID", "name": "Bill_ID", "width": "10%", "orderable": true },
                         { "data": "Bill_No", "width": "10%", "orderable": false },
@@ -130,11 +211,11 @@
                                 var date = full.Refund_Date;
                                 date = moment(date).format('DD-MMM-YYYY');
                                 return date;
-                            }, "width": "15%", "orderable": true
+                            }, "width": "10%", "orderable": true
                         },
-                        { "data": "Refund_Amount", "width": "15%", className: "text-right", "orderable": false },
-                        { "data": "MrNo", "name": "MrNo", "width": "15%", "orderable": false },
-                        { "data": "Remarks", "width": "25%", "orderable": false },
+                        { "data": "Refund_Amount", "width": "10%", className: "text-right", "orderable": false },
+                        { "data": "MrNo", "name": "MrNo", "width": "10%", "orderable": false },
+                        { "data": "Remarks", "width": "20%", "orderable": false },
 
 
                         {
@@ -207,6 +288,7 @@
         <table id="tblAdvanceView" class="table table-hover table-striped table-bordered">
             <thead>
                   <tr>
+                     <th style="text-align:center;"><input type="checkbox" id="header-check" /></th>
                      <th>Refund_ID</th>
                      <th>Bill_ID</th>
                      <th>Bill No </th>
