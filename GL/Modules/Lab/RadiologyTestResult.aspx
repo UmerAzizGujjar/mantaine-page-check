@@ -1697,23 +1697,38 @@
         );
     } 
     else {
+        var $row = $($this).closest('tr');
+
+        var ListOfTestIDs = $row.find('input[name="List_Of_Test_IDs"]').val() || '';
+        var test_wise_ids = $row.find('input[name="test_wise_id"]').val() || '';
+        var ListTransID = $row.find('td').eq(1).contents().filter(function () {
+            return this.nodeType === 3;
+        }).text().trim();
+        var billdetailid = $row.find('input[name="Bill_Details_ID"]').val() || '';
+        var Patient_ID = $('#hdnPatient_ID').val();
+
+        if (!ListOfTestIDs || ListOfTestIDs === "null") {
+            ListOfTestIDs = $row.find('input[name="labtestDID"]').val() || '';
+        }
+
+        // Open loading window immediately
         var reportWindow = window.open('', '_blank');
         reportWindow.document.write(`
-            <!DOCTYPE html><html><head><title>Loading...</title>
-            <style>
-                body { font-family: Arial, sans-serif; display: flex; justify-content: center; 
-                       align-items: center; height: 100vh; margin: 0; background: #f5f5f5; }
-                .loader { text-align: center; }
-                .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; 
-                           border-radius: 50%; width: 50px; height: 50px; 
-                           animation: spin 1s linear infinite; margin: 0 auto 20px; }
-                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-            </style></head>
-            <body><div class="loader">
-                <div class="spinner"></div>
-                <p style="color:#555; font-size:16px;">Loading Report, Please Wait...</p>
-            </div></body></html>
-        `);
+        <!DOCTYPE html><html><head><title>Loading...</title>
+        <style>
+            body { font-family: Arial, sans-serif; display: flex; justify-content: center; 
+                   align-items: center; height: 100vh; margin: 0; background: #f5f5f5; }
+            .loader { text-align: center; }
+            .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; 
+                       border-radius: 50%; width: 50px; height: 50px; 
+                       animation: spin 1s linear infinite; margin: 0 auto 20px; }
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        </style></head>
+        <body><div class="loader">
+            <div class="spinner"></div>
+            <p style="color:#555; font-size:16px;">Loading Report, Please Wait...</p>
+        </div></body></html>
+    `);
 
         $.ajax({
             type: "POST",
@@ -1742,14 +1757,17 @@
                     return;
                 }
 
+                // Build logo HTML
                 var logoHtml = '';
                 if (data.Company_Logo_Path && data.Company_Logo_Path !== '') {
                     logoHtml = '<img src="' + data.Company_Logo_Path + '" alt="Logo" style="max-height:80px; max-width:150px; object-fit:contain;" onerror="this.style.display=\'none\'" />';
                 }
 
+                // Format dates safely
                 function formatDate(val) {
                     if (!val) return '';
                     try {
+                        // Handle /Date(xxxxx)/ format
                         var match = /\/Date\((\d+)\)\//.exec(val);
                         if (match) {
                             return new Date(parseInt(match[1])).toLocaleDateString('en-GB');
@@ -1767,91 +1785,330 @@
     <style>
         @page { size: A4; margin: 15mm 20mm; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; font-size: 11px; color: #000; background: #fff; line-height: 1.4; }
-        .page-wrapper { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 10mm 15mm; background: #fff; }
-        .report-header { display: flex; align-items: center; gap: 15px; padding-bottom: 10px; border-bottom: 2.5px solid #000; margin-bottom: 12px; }
-        .logo-wrap { flex-shrink: 0; width: 100px; display: flex; align-items: center; justify-content: center; }
-        .hospital-info { flex: 1; text-align: center; }
-        .hospital-info .name { font-size: 17px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-        .hospital-info .address { font-size: 9px; color: #333; margin-top: 3px; }
-        .patient-section { display: flex; gap: 20px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #ccc; }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            color: #000;
+            background: #fff;
+            line-height: 1.4;
+        }
+
+        .page-wrapper {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 10mm 15mm;
+            background: #fff;
+        }
+
+        /* ── HEADER ── */
+        .report-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2.5px solid #000;
+            margin-bottom: 12px;
+        }
+        .logo-wrap {
+            flex-shrink: 0;
+            width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hospital-info {
+            flex: 1;
+            text-align: center;
+        }
+        .hospital-info .name {
+            font-size: 17px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .hospital-info .address {
+            font-size: 9px;
+            color: #333;
+            margin-top: 3px;
+        }
+
+        /* ── PATIENT INFO ── */
+        .patient-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+        }
         .patient-col { flex: 1; }
-        .patient-col .patient-title { font-size: 13px; font-weight: bold; border-bottom: 1px solid #000; margin-bottom: 6px; padding-bottom: 3px; }
-        .info-row { display: flex; margin-bottom: 4px; font-size: 10.5px; gap: 5px; }
-        .info-label { font-weight: bold; min-width: 115px; flex-shrink: 0; }
-        .info-val { flex: 1; border-bottom: 1px dotted #bbb; padding-bottom: 1px; min-height: 14px; }
-        .test-banner { text-align: center; border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 7px 0; margin-bottom: 15px; }
-        .test-banner .test-title { font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        .report-content { min-height: 350px; font-size: 11px; line-height: 1.7; margin-bottom: 20px; text-align: justify; }
+        .patient-col .patient-title {
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            margin-bottom: 6px;
+            padding-bottom: 3px;
+        }
+        .info-row {
+            display: flex;
+            margin-bottom: 4px;
+            font-size: 10.5px;
+            gap: 5px;
+        }
+        .info-label {
+            font-weight: bold;
+            min-width: 115px;
+            flex-shrink: 0;
+        }
+        .info-val {
+            flex: 1;
+            border-bottom: 1px dotted #bbb;
+            padding-bottom: 1px;
+            min-height: 14px;
+        }
+
+        /* ── TEST NAME BANNER ── */
+        .test-banner {
+            text-align: center;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 7px 0;
+            margin-bottom: 15px;
+        }
+        .test-banner .test-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── REPORT CONTENT ── */
+        .report-content {
+            min-height: 350px;
+            font-size: 11px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
         .report-content p { margin-bottom: 6px; }
         .report-content table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
-        .report-content table td, .report-content table th { border: 1px solid #ccc; padding: 4px 6px; font-size: 10.5px; }
-        .signatures { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 10px; border-top: 1px solid #000; page-break-inside: avoid; }
-        .sig-block { width: 45%; }
-        .sig-block.right { text-align: right; }
-        .sig-name { font-weight: bold; font-size: 11px; }
-        .sig-qual { font-size: 9.5px; margin-top: 2px; color: #333; }
-        .sig-date { font-size: 9.5px; margin-top: 2px; }
-        .sig-note { font-style: italic; font-size: 8.5px; margin-top: 5px; color: #555; }
-        .sig-line { border-top: 1px solid #000; margin-top: 35px; padding-top: 5px; }
-        .page-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px; padding-top: 8px; border-top: 1.5px double #000; font-size: 9px; color: #444; page-break-inside: avoid; }
+        .report-content table td,
+        .report-content table th { border: 1px solid #ccc; padding: 4px 6px; font-size: 10.5px; }
+
+        ///* ── SIGNATURES ── */
+        //.signatures {
+        //    display: flex;
+        //    justify-content: space-between;
+        //    margin-top: 30px;
+        //    padding-top: 10px;
+        //    border-top: 1px solid #000;
+        //    page-break-inside: avoid;
+        //}
+        //.sig-block { width: 45%; }
+        //.sig-block.right { text-align: right; }
+        //.sig-name { font-weight: bold; font-size: 11px; }
+        //.sig-qual { font-size: 9.5px; margin-top: 2px; color: #333; }
+        //.sig-date { font-size: 9.5px; margin-top: 2px; }
+        //.sig-note { font-style: italic; font-size: 8.5px; margin-top: 5px; color: #555; }
+        //.sig-line {
+        //    border-top: 1px solid #000;
+        //    margin-top: 35px;
+        //    padding-top: 5px;
+        //}
+
+            <!-- SIGNATURES -->
+    <div class="signatures">
+
+        <!-- Left: Performing Doctor -->
+        <div class="sig-block">
+            <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
+            <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
+            <div class="sig-date">Date &amp; Time: ${data.Test_Ready_On || ''}</div>
+            <div class="sig-note">No Signature(s) required, Electronically Verified</div>
+        </div>
+
+        <!-- Right: Approving Doctor — fixed margin -->
+        <div class="sig-block right">
+            <div class="sig-line" style="margin-top:0; border-top:1px solid #000; 
+                 padding-top:5px; display:inline-block; min-width:200px; text-align:right;">
+                <div class="sig-name">
+                    ${data.Test_Approved_By_Doctor_name
+                        ? data.Test_Approved_By_Doctor_name
+                        : '&nbsp;'}
+                </div>
+                <div class="sig-qual">
+                    ${data.Test_Approved_By_Doctor_qualification || ''}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+        /* ── PAGE FOOTER ── */
+        .page-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 8px;
+            border-top: 1.5px double #000;
+            font-size: 9px;
+            color: #444;
+            page-break-inside: avoid;
+        }
         .footer-col { flex: 1; }
         .footer-col.right { text-align: right; }
-        .print-btn { position: fixed; bottom: 25px; right: 25px; background: #1a1a2e; color: #fff; border: none; padding: 12px 28px; border-radius: 6px; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999; }
-        .print-btn:hover { background: #16213e; }
-        @media print {
-            @page { size: A4; margin: 15mm 20mm; margin-top: 0; margin-bottom: 0; }
-            body { margin: 15mm 20mm !important; padding: 0 !important; }
-            .print-btn { display: none !important; }
-            html, body { height: auto !important; overflow: visible !important; }
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+
+        /* ── PRINT BUTTON ── */
+        .print-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #1a1a2e;
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
         }
+        .print-btn:hover { background: #16213e; }
+
+        // Replace your @media print section with this:
+
+@media print {
+    /* Hide browser's default print header/footer */
+    @page {
+        size: A4;
+        margin: 15mm 20mm;
+        /* This removes the default header/footer in most browsers */
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    
+    /* Add back your own margins on body */
+    body {
+        margin: 15mm 20mm !important;
+        padding: 0 !important;
+    }
+    
+    .print-btn { 
+        display: none !important; 
+    }
+    
+    html, body {
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+}
     </style>
     <script>
-    function cleanPrint() {
-        var btn = document.querySelector('.print-btn');
-        if (btn) btn.style.display = 'none';
-        var style = document.createElement('style');
-        style.innerHTML = '@page { margin: 15mm 20mm; }';
-        document.head.appendChild(style);
-        window.print();
-        setTimeout(function() { if (btn) btn.style.display = 'block'; }, 1000);
-    }
-    <\/script>
+function cleanPrint() {
+    var btn = document.querySelector('.print-btn');
+    if (btn) btn.style.display = 'none';
+    
+    var style = document.createElement('style');
+    style.innerHTML = '@page { margin: 15mm 20mm; }';
+    document.head.appendChild(style);
+    
+    window.print();
+    
+    setTimeout(function() {
+        if (btn) btn.style.display = 'block';
+    }, 1000);
+}
+<\/script>
 </head>
 <body>
 <div class="page-wrapper">
+
+    <!-- HEADER -->
     <div class="report-header">
-        <div class="logo-wrap">${logoHtml || ''}</div>
+        <div class="logo-wrap">${logoHtml}</div>
         <div class="hospital-info">
-            <div class="name">${data.Company_Name || 'NATIONAL TESTING HOSPITAL & MEDICAL CENTRE'}</div>
+            <div class="name">${data.Company_Name || 'NATIONAL TESTing HOSPITAL & MEDICAL CENTRE'}</div>
             <div class="address">${data.Company_Address || ''}</div>
         </div>
     </div>
+
+    <!-- PATIENT INFO - TWO COLUMNS -->
     <div class="patient-section">
+
+        <!-- LEFT COLUMN -->
         <div class="patient-col">
-            <div class="patient-title">${data.Full_Name || ''} ${data.Age_years ? data.Age_years + 'Y,' : ''} ${data.Gender || ''}</div>
-            <div class="info-row"><span class="info-label">Contact :</span><span class="info-val">${data.Mobile1 || ''}</span></div>
-            <div class="info-row"><span class="info-label">Patient Type :</span><span class="info-val">${data.Patient_Type || ''}</span></div>
-            <div class="info-row"><span class="info-label">CNIC :</span><span class="info-val">${data.NIC || ''}</span></div>
-            <div class="info-row"><span class="info-label">Referring Doctor :</span><span class="info-val">${data.ReferredByDoctor || ''}</span></div>
-            <div class="info-row"><span class="info-label">Approved By :</span><span class="info-val">${data.Test_Approved_By_Doctor_name || ''}</span></div>
+            <div class="patient-title">${data.Full_Name || ''} &nbsp; ${data.Age_years || ''}Y, &nbsp; ${data.Gender || ''}</div>
+            <div class="info-row">
+                <span class="info-label">Contact :</span>
+                <span class="info-val">${data.Mobile1 || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Patient Type :</span>
+                <span class="info-val">${data.Patient_Type || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">CNIC :</span>
+                <span class="info-val">${data.NIC || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Referring Doctor :</span>
+                <span class="info-val">${data.ReferredByDoctor || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Approved By :</span>
+                <span class="info-val">${data.Test_Approved_By_Doctor_name || ''}</span>
+            </div>
         </div>
+
+        <!-- RIGHT COLUMN -->
         <div class="patient-col">
-            <div class="patient-title">MRN# ${data.Patient_No || ''}</div>
-            <div class="info-row"><span class="info-label">Reg Date :</span><span class="info-val">${formatDate(data.REg_Date)}</span></div>
-            <div class="info-row"><span class="info-label">Department :</span><span class="info-val">${data.Department || ''}</span></div>
-            <div class="info-row"><span class="info-label">Created At :</span><span class="info-val">${data.Billing_Date || ''}</span></div>
-            <div class="info-row"><span class="info-label">Reported At :</span><span class="info-val">${data.Approved_Time || ''}</span></div>
-            <div class="info-row"><span class="info-label">Accession # :</span><span class="info-val">${data.Bill_No || ''}</span></div>
+            <div class="patient-title">MRN# &nbsp; ${data.Patient_No || ''}</div>
+            <div class="info-row">
+                <span class="info-label">Reg Date :</span>
+                <span class="info-val">${formatDate(data.REg_Date)}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Department :</span>
+                <span class="info-val">${data.Department || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Created At :</span>
+                <span class="info-val">${data.Billing_Date || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Reported At :</span>
+                <span class="info-val">${data.Approved_Time || ''}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Accession # :</span>
+                <span class="info-val">${data.Bill_No || ''}</span>
+            </div>
         </div>
+
     </div>
+
+    <!-- TEST NAME BANNER -->
     <div class="test-banner">
         <div class="test-title">${data.Test_Name || ''}</div>
     </div>
+
+    <!-- REPORT CONTENT (Fixed_Value from CKEditor) -->
     <div class="report-content">
         ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
     </div>
+
+    <!-- SIGNATURES -->
     <div class="signatures">
         <div class="sig-block">
             <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
@@ -1866,14 +2123,22 @@
             </div>
         </div>
     </div>
+
+    <!-- PAGE FOOTER -->
     <div class="page-footer">
         <div class="footer-col">${data.Report_Footer1 || ''}</div>
         <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
     </div>
+
 </div>
+
 <button class="print-btn" onclick="cleanPrint()">🖨 Print Report</button>
+
+
+
 </body>
 </html>`;
+
 
                 reportWindow.document.open();
                 reportWindow.document.write(html);
@@ -1885,7 +2150,9 @@
                 reportWindow.document.close();
             }
         });
-    }
+          }
+
+          // THIS IS THE TESTING BLOCK 
 }
 
         var test_wise_id;
