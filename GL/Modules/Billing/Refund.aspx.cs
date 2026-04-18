@@ -263,6 +263,7 @@ namespace PMS
             Ref.Remarks = dt.remarks;
             Ref.Created_By = AppConfig.UserID;
             Ref.Creation_Date = DateTime.Now;
+            Ref.Status = "Created";
             decimal totalRefund = 0;
 
             List<Refund_Detail_Service> ListOfshare = new List<Refund_Detail_Service>();
