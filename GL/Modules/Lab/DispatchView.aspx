@@ -1,7 +1,10 @@
-﻿2<%@ Page Title="Accession View" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DispatchView.aspx.cs" Inherits="PMS.DispatchView" %>
+﻿<%@ Page Title="Dispatch View" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DispatchView.aspx.cs" Inherits="PMS.DispatchView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
         .status-badge {
@@ -11,30 +14,27 @@
             font-weight: 500;
             display: inline-block;
         }
-        .status-Collected { background: #d4edda; color: #155724; }
-        .status-Pending { background: #fff3cd; color: #856404; }
-        .status-Processing { background: #cce5ff; color: #004085; }
-        .status-Completed { background: #d1ecf1; color: #0c5460; }
         .status-Dispatched { background: #d4edda; color: #155724; }
+        .status-Printed { background: #cce5ff; color: #004085; }
         
-        .dispatch-btn {
-            background: #28a745;
+        .print-btn {
+            background: #007bff;
             color: white;
             border: none;
             padding: 4px 12px;
             border-radius: 4px;
             cursor: pointer;
         }
-        .dispatch-btn:hover { background: #218838; }
-        .dispatch-all-btn {
-            background: #007bff;
+        .print-btn:hover { background: #0056b3; }
+        .print-btn-disabled {
+            background: #6c757d;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 4px 12px;
             border-radius: 4px;
-            margin-right: 10px;
-            cursor: pointer;
+            cursor: not-allowed;
         }
+        
         .action-bar {
             background: white;
             padding: 15px;
@@ -57,42 +57,100 @@
         .dt-button {
             margin: 0 2px;
         }
-        /* Prevent form submission */
         form {
             margin: 0;
             padding: 0;
         }
+        .print-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #007bff;
+        }
+        .print-icon-disabled {
+            font-size: 20px;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+        .print-icon:hover {
+            color: #0056b3;
+        }
     </style>
     <script type="text/javascript">
-        // Prevent any form submission
         $(document).ready(function () {
-            // Disable any form submission on enter key
-            $(document).on('keypress', 'form input[type="text"]', function (e) {
-                if (e.which === 13) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-
             $('#ctl00_lblMessage').hide();
             LoadPage();
         });
 
-        function PrintSample(sample_id) {
+        function PrintDispatchSlip(sampleDetailId, accessionNo) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            // Open print window
             var locationInfo = window.location;
-            var url = "/ReportViewer.aspx?ReportName=LabSlip&Title=Sample Report&Lab_ID=" + sample_id;
+            var url = "/ReportViewer.aspx?ReportName=DispatchSlip&Title=Dispatch Slip&Sample_Detail_ID=" + sampleDetailId + "&Accession_No=" + accessionNo;
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=LabSlip&Title=Sample Report&Lab_ID=" + sample_id;
+                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=DispatchSlip&Title=Dispatch Slip&Sample_Detail_ID=" + sampleDetailId + "&Accession_No=" + accessionNo;
             }
-            window.open(url, '_blank');
-            return false;
-        }
 
-        function editSample(id) {
-            window.location.href = "SampleCollectionFrom.aspx?SampleId=" + id;
+            var printWindow = window.open(url, '_blank');
+
+            // After print window opens, update printed status
+            Swal.fire({
+                title: 'Confirm Print',
+                text: 'Has the dispatch slip been printed for accession #' + accessionNo + '?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Mark as Printed',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "DispatchView.aspx/MarkAsPrinted",
+                        data: JSON.stringify({ sampleDetailIds: [sampleDetailId] }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.d === "Success") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Marked as Printed!',
+                                    text: 'Accession #' + accessionNo + ' has been marked as printed.',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                                setTimeout(function () {
+                                    if (window.dispatchTable) {
+                                        window.dispatchTable.ajax.reload(null, false);
+                                    } else {
+                                        $('#example').DataTable().ajax.reload(null, false);
+                                    }
+                                }, 1500);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: response.d
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Failed to update printed status.'
+                            });
+                        }
+                    });
+                }
+            });
             return false;
         }
 
@@ -155,7 +213,7 @@
                 ajax: function (data, callback) {
                     $.ajax({
                         type: "POST",
-                        url: "AccessionView.aspx/GetDispatchList",
+                        url: "DispatchView.aspx/GetDispatchList",
                         data: JSON.stringify({
                             draw: data.draw,
                             start: data.start,
@@ -193,7 +251,8 @@
                         searchable: false,
                         width: "30px",
                         render: function (data, type, full) {
-                            if (full.dispatch_status !== "Dispatched") {
+                            // Only show checkbox for items not printed yet
+                            if (full.printed !== true) {
                                 return '<input type="checkbox" class="select-row" data-id="' + full.Sample_Detail_ID + '" data-accession="' + full.Accession_No + '">';
                             }
                             return '<input type="checkbox" class="select-row" disabled data-id="' + full.Sample_Detail_ID + '" data-accession="' + full.Accession_No + '">';
@@ -218,10 +277,7 @@
                         data: "dispatch_status",
                         name: "dispatch_status",
                         render: function (data) {
-                            if (data === "Dispatched") {
-                                return '<span class="status-badge status-Dispatched">Dispatched</span>';
-                            }
-                            return '<span class="status-badge status-Pending">Pending</span>';
+                            return '<span class="status-badge status-Dispatched">Dispatched</span>';
                         }
                     },
                     {
@@ -232,14 +288,24 @@
                         }
                     },
                     {
+                        data: "printed",
+                        name: "printed",
+                        render: function (data) {
+                            if (data === true) {
+                                return '<span class="status-badge status-Printed">Printed</span>';
+                            }
+                            return '<span class="status-badge status-Pending">Not Printed</span>';
+                        }
+                    },
+                    {
                         data: null,
                         orderable: false,
                         searchable: false,
                         render: function (data, type, full) {
-                            if (full.dispatch_status !== "Dispatched") {
-                                return '<button type="button" class="dispatch-btn btn btn-primry" onclick="dispatchSingle(' + full.Sample_Detail_ID + ', ' + full.Accession_No + '); return false;">Dispatch</button>';
+                            if (full.printed !== true) {
+                                return '<i class="fa fa-print print-icon" onclick="PrintDispatchSlip(' + full.Sample_Detail_ID + ', ' + full.Accession_No + '); return false;" title="Print Dispatch Slip"></i>';
                             }
-                            return '<button type="button" class="dispatch-btn" style="background:#6c757d;" disabled>Dispatched</button>';
+                            return '<i class="fa fa-print print-icon-disabled" title="Already Printed"></i>';
                         }
                     }
                 ],
@@ -264,7 +330,7 @@
 
                         $.ajax({
                             type: "POST",
-                            url: "AccessionView.aspx/SaveUserColumnPreferences",
+                            url: "DispatchView.aspx/SaveUserColumnPreferences",
                             data: JSON.stringify({ preferences: JSON.stringify(currentVis) }),
                             contentType: "application/json; charset=utf-8",
                             success: function () { console.log("Column preferences saved"); },
@@ -274,7 +340,6 @@
                 },
 
                 drawCallback: function () {
-                    // Re-attach row selection styling
                     $('.select-row').off('change').on('change', function (e) {
                         e.stopPropagation();
                         if ($(this).is(':checked')) {
@@ -287,28 +352,28 @@
                 }
             });
 
-            // Store table reference globally
-            window.accessionTable = table;
+            window.dispatchTable = table;
         }
 
         function addActionBar() {
             if ($('.action-bar').length === 0) {
                 var actionBar = '<div class="action-bar">' +
-                    '<div><input type="checkbox" id="selectAll"> <label for="selectAll">Select All</label></div>' +
-                    //'<div>Selected: <span id="selectedCount">0</span> items</div>' +
-                    '<button type="button" id="dispatchSelectedBtn" class="dispatch-all-btn  btn btn-primry">Dispatch Selected</button>' +
+                    '<div><input type="checkbox" id="selectAll"> <label for="selectAll">Select All (Unprinted Only)</label></div>' +
+                    '<div>Selected: <span id="selectedCount">0</span> items</div>' +
+                    '<button type="button" id="printSelectedBtn" class="dispatch-all-btn btn btn-primary">Print Selected</button>' +
                     '</div>';
                 $('#example_wrapper').before(actionBar);
 
                 $('#selectAll').off('change').on('change', function (e) {
                     var isChecked = $(this).is(':checked');
+                    // Only select unprinted items
                     $('.select-row:not(:disabled)').prop('checked', isChecked).trigger('change');
                 });
 
-                $('#dispatchSelectedBtn').off('click').on('click', function (e) {
+                $('#printSelectedBtn').off('click').on('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    dispatchSelected();
+                    printSelected();
                     return false;
                 });
             }
@@ -321,108 +386,53 @@
             $('#selectAll').prop('checked', count === totalSelectable && totalSelectable > 0);
         }
 
-        function dispatchSingle(sampleDetailId, accessionNo) {
-            // Prevent any default behavior
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-
-            Swal.fire({
-                title: 'Confirm Dispatch',
-                text: 'Are you sure you want to dispatch accession #' + accessionNo + '?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, Dispatch',
-                cancelButtonText: 'Cancel',
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#6c757d'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Show loading
-                    Swal.fire({
-                        title: 'Processing...',
-                        text: 'Please wait',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-
-                    $.ajax({
-                        type: "POST",
-                        url: "DispatchView.aspx/DispatchAccession",
-                        data: JSON.stringify({ sampleDetailIds: [sampleDetailId] }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (response) {
-                            if (response.d === "Success") {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Dispatched!',
-                                    text: 'Accession #' + accessionNo + ' has been dispatched.',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                });
-                                // Reload the DataTable and keep current page
-                                setTimeout(function () {
-                                    if (window.accessionTable) {
-                                        window.accessionTable.ajax.reload(null, false);
-                                    } else {
-                                        $('#example').DataTable().ajax.reload(null, false);
-                                    }
-                                }, 1500);
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    text: response.d
-                                });
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Failed to dispatch. Please try again.'
-                            });
-                        }
-                    });
-                }
-            });
-            return false;
-        }
-
-        function dispatchSelected() {
+        function printSelected() {
             var selectedIds = [];
             $('.select-row:checked').each(function () {
-                selectedIds.push($(this).data('id'));
+                selectedIds.push({
+                    id: $(this).data('id'),
+                    accession: $(this).data('accession')
+                });
             });
 
             if (selectedIds.length === 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning!',
-                    text: 'Please select at least one item to dispatch'
+                    text: 'Please select at least one unprinted item to print'
                 });
                 return;
             }
 
+            var accessionNumbers = selectedIds.map(s => s.accession).join(', ');
+
             Swal.fire({
-                title: 'Confirm Bulk Dispatch',
-                text: 'Are you sure you want to dispatch ' + selectedIds.length + ' selected item(s)?',
+                title: 'Confirm Print',
+                text: 'Are you sure you want to print dispatch slips for ' + selectedIds.length + ' selected item(s)?\nAccession Nos: ' + accessionNumbers,
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, Dispatch All',
+                confirmButtonText: 'Yes, Print & Mark',
                 cancelButtonText: 'Cancel',
                 confirmButtonColor: '#28a745',
                 cancelButtonColor: '#6c757d'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Show loading
+                    // Open print window for all selected
+                    var ids = selectedIds.map(s => s.id).join(',');
+                    var locationInfo = window.location;
+                    var url = "/ReportViewer.aspx?ReportName=MultipleDispatchSlips&Title=Dispatch Slips&Ids=" + ids;
+                    if (!locationInfo.origin.includes('localhost')) {
+                        var urlInfo = window.location.href.split('/');
+                        var ip = urlInfo[2];
+                        var foldername = urlInfo[3];
+                        url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=MultipleDispatchSlips&Title=Dispatch Slips&Ids=" + ids;
+                    }
+                    window.open(url, '_blank');
+
+                    // Mark all as printed
                     Swal.fire({
                         title: 'Processing...',
-                        text: 'Please wait',
+                        text: 'Marking items as printed',
                         allowOutsideClick: false,
                         didOpen: () => {
                             Swal.showLoading();
@@ -431,23 +441,22 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "DispatchView.aspx/DispatchAccession",
-                        data: JSON.stringify({ sampleDetailIds: selectedIds }),
+                        url: "DispatchView.aspx/MarkAsPrinted",
+                        data: JSON.stringify({ sampleDetailIds: selectedIds.map(s => s.id) }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
                             if (response.d === "Success") {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Dispatched!',
-                                    text: selectedIds.length + ' item(s) have been dispatched.',
+                                    title: 'Printed!',
+                                    text: selectedIds.length + ' item(s) have been marked as printed.',
                                     timer: 1500,
                                     showConfirmButton: false
                                 });
-                                // Reload the DataTable and keep current page
                                 setTimeout(function () {
-                                    if (window.accessionTable) {
-                                        window.accessionTable.ajax.reload(null, false);
+                                    if (window.dispatchTable) {
+                                        window.dispatchTable.ajax.reload(null, false);
                                     } else {
                                         $('#example').DataTable().ajax.reload(null, false);
                                     }
@@ -464,7 +473,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
-                                text: 'Failed to dispatch selected items'
+                                text: 'Failed to update printed status.'
                             });
                         }
                     });
@@ -493,6 +502,7 @@
                         <th>Outsource Lab</th>
                         <th>Dispatch Status</th>
                         <th>Dispatch Date</th>
+                        <th>Print Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
