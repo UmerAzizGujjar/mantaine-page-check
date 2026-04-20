@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -151,6 +154,213 @@ namespace PMS.Modules.PatientManagement
             {
                 throw new Exception("Error fetching OPD Refund list", ex);
             }
-        }      
+        }
+
+        [WebMethod]
+        public static string ApproveOPDRefunds(string refundIds)
+        {
+            var user_id = AppConfig.UserID;
+            var results = new List<object>();
+            int approvedCount = 0;
+            int failedCount = 0;
+
+            try
+            {
+                if (string.IsNullOrEmpty(refundIds))
+                {
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        Success = false,
+                        Message = "No refund IDs provided"
+                    });
+                }
+
+                string[] ids = refundIds.Split(',');
+
+                string sysCode = "";
+                using (var db = new DataBaseDataContext())
+                {
+                    sysCode = db.sys_Parms
+                                .Where(x => x.Name == "Billing Approval")
+                                .Select(x => x.Code)
+                                .FirstOrDefault();
+                }
+
+                foreach (string refundId in ids)
+                {
+                    if (!string.IsNullOrEmpty(refundId))
+                    {
+                        try
+                        {
+                            string message = "";
+                            int voucherId = 0;
+
+                            if (sysCode == "01")
+                            {
+                                // Use stored procedure approval (same as ApproveRefund method)
+                                int refundIdInt = Convert.ToInt32(refundId);
+                                int patientID;
+
+                                using (var dbFetch = new DataBaseDataContext())
+                                {
+                                    var refund = dbFetch.OPD_Refunds.FirstOrDefault(r => r.Refund_ID == refundIdInt);
+                                    if (refund == null)
+                                    {
+                                        message = "Record not found";
+                                        voucherId = 0;
+                                        goto AddResult;
+                                    }
+
+                                    if (refund.Status == "Approved")
+                                    {
+                                        message = "Already approved";
+                                        voucherId = 0;
+                                        goto AddResult;
+                                    }
+
+                                    patientID = (int)refund.pat_id;
+                                }
+
+                                using (var dbSP = new DataBaseDataContext())
+                                {
+                                    var result = dbSP.SpApprove_OPDRefund(patientID, user_id).FirstOrDefault();
+
+                                    if (result == null || string.IsNullOrEmpty(result.Message))
+                                    {
+                                        message = "Stored procedure did not return a valid response";
+                                        voucherId = 0;
+                                        goto AddResult;
+                                    }
+
+                                    if (!result.Message.Contains("successfully"))
+                                    {
+                                        message = "Voucher Generation Failed: " + result.Message;
+                                        voucherId = 0;
+                                        goto AddResult;
+                                    }
+
+                                    message = result.Message;
+                                    voucherId = 1;
+                                }
+
+                                if (voucherId > 0)
+                                {
+                                    using (var dbUpdate = new DataBaseDataContext())
+                                    {
+                                        var refund = dbUpdate.OPD_Refunds.FirstOrDefault(r => r.Refund_ID == refundIdInt);
+                                        if (refund != null)
+                                        {
+                                            refund.Status = "Approved";
+                                            refund.approve_by = user_id;
+                                            refund.approve_date = DateTime.Now;
+                                            dbUpdate.SubmitChanges();
+                                        }
+                                    }
+                                }
+                            }
+                            else if (sysCode == "02")
+                            {
+                                // Simple approval (same as your working ApproveRefund for code 02)
+                                using (var db = new DataBaseDataContext())
+                                {
+                                    var record = db.OPD_Refunds
+                                                   .FirstOrDefault(x => x.Refund_ID == Convert.ToInt32(refundId));
+
+                                    if (record != null)
+                                    {
+                                        if (record.Status == "Approved")
+                                        {
+                                            message = "Already approved";
+                                            voucherId = 0;
+                                        }
+                                        else
+                                        {
+                                            record.Status = "Approved";
+                                            record.approve_by = user_id;
+                                            record.approve_date = DateTime.Now;
+
+                                            db.SubmitChanges();
+
+                                            message = "Approved Successfully";
+                                            voucherId = 1;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        message = "Record not found";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                message = "Invalid approval code configuration";
+                            }
+
+                            AddResult:
+                            if (voucherId > 0)
+                            {
+                                approvedCount++;
+                                results.Add(new
+                                {
+                                    RefundID = refundId,
+                                    Success = true,
+                                    Message = message,
+                                    Voucher_ID = voucherId
+                                });
+                            }
+                            else
+                            {
+                                failedCount++;
+                                results.Add(new
+                                {
+                                    RefundID = refundId,
+                                    Success = false,
+                                    Message = string.IsNullOrEmpty(message) ? "Approval failed" : message,
+                                    Voucher_ID = 0
+                                });
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            failedCount++;
+                            results.Add(new
+                            {
+                                RefundID = refundId,
+                                Success = false,
+                                Message = "Error: " + ex.Message,
+                                Voucher_ID = 0
+                            });
+                        }
+                    }
+                }
+
+                var finalResponse = new
+                {
+                    Success = approvedCount > 0,
+                    TotalRecords = ids.Length,
+                    ApprovedCount = approvedCount,
+                    FailedCount = failedCount,
+                    Details = results
+                };
+
+                return new JavaScriptSerializer().Serialize(finalResponse);
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new
+                {
+                    Success = false,
+                    Message = "Error: " + ex.Message,
+                    TotalRecords = 0,
+                    ApprovedCount = 0,
+                    FailedCount = 0
+                };
+                return new JavaScriptSerializer().Serialize(errorResponse);
+            }
+        }
+
+        public Guid? approve_by { get; set; }
+        public DateTime? approve_date { get; set; }
+        public string Status { get; set; }
     }
 }
