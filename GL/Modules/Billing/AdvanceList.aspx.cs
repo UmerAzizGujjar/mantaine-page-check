@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -100,7 +101,8 @@ namespace PMS
                                       Advance_Date = AR.Advance_Date,
                                       Advance_Amount = AR.Advance_Amount,
                                       Remarks = AR.Remarks,
-                                     // MrNo = DBClass.GetMRNOBy_PatientID(Convert.ToInt32(AR.Patient_ID)),
+                                      Status = AR.Status ?? "Created",
+                                      // MrNo = DBClass.GetMRNOBy_PatientID(Convert.ToInt32(AR.Patient_ID)),
                                       MrNo = (from bl in _dbContext.Reg_patients where bl.pat_id == AR.Patient_ID select bl.Patient_No).FirstOrDefault(),
                                   };
 
@@ -190,6 +192,111 @@ namespace PMS
                 throw;
             }
         }
+        [WebMethod]
+        public static string ApproveAdvances(string advanceIds)
+        {
+            var user_id = AppConfig.UserID;
+            var results = new List<object>();
+            int approvedCount = 0;
+            int failedCount = 0;
 
+            try
+            {
+                string[] ids = advanceIds.Split(',');
+
+                foreach (string advanceid in ids)
+                {
+                    if (!string.IsNullOrEmpty(advanceid))
+                    {
+                        try
+                        {
+                            string message = "";
+                            int voucherId = 0;
+
+                            using (var db = new DataBaseDataContext())
+                            {
+                                using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                                {
+                                    using (var cmd = new SqlCommand("SpApprove_Advance", conn))
+                                    {
+                                        cmd.CommandType = CommandType.StoredProcedure;
+                                        cmd.Parameters.AddWithValue("@advanceid", Convert.ToInt32(advanceid));
+                                        cmd.Parameters.AddWithValue("@user_id", user_id);
+
+                                        conn.Open();
+
+                                        using (var reader = cmd.ExecuteReader())
+                                        {
+                                            if (reader.Read())
+                                            {
+                                                message = reader["Message"].ToString();
+                                                voucherId = Convert.ToInt32(reader["Voucher_ID"]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (voucherId > 0)
+                            {
+                                approvedCount++;
+                                results.Add(new
+                                {
+                                    AdvanceID = advanceid,
+                                    Success = true,
+                                    Message = message,
+                                    Voucher_ID = voucherId
+                                });
+                            }
+                            else
+                            {
+                                failedCount++;
+                                results.Add(new
+                                {
+                                    AdvanceID = advanceid,
+                                    Success = false,
+                                    Message = message,
+                                    Voucher_ID = 0
+                                });
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            failedCount++;
+                            results.Add(new
+                            {
+                                AdvanceID = advanceid,
+                                Success = false,
+                                Message = ex.Message,
+                                Voucher_ID = 0
+                            });
+                        }
+                    }
+                }
+
+                var finalResponse = new
+                {
+                    TotalRecords = ids.Length,
+                    ApprovedCount = approvedCount,
+                    FailedCount = failedCount,
+                    Details = results,
+                    Success = approvedCount > 0
+                };
+
+                return new JavaScriptSerializer().Serialize(finalResponse);
+            }
+            catch (Exception ex)
+            {
+                var errorResponse = new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    TotalRecords = 0,
+                    ApprovedCount = 0,
+                    FailedCount = 0
+                };
+                return new JavaScriptSerializer().Serialize(errorResponse);
+            }
+        }
     }
 }

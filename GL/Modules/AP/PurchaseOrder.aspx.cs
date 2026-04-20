@@ -168,6 +168,7 @@ namespace PMS.AP
                               m.CS_Master_ID,
                               m.PO_ID,
                               m.Ware_House,
+                              Ware_HouseText = (db.GetDataValueName("Ware House", m.Ware_House)),
                               m.PO_No,
                               m.PO_Date,
                               m.Due_Date,

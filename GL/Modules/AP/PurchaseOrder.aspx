@@ -861,9 +861,8 @@
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlPOType').val(data.PO_Type).trigger('change');
                 }, 1000)
-                setTimeout(function () {
-                    $('#ddlWarehouse').val(data.Ware_House).trigger('change');
-                }, 1000);
+            
+             
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlpayment').val(data.Payment_Terms).trigger('change');
                 }, 1000)
@@ -881,6 +880,12 @@
                 LoadPOItemDetail(PO_ID);
                 $('#txtAdv_amou').val(data.Total_Adv_Amt);
                 $('#txtFurther_amou').val(data.Total_Further_Amt);
+                $('#ddlWarehouse').html(
+                    $('<option>', {
+                        value: data.Ware_House,
+                        text: data.Ware_HouseText
+                    })
+                );
             },
                 function (error) {
                     alert(error.get_message());

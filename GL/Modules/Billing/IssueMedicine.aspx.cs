@@ -990,7 +990,7 @@ namespace PMS
             return result;
         }
         [WebMethod]
-        public static string AllInvoiceNumbers(string searchTerm)
+        public static string AllInvoiceNumbers(string searchTerm, int reg_id)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
@@ -998,6 +998,11 @@ namespace PMS
                 .Where(data => data.IsPharmacy == true
                             && data.Invoice_No != null
                             && (data.isCancel == false || data.isCancel == null));
+
+            if (reg_id > 0)
+            {
+                query = query.Where(x => x.Patient_ID == reg_id);
+            }
 
             // If user is searching
             if (!string.IsNullOrEmpty(searchTerm))
@@ -1075,17 +1080,29 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string SaleReturnItems()
+        public static string SaleReturnItems(string searchTerm)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var panel = (from data in db.INV_Items
-                         where data.IsPharmacyItem == true
-                         select new
-                         {
-                             Item_ID = data.Item_ID,
-                             Description = data.Description,
-                         }).ToList();
-            return (new JavaScriptSerializer()).Serialize(panel);
+
+            var query = db.INV_Items.Where(data => data.IsPharmacyItem == true);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var term = searchTerm.Trim();
+                query = query.Where(x => x.Description.Contains(term));
+            }
+
+            var result = query
+                .OrderBy(x => x.Description)
+                .Select(x => new
+                {
+                    id = x.Item_ID,
+                    text = x.Description
+                })
+                .Take(string.IsNullOrWhiteSpace(searchTerm) ? 100 : 200)
+                .ToList();
+
+            return (new JavaScriptSerializer()).Serialize(result);
         }
 
         [WebMethod]

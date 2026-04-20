@@ -54,6 +54,50 @@ namespace PMS
             }
             return data;
         }
+        // First WebMethod: Check if Walkin Patient Reg Fee is active (Code = "01")
+        [WebMethod]
+        public static string IsWalkinPatientRegFeeActive()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var code = (from tbl in db.sys_Parms
+                                where tbl.Name == "Walkin Patient Reg Fee"
+                                select tbl.Code)
+                               .FirstOrDefault();
+
+                    // Return "01" if active, otherwise "0"
+                    return (code == "01") ? "01" : "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        // Second WebMethod: Get the actual fee amount
+        [WebMethod]
+        public static string GetWalkinPatientRegFee()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var fee = (from tbl in db.sys_Parms
+                               where tbl.Name == "OPD Fee"
+                               select tbl.Code)
+                              .FirstOrDefault();
+
+                    return fee ?? "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
         [WebMethod]
         public static string RightAppointmentBilling()
         {
@@ -511,7 +555,7 @@ namespace PMS
             return pts;
         }
         [WebMethod]
-        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age)
+        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age,string txtfees)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
@@ -546,6 +590,7 @@ namespace PMS
                         pat.DOB = dob;
                     }
                     pat.NIC = CNIC;
+                  
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                     //pat.mr_no_sequence = db.GetSequentialMrNo();
@@ -576,6 +621,7 @@ namespace PMS
                 pat.Created_by = AppConfig.UserID;
                 pat.iscancel = false;
                 pat.Martial_Status = martail_status;
+                pat.Card_fee = Convert.ToDecimal(txtfees);
                 if (string.IsNullOrWhiteSpace(Date_Of_Birth))
                 {
                     pat.DOB = null;

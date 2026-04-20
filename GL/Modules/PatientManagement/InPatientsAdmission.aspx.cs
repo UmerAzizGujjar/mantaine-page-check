@@ -710,6 +710,49 @@ namespace PMS
             return "";
         }
         [WebMethod]
+        public static string IsWalkinPatientRegFeeActive()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var code = (from tbl in db.sys_Parms
+                                where tbl.Name == "Walkin Patient Reg Fee"
+                                select tbl.Code)
+                               .FirstOrDefault();
+
+                    // Return "01" if active, otherwise "0"
+                    return (code == "01") ? "01" : "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        // Second WebMethod: Get the actual fee amount
+        [WebMethod]
+        public static string GetWalkinPatientRegFee()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var fee = (from tbl in db.sys_Parms
+                               where tbl.Name == "OPD Fee"
+                               select tbl.Code)
+                              .FirstOrDefault();
+
+                    return fee ?? "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+        [WebMethod]
         public static string LoadExaminationHistory(int PatientID)  // LoadExaminationTabHistory()
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -1061,7 +1104,7 @@ namespace PMS
                     OPD.Issuance_Of = ddlIssuance_Of;
                     OPD.Patient_Discount_Type = PatientDiscountType;
                     OPD.Discharge = false;
-                    OPD.Panel_Company = panelCompany;
+         
                     OPD.InsuranceCardNo = CardNo;
                     OPD.CardHolderName = Cardholdername;
                     OPD.CompanyNAme = CompanyName;
@@ -5333,7 +5376,7 @@ namespace PMS
             return list;
         }
         [WebMethod]
-        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age)
+        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age,string txtfees)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
@@ -5453,6 +5496,7 @@ namespace PMS
                 string companyCode = company.CompanyCode;
                 string MR_Sequence = companyCode + "-" + PatientNumber;
                 pat.mr_no_sequence = MR_Sequence;
+                pat.Card_fee = Convert.ToDecimal(txtfees);
                 pat.walkin = true;
                 db.Reg_patients.InsertOnSubmit(pat);
                 db.SubmitChanges();
@@ -5616,15 +5660,25 @@ namespace PMS
                     select op.Discharge
                 ).FirstOrDefault();
 
-                var latestEmergencyDischarge = (
+                // Get latest emergency patient where Admission_Date is NOT null
+                var latestEmergency = (
                     from ep in db.Emergency_Patients
-                    where ep.Patient_ID == patientId
+                    where ep.Patient_ID == patientId && ep.Admission_Date != null
                     orderby ep.Admission_Date descending
-                    select ep.Discharge
+                    select ep
                 ).FirstOrDefault();
 
                 bool blockedOpd = latestOutPatientDischarge == false;
-                bool blockedEmerg = latestEmergencyDischarge == false;
+
+                // Only block emergency if:
+                // 1. There is an emergency record with Admission_Date NOT null, AND
+                // 2. Discharge is false (or null treated as false/not discharged)
+                bool blockedEmerg = false;
+                if (latestEmergency != null)
+                {
+                    // If Discharge is false or null, patient is still admitted
+                    blockedEmerg = latestEmergency.Discharge == false || latestEmergency.Discharge == null;
+                }
 
                 if (blockedOpd && blockedEmerg)
                 {
