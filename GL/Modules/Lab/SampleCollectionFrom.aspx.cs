@@ -263,6 +263,7 @@ namespace PMS
 
                         // Assign the current number and increment for next test
                         SDObj.accession_no = nextAccessionNumbers[outSourceLab];
+                        SDObj.dispatch_status = "Pending";
                       //  SDObj.a = DateTime.Now;
 
                         // Increment for the next test with same OutSource lab

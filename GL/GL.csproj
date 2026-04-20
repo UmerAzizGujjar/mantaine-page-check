@@ -278,6 +278,7 @@
     <Content Include="Modules\Inventory\PharmacyView.aspx" />
     <Content Include="Modules\Inventory\Service.aspx" />
     <Content Include="Modules\Inventory\ServiceView.aspx" />
+    <Content Include="Modules\Lab\DispatchView.aspx" />
     <Content Include="Modules\Lab\Accessionview.aspx" />
     <Content Include="Modules\Lab\RadiologyResultsPreview.aspx" />
     <Content Include="Modules\Lab\RadiologyTestResult.aspx" />
@@ -26260,6 +26261,13 @@
     </Compile>
     <Compile Include="Modules\Inventory\ServiceView.aspx.designer.cs">
       <DependentUpon>ServiceView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\DispatchView.aspx.cs">
+      <DependentUpon>DispatchView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\DispatchView.aspx.designer.cs">
+      <DependentUpon>DispatchView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Lab\Accessionview.aspx.cs">
       <DependentUpon>Accessionview.aspx</DependentUpon>

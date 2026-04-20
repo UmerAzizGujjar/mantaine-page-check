@@ -971,7 +971,7 @@ namespace PMS
         partial void DeleteSample_Detail(Sample_Detail instance);
         #endregion
         public DataBaseDataContext() :
-       base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -169432,6 +169432,10 @@ namespace PMS
 
         private System.Nullable<bool> _printed;
 
+        private string _dispatch_status;
+
+        private System.Nullable<System.DateTime> _dispatch_date;
+
         private EntityRef<Sample_Master> _Sample_Master;
 
         #region Extensibility Method Definitions
@@ -169462,6 +169466,10 @@ namespace PMS
         partial void Onaccession_noChanged();
         partial void OnprintedChanging(System.Nullable<bool> value);
         partial void OnprintedChanged();
+        partial void Ondispatch_statusChanging(string value);
+        partial void Ondispatch_statusChanged();
+        partial void Ondispatch_dateChanging(System.Nullable<System.DateTime> value);
+        partial void Ondispatch_dateChanged();
         #endregion
 
         public Sample_Detail()
@@ -169710,6 +169718,46 @@ namespace PMS
                     this._printed = value;
                     this.SendPropertyChanged("printed");
                     this.OnprintedChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_dispatch_status", DbType = "NVarChar(150)")]
+        public string dispatch_status
+        {
+            get
+            {
+                return this._dispatch_status;
+            }
+            set
+            {
+                if ((this._dispatch_status != value))
+                {
+                    this.Ondispatch_statusChanging(value);
+                    this.SendPropertyChanging();
+                    this._dispatch_status = value;
+                    this.SendPropertyChanged("dispatch_status");
+                    this.Ondispatch_statusChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_dispatch_date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> dispatch_date
+        {
+            get
+            {
+                return this._dispatch_date;
+            }
+            set
+            {
+                if ((this._dispatch_date != value))
+                {
+                    this.Ondispatch_dateChanging(value);
+                    this.SendPropertyChanging();
+                    this._dispatch_date = value;
+                    this.SendPropertyChanged("dispatch_date");
+                    this.Ondispatch_dateChanged();
                 }
             }
         }
