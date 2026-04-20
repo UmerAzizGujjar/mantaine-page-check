@@ -359,8 +359,8 @@
             if ($('.action-bar').length === 0) {
                 var actionBar = '<div class="action-bar">' +
                     '<div><input type="checkbox" id="selectAll"> <label for="selectAll">Select All (Unprinted Only)</label></div>' +
-                    '<div>Selected: <span id="selectedCount">0</span> items</div>' +
-                    '<button type="button" id="printSelectedBtn" class="dispatch-all-btn btn btn-primary">Print Selected</button>' +
+                    //'<div>Selected: <span id="selectedCount">0</span> items</div>' +
+                    '<button type="button" id="printSelectedBtn" class="dispatch-all-btn btn btn-primry">Print Selected</button>' +
                     '</div>';
                 $('#example_wrapper').before(actionBar);
 
