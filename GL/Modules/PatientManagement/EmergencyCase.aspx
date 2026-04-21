@@ -85,6 +85,17 @@
                 format: '___/___',
                 separator: '-'
             });
+            // Reference the elements
+            var txtEOR = document.getElementById('ctl00_MainContent_ctl00_MainContent_txtEOR');
+            var txtMR = document.getElementById('ctl00_MainContent_txtMR');
+            var txtVR = document.getElementById('ctl00_MainContent_txtVR');
+            var txtAcc = document.getElementById('ctl00_MainContent_txtAcc');
+
+            // Set default values
+            if (txtEOR) txtEOR.value = '4/4';
+            if (txtMR) txtMR.value = '5/5';
+            if (txtVR) txtVR.value = '6/6';
+            if (txtAcc) txtAcc.value = '15/15';
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_ctl00_MainContent_txtEOR'),
                 format: '_/4',
@@ -6740,7 +6751,7 @@ function setDropdownText(selector, text) {
        }
 
 
-  </script>
+    </script>
 
     <style type="text/css">
         .mgTab {
