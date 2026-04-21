@@ -204,6 +204,15 @@ namespace PMS
             {
                 string[] ids = advanceIds.Split(',');
 
+                string sysCode = "";
+                using (var db = new DataBaseDataContext())
+                {
+                    sysCode = db.sys_Parms
+                                .Where(x => x.Name == "Billing Approval")
+                                .Select(x => x.Code)
+                                .FirstOrDefault();
+                }
+
                 foreach (string advanceid in ids)
                 {
                     if (!string.IsNullOrEmpty(advanceid))
@@ -212,31 +221,56 @@ namespace PMS
                         {
                             string message = "";
                             int voucherId = 0;
-
-                            using (var db = new DataBaseDataContext())
+                            if (sysCode == "01")
                             {
-                                using (var conn = new SqlConnection(db.Connection.ConnectionString))
+                                using (var db = new DataBaseDataContext())
                                 {
-                                    using (var cmd = new SqlCommand("SpApprove_Advance", conn))
+                                    using (var conn = new SqlConnection(db.Connection.ConnectionString))
                                     {
-                                        cmd.CommandType = CommandType.StoredProcedure;
-                                        cmd.Parameters.AddWithValue("@advanceid", Convert.ToInt32(advanceid));
-                                        cmd.Parameters.AddWithValue("@user_id", user_id);
-
-                                        conn.Open();
-
-                                        using (var reader = cmd.ExecuteReader())
+                                        using (var cmd = new SqlCommand("SpApprove_Advance", conn))
                                         {
-                                            if (reader.Read())
+                                            cmd.CommandType = CommandType.StoredProcedure;
+                                            cmd.Parameters.AddWithValue("@advanceid", Convert.ToInt32(advanceid));
+                                            cmd.Parameters.AddWithValue("@user_id", user_id);
+
+                                            conn.Open();
+
+                                            using (var reader = cmd.ExecuteReader())
                                             {
-                                                message = reader["Message"].ToString();
-                                                voucherId = Convert.ToInt32(reader["Voucher_ID"]);
+                                                if (reader.Read())
+                                                {
+                                                    message = reader["Message"].ToString();
+                                                    voucherId = Convert.ToInt32(reader["Voucher_ID"]);
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+                            else if (sysCode == "02")
+                            {
+                                using (var db = new DataBaseDataContext())
+                                {
+                                    var record = db.AR_Advances
+                                                   .FirstOrDefault(x => x.Advance_ID == Convert.ToInt32(advanceid));
 
+                                    if (record != null)
+                                    {
+                                        record.Status = "Approved";
+                                        record.Approve_by = user_id;
+                                        record.Approve_date = DateTime.Now;
+
+                                        db.SubmitChanges();
+
+                                        message = "Approved Successfully";
+                                        voucherId = 1; 
+                                    }
+                                    else
+                                    {
+                                        message = "Record not found";
+                                    }
+                                }
+                            }
                             if (voucherId > 0)
                             {
                                 approvedCount++;
