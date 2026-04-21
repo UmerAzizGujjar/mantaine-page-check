@@ -12,7 +12,51 @@
                 gap: 0.5rem;
             }
         </style>
-  
+  <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+          var textBox = document.getElementById("<%= txtCallToDoctor.ClientID %>");
+
+         if (textBox) {
+             // Add initial bullet if textbox is empty on focus
+             textBox.addEventListener("focus", function () {
+                 if (this.value.trim() === "") {
+                     this.value = "• ";
+                 }
+             });
+
+             textBox.addEventListener("keydown", function (e) {
+                 if (e.key === "Enter") {
+                     e.preventDefault(); // Prevent default newline
+
+                     var start = this.selectionStart;
+                     var end = this.selectionEnd;
+                     var value = this.value;
+
+                     // Get current line content before cursor
+                     var beforeCursor = value.substring(0, start);
+                     var lastNewline = beforeCursor.lastIndexOf("\n");
+                     var currentLine = beforeCursor.substring(lastNewline + 1);
+
+                     // Check if current line already has a bullet
+                     var hasBullet = currentLine.trim().startsWith("•");
+
+                     // If line has content (not just bullet), add new bullet on next line
+                     var lineContent = currentLine.replace(/^•\s*/, "").trim();
+
+                     if (lineContent.length > 0 || (hasBullet && currentLine.trim() === "•")) {
+                         // Add newline with bullet
+                         this.value = value.substring(0, start) + "\n• " + value.substring(end);
+                         this.selectionStart = this.selectionEnd = start + 3; // Move cursor after bullet and space
+                     } else {
+                         // Just add newline without bullet if line is empty
+                         this.value = value.substring(0, start) + "\n" + value.substring(end);
+                         this.selectionStart = this.selectionEnd = start + 1;
+                     }
+                 }
+             });
+         }
+     });
+  </script>
     <script type="text/javascript">
         var btnVal = '';
         localStorage.IsDischarge = 0;
@@ -6696,7 +6740,7 @@ function setDropdownText(selector, text) {
        }
 
 
-    </script>
+  </script>
 
     <style type="text/css">
         .mgTab {
@@ -7721,11 +7765,12 @@ function setDropdownText(selector, text) {
                                 </div>
                                 </div>
                                  </div>
-                        <div style="position: relative; top: -200px; left: 25%; width: 500px;">
+                                  <div style="position: relative; top: -200px; left: 25%; width: 500px;">
                             <h2 style="text-align:left;">Doctor Notes</h2>
-                            <asp:TextBox TextMode="MultiLine" runat="server" id="txtCallToDoctor" style=" height: 139px; font-size: 18px; font-weight: Bold;"></asp:TextBox>
+                            <asp:TextBox TextMode="MultiLine" runat="server" id="txtCallToDoctor" style="height: 139px; font-size: 18px; font-weight: Bold;"></asp:TextBox>
                             <input type="hidden" id="hdnEmergencyDocId" value="" />
                         </div>
+
 
                         <div style="margin-left: 0px; margin-top: -130px; width: 1214px; overflow: scroll; height: 210px; max-height: 400px !important;">
                             <table id="tblDoctorNotes" class="table" style="width: 100% !important;">
