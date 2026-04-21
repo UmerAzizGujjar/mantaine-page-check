@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "National_Hospital")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "IITH")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -971,7 +971,7 @@ namespace PMS
         partial void DeleteReg_patient(Reg_patient instance);
         #endregion
         public DataBaseDataContext() :
-base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -5386,13 +5386,6 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
             return ((ISingleResult<sp_Sample_Detail_LoadResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetIPD_Distribution")]
-        public ISingleResult<spGetIPD_DistributionResult> spGetIPD_Distribution([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_No", DbType = "VarChar(50)")] string bill_No)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), bill_No);
-            return ((ISingleResult<spGetIPD_DistributionResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spLabReportQ")]
         public ISingleResult<spLabReportQResult> spLabReportQ([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Test_IDs", DbType = "VarChar(MAX)")] string test_IDs, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Trans_IDs", DbType = "VarChar(MAX)")] string trans_IDs, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Patient_ID", DbType = "BigInt")] System.Nullable<long> patient_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_Details_IDs", DbType = "VarChar(MAX)")] string bill_Details_IDs)
         {
@@ -5405,6 +5398,13 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pRId);
             return ((ISingleResult<sp_GetPRDetailByPRIDResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spGetIPD_Distribution")]
+        public ISingleResult<spGetIPD_DistributionResult> spGetIPD_Distribution([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_No", DbType = "VarChar(50)")] string bill_No)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), bill_No);
+            return ((ISingleResult<spGetIPD_DistributionResult>)(result.ReturnValue));
         }
     }
 
@@ -220661,248 +220661,6 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
         }
     }
 
-    public partial class spGetIPD_DistributionResult
-    {
-
-        private string _Description;
-
-        private string _Item_Type;
-
-        private string _Test_Main_Department;
-
-        private string _Item_Type1;
-
-        private System.Nullable<decimal> _Total_Amount;
-
-        private System.Nullable<decimal> _Discount_Amount;
-
-        private System.Nullable<decimal> _Discount_Percentage;
-
-        private System.Nullable<decimal> _Net_Amount;
-
-        private System.Nullable<decimal> _Qty;
-
-        private System.Nullable<decimal> _Doctor_Share;
-
-        private System.Nullable<decimal> _Hospital_Share;
-
-        private System.Nullable<int> _Account_ID;
-
-        private string _Account_Code;
-
-        public spGetIPD_DistributionResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(20) NOT NULL", CanBeNull = false)]
-        public string Description
-        {
-            get
-            {
-                return this._Description;
-            }
-            set
-            {
-                if ((this._Description != value))
-                {
-                    this._Description = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Type", DbType = "VarChar(20)")]
-        public string Item_Type
-        {
-            get
-            {
-                return this._Item_Type;
-            }
-            set
-            {
-                if ((this._Item_Type != value))
-                {
-                    this._Item_Type = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_Main_Department", DbType = "VarChar(50)")]
-        public string Test_Main_Department
-        {
-            get
-            {
-                return this._Test_Main_Department;
-            }
-            set
-            {
-                if ((this._Test_Main_Department != value))
-                {
-                    this._Test_Main_Department = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Type1", DbType = "VarChar(20)")]
-        public string Item_Type1
-        {
-            get
-            {
-                return this._Item_Type1;
-            }
-            set
-            {
-                if ((this._Item_Type1 != value))
-                {
-                    this._Item_Type1 = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Amount", DbType = "Decimal(38,6)")]
-        public System.Nullable<decimal> Total_Amount
-        {
-            get
-            {
-                return this._Total_Amount;
-            }
-            set
-            {
-                if ((this._Total_Amount != value))
-                {
-                    this._Total_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Discount_Amount
-        {
-            get
-            {
-                return this._Discount_Amount;
-            }
-            set
-            {
-                if ((this._Discount_Amount != value))
-                {
-                    this._Discount_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Percentage", DbType = "Decimal(38,6)")]
-        public System.Nullable<decimal> Discount_Percentage
-        {
-            get
-            {
-                return this._Discount_Percentage;
-            }
-            set
-            {
-                if ((this._Discount_Percentage != value))
-                {
-                    this._Discount_Percentage = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Net_Amount", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Net_Amount
-        {
-            get
-            {
-                return this._Net_Amount;
-            }
-            set
-            {
-                if ((this._Net_Amount != value))
-                {
-                    this._Net_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,2)")]
-        public System.Nullable<decimal> Qty
-        {
-            get
-            {
-                return this._Qty;
-            }
-            set
-            {
-                if ((this._Qty != value))
-                {
-                    this._Qty = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Share", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Doctor_Share
-        {
-            get
-            {
-                return this._Doctor_Share;
-            }
-            set
-            {
-                if ((this._Doctor_Share != value))
-                {
-                    this._Doctor_Share = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Hospital_Share", DbType = "Decimal(38,4)")]
-        public System.Nullable<decimal> Hospital_Share
-        {
-            get
-            {
-                return this._Hospital_Share;
-            }
-            set
-            {
-                if ((this._Hospital_Share != value))
-                {
-                    this._Hospital_Share = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_ID", DbType = "Int")]
-        public System.Nullable<int> Account_ID
-        {
-            get
-            {
-                return this._Account_ID;
-            }
-            set
-            {
-                if ((this._Account_ID != value))
-                {
-                    this._Account_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_Code", DbType = "VarChar(10)")]
-        public string Account_Code
-        {
-            get
-            {
-                return this._Account_Code;
-            }
-            set
-            {
-                if ((this._Account_Code != value))
-                {
-                    this._Account_Code = value;
-                }
-            }
-        }
-    }
-
     public partial class spLabReportQResult
     {
 
@@ -222912,6 +222670,320 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLC
                 if ((this._TotalStock != value))
                 {
                     this._TotalStock = value;
+                }
+            }
+        }
+    }
+
+    public partial class spGetIPD_DistributionResult
+    {
+
+        private string _Description;
+
+        private string _Item_Type;
+
+        private string _Test_Main_Department;
+
+        private string _Item_Type1;
+
+        private System.Nullable<decimal> _Total_Amount;
+
+        private System.Nullable<decimal> _Discount_Amount;
+
+        private System.Nullable<decimal> _Discount_Percentage;
+
+        private System.Nullable<decimal> _Net_Amount;
+
+        private System.Nullable<decimal> _Qty;
+
+        private System.Nullable<decimal> _Doctor_Share;
+
+        private System.Nullable<decimal> _Hospital_Share;
+
+        private System.Nullable<int> _Account_ID;
+
+        private string _Account_Code;
+
+        private System.Nullable<int> _Discount_Account_ID;
+
+        private string _Discount_Account_Code;
+
+        private System.Nullable<int> _CashInHand_Account_ID;
+
+        private string _CashInHand_Account_Code;
+
+        public spGetIPD_DistributionResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(20) NOT NULL", CanBeNull = false)]
+        public string Description
+        {
+            get
+            {
+                return this._Description;
+            }
+            set
+            {
+                if ((this._Description != value))
+                {
+                    this._Description = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Type", DbType = "VarChar(20)")]
+        public string Item_Type
+        {
+            get
+            {
+                return this._Item_Type;
+            }
+            set
+            {
+                if ((this._Item_Type != value))
+                {
+                    this._Item_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Test_Main_Department", DbType = "VarChar(50)")]
+        public string Test_Main_Department
+        {
+            get
+            {
+                return this._Test_Main_Department;
+            }
+            set
+            {
+                if ((this._Test_Main_Department != value))
+                {
+                    this._Test_Main_Department = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Type1", DbType = "VarChar(20)")]
+        public string Item_Type1
+        {
+            get
+            {
+                return this._Item_Type1;
+            }
+            set
+            {
+                if ((this._Item_Type1 != value))
+                {
+                    this._Item_Type1 = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Amount", DbType = "Decimal(38,6)")]
+        public System.Nullable<decimal> Total_Amount
+        {
+            get
+            {
+                return this._Total_Amount;
+            }
+            set
+            {
+                if ((this._Total_Amount != value))
+                {
+                    this._Total_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Discount_Amount
+        {
+            get
+            {
+                return this._Discount_Amount;
+            }
+            set
+            {
+                if ((this._Discount_Amount != value))
+                {
+                    this._Discount_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Percentage", DbType = "Decimal(38,6)")]
+        public System.Nullable<decimal> Discount_Percentage
+        {
+            get
+            {
+                return this._Discount_Percentage;
+            }
+            set
+            {
+                if ((this._Discount_Percentage != value))
+                {
+                    this._Discount_Percentage = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Net_Amount", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Net_Amount
+        {
+            get
+            {
+                return this._Net_Amount;
+            }
+            set
+            {
+                if ((this._Net_Amount != value))
+                {
+                    this._Net_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Qty", DbType = "Decimal(38,2)")]
+        public System.Nullable<decimal> Qty
+        {
+            get
+            {
+                return this._Qty;
+            }
+            set
+            {
+                if ((this._Qty != value))
+                {
+                    this._Qty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Doctor_Share", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Doctor_Share
+        {
+            get
+            {
+                return this._Doctor_Share;
+            }
+            set
+            {
+                if ((this._Doctor_Share != value))
+                {
+                    this._Doctor_Share = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Hospital_Share", DbType = "Decimal(38,4)")]
+        public System.Nullable<decimal> Hospital_Share
+        {
+            get
+            {
+                return this._Hospital_Share;
+            }
+            set
+            {
+                if ((this._Hospital_Share != value))
+                {
+                    this._Hospital_Share = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_ID", DbType = "Int")]
+        public System.Nullable<int> Account_ID
+        {
+            get
+            {
+                return this._Account_ID;
+            }
+            set
+            {
+                if ((this._Account_ID != value))
+                {
+                    this._Account_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Account_Code", DbType = "VarChar(10)")]
+        public string Account_Code
+        {
+            get
+            {
+                return this._Account_Code;
+            }
+            set
+            {
+                if ((this._Account_Code != value))
+                {
+                    this._Account_Code = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Account_ID", DbType = "Int")]
+        public System.Nullable<int> Discount_Account_ID
+        {
+            get
+            {
+                return this._Discount_Account_ID;
+            }
+            set
+            {
+                if ((this._Discount_Account_ID != value))
+                {
+                    this._Discount_Account_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Account_Code", DbType = "VarChar(10)")]
+        public string Discount_Account_Code
+        {
+            get
+            {
+                return this._Discount_Account_Code;
+            }
+            set
+            {
+                if ((this._Discount_Account_Code != value))
+                {
+                    this._Discount_Account_Code = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CashInHand_Account_ID", DbType = "Int")]
+        public System.Nullable<int> CashInHand_Account_ID
+        {
+            get
+            {
+                return this._CashInHand_Account_ID;
+            }
+            set
+            {
+                if ((this._CashInHand_Account_ID != value))
+                {
+                    this._CashInHand_Account_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CashInHand_Account_Code", DbType = "VarChar(10)")]
+        public string CashInHand_Account_Code
+        {
+            get
+            {
+                return this._CashInHand_Account_Code;
+            }
+            set
+            {
+                if ((this._CashInHand_Account_Code != value))
+                {
+                    this._CashInHand_Account_Code = value;
                 }
             }
         }

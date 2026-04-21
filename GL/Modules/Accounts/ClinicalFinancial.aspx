@@ -618,7 +618,7 @@ function addNewRowAdvance() {
                     const savedData = response.d;
                     console.log(savedData);
                     getClinicalFinancialAcoountsDropdown(function (options) {
-                        getPatientTypes(function (categoryOptions) {
+                       // getPatientTypes(function (categoryOptions) {
                             getAccounts(function (optionsVen) {
 
                                 savedData.forEach(item => {
@@ -629,13 +629,12 @@ function addNewRowAdvance() {
                                         <input type="hidden" class="financialDepartmentIPD" value="${item.financialdepartment}"/>
                                     </td>
                                     <td>
-                                        <select class="categorynameIPD select2select" style="background-color: white; height:32px;" disabled>
-                                            ${setSelected(categoryOptions, item.categoryname)}
-                                        </select>
-                                        <select class="categorynameIPD" style="background-color: white; height:32px;" disabled>
-                                            <option value="0">Please Select</option>
-                                            <option value="03" selected>IPD</option>
-                                        </select>
+               
+                                             <select class="categorynameIPD" disabled style="background-color: white; height:32px;">
+                                                 <option value="0">Please Select</option>
+                                                 <option value="03" selected >IPD</option>
+                                             </select>
+
                                     </td>
                                     <td>
                                       <select class="cashinhandIPD select2select" style="background-color: white;" disabled>
@@ -669,7 +668,7 @@ function addNewRowAdvance() {
 
                                 $('.select2select').select2(); // reinit after DOM update
                             });
-                        });
+                       // });
                     });
                 }
             });
@@ -1128,9 +1127,8 @@ function addNewRowAdvance() {
                                 let row = `
 <tr class="data-row">
     <td style="display: none">
-        <select class="financialDepartmentSERVICE" disabled>
-            ${setSelected(options, item.financialdepartment)}
-        </select>
+
+        <input type="hidden" class="financialDepartmentSERVICE" value="${item.financialdepartment}"/>
     </td>
     <td>
         <select class="categorynameSERVICE" style="background-color: white; height:32px;" disabled>
@@ -1191,9 +1189,8 @@ function addNewRowAdvance() {
                                 let row = `
 <tr class="data-row">
     <td style="display: none">
-        <select class="financialDepartmentPHARMACY" disabled>
-            ${setSelected(options, item.financialdepartment)}
-        </select>
+
+                <input type="hidden" class="financialDepartmentPHARMACY" value="${item.financialdepartment}"/>
     </td>
     <td>
         <select class="categorynamePHARMACY" style="background-color: white; height:32px;" disabled>
@@ -1309,7 +1306,7 @@ function addNewRowAdvance() {
         }
         function addNewRowIPD() {
             getClinicalFinancialAcoountsDropdown(function (options) {
-                getPatientTypes(function (categoryOptions) {
+          
                     getAccounts(function (optionsVen) {
                         let newRow = `
                                 <tr class="data-row">
@@ -1348,7 +1345,7 @@ function addNewRowAdvance() {
                         $('.financialDepartmentIPD option[value="011"]').prop('selected', true);
                         $('.select2select').select2(); // initialize Select2
                     });
-                });
+
             });
         }
         function addNewRowOPDShare() {
@@ -1707,9 +1704,8 @@ function addNewRowAdvance() {
                     let newRow = `
                 <tr class="data-row">
                     <td style="display: none">
-                        <select class="financialDepartmentPHARMACY">
-                            ${options}
-                        </select>
+    
+<input type = "hidden" class="financialDepartmentPHARMACY" value = "005">
                     
                     <td>
                         <select disabled class="categorynamePHARMACY" style="background-color: white; height:32px;">
