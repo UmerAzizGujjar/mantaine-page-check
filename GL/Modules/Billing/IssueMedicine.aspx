@@ -1795,17 +1795,16 @@
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
 
-                // Process GRN_Details
+
                 $.each(parsedData.OPD_NO, function (key, value) {
                     options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';
                 });
 
-                // Process Stock_Adjustment_Details
+
                 $.each(parsedData.IPD_NO, function (key, value) {
                     options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';
                 });
 
-                // Process Stock_Adjustment_Details
                 $.each(parsedData.Emergency_NO, function (key, value) {
                     options += '<option value="' + value.Patient_ID + '" >' + value.Patient_No + '</option>';
                 });
@@ -2136,6 +2135,12 @@
             if (Patient_ID == "" || Patient_ID == '') {
                 Patient_ID = "";
             }
+            var In_Patient_ID = $('#ddlPatient_No').val();
+
+            if (In_Patient_ID == '' || In_Patient_ID == '0' || In_Patient_ID == undefined) {
+                In_Patient_ID = 0;
+            }
+
             var CustomerName = $('#CustomerName').val();
             var warehouse = $("#ddlWarehouse").val();
             var TransType = $("#txtTransType").val();
@@ -2254,6 +2259,7 @@
                 "linediscount": linediscount,
                 "DiscAmnt": DiscAmnt,
                 "Save_list": Save_list,
+                "In_Patient_ID": In_Patient_ID,
                 "invNumber": invNumber
             };
             if (patId == undefined) {
