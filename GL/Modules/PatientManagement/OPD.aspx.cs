@@ -1044,6 +1044,22 @@ namespace PMS.Modules.PatientManagement
 
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
+
+            bool isNewPatient = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
+
+            if (isNewPatient && !string.IsNullOrWhiteSpace(CNIC))
+            {
+                var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "CNIC Validation" && p.Code == "01");
+                if (cnicValidation != null)
+                {
+                    var existingPatient = db.Reg_patients.FirstOrDefault(p => p.NIC == CNIC && p.iscancel == false);
+                    if (existingPatient != null)
+                    {
+                        return "CNIC_EXISTS"; 
+                    }
+                }
+            }
+
             if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
             {
                 pat = db.Reg_patients.FirstOrDefault(w => w.pat_id == Convert.ToInt32(PatientID));
