@@ -165,12 +165,12 @@
                 <option value="0">Select Martial Status</option>
             </select>
         </div>
-          <div class="col-lg-2 col-md-4 col-sm-6">
-      <label for="ddl_bloodGroup">Blood Group<span ></span></label>
-      <select id="ddl_bloodGroup" tabindex="11" class="form-control">
-          <option value="0">Select Blood Group</option>
-      </select>
-  </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="ddl_bloodGroup">Blood Group<span></span></label>
+            <select id="ddl_bloodGroup" tabindex="11" class="form-control">
+                <option value="0">Select Blood Group</option>
+            </select>
+        </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
             <input type="text" id="txt_mobile" tabindex="10" class="form-control" />
@@ -182,39 +182,44 @@
             <input type="text" id="txt_cnic" tabindex="12" class="form-control" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
-            <label>Country</label>
-            <select id="ddlCountry" tabindex="13" class="form-control">
-                 <option value="0">Select Country</option>
-            </select>
+            <label for="txt_OtherCnic">Other CNIC</label>
+            <input type="text" id="txt_OtherCnic" tabindex="13" class="form-control" />
         </div>
+        
     </div>
     <div class="row">
         <div class="col-lg-2 col-md-4 col-sm-6">
+            <label>Country</label>
+            <select id="ddlCountry" tabindex="14" class="form-control">
+                <option value="0">Select Country</option>
+            </select>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="ddlstate">Province</label>
-            <select id="ddlstate" tabindex="14" class="form-control">
+            <select id="ddlstate" tabindex="15" class="form-control">
                  <option value="0">Select Province</option>
             </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txtcity">City</label>
-            <select id="txtcity"  tabindex="15" class="form-control">
+            <select id="txtcity"  tabindex="16" class="form-control">
                 <option value="0">Select City</option>             
             </select>
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <label for="txtarea">Area</label>
-            <select id="txtarea" tabindex="16" class="form-control">
+            <select id="txtarea" tabindex="17" class="form-control">
                 <option value="0">Select Area</option>
             </select>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-8">
+        <div class="col-lg-3 col-md-6 col-sm-8">
             <label for="txt_Address">Address<span style="color: red;">*</span></label>
-            <input type="text" tabindex="17" id="txt_Address" class="form-control" />
+            <input type="text" tabindex="18" id="txt_Address" class="form-control" />
             <span id="address-error" class="span_txt" style="display: none;">Please Enter Address</span>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="col-lg-1 col-md-4 col-sm-6">
             <label for="lblfee">Fee<span style="color: red;">*</span></label>
-            <input type="text" tabindex="17" id="txtCardFee" class="form-control" />
+            <input type="text" tabindex="19" id="txtCardFee" class="form-control" />
          
         </div>
     </div>

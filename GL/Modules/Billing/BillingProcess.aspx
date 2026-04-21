@@ -6039,6 +6039,7 @@
                 var Age = $('#txt_dob').val();
                 var Date_Of_Birth = $('#txtAge_yearss').val();
                 var CNIC = $('#txt_cnic').val();
+                var OtherCNIC = $('#txt_Othercnic').val();
                 var Address = $('#txt_Address').val();
                 var martail_status = $('#ddl_status').val();
                 var txtfees = $('#txtfees').val();
@@ -6065,6 +6066,7 @@
                     "martail_status": martail_status,
                     "Age": Age,
                     "txtfees": txtfees,
+                    "OtherCNIC": OtherCNIC,
 
                 });
                 $.ajax({
@@ -6468,6 +6470,7 @@
                     $("#txt_relation").val(data.d.FatherName);
                     $("#txt_mobile").val(data.d.Mobile);
                     $("#txt_cnic").val(data.d.CNIC);
+                    $("#txt_Othercnic").val(data.d.OtherCNIC);
                     $("#txt_Address").val(data.d.Address);
                     $("#ddl_bld_grp").val(data.d.Blood_Group).change();
                     $("#ddlRhFactor").val(data.d.Rh_Factor);
@@ -6615,6 +6618,13 @@
                 $('#txt_cnic').attr('placeholder', '_____-_______-_');
                 MaskedInput({
                     elm: document.getElementById('txt_cnic'),
+                    format: '_____-_______-_',
+                    separator: '-'
+
+                });
+                $('#txt_Othercnic').attr('placeholder', '_____-_______-_');
+                MaskedInput({
+                    elm: document.getElementById('txt_Othercnic'),
                     format: '_____-_______-_',
                     separator: '-'
 
@@ -7769,6 +7779,12 @@
 
                                 <div class="col-lg-5 col-md-3 col-sm-4">
                                     <input type="text" tabindex="8" id="txt_Address"  />
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <label>Other CNIC</label>
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <input tabindex="12" type="text" id="txt_Othercnic" style="width: 200px !important" />
                                 </div>
                                     <div class="col-lg-2 col-md-3 col-sm-4" >
                                     <label id="lblfee">Fees<span style="color:red;">*</span></label>

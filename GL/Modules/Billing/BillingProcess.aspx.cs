@@ -507,6 +507,7 @@ namespace PMS
             public string Relation { get; set; }
 
             public string CNIC { get; set; }
+            public string OtherCNIC { get; set; }
 
 
             public string Reg_PatientID { get; set; }
@@ -544,6 +545,7 @@ namespace PMS
                 pts.Address = pat.Permanent_Address;
                 pts.Mobile = pat.Mobile1;
                 pts.CNIC = pat.NIC;
+                pts.OtherCNIC = pat.other_cnic;
                 pts.Gender = pat.Gender;
 
 
@@ -555,7 +557,7 @@ namespace PMS
             return pts;
         }
         [WebMethod]
-        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age,string txtfees)
+        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC,string OtherCNIC, string Address, string PatientID, string martail_status, string Age,string txtfees)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
@@ -590,6 +592,7 @@ namespace PMS
                         pat.DOB = dob;
                     }
                     pat.NIC = CNIC;
+                    pat.other_cnic = OtherCNIC;
                   
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
@@ -616,6 +619,7 @@ namespace PMS
                 pat.Mobile1 = Mobile;
                 pat.Age_years = Age;
                 pat.NIC = CNIC;
+                pat.other_cnic = OtherCNIC;
                 pat.Permanent_Address = Address;
                 pat.Created_time = DateTime.Now;
                 pat.Created_by = AppConfig.UserID;

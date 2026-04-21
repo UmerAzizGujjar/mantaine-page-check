@@ -1228,6 +1228,7 @@
             var Age = $('#txt_dob').val();
             var Date_Of_Birth = $('#txtAge_yearss').val();
             var CNIC = $('#txt_cnic').val();
+            var OtherCNIC = $('#txt_Othercnic').val();
             var Address = $('#txt_house').val();
             var stno = $('#txtstrm').val();
             var city = $('#txtcity :selected').text();
@@ -1275,6 +1276,7 @@
                 Age: Age,
                 "Country": Country,
                 "Province": Province,
+                "OtherCNIC": OtherCNIC,
                 "cardfee": cardfee,
             };
 
@@ -2167,43 +2169,47 @@
 
                     <div class="row">
                         <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label for="txt_Othercnic">Other CNIC</label>
+                            <input type="text" id="txt_Othercnic" class="form-control" />
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
                             <input type="text" id="txt_mobile" class="form-control" />
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
                             <select id="ddl_status" class="form-control">
-                                <option value="0">Select Marial</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2 colmd-4 col-sm-6">
-                            <label>Country</label>
-                            <select id="ddlCountry" class="form-control">
-                                <option value="0">Select Country</option>
+                                <option value="0">Select Marital</option>
                             </select>
                         </div>
                         <div class="col-lg-3 colmd-4 col-sm-6">
-                            <label>Province</label>
-                            <select id="ddl_Province" class="form-control">
-                                <option value="0">Select Province</option>
+                            <label>Country</label>
+                            <select id="ddlCountry" class="form-control">
+                                <option value="0">Select Country</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-lg-3 colmd-4 col-sm-6">
+                            <label>Province</label>
+                            <select id="ddl_Province" class="form-control">
+                                <option value="0">Select Province</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 colmd-4 col-sm-6">
                             <label for="txtcity">City</label>
                             <select id="txtcity" class="form-control">
                                 <option value="0">Select City</option>
                             </select>
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="txtarea">Area</label>
                             <select id="txtarea" class="form-control">
                                 <option value="0">Select Area</option>
                             </select>
                         </div>
-                        <div class="col-lg-5 col-md-4 col-sm-6">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txt_house">Address</label>
                             <input type="text" id="txt_house" class="form-control" />
                         </div>

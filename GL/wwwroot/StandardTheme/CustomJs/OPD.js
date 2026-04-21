@@ -171,9 +171,33 @@ $(document).ready(function () {
 
     });
 
+    MaskedInput({
+        elm: document.getElementById('txt_OtherCnic'),
+        format: '_____-_______-_',
+        separator: '-'
+
+    });
+
+    $('#txt_OtherCnic').attr('placeholder', '_____-_______-_');
+
     $('#txt_cnic').attr('placeholder', '_____-_______-_');
 
     $('#txt_cnic').on('focus', function () {
+        var input = this;
+        setTimeout(function () {
+            if (input.setSelectionRange) {
+                input.setSelectionRange(0, 0);
+            } else if (input.createTextRange) {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', 0);
+                range.moveStart('character', 0);
+                range.select();
+            }
+        }, 0);
+    });
+
+    $('#txt_OtherCnic').on('focus', function () {
         var input = this;
         setTimeout(function () {
             if (input.setSelectionRange) {
@@ -1000,6 +1024,7 @@ function SavePatient() {
     var Age = $('#txt_dob').val();
     var Date_Of_Birth = $('#txtAge_yearss').val();
     var CNIC = $('#txt_cnic').val();
+    var OtherCNIC = $('#txt_OtherCnic').val();
     var Address = $('#txt_house').val();
     var stno = $('#txtstrm').val();
     var city = $('#txtcity :selected').text();
@@ -1047,6 +1072,7 @@ function SavePatient() {
         Age: Age,
         "Country": Country,
         "Province": Province,
+        "OtherCNIC": OtherCNIC,
         "cardfee": cardfee,
     };
 

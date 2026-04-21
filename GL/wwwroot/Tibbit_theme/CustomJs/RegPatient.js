@@ -17,6 +17,13 @@
 
     });
 
+    MaskedInput({
+        elm: document.getElementById('txt_OtherCnic'),
+        format: '_____-_______-_',
+        separator: '-'
+
+    });
+
     $('#txt_mobile').on('focus', function () {
         var input = this;
         setTimeout(function () {
@@ -256,6 +263,7 @@ function SavePatient() {
     var Age = $('#txt_dob').val();
     var Date_Of_Birth = $('#txtAge_yearss').val();
     var CNIC = $('#txt_cnic').val();
+    var OtherCnic = $('#txt_OtherCnic').val();
     var Address = $('#txt_Address').val();
     var city = $('#txtcity :selected').text();
     var area = $('#txtarea :selected').text();
@@ -321,6 +329,7 @@ function SavePatient() {
         "State": State,
         "Country": Country,
         "cardfee": cardfee,
+        "OtherCnic": OtherCnic,
         "AntiForgeryToken": AntiForgeryToken,
 
     });
@@ -418,6 +427,7 @@ function Get_Pat_Info(reg_id) {
             $('#txt_Address').val(data.Address);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#txt_cnic').val(data.CNIC_Masked);
+            $('#txt_OtherCnic').val(data.other_cnic);
             $('#txtAge_yearss').val(data.DOB);
             $('#txtCardFee').val(data.Card_fee);
             //dob

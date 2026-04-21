@@ -193,7 +193,7 @@
                 $('#btnDischargeRequest').attr('disabled', true);
             }
 
-            $('#Addmedicine').attr('disabled', true);
+           // $('#Addmedicine').attr('disabled', true);
 
 
 

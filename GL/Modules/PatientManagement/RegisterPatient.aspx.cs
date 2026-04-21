@@ -166,6 +166,7 @@ namespace PMS.Modules.PatientManagement
             public string Area_text { get; set; }
             public int Reg_PatientID { get; set; }
             public string CNIC_Masked { get; set; }
+            public string other_cnic { get; set; }
             public string DOB { get; set; }
 
             public decimal Card_fee { get; set; }
@@ -298,7 +299,7 @@ namespace PMS.Modules.PatientManagement
     string Mobile, string Date_Of_Birth, string CNIC, string Address,
     string PatientID, string martail_status, string Age, string city, string area,
     string city_val, string area_val, string Blood_Group, string State, string Country,
-    string cardfee, string AntiForgeryToken)
+    string cardfee, string OtherCnic, string AntiForgeryToken)
 
         {
 
@@ -376,6 +377,7 @@ namespace PMS.Modules.PatientManagement
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.NIC = CNIC;
+                    pat.other_cnic = OtherCnic;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                     pat.city = city;
@@ -655,6 +657,7 @@ namespace PMS.Modules.PatientManagement
                                       rg.Card_fee,
                                       rg.val_area,
                                       rg.pat_id,
+                                      rg.other_cnic,
                                       rg.DOB  // Keep as raw DateTime? or string? depends on DB schema
                                   }).FirstOrDefault();
 
@@ -673,6 +676,7 @@ namespace PMS.Modules.PatientManagement
                     MaritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", patientRaw.Martial_Status) ?? ""),
                     Mr_No = HttpUtility.HtmlEncode(patientRaw.mr_no_sequence ?? ""),
                     CNIC_Masked = (patientRaw.NIC),
+                    other_cnic = (patientRaw.other_cnic),
                     Address = HttpUtility.HtmlEncode(patientRaw.Permanent_Address ?? ""),
                     Mobile = (patientRaw.Mobile1),
                     BloodGroup_text = HttpUtility.HtmlEncode(db.GetDataValueName("Blood Group", patientRaw.Blood_Group) ?? ""),
