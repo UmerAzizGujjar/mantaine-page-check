@@ -2690,7 +2690,43 @@ function setDropdownText(selector, text) {
 
             });
         }
+        var skipClear = false;
+        function getAndDisablePharmacyItem(itemID) {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/getallpharmacyitems",  
+                data: JSON.stringify({ itemID: itemID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // Parse the JSON string returned by the WebMethod
+                    var data = JSON.parse(response.d);
 
+                    if (data && data.length > 0) {
+                        var value = data[0]; // Get the first item
+                        var $select = $('#txtPharmacyItem');
+
+                        // 1. Set the flag to true to skip the Cleardrpdwn logic
+                        skipClear = true;
+
+                        // 2. Append the option using your preferred string format
+                        $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+
+                        // 3. Set the value and trigger change to update the Select2 UI
+                        $select.val(value.Item_ID).trigger('change');
+
+                        // 4. Disable the select to prevent further user interaction
+                        $select.prop('disabled', true);
+
+                        // 5. Reset the flag so future manual changes (if any) work normally
+                        skipClear = false;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error: " + error);
+                }
+            });
+        }
         function editMedicine(AnchorTag) {
 
             var table_name = $(AnchorTag).parents('table').attr('id');
@@ -2730,7 +2766,8 @@ function setDropdownText(selector, text) {
             var duration = $($(row).find('td')[4]).text().trim();
             var special_instruction = $($(row).find('td')[5]).text().trim();
             var other_instruction = $($(row).find('td')[8]).text().trim();
-            $('#txtPharmacyItem').val(Medicine_Id).trigger('change');
+            skipClear = true;
+            getAndDisablePharmacyItem(Medicine_Id);
             $("#ddlDosage_Qty").find('option:contains(' + dosage_qty + ')')[0].selected = true;
             $("#ddlDosage_From").find('option:contains(' + dosage_form + ')')[0].selected = true;
             $("#txtRecomended_Dosage").find('option:contains(' + frequency + ')')[0].selected = true;
@@ -5741,9 +5778,9 @@ function setDropdownText(selector, text) {
                     }
                 });
         }
-
+        
         function Cleardrpdwn() {
-
+            if (skipClear) return;
             FillMedicine();
         }
         function CleardrpdwnItem() {

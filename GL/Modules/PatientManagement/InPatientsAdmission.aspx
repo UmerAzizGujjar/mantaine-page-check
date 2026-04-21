@@ -310,8 +310,28 @@
             }).datepicker("setDate", new Date());
 
             
-            var regNumber = 'NH-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-            $("#ctl00_MainContent_txtBirthRegNumber").val(regNumber);
+            var regNumber = "";
+            var regIdFromUrl = '<%= Request.QueryString["Reg_ID"] %>';
+
+            if (regIdFromUrl && regIdFromUrl !== "") {
+                PageMethods.GetEditPatientDetails(regIdFromUrl, function (data) {
+                    if (data && data.Mr_No) {
+                        $("#ctl00_MainContent_txtBirthRegNumber").val($.trim(data.Mr_No));
+                    }
+                });
+            }
+            else {
+                regNumber = $.trim($("#<%= txtPatient_ID.ClientID %>").val());
+                if (!regNumber || regNumber === "(New)") {
+                    var tokenText = $.trim($("#token-input-<%= txtPatient_ID.ClientID %>").closest("ul").find("li.token-input-token-facebook p").first().text());
+                    if (tokenText) {
+                        regNumber = $.trim(tokenText.split('-')[0]);
+                    }
+                }
+                if (regNumber && regNumber !== "(New)") {
+                    $("#ctl00_MainContent_txtBirthRegNumber").val(regNumber);
+                }
+            }
             jQuery(function ($) {
                 MaskedInput({
                     elm: document.getElementById('txtSearch'), // select only by id
