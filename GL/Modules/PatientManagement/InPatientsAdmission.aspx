@@ -6191,7 +6191,7 @@
                     tokenLimit: 1,
                     onAdd: function (item) {
                         $("#hdfPatient_ID").val(item.id);
-                        loadAjax();
+                       // loadAjax();
                     }
                 });
         }
