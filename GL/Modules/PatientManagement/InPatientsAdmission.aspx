@@ -116,12 +116,22 @@
             });
 
             $('#txt_cnic').attr('placeholder', '_____-_______-_');
+            $('#txt_Othercnic').attr('placeholder', '_____-_______-_');
             MaskedInput({
                 elm: document.getElementById('txt_cnic'),
                 format: '_____-_______-_',
                 separator: '-'
 
             });
+
+            MaskedInput({
+                elm: document.getElementById('txt_Othercnic'),
+                format: '_____-_______-_',
+                separator: '-'
+
+            });
+
+            
 
 
             $("#ctl00_MainContent_ddlDeathCertifiedbyDr1").select2({
@@ -6113,8 +6123,11 @@
             var Age = $('#txt_dob').val();
             var Date_Of_Birth = $('#txtAge_yearss').val();
             var CNIC = $('#txt_cnic').val();
+            var OtherCNIC = $('#txt_Othercnic').val();
             var Address = $('#txt_Address').val();
             var martail_status = $('#ddl_status').val();
+            var txtfees = $('#txtfees').val();
+
             if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || Address == "")) {
                 Swal.fire({
                     icon: 'error',
@@ -6132,6 +6145,7 @@
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
             }
+
             var data = JSON.stringify({
                 "Full_Name": Full_Name,
                 "RelationType": RelationType,
@@ -6140,21 +6154,60 @@
                 "Mobile": Mobile,
                 "Date_Of_Birth": Date_Of_Birth,
                 "CNIC": CNIC,
+                "OtherCNIC": OtherCNIC,
                 "Address": Address,
                 "PatientID": PatientID,
                 "martail_status": martail_status,
                 "Age": Age,
-
+                "txtfees": txtfees,
             });
+
             $.ajax({
                 type: "POST",
                 url: "InPatientsAdmission.aspx/SavePatientDetail",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (data) {
+                success: function (response) {
                     debugger;
-                    var Reg_Patient_ID = data.d;
+
+                    // Check if CNIC already exists
+                    if (response.d === "CNIC_EXISTS") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'CNIC Already Exists!',
+                            text: 'A patient with this CNIC is already registered.',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        }).then(function () {
+                            $('#SavePatient_Data').attr('disabled', false);
+                        });
+                        return;
+                    }
+
+                    // Check for other errors
+                    if (response.d && response.d.startsWith("ERROR:")) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.d.replace("ERROR:", ""),
+                            showConfirmButton: true,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        }).then(function () {
+                            $('#SavePatient_Data').attr('disabled', false);
+                        });
+                        return;
+                    }
+
+                    var Reg_Patient_ID = response.d;
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -6169,10 +6222,23 @@
                     });
 
                     $('#PatientModel').modal('hide');
-                    AddPatientDetail(Reg_Patient_ID)
+                    AddPatientDetail(Reg_Patient_ID);
+                    $('#SavePatient_Data').attr('disabled', false);
                 },
                 error: function (response) {
-                    alert("Error");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Error while saving data. Please try again',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    }).then(function () {
+                        $('#SavePatient_Data').attr('disabled', false);
+                    });
                 }
             });
         }
@@ -6283,6 +6349,7 @@
                 $('#txt_mobile').val(unmaskedValue);
             }, 100);
             $('#txt_name').focus();
+            CheckAndLoadWalkinPatientRegFee();
         }
         var isAdd = false;
         function AddPatientDetail(Reg_Patient_ID) {
@@ -6304,6 +6371,64 @@
                 $('#ddl_status').html(options);
             });
             return options;
+        }
+        // Main function that checks and populates the fee
+        function CheckAndLoadWalkinPatientRegFee() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/IsWalkinPatientRegFeeActive",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var isActive = response.d;
+
+                    if (isActive == "01") {
+
+                        $('#txtfees').show();
+                        $('#lblfees').show();
+
+
+                        // Now get the actual fee amount
+                        GetWalkinPatientRegFee();
+                    } else {
+                        // Hide the txtfees field
+                        $('#txtfees').hide(); // or $('#feesRow').hide();
+                        $('#lblfees').hide(); // or $('#feesRow').hide();
+                        $('#txtfees').val('0');
+                        $('#txtfees').prop('disabled', true);
+                    }
+                },
+                error: function (error) {
+                    console.error("Error checking registration fee status:", error);
+                    $('#txtfees').hide();
+                }
+            });
+        }
+
+        function GetWalkinPatientRegFee() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/GetWalkinPatientRegFee",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var fee = response.d;
+                    if (fee && fee != '0' && fee != 'null' && fee != '') {
+                        fee = fee.replace(/["']/g, '');
+                        $('#txtfees').val(fee);
+                    } else {
+                        $('#txtfees').val('0');
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching registration fee:", error);
+                    $('#txtfees').val('0');
+                }
+            });
         }
         function fillgender() {
             var options = '<option value="0">Please Select</option>';
@@ -6374,6 +6499,7 @@
                 $("#txt_relation").val(data.d.FatherName);
                 $("#txt_mobile").val(data.d.Mobile);
                 $("#txt_cnic").val(data.d.CNIC);
+                $("#txt_Othercnic").val(data.d.OtherCNIC);
                 $("#txt_Address").val(data.d.Address);
                 $("#ddl_bld_grp").val(data.d.Blood_Group).change();
                 $("#ddlRhFactor").val(data.d.Rh_Factor);
@@ -13110,8 +13236,22 @@
                             <label>Address<span style="color:red;">*</span></label>
                         </div>
 
-                        <div class="col-lg-6 col-md-3 col-sm-4">
+                        <div class="col-lg-5 col-md-3 col-sm-4">
                             <input type="text"  tabindex="13" id="txt_Address"  />
+                        </div>
+                        
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <label>Other CNIC</label>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input tabindex="12" type="text" id="txt_Othercnic" style="width: 200px !important" />
+                        </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4" >
+                            <label id="lblfees">Fees<span style="color:red;">*</span></label>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <input tabindex="9"  type="text" disabled="disabled" style="display:none" id="txtfees" />
                         </div>
                     </div>
                 </div>

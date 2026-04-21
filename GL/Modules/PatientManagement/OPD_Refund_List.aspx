@@ -6,6 +6,17 @@
     $(document).ready(function () {
         $('#ctl00_lblMessage').hide();
         LoadPage();
+
+        $(document).on('change', '#header-check', function () {
+            var isChecked = $(this).prop('checked');
+            $('#tblOPDRefund tbody .refund-checkbox').prop('checked', isChecked);
+        });
+
+        $(document).on('change', '.refund-checkbox', function () {
+            var allChecked = $('#tblOPDRefund tbody .refund-checkbox:checked').length ===
+                $('#tblOPDRefund tbody .refund-checkbox').length;
+            $('#header-check').prop('checked', allChecked);
+        });
     });
   
 
@@ -31,6 +42,7 @@
                     console.error("Failed to load column preferences");
                 }
             });
+
             const table = $("#tblOPDRefund").DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -42,6 +54,113 @@
                         className: 'dt-button buttons-copy buttons-html5',
                         action: function () {
                             window.location = 'OPD_Refund.aspx';
+                        }
+                    },
+                    {
+                        text: '<i class="fa fa-check"></i> Approve',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function (e, dt, node, config) {
+                            var selected = [];
+                            $('#tblOPDRefund tbody .refund-checkbox:checked').each(function () {
+                                selected.push($(this).val());
+                            });
+
+                            if (selected.length === 0) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'No Selection',
+                                    text: 'Please select at least one OPD refund to approve.',
+                                    confirmButtonColor: '#3085d6'
+                                });
+                                return;
+                            }
+
+                            Swal.fire({
+                                title: 'Confirm Approval',
+                                text: 'Are you sure you want to approve ' + selected.length + ' record(s)?',
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonColor: '#28a745',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, Approve!',
+                                cancelButtonText: 'Cancel'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    Swal.fire({
+                                        title: 'Processing...',
+                                        text: 'Please wait',
+                                        allowOutsideClick: false,
+                                        showConfirmButton: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+
+                                    // Pass the comma-separated string
+                                    PageMethods.ApproveOPDRefunds(selected.join(','), function (response) {
+                                        try {
+                                            // IMPORTANT: Parse response directly, not response.d
+                                            var result = JSON.parse(response);
+
+                                            if (result.Success) {
+                                                let messageHtml = `<div style="text-align: left;">
+                                <p><strong>Total Records:</strong> ${result.TotalRecords}</p>
+                                <p><strong>Approved:</strong> ${result.ApprovedCount}</p>
+                                <p><strong>Failed:</strong> ${result.FailedCount}</p>
+                            </div>`;
+
+                                                if (result.Details && result.Details.length > 0) {
+                                                    messageHtml += `<hr><div style="max-height: 200px; overflow-y: auto;">`;
+                                                    for (var i = 0; i < result.Details.length; i++) {
+                                                        var detail = result.Details[i];
+                                                        if (detail.Success) {
+                                                            messageHtml += `<p style="color: green;">✅ Refund #${detail.RefundID}: ${detail.Message}</p>`;
+                                                        } else {
+                                                            messageHtml += `<p style="color: red;">❌ Refund #${detail.RefundID}: ${detail.Message}</p>`;
+                                                        }
+                                                    }
+                                                    messageHtml += `</div>`;
+                                                }
+
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Approval Complete!',
+                                                    html: messageHtml,
+                                                    confirmButtonColor: '#28a745'
+                                                }).then(() => {
+                                                    if (result.ApprovedCount > 0) {
+                                                        $('#tblOPDRefund').DataTable().ajax.reload();
+                                                        $('#header-check').prop('checked', false);
+                                                    }
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Approval Failed',
+                                                    text: result.Message || 'Unknown error occurred',
+                                                    confirmButtonColor: '#d33'
+                                                });
+                                            }
+                                        } catch (e) {
+                                            console.error("Parse error:", e);
+                                            console.log("Raw response:", response);
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: 'Invalid response from server: ' + e.message,
+                                                confirmButtonColor: '#d33'
+                                            });
+                                        }
+                                    }, function (error) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: error.get_message ? error.get_message() : 'An error occurred',
+                                            confirmButtonColor: '#d33'
+                                        });
+                                    });
+                                }
+                            });
                         }
                     },
                     'copy',
@@ -84,6 +203,17 @@
                     });
                 },
                 "columns": [
+                    {
+                        "data": null,
+                        "width": "5%",
+                        "orderable": false,
+                        "render": function (data, type, full) {
+                            return '<input type="checkbox" class="refund-checkbox" value="' + full.Refund_ID + '" />';
+                        },
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            $(td).css('text-align', 'center');
+                        }
+                    },
                     { "data": "Refund_ID", "visible": false, "width": "0%" },
                     { "data": "OPD_No", "name": "OPD_No", "width": "10%", "orderable": true },
                     { "data": "Full_Name", "width": "10%", "orderable": false },
@@ -235,6 +365,7 @@
     <table id="tblOPDRefund" class="table table-hover table-striped table-bordered">
         <thead>
               <tr>
+                 <th style="text-align:center;"><input type="checkbox" id="header-check" /></th>
                  <th>Refund_ID</th>
                  <th>OPD No</th>
                  <th>Full_Name</th>

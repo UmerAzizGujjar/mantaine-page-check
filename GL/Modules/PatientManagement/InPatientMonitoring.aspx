@@ -842,6 +842,41 @@
             }, 3000);
 
         }
+        $(document).on('keyup', '.select2-search__field', function () {
+            var searchString = $(this).val();
+
+            if (searchString.length < 2) {
+                return;
+            }
+
+            $.ajax({
+                url: 'InPatientMonitoring.aspx/getpharmacyitems',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ searchString: searchString }),
+                success: function (response) {
+                    try {
+                        var pharmacyItems = JSON.parse(response.d);
+                        var $select = $('#txtPharmacyItem');
+
+                        $.each(pharmacyItems, function (key, value) {
+                            var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
+                            if (!optionExists) {
+                                $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+                            }
+                        });
+
+                        $select.trigger('change');
+
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
         function FillDosage() {
             PageMethods.FillDosageDropDown(function (Dosage) {
                 var options = '<option value="' + 0 + '"> Select</option>'
@@ -913,7 +948,7 @@
             FillPharmacyItem()
         }
         function NewMedicine() {
-
+           // $('#txtPharmacyItem').val('').trigger('change');
             $('#txtMedicen').show();
             var medicine = $('#txtMedicen').val();
             if (medicine != "") {
@@ -1029,7 +1064,7 @@
                 $('#StopField').show();
             })
 
-            $('#Addmedicine').attr('disabled', true);
+          //  $('#Addmedicine').attr('disabled', true);
             $("#txtMedicineNames").hide();
             $("#lblMed").hide();
             //  var current_time = moment().format("hh:mm A");
@@ -1342,24 +1377,38 @@
 
                 }
 
-                if ($('#txtPharmacyItem').val() == 'Select Medicine') {
-                    $('#txtPharmacyItem').val() = '';
+                var value = $('#txtPharmacyItem').val();
+
+                if ($('#txtPharmacyItem').val() == 'Select Medicine' || $('#txtPharmacyItem').val() == null || $('#txtPharmacyItem').val() == '0') {
+                    $('#txtPharmacyItem').val('');
                 }
 
-                if ($('#txtMedicen').val() != '' && $('#txtPharmacyItem').val() != '') {
-                    alert("Please Eneter One Name")
+                var medicen = $('#txtMedicen').val();
+                var pharmacyItem = $('#txtPharmacyItem').val();
+
+                if ((medicen == '' || medicen == null) && (pharmacyItem == '' || pharmacyItem == null)) {
+                    alert("Please enter medicine name");
                     return false;
                 }
-                if ($('#txtMedicen').val() == '' && $('#txtPharmacyItem').val() == '') {
-                    alert("Please Eneter Name")
+
+                if ((medicen != '' && medicen != null) && (pharmacyItem != '' && pharmacyItem != null && pharmacyItem != '0')) {
+                    alert("Please enter only one medicine name");
                     return false;
                 }
                 var UnListedMed = $('#txtMedicen').val();
+                var pharmacyITem = ''; 
 
-                if ($('#txtPharmacyItem').val() != '')
-                    var pharmacyITem = $('#txtPharmacyItem').find('option:selected').text()
-                else {
-                    var pharmacyITem = $('#txtMedicen').val()
+                if ($('#txtPharmacyItem').val() != '' && $('#txtPharmacyItem').val() != '0' && $('#txtPharmacyItem').val() != null) {
+                    pharmacyITem = $('#txtPharmacyItem').find('option:selected').text();
+                } else if (UnListedMed != '' && UnListedMed != null) {
+                    pharmacyITem = UnListedMed;
+                }
+
+                var itemCode = '';
+                if ($('#txtPharmacyItem').val() != '' && $('#txtPharmacyItem').val() != '0' && $('#txtPharmacyItem').val() != null) {
+                    itemCode = $('#txtPharmacyItem').val();
+                } else {
+                    itemCode = '0'; 
                 }
 
                 var Dose = $('#txtDosages').val();
@@ -1368,26 +1417,26 @@
                     return false;
                 }
                 var Frequency = $('#txtRecomended_Dosages').val();
-                if (Frequency == "") {
-                    alert("Please Select Frequency ")
-                    return false;
-                }
+                //if (Frequency == "") {
+                //    alert("Please Select Frequency ")
+                //    return false;
+                //}
                 var DosageFrom = $('#ddlDosage_From').val();
-                var Route = $('#Route').val();
-                if (Route == "") {
-                    alert("Please Select Route ")
-                    return false;
-                }
-                var Duration = $('#txtInjections').val();
-                if (Duration == "") {
-                    if (localStorage.IsPRN == 1 || localStorage.IsStat == 1) {
+                //var Route = $('#Route').val();
+                //if (Route == "") {
+                //    alert("Please Select Route ")
+                //    return false;
+                //}
+                //var Duration = $('#txtInjections').val();
+                //if (Duration == "") {
+                //    if (localStorage.IsPRN == 1 || localStorage.IsStat == 1) {
 
-                    }
-                    else {
-                        alert("Please Select Duration ");
-                        return false;
-                    }
-                }
+                //    }
+                //    else {
+                //        alert("Please Select Duration ");
+                //        return false;
+                //    }
+                //}
 
                 var datetime = '<%= DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss A")%>';
                 var datetimeValue = '<%= DateTime.Now%>';
@@ -4696,7 +4745,7 @@
                                 <table class="table" id="tblHistoryMedications">
                                         <thead>
                                             <tr style="position: sticky; top: 0;z-index: 10;";>
-                                                <td colspan="12">
+                                                <td colspan="14">
                                                     <div id="HeaderHistoryMedications">
                                                         <h2 class="color">Previous History</h2>
                                                     </div>

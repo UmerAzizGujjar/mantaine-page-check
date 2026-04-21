@@ -195,18 +195,18 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(dept);
         }
         [WebMethod]
-        public static String SaveTest(DateTime CollectedDate, string sampleStatus, string ddlPat_type, /*DateTime ResultDate,*/ int PatientID, string[][] SaveCheckedTest, int EmployeeID, string[][] rem)
+        public static String SaveTest(DateTime CollectedDate, string sampleStatus, string ddlPat_type, int PatientID, string[][] SaveCheckedTest, int EmployeeID, string[][] rem)
         {
-            
             var sampleid = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var SampleNo = db.Sample_Masters.DefaultIfEmpty().Max(p => p == null ? 0 : p.Sample_No + 1);
-               
+
                 if (SampleNo == 0)
                 {
                     SampleNo = 1;
                 }
+
                 Sample_Master SMObj = new Sample_Master()
                 {
                     Sample_No = SampleNo,
@@ -219,39 +219,11 @@ namespace PMS
                     Created_Time = DateTime.Now
                 };
 
+                // Dictionary to track the next accession number for each OutSource lab
+                Dictionary<string, int> nextAccessionNumbers = new Dictionary<string, int>();
+
                 for (int i = 0; i < SaveCheckedTest.Length; i++)
                 {
-                    #region 'Comment Aera'
-                    //for (int b = 0; b < rem.Length; b++)
-                    //{
-                    //    var Gener = (from lb in db.Lab_Tests
-                    //                 where lb.Test_ID == Convert.ToInt32(SaveCheckedTest[i][1])
-                    //                 select lb.Genre).FirstOrDefault();
-
-                    //    if (Gener == null)
-                    //    {
-                    //        Gener = "0";
-                    //    }
-
-                    //    Sample_Detail SDObj = new Sample_Detail()
-                    //    {
-                    //        Test_ID = Convert.ToInt32(SaveCheckedTest[i][1]),
-                    //        //Test_Detail_ID = Convert.ToInt32(SampleCollected[i][1]),
-                    //        Bill_Detail_ID = Convert.ToInt32(SaveCheckedTest[i][2]),
-                    //        Dept = SaveCheckedTest[i][3],
-                    //        //Sample_Collected = true,
-                    //        Genre = Gener,
-                    //        Qty = SaveCheckedTest[i][5],
-
-                    //        Remarks = rem[b][0].ToString(),
-                    //        Sample_Collected = System.Convert.ToBoolean(rem[b][1]),
-
-                    //    };
-
-                    //    SMObj.Sample_Details.Add(SDObj);
-                    //}
-                    #endregion
-
                     var Gener = (from lb in db.Lab_Tests
                                  where lb.Test_ID == Convert.ToInt32(SaveCheckedTest[i][1])
                                  select lb.Genre).FirstOrDefault();
@@ -264,23 +236,42 @@ namespace PMS
                     Sample_Detail SDObj = new Sample_Detail()
                     {
                         Test_ID = Convert.ToInt32(SaveCheckedTest[i][1]),
-                       
                         Bill_Detail_ID = Convert.ToInt32(SaveCheckedTest[i][2]),
                         Dept = SaveCheckedTest[i][3],
-                      
                         Genre = Gener,
                         Qty = SaveCheckedTest[i][5],
-
                         Remarks = rem[i][0].ToString(),
                         OutSource = rem[i][2].ToString(),
                         Sample_Collected = System.Convert.ToBoolean(rem[i][1]),
-
                     };
+
+                    // Generate accession number if OutSource is selected (not "0")
+                    if (rem[i][2].ToString() != "0" && !string.IsNullOrEmpty(rem[i][2].ToString()))
+                    {
+                        string outSourceLab = rem[i][2].ToString();
+
+                        // Check if we already have a next number for this lab in current batch
+                        if (!nextAccessionNumbers.ContainsKey(outSourceLab))
+                        {
+                            // Get the current MAX from database for this lab
+                            int? maxAccessionNo = db.Sample_Details
+                                .Where(sd => sd.OutSource == outSourceLab && sd.accession_no != null)
+                                .Max(sd => (int?)sd.accession_no);
+
+                            nextAccessionNumbers[outSourceLab] = (maxAccessionNo ?? 0) + 1;
+                        }
+
+                        // Assign the current number and increment for next test
+                        SDObj.accession_no = nextAccessionNumbers[outSourceLab];
+                        SDObj.dispatch_status = "Pending";
+                      //  SDObj.a = DateTime.Now;
+
+                        // Increment for the next test with same OutSource lab
+                        nextAccessionNumbers[outSourceLab]++;
+                    }
 
                     SMObj.Sample_Details.Add(SDObj);
                 }
-
-                
 
                 db.Sample_Masters.InsertOnSubmit(SMObj);
                 try
@@ -290,7 +281,7 @@ namespace PMS
                 }
                 catch (Exception ex)
                 {
-                    return "Problem in save tests";
+                    return "Problem in save tests: " + ex.Message;
                 }
 
                 return "Save-" + sampleid;
@@ -328,6 +319,11 @@ namespace PMS
                                     where SM.Sample_ID == SampleID
                                     select SM).FirstOrDefault();
 
+                if (SampleMaster == null)
+                {
+                    return "Sample not found";
+                }
+
                 SampleMaster.Sample_Collected_Date = CollectedDate;
                 SampleMaster.Collected_Emp_ID = EmployeeID;
                 SampleMaster.patient_type_range = ddlPat_type;
@@ -335,41 +331,54 @@ namespace PMS
                 SampleMaster.Updated_By = AppConfig.UserID;
                 SampleMaster.Updated_Time = DateTime.Now;
 
-                
-
                 var SampleDetail = (from SD in db.Sample_Details
                                     where SD.Sample_ID == SampleID
                                     select SD).ToList();
 
                 db.Sample_Details.DeleteAllOnSubmit(SampleDetail);
 
-               
+                // Dictionary to track the next accession number for each OutSource lab
+                Dictionary<string, int> nextAccessionNumbers = new Dictionary<string, int>();
 
                 for (int i = 0; i < SaveCheckedTest.Length; i++)
                 {
-                   
-                        var Gener = (from lb in db.Lab_Tests
-                                     where lb.Test_ID == Convert.ToInt32(SaveCheckedTest[i][1])
-                                     select lb.Genre).ToList();
+                    Sample_Detail SDObj = new Sample_Detail()
+                    {
+                        Test_ID = Convert.ToInt32(SaveCheckedTest[i][1]),
+                        Bill_Detail_ID = Convert.ToInt32(SaveCheckedTest[i][2]),
+                        Dept = SaveCheckedTest[i][3],
+                        Genre = string.Empty,
+                        Qty = SaveCheckedTest[i][5],
+                        Remarks = rem[i][0].ToString(),
+                        OutSource = rem[i][2].ToString(),
+                        Sample_Collected = System.Convert.ToBoolean(rem[i][1]),
+                    };
 
+                    // Generate accession number if OutSource is selected (not "0")
+                    if (rem[i][2].ToString() != "0" && !string.IsNullOrEmpty(rem[i][2].ToString()))
+                    {
+                        string outSourceLab = rem[i][2].ToString();
 
-                        Sample_Detail SDObj = new Sample_Detail()
+                        // Check if we already have a next number for this lab in current batch
+                        if (!nextAccessionNumbers.ContainsKey(outSourceLab))
                         {
-                            Test_ID = Convert.ToInt32(SaveCheckedTest[i][1]),
-                           
-                            Bill_Detail_ID = Convert.ToInt32(SaveCheckedTest[i][2]),
-                            Dept = SaveCheckedTest[i][3],
-                           
-                            Genre = string.Empty,
-                            Qty = SaveCheckedTest[i][5],
+                            // Get the current MAX from database for this lab
+                            int? maxAccessionNo = db.Sample_Details
+                                .Where(sd => sd.OutSource == outSourceLab && sd.accession_no != null)
+                                .Max(sd => (int?)sd.accession_no);
 
-                            Remarks = rem[i][0].ToString(),
-                            OutSource = rem[i][2].ToString(),
-                            Sample_Collected = System.Convert.ToBoolean(rem[i][1]),
-                        };
+                            nextAccessionNumbers[outSourceLab] = (maxAccessionNo ?? 0) + 1;
+                        }
 
-                        SampleMaster.Sample_Details.Add(SDObj);
-                    
+                        // Assign the current number and increment for next test
+                        SDObj.accession_no = nextAccessionNumbers[outSourceLab];
+                        //SDObj.Accession_Generated_Date = DateTime.Now;
+
+                        // Increment for the next test with same OutSource lab
+                        nextAccessionNumbers[outSourceLab]++;
+                    }
+
+                    SampleMaster.Sample_Details.Add(SDObj);
                 }
 
                 try

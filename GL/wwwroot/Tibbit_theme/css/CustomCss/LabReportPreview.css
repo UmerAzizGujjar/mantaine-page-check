@@ -1,4 +1,29 @@
 ﻿
+.select2-container {
+    width: 100% !important;
+    max-width: 297px !important;
+}
+
+.select2-container--default .select2-selection--single {
+    height: 34px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+}
+
+.select2-dropdown {
+    z-index: 9999 !important;
+}
+
+#tblsingleTest td {
+    vertical-align: top;
+}
+
+#tblsingleTest .select2-container {
+    min-width: 150px;
+}
+
+
+
 .select2-selection__rendered {
     text-align: left !important;
     direction: ltr !important;

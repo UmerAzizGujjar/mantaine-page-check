@@ -356,6 +356,13 @@
 
                 }
             });
+
+            setTimeout(function () {
+                if ($('#ddlGrowth').length && typeof $.fn.select2 !== 'undefined') {
+                    $('#ddlGrowth').select2({ width: '100%' });
+                    $('#ddlOrganism').select2({ width: '100%' });
+                }
+            }, 500);
             // GetPendingList();   //  21-01-2021
             $('#btnGrowth').click(function () {
 

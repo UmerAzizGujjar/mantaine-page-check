@@ -4,7 +4,10 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Refund.css" rel="stylesheet" />
     <script type="text/javascript">          
         $(document).ready(function () {
-            
+
+
+            $('#colApprove').hide();
+            $('#colPrint').hide();
 
             var urlParams = new URLSearchParams(window.location.search);
             var refundID = urlParams.get("RefundID");
@@ -22,7 +25,7 @@
             $.ajax({
                 type: "POST",
                 url: "OPD_Refund.aspx/GetOPDPatient",
-                data: JSON.stringify({ refundID: refundID }), 
+                data: JSON.stringify({ refundID: refundID }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: OnSuccesss,
@@ -39,7 +42,7 @@
                 return;
             }
             $('#hdPatientID').text(data.Patient_ID);
-            $('#hdRegPatId').val(data.Reg_PatId); 
+            $('#hdRegPatId').val(data.Reg_PatId);
             $('#lblMRNo').text(data.Patient_No);
             $('#lblPatienName').text(data.Full_Name);
             $('#lblAgeYears').text(data.Age_years);
@@ -60,6 +63,20 @@
             $('#txtActualAmount').val((data.Actual_amount || 0).toFixed(2));
 
             $('#btnSave').val('Update');
+
+            if (data.Status === "Approved") {
+                $('#btnSave').prop('disabled', true);
+                $('#txtHospitalRefund').prop('disabled', true);
+                $('#txtDoctorRefund').prop('disabled', true);
+                $('#txtRemarks').prop('disabled', true);
+                $('#colSave').hide();
+                $('#colApprove').hide();
+                $('#colPrint').show();
+            } else {
+                $('#colSave').show();
+                $('#colApprove').show();
+                $('#colPrint').hide();
+            }
         }
 
         function updateTotalRefund() {
@@ -88,19 +105,14 @@
             return d.getDate() + '-' + months[d.getMonth()] + '-' + d.getFullYear();
         }
 
-        function formatDateForPicker(dateStr) {
-            var d = parseAspNetDate(dateStr);
-            if (!d) return "";
-
-            var mm = (d.getMonth() + 1).toString().padStart(2, '0');
-            var dd = d.getDate().toString().padStart(2, '0');
-            var yyyy = d.getFullYear();
-            return mm + '/' + dd + '/' + yyyy;
-        }
-        
         function PrintRefund() {
             debugger;
-            var refundID = '<% =Request.QueryString["advID"] %>';
+            var refundID = '<% =Request.QueryString["RefundID"] %>';
+            if (!refundID) {
+                var urlParams = new URLSearchParams(window.location.search);
+                refundID = urlParams.get("RefundID");
+            }
+
             var locationInfo = window.location;
             var url = "/ReportViewer.aspx?ReportName=PrintRefundReport&Title=Refund Print &Refund_ID=" + refundID;
             if (!locationInfo.origin.includes('localhost')) {
@@ -111,12 +123,7 @@
             }
             window.open(url, '_blank');
         }
-        
-        
-        
-        
 
-        
         function GetPatientDetailByOPDNO() {
             var opdNo = $('#txtOPD_NO').val();
             if (!opdNo.trim()) {
@@ -161,35 +168,20 @@
                     $('#txtDoctorAmount').val(p.Doctor_Amount);
                     $('#txtHospitalShare').val(p.Hospital_share);
                     $('#txtActualAmount').val(p.Actual_amount);
+                    $('#colApprove').hide();
+                    $('#colPrint').hide();
+                    $('#colSave').show();
+                    $('#btnSave').val('Save');
+                    $('#btnSave').prop('disabled', false);
+                    $('#txtHospitalRefund').prop('disabled', false);
+                    $('#txtDoctorRefund').prop('disabled', false);
+                    $('#txtRemarks').prop('disabled', false);
                 },
                 error: function () {
                     alert("Failed to load patient data.");
                 }
             });
-
-
         }
-
-        
-
-        function httpGet(theUrl) {
-            var xmlHttp = null;
-            xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", theUrl, false);
-            xmlHttp.send(null);
-            return xmlHttp.responseText;
-        }
-
-
-        function ReplaceNullWith_Space(Data) {
-            if (Data == "null")
-                return " ";
-            else
-                return Data;
-        }
-
-
-        
 
         function SaveOPDRecord() {
             var urlParams = new URLSearchParams(window.location.search);
@@ -248,7 +240,7 @@
                 Patient_ID: $("#hdPatientID").text(),
                 Reg_PatId: $("#hdRegPatId").val(),
                 OPD_No: $("#txtOPD_NO").val(),
-                Refund_Date: $("#txtAdvanceDate").val(), 
+                Refund_Date: $("#txtAdvanceDate").val(),
                 Hospital_Refund: HospitalRefund,
                 Doctor_Refund: DoctorRefund,
                 Remarks: $("#txtRemarks").val()
@@ -265,16 +257,19 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
-                            text: 'Refund OPD saved successfully.',
-                            showConfirmButton: false,
-                            timer: 2500,
+                            text: 'Refund OPD saved successfully. Please Approve to generate voucher.',
+                            showConfirmButton: true,
                             customClass: {
                                 popup: 'swal-big-popup',
                                 title: 'swal-big-title',
                                 htmlContainer: 'swal-big-text'
                             }
                         }).then(() => {
-                            window.location.href = "OPD_Refund_List.aspx";
+                            if (!refundID) {
+                                window.location.reload();
+                            } else {
+                                LoadPatientDetails(refundID);
+                            }
                         });
                     } else {
                         Swal.fire({
@@ -304,7 +299,65 @@
             });
         }
 
+        function ApproveOPDRecord() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var refundID = urlParams.get("RefundID");
 
+            if (!refundID) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Cannot approve: No Refund ID found. Please save first.'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will generate the financial voucher and mark as Approved!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Approve it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "OPD_Refund.aspx/ApproveRefund",
+                        data: JSON.stringify({ refundID: refundID }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.d === "Success") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Approved!',
+                                    text: 'Refund approved and voucher generated.',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                }).then(() => {
+                                    LoadPatientDetails(refundID); 
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Approval Failed',
+                                    text: response.d
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Approval request failed.'
+                            });
+                        }
+                    });
+                }
+            });
+        }
 
     </script>
 </asp:Content>
@@ -312,9 +365,9 @@
     <div class="container-fluid">
         <input type="hidden" id="hdRegPatId" />
         <input type="hidden" id="hdPatientID" />
-        <input type="hidden" id="txtOPD_No" />
+        <input type="hidden" id="txtAdvanceDate" value="<%= DateTime.Now.ToString("MM/dd/yyyy") %>" /> 
+        
         <div class="row">
-            <!-- Left Card -->
             <div class="col-lg-5 col-md-5 col-sm-12">
                 <div class="card">
                     <div class="card-body">
@@ -370,7 +423,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Right Card -->
             <div class="col-lg-5 col-md-5 col-sm-12">
                 <div class="card">
                     <div class="card-body">
@@ -454,17 +506,20 @@
             </div>
         </div>
         
-        <div class="row mt-3">
-            <div class=" col-lg-8">
+        <div class="row mt-3" id="divActionButtons">
+            <div class="col-lg-8">
                 <div class="row">
-                    <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="col-lg-2 col-md-3 col-sm-6" id="colSave">
                         <input type="button" value="Save" onclick="SaveOPDRecord()" id="btnSave" class="btn btn-primry" />
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6" id="colApprove">
+                        <input type="button" value="Approve" onclick="ApproveOPDRecord()" id="btnApprove" class="btn btn-primry" />
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-6">
                         <input type="button" value="List View" class="btn-gray" onclick="window.open('OPD_Refund_List.aspx')" />
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3">
-                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" style="display: none" />
+                    <div class="col-lg-2 col-md-2 col-sm-3" id="colPrint">
+                        <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintRefund()" value="Print" />
                     </div>
                 </div>
             </div>

@@ -1182,6 +1182,7 @@
                 backdrop: 'static'
             });
             $("#ddl_name").focus();
+            CheckAndLoadWalkinPatientRegFee();
 
         }
         function clearPatient() {
@@ -1227,6 +1228,7 @@
             var Age = $('#txt_dob').val();
             var Date_Of_Birth = $('#txtAge_yearss').val();
             var CNIC = $('#txt_cnic').val();
+            var OtherCNIC = $('#txt_Othercnic').val();
             var Address = $('#txt_house').val();
             var stno = $('#txtstrm').val();
             var city = $('#txtcity :selected').text();
@@ -1236,7 +1238,7 @@
             var martail_status = $('#ddl_status').val();
             var Country = $('#ddlCountry :selected').val();
             var Province = $('#ddl_Province :selected').val();
-            var cardfee = $('#txtCardFee').val();
+            var cardfee = $('#txtcardfees').val();
 
             if ((PatientName == "" || Mobile == "")) {
                 Swal.fire({
@@ -1274,9 +1276,9 @@
                 Age: Age,
                 "Country": Country,
                 "Province": Province,
+                "OtherCNIC": OtherCNIC,
                 "cardfee": cardfee,
             };
-
 
             $.ajax({
                 type: "POST",
@@ -1286,6 +1288,40 @@
                 dataType: "json",
                 success: function (response) {
                     debugger;
+
+                    // Check if CNIC already exists
+                    if (response.d === "CNIC_EXISTS") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'CNIC Already Exists!',
+                            text: 'A patient with this CNIC is already registered.',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return;
+                    }
+
+                    // Check for other errors
+                    if (response.d && response.d.startsWith("ERROR:")) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.d.replace("ERROR:", ""),
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return;
+                    }
+
                     var ini_patientID = response.d;
 
                     Swal.fire({
@@ -1712,7 +1748,63 @@
                 }
             });
         }
+        function CheckAndLoadWalkinPatientRegFee() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/IsWalkinPatientRegFeeActive",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var isActive = response.d;
 
+                    if (isActive == "01") {
+
+                        $('#txtcardfees').show();
+                        $('#lblfee').show();
+
+
+                        // Now get the actual fee amount
+                        GetWalkinPatientRegFee();
+                    } else {
+                        // Hide the txtfees field
+                        $('#txtcardfees').hide(); // or $('#feesRow').hide();
+                        $('#lblfee').hide(); // or $('#feesRow').hide();
+                        $('#txtcardfees').val('0');
+                        $('#txtcardfees').prop('disabled', true);
+                    }
+                },
+                error: function (error) {
+                    console.error("Error checking registration fee status:", error);
+                    $('#txtcardfees').hide();
+                }
+            });
+        }
+
+        function GetWalkinPatientRegFee() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/GetWalkinPatientRegFee",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var fee = response.d;
+                    if (fee && fee != '0' && fee != 'null' && fee != '') {
+                        fee = fee.replace(/["']/g, '');
+                        $('#txtcardfees').val(fee);
+                    } else {
+                        $('#txtcardfees').val('0');
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching registration fee:", error);
+                    $('#txtcardfees').val('0');
+                }
+            });
+        }
 
         var originalFee;
         function Calc_Discount() {
@@ -2110,49 +2202,53 @@
 
                     <div class="row">
                         <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label for="txt_Othercnic">Other CNIC</label>
+                            <input type="text" id="txt_Othercnic" class="form-control" />
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
                             <input type="text" id="txt_mobile" class="form-control" />
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
                             <select id="ddl_status" class="form-control">
-                                <option value="0">Select Marial</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2 colmd-4 col-sm-6">
-                            <label>Country</label>
-                            <select id="ddlCountry" class="form-control">
-                                <option value="0">Select Country</option>
+                                <option value="0">Select Marital</option>
                             </select>
                         </div>
                         <div class="col-lg-3 colmd-4 col-sm-6">
-                            <label>Province</label>
-                            <select id="ddl_Province" class="form-control">
-                                <option value="0">Select Province</option>
+                            <label>Country</label>
+                            <select id="ddlCountry" class="form-control">
+                                <option value="0">Select Country</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-lg-3 colmd-4 col-sm-6">
+                            <label>Province</label>
+                            <select id="ddl_Province" class="form-control">
+                                <option value="0">Select Province</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 colmd-4 col-sm-6">
                             <label for="txtcity">City</label>
                             <select id="txtcity" class="form-control">
                                 <option value="0">Select City</option>
                             </select>
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="txtarea">Area</label>
                             <select id="txtarea" class="form-control">
                                 <option value="0">Select Area</option>
                             </select>
                         </div>
-                        <div class="col-lg-5 col-md-4 col-sm-6">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txt_house">Address</label>
                             <input type="text" id="txt_house" class="form-control" />
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6" style="display: none">
-                            <label for="lblfee">Fee<span style="color: red;">*</span></label>
-                            <input type="text" tabindex="17" id="txtCardFee" class="form-control" />
+                        <div class="col-lg-3 col-md-4 col-sm-6" >
+                            <label for="lblfee" id="lblfee">Fee</label>
+                            <input type="text" disabled="disabled" tabindex="17" id="txtcardfees" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row" style="display: none;">

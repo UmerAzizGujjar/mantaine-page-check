@@ -1992,5 +1992,23 @@ namespace PMS
             public string UserName { get; set; }
         }
 
+        [WebMethod]
+        public static string getpharmacyitems(string searchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var pharmacyItems = (from d in db.INV_Items
+                                     where d.IsPharmacyItem == true && d.Description.Contains(searchString)
+                                     orderby d.Item_ID descending
+                                     select new
+                                     {
+                                         d.Item_ID,
+                                         Description = d.Description
+                                     }).Take(20).ToList();
+
+                return (new JavaScriptSerializer().Serialize(pharmacyItems));
+            }
+        }
+
     }
 }
