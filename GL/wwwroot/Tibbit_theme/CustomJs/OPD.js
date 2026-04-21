@@ -1105,6 +1105,17 @@ function SavePatient() {
         dataType: "json",
         success: function (response) {
             debugger;
+            if (response.d === "CNIC_EXISTS") {
+                Swal.fire({
+                    title: 'CNIC Already Exists!',
+                    text: 'A patient with this CNIC is already registered.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    $('#SavePatient_Data').attr('disabled', false);
+                });
+                return; 
+            }
             var ini_patientID = response.d;
 
             Swal.fire({
