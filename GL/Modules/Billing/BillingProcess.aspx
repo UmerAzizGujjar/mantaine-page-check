@@ -4115,6 +4115,33 @@
                     }
                 });
             }
+
+            var globalAllowLineDiscount;
+
+
+            function getAllowLineDiscount() {
+                debugger;
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/AllowLineDiscount",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        globalAllowLineDiscount = response.d;
+                        console.log("Allow Line Discount value:", globalAllowLineDiscount);
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching discount setting:", error);
+                        globalAllowLineDiscount = "0";
+                    }
+                });
+            }
+
+
             var Item_Discount = 0;
             var isItemCompeted = false;
             var isItemCompeted_Procedure = false;
@@ -4148,7 +4175,7 @@
                     });
                     return;
                 }
-
+                getAllowLineDiscount();
                 notProcedurenotITem = false;
                 localStorage.IsPocedure = false;
                 if ($('#lblPatientDiscountType').text() == "Insurance Company") {
@@ -4225,7 +4252,7 @@
 
                 }
                 var comp_name = '<% =AppConfig.Company_Name %>';
-                if (comp_name == 'Skin Studio') {
+                if (globalAllowLineDiscount == '01') {
                     // Enable discount amount fields for Skin Studio
                     $('input[name="DisAmount"]').attr('disabled', false);
                     $('input[name="DisPer"]').attr('disabled', false);
@@ -4242,132 +4269,120 @@
                     var rowIndex = parseInt((parseInt($('#tblDetails tbody tr').length)));
                     debugger;
                     var dateValue = '<%= DateTime.Now.ToString("dd MMM yyyy") %>';
-                    if (CheckInPatientObject == true) {
-                        if (isNaN(validate)) {
-                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + ' </td> </tr>'
+                 if (CheckInPatientObject == true) {
+                     if (isNaN(validate)) {
+                         var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + ' </td> </tr>'
 
 
-                        }
-                        else {
-                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + localStorage.IsHospitalServices + ',' + localStorage.IsPocedure + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + ' </td> </tr>'
-                        }
-                    }
-                    else {
+                     }
+                     else {
+                         var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + localStorage.IsHospitalServices + ',' + localStorage.IsPocedure + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td id="amnt' + rowIndex + '" name"amnt" style="text-align:Right;"onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + ' </td> </tr>'
+                     }
+                 }
+                 else {
 
-                        if (isNaN(validate)) {
-                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name"amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + ' </td> </tr>'
-
-
-                        }
-                        else {
-                            var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + localStorage.IsHospitalServices + ',' + localStorage.IsPocedure + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name"amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + ' </td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;"  onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + ' </td> </tr>'
-                        }
-                    }
+                     if (isNaN(validate)) {
+                         var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name"amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + '</td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + ' </td> </tr>'
 
 
-
-                    $('#tblDetails tbody').append(rows);
-                    $('.ddlDoctor').select2();
-                    if ($('#txtAddService').tokenInput) {
-                        $('#txtAddService').tokenInput("clear");
-                    }
-
-                    loadBOMDetails(localStorage.SelectedItemID)
-
-                    var panel = $("#ddlpanel").val();
-                    if (panel != 0 || panel != "0") {
-                        GetpanelServiceRate(panel, localStorage.SelectedItemID);
-                    }
+                     }
+                     else {
+                         var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + localStorage.SelectedItemID + '" /> <input type="hidden" name="hdnItemName" value="' + localStorage.SelectedItemName + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinor + '" /> <input type="hidden" name="hdnDisPer" value="' + disc + '"/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + localStorage.SelectedItemAmount + '/><input type="hidden" name="hdnItemType" value="' + localStorage.SelectedItemType + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + localStorage.SelectedItemName + '</td><td> ' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + localStorage.IsHospitalServices + ',' + localStorage.IsPocedure + ')"/><input type="hidden" name="txtActualAmount" value="' + localStorage.SelectedItemAmount + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name"amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + localStorage.SelectedItemAmount + ' </td><td> <input type="text" name="DisPer" value="' + disc + '" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + localStorage.SelectedItemAmount + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;"  onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + dateValue + '"/>' + dateValue + ' </td> </tr>'
+                     }
+                 }
 
 
-                    debugger;
-                    if (Alloweditrate == "true") {
 
-                        $("#amnt" + rowIndex).attr('contenteditable', true);
+                 $('#tblDetails tbody').append(rows);
+                 $('.ddlDoctor').select2();
+                 if ($('#txtAddService').tokenInput) {
+                     $('#txtAddService').tokenInput("clear");
+                 }
 
-                    }
-                    else {
-                        $("#amnt" + rowIndex).attr('contenteditable', false);
-                    }
+                 loadBOMDetails(localStorage.SelectedItemID)
 
-
-                    var user_name = '<% =AppConfig.UserName %>';
-                    // Ali.Tariq
-                    //if (user_name === "Ali.Tariq" || user_name === "ali.tariq") {
-                    //    debugger;
-                    //    $('input[name="DisPer"]').attr('disabled', false);
-                    //    $('input[name="DisAmount"]').attr('disabled', false);
-                    //}
-                    /* else {*/
-                    /*    $('input[name="DisAmount"]').attr('disabled', true);*/
-                    //}
-
-                    // Add this in your document.ready function
-                    $('#txtDisPer').on('keyup', function () {
-                        clearTimeout($(this).data('timeout'));
-                        $(this).data('timeout', setTimeout(function () {
-                            CalculateSummariesMaster(false);
-                        }, 100));
-                    });
-                    //$('#txtDisPer').on('keyup', function () {
-                    //    $('#tblDetails').find('input[name="DisPer"]').prop('disabled', true);
-                    //    $('#tblDetails').find('input[name="DisAmount"]').prop('disabled', true);
-                    //});
-                    $(document).on('keyup', 'input[name="DisPer"]', function () {
-                        $('#txtDisPer').prop('disabled', true);
-                        $('#txtDisAmt').prop('disabled', true);
-                    });
+                 var panel = $("#ddlpanel").val();
+                 if (panel != 0 || panel != "0") {
+                     GetpanelServiceRate(panel, localStorage.SelectedItemID);
+                 }
 
 
-                    var comp_names = '<% =AppConfig.Company_Name %>';
-                    if (comp_names == 'Skin Studio') {
-                        // Enable discount amount fields for newly added rows
-                        $('input[name="DisAmount"]').attr('disabled', false);
-                        $('input[name="DisPer"]').attr('disabled', false);
-                    } else {
-                        // Disable discount amount fields for newly added rows
-                        $('input[name="DisAmount"]').attr('disabled', true);
-                        $('input[name="DisPer"]').attr('disabled', true);
-                    }
+                 debugger;
+                 if (Alloweditrate == "true") {
+
+                     $("#amnt" + rowIndex).attr('contenteditable', true);
+
+                 }
+                 else {
+                     $("#amnt" + rowIndex).attr('contenteditable', false);
+                 }
+
+
+                 var user_name = '<% =AppConfig.UserName %>';
+            
+                 // Add this in your document.ready function
+                 $('#txtDisPer').on('keyup', function () {
+                     clearTimeout($(this).data('timeout'));
+                     $(this).data('timeout', setTimeout(function () {
+                         CalculateSummariesMaster(false);
+                     }, 100));
+                 });
+           
+                 $(document).on('keyup', 'input[name="DisPer"]', function () {
+                     $('#txtDisPer').prop('disabled', true);
+                     $('#txtDisAmt').prop('disabled', true);
+                 });
+
+
+                 var comp_names = '<% =AppConfig.Company_Name %>';
+                 if (globalAllowLineDiscount == '01') {
+                  
+                     $('input[name="DisAmount"]').attr('disabled', false);
+                     $('input[name="DisPer"]').attr('disabled', false);
+                 } else {
+                     // Disable discount amount fields for newly added rows
+                     $('input[name="DisAmount"]').attr('disabled', true);
+                     $('input[name="DisPer"]').attr('disabled', true);
+                 }
 
 
 
 
-                    if ($('#lblPatientCategory').text() == "Insurance Company") {
-                        if (Type == "IPD") {
-                            $('#txtDisPer').val(DiscountAMt);
-                            CalculateSummariesMaster(false);
-                        }
-                        else if (Type = "OPD") {
-                        }
-                    }
-                    debugger;
-                    CalculateSummarieDiscountPerWise(rowIndex);
+                 if ($('#lblPatientCategory').text() == "Insurance Company") {
+                     if (Type == "IPD") {
+                         $('#txtDisPer').val(DiscountAMt);
+                         CalculateSummariesMaster(false);
+                     }
+                     else if (Type = "OPD") {
+                     }
+                 }
+                 debugger;
+                 CalculateSummarieDiscountPerWise(rowIndex);
 
-                    debugger;
-                    var ItemId = localStorage.SelectedItemID;
-                    var pat_type = $("#lblPatientDiscountType").text();
-                    var INP_Private = $("#lblPatientCategory").text();
+                 debugger;
+                 var ItemId = localStorage.SelectedItemID;
+                 var pat_type = $("#lblPatientDiscountType").text();
+                 var INP_Private = $("#lblPatientCategory").text();
 
-                    if (pat_type == "Private" || INP_Private == "Private") {
-                        if (ItemId == 12402 || ItemId == 12404 || ItemId == 12408 || ItemId == 14218 || ItemId == 12407 || ItemId == 18138 || ItemId == 12393 || ItemId == 13206 || ItemId == 13208 || ItemId == 18842) {
-                            $("#tblDetails tr").each(function () {
-                                var item_id = $('#txtAddService').val();
-                                var row_item_id = $(this).find('input[name="hdnItemID"]').val();
+                 if (pat_type == "Private" || INP_Private == "Private") {
+                     if (ItemId == 12402 || ItemId == 12404 || ItemId == 12408 || ItemId == 14218 || ItemId == 12407 || ItemId == 18138 || ItemId == 12393 || ItemId == 13206 || ItemId == 13208 || ItemId == 18842) {
+                         $("#tblDetails tr").each(function () {
+                             var item_id = $('#txtAddService').val();
+                             var row_item_id = $(this).find('input[name="hdnItemID"]').val();
 
-                            });
-                        }
-                    }
-                    else if (pat_type == "Insurance Company" || INP_Private == "Insurance Company") {
+                         });
+                     }
+                 }
+                 else if (pat_type == "Insurance Company" || INP_Private == "Insurance Company") {
 
-                        debugger;
+                     debugger;
 
-                    }
+                 }
 
-                    var user_name = '<% =AppConfig.UserName %>';
-                    // Ali.Tariq
+                 var user_name = '<% =AppConfig.UserName %>';
+                 // Ali.Tariq
 
-                }, 300);
+             }, 300);
                 setTimeout(function () {
                     $(arr).filter(function (i, n) {
                         var company_id = 0;
@@ -6569,6 +6584,7 @@
                 fillCasher();
                 
                 TotalAmountToday();
+                getAllowLineDiscount();
                 $("#txtSearch").keypress(function (event) {
 
                     var SearchString = $('#txtSearch').val();

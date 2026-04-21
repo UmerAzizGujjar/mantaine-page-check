@@ -5421,5 +5421,26 @@ namespace PMS
                 return new JavaScriptSerializer().Serialize(new { success = false, message = ex.Message });
             }
         }
+
+        [WebMethod]
+        public static string AllowLineDiscount()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Allow Line Discount"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
     }
 }
