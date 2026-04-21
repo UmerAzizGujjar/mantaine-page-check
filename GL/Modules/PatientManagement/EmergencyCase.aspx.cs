@@ -7442,6 +7442,24 @@ namespace PMS
 
             return (new JavaScriptSerializer().Serialize(dpt));
         }
+        [WebMethod]
+        public static object GetTemplateTest(int Templateid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var dpt = (from dt in db.Doctor_Template_Masters
+                       join dtm in db.Doctor_Template_Tests
+                       on dt.Template_Id equals dtm.Template_Id
+                       where dt.Template_Id == Templateid
+                       select new
+                       {
+                           dtm.Department_id,
+                           dtm.Test_Id,
+                           dtm.Test_Name,
+                           dtm.Rotation_Id,
+                       }).ToList();
+
+            return dpt;
+        }
 
     }
 }
