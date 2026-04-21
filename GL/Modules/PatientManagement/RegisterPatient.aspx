@@ -146,7 +146,7 @@
             </div>
             <div class="col-lg-1 col-md-3 col-sm-6">
                 <label></label>
-                <input disabled type="text" id="txtAge_yearss" tabindex="7" style="margin-top: 7px" class="form-control" placeholder="dd/mm/yy" />
+                <input  type="text" id="txtAge_yearss" tabindex="7" style="margin-top: 7px" class="form-control" placeholder="dd/mm/yy" />
                 <span id="age-error" class="span_txt" style="display: none;">Enter Age</span>
             </div>
         </div>

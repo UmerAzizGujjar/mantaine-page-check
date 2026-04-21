@@ -125,6 +125,53 @@ $(document).ready(function () {
         });
     });
 
+    if (!$('#txtAge_yearss').hasClass('hasDatepicker')) {
+        $('#txtAge_yearss').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0",
+            dateFormat: "dd/mm/yy",
+            onSelect: function (dateText) {
+                var selectedDate = $(this).datepicker('getDate');
+                if (selectedDate) {
+                    var today = new Date();
+                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
+                    var ageMonths = today.getMonth() - selectedDate.getMonth();
+                    var ageDays = today.getDate() - selectedDate.getDate();
+
+                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+                        ageYears--;
+                    }
+
+                    if (ageYears > 0) {
+                        $('#txt_dob').val(ageYears);
+                        $('#PrefixAge').val('Year').trigger('change');
+                    } else {
+                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
+                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
+                        if (monthDiff > 0) {
+                            $('#txt_dob').val(monthDiff);
+                            $('#PrefixAge').val('Month').trigger('change');
+                        } else {
+                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
+                            if (dayDiff > 0) {
+                                $('#txt_dob').val(dayDiff);
+                                $('#PrefixAge').val('Day').trigger('change');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    $('#txtAge_yearss').off('click').on('click', function () {
+        if ($(this).datepicker('widget').is(':visible')) {
+            return;
+        }
+        $(this).datepicker('show');
+    });
+
 });
 function fillDropdown($dropdown, methodName) {
     if ($dropdown.data('filled')) return;
@@ -234,13 +281,43 @@ function CalculateDateOfBirth() {
     var finalDate = dob.format("DD/MM/YYYY");
 
     var $input = $('#txtAge_yearss');
-
     if (!$input.hasClass('hasDatepicker')) {
         $input.datepicker({
             changeMonth: true,
             changeYear: true,
             yearRange: "-100:+0",
-            dateFormat: "dd/mm/yy"
+            dateFormat: "dd/mm/yy",
+            onSelect: function (dateText) {
+                var selectedDate = $(this).datepicker('getDate');
+                if (selectedDate) {
+                    var today = new Date();
+                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
+                    var ageMonths = today.getMonth() - selectedDate.getMonth();
+                    var ageDays = today.getDate() - selectedDate.getDate();
+
+                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+                        ageYears--;
+                    }
+
+                    if (ageYears > 0) {
+                        $('#txt_dob').val(ageYears);
+                        $('#PrefixAge').val('Year').trigger('change');
+                    } else {
+                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
+                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
+                        if (monthDiff > 0) {
+                            $('#txt_dob').val(monthDiff);
+                            $('#PrefixAge').val('Month').trigger('change');
+                        } else {
+                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
+                            if (dayDiff > 0) {
+                                $('#txt_dob').val(dayDiff);
+                                $('#PrefixAge').val('Day').trigger('change');
+                            }
+                        }
+                    }
+                }
+            }
         });
     }
 
@@ -341,6 +418,18 @@ function SavePatient() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
+            if (response.d === "CNIC_EXISTS") {
+                Swal.fire({
+                    title: 'CNIC Already Exists!',
+                    text: 'A patient with this CNIC is already registered.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    $('#SavePatient_Data').attr('disabled', false);
+                });
+                return;
+            }
+
             if (data.d.startsWith("ERROR:")) {
                 toasterMessage(true, "Validation Failed", data.d.replace("ERROR: ", ""));
                 $('#SavePatient_Data').attr('disabled', false);
