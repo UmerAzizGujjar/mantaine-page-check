@@ -1939,111 +1939,111 @@
                 });
                 return;
             }
-            if (temp === "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please enter Temperature (°C).',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-            if (respiration === "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please enter Respiration (per minute).',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-            if (blood === "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please enter Blood Group or Blood Info.',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-            if (weight === "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please enter Weight (Kg).',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-            if (saturation === "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please enter Saturation (%).',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-            if (saturationRoom === "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please enter Saturation (Room).',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
-            if (saturationOxygen === "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Please enter Saturation (Oxygen).',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-                return;
-            }
+            //if (temp === "") {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Please enter Temperature (°C).',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
+            //if (respiration === "") {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Please enter Respiration (per minute).',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
+            //if (blood === "") {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Please enter Blood Group or Blood Info.',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
+            //if (weight === "") {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Please enter Weight (Kg).',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
+            //if (saturation === "") {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Please enter Saturation (%).',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
+            //if (saturationRoom === "") {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Please enter Saturation (Room).',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
+            //if (saturationOxygen === "") {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Error!',
+            //        text: 'Please enter Saturation (Oxygen).',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
 
 
             var datetime = '<%= DateTime.Now%>';

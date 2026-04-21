@@ -124,6 +124,26 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
+        [WebMethod]
+        public static string AllowClinicCard()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Show Clinic"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
         public static class ValidationHelper
         {
             public static bool IsValidMobile(string mobile)
