@@ -2996,6 +2996,30 @@ namespace PMS
             }
         }
         [WebMethod]
+        public static string getallpharmacyitems(string itemID)
+        {
+            if (string.IsNullOrEmpty(itemID))
+                return "[]";
+
+             
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+
+                var pharmacyItems = (from d in db.INV_Items
+                                     where d.Pharmacy_Item == true
+                                     && d.Item_ID.ToString() == itemID
+                                     orderby d.Item_ID descending
+                                     select new
+                                     {
+                                         d.Item_ID,
+                                         Description = (d.Salt != null ? (d.Salt + "-" + d.Description) : d.Description),
+                                     }).ToList();
+
+                return (new JavaScriptSerializer().Serialize(pharmacyItems));
+            }
+        }
+        [WebMethod]
         public static string GetDoctorsAgainstMO(string status)
         {
             DataBaseDataContext db = new DataBaseDataContext();
