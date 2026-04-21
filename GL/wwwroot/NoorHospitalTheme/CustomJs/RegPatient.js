@@ -632,3 +632,25 @@ function Get_Pat_Info(reg_id) {
         }
     });
 }
+
+
+function isCNICValidationRequired() {
+    var result = false;
+    $.ajax({
+        type: "POST",
+        url: "RegisterPatient.aspx/CNICValidation",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            if (response.d === "01") {
+                result = true;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error checking CNIC validation:", error);
+            result = false;
+        }
+    });
+    return result;
+}

@@ -52,6 +52,7 @@
         $(document).ready(function () {
             getprvpat_id();
             CheckCNICUpdateonCondition();
+            isCNICValidationRequired();
 
             $('#btnsaveprint').click(function () {
 
@@ -6265,7 +6266,7 @@
             var martail_status = $('#ddl_status').val();
             var txtfees = $('#txtfees').val();
 
-            if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || Address == "")) {
+            if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == ""  || Address == "")) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -6281,6 +6282,53 @@
 
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
+            }
+
+            var isCNICRequired = isCNICValidationRequired();
+            if (isCNICRequired) {
+                var isCNICEmpty = !CNIC || CNIC === "" || CNIC === "_____-_______-_";
+                var isOtherCNICEmpty = !OtherCNIC || OtherCNIC === "" || OtherCNIC === "_____-_______-_";
+
+                if (isCNICEmpty && isOtherCNICEmpty) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'CNIC Required!',
+                        text: 'Please enter  CNIC or Other CNIC',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                } else {
+                    if (!isCNICEmpty && CNIC !== "_____-_______-_") {
+                        var cnicPattern = /^\d{5}-\d{7}-\d$/;
+                        if (!cnicPattern.test(CNIC)) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Invalid CNIC Format!',
+                                text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#d33'
+                            });
+                            $('#SavePatient_Data').attr('disabled', false);
+                            return;
+                        }
+                    }
+                    if (!isOtherCNICEmpty && OtherCNIC !== "_____-_______-_") {
+                        var otherCnicPattern = /^\d{5}-\d{7}-\d$/;
+                        if (!otherCnicPattern.test(OtherCNIC)) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Invalid Other CNIC Format!',
+                                text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#d33'
+                            });
+                            $('#SavePatient_Data').attr('disabled', false);
+                            return;
+                        }
+                    }
+                }
             }
 
             var data = JSON.stringify({
@@ -7041,6 +7089,27 @@
             LoadOPDReferPatients();
         }
 
+
+        function isCNICValidationRequired() {
+            var result = false;
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/CNICValidation",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d === "01") {
+                        result = true;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking CNIC validation:", error);
+                    result = false;
+                }
+            });
+            return result;
+        }
 
 
     </script>

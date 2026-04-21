@@ -2571,6 +2571,27 @@ namespace PMS.Modules.PatientManagement
                     p.Patient_Main_Category == departmentId) + 1;
             }
         }
+
+        [WebMethod]
+        public static string CNICValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "CNIC Validation"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
     }
 
 }

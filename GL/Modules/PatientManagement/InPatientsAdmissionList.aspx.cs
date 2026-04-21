@@ -191,7 +191,15 @@ namespace PMS
                                             Patient_Type = _dbContext.GetDataValueName("Patient Type", IP.Patient_Discount_Type),
                                             Discharge_ON = IP.Discharge_On,
                                             Created_by = Convert.ToString(_dbContext.getUserName(Convert.ToString(IP.Created_By))),
-                                            AdmitDays = SqlMethods.DateDiffDay(IP.Admission_Date, DateTime.Now)
+                                            AdmitDays = SqlMethods.DateDiffDay(IP.Admission_Date, DateTime.Now),
+                                            Ward_Name = (from W in _dbContext.Ward_Definitions
+                                                         where W.Ward_ID == IP.Ward_ID
+                                                         select W.Ward_Type).FirstOrDefault(),
+                                            // Simple subquery for Room
+                                            Room_Name = (from R in _dbContext.Rooms
+                                                         where R.Room_ID == IP.Room_ID
+                                                         select R.Name).FirstOrDefault(),
+                                            Bed_No = IP.Bed_No
                                         };
 
                     var FilteredCount = IN_Monitoring.Count();

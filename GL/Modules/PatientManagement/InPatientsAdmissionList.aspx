@@ -129,7 +129,23 @@
                     //    "width": "10%", "orderable": false
                     //},
                     { "data": "Created_by", "name": "Created_by", "width": "10%", "orderable": true },
+                    {
+                        "data": null,
+                        "name": "Location",
+                        "width": "10%",
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            if (row.Ward_Name) {
+                                return row.Ward_Name + " - Bed: " + (row.Bed_No || "N/A");
+                            } else if (row.Room_Name) {
+                                return "Room " + row.Room_Name + " - Bed: " + (row.Bed_No || "N/A");
+                            } else {
+                                return "Not Assigned";
+                            }
+                        }
+                    },
                     { "data": "AdmitDays", "name": "AdmitDays", "width": "10%", "orderable": true },
+                    { "data": "Bed_No", "name": "Bed_No", "width": "10%", "orderable": true },
                     {
                         "render": function (data, type, full) {
                             var res = '<a href="#" onclick="editOpen(' + full.In_Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
@@ -314,6 +330,8 @@
                     <th>Patient Category</th> 
                     <th>Dept.</th>                      
                     <th>Admitted By</th>                             
+                    <th>Ward/Room</th>                             
+                    <th>bed No</th>                             
                     <th>Days Occupied</th>                             
                     <th>Actions</th>
                 </tr>
