@@ -8,8 +8,9 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            LoadClinicCard();
             loadCardfee();
-
+        
             var urlParams = new URLSearchParams(window.location.search);
             var patId = urlParams.get('ID');
             if (patId) {
@@ -109,6 +110,31 @@
                 },
                 error: function (error) {
                     console.error("Error fetching items", error);
+                }
+            });
+        }
+        function LoadClinicCard() {
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/AllowClinicCard", 
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = response.d; 
+
+                    if (result === "01") {
+                       
+                        $("#filtercard").show();
+
+                        
+                    } else {
+                      
+                        $("#filtercard").hide();
+                    }
+                },
+                error: function (err) {
+                    console.log("Error: " + err);
+                    $("#filtercard").hide(); // Hide on error
                 }
             });
         }
@@ -1254,7 +1280,7 @@
 
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-4 fields">
+        <div class="col-lg-3 col-md-3 col-sm-4 fields" id="filtercard">
             <div class="card3">
                 <span style="font-size: 15px;">Total OPD</span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat"  runat="server"></span>
