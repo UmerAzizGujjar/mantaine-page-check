@@ -51,6 +51,7 @@
         }
         $(document).ready(function () {
             getprvpat_id();
+            CheckCNICUpdateonCondition();
 
             $('#btnsaveprint').click(function () {
 
@@ -6025,8 +6026,144 @@
                 $('#ctl00_MainContent_txtadvamount').val(data.d.AdvanceAmount);
                 $('#<%= vLbl_Patient_AdmitCatagory.ClientID%>').text(data.d.Type);
 
+                var NIC = data.d.NIC;
+                if (CNICs == '01') {
+
+
+                    if (NIC == '') {
+
+
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'CNIC Not Entered',
+                            text: 'Do you want to enter CNIC?',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No'
+                        }).then((result) => {
+
+                            if (result.isConfirmed) {
+
+                                Swal.fire({
+                                    title: 'Enter CNIC',
+                                    input: 'text',
+                                    inputPlaceholder: '12345-1234567-1',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Save',
+                                    customClass: {
+                                        input: 'cnic-input'
+                                    },
+
+                                    didOpen: () => {
+                                        const input = Swal.getInput();
+
+                                        // Apply your MaskedInput here
+                                        MaskedInput({
+                                            elm: input,
+                                            format: '_____-_______-_',
+                                            separator: '-'
+                                        });
+                                        setTimeout(() => {
+                                            input.focus();
+                                            input.setSelectionRange(0, 0);
+                                        }, 0);
+                                    },
+
+                                    inputValidator: (value) => {
+                                        /*  if (!value) return 'CNIC is required!';*/
+                                        if (value.includes('_')) return 'Complete CNIC first!';
+                                    }
+
+                                }).then((res) => {
+                                    if (res.isConfirmed) {
+                                        let enteredCNIC = res.value;
+
+                                        SaveCNIC(enteredCNIC);
+                                        $('#txtCNIC').val(enteredCNIC);
+                                    }
+                                });
+
+                            }
+                            //else {
+                            //    PatientMonitoring()
+                            //}
+
+                        });
+                    }
+                }
+
+
             }
         }
+
+        var CNICs;
+        function CheckCNICUpdateonCondition() {
+
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/CNICUpdateCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var CNICss = JSON.parse(response.d);
+                    if (CNICss == '01') {
+                        CNICs = true;
+                    }
+                    else {
+                        CNICs = false;
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
+
+        function SaveCNIC(enteredCNIC) {
+            var Patient_ID = $('#hdfPatient_ID').val();
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/SaveCNIC",
+                data: JSON.stringify({
+                    'Patient_ID': Patient_ID,
+                    'enteredCNIC': enteredCNIC
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var doctorIds = JSON.parse(response.d);
+
+                },
+                error: function (err) {
+                    alert("Could not Save CNIC.");
+                }
+            });
+        }
+        //function PatientMonitoring() {
+        //    var Patient_ID = $('#hdfPatient_ID').val();
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "InPatientsAdmission.aspx/PatientMonitoring",
+        //        data: JSON.stringify({
+        //            'Patient_ID': Patient_ID
+        //        }),
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (response) {
+        //            debugger;
+        //            var doctorIds = JSON.parse(response.d);
+
+        //        },
+        //        error: function (err) {
+        //            alert("Could not Save CNIC.");
+        //        }
+        //    });
+        //}
+
+
         function loadtokenInputs(data) {
             $("#ctl00_MainContent_txtPatient_ID").tokenInput("../../json.aspx?Table=Patients",
                 {
@@ -6889,6 +7026,11 @@
     </script>
 
     <style type="text/css">
+                .cnic-input {
+    width: 250px !important;
+    margin: 0 auto;   /* center it */
+    display: block;
+}
         .mgTab {
             padding-left: 100px;
         }
