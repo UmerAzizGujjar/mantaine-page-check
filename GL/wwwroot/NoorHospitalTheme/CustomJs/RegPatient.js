@@ -2,6 +2,7 @@ $(document).ready(function () {
 
 
     clearPatient();
+    isCNICValidationRequired();
 
 
     MaskedInput({
@@ -419,6 +420,52 @@ function SavePatient() {
         $('#address-error').show();
         valid = false;
 
+    }
+    var isCNICRequired = isCNICValidationRequired();
+    if (isCNICRequired) {
+        var isCNICEmpty = !CNIC || CNIC === "" || CNIC === "_____-_______-_";
+        var isOtherCNICEmpty = !OtherCnic || OtherCnic === "" || OtherCnic === "_____-_______-_";
+
+        if (isCNICEmpty && isOtherCNICEmpty) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'CNIC Required!',
+                text: 'Please enter  CNIC or Other CNIC',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            });
+            $('#SavePatient_Data').attr('disabled', false);
+            return;
+        } else {
+            if (!isCNICEmpty && CNIC !== "_____-_______-_") {
+                var cnicPattern = /^\d{5}-\d{7}-\d$/;
+                if (!cnicPattern.test(CNIC)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid CNIC Format!',
+                        text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                }
+            }
+            if (!isOtherCNICEmpty && OtherCnic !== "_____-_______-_") {
+                var otherCnicPattern = /^\d{5}-\d{7}-\d$/;
+                if (!otherCnicPattern.test(OtherCnic)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Other CNIC Format!',
+                        text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                }
+            }
+        }
     }
     if ((PatientName == "" || Mobile == "+92__________" || Age == "" || Relation == "0" || Address == "0")) {
 
