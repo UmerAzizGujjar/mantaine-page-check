@@ -7390,31 +7390,7 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(dpt));
         }
 
-        [WebMethod]
-        public static string GetTemplateMedicine(int Templateid)
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            var dpt = (from dt in db.Doctor_Template_Masters
-                       join dtm in db.Doctor_Template_Medicines
-                       on dt.Template_Id equals dtm.Template_Id
-                       join mt in db.Medicines_Templates
-                       on dtm.Medicine_id equals mt.Item_Code
-                       where dt.Template_Id == Templateid
-                       select new
-                       {
-                           mt.Medicine_Date,
-                           mt.Medicine_Name,
-                           mt.Dosage_From,
-                           mt.Dosage_Qty,
-                           mt.AttendingParamedical_Staff,
-                           mt.Item_Code,
-                           mt.Other_Instruction,
-                           mt.Frequency,
-                           mt.Injections,
-                           mt.Oral,
-                       }).ToList();
-            return (new JavaScriptSerializer().Serialize(dpt));
-        }
+
 
         [WebMethod]
         public static string loadtemplate(string item_id)
@@ -7436,9 +7412,38 @@ namespace PMS
         }
 
 
-
         [WebMethod]
-        public static object GetTemplateTest(int Templateid) 
+        public static string GetTemplateMedicine(int Templateid)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var dpt = db.Doctor_Template_Medicines
+                       .Where(dtm => dtm.Template_Id == Templateid)
+                       .Join(db.Medicines_Templates,
+                             dtm => dtm.Medicine_id,
+                             mt => mt.Item_Code,
+                             (dtm, mt) => new
+                             {
+                                 mt.Medicine_Date,
+                                 mt.Medicine_Name,
+                                 mt.Dosage_From,
+                                 mt.Dosage_Qty,
+                                 mt.AttendingParamedical_Staff,
+                                 mt.Item_Code,
+                                 mt.Other_Instruction,
+                                 mt.Frequency,
+                                 mt.Injections,
+                                 mt.Oral,
+                                 dtm.Medicine_id
+                             })
+                       .ToList()
+                       .GroupBy(x => x.Medicine_id)
+                       .Select(g => g.First())
+                       .ToList();
+
+            return (new JavaScriptSerializer().Serialize(dpt));
+        }
+        [WebMethod]
+        public static object GetTemplateTest(int Templateid)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var dpt = (from dt in db.Doctor_Template_Masters
@@ -7453,7 +7458,7 @@ namespace PMS
                            dtm.Rotation_Id,
                        }).ToList();
 
-            return dpt; 
+            return dpt;
         }
 
     }
