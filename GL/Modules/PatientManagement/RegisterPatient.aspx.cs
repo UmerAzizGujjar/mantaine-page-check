@@ -166,6 +166,7 @@ namespace PMS.Modules.PatientManagement
             public string Area_text { get; set; }
             public int Reg_PatientID { get; set; }
             public string CNIC_Masked { get; set; }
+            public string other_cnic { get; set; }
             public string DOB { get; set; }
 
             public decimal Card_fee { get; set; }
@@ -290,15 +291,15 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-       
+
         //[WebMethod]
         [WebMethod]
         public static string SavePatientDetail(
-    string Full_Name, string RelationType, string Relation, string Gender,
-    string Mobile, string Date_Of_Birth, string CNIC, string Address,
-    string PatientID, string martail_status, string Age, string city, string area,
-    string city_val, string area_val, string Blood_Group, string State, string Country,
-    string cardfee, string AntiForgeryToken)
+     string Full_Name, string RelationType, string Relation, string Gender,
+     string Mobile, string Date_Of_Birth, string CNIC, string Address,
+     string PatientID, string martail_status, string Age, string city, string area,
+     string city_val, string area_val, string Blood_Group, string State, string Country,
+     string cardfee, string OtherCnic, string AntiForgeryToken)
 
         {
 
@@ -339,6 +340,21 @@ namespace PMS.Modules.PatientManagement
                     Reg_patient pat;
                     bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
 
+                    // CNIC VALIDATION CHECK
+                    if (isNew && !string.IsNullOrWhiteSpace(CNIC))
+                    {
+                        var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "CNIC Validation" && p.Code == "01");
+                        if (cnicValidation != null)
+                        {
+                            var existingPatient = db.Reg_patients.FirstOrDefault(p => p.NIC == CNIC && p.iscancel == false);
+                            if (existingPatient != null)
+                            {
+                                return "CNIC_EXISTS";
+                            }
+                        }
+                    }
+                    // END OF CNIC VALIDATION
+
                     if (!isNew)
                     {
                         int patId = Convert.ToInt32(PatientID);
@@ -365,7 +381,7 @@ namespace PMS.Modules.PatientManagement
 
                         var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
                         string companyCode = company?.CompanyCode ?? "HOSP";
-                        pat.mr_no_sequence = string.IsNullOrWhiteSpace(companyCode)? PatientNumber: $"{companyCode}-{PatientNumber}";
+                        pat.mr_no_sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";
 
                     }
 
@@ -376,6 +392,7 @@ namespace PMS.Modules.PatientManagement
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.NIC = CNIC;
+                    pat.other_cnic = OtherCnic;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                     pat.city = city;
@@ -456,17 +473,6 @@ namespace PMS.Modules.PatientManagement
                         db.Reg_patients.InsertOnSubmit(pat);
 
                     db.SubmitChanges();
-                    // Generate QR code ONLY for NEW registrations (per requirement)
-                    //if (isNew && pat != null && !string.IsNullOrWhiteSpace(pat.mr_no_sequence))
-                    //{
-                    //    string qrPath = GenerateAndSaveQRCode(pat); // NO db parameter!
-                    //    if (!string.IsNullOrEmpty(qrPath))
-                    //    {
-                    //        pat.QRCodePath = qrPath; // ✅ Requires DBML update (see below)
-                    //        try { db.SubmitChanges(); }
-                    //        catch { /* Silent fail - registration must succeed */ }
-                    //    }
-                    //}
 
                     return pat.pat_id.ToString();
                 }
@@ -655,6 +661,7 @@ namespace PMS.Modules.PatientManagement
                                       rg.Card_fee,
                                       rg.val_area,
                                       rg.pat_id,
+                                      rg.other_cnic,
                                       rg.DOB  // Keep as raw DateTime? or string? depends on DB schema
                                   }).FirstOrDefault();
 
@@ -673,6 +680,7 @@ namespace PMS.Modules.PatientManagement
                     MaritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", patientRaw.Martial_Status) ?? ""),
                     Mr_No = HttpUtility.HtmlEncode(patientRaw.mr_no_sequence ?? ""),
                     CNIC_Masked = (patientRaw.NIC),
+                    other_cnic = (patientRaw.other_cnic),
                     Address = HttpUtility.HtmlEncode(patientRaw.Permanent_Address ?? ""),
                     Mobile = (patientRaw.Mobile1),
                     BloodGroup_text = HttpUtility.HtmlEncode(db.GetDataValueName("Blood Group", patientRaw.Blood_Group) ?? ""),

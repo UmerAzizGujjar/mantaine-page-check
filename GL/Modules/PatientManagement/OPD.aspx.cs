@@ -1009,7 +1009,7 @@ namespace PMS.Modules.PatientManagement
         [WebMethod]
         public static string SavePatientDetail(
             string Full_Name, string RelationType, string Relation, string Gender,
-            string Mobile, string Date_Of_Birth, string CNIC, string Address,
+            string Mobile, string Date_Of_Birth, string CNIC, string OtherCNIC, string Address,
             string PatientID, string martail_status, string Age,
            string stno, string city, string area,
             string city_val, string area_val, string Province, string Country, string cardfee)
@@ -1045,6 +1045,7 @@ namespace PMS.Modules.PatientManagement
                     }
                    
                     pat.NIC = CNIC;
+                    pat.other_cnic = OtherCNIC;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                    
@@ -1080,6 +1081,7 @@ namespace PMS.Modules.PatientManagement
                 }
                    
                 pat.NIC = CNIC;
+                pat.other_cnic = OtherCNIC;
                 pat.Permanent_Address = Address;
               
                 pat.stno_mno = stno;

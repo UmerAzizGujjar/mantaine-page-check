@@ -17,6 +17,13 @@ $(document).ready(function () {
 
     });
 
+    MaskedInput({
+        elm: document.getElementById('txt_OtherCnic'),
+        format: '_____-_______-_',
+        separator: '-'
+
+    });
+
     $('#txt_mobile').on('focus', function () {
         var input = this;
         setTimeout(function () {
@@ -116,6 +123,53 @@ $(document).ready(function () {
                 }
             }, 50);
         });
+    });
+
+    if (!$('#txtAge_yearss').hasClass('hasDatepicker')) {
+        $('#txtAge_yearss').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0",
+            dateFormat: "dd/mm/yy",
+            onSelect: function (dateText) {
+                var selectedDate = $(this).datepicker('getDate');
+                if (selectedDate) {
+                    var today = new Date();
+                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
+                    var ageMonths = today.getMonth() - selectedDate.getMonth();
+                    var ageDays = today.getDate() - selectedDate.getDate();
+
+                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+                        ageYears--;
+                    }
+
+                    if (ageYears > 0) {
+                        $('#txt_dob').val(ageYears);
+                        $('#PrefixAge').val('Year').trigger('change');
+                    } else {
+                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
+                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
+                        if (monthDiff > 0) {
+                            $('#txt_dob').val(monthDiff);
+                            $('#PrefixAge').val('Month').trigger('change');
+                        } else {
+                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
+                            if (dayDiff > 0) {
+                                $('#txt_dob').val(dayDiff);
+                                $('#PrefixAge').val('Day').trigger('change');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    $('#txtAge_yearss').off('click').on('click', function () {
+        if ($(this).datepicker('widget').is(':visible')) {
+            return;
+        }
+        $(this).datepicker('show');
     });
 
 });
@@ -227,13 +281,43 @@ function CalculateDateOfBirth() {
     var finalDate = dob.format("DD/MM/YYYY");
 
     var $input = $('#txtAge_yearss');
-
     if (!$input.hasClass('hasDatepicker')) {
         $input.datepicker({
             changeMonth: true,
             changeYear: true,
             yearRange: "-100:+0",
-            dateFormat: "dd/mm/yy"
+            dateFormat: "dd/mm/yy",
+            onSelect: function (dateText) {
+                var selectedDate = $(this).datepicker('getDate');
+                if (selectedDate) {
+                    var today = new Date();
+                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
+                    var ageMonths = today.getMonth() - selectedDate.getMonth();
+                    var ageDays = today.getDate() - selectedDate.getDate();
+
+                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+                        ageYears--;
+                    }
+
+                    if (ageYears > 0) {
+                        $('#txt_dob').val(ageYears);
+                        $('#PrefixAge').val('Year').trigger('change');
+                    } else {
+                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
+                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
+                        if (monthDiff > 0) {
+                            $('#txt_dob').val(monthDiff);
+                            $('#PrefixAge').val('Month').trigger('change');
+                        } else {
+                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
+                            if (dayDiff > 0) {
+                                $('#txt_dob').val(dayDiff);
+                                $('#PrefixAge').val('Day').trigger('change');
+                            }
+                        }
+                    }
+                }
+            }
         });
     }
 
@@ -256,6 +340,7 @@ function SavePatient() {
     var Age = $('#txt_dob').val();
     var Date_Of_Birth = $('#txtAge_yearss').val();
     var CNIC = $('#txt_cnic').val();
+    var OtherCnic = $('#txt_OtherCnic').val();
     var Address = $('#txt_Address').val();
     var city = $('#txtcity :selected').text();
     var area = $('#txtarea :selected').text();
@@ -321,6 +406,7 @@ function SavePatient() {
         "State": State,
         "Country": Country,
         "cardfee": cardfee,
+        "OtherCnic": OtherCnic,
         "AntiForgeryToken": AntiForgeryToken,
 
     });
@@ -332,6 +418,18 @@ function SavePatient() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
+            if (response.d === "CNIC_EXISTS") {
+                Swal.fire({
+                    title: 'CNIC Already Exists!',
+                    text: 'A patient with this CNIC is already registered.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    $('#SavePatient_Data').attr('disabled', false);
+                });
+                return;
+            }
+
             if (data.d.startsWith("ERROR:")) {
                 toasterMessage(true, "Validation Failed", data.d.replace("ERROR: ", ""));
                 $('#SavePatient_Data').attr('disabled', false);
@@ -418,6 +516,7 @@ function Get_Pat_Info(reg_id) {
             $('#txt_Address').val(data.Address);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#txt_cnic').val(data.CNIC_Masked);
+            $('#txt_OtherCnic').val(data.other_cnic);
             $('#txtAge_yearss').val(data.DOB);
             $('#txtCardFee').val(data.Card_fee);
             //dob

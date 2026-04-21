@@ -193,7 +193,7 @@
                 $('#btnDischargeRequest').attr('disabled', true);
             }
 
-            $('#Addmedicine').attr('disabled', true);
+           // $('#Addmedicine').attr('disabled', true);
 
 
 
@@ -5749,57 +5749,71 @@
 
                 if ($('#txtPharmacyItem').find('option:selected').text().trim() == 'Reassurance') {
                     $('#txtDosage').val("0");
-                    $('#txtInjection').val("0");
+                    $('#txtInjections').val("0");
                     $('#AttendingParamedicalStaff').val("0");
 
                 }
 
-                if ($('#txtPharmacyItem').val() == 'Select Medicine') {
-                    $('#txtPharmacyItem').val() = '';
+                var value = $('#txtPharmacyItem').val();
+
+                if ($('#txtPharmacyItem').val() == 'Select Medicine' || $('#txtPharmacyItem').val() == null || $('#txtPharmacyItem').val() == '0') {
+                    $('#txtPharmacyItem').val('');
                 }
 
-                if ($('#txtMedicen').val() != '' && $('#txtPharmacyItem').val() != '') {
-                    alert("Please Eneter One Name")
+                var medicen = $('#txtMedicen').val();
+                var pharmacyItem = $('#txtPharmacyItem').val();
+
+                if ((medicen == '' || medicen == null) && (pharmacyItem == '' || pharmacyItem == null)) {
+                    alert("Please enter medicine name");
                     return false;
                 }
-                if ($('#txtMedicen').val() == '' && $('#txtPharmacyItem').val() == '') {
-                    alert("Please Eneter Name")
+
+                if ((medicen != '' && medicen != null) && (pharmacyItem != '' && pharmacyItem != null && pharmacyItem != '0')) {
+                    alert("Please enter only one medicine name");
                     return false;
                 }
                 var UnListedMed = $('#txtMedicen').val();
+                var pharmacyITem = '';
 
-                if ($('#txtPharmacyItem').val() != '')
-                    var pharmacyITem = $('#txtPharmacyItem').find('option:selected').text()
-                else {
-                    var pharmacyITem = $('#txtMedicen').val()
+                if ($('#txtPharmacyItem').val() != '' && $('#txtPharmacyItem').val() != '0' && $('#txtPharmacyItem').val() != null) {
+                    pharmacyITem = $('#txtPharmacyItem').find('option:selected').text();
+                } else if (UnListedMed != '' && UnListedMed != null) {
+                    pharmacyITem = UnListedMed;
                 }
 
-                var Dose = $('#txtDosage').val();
+                var itemCode = '';
+                if ($('#txtPharmacyItem').val() != '' && $('#txtPharmacyItem').val() != '0' && $('#txtPharmacyItem').val() != null) {
+                    itemCode = $('#txtPharmacyItem').val();
+                } else {
+                    itemCode = '0';
+                }
+
+                var Dose = $('#txtDosages').val();
                 if (Dose == "") {
                     alert("Please Select Dose ")
                     return false;
                 }
-                var Frequency = $('#txtRecomended_Dosage').val();
-                if (Frequency == "") {
-                    alert("Please Select Frequency ")
-                    return false;
-                }
+                var Frequency = $('#txtRecomended_Dosages').val();
+                //if (Frequency == "") {
+                //    alert("Please Select Frequency ")
+                //    return false;
+                //}
                 var DosageFrom = $('#ddlDosage_From').val();
-                var Route = $('#Routes').val();
-                if (Route == "") {
-                    alert("Please Select Route ")
-                    return false;
-                }
-                var Duration = $('#txtInjection').val();
-                if (Duration == "") {
-                    if (localStorage.IsPRN == 1 || localStorage.IsStat == 1) {
+                //var Route = $('#Route').val();
+                //if (Route == "") {
+                //    alert("Please Select Route ")
+                //    return false;
+                //}
+                //var Duration = $('#txtInjections').val();
+                //if (Duration == "") {
+                //    if (localStorage.IsPRN == 1 || localStorage.IsStat == 1) {
 
-                    }
-                    else {
-                        alert("Please Select Duration ");
-                        return false;
-                    }
-                }
+                //    }
+                //    else {
+                //        alert("Please Select Duration ");
+                //        return false;
+                //    }
+                //}
 
                 var datetime = '<%= DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss A")%>';
                 var datetimeValue = '<%= DateTime.Now%>';
