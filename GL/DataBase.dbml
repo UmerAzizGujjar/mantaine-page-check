@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="IITH" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -11763,24 +11763,6 @@
       <Column Name="OutSource" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.spGetIPD_Distribution" Method="spGetIPD_Distribution">
-    <Parameter Name="Bill_No" Parameter="bill_No" Type="System.String" DbType="VarChar(50)" />
-    <ElementType Name="spGetIPD_DistributionResult">
-      <Column Name="Description" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Test_Main_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Item_Type1" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
-      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
-      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-      <Column Name="Hospital_Share" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-      <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Account_Code" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spLabReportQ" Method="spLabReportQ">
     <Parameter Name="Test_IDs" Parameter="test_IDs" Type="System.String" DbType="VarChar(MAX)" />
     <Parameter Name="Trans_IDs" Parameter="trans_IDs" Type="System.String" DbType="VarChar(MAX)" />
@@ -11903,6 +11885,28 @@
       <Column Name="UnitPrice" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="TotalStock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetIPD_Distribution" Method="spGetIPD_Distribution">
+    <Parameter Name="Bill_No" Parameter="bill_No" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="spGetIPD_DistributionResult">
+      <Column Name="Description" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Type" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Test_Main_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Item_Type1" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Total_Amount" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+      <Column Name="Discount_Amount" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+      <Column Name="Discount_Percentage" Type="System.Decimal" DbType="Decimal(38,6)" CanBeNull="true" />
+      <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="Doctor_Share" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+      <Column Name="Hospital_Share" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+      <Column Name="Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Account_Code" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Discount_Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Discount_Account_Code" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="CashInHand_Account_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CashInHand_Account_Code" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
