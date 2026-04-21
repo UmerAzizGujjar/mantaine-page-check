@@ -1280,7 +1280,6 @@
                 "cardfee": cardfee,
             };
 
-
             $.ajax({
                 type: "POST",
                 url: "EmergencyForm.aspx/SavePatientDetail",
@@ -1289,6 +1288,40 @@
                 dataType: "json",
                 success: function (response) {
                     debugger;
+
+                    // Check if CNIC already exists
+                    if (response.d === "CNIC_EXISTS") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'CNIC Already Exists!',
+                            text: 'A patient with this CNIC is already registered.',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return;
+                    }
+
+                    // Check for other errors
+                    if (response.d && response.d.startsWith("ERROR:")) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.d.replace("ERROR:", ""),
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return;
+                    }
+
                     var ini_patientID = response.d;
 
                     Swal.fire({

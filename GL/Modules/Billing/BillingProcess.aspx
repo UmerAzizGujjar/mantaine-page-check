@@ -6035,77 +6035,95 @@
                 }
             }
             debugger;
-            function SavePatient() {
-                debugger;
-                $('#SavePatient_Data').attr('disabled', true);
-                var Prefix_PatientName = $('#ddl_name').val();
-                var PatientName = $('#txt_name').val();
-                var PatientID = $('#hdfPatient_ID').val();
+           function SavePatient() {
+    debugger;
+    $('#SavePatient_Data').attr('disabled', true);
+    var Prefix_PatientName = $('#ddl_name').val();
+    var PatientName = $('#txt_name').val();
+    var PatientID = $('#hdfPatient_ID').val();
 
+    var Full_Name = Prefix_PatientName + PatientName;
+    debugger;
+    var RelationType = $('#ddlRelation').val();
+    var Relation = $('#txt_relation').val();
+    var Gender = $('#ddl_Gender').val();
 
-                var Full_Name = Prefix_PatientName + PatientName;
-                debugger;
-                var RelationType = $('#ddlRelation').val();
-                var Relation = $('#txt_relation').val();
-                var Gender = $('#ddl_Gender').val();
+    var Mobile = $('#txt_mobile').val();
+    var PreFix_DOB = $('#ddl_dob').val();
+    var Age = $('#txt_dob').val();
+    var Date_Of_Birth = $('#txtAge_yearss').val();
+    var CNIC = $('#txt_cnic').val();
+    var OtherCNIC = $('#txt_Othercnic').val();
+    var Address = $('#txt_Address').val();
+    var martail_status = $('#ddl_status').val();
+    var txtfees = $('#txtfees').val();
+    
+    if ((PatientName == "" || Mobile == "")) {
+        alert("Please Enter compulsory Fields");
+        $('#SavePatient_Data').attr('disabled', false);
+        return;
+    }
 
-                var Mobile = $('#txt_mobile').val();
-                var PreFix_DOB = $('#ddl_dob').val();
-                var Age = $('#txt_dob').val();
-                var Date_Of_Birth = $('#txtAge_yearss').val();
-                var CNIC = $('#txt_cnic').val();
-                var OtherCNIC = $('#txt_Othercnic').val();
-                var Address = $('#txt_Address').val();
-                var martail_status = $('#ddl_status').val();
-                var txtfees = $('#txtfees').val();
-                if ((PatientName == "" || Mobile == "")) {
-
-
-                    alert("Please Enter compulsory Fields");
+    var data = JSON.stringify({
+        "Full_Name": Full_Name,
+        "RelationType": RelationType,
+        "Relation": Relation,
+        "Gender": Gender,
+        "Mobile": Mobile,
+        "Date_Of_Birth": Date_Of_Birth,
+        "CNIC": CNIC,
+        "Address": Address,
+        "PatientID": PatientID,
+        "martail_status": martail_status,
+        "Age": Age,
+        "txtfees": txtfees,
+        "OtherCNIC": OtherCNIC,
+    });
+    
+    $.ajax({
+        type: "POST",
+        url: "BillingProcess.aspx/SavePatientDetail",
+        data: data,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            debugger;
+            
+            // Check if CNIC already exists
+            if (response.d === "CNIC_EXISTS") {
+                Swal.fire({
+                    title: 'CNIC Already Exists!',
+                    text: 'A patient with this CNIC is already registered.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(function() {
                     $('#SavePatient_Data').attr('disabled', false);
-                    return;
-                    // }
-                }
-
-
-                var data = JSON.stringify({
-                    "Full_Name": Full_Name,
-                    "RelationType": RelationType,
-                    "Relation": Relation,
-                    "Gender": Gender,
-                    "Mobile": Mobile,
-                    "Date_Of_Birth": Date_Of_Birth,
-                    "CNIC": CNIC,
-                    "Address": Address,
-                    "PatientID": PatientID,
-                    "martail_status": martail_status,
-                    "Age": Age,
-                    "txtfees": txtfees,
-                    "OtherCNIC": OtherCNIC,
-
                 });
-                $.ajax({
-                    type: "POST",
-                    url: "BillingProcess.aspx/SavePatientDetail",
-                    data: data,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data) {
-                        debugger;
-                        var Reg_Patient_ID = data.d;
-
-                        alert('Your Record Save and Load Successfully');
-                        $('#PatientModel').modal('hide');
-
-                        //ApproveRegPatients(Reg_Patient_ID)
-                        AddPatientDetail(Reg_Patient_ID);
-
-                    },
-                    error: function (response) {
-                        alert("Error");
-                    }
-                });
+                return;
             }
+            
+            // Check for other errors
+            if (response.d.startsWith("ERROR:")) {
+                alert(response.d);
+                $('#SavePatient_Data').attr('disabled', false);
+                return;
+            }
+            
+            var Reg_Patient_ID = response.d;
+            alert('Your Record Saved and Loaded Successfully');
+            $('#PatientModel').modal('hide');
+            
+            // ApproveRegPatients(Reg_Patient_ID)
+            if (typeof AddPatientDetail === 'function') {
+                AddPatientDetail(Reg_Patient_ID);
+            }
+        },
+        error: function (response) {
+            alert("Error occurred while saving. Please try again.");
+            $('#SavePatient_Data').attr('disabled', false);
+        }
+    });
+}
 
             function ApproveRegPatients(pat_id) {
                 PageMethods.ApproveRegpatient(pat_id, function (Tests) {

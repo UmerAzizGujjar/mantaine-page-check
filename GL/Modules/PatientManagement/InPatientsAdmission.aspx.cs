@@ -5376,11 +5376,29 @@ namespace PMS
             return list;
         }
         [WebMethod]
-        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string OtherCNIC, string Address, string PatientID, string martail_status, string Age,string txtfees)
+        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string OtherCNIC, string Address, string PatientID, string martail_status, string Age, string txtfees)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
-            if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
+
+            bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
+
+            // CNIC VALIDATION CHECK - Only for new patients
+            if (isNew && !string.IsNullOrWhiteSpace(CNIC))
+            {
+                var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "CNIC Validation" && p.Code == "01");
+                if (cnicValidation != null)
+                {
+                    var existingPatient = db.Reg_patients.FirstOrDefault(p => p.NIC == CNIC && p.iscancel == false);
+                    if (existingPatient != null)
+                    {
+                        return "CNIC_EXISTS";
+                    }
+                }
+            }
+            // END OF CNIC VALIDATION
+
+            if (!isNew)
             {
                 pat = db.Reg_patients.Where(w => w.pat_id == Convert.ToInt32(PatientID)).FirstOrDefault();
 

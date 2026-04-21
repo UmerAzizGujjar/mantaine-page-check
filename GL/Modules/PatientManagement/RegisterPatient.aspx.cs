@@ -295,11 +295,11 @@ namespace PMS.Modules.PatientManagement
         //[WebMethod]
         [WebMethod]
         public static string SavePatientDetail(
-        string Full_Name, string RelationType, string Relation, string Gender,
-        string Mobile, string Date_Of_Birth, string CNIC, string Address,
-        string PatientID, string martail_status, string Age, string city, string area,
-        string city_val, string area_val, string Blood_Group, string State, string Country,
-        string cardfee, string OtherCnic, string AntiForgeryToken)
+     string Full_Name, string RelationType, string Relation, string Gender,
+     string Mobile, string Date_Of_Birth, string CNIC, string Address,
+     string PatientID, string martail_status, string Age, string city, string area,
+     string city_val, string area_val, string Blood_Group, string State, string Country,
+     string cardfee, string OtherCnic, string AntiForgeryToken)
 
         {
 
@@ -340,7 +340,7 @@ namespace PMS.Modules.PatientManagement
                     Reg_patient pat;
                     bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
 
-                    // CNIC VALIDATION CHECK - ONLY ADDITION
+                    // CNIC VALIDATION CHECK
                     if (isNew && !string.IsNullOrWhiteSpace(CNIC))
                     {
                         var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "CNIC Validation" && p.Code == "01");
@@ -353,7 +353,7 @@ namespace PMS.Modules.PatientManagement
                             }
                         }
                     }
-                    // END OF CNIC VALIDATION CHECK
+                    // END OF CNIC VALIDATION
 
                     if (!isNew)
                     {

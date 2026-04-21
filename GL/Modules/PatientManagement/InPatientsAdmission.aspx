@@ -6107,6 +6107,7 @@
             var Address = $('#txt_Address').val();
             var martail_status = $('#ddl_status').val();
             var txtfees = $('#txtfees').val();
+
             if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || Address == "")) {
                 Swal.fire({
                     icon: 'error',
@@ -6124,6 +6125,7 @@
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
             }
+
             var data = JSON.stringify({
                 "Full_Name": Full_Name,
                 "RelationType": RelationType,
@@ -6138,17 +6140,54 @@
                 "martail_status": martail_status,
                 "Age": Age,
                 "txtfees": txtfees,
-
             });
+
             $.ajax({
                 type: "POST",
                 url: "InPatientsAdmission.aspx/SavePatientDetail",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (data) {
+                success: function (response) {
                     debugger;
-                    var Reg_Patient_ID = data.d;
+
+                    // Check if CNIC already exists
+                    if (response.d === "CNIC_EXISTS") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'CNIC Already Exists!',
+                            text: 'A patient with this CNIC is already registered.',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        }).then(function () {
+                            $('#SavePatient_Data').attr('disabled', false);
+                        });
+                        return;
+                    }
+
+                    // Check for other errors
+                    if (response.d && response.d.startsWith("ERROR:")) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.d.replace("ERROR:", ""),
+                            showConfirmButton: true,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        }).then(function () {
+                            $('#SavePatient_Data').attr('disabled', false);
+                        });
+                        return;
+                    }
+
+                    var Reg_Patient_ID = response.d;
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -6163,10 +6202,23 @@
                     });
 
                     $('#PatientModel').modal('hide');
-                    AddPatientDetail(Reg_Patient_ID)
+                    AddPatientDetail(Reg_Patient_ID);
+                    $('#SavePatient_Data').attr('disabled', false);
                 },
                 error: function (response) {
-                    alert("Error");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Error while saving data. Please try again',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    }).then(function () {
+                        $('#SavePatient_Data').attr('disabled', false);
+                    });
                 }
             });
         }

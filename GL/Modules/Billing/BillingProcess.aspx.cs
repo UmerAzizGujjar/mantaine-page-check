@@ -557,11 +557,29 @@ namespace PMS
             return pts;
         }
         [WebMethod]
-        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC,string OtherCNIC, string Address, string PatientID, string martail_status, string Age,string txtfees)
+        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string OtherCNIC, string Address, string PatientID, string martail_status, string Age, string txtfees)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
-            if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
+
+            bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
+
+            // CNIC VALIDATION CHECK - Only for new patients
+            if (isNew && !string.IsNullOrWhiteSpace(CNIC))
+            {
+                var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "CNIC Validation" && p.Code == "01");
+                if (cnicValidation != null)
+                {
+                    var existingPatient = db.Reg_patients.FirstOrDefault(p => p.NIC == CNIC && p.iscancel == false);
+                    if (existingPatient != null)
+                    {
+                        return "CNIC_EXISTS";
+                    }
+                }
+            }
+            // END OF CNIC VALIDATION
+
+            if (!isNew)
             {
                 pat = db.Reg_patients.Where(w => w.pat_id == Convert.ToInt32(PatientID)).FirstOrDefault();
 
@@ -593,14 +611,11 @@ namespace PMS
                     }
                     pat.NIC = CNIC;
                     pat.other_cnic = OtherCNIC;
-                  
+
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                     //pat.mr_no_sequence = db.GetSequentialMrNo();
                     pat.walkin = true;
-
-
-
 
                     db.SubmitChanges();
                 }
@@ -686,7 +701,7 @@ namespace PMS
                                where dt.Company_ID == companyID
                                select dt).FirstOrDefault();
                 string companyCode = company.CompanyCode;
-                string MR_Sequence = string.IsNullOrWhiteSpace(companyCode)? PatientNumber: $"{companyCode}-{PatientNumber}";
+                string MR_Sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";
 
                 pat.mr_no_sequence = MR_Sequence;
                 pat.walkin = true;
@@ -696,7 +711,6 @@ namespace PMS
             }
             return pat.pat_id.ToString();
         }
-
         [WebMethod]
         public static string GetChargePolicy()
         {

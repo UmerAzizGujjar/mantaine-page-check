@@ -276,39 +276,36 @@ function SavePatient() {
     var cardfee = $('#txtCardFee').val();
     var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
 
+    var valid = true;
+
     if (PatientName === "") {
         $('#firstname-error').show();
         valid = false;
-       
     }
     if (Mobile == "+92__________") {
         $('#mobile-error').show();
         valid = false;
-       
     }
 
     if (Age === "") {
         $('#age-error').show();
         valid = false;
-        
     }
 
     if (Relation === "") {
         $('#relation-error').show();
         valid = false;
-       
     }
     if (Address === "") {
         $('#address-error').show();
         valid = false;
-
     }
-    if ((PatientName == "" || Mobile == "+92__________" )) {
-        
+
+    if (!valid) {
         $('#SavePatient_Data').attr('disabled', false);
         return;
-
     }
+
     var data = JSON.stringify({
         "Full_Name": Full_Name,
         "RelationType": RelationType,
@@ -331,25 +328,41 @@ function SavePatient() {
         "cardfee": cardfee,
         "OtherCnic": OtherCnic,
         "AntiForgeryToken": AntiForgeryToken,
-
     });
+
     console.log(data);
+
     $.ajax({
         type: "POST",
         url: "RegisterPatient.aspx/SavePatientDetail",
         data: data,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function (data) {
-            if (data.d.startsWith("ERROR:")) {
-                toasterMessage(true, "Validation Failed", data.d.replace("ERROR: ", ""));
+        success: function (response) {
+            // Check for CNIC_EXISTS first
+            if (response.d === "CNIC_EXISTS") {
+                Swal.fire({
+                    title: 'CNIC Already Exists!',
+                    text: 'A patient with this CNIC is already registered.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    $('#SavePatient_Data').attr('disabled', false);
+                });
+                return;
+            }
+
+            // Check for other errors
+            if (response.d.startsWith("ERROR:")) {
+                toasterMessage(true, "Validation Failed", response.d.replace("ERROR: ", ""));
                 $('#SavePatient_Data').attr('disabled', false);
                 return;
             }
+
             debugger;
-            var ini_patientID = data.d;
+            var ini_patientID = response.d;
             toasterMessage(false, "Success", "Data Saved Successfully");
-            Approve(ini_patientID)
+            Approve(ini_patientID);
             window.location.reload();
             var url = "../../ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + ini_patientID;
             window.open(url, '_blank');
