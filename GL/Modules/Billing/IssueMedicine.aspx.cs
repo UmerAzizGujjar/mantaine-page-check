@@ -1201,7 +1201,7 @@ namespace PMS
                     Net_Amount = decimal.Parse(item.NetAmt),
                     Batch_No = item.Batch_No,
                     CGS = item.CGSAmount,
-                    //LineDiscount = item.LineDiscount
+                    LineDiscount =Convert.ToDecimal( item.LineDiscount)
                 };
                 db.Pharmacy_SaleReturn_Details.InsertOnSubmit(detail);
                 db.SubmitChanges();
