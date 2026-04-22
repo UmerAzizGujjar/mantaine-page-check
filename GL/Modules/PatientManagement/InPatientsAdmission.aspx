@@ -2073,11 +2073,7 @@
                             }
                         });
 
-                        if (isCertificateGenrate) {
-                            callNADRAAPI(response);
-                        } else {
-                            window.location = "InPatientsAdmission.aspx?ID=" + response;
-                        }
+                        window.location = "InPatientsAdmission.aspx?ID=" + response;
 
                         $('#btnSave').val("Update");
                     }
@@ -3528,7 +3524,7 @@
 
                             })
 
-                            callNADRAAPI(response);
+                            window.location = "InPatientsAdmission.aspx?ID=" + response;
                         }
                         $('#btnSave').val("Update");
                     }
@@ -3547,7 +3543,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             }).then(() => {
-                                callNADRAAPI(response);
+                                window.location = "InPatientsAdmission.aspx?ID=" + response;
                             });
                         } else {
                             window.location = "InPatientsAdmission.aspx?ID=" + response;
@@ -4391,6 +4387,15 @@
 
                             $('#ctl00_MainContent_txtBirthAttendant').val(data.Birth_Attendant || '');
                             $('#ctl00_MainContent_txtBirthRemarks').val(data.Birth_Remarks || '');
+
+                            var trackingId = (data.BirthCertificateTrackingId || '').toString().trim();
+                            if (trackingId !== '') {
+                                $('#genrateCerti').prop('disabled', true);
+                                $('#genrateCerti').val('Certificate Sent');
+                            } else {
+                                $('#genrateCerti').prop('disabled', false);
+                                $('#genrateCerti').val('Generate');
+                            }
                         }
                     },
                     error: function (error) {

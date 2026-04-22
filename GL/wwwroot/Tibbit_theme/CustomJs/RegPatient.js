@@ -333,8 +333,15 @@ function SavePatient() {
     var Prefix_PatientName = $('#ddl_name').val();
     var PatientName = $('#txt_name').val();
     var PatientID = $('#hdn_regid').val();
-    var Full_Name = Prefix_PatientName + PatientName;
-    var RelationType = $('#ddlRelation').val();
+    // 1. Check if the name contains a dot (indicating an existing prefix)
+    if (PatientName.includes('.')) {
+        // Split by the first dot and take everything after it
+        // Then use .trim() to remove leading spaces
+        PatientName = PatientName.substring(PatientName.indexOf('.') + 1).trim();
+    }
+    // 2. Combine with the selected prefix
+    var Full_Name = Prefix_PatientName + " " + PatientName;
+     var RelationType = $('#ddlRelation').val();
     var Relation = $('#txt_relation').val();
     var Gender = $('#ddl_Gender').val();
     var Mobile = $('#txt_mobile').val();

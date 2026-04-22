@@ -546,7 +546,9 @@ namespace PMS
                                       ip.Birth_Postal_Code,
                                       ip.Birth_Religion,
                                       ip.Birth_Attendant,
-                                      ip.Birth_Remarks
+                                       ip.Birth_Remarks,
+                                       ip.BirthCertificateTrackingId,
+                                       ip.IsCertificateSentToNADRA
                                   }).FirstOrDefault();
 
                     if (result != null)
@@ -1209,14 +1211,8 @@ namespace PMS
 
                     if (isCertificateGenrate)
                     {
-                        try
-                        {
-                            SendBirthCertificateToNadra(db, OPD);
-                            db.SubmitChanges();
-                        }
-                        catch
-                        {
-                        }
+                        SendBirthCertificateToNadra(db, OPD);
+                        db.SubmitChanges();
                     }
 
                     if (OPD.In_Patient_ID > 0)
@@ -1328,6 +1324,14 @@ namespace PMS
             if (db == null || patient == null)
                 return;
 
+            Func<string, string> normalizeGender = g =>
+            {
+                var value = (g ?? string.Empty).Trim().ToLowerInvariant();
+                if (value == "m" || value == "male") return "male";
+                if (value == "f" || value == "female") return "female";
+                return value;
+            };
+
             string baseUrl = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_BaseUrl'");
             string username = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_Username'");
             string password = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_Password'");
@@ -1372,9 +1376,9 @@ namespace PMS
                     issuanceDate = DateTime.Now.ToString("dd/MM/yyyy"),
                     childName = patient.Birth_Child_Name ?? "",
                     childDateofBirth = patient.Birth_Date.HasValue
-                        ? patient.Birth_Date.Value.ToString("M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture)
-                        : DateTime.Now.ToString("M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture),
-                    childGender = (patient.Birth_Gender ?? "").ToLower(),
+                        ? patient.Birth_Date.Value.ToString("d/M/yyyy", CultureInfo.InvariantCulture)
+                        : DateTime.Now.ToString("d/M/yyyy", CultureInfo.InvariantCulture),
+                    childGender = normalizeGender(patient.Birth_Gender),
                     placeofOccurrence = "hospital",
                     placeofBirth = patient.Birth_Place ?? "",
                     districtofBirth = patient.Birth_City ?? "",
@@ -1426,6 +1430,11 @@ namespace PMS
                     ? birthResult["trackingId"].ToString()
                     : "";
 
+                if (string.IsNullOrWhiteSpace(trackingId))
+                {
+                    throw new Exception("NADRA error: trackingId is null or empty.");
+                }
+
                 patient.NADRA_Response = birthResponseString;
 
                 if (code == "100" || code == "200")
@@ -1434,7 +1443,7 @@ namespace PMS
                     patient.CertificateSentDate = DateTime.Now;
                 }
 
-                // patient.BirthCertificateTrackingId = trackingId; // Column does not exist yet.
+                patient.BirthCertificateTrackingId = trackingId; // Column does not exist yet.
             }
         }
 
@@ -1471,122 +1480,7 @@ namespace PMS
             public string AdvanceAmount;
             public string RevisitMsg { get; set; }
         }
-        [WebMethod]
-        public static string SendToNADRA(int InPatientID)
-        {
-            try
-            {
-                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    // 1. Get patient record
-                    var patient = db.In_Patients.FirstOrDefault(p => p.In_Patient_ID == InPatientID);
-                    if (patient == null)
-                    {
-                        return "ERROR: Patient not found";
-                    }
-
-                    // 2. Get NADRA credentials from sys_Parms
-                    string baseUrl = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_BaseUrl'");
-                    string username = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_Username'");
-                    string password = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_Password'");
-                    string hospitalName = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_HospitalName'");
-                    string hospitalAddress = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_HospitalAddress'");
-
-                    // 3. Validate credentials
-                    if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                    {
-                        return "ERROR: NADRA credentials not configured in sys_Parms";
-                    }
-
-                    // 4. Prepare birth data
-                    var birthData = new
-                    {
-                        hospitalName = hospitalName,
-                        hospitalAddress = hospitalAddress,
-                        issuanceDate = DateTime.Now.ToString("dd/MM/yyyy"),
-                        refNumber = patient.Birth_Reg_Number ?? $"REF-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}",
-                        childName = patient.Birth_Child_Name ?? "",
-                        childDateofBirth = patient.Birth_Date?.ToString("dd/MM/yyyy HH:mm:ss") ?? DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-                        childGender = patient.Birth_Gender?.ToLower() ?? "",
-                        placeofOccurrence = "hospital",
-                        placeofBirth = patient.Birth_Place ?? "",
-                        districtofBirth = patient.Birth_City ?? "",
-                        typeofBirth = "Single",
-                        disability = "N",
-                        fatherName = patient.Birth_Father_Name ?? "",
-                        motherName = patient.Birth_Mother_Name ?? "",
-                        FatherIdentityType = "cnic",
-                        FatherIdentityValue = patient.Birth_Father_CNIC ?? "",
-                        MotherIdentityType = "cnic",
-                        MotherIdentityValue = patient.Birth_Mother_CNIC ?? "",
-                        motherBloodGroup = "O+",
-                        childBloodGroup = "O+",
-                        contactNumber = patient.pat_number ?? "",
-                        doctorName = "Dr. Default",
-                        registrationNo = "REG123456"
-                    };
-
-                    // 5. Authenticate with NADRA
-                    using (var client = new HttpClient())
-                    {
-                        // Step 1: Get Token
-                        var authData = new { username = username, password = password };
-                        var authJson = new JavaScriptSerializer().Serialize(authData);
-                        var authContent = new StringContent(authJson, Encoding.UTF8, "application/json");
-
-                        var authResponse = client.PostAsync($"{baseUrl}/Authenticate", authContent).Result;
-                        string authResponseString = authResponse.Content.ReadAsStringAsync().Result;
-
-                        // Parse authentication response properly
-                        var authDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(authResponseString);
-                        string token = authDict.ContainsKey("token") ? authDict["token"]?.ToString() : null;
-                        string authCode = authDict.ContainsKey("code") ? authDict["code"]?.ToString() : null;
-                        string authMessage = authDict.ContainsKey("message") ? authDict["message"]?.ToString() : null;
-
-                        if (string.IsNullOrEmpty(token) || token == "null")
-                        {
-                            return $"ERROR: Authentication failed - {authMessage} (Code: {authCode})";
-                        }
-
-                        // Step 2: Send Birth Data
-                        var request = new { BirthData = birthData };
-                        var birthJson = new JavaScriptSerializer().Serialize(request);
-                        var birthContent = new StringContent(birthJson, Encoding.UTF8, "application/json");
-
-                        client.DefaultRequestHeaders.Clear();
-                        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
-                        var birthResponse = client.PostAsync($"{baseUrl}/AddBirthData", birthContent).Result;
-                        string birthResponseString = birthResponse.Content.ReadAsStringAsync().Result;
-
-                        // Parse birth response
-                        var birthDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(birthResponseString);
-                        string birthCode = birthDict.ContainsKey("code") ? birthDict["code"]?.ToString() : null;
-                        string birthMessage = birthDict.ContainsKey("message") ? birthDict["message"]?.ToString() : null;
-
-                        // 6. Update database
-                        patient.IsCertificateSentToNADRA = true;
-                        patient.CertificateSentDate = DateTime.Now;
-                        patient.NADRA_Response = birthResponseString;
-                        db.SubmitChanges();
-
-                        // 7. Return result
-                        if (birthCode == "200")
-                        {
-                            return $"SUCCESS: Birth certificate sent to NADRA successfully. {birthMessage}";
-                        }
-                        else
-                        {
-                            return $"SUCCESS but NADRA returned: {birthMessage} (Code: {birthCode})";
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return $"ERROR: {ex.Message}";
-            }
-        }
+        
         [WebMethod]
         public static string PendingAdmisionPatients()
         {
