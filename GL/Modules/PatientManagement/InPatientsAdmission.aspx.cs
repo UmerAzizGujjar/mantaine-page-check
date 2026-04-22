@@ -1805,34 +1805,34 @@ namespace PMS
                 return "ERROR: " + ex.Message;
             }
         }
-        //[WebMethod]
-        //public static string PatientMonitoring(string Patient_ID)
-        //{
-        //    try
-        //    {
-        //        DataBaseDataContext db = new DataBaseDataContext();
+        [WebMethod]
+        public static string PatientMonitoring(string Patient_ID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
 
-        //        int patId = Convert.ToInt32(Patient_ID);
+                int patId = Convert.ToInt32(Patient_ID);
 
-        //        var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
 
-        //        if (patient != null)
-        //        {
-        //            patient.Mont = true;
-        //            db.SubmitChanges();
+                if (patient != null)
+                {
+                    patient.Monitoring = true;
+                    db.SubmitChanges();
 
-        //            return "SUCCESS";
-        //        }
-        //        else
-        //        {
-        //            return "PATIENT_NOT_FOUND";
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return "ERROR: " + ex.Message;
-        //    }
-        //}
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
 
 
         [System.Web.Services.WebMethod]

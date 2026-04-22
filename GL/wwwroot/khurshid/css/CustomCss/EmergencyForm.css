@@ -10,6 +10,11 @@
     margin-top: 50px !important;
     /*height: 330px !important,*/
 }
+.cnic-input {
+    width: 250px !important;
+    margin: 0 auto; /* center it */
+    display: block;
+}
 /*.col-lg-3, .col-md-6, .col-sm-12 {
     height: 70px !important
 }*/

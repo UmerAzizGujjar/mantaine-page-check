@@ -5634,12 +5634,11 @@
                                     });
 
                                 }
-                                //else {
-                                //    PatientMonitoring()
-                                //}
-
+                                else if (result.isDismissed) {
+                                    PatientMonitoring();
+                                }
                             });
-                        }
+                        }                      
                     }
                     
 
