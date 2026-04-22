@@ -157,14 +157,15 @@
                     });
                 },
                 "columns": [
-                    { "data": null, "width": "4%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
+                    { "data": null, "width": "3%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                     { "data": "Patient_ID", "visible": false, "width": "0%", "orderable": false },
-                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
+                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "7%", "orderable": true },
                     { "data": "Opd_No", "name": "Opd_No", "width": "5%", "orderable": false },
                     { "data": "Token_No", "name": "Token_No", "width": "5%", "orderable": false },
+                    { "data": "Dept_Token", "name": "Dept_Token", "width": "5%", "orderable": false },
                     { "data": "Full_Name", "width": "10%", "orderable": false },
                     { "data": "Patient_Type", "width": "6%", "orderable": false },
-                    { "data": "Department", "width": "10%", "orderable": false },
+                    { "data": "Department", "width": "8%", "orderable": false },
                     { "data": "NIC", "width": "8%", "orderable": false },
                     { "data": "Mobile1", "width": "8%", "orderable": false },
                     { "data": "Age", "name": "Age", "width": "8%" },
@@ -181,7 +182,7 @@
                             let print = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="Print(${full.Patient_ID})"><i class="fa fa-print"></i></a>`;
                             return res + Del + print;
                         },
-                        "width": "17%",
+                        "width": "14%",
                         "orderable": false
                     }
                 ],
@@ -245,6 +246,7 @@
                         <th style="width: 8%;">MR No.</th>
                         <th style="width: 5%;">OPD</th>
                         <th style="width: 5%;">Token No</th>
+                        <th style="width: 5%;">Dept Token</th>
                         <th style="width: 13%;">Name</th>
                         <th style="width: 10%;">Category</th>
                         <th style="width: 10%;">Department</th>

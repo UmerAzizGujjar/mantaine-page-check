@@ -12,7 +12,51 @@
                 gap: 0.5rem;
             }
         </style>
-  
+  <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+          var textBox = document.getElementById("<%= txtCallToDoctor.ClientID %>");
+
+         if (textBox) {
+             // Add initial bullet if textbox is empty on focus
+             textBox.addEventListener("focus", function () {
+                 if (this.value.trim() === "") {
+                     this.value = "• ";
+                 }
+             });
+
+             textBox.addEventListener("keydown", function (e) {
+                 if (e.key === "Enter") {
+                     e.preventDefault(); // Prevent default newline
+
+                     var start = this.selectionStart;
+                     var end = this.selectionEnd;
+                     var value = this.value;
+
+                     // Get current line content before cursor
+                     var beforeCursor = value.substring(0, start);
+                     var lastNewline = beforeCursor.lastIndexOf("\n");
+                     var currentLine = beforeCursor.substring(lastNewline + 1);
+
+                     // Check if current line already has a bullet
+                     var hasBullet = currentLine.trim().startsWith("•");
+
+                     // If line has content (not just bullet), add new bullet on next line
+                     var lineContent = currentLine.replace(/^•\s*/, "").trim();
+
+                     if (lineContent.length > 0 || (hasBullet && currentLine.trim() === "•")) {
+                         // Add newline with bullet
+                         this.value = value.substring(0, start) + "\n• " + value.substring(end);
+                         this.selectionStart = this.selectionEnd = start + 3; // Move cursor after bullet and space
+                     } else {
+                         // Just add newline without bullet if line is empty
+                         this.value = value.substring(0, start) + "\n" + value.substring(end);
+                         this.selectionStart = this.selectionEnd = start + 1;
+                     }
+                 }
+             });
+         }
+     });
+  </script>
     <script type="text/javascript">
         var btnVal = '';
         localStorage.IsDischarge = 0;
@@ -41,6 +85,17 @@
                 format: '___/___',
                 separator: '-'
             });
+            // Reference the elements
+            var txtEOR = document.getElementById('ctl00_MainContent_ctl00_MainContent_txtEOR');
+            var txtMR = document.getElementById('ctl00_MainContent_txtMR');
+            var txtVR = document.getElementById('ctl00_MainContent_txtVR');
+            var txtAcc = document.getElementById('ctl00_MainContent_txtAcc');
+
+            // Set default values
+            if (txtEOR) txtEOR.value = '4/4';
+            if (txtMR) txtMR.value = '5/5';
+            if (txtVR) txtVR.value = '6/6';
+            if (txtAcc) txtAcc.value = '15/15';
             MaskedInput({
                 elm: document.getElementById('ctl00_MainContent_ctl00_MainContent_txtEOR'),
                 format: '_/4',
@@ -2646,7 +2701,43 @@ function setDropdownText(selector, text) {
 
             });
         }
+        var skipClear = false;
+        function getAndDisablePharmacyItem(itemID) {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyCase.aspx/getallpharmacyitems",  
+                data: JSON.stringify({ itemID: itemID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // Parse the JSON string returned by the WebMethod
+                    var data = JSON.parse(response.d);
 
+                    if (data && data.length > 0) {
+                        var value = data[0]; // Get the first item
+                        var $select = $('#txtPharmacyItem');
+
+                        // 1. Set the flag to true to skip the Cleardrpdwn logic
+                        skipClear = true;
+
+                        // 2. Append the option using your preferred string format
+                        $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+
+                        // 3. Set the value and trigger change to update the Select2 UI
+                        $select.val(value.Item_ID).trigger('change');
+
+                        // 4. Disable the select to prevent further user interaction
+                        $select.prop('disabled', true);
+
+                        // 5. Reset the flag so future manual changes (if any) work normally
+                        skipClear = false;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error: " + error);
+                }
+            });
+        }
         function editMedicine(AnchorTag) {
 
             var table_name = $(AnchorTag).parents('table').attr('id');
@@ -2686,7 +2777,8 @@ function setDropdownText(selector, text) {
             var duration = $($(row).find('td')[4]).text().trim();
             var special_instruction = $($(row).find('td')[5]).text().trim();
             var other_instruction = $($(row).find('td')[8]).text().trim();
-            $('#txtPharmacyItem').val(Medicine_Id).trigger('change');
+            skipClear = true;
+            getAndDisablePharmacyItem(Medicine_Id);
             $("#ddlDosage_Qty").find('option:contains(' + dosage_qty + ')')[0].selected = true;
             $("#ddlDosage_From").find('option:contains(' + dosage_form + ')')[0].selected = true;
             $("#txtRecomended_Dosage").find('option:contains(' + frequency + ')')[0].selected = true;
@@ -5697,9 +5789,9 @@ function setDropdownText(selector, text) {
                     }
                 });
         }
-
+        
         function Cleardrpdwn() {
-
+            if (skipClear) return;
             FillMedicine();
         }
         function CleardrpdwnItem() {
@@ -7684,11 +7776,12 @@ function setDropdownText(selector, text) {
                                 </div>
                                 </div>
                                  </div>
-                        <div style="position: relative; top: -200px; left: 25%; width: 500px;">
+                                  <div style="position: relative; top: -200px; left: 25%; width: 500px;">
                             <h2 style="text-align:left;">Doctor Notes</h2>
-                            <asp:TextBox TextMode="MultiLine" runat="server" id="txtCallToDoctor" style=" height: 139px; font-size: 18px; font-weight: Bold;"></asp:TextBox>
+                            <asp:TextBox TextMode="MultiLine" runat="server" id="txtCallToDoctor" style="height: 139px; font-size: 18px; font-weight: Bold;"></asp:TextBox>
                             <input type="hidden" id="hdnEmergencyDocId" value="" />
                         </div>
+
 
                         <div style="margin-left: 0px; margin-top: -130px; width: 1214px; overflow: scroll; height: 210px; max-height: 400px !important;">
                             <table id="tblDoctorNotes" class="table" style="width: 100% !important;">

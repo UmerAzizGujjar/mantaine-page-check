@@ -2,7 +2,7 @@ $(document).ready(function () {
 
 
     clearPatient();
-
+    isCNICValidationRequired();
 
     MaskedInput({
         elm: document.getElementById('txt_mobile'),
@@ -380,6 +380,52 @@ function SavePatient() {
         valid = false;
 
     }
+    var isCNICRequired = isCNICValidationRequired();
+    if (isCNICRequired) {
+        var isCNICEmpty = !CNIC || CNIC === "" || CNIC === "_____-_______-_";
+        var isOtherCNICEmpty = !OtherCnic || OtherCnic === "" || OtherCnic === "_____-_______-_";
+
+        if (isCNICEmpty && isOtherCNICEmpty) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'CNIC Required!',
+                text: 'Please enter  CNIC or Other CNIC',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            });
+            $('#SavePatient_Data').attr('disabled', false);
+            return;
+        } else {
+            if (!isCNICEmpty && CNIC !== "_____-_______-_") {
+                var cnicPattern = /^\d{5}-\d{7}-\d$/;
+                if (!cnicPattern.test(CNIC)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid CNIC Format!',
+                        text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                }
+            }
+            if (!isOtherCNICEmpty && OtherCnic !== "_____-_______-_") {
+                var otherCnicPattern = /^\d{5}-\d{7}-\d$/;
+                if (!otherCnicPattern.test(OtherCnic)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Other CNIC Format!',
+                        text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                }
+            }
+        }
+    }
     if ((PatientName == "" || Mobile == "+92__________" || Age == "" || Relation == "0" || Address == "0")) {
 
         $('#SavePatient_Data').attr('disabled', false);
@@ -544,4 +590,25 @@ function Get_Pat_Info(reg_id) {
             console.error("AJAX Error: ", response);
         }
     });
+}
+
+function isCNICValidationRequired() {
+    var result = false;
+    $.ajax({
+        type: "POST",
+        url: "RegisterPatient.aspx/CNICValidation",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            if (response.d === "01") {
+                result = true;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error checking CNIC validation:", error);
+            result = false;
+        }
+    });
+    return result;
 }

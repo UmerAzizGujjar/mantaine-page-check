@@ -170,6 +170,7 @@ namespace PMS.Modules.PatientManagement
             public string DOB { get; set; }
 
             public decimal Card_fee { get; set; }
+            public bool Monitoring { get; set; }
 
         }
 
@@ -662,6 +663,7 @@ namespace PMS.Modules.PatientManagement
                                       rg.val_area,
                                       rg.pat_id,
                                       rg.other_cnic,
+                                      rg.Monitoring,
                                       rg.DOB  // Keep as raw DateTime? or string? depends on DB schema
                                   }).FirstOrDefault();
 
@@ -691,10 +693,32 @@ namespace PMS.Modules.PatientManagement
                     Reg_PatientID = patientRaw.pat_id,
                     DOB = patientRaw.DOB.HasValue
                           ? patientRaw.DOB.Value.ToString("dd/MM/yyyy")
-                          : ""
+                          : "",
+                          Monitoring = patientRaw.Monitoring ?? false
                 };
 
                 return new JavaScriptSerializer().Serialize(patient);
+            }
+        }
+
+        [WebMethod]
+        public static string CNICValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "CNIC Validation"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
             }
         }
     }
