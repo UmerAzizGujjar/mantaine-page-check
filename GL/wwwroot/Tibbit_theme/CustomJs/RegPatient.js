@@ -569,8 +569,12 @@ function Get_Pat_Info(reg_id) {
             $('#txt_OtherCnic').val(data.other_cnic);
             $('#txtAge_yearss').val(data.DOB);
             $('#txtCardFee').val(data.Card_fee);
-            //dob
-         
+            
+            if (data.Monitoring === true) {
+                $('#chkMonitoring').prop('checked', true).trigger('change');
+            } else {
+                $('#chkMonitoring').prop('checked', false).trigger('change');
+            }
             if (data.MaritalStatus_text)
                 $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
             if (data.Country_text)
