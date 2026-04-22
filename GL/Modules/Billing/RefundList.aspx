@@ -194,7 +194,11 @@
                         });
                     },
                     "columns": [
-                        {"data": null,"width": "5%","orderable": false,"render": function (data, type, full) {
+                        {
+                            "data": null,
+                            "width": "5%",
+                            "orderable": false,
+                            "render": function (data, type, full) {
                                 return '<input type="checkbox" class="refund-checkbox" value="' + full.Refund_ID + '" />';
                             },
                             "createdCell": function (td, cellData, rowData, row, col) {
@@ -207,30 +211,44 @@
                         {
                             "data": "Refund_Date", "name": "Refund_Date",
                             "render": function (data, type, full) {
-                                debugger;
                                 var date = full.Refund_Date;
                                 date = moment(date).format('DD-MMM-YYYY');
                                 return date;
-                            }, "width": "10%", "orderable": true
+                            },
+                            "width": "10%",
+                            "orderable": true
                         },
                         { "data": "Refund_Amount", "width": "10%", className: "text-right", "orderable": false },
                         { "data": "MrNo", "name": "MrNo", "width": "10%", "orderable": false },
-                        { "data": "Remarks", "width": "20%", "orderable": false },
-
-
+                        { "data": "Remarks", "width": "15%", "orderable": false },
+                        {
+                            "data": "Status",
+                            "width": "8%",
+                            "orderable": true,
+                            "render": function (data, type, full) {
+                                if (data === "Approved") {
+                                    return '<span class="badge badge-success" style="background-color: #28a745; padding: 5px 10px; border-radius: 4px; color: white;">Approved</span>';
+                                } else if (data === "Rejected") {
+                                    return '<span class="badge badge-danger" style="background-color: #dc3545; padding: 5px 10px; border-radius: 4px; color: white;">Rejected</span>';
+                                } else {
+                                    return '<span class="badge badge-warning" style="background-color: #ffc107; padding: 5px 10px; border-radius: 4px; color: #333;">Created</span>';
+                                }
+                            }
+                        },
                         {
                             render: function (data, type, full) {
-                                debugger;
-                                var res = '<a href="#" onclick="EditAdvance(' + full.Refund_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>'
-
+                                // Only show Edit button if status is not Approved
+                                var editBtn = '';
+                                if (full.Status !== "Approved") {
+                                    editBtn = '<a href="#" onclick="EditAdvance(' + full.Refund_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                                }
                                 var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
-
-                                var print = '<a  class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintRefund(' + full.Refund_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
-                                var result;
-                                result = res + Del + print;
+                                var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintRefund(' + full.Refund_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                                var result = editBtn + Del + print;
                                 return result;
-
-                            }, "width": "10%", "orderable": false
+                            },
+                            "width": "12%",
+                            "orderable": false
                         }
                     ],
                     "initComplete": function (settings, json) {
@@ -285,22 +303,22 @@
     
 
     <div>
-        <table id="tblAdvanceView" class="table table-hover table-striped table-bordered">
-            <thead>
-                  <tr>
-                     <th style="text-align:center;"><input type="checkbox" id="header-check" /></th>
-                     <th>Refund_ID</th>
-                     <th>Bill_ID</th>
-                     <th>Bill No </th>
-                     <th>Refund_Date</th>
-                     <th>Refund_Amount</th>
-                     <th>Mr No#</th>
-                     <th>Remarks</th>
-                   <th>Action</th>
-                 </tr>
-            </thead>
-               
-             </table>
+     <table id="tblAdvanceView" class="table table-hover table-striped table-bordered">
+    <thead>
+        <tr>
+            <th style="text-align:center;"><input type="checkbox" id="header-check" /></th>
+            <th>Refund_ID</th>
+            <th>Bill_ID</th>
+            <th>Bill No</th>
+            <th>Refund_Date</th>
+            <th>Refund_Amount</th>
+            <th>Mr No#</th>
+            <th>Remarks</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+</table>
     </div>
 
 </asp:Content>

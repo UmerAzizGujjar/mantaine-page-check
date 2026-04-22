@@ -127,6 +127,7 @@ namespace PMS.Modules.PatientManagement
                                       Refund_Amount = R.Refund_Amount,
                                       Hospital_Refund = R.Hospital_Refund,
                                       Doctor_Refund = R.Doctor_Refund,
+                                      Status = R.Status ?? "Created",
                                       Remarks = R.Remarks,
                                   };
 

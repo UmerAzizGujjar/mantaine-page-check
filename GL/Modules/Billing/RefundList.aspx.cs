@@ -95,6 +95,7 @@ namespace PMS
                                     Bill_No = (from bl in _dbContext.Ar_Billings where bl.Bill_ID == R.Bill_ID select bl.Bill_No).FirstOrDefault(),
                                     Refund_Date = R.Refund_Date,
                                     Refund_Amount = R.Refund_Amount,
+                                    Status = R.Status ?? "Created",
                                     MrNo = (from bl in _dbContext.Patients where bl.Patient_ID == R.Patient_ID select bl.mr_no_sequence).FirstOrDefault(),
                                     Remarks = R.Remarks,
                                 };
