@@ -1405,8 +1405,9 @@ function SaveData() {
                 }
             });
             var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + patientID;
-            //var url = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + patientID;
+            var url1 = "../../ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + patientID;
             window.open(url, '_blank');
+            window.open(url1, '_blank');
             window.location.href = "OPDView.aspx";
         },
         error: function (xhr, status, error) {
@@ -1833,14 +1834,11 @@ function AddReferPatientDetail(reg_id) {
 
 // OPD.js
 function OPD_Print(OPD_ID, company_name) {
-    debugger;
     if (!OPD_ID) {
         console.error("OPD_ID is missing");
         return;
     }
 
-    var reportPath;
-    var url;
     var locationInfo = window.location;
 
     if (company_name == 'As-Siraat Serving Humanity') {
@@ -1849,23 +1847,19 @@ function OPD_Print(OPD_ID, company_name) {
         reportPath = 'ReportViewer.aspx';
     }
 
-    var reportParams = '?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=' + OPD_ID;
+    var url = "/ReportViewer.aspx?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
+    var url1 = "/ReportViewer.aspx?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=" + OPD_ID;
 
-    if (locationInfo.hostname === "localhost") {
-        // Local development — use relative path
-        url = '../../' + reportPath + reportParams;
-    } else {
-        // Live server — dynamically pick up IP and folder
-        var urlParts = window.location.href.split('/');
-        var protocol = urlParts[0];           // "http:"
-        var ip = urlParts[2];           // "173.234.137.51"
-        var foldername = urlParts[3];           // "Assiraat_Standard"
-
-        url = protocol + '//' + ip + '/' + foldername + '/' + reportPath + reportParams;
+    if (locationInfo.hostname !== "localhost") {
+        var urlInfo = window.location.href.split('/');
+        var ip = urlInfo[2];
+        var foldername = urlInfo[3];
+        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=OPD_Patient_Print&Title=OPD Patient Print &OPD_ID=' + OPD_ID;
+        url1 = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=' + OPD_ID;
     }
 
-    console.log("Opening URL:", url); // helpful for debugging
     window.open(url, '_blank');
+    window.open(url1, '_blank');
 }
 
 
