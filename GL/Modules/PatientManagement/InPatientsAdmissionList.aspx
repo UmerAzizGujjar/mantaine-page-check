@@ -114,10 +114,10 @@
                         "data": "Admission_Date", "name": "Admission_Date",
                         "render": function (data, type, full) {
                             return moment(full.Admission_Date).format('DD-MMM-YYYY');
-                        }, "width": "10%", "orderable": true
+                        }, "width": "7%", "orderable": true
                     },
-                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%", "orderable": true },
-                    { "data": "Full_Name", "name": "Full_Name", "width": "12%", "orderable": false },
+                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
+                    { "data": "Full_Name", "name": "Full_Name", "width": "10%", "orderable": false },
                     { "data": "Father_Name", "width": "10%", "orderable": false },
                     { "data": "Patient_Type", "name": "Patient_Type", "width": "10%", "orderable": true },
                     { "data": "Department", "name": "Department", "width": "10%", "orderable": true },
@@ -145,7 +145,6 @@
                         }
                     },
                     { "data": "AdmitDays", "name": "AdmitDays", "width": "10%", "orderable": true },
-                    { "data": "Bed_No", "name": "Bed_No", "width": "10%", "orderable": true },
                     {
                         "render": function (data, type, full) {
                             var res = '<a href="#" onclick="editOpen(' + full.In_Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
@@ -153,7 +152,7 @@
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color:white;padding: 5px 8px;" href="#" onclick="PrintSlip(' + full.In_Patient_ID + ')"><i class="fa fa-print"></i></a>';
                             return res + Del + print;
                         },
-                        "width": "12%", "orderable": false
+                        "width": "13%", "orderable": false
                     }
                 ],
                 "createdRow": function (row, data, dataIndex) {
@@ -330,8 +329,7 @@
                     <th>Patient Category</th> 
                     <th>Dept.</th>                      
                     <th>Admitted By</th>                             
-                    <th>Ward/Room</th>                             
-                    <th>bed No</th>                             
+                    <th>Ward/Room</th>                          
                     <th>Days Occupied</th>                             
                     <th>Actions</th>
                 </tr>
