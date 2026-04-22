@@ -32,7 +32,73 @@ namespace PMS.Modules.PatientManagement
                 
             
         }
+        [WebMethod]
+        public static string CNICUpdateCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "CNIC Validation"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
+        public static string SaveCNIC(string Patient_ID, string enteredCNIC)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
 
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.NIC = enteredCNIC;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+        [WebMethod]
+        public static string PatientMonitoring(string Patient_ID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.Monitoring = true;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
         [WebMethod]
         public static string GetUserAccount()
         {
@@ -2569,6 +2635,27 @@ namespace PMS.Modules.PatientManagement
                     p.Created_Time.HasValue &&
                     p.Created_Time.Value.Date == DateTime.Now.Date &&
                     p.Patient_Main_Category == departmentId) + 1;
+            }
+        }
+
+        [WebMethod]
+        public static string CNICValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "CNIC Validation"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
             }
         }
     }

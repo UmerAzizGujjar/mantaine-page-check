@@ -1475,6 +1475,7 @@ namespace PMS
             public string Gender;
             public string Age;
             public string Mobile;
+            public string NIC;
             public string Address;
             public string Entry_Date;
             public string AdvanceAmount;
@@ -1659,6 +1660,75 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(data));
         }
 
+        [WebMethod]
+        public static string CNICUpdateCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "CNIC Validation"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
+        public static string SaveCNIC(string Patient_ID, string enteredCNIC)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.NIC = enteredCNIC;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+        [WebMethod]
+        public static string PatientMonitoring(string Patient_ID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.Monitoring = true;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+
+
         [System.Web.Services.WebMethod]
         public static Detail GetDetail(string PatientID)
         {
@@ -1687,6 +1757,7 @@ namespace PMS
                     pt.Entry_Date = pat.Created_time.ToString();
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
+                pt.NIC = pat.NIC;
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 Type = db.GetDataValueName("Patient Type", Type);
                 var inpatid = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + "order by Advance_ID desc");
@@ -5918,6 +5989,27 @@ namespace PMS
             }
 
             return list;
+        }
+
+        [WebMethod]
+        public static string CNICValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "CNIC Validation"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
         }
     }
 }

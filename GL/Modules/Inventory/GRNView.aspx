@@ -422,22 +422,22 @@
             debugger;
             var ID = id
             if (type == 'GRN') {
-                window.open("GRN.aspx?GRN_ID=" + ID, "_blank");
+                window.open("GRN.aspx?GRN_ID="+ ID, "_blank");
             }
             else if (type == 'IGP') {
-                window.open("InversionGatePass.aspx?IGP_Id = " + ID, "_blank");
+                window.open("InversionGatePass.aspx?IGP_Id =" + ID, "_blank");
             }
             else if (type == 'PO') {
-                window.open("../AP/PurchaseOrder.aspx?PO_ID=" + ID, "_blank");
+                window.open("../AP/PurchaseOrder.aspx?PO_ID="+ ID, "_blank");
             }
             else if (type == 'PR') {
-                window.open("../AP/PurchaseRequistion.aspx?ID=" + ID, "_blank");
+                window.open("../AP/PurchaseRequistion.aspx?ID="+ ID, "_blank");
             }
             else if (type == 'PUR Inv') {
-                window.open("AddPurchaseInvoice.aspx?Inv_ID=" + ID, "_blank");
+                window.open("AddPurchaseInvoice.aspx?Inv_ID="+ ID, "_blank");
             }
             else if (type == 'Pay Inv') {
-                window.open("AddPaymentInvoice.aspx?Inv_ID=" + ID, "_blank");
+                window.open("AddPaymentInvoice.aspx?Inv_ID="+ ID, "_blank");
             }
         }  
 

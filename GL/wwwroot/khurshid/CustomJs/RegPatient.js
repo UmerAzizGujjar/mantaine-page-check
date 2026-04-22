@@ -352,6 +352,7 @@ function SavePatient() {
     var State = $('#ddlstate').val();
     var Country = $('#ddlCountry :selected').val();
     var cardfee = $('#txtCardFee').val();
+    var Monitoring = $('#chkMonitoring').is(':checked');
     var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
 
     if (PatientName === "") {
@@ -454,6 +455,7 @@ function SavePatient() {
         "Country": Country,
         "cardfee": cardfee,
         "OtherCnic": OtherCnic,
+        "Monitoring": Monitoring,
         "AntiForgeryToken": AntiForgeryToken,
 
     });
@@ -567,7 +569,11 @@ function Get_Pat_Info(reg_id) {
             $('#txtAge_yearss').val(data.DOB);
             $('#txtCardFee').val(data.Card_fee);
             //dob
-
+            if (data.Monitoring === true) {
+                $('#chkMonitoring').prop('checked', true).trigger('change');
+            } else {
+                $('#chkMonitoring').prop('checked', false).trigger('change');
+            }
             if (data.MaritalStatus_text)
                 $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
             if (data.Country_text)
@@ -591,4 +597,26 @@ function Get_Pat_Info(reg_id) {
             console.error("AJAX Error: ", response);
         }
     });
+}
+
+
+function isCNICValidationRequired() {
+    var result = false;
+    $.ajax({
+        type: "POST",
+        url: "RegisterPatient.aspx/CNICValidation",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            if (response.d === "01") {
+                result = true;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error checking CNIC validation:", error);
+            result = false;
+        }
+    });
+    return result;
 }

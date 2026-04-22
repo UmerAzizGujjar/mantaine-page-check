@@ -8,6 +8,7 @@
           
           $(document).ready(function () {
               loadCardfee();
+              checkMonitoringVisibility();
               var reg_id = '<%= Request.QueryString["Reg_id"] %>'
          if (reg_id != "") {
             
@@ -86,6 +87,28 @@
                   },
                   error: function (xhr, status, error) {
                       console.error("Error loading card fee:", error);
+                  }
+              });
+          }
+
+          function checkMonitoringVisibility() {
+              $.ajax({
+                  type: "POST",
+                  url: "RegisterPatient.aspx/MonitoringCheckbox",
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  success: function (response) {
+
+                      if (response.d === "01") {
+                          $('#MonitoringDiv').show(); 
+                      } else {
+                          $('#MonitoringDiv').hide();
+                      }
+
+                  },
+                  error: function (xhr, status, error) {
+                      console.error("Error checking Monitoring checkbox:", error);
+                      $('#MonitoringDiv').hide();
                   }
               });
           }
@@ -223,6 +246,12 @@
          
         </div>
     </div>
+        <div class="row" id="MonitoringDiv">
+            <div class="col-lg-1 col-md-4 col-sm-6">
+                <label for="chkMonitoring">Monitoring</label>
+                <input type="checkbox" id="chkMonitoring" />
+            </div>
+        </div>
     </div>
     </div>
         </div>

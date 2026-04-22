@@ -1,7 +1,7 @@
 ﻿
 $(document).ready(function () {
     debugger;
-
+    isCNICValidationRequired();
     $('.show').show();
     $('#divcard').hide();
     $('#divapprove').hide();
@@ -1101,6 +1101,53 @@ function SavePatient() {
         return;
     }
 
+    var isCNICRequired = isCNICValidationRequired();
+    if (isCNICRequired) {
+        var isCNICEmpty = !CNIC || CNIC === "" || CNIC === "_____-_______-_";
+        var isOtherCNICEmpty = !OtherCNIC || OtherCNIC === "" || OtherCNIC === "_____-_______-_";
+
+        if (isCNICEmpty && isOtherCNICEmpty) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'CNIC Required!',
+                text: 'Please enter  CNIC or Other CNIC',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            });
+            $('#SavePatient_Data').attr('disabled', false);
+            return;
+        } else {
+            if (!isCNICEmpty && CNIC !== "_____-_______-_") {
+                var cnicPattern = /^\d{5}-\d{7}-\d$/;
+                if (!cnicPattern.test(CNIC)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid CNIC Format!',
+                        text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                }
+            }
+            if (!isOtherCNICEmpty && OtherCNIC !== "_____-_______-_") {
+                var otherCnicPattern = /^\d{5}-\d{7}-\d$/;
+                if (!otherCnicPattern.test(OtherCNIC)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Other CNIC Format!',
+                        text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                }
+            }
+        }
+    }
+
     var data = {
         Full_Name: Full_Name,
         RelationType: RelationType,
@@ -1944,46 +1991,6 @@ function OPD_Print(OPD_ID, company_name) {
     window.open(url1, '_blank');
 }
 
-    //alternative js below in case of IP failure
-
-//function OPD_Print(OPD_ID, company_name) {
-//    debugger;
-//    if (!OPD_ID) {
-//        console.error("OPD_ID is missing");
-//        return;
-//    }
-
-//    var reportPath;
-//    var url;
-//    var locationInfo = window.location;
-
-//    if (company_name == 'As-Siraat Serving Humanity') {
-//        reportPath = '../../ReportViewer.aspx';
-//    } else {
-//        reportPath = 'ReportViewer.aspx';
-//    }
-
-//    var reportParams = '?ReportName=OPD_Patient_Print_Slip&Title=OPD Patient Print &OPD_ID=' + OPD_ID;
-
-//    if (locationInfo.hostname === "localhost") {
-//        // Local development — use relative path
-//        url = '../../' + reportPath + reportParams;
-//    } else {
-//        // Live server — dynamically pick up IP and folder
-//        var urlParts = window.location.href.split('/');
-//        var protocol = urlParts[0];           // "http:"
-//        var ip = urlParts[2];           // "173.234.137.51"
-//        var foldername = urlParts[3];           // "Assiraat_Standard"
-
-//        url = protocol + '//' + ip + '/' + foldername + '/' + reportPath + reportParams;
-//    }
-
-//    console.log("Opening URL:", url); // helpful for debugging
-//    window.open(url, '_blank');
-//}
-
-
-
 function getVisitDays(regPatId) {
     if (!regPatId || regPatId <= 0) return;
 
@@ -2015,4 +2022,26 @@ function getVisitDays(regPatId) {
             $('#Span6').text('');
         }
     });
+}
+
+
+function isCNICValidationRequired() {
+    var result = false;
+    $.ajax({
+        type: "POST",
+        url: "OPD.aspx/CNICValidation",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            if (response.d === "01") {
+                result = true;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error checking CNIC validation:", error);
+            result = false;
+        }
+    });
+    return result;
 }

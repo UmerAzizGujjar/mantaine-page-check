@@ -200,7 +200,7 @@
                         "data": "IsAcknowledge",
                         "name": "IsAcknowledge",
                         "render": function (data, type, row) {
-                            if (row.IsApproved === true && row.IsAcknowledge === true) {
+                            if (row.IsApproved === true ) {
                                 return '<span class="">Approved</span>';
                             }
                             else if (row.IsAcknowledge === true && row.IsApproved === false) {

@@ -1198,8 +1198,8 @@
                                 'DisAmt': disAmt,
                                 'NetAmt': netAmt,
                                 'Batch_No': Batch_No,
-                                'CGSAmount': CGSAmount
-                                //,'LineDiscount': lineDiscount
+                                'CGSAmount': CGSAmount,
+                                'LineDiscount': lineDiscount
                             });
                         });
                         if (!isValid) {

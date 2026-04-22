@@ -11,6 +11,11 @@
 .mleft {
     margin-left: 15px !important;
 }
+.cnic-input {
+    width: 250px !important;
+    margin: 0 auto; /* center it */
+    display: block;
+}
 .card {
     border: 1px solid #C4C4C4;
     background-color: #f9f9f9;
