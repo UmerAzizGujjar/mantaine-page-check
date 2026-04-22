@@ -352,6 +352,7 @@ function SavePatient() {
     var State = $('#ddlstate').val();
     var Country = $('#ddlCountry :selected').val();
     var cardfee = $('#txtCardFee').val();
+    var Monitoring = $('#chkMonitoring').is(':checked');
     var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
 
     var valid = true;
@@ -453,6 +454,7 @@ function SavePatient() {
         "Country": Country,
         "cardfee": cardfee,
         "OtherCnic": OtherCnic,
+        "Monitoring": Monitoring,
         "AntiForgeryToken": AntiForgeryToken,
     });
 
