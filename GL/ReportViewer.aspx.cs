@@ -1558,6 +1558,7 @@ namespace PMS
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[1].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[2].Name.ToString());
                 rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[3].Name.ToString());
+                rd.SetParameterValue("@outPatient", Convert.ToInt32(out_Patient_ID), rd.Subreports[4].Name.ToString());
             }
             else if (reportName == "Reg_Patient_Print")
             {
