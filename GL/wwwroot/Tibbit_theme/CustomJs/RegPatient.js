@@ -39,22 +39,22 @@
         }, 0);
     });
 
-    $('#txt_cnic').on('focus', function () {
-        var input = this;
-        setTimeout(function () {
-            if (input.setSelectionRange) {
-                input.setSelectionRange(0, 0);
-            } else if (input.createTextRange) {
-                var range = input.createTextRange();
-                range.collapse(true);
-                range.moveEnd('character', 0);
-                range.moveStart('character', 0);
-                range.select();
-            }
-        }, 0);
-    });
+    //$('#txt_cnic').on('focus', function () {
+    //    var input = this;
+    //    setTimeout(function () {
+    //        if (input.setSelectionRange) {
+    //            input.setSelectionRange(0, 0);
+    //        } else if (input.createTextRange) {
+    //            var range = input.createTextRange();
+    //            range.collapse(true);
+    //            range.moveEnd('character', 0);
+    //            range.moveStart('character', 0);
+    //            range.select();
+    //        }
+    //    }, 0);
+    //});
 
-    $('#txt_mobile, #txt_cnic').on('click', function (e) {
+    $('#txt_mobile').on('click', function (e) {
         e.preventDefault();
         this.setSelectionRange(0, 0);
     });
