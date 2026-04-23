@@ -99,10 +99,8 @@ namespace PMS.Modules.Accounts
                              casher = p.cashier,
                              EmpCode=p.Emp_Code,
                              AllowUndischarge = p.allow_undischarge,
-                              // TODO: Uncomment after adding/mapping `All_doctor_template` in `aspnet_User`.
-                              // AllDoctorTemplate = p.All_doctor_template,
-                              AllDoctorTemplate = false,
-                         }).FirstOrDefault();
+                               AllDoctorTemplate = p.All_doctor_template,
+                          }).FirstOrDefault();
             string data = string.Empty;
             data = new JavaScriptSerializer().Serialize(users);
             return data;
@@ -216,8 +214,7 @@ namespace PMS.Modules.Accounts
                     user.cashier = data.ddlcasher;
                     user.AllowRateEdit = data.AllowRateEdit;
                     user.allow_undischarge = data.AllowUndischarge;
-                    // TODO: Uncomment after adding/mapping `All_doctor_template` in `aspnet_User`.
-                    // user.All_doctor_template = data.AllDoctorTemplate;
+                    user.All_doctor_template = data.AllDoctorTemplate;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -301,8 +298,8 @@ namespace PMS.Modules.Accounts
                 newuser.cashier = data.ddlcasher;
                 newuser.AllowRateEdit = data.AllowRateEdit;
                 newuser.allow_undischarge = data.AllowUndischarge;
-                // TODO: Uncomment after adding/mapping `All_doctor_template` in `aspnet_User`.
-                // newuser.All_doctor_template = data.AllDoctorTemplate;
+          
+                 newuser.All_doctor_template = data.AllDoctorTemplate;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
                 db.aspnet_Users.InsertOnSubmit(newuser);
 
