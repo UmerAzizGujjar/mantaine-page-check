@@ -5871,26 +5871,26 @@
                     }
                 });
             }
-            //function PatientMonitoring() {
-            //    var Patient_ID = $('#hdfPatient_ID').val();
-            //    $.ajax({
-            //        type: "POST",
-            //        url: "BillingProcess.aspx/PatientMonitoring",
-            //        data: JSON.stringify({
-            //            'Patient_ID': Patient_ID                    
-            //        }),
-            //        contentType: "application/json; charset=utf-8",
-            //        dataType: "json",
-            //        success: function (response) {
-            //            debugger;
-            //            var doctorIds = JSON.parse(response.d);
+            function PatientMonitoring() {
+                var Patient_ID = $('#hdfPatient_ID').val();
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/PatientMonitoring",
+                    data: JSON.stringify({
+                        'Patient_ID': Patient_ID                    
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        var doctorIds = JSON.parse(response.d);
 
-            //        },
-            //        error: function (err) {
-            //            alert("Could not Save CNIC.");
-            //        }
-            //    });
-            //}
+                    },
+                    error: function (err) {
+                        alert("Could not Save CNIC.");
+                    }
+                });
+            }
 
             function LoadBillbypatid(pat_id) {
                 debugger;
