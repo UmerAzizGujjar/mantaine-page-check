@@ -3447,6 +3447,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
+                    tr_Export.Visible = true;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
