@@ -1459,6 +1459,23 @@ function SaveData() {
         return;
     }
 
+    if (discount > 0 && (!Remarks || Remarks.trim() === "")) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Remarks Required',
+            text: 'Please enter remarks when discount is given.',
+            showConfirmButton: false,
+            timer: 2500,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        $('#txtremarks').focus();
+        return;
+    }
+
     if (Department == "101" && FilterClinic == "0") {
         Swal.fire({
             icon: 'error',

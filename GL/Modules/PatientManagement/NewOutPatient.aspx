@@ -3070,7 +3070,6 @@ function LoadLabResultrpt() {
 
         }
         function Add_MediceneRow(serialNo, testName) {
-            // Get all values from the dynamic form
             debugger;
             var medicineName = testName;
             var dose = $('#mediceneDose_' + serialNo).val();
@@ -3083,15 +3082,20 @@ function LoadLabResultrpt() {
             var frequency = $('#medicenefrequency_' + serialNo).val();
             var frequencyText = $('#medicenefrequency_' + serialNo).find('option:selected').text().trim();
             var otherInstruction = $('#otherinstructions_' + serialNo).val();
-            var otherInstructionText = $('#otherinstructions_' + serialNo).find('option:selected').text().trim();
+
+            var selectedOtherInstructionText = $('#otherinstructions_' + serialNo).find('option:selected').text().trim();
+            if (!otherInstruction || otherInstruction === "" || selectedOtherInstructionText === "Select Instruction") {
+                var otherInstructionText = "";
+                var otherInstruction = "";
+            } else {
+                var otherInstructionText = selectedOtherInstructionText;
+            }
+
             var specialInstructions = $('#specialinstructions_' + serialNo).val();
             var ItemCode = $('#ItemCode' + serialNo).val();
-
-            // Get current datetime
             var datetime = '<%= DateTime.Now.ToString("dd/MM/yyyy  h:m:s A")%>';
             var datetimeValue = '<%= DateTime.Now%>';
 
-            // Validation
             if (!dose) {
                 alert('Please select Dose');
                 return false;
@@ -3105,11 +3109,11 @@ function LoadLabResultrpt() {
                 return false;
             }
 
-            // Check if we're editing an existing row
+            // Check if this is an edit operation (existing row with matching serialNo)
             var existingRow = $('input[name="uurowid"][value="' + serialNo + '"]').closest('tr');
 
             if (existingRow.length > 0) {
-                // Update existing row - keeping your exact structure
+                // UPDATE existing row instead of creating new one
                 existingRow.find('td').eq(0).html('<input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime);
                 existingRow.find('td').eq(1).html('<input type="hidden" name="hdnItemCode" value="0">' + medicineName);
                 existingRow.find('td').eq(2).html(frequencyText + '<input type="hidden" class="field-value" value="' + frequency + '">');
@@ -3120,8 +3124,15 @@ function LoadLabResultrpt() {
                 existingRow.find('td').eq(7).html(doseText + '<input type="hidden" class="field-value" value="' + dose + '">');
                 existingRow.find('td').eq(8).html(otherInstructionText + '<input type="hidden" class="field-value" value="' + otherInstruction + '">');
                 existingRow.find('td').eq(9).html(ItemCode + '<input type="hidden" class="field-value" value="' + ItemCode + '">');
+
+                // Keep the same uurowid (don't change it)
+
+                // Clear the details div after update
+                $('#MediceneDetails_' + serialNo).slideUp();
+
             } else {
-                // Create new row - using your exact string concatenation style
+                // ADD new row (this is a new medicine, not an edit)
+                var newUuid = uuid();
                 var row = '<tr>' +
                     '<td style="display:none"><input type="hidden" name="testDate" value="' + datetimeValue + '">' + datetime + '</td>' +
                     '<td><input type="hidden" name="hdnItemCode" value="0">' + medicineName + '</td>' +
@@ -3132,31 +3143,31 @@ function LoadLabResultrpt() {
                     '<td>' + dosageFromText + '<input type="hidden" class="field-value" value="' + dosageFrom + '"></td>' +
                     '<td>' + doseText + '<input type="hidden" class="field-value" value="' + dose + '"></td>' +
                     '<td>' + otherInstructionText + '<input type="hidden" class="field-value" value="' + otherInstruction + '"></td>' +
-                    '<td style="display:none;"><input type="hidden" id="ItemCode" name="ItemCode" value="' + serialNo + '" /></td>' +
+                    '<td style="display:none;"><input type="hidden" name="ItemCode" value="' + serialNo + '" /></td>' +
                     '<td>' +
                     '<a href="#" onclick="editMedicine(this)">Edit</a> | ' +
                     '<a href="#" onclick="deleteMedicine(this)"><i class="fa fa-times"></i></a>' +
+                    '<input type="hidden" name="uurowid" value="' + newUuid + '">' +
                     '</td>' +
-                   
                     '</tr>';
-
-                // Append to table
                 $('#tblMedicines tbody').append(row);
+
+                $('#dvtblMedicines').slideDown();
+                $('#MediceneDetails_' + serialNo).slideUp();
             }
 
-            // Rest of your existing code remains exactly the same...
-            $('#dvtblMedicines').slideDown();
-            $('#MediceneDetails_' + serialNo).slideUp();
+            // Clear the form fields after add/update
+            $('#mediceneDose_' + serialNo).val('');
+            $('#mediceneDosageFrom_' + serialNo).val('');
+            $('#duration_' + serialNo).val('');
+            $('#mediceneroute_' + serialNo).val('');
+            $('#medicenefrequency_' + serialNo).val('');
+            $('#otherinstructions_' + serialNo).val('');
+            $('#specialinstructions_' + serialNo).val('');
 
-            if (existingRow.length === 0) {
-                $('#mediceneDose_' + serialNo).val('');
-                $('#mediceneDosageFrom_' + serialNo).val('');
-                $('#duration_' + serialNo).val('');
-                $('#mediceneroute_' + serialNo).val('');
-                $('#medicenefrequency_' + serialNo).val('');
-                $('#otherinstructions_' + serialNo).val('');
-                $('#specialinstructions_' + serialNo).val('');
-            }
+            // Uncheck the checkbox and remove the details div
+            $('#Medicenechk_' + serialNo).prop('checked', false);
+            $('#MediceneDetails_' + serialNo).remove();
         }
         function editMedicine(element) {
             const $row = $(element).closest('tr');
