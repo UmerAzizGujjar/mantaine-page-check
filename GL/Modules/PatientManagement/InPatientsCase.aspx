@@ -4934,7 +4934,8 @@
                 }
                 else if (maindpt == "006") {
 
-                    FillProcedure("006");
+                    //FillProcedure("006");
+                    AddRadialogyTest();
 
                     $('#divRotation').hide();
                 }
@@ -4943,6 +4944,16 @@
                     FillProcedure("007");
                     $('#ddlXRayLF').hide();
                     $('#divRotation').hide();
+                }
+                else if (maindpt == "009") {
+                    AddRadialogyTest('009'); 
+                    $('#divRotation').hide();
+                    $('#ddlXRayLF').hide();
+                }
+                else if (maindpt == "010") {
+                    AddRadialogyTest('010'); 
+                    $('#divRotation').hide();
+                    $('#ddlXRayLF').hide();
                 }
 
             }
@@ -4963,7 +4974,6 @@
                 FillLabTests();
                 $('#divRotation').hide();
                 $('#ddlXRayLF').hide();
-
             }
             else if (maindpt == "002") {
                 FillTestsByCategory('002');
@@ -4976,23 +4986,35 @@
             else if (maindpt == "004") {
                 FillTestsByCategory('004');
                 $('#ddlXRayLF').hide();
-
             }
             else if (maindpt == "005") {
-
                 FillProcedure("005");
                 $('#divRotation').hide();
                 $('#ddlXRayLF').hide();
             }
             else if (maindpt == "006") {
-
                 FillProcedure("006");
                 $('#divRotation').hide();
                 $('#ddlXRayLF').hide();
             }
             else if (maindpt == "007") {
-
                 FillProcedure("007");
+                $('#divRotation').hide();
+                $('#ddlXRayLF').hide();
+            }
+            
+            else if (maindpt == "009") {
+                FillTestsByCategory('009');  
+                $('#divRotation').hide();
+                $('#ddlXRayLF').hide();
+            }
+            else if (maindpt == "010") {
+                FillProcedure("010"); 
+                $('#divRotation').hide();
+                $('#ddlXRayLF').hide();
+            }
+            else {
+                FillProcedure(maindpt);
                 $('#divRotation').hide();
                 $('#ddlXRayLF').hide();
             }

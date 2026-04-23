@@ -566,7 +566,7 @@ namespace PMS.Modules.PatientManagement
               AND rg.Patient_No IS NOT NULL 
               AND ISNULL(rg.isCancel, 0) != 1 
               AND (
-                  LTRIM(RTRIM(rg.patient_no)) LIKE '%{safeSearch}%' 
+                  LTRIM(RTRIM(rg.mr_no_sequence)) LIKE '%{safeSearch}%' 
                   OR LTRIM(RTRIM(rg.full_name)) LIKE '%{safeSearch}%' 
                   OR LTRIM(RTRIM(rg.mobile1)) LIKE '%{safeSearch}%' 
                   OR LTRIM(RTRIM(rg.nic)) LIKE '%{safeSearch}%'
@@ -2297,7 +2297,7 @@ namespace PMS.Modules.PatientManagement
             if (string.IsNullOrEmpty(SearchString))
                 SearchSql = "SELECT top 10 pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 order by pat_id desc";
             else
-                SearchSql = "SELECT pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 and (LTRIM(RTRIM(patient_no)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
+                SearchSql = "SELECT pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 and (LTRIM(RTRIM(mr_no_sequence)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
 
             DataTable dt = DBClass.getDataTable(SearchSql);
             List<PatientsResult> list = new List<PatientsResult>();
