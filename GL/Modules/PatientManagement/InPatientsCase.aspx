@@ -2253,6 +2253,8 @@
             var Oxygen1 = $('#ctl00_MainContent_txtOxygen1').val();
             var otherecdesc = toHtml('#ctl00_MainContent_txtotherecdesc');
             var Special_Instruction_Desc = $('#ctl00_MainContent_txtRN_Special_Instruction_Desc').val();
+            var Special_Instruction_Desc = $('#ctl00_MainContent_txtFollowUpInstruction').val();
+            var Special_Instruction_Desc = $('#ctl00_MainContent_txtOperationalDetails').val();
             var Receiving_Date_Discharge = $('#ctl00_MainContent_txttxtReceiving_DateDesc').val();
 
 
@@ -9805,6 +9807,15 @@
                                                  <asp:Label ID="Label10" runat="server" Text="Discharge Type"></asp:Label>
                                                  <asp:DropDownList runat="server" AppendDataBoundItems="true" ID="ddlDischarge_Type"></asp:DropDownList>
                                              </div>
+                                             <div class="col-lg-3 col-md-6 col-sm-12">
+                                                 <asp:Label ID="Label136" runat="server" Text="Follow Up Instruction"></asp:Label>
+                                                 <asp:TextBox ID="txtFollowUpInstruction" runat="server" TabIndex="9" TextMode="MultiLine" Style="height: 35px; width: 100%"></asp:TextBox>
+                                             </div>
+                                             <div class="col-lg-3 col-md-6 col-sm-12">
+                                                 <asp:Label ID="Label88" runat="server" Text="Operational Details"></asp:Label>
+                                                 <asp:TextBox ID="txtOperationalDetails" runat="server" TabIndex="9" TextMode="MultiLine" Style="height: 35px; width: 100%"></asp:TextBox>
+                                             </div>
+
                                          </div>
                                          <div class="row">
                                              <div class="col-lg-8">
