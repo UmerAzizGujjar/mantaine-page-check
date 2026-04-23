@@ -229,12 +229,34 @@
                     { "data": "Refund_Amount", "width": "10%", className: "text-right", "orderable": false },
                     { "data": "Hospital_Refund", "name": "Hospital_Refund", "width": "10%", "orderable": false },
                     { "data": "Doctor_Refund", "width": "10%", "orderable": false },
-                    { "data": "Remarks", "width": "10%", "orderable": false },
+                    {
+                        "data": "Remarks",
+                        "width": "10%",
+                        "orderable": false
+                    },
+                    {
+                        "data": "Status",
+                        "width": "8%",
+                        "orderable": true,
+                        "render": function (data, type, full) {
+                            if (data === "Approved") {
+                                return '<span class="badge badge-success" style="background-color: #28a745; padding: 5px 10px; border-radius: 4px; color: white;">Approved</span>';
+                            } else if (data === "Rejected") {
+                                return '<span class="badge badge-danger" style="background-color: #dc3545; padding: 5px 10px; border-radius: 4px; color: white;">Rejected</span>';
+                            } else {
+                                return '<span class="badge badge-warning" style="background-color: #ffc107; padding: 5px 10px; border-radius: 4px; color: #333;">Created</span>';
+                            }
+                        }
+                    },
                     {
                         render: function (data, type, full) {
-                            var res = '<a href="#" onclick="EditOPDRefund(' + full.Refund_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                            // Only show Edit button if status is not Approved
+                            var editBtn = '';
+                            if (full.Status !== "Approved") {
+                                editBtn = '<a href="#" onclick="EditOPDRefund(' + full.Refund_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
+                            }
                             var Del = '<a href="#" class="delListBtn" onclick="cancelRefund(' + full.Refund_ID + ')" style="border-radius: 4px; margin-left: 4px; color: white; background-color: red; padding: 5px 8px; text-decoration: none;"><i class="fa fa-trash"></i></a>';
-                            return res + Del;
+                            return editBtn + Del;
                         },
                         "width": "10%",
                         "orderable": false
@@ -362,23 +384,23 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <div>
-    <table id="tblOPDRefund" class="table table-hover table-striped table-bordered">
-        <thead>
-              <tr>
-                 <th style="text-align:center;"><input type="checkbox" id="header-check" /></th>
-                 <th>Refund_ID</th>
-                 <th>OPD No</th>
-                 <th>Full_Name</th>
-                 <th>Refund Date</th>
-                 <th>Refund_Amount</th>
-                 <th>Hospital Refund</th>
-                 <th>Doctor Refund</th>
-                 <th>Remarks</th>
-                 <th>Action</th>
-             </tr>
-        </thead>
-           
-         </table>
+   <table id="tblOPDRefund" class="table table-hover table-striped table-bordered">
+    <thead>
+        <tr>
+            <th style="text-align:center;"><input type="checkbox" id="header-check" /></th>
+            <th>Refund_ID</th>
+            <th>OPD No</th>
+            <th>Full_Name</th>
+            <th>Refund Date</th>
+            <th>Refund_Amount</th>
+            <th>Hospital Refund</th>
+            <th>Doctor Refund</th>
+            <th>Remarks</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+</table>
 </div>
 
 </asp:Content>
