@@ -49,9 +49,8 @@ namespace PMS
                         return false;
                     }
 
-                    // return user.allow_undischarge == true;
+                    return user.allow_undischarge == true;
 
-                    return false;
                 }
             }
             catch
@@ -64,10 +63,10 @@ namespace PMS
         public static string UnDischargePatients(int[] inPatientIds)
         {
             // TODO: Keep backend authorization check once `allow_undischarge` is added.
-            // if (!CanUnDischarge())
-            // {
-            //     return "You are not authorized to undischage patients.";
-            // }
+             if (!CanUnDischarge())
+             {
+                return "You are not authorized to undischage patients.";
+            }
 
             if (inPatientIds == null || inPatientIds.Length == 0)
             {

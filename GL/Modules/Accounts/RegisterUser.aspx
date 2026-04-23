@@ -84,6 +84,8 @@
                     $('#Allowradiologyapprove').prop('checked', data.Allowradiologyapprove);
                     $('#Rejectradiology').prop('checked', data.Rejectradiology);
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
+                    $('#AllowUndischarge').prop('checked', data.AllowUndischarge);
+                    
                 },
                 error: function (xhr, status, error) {
                     alert("Error: " + xhr.responseText);
@@ -142,6 +144,8 @@
             var Allowradiologyapprove = $('#Allowradiologyapprove').prop('checked');
             var Rejectradiology = $('#Rejectradiology').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
+            var AllowUndischarge = $('#AllowUndischarge').prop('checked');
+            
             var EmpCode = $('#EmpCode').val();
             var ddlcasher = $('#ddlcasher').val();
             var hasMinLength = Password.length >= 6;
@@ -273,7 +277,8 @@
                 "Allowradiologyapprove": Allowradiologyapprove,
                 "Rejectradiology": Rejectradiology,
                 "AllowRateEdit": AllowRateEdit,
-                "ddlcasher": ddlcasher
+                "ddlcasher": ddlcasher,
+                "AllowUndischarge": AllowUndischarge
 
             };
 
@@ -519,6 +524,9 @@
                                                         <input type="checkbox" class="form-check-input" id="AllowDeathDetails" name="AllowDeathDetails" />
                                                     </div>
                                                     <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="AllowUndischarge" name="AllowUndischarge" />
+</div>
+                                                    <div class="form-check">
                                                         <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
                                                     </div>
 
@@ -582,6 +590,9 @@
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AllowDeathDetails">Allow Death Details</label>
                                                     </div>
+                                                     <div class="form-check">
+     <label class="form-check-label" for="AllowUndischarge">Allow Undischarge</label>
+ </div>
                                                      <div class="form-check">
                                                        <label class="form-check-label" for="EmpCode">Employee Code</label>
                                                     </div>
