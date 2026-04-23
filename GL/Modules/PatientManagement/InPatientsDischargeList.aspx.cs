@@ -31,6 +31,74 @@ namespace PMS
         }
 
         [WebMethod]
+        public static bool CanUnDischarge()
+        {
+            try
+            {
+                var currentUserId = AppConfig.UserID;
+                if (currentUserId == Guid.Empty)
+                {
+                    return false;
+                }
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var user = db.aspnet_Users.FirstOrDefault(u => u.UserId == currentUserId);
+                    if (user == null)
+                    {
+                        return false;
+                    }
+
+                    // return user.allow_undischarge == true;
+
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [WebMethod]
+        public static string UnDischargePatients(int[] inPatientIds)
+        {
+            // TODO: Keep backend authorization check once `allow_undischarge` is added.
+            // if (!CanUnDischarge())
+            // {
+            //     return "You are not authorized to undischage patients.";
+            // }
+
+            if (inPatientIds == null || inPatientIds.Length == 0)
+            {
+                return "Please select at least one patient.";
+            }
+
+            using (var db = new DataBaseDataContext())
+            {
+                foreach (var inPatientId in inPatientIds.Distinct())
+                {
+                    var inPatient = db.In_Patients.FirstOrDefault(p => p.In_Patient_ID == inPatientId);
+                    if (inPatient != null)
+                    {
+                        inPatient.Discharge = false;
+                        inPatient.Discharge_On = null;
+                    }
+
+                    var ward = db.Ward_Allocations.Where(w => w.Patient_ID == inPatientId).FirstOrDefault();
+                    if (ward != null)
+                    {
+                        ward.IsDischarge = false;
+                    }
+                }
+
+                db.SubmitChanges();
+            }
+
+            return "Patient(s) undischarged successfully.";
+        }
+
+        [WebMethod]
         public static string DeleteRecord(int InPatientID)
         {
 
