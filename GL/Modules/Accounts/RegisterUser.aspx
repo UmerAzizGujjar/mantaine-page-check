@@ -85,6 +85,7 @@
                     $('#Rejectradiology').prop('checked', data.Rejectradiology);
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                     $('#AllowUndischarge').prop('checked', data.AllowUndischarge);
+                    $('#AllDoctorTemplate').prop('checked', data.AllDoctorTemplate);
                     
                 },
                 error: function (xhr, status, error) {
@@ -145,6 +146,7 @@
             var Rejectradiology = $('#Rejectradiology').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var AllowUndischarge = $('#AllowUndischarge').prop('checked');
+            var AllDoctorTemplate = $('#AllDoctorTemplate').prop('checked');
             
             var EmpCode = $('#EmpCode').val();
             var ddlcasher = $('#ddlcasher').val();
@@ -278,7 +280,8 @@
                 "Rejectradiology": Rejectradiology,
                 "AllowRateEdit": AllowRateEdit,
                 "ddlcasher": ddlcasher,
-                "AllowUndischarge": AllowUndischarge
+                "AllowUndischarge": AllowUndischarge,
+                "AllDoctorTemplate": AllDoctorTemplate
 
             };
 
@@ -527,6 +530,9 @@
     <input type="checkbox" class="form-check-input" id="AllowUndischarge" name="AllowUndischarge" />
 </div>
                                                     <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllDoctorTemplate" name="AllDoctorTemplate" />
+                                                    </div>
+                                                    <div class="form-check">
                                                         <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
                                                     </div>
 
@@ -593,6 +599,9 @@
                                                      <div class="form-check">
      <label class="form-check-label" for="AllowUndischarge">Allow Undischarge</label>
  </div>
+                                                     <div class="form-check">
+                                                         <label class="form-check-label" for="AllDoctorTemplate">All Doctor Template</label>
+                                                     </div>
                                                      <div class="form-check">
                                                        <label class="form-check-label" for="EmpCode">Employee Code</label>
                                                     </div>
