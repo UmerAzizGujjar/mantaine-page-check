@@ -1664,7 +1664,62 @@
                     var returnVal = false;
                     if (val == "0")//no duplicate
                     {
-                        CheckRemarksValidation();
+                        var isRemarksValidationActive = CheckRemarksValidation();
+            
+            if (isRemarksValidationActive) {
+                var isDiscountGiven = IsDiscountGiven(); // Checks global discount
+                
+                // If no global discount, check line items for discounts
+                if (!isDiscountGiven) {
+                    $.each($('#tblDetails tbody tr'), function (key, value) {
+                        var disPer = parseFloat($(value).find('input[name="DisPer"]').val()) || 0;
+                        var disAmt = parseFloat($(value).find('input[name="DisAmount"]').val()) || 0;
+                        if (disPer > 0 || disAmt > 0) {
+                            isDiscountGiven = true;
+                            return false; // break loop
+                        }
+                    });
+                }
+
+                if (isDiscountGiven) {
+                    var missingRemarks = false;
+                    var missingRowNumber = 0;
+
+                    $('#tblDetails tbody tr').each(function (index) {
+                        var disPer = parseFloat($(this).find('input[name="DisPer"]').val()) || 0;
+                        var disAmt = parseFloat($(this).find('input[name="DisAmount"]').val()) || 0;
+                        
+                        // Check if this row has a discount
+                        if (disPer > 0 || disAmt > 0) {
+                            // Get remarks from the 4th cell (index 3)
+                            var remarks = $(this).find('td').eq(3).text().trim();
+                            
+                            if (remarks === "" || remarks === ".") {
+                                missingRemarks = true;
+                                missingRowNumber = index + 1;
+                                return false; // break each loop
+                            }
+                        }
+                    });
+
+                    if (missingRemarks) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Failed!',
+                            text: 'Remarks are compulsory for discounted items. Please add remarks for Row ' + missingRowNumber + '.',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $("#btnSave").prop("disabled", false);
+                        document.getElementById("hdnDuplicateCheck").value = "0";
+                        return; // Stop execution
+                    }
+                }
+            }
                         
                         $('#btnSave').attr('disabled', 'disabled');
                         document.getElementById("hdnDuplicateCheck").value = "1";
