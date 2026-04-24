@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace PMS.Modules.Lab
 {
@@ -965,7 +969,117 @@ namespace PMS.Modules.Lab
             public string TestDepartment { get; set; }
 
             public string History { get; set; }
+            public string PACS_Study_Url { get; set; }
         }
+
+        [WebMethod]
+        public static string CheckOrthancStudy(string accessionNumber)
+        {
+            if (string.IsNullOrWhiteSpace(accessionNumber))
+                return "[]";
+
+            try
+            {
+                var baseUrl = GetOrthancBaseUrl();
+                if (string.IsNullOrWhiteSpace(baseUrl))
+                {
+                    return "[]";
+                }
+
+                var payload = new
+                {
+                    Level = "Study",
+                    Query = new { AccessionNumber = accessionNumber },
+                    Expand = true
+                };
+
+                string payloadJson = JsonConvert.SerializeObject(payload);
+
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromSeconds(10);
+                    var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
+                    var response = client.PostAsync(baseUrl + "/tools/find", content).GetAwaiter().GetResult();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    }
+                }
+            }
+            catch
+            {
+                return "[]";
+            }
+
+            return "[]";
+        }
+
+        private static string GetOrthancBaseUrl()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                var baseUrl = db.ExecuteQuery<string>("SELECT Segment1 FROM sys_Parms WHERE Name = 'PACS_URL'").FirstOrDefault();
+                baseUrl = (baseUrl ?? string.Empty).Trim().TrimEnd('/');
+                return baseUrl;
+            }
+        }
+
+        private static string GetOrthancStudyViewerUrl(string accessionNumber, string baseUrl)
+        {
+            if (string.IsNullOrWhiteSpace(accessionNumber) || string.IsNullOrWhiteSpace(baseUrl))
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                var payload = new
+                {
+                    Level = "Study",
+                    Query = new { AccessionNumber = accessionNumber },
+                    Expand = true
+                };
+
+                string payloadJson = JsonConvert.SerializeObject(payload);
+                string studiesJson = "[]";
+
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromSeconds(10);
+                    var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
+                    var response = client.PostAsync(baseUrl + "/tools/find", content).GetAwaiter().GetResult();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        studiesJson = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(studiesJson) || studiesJson == "[]")
+                {
+                    return string.Empty;
+                }
+
+                var studies = JArray.Parse(studiesJson);
+                if (studies.Count == 0)
+                {
+                    return string.Empty;
+                }
+
+                var studyUid = studies[0].SelectToken("MainDicomTags.StudyInstanceUID")?.ToString();
+                if (string.IsNullOrWhiteSpace(studyUid))
+                {
+                    return string.Empty;
+                }
+
+                return baseUrl + "/ohif/viewer?StudyInstanceUIDs=" + HttpUtility.UrlEncode(studyUid);
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
         [WebMethod]
         public static string FillTestDepartment()
         {
@@ -1054,6 +1168,7 @@ namespace PMS.Modules.Lab
 
             List<Test> AlltestList = new List<Test>();
             List<Test> AlltestListRefined = new List<Test>();
+            var orthancBaseUrl = GetOrthancBaseUrl();
 
             foreach (var item in data)
             {
@@ -1110,6 +1225,7 @@ namespace PMS.Modules.Lab
                 test.Result_Time = item.Created_Time?.ToString() ?? "";
                 test.Approved_By = item.Approved_By ?? "";
                 test.Approved_Time = item.Approved_Time?.ToString() ?? "";
+                test.PACS_Study_Url = GetOrthancStudyViewerUrl(test.Lab_Test_Detail_ID, orthancBaseUrl);
                 if (item.Test_Main_Department == null)
                 {
                     test.Test_Main_Department = "";
