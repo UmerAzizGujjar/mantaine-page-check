@@ -322,7 +322,7 @@
                         var sDate = ($("#ctl00_MainContent_txtStart_Date").val());
                         var eDate = ($("#ctl00_MainContent_txtEnd_Date").val());
                         var department = ($("#ctl00_MainContent_ddlDepartments").val());
-                        var url = 'ReportViewer.aspx?ReportName=StockAdjustment&ReportTitle= ' + rptTitle + '&startDate=' + sDate + '&endDate=' + eDate + '&Department=' + department;
+                        var url = 'ReportViewer.aspx?ReportName=StockAdjustment&ReportTitle= ' + rptTitle + '&startDate=' + sDate + '&endDate=' + eDate + '&Department=' + department + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "STM") {
