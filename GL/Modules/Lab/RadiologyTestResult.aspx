@@ -1456,6 +1456,23 @@
                 });
 
                 $('#tblLabTest tbody').html(rows);
+
+                $('#tblLabTest tbody tr').each(function (index) {
+                    var rowData = Test[index];
+                    if (!rowData || !rowData.PACS_Study_Url) {
+                        return;
+                    }
+
+                    var actionCell = $(this).find('td:eq(13)');
+                    if (actionCell.find('a[onclick="EditData(this)"]').length === 0) {
+                        return;
+                    }
+
+                    if (actionCell.find('a.pacs-link').length === 0) {
+                        actionCell.append(' | <a class="pacs-link" href="' + rowData.PACS_Study_Url + '" target="_blank" rel="noopener noreferrer">PACS</a>');
+                    }
+                });
+
                 $(".tdemergency").hide();
             });
         }
