@@ -4610,6 +4610,7 @@ namespace PMS
                 rd.SetParameterValue("edate", EndDate);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@Reason", Reason);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
 
             }
             else if (reportName == "SIH")

@@ -3369,6 +3369,26 @@ namespace PMS
                     ddlPatientType.Visible = false;
                     lblPatientType.Visible = false;
 
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+
                 }
                 else if (PageTitle == "SehatSahulatWiseExpensive")
                 {

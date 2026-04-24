@@ -70,7 +70,7 @@
                      },
                      "columns": [
                          { "data": "Student_Receipt_ID", "visible": false, "width": "0%" },
-                         { "data": "Student_Receipt_No", "name":"Student_Receipt_No", "width": "10%", "orderable": true },
+                         { "data": "Student_Receipt_No", "name":"Student_Receipt_No", "width": "8%", "orderable": true },
                          {
                              "data": "Student_Receipt_Date", "name": "Student_Receipt_Date",
                              "render": function (data, type, full) {
@@ -78,14 +78,16 @@
                                  var date = full.Student_Receipt_Date;
                                  date = moment(date).format('DD-MMM-YYYY');
                                  return date;
-                             }, "width": "15%", "orderable": false
+                             }, "width": "10%", "orderable": true
                          },
-                         { "data": "Full_Name", "name":"Full_Name", "width": "10%", "orderable": true },
-                         { "data": "Class", "name":"Class", "width": "10%", },
-                         { "data": "Status", "width": "10%", "orderable": false },
-                         { "data": "RollNo", "width": "10%", "orderable": false },
-                         { "data": "Balance", "width": "10%", "orderable": false },
-                         { "data": "Remarks", "width": "10%", "orderable": false },
+                         { "data": "Full_Name", "name":"Full_Name", "width": "8%", "orderable": true },
+                         { "data": "Class", "name":"Class", "width": "8%", },
+                         { "data": "Status", "width": "8%", "orderable": false },
+                         { "data": "RollNo", "width": "8%", "orderable": false },
+                         { "data": "Net_Payable", "width": "8%", "orderable": false },
+                         { "data": "Amount_Received", "width": "8%", "orderable": false },
+                         { "data": "Balance", "width": "8%", "orderable": false },
+                         { "data": "Remarks", "width": "8%", "orderable": false },
                          {
                              render: function (data, type, full) {
                                  debugger;
@@ -163,6 +165,8 @@
                         <th>Class</th>
                         <th>Status</th>
                         <th>Roll No</th>
+                        <th>Net Payable</th>
+                        <th>Received Amount</th>
                         <th>Balance</th>
                         <th>Remarks</th>
                         <th>View</th>
