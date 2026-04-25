@@ -166,9 +166,11 @@ namespace PMS.Modules.PatientManagement
             public string Area_text { get; set; }
             public int Reg_PatientID { get; set; }
             public string CNIC_Masked { get; set; }
+            public string other_cnic { get; set; }
             public string DOB { get; set; }
 
             public decimal Card_fee { get; set; }
+            public bool Monitoring { get; set; }
 
         }
 
@@ -290,15 +292,15 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-       
+
         //[WebMethod]
         [WebMethod]
         public static string SavePatientDetail(
-    string Full_Name, string RelationType, string Relation, string Gender,
-    string Mobile, string Date_Of_Birth, string CNIC, string Address,
-    string PatientID, string martail_status, string Age, string city, string area,
-    string city_val, string area_val, string Blood_Group, string State, string Country,
-    string cardfee, string AntiForgeryToken)
+     string Full_Name, string RelationType, string Relation, string Gender,
+     string Mobile, string Date_Of_Birth, string CNIC, string Address,
+     string PatientID, string martail_status, string Age, string city, string area,
+     string city_val, string area_val, string Blood_Group, string State, string Country,
+     string cardfee, string OtherCnic, bool Monitoring, string AntiForgeryToken)
 
         {
 
@@ -339,6 +341,21 @@ namespace PMS.Modules.PatientManagement
                     Reg_patient pat;
                     bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
 
+                    // CNIC VALIDATION CHECK
+                    if (isNew && !string.IsNullOrWhiteSpace(CNIC))
+                    {
+                        var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "CNIC Validation" && p.Code == "01");
+                        if (cnicValidation != null)
+                        {
+                            var existingPatient = db.Reg_patients.FirstOrDefault(p => p.NIC == CNIC && p.iscancel == false);
+                            if (existingPatient != null)
+                            {
+                                return "CNIC_EXISTS";
+                            }
+                        }
+                    }
+                    // END OF CNIC VALIDATION
+
                     if (!isNew)
                     {
                         int patId = Convert.ToInt32(PatientID);
@@ -365,7 +382,7 @@ namespace PMS.Modules.PatientManagement
 
                         var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
                         string companyCode = company?.CompanyCode ?? "HOSP";
-                        pat.mr_no_sequence = string.IsNullOrWhiteSpace(companyCode)? PatientNumber: $"{companyCode}-{PatientNumber}";
+                        pat.mr_no_sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";
 
                     }
 
@@ -376,6 +393,7 @@ namespace PMS.Modules.PatientManagement
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.NIC = CNIC;
+                    pat.other_cnic = OtherCnic;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                     pat.city = city;
@@ -385,6 +403,7 @@ namespace PMS.Modules.PatientManagement
                     pat.State = State;
                     pat.Blood_Group = Blood_Group;
                     pat.Country = Country;
+                    pat.Monitoring = Monitoring;
 
                     // Card Fee Safe Parse
                     decimal cardFeeValue = 0;
@@ -456,17 +475,6 @@ namespace PMS.Modules.PatientManagement
                         db.Reg_patients.InsertOnSubmit(pat);
 
                     db.SubmitChanges();
-                    // Generate QR code ONLY for NEW registrations (per requirement)
-                    //if (isNew && pat != null && !string.IsNullOrWhiteSpace(pat.mr_no_sequence))
-                    //{
-                    //    string qrPath = GenerateAndSaveQRCode(pat); // NO db parameter!
-                    //    if (!string.IsNullOrEmpty(qrPath))
-                    //    {
-                    //        pat.QRCodePath = qrPath; // ✅ Requires DBML update (see below)
-                    //        try { db.SubmitChanges(); }
-                    //        catch { /* Silent fail - registration must succeed */ }
-                    //    }
-                    //}
 
                     return pat.pat_id.ToString();
                 }
@@ -477,163 +485,13 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-        //public static string SavePatientDetail(
-        //    string Full_Name, string RelationType, string Relation, string Gender,
-        //    string Mobile, string Date_Of_Birth, string CNIC, string Address,
-        //    string PatientID, string martail_status, string Age, string city, string area,
-        //    string city_val, string area_val, string Blood_Group, string State, string Country,string cardfee, string AntiForgeryToken)
-        //{
-        //    if(Date_Of_Birth == "")
-        //    {
-        //        Date_Of_Birth = null;
-        //    }
-        //    else
-        //    {
-        //        if (!DateTime.TryParseExact(Date_Of_Birth, "dd/MM/yyyy",
-        //     CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDOB))
-        //        {
-        //            return "ERROR: Invalid Date of Birth format. Use dd/MM/yyyy.";
-        //        }
-        //    }
-
-        //    if (HttpContext.Current.Session["UserID"] == null)
-        //        return "ERROR: Unauthorized. Please log in.";
-
-        //    string storedToken = HttpContext.Current.Session["AntiForgeryToken"] as string;
-        //    if (string.IsNullOrEmpty(storedToken) || !storedToken.Equals(AntiForgeryToken))
-        //        return "ERROR: Invalid request. Possible CSRF attack.";
-
-        //    Full_Name = SanitizeInput(Full_Name);
-        //    Relation = SanitizeInput(Relation);
-        //    Address = SanitizeInput(Address);
-        //    // Note: RelationType is from a fixed dropdown (Mr./Mrs./B/O.) — assumed safe
-        //    // Mobile, CNIC, Age, etc. are validated by strict regex — low XSS risk
-
-        //    var errors = new List<string>();
-
-
-
-        //    if (errors.Any())
-        //        return "ERROR: " + string.Join("; ", errors);
-
-        //    try
-        //    {
-        //        using (var db = new DataBaseDataContext())
-        //        {
-        //            Reg_patient pat;
-        //            bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
-
-        //            if (!isNew)
-        //            {
-        //                int patId = Convert.ToInt32(PatientID);
-        //                pat = db.Reg_patients.FirstOrDefault(w => w.pat_id == patId);
-        //                if (pat == null)
-        //                    return "ERROR: Patient record not found.";
-        //            }
-        //            else
-        //            {
-        //                pat = new Reg_patient();
-        //                string PatientNumber = DBClass.getMaxEntry_No("Reg_patient", "Patient_No").ToString();
-        //                pat.Patient_No = Convert.ToInt32(PatientNumber);
-        //                pat.walkin = false;
-        //                pat.Created_time = DateTime.Now;
-        //                if (Guid.TryParse(HttpContext.Current.Session["UserID"]?.ToString(), out Guid userId))
-        //                    pat.Created_by = userId;
-        //                else
-        //                    return "ERROR: Invalid user session.";
-        //                pat.iscancel = false;
-
-        //                var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
-        //                string companyCode = company?.CompanyCode ?? "HOSP";
-        //                pat.mr_no_sequence = $"{companyCode}-{PatientNumber}";
-        //            }
-
-        //            pat.Relation_prefix = RelationType; 
-        //            pat.Full_Name = Full_Name;        
-        //            pat.Father_Name = Relation;   
-        //            pat.Gender = Gender;
-        //            pat.Mobile1 = Mobile;
-        //            pat.Age_years = Age;
-        //            //pat.DOB = DateTime.ParseExact(Date_Of_Birth, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
-        //            pat.NIC = CNIC;
-        //            pat.Permanent_Address = Address;    
-        //            pat.Martial_Status = martail_status;
-        //            pat.city = city;
-        //            pat.area = area;
-        //            pat.val_city = city_val;
-        //            pat.val_area = area_val;
-        //            pat.State = State;
-        //            pat.Blood_Group = Blood_Group;
-        //            pat.Country = Country;
-        //            //pat.Card_fee = Convert.ToDecimal(cardfee);
-        //            // Parse Card Fee safely
-        //            decimal cardFeeValue = 0;
-        //            if (!string.IsNullOrWhiteSpace(cardfee))
-        //            {
-        //                if (!decimal.TryParse(cardfee.Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out cardFeeValue))
-        //                {
-        //                    return "ERROR: Invalid card fee. Please enter a valid number (e.g., 100.50).";
-        //                }
-        //            }
-        //            pat.Card_fee = cardFeeValue;
-        //            pat.DOB = parsedDOB;
-        //            DateTime dob = pat.DOB.Value.Date;
-        //            DateTime today = DateTime.Today;
-
-        //            int years = today.Year - dob.Year;
-        //            int months = today.Month - dob.Month;
-        //            int days = today.Day - dob.Day;
-
-        //            if (days < 0)
-        //            {
-        //                months--;
-        //                days += DateTime.DaysInMonth(today.Year, today.Month == 1 ? 12 : today.Month - 1);
-        //            }
-        //            if (months < 0)
-        //            {
-        //                years--;
-        //                months += 12;
-        //            }
-
-        //            string formattedAge = "";
-        //            if (years > 0)
-        //            {
-        //                formattedAge = $"{years}Y";
-        //                if (months > 0) formattedAge += $" {months}M";
-        //                if (days > 0) formattedAge += $" {days}D";
-        //            }
-        //            else if (months > 0)
-        //            {
-        //                formattedAge = $"{months}M";
-        //                if (days > 0) formattedAge += $" {days}D";
-        //            }
-        //            else
-        //            {
-        //                formattedAge = $"{days}D";
-        //            }
-
-        //            pat.Age_years = formattedAge;
-
-        //            if (isNew)
-        //                db.Reg_patients.InsertOnSubmit(pat);
-
-        //            db.SubmitChanges();
-        //            return pat.pat_id.ToString();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log ex if needed (e.g., to file or DB)
-        //        return "ERROR: Failed to save patient. Please try again.";
-        //    }
-        //}
+        
 
         [WebMethod]
         public static string GetRegData(int reg_id)
         {
             using (var db = new DataBaseDataContext())
             {
-                // Fetch raw data first — minimal projection, no formatting
                 var patientRaw = (from rg in db.Reg_patients
                                   where rg.pat_id == reg_id
                                   select new
@@ -655,13 +513,14 @@ namespace PMS.Modules.PatientManagement
                                       rg.Card_fee,
                                       rg.val_area,
                                       rg.pat_id,
-                                      rg.DOB  // Keep as raw DateTime? or string? depends on DB schema
+                                      rg.other_cnic,
+                                      rg.Monitoring,
+                                      rg.DOB 
                                   }).FirstOrDefault();
 
                 if (patientRaw == null)
                     return new JavaScriptSerializer().Serialize((object)null);
 
-                // Now format in-memory (after query is executed)
                 var patient = new SafePatientData
                 {
                     Name = HttpUtility.HtmlEncode(patientRaw.Full_Name ?? ""),
@@ -673,6 +532,7 @@ namespace PMS.Modules.PatientManagement
                     MaritalStatus_text = HttpUtility.HtmlEncode(db.GetDataValueName("Marital Status", patientRaw.Martial_Status) ?? ""),
                     Mr_No = HttpUtility.HtmlEncode(patientRaw.mr_no_sequence ?? ""),
                     CNIC_Masked = (patientRaw.NIC),
+                    other_cnic = (patientRaw.other_cnic),
                     Address = HttpUtility.HtmlEncode(patientRaw.Permanent_Address ?? ""),
                     Mobile = (patientRaw.Mobile1),
                     BloodGroup_text = HttpUtility.HtmlEncode(db.GetDataValueName("Blood Group", patientRaw.Blood_Group) ?? ""),
@@ -683,10 +543,53 @@ namespace PMS.Modules.PatientManagement
                     Reg_PatientID = patientRaw.pat_id,
                     DOB = patientRaw.DOB.HasValue
                           ? patientRaw.DOB.Value.ToString("dd/MM/yyyy")
-                          : ""
+                          : "",
+                          Monitoring = patientRaw.Monitoring ?? false
                 };
 
                 return new JavaScriptSerializer().Serialize(patient);
+            }
+        }
+
+        [WebMethod]
+        public static string CNICValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "CNIC Validation"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        [WebMethod]
+        public static string MonitoringCheckbox()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Monitoring checkbox"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
             }
         }
     }

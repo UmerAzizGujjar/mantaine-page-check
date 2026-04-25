@@ -32,7 +32,73 @@ namespace PMS.Modules.PatientManagement
                 
             
         }
+        [WebMethod]
+        public static string CNICUpdateCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "CNIC Validation"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
+        public static string SaveCNIC(string Patient_ID, string enteredCNIC)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
 
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.NIC = enteredCNIC;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+        [WebMethod]
+        public static string PatientMonitoring(string Patient_ID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.Monitoring = true;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
         [WebMethod]
         public static string GetUserAccount()
         {
@@ -124,6 +190,26 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
+        [WebMethod]
+        public static string AllowClinicCard()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Show Clinic"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
         public static class ValidationHelper
         {
             public static bool IsValidMobile(string mobile)
@@ -480,7 +566,7 @@ namespace PMS.Modules.PatientManagement
               AND rg.Patient_No IS NOT NULL 
               AND ISNULL(rg.isCancel, 0) != 1 
               AND (
-                  LTRIM(RTRIM(rg.patient_no)) LIKE '%{safeSearch}%' 
+                  LTRIM(RTRIM(rg.mr_no_sequence)) LIKE '%{safeSearch}%' 
                   OR LTRIM(RTRIM(rg.full_name)) LIKE '%{safeSearch}%' 
                   OR LTRIM(RTRIM(rg.mobile1)) LIKE '%{safeSearch}%' 
                   OR LTRIM(RTRIM(rg.nic)) LIKE '%{safeSearch}%'
@@ -1009,7 +1095,7 @@ namespace PMS.Modules.PatientManagement
         [WebMethod]
         public static string SavePatientDetail(
             string Full_Name, string RelationType, string Relation, string Gender,
-            string Mobile, string Date_Of_Birth, string CNIC, string Address,
+            string Mobile, string Date_Of_Birth, string CNIC, string OtherCNIC, string Address,
             string PatientID, string martail_status, string Age,
            string stno, string city, string area,
             string city_val, string area_val, string Province, string Country, string cardfee)
@@ -1024,6 +1110,22 @@ namespace PMS.Modules.PatientManagement
 
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
+
+            bool isNewPatient = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
+
+            if (isNewPatient && !string.IsNullOrWhiteSpace(CNIC))
+            {
+                var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "CNIC Validation" && p.Code == "01");
+                if (cnicValidation != null)
+                {
+                    var existingPatient = db.Reg_patients.FirstOrDefault(p => p.NIC == CNIC && p.iscancel == false);
+                    if (existingPatient != null)
+                    {
+                        return "CNIC_EXISTS"; 
+                    }
+                }
+            }
+
             if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
             {
                 pat = db.Reg_patients.FirstOrDefault(w => w.pat_id == Convert.ToInt32(PatientID));
@@ -1045,6 +1147,7 @@ namespace PMS.Modules.PatientManagement
                     }
                    
                     pat.NIC = CNIC;
+                    pat.other_cnic = OtherCNIC;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                    
@@ -1080,6 +1183,7 @@ namespace PMS.Modules.PatientManagement
                 }
                    
                 pat.NIC = CNIC;
+                pat.other_cnic = OtherCNIC;
                 pat.Permanent_Address = Address;
               
                 pat.stno_mno = stno;
@@ -2193,7 +2297,7 @@ namespace PMS.Modules.PatientManagement
             if (string.IsNullOrEmpty(SearchString))
                 SearchSql = "SELECT top 10 pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 order by pat_id desc";
             else
-                SearchSql = "SELECT pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 and (LTRIM(RTRIM(patient_no)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
+                SearchSql = "SELECT pat_id,isnull(mr_no_sequence,'')Patient_No,isnull(Full_Name,'')Full_Name,isnull(NIC,'')NIC,isnull(Mobile1,'') ContactNo,isnull(Father_Name,'')Father_Name FROM reg_patient where(1=1) and Patient_No<>0 and Patient_No is not null and isnull(isCancel,0)!=1 and (LTRIM(RTRIM(mr_no_sequence)) like '%" + SearchString.Trim() + "%' or  LTRIM(RTRIM(full_name)) like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(mobile1))  like '%" + SearchString.Trim() + "%' or LTRIM(RTRIM(nic))  like '%" + SearchString.Trim() + "%') order by pat_id desc";
 
             DataTable dt = DBClass.getDataTable(SearchSql);
             List<PatientsResult> list = new List<PatientsResult>();
@@ -2531,6 +2635,27 @@ namespace PMS.Modules.PatientManagement
                     p.Created_Time.HasValue &&
                     p.Created_Time.Value.Date == DateTime.Now.Date &&
                     p.Patient_Main_Category == departmentId) + 1;
+            }
+        }
+
+        [WebMethod]
+        public static string CNICValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "CNIC Validation"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
             }
         }
     }

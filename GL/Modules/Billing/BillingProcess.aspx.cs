@@ -14,6 +14,7 @@ using System.Web.UI.WebControls;
 using System.Windows;
 using Telerik.Web;
 using Telerik.Web.UI.ImageEditor;
+using static PMS.Modules.Administrator.Doctor_Payable;
 
 namespace PMS
 {
@@ -115,6 +116,17 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var dept = (from data in db.sys_Parms
                         where data.Name == "Receipts Update on Billing"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
+        public static string CNICUpdateCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "CNIC Validation"
                         select
                           data.Code
                         ).FirstOrDefault();
@@ -507,6 +519,7 @@ namespace PMS
             public string Relation { get; set; }
 
             public string CNIC { get; set; }
+            public string OtherCNIC { get; set; }
 
 
             public string Reg_PatientID { get; set; }
@@ -544,6 +557,7 @@ namespace PMS
                 pts.Address = pat.Permanent_Address;
                 pts.Mobile = pat.Mobile1;
                 pts.CNIC = pat.NIC;
+                pts.OtherCNIC = pat.other_cnic;
                 pts.Gender = pat.Gender;
 
 
@@ -555,11 +569,87 @@ namespace PMS
             return pts;
         }
         [WebMethod]
-        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age,string txtfees)
+        public static string SaveCNIC(string Patient_ID, string enteredCNIC)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.NIC = enteredCNIC;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+        [WebMethod]
+        public static string PatientMonitoring(string Patient_ID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.Monitoring = true;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+
+
+        [WebMethod]
+        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string OtherCNIC, string Address, string PatientID, string martail_status, string Age, string txtfees)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
-            if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
+
+            bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
+
+            // CNIC VALIDATION CHECK - Only for new patients
+            if (isNew && !string.IsNullOrWhiteSpace(CNIC))
+            {
+                var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "CNIC Validation" && p.Code == "01");
+                if (cnicValidation != null)
+                {
+                    var existingPatient = db.Reg_patients.FirstOrDefault(p => p.NIC == CNIC && p.iscancel == false);
+                    if (existingPatient != null)
+                    {
+                        return "CNIC_EXISTS";
+                    }
+                }
+            }
+            // END OF CNIC VALIDATION
+
+            if (!isNew)
             {
                 pat = db.Reg_patients.Where(w => w.pat_id == Convert.ToInt32(PatientID)).FirstOrDefault();
 
@@ -590,14 +680,12 @@ namespace PMS
                         pat.DOB = dob;
                     }
                     pat.NIC = CNIC;
-                  
+                    pat.other_cnic = OtherCNIC;
+
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                     //pat.mr_no_sequence = db.GetSequentialMrNo();
                     pat.walkin = true;
-
-
-
 
                     db.SubmitChanges();
                 }
@@ -616,6 +704,7 @@ namespace PMS
                 pat.Mobile1 = Mobile;
                 pat.Age_years = Age;
                 pat.NIC = CNIC;
+                pat.other_cnic = OtherCNIC;
                 pat.Permanent_Address = Address;
                 pat.Created_time = DateTime.Now;
                 pat.Created_by = AppConfig.UserID;
@@ -682,7 +771,7 @@ namespace PMS
                                where dt.Company_ID == companyID
                                select dt).FirstOrDefault();
                 string companyCode = company.CompanyCode;
-                string MR_Sequence = string.IsNullOrWhiteSpace(companyCode)? PatientNumber: $"{companyCode}-{PatientNumber}";
+                string MR_Sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";
 
                 pat.mr_no_sequence = MR_Sequence;
                 pat.walkin = true;
@@ -692,7 +781,6 @@ namespace PMS
             }
             return pat.pat_id.ToString();
         }
-
         [WebMethod]
         public static string GetChargePolicy()
         {
@@ -3417,6 +3505,7 @@ namespace PMS
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
+                pt.NIC = pat.NIC;
                 //pt.opdid = DBClass.getField("select Out_Patient_ID from Out_Patient where Patient_ID =" + pat_id);
                 //pt.get_patientid = DBClass.getField("select Patient_ID from Patients where Reg_PatId =" + PatientID);
                 //pt.refferedoc = DBClass.getField("select Doctor_ID from Out_Patient where Patient_id=" + pt.get_patientid + " order by Created_Time desc");
@@ -3866,6 +3955,7 @@ namespace PMS
             public string Patient_Type;
             public string Patient_Discount_Type;
             public string Mobile;
+            public string NIC;
             public string Address;
             public string Entry_Date;
             public string Follow;
@@ -5417,5 +5507,69 @@ namespace PMS
                 return new JavaScriptSerializer().Serialize(new { success = false, message = ex.Message });
             }
         }
+
+        [WebMethod]
+        public static string AllowLineDiscount()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Allow Line Discount"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        [WebMethod]
+        public static string CNICValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "CNIC Validation"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        [WebMethod]
+        public static string ReamrksValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Billing Remarks"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
     }
 }

@@ -618,6 +618,7 @@ namespace PMS
             public decimal BalanceAmount { get; set; }
             public decimal linediscount { get; set; }
             public string invNumber { get; set; }
+            public int In_Patient_ID { get; set; }
             public List<Medicindetails> Save_list { get; set; }
         }
 
@@ -686,6 +687,7 @@ namespace PMS
             newBill.Patient_ID = patId;
             //var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
             newBill.Ware_House = data.warehouse;
+            newBill.In_Patient_ID = data.In_Patient_ID;
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
             newBill.IsPharmacy = true;
@@ -1199,7 +1201,7 @@ namespace PMS
                     Net_Amount = decimal.Parse(item.NetAmt),
                     Batch_No = item.Batch_No,
                     CGS = item.CGSAmount,
-                    //LineDiscount = item.LineDiscount
+                    LineDiscount =Convert.ToDecimal( item.LineDiscount)
                 };
                 db.Pharmacy_SaleReturn_Details.InsertOnSubmit(detail);
                 db.SubmitChanges();

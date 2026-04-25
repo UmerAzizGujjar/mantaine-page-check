@@ -8,8 +8,9 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            LoadClinicCard();
             loadCardfee();
-
+        
             var urlParams = new URLSearchParams(window.location.search);
             var patId = urlParams.get('ID');
             if (patId) {
@@ -109,6 +110,31 @@
                 },
                 error: function (error) {
                     console.error("Error fetching items", error);
+                }
+            });
+        }
+        function LoadClinicCard() {
+            $.ajax({
+                type: "POST",
+                url: "OPD.aspx/AllowClinicCard", 
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = response.d; 
+
+                    if (result === "01") {
+                       
+                        $("#filtercard").show();
+
+                        
+                    } else {
+                      
+                        $("#filtercard").hide();
+                    }
+                },
+                error: function (err) {
+                    console.log("Error: " + err);
+                    $("#filtercard").hide(); // Hide on error
                 }
             });
         }
@@ -1254,7 +1280,7 @@
 
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-4 fields">
+        <div class="col-lg-3 col-md-3 col-sm-4 fields" id="filtercard">
             <div class="card3">
                 <span style="font-size: 15px;">Total OPD</span>
                 <span style="margin-left: 5px !important; font-weight: bold; font-size: 24px;" id="lbltotpat"  runat="server"></span>
@@ -1589,47 +1615,52 @@
                             <label for="txt_cnic">CNIC<span style="color: red;">*</span></label>
                             <input type="text" id="txt_cnic" class="form-control" />
                         </div>
+                        
                     </div>
 
                     <div class="row">
                         <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label for="txt_OtherCnic">Other CNIC</label>
+                            <input type="text" id="txt_OtherCnic" class="form-control" />
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
                             <input type="text" id="txt_mobile" class="form-control" />
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
                             <select id="ddl_status" class="form-control">
                                 <option value="0">Select Marial</option>
                             </select>
                         </div>
-                        <div class="col-lg-2 colmd-4 col-sm-6">
+                        <div class="col-lg-3 colmd-4 col-sm-6">
                             <label>Country</label>
                             <select id="ddlCountry" class="form-control">
                                 <option value="0">Select Country</option>
                             </select>
-                        </div>
+                        </div>                      
+                    </div>
+
+                    <div class="row">
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label>Province</label>
                             <select id="ddl_Province" class="form-control">
                                 <option value="0">Select Province</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div class="row">
                         <div class="col-lg-3 colmd-4 col-sm-6">
                             <label for="txtcity">City</label>
                             <select id="txtcity" class="form-control">
                                 <option value="0">Select City</option>
                             </select>
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="txtarea">Area</label>
                             <select id="txtarea" class="form-control">
                                 <option value="0">Select Area</option>
                             </select>
                         </div>
-                        <div class="col-lg-5 col-md-4 col-sm-6">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txt_house">Address</label>
                             <input type="text" id="txt_house" class="form-control" />
                         </div>

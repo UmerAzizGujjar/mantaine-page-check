@@ -4,9 +4,10 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EmergencyForm.css" rel="stylesheet" />
     <script type="text/javascript">
-
+        
         $(document).ready(function () {
             debugger;
+            CheckCNICUpdateonCondition();
             MaskedInput({
                 elm: document.getElementById('txt_mobile'),
                 format: '+92__________',
@@ -14,7 +15,24 @@
 
             }); 
 
+            isCNICValidationRequired();
+
+            MaskedInput({
+                elm: document.getElementById('txt_cnic'),
+                format: '_____-_______-_',
+                separator: '-'
+            });
+
+            MaskedInput({
+                elm: document.getElementById('txt_Othercnic'), 
+                format: '_____-_______-_',
+                separator: '-'
+            });
+
             
+            $('#txt_cnic').attr('placeholder', '_____-_______-_');
+            $('#txt_Othercnic').attr('placeholder', '_____-_______-_');
+
             showhide();
             $('#btnsearchpatlist').click(function () {
                 $("#PatientsSearchModel").modal('show');
@@ -814,9 +832,71 @@
                             text: data.Gender_text
                         })
                     );
-                    checkcardvalidation();
+                    var NIC = data.CNIC_Masked;
+                    if (CNICs == '01') {
+                        if (NIC == '') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'CNIC Not Entered',
+                                text: 'Do you want to enter CNIC?',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes',
+                                cancelButtonText: 'No'
+                            }).then((result) => {
 
+                                if (result.isConfirmed) {
 
+                                    Swal.fire({
+                                        title: 'Enter CNIC',
+                                        input: 'text',
+                                        inputPlaceholder: '12345-1234567-1',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Save',
+                                        customClass: {
+                                            input: 'cnic-input'
+                                        },
+
+                                        didOpen: () => {
+                                            const input = Swal.getInput();
+
+                                            // Apply your MaskedInput here
+                                            MaskedInput({
+                                                elm: input,
+                                                format: '_____-_______-_',
+                                                separator: '-'
+                                            });
+                                            setTimeout(() => {
+                                                input.focus();
+                                                input.setSelectionRange(0, 0);
+                                            }, 0);
+                                        },
+
+                                        inputValidator: (value) => {
+                                            /*  if (!value) return 'CNIC is required!';*/
+                                            if (value.includes('_')) return 'Complete CNIC first!';
+                                        }
+
+                                    }).then((res) => {
+                                        if (res.isConfirmed) {
+                                            let enteredCNIC = res.value;
+
+                                            SaveCNIC(enteredCNIC);
+                                            $('#txtCNIC').val(enteredCNIC);
+                                        }
+                                    });
+
+                                }
+                                else if (result.isDismissed) {
+                                    // 👇 User clicked "No"
+                                    PatientMonitoring();
+                                }
+                            });
+                        }
+
+                     
+                    }
+
+                    //checkcardvalidation();
 
                 },
                 error: function (response) {
@@ -825,6 +905,75 @@
                 }
             });
         }
+
+
+        var CNICs;
+        function CheckCNICUpdateonCondition() {
+
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/CNICUpdateCondition",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var CNICss = JSON.parse(response.d);
+                    if (CNICss == '01') {
+                        CNICs = true;
+                    }
+                    else {
+                        CNICs = false;
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
+
+        function SaveCNIC(enteredCNIC) {
+            var Patient_ID = $('#hdn_regid').val();
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/SaveCNIC",
+                data: JSON.stringify({
+                    'Patient_ID': Patient_ID,
+                    'enteredCNIC': enteredCNIC
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var doctorIds = JSON.parse(response.d);
+
+                },
+                error: function (err) {
+                    alert("Could not Save CNIC.");
+                }
+            });
+        }
+        function PatientMonitoring() {
+            var Patient_ID = $('#hdn_regid').val();
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/PatientMonitoring",
+                data: JSON.stringify({
+                    'Patient_ID': Patient_ID
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var doctorIds = JSON.parse(response.d);
+
+                },
+                error: function (err) {
+                    alert("Could not Save CNIC.");
+                }
+            });
+        }
+
         function FillModePresentation() {
             var options = '<option value="0">Please Select</option>';
 
@@ -1228,6 +1377,7 @@
             var Age = $('#txt_dob').val();
             var Date_Of_Birth = $('#txtAge_yearss').val();
             var CNIC = $('#txt_cnic').val();
+            var OtherCNIC = $('#txt_Othercnic').val();
             var Address = $('#txt_house').val();
             var stno = $('#txtstrm').val();
             var city = $('#txtcity :selected').text();
@@ -1256,6 +1406,53 @@
                 return;
             }
 
+            var isCNICRequired = isCNICValidationRequired();
+            if (isCNICRequired) {
+                var isCNICEmpty = !CNIC || CNIC === "" || CNIC === "_____-_______-_";
+                var isOtherCNICEmpty = !OtherCNIC || OtherCNIC === "" || OtherCNIC === "_____-_______-_";
+
+                if (isCNICEmpty && isOtherCNICEmpty) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'CNIC Required!',
+                        text: 'Please enter  CNIC or Other CNIC',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                } else {
+                    if (!isCNICEmpty && CNIC !== "_____-_______-_") {
+                        var cnicPattern = /^\d{5}-\d{7}-\d$/;
+                        if (!cnicPattern.test(CNIC)) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Invalid CNIC Format!',
+                                text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#d33'
+                            });
+                            $('#SavePatient_Data').attr('disabled', false);
+                            return;
+                        }
+                    }
+                    if (!isOtherCNICEmpty && OtherCNIC !== "_____-_______-_") {
+                        var otherCnicPattern = /^\d{5}-\d{7}-\d$/;
+                        if (!otherCnicPattern.test(OtherCNIC)) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Invalid Other CNIC Format!',
+                                text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#d33'
+                            });
+                            $('#SavePatient_Data').attr('disabled', false);
+                            return;
+                        }
+                    }
+                }
+            }
+
             var data = {
                 Full_Name: Full_Name,
                 RelationType: RelationType,
@@ -1275,9 +1472,9 @@
                 Age: Age,
                 "Country": Country,
                 "Province": Province,
+                "OtherCNIC": OtherCNIC,
                 "cardfee": cardfee,
             };
-
 
             $.ajax({
                 type: "POST",
@@ -1287,6 +1484,40 @@
                 dataType: "json",
                 success: function (response) {
                     debugger;
+
+                    // Check if CNIC already exists
+                    if (response.d === "CNIC_EXISTS") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'CNIC Already Exists!',
+                            text: 'A patient with this CNIC is already registered.',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return;
+                    }
+
+                    // Check for other errors
+                    if (response.d && response.d.startsWith("ERROR:")) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.d.replace("ERROR:", ""),
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return;
+                    }
+
                     var ini_patientID = response.d;
 
                     Swal.fire({
@@ -1802,6 +2033,27 @@
             }
         }
 
+        function isCNICValidationRequired() {
+            var result = false;
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/CNICValidation",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d === "01") {
+                        result = true;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking CNIC validation:", error);
+                    result = false;
+                }
+            });
+            return result;
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -2167,43 +2419,47 @@
 
                     <div class="row">
                         <div class="col-lg-3 col-md-4 col-sm-6">
+                            <label for="txt_Othercnic">Other CNIC</label>
+                            <input type="text" id="txt_Othercnic" class="form-control" />
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
                             <input type="text" id="txt_mobile" class="form-control" />
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
                             <select id="ddl_status" class="form-control">
-                                <option value="0">Select Marial</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2 colmd-4 col-sm-6">
-                            <label>Country</label>
-                            <select id="ddlCountry" class="form-control">
-                                <option value="0">Select Country</option>
+                                <option value="0">Select Marital</option>
                             </select>
                         </div>
                         <div class="col-lg-3 colmd-4 col-sm-6">
-                            <label>Province</label>
-                            <select id="ddl_Province" class="form-control">
-                                <option value="0">Select Province</option>
+                            <label>Country</label>
+                            <select id="ddlCountry" class="form-control">
+                                <option value="0">Select Country</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-lg-3 colmd-4 col-sm-6">
+                            <label>Province</label>
+                            <select id="ddl_Province" class="form-control">
+                                <option value="0">Select Province</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 colmd-4 col-sm-6">
                             <label for="txtcity">City</label>
                             <select id="txtcity" class="form-control">
                                 <option value="0">Select City</option>
                             </select>
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                             <label for="txtarea">Area</label>
                             <select id="txtarea" class="form-control">
                                 <option value="0">Select Area</option>
                             </select>
                         </div>
-                        <div class="col-lg-5 col-md-4 col-sm-6">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
                             <label for="txt_house">Address</label>
                             <input type="text" id="txt_house" class="form-control" />
                         </div>

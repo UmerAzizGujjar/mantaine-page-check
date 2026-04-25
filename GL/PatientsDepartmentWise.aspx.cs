@@ -3369,6 +3369,26 @@ namespace PMS
                     ddlPatientType.Visible = false;
                     lblPatientType.Visible = false;
 
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+
                 }
                 else if (PageTitle == "SehatSahulatWiseExpensive")
                 {
@@ -3447,6 +3467,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
+                    tr_Export.Visible = true;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
@@ -3472,6 +3493,89 @@ namespace PMS
                     ddloprators.DataValueField = "UserId";
                     ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddloprators.DataBind();
+
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+
+                }
+                if (this.PageTitle == "Student_Fee_Details_Report")
+                {
+                    string x = "Student Fee Details Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var valusets = (from p in dbs.Reg_Students
+                                    orderby p.Roll_No
+                                    select new
+                                    {
+                                        p.Roll_No,
+                                        p.Full_Name,
+                                        Complete = p.Roll_No + "-" + p.Full_Name
+                                    }).ToList();
+
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "Complete";
+                    ddloprators.DataValueField = "Roll_No";
+                    ddloprators.DataBind();
+                    ddloprators.Items.Insert(0, new ListItem() { Text = "All", Value = "0" });
+                    lboperator.Text = "Student";
+
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+
+                }
+                if (this.PageTitle == "Student_Fee_Details_Class_Report")
+                {
+                    string x = "Student Fee Receivable Details Class Wise Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Student Class");
+                    ddloprators.DataSource = valuset;
+                    ddloprators.DataTextField = "DataValue_Description";
+                    ddloprators.DataValueField = "DataValue_Name";
+                    ddloprators.Items.Clear();
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    lboperator.Text = "Class";
+
 
                     lbShift.Visible = false;
                     ddlShift.Visible = false;

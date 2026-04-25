@@ -10,16 +10,11 @@ using System.Web.UI.WebControls;
 namespace PMS.Modules.PatientManagement
 {
     public partial class OPD_Refund : System.Web.UI.Page
-
     {
         protected void Page_Load(object sender, EventArgs e)
         {
 
         }
-
-
-
-
 
         [WebMethod]
         public static string GetPatientByOPDNo(string opdNo)
@@ -36,7 +31,7 @@ namespace PMS.Modules.PatientManagement
                                 select new
                                 {
                                     pat.Opd_No,
-                                    Patient_ID = pat.Patient_ID,      
+                                    Patient_ID = pat.Patient_ID,
                                     Reg_PatId = pat.Reg_PatId,
                                     pat.Patient_No,
                                     pat.Full_Name,
@@ -110,17 +105,30 @@ namespace PMS.Modules.PatientManagement
                     long opdNo = string.IsNullOrEmpty(data.OPD_No) ? 0 : Convert.ToInt64(data.OPD_No);
                     if (string.IsNullOrWhiteSpace(data.Patient_ID))
                         return "Error: OPD Patient is required.";
+
                     int patientID = Convert.ToInt32(data.Patient_ID);
+
                     if (string.IsNullOrWhiteSpace(data.Reg_PatId))
                         return "Error: Registered Patient ID is required.";
+
                     int regPatId = Convert.ToInt32(data.Reg_PatId);
                     var regPatient = db.Reg_patients.FirstOrDefault(r => r.pat_id == regPatId);
                     if (regPatient == null)
                         return $"Error: Registered Patient with ID {regPatId} does not exist.";
+
                     DateTime refundDate = DateTime.Now;
                     if (!string.IsNullOrWhiteSpace(data.Refund_Date))
                         DateTime.TryParse(data.Refund_Date, out refundDate);
+
                     decimal totalRefund = data.Hospital_Refund + data.Doctor_Refund;
+                    if (string.IsNullOrEmpty(data.Refund_ID))
+                    {
+                        var existingPatient = db.Patients.FirstOrDefault(p => p.Patient_ID == patientID);
+                        if (existingPatient != null && existingPatient.Is_Refund == true)
+                        {
+                            return "Error: This OPD is already refunded.";
+                        }
+                    }
 
                     if (string.IsNullOrEmpty(data.Refund_ID))
                     {
@@ -135,7 +143,8 @@ namespace PMS.Modules.PatientManagement
                             Refund_Amount = totalRefund,
                             Remarks = data.Remarks,
                             Created_By = AppConfig.UserID,
-                            Creation_Date = DateTime.Now
+                            Creation_Date = DateTime.Now,
+                            Status = "Created",
                         };
 
                         var patient = db.Patients.FirstOrDefault(p => p.Patient_ID == patientID);
@@ -143,20 +152,9 @@ namespace PMS.Modules.PatientManagement
                         {
                             patient.Is_Refund = true;
                         }
+
                         db.OPD_Refunds.InsertOnSubmit(refund);
-
                         db.SubmitChanges();
-
-                        Guid userId = AppConfig.UserID;
-                        var result = db.SpApprove_OPDRefund(patientID, userId).FirstOrDefault();
-
-                        if (result != null && !string.IsNullOrEmpty(result.Message))
-                        {
-                            if (!result.Message.Contains("successfully"))
-                            {
-                                return "Refund saved, but voucher issue: " + result.Message;
-                            }
-                        }
                     }
                     else
                     {
@@ -166,6 +164,8 @@ namespace PMS.Modules.PatientManagement
                         var refund = db.OPD_Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
                         if (refund == null)
                             return "Error: Refund not found.";
+                        if (refund.Status == "Approved")
+                            return "Error: Cannot modify an approved refund.";
 
                         refund.OPD_No = opdNo;
                         refund.pat_id = patientID;
@@ -177,6 +177,9 @@ namespace PMS.Modules.PatientManagement
                         refund.Remarks = data.Remarks;
                         refund.Update_By = AppConfig.UserID;
                         refund.Update_Time = DateTime.Now;
+                        refund.Status = "Created";
+                        refund.approve_by = null;
+                        refund.approve_date = null;
                     }
 
                     db.SubmitChanges();
@@ -189,18 +192,62 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-
-        public class RefundModel
+        [WebMethod]
+        public static string ApproveRefund(string refundID)
         {
-            public string Refund_ID { get; set; }
-            public string OPD_No { get; set; }
-            public string Patient_ID { get; set; }
-            public string Reg_PatId { get; set; }
-            public string Refund_Date { get; set; }
-            public decimal Hospital_Refund { get; set; }
-            public decimal Doctor_Refund { get; set; }
-            public string Remarks { get; set; }
-            public static Guid UserID { get; set; }
+            try
+            {
+                if (string.IsNullOrWhiteSpace(refundID) || !int.TryParse(refundID, out int refundId))
+                    return "Error: Invalid Refund ID.";
+
+                Guid userId = AppConfig.UserID;
+                int patientID;
+                using (DataBaseDataContext dbFetch = new DataBaseDataContext())
+                {
+                    var refund = dbFetch.OPD_Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
+                    if (refund == null)
+                        return "Error: Refund record not found.";
+
+                    if (refund.Status == "Approved")
+                        return "Error: This refund is already approved.";
+
+                    patientID = (int)refund.pat_id; 
+                }
+
+                using (DataBaseDataContext dbSP = new DataBaseDataContext())
+                {
+                    var result = dbSP.SpApprove_OPDRefund(patientID, userId).FirstOrDefault();
+
+                    if (result == null || string.IsNullOrEmpty(result.Message))
+                        return "Error: Stored procedure did not return a valid response.";
+
+                    if (!result.Message.Contains("successfully"))
+                        return "Voucher Generation Failed: " + result.Message;
+                }
+
+                using (DataBaseDataContext dbUpdate = new DataBaseDataContext())
+                {
+                    var refund = dbUpdate.OPD_Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
+                    if (refund == null)
+                        return "Error: Refund record not found after approval.";
+
+                    refund.Status = "Approved";
+                    refund.approve_by = userId;
+                    refund.approve_date = DateTime.Now;
+
+                    dbUpdate.SubmitChanges();
+                }
+
+                return "Success";
+            }
+            catch (System.Data.Linq.ChangeConflictException ex)
+            {
+                return "Error: Concurrency conflict - " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
         }
 
         [WebMethod]
@@ -219,7 +266,7 @@ namespace PMS.Modules.PatientManagement
                     return new JavaScriptSerializer().Serialize(new { });
 
                 var patient = (from pat in db.Patients
-                               where pat.Patient_ID == refund.pat_id  
+                               where pat.Patient_ID == refund.pat_id
                                select new
                                {
                                    pat.Patient_No,
@@ -232,16 +279,21 @@ namespace PMS.Modules.PatientManagement
                                    department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category),
                                    Patient_Main_Category = db.GetDataValueName("Patient Type", pat.Patient_Type),
                                    pat.Opd_No,
-                                   pat.Doctor_Amount,
+                                   pat.Doctor_Amount, 
                                    pat.Hospital_share,
                                    pat.Actual_amount
                                }).FirstOrDefault();
 
+                
+                decimal docAmt = patient?.Doctor_Amount ?? 0;
+                decimal hospShare = patient?.Hospital_share ?? 0;
+                decimal actAmt = patient?.Actual_amount ?? 0;
+
                 var result = new
                 {
                     Refund_ID = refund.Refund_ID,
-                    Patient_ID = refund.pat_id,    
-                    Reg_PatId = refund.Reg_PatId,     
+                    Patient_ID = refund.pat_id,
+                    Reg_PatId = refund.Reg_PatId,
                     Patient_No = patient?.Patient_No,
                     Full_Name = patient?.Full_Name ?? "Unknown Patient",
                     Mobile1 = patient?.Mobile1 ?? "",
@@ -257,13 +309,26 @@ namespace PMS.Modules.PatientManagement
                     OPD_No = refund.OPD_No,
                     Hospital_Refund = refund.Hospital_Refund,
                     Doctor_Refund = refund.Doctor_Refund,
-                    Doctor_Amount = patient?.Doctor_Amount,
-                    Hospital_share = patient?.Hospital_share,
-                    Actual_amount = patient?.Actual_amount
+                    Doctor_Amount = docAmt,
+                    Hospital_share = hospShare,
+                    Actual_amount = actAmt,
+                    Status = refund.Status ?? "Created" 
                 };
 
                 return new JavaScriptSerializer().Serialize(result);
             }
+        }
+
+        public class RefundModel
+        {
+            public string Refund_ID { get; set; }
+            public string OPD_No { get; set; }
+            public string Patient_ID { get; set; }
+            public string Reg_PatId { get; set; }
+            public string Refund_Date { get; set; }
+            public decimal Hospital_Refund { get; set; }
+            public decimal Doctor_Refund { get; set; }
+            public string Remarks { get; set; }
         }
     }
 }

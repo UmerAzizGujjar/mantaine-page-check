@@ -546,7 +546,9 @@ namespace PMS
                                       ip.Birth_Postal_Code,
                                       ip.Birth_Religion,
                                       ip.Birth_Attendant,
-                                      ip.Birth_Remarks
+                                       ip.Birth_Remarks,
+                                       ip.BirthCertificateTrackingId,
+                                       ip.IsCertificateSentToNADRA
                                   }).FirstOrDefault();
 
                     if (result != null)
@@ -1207,6 +1209,12 @@ namespace PMS
 
                     db.SubmitChanges();
 
+                    if (isCertificateGenrate)
+                    {
+                        SendBirthCertificateToNadra(db, OPD);
+                        db.SubmitChanges();
+                    }
+
                     if (OPD.In_Patient_ID > 0)
                     {
                         if (ddlIssuance_Of == "001")
@@ -1311,6 +1319,135 @@ namespace PMS
         }
 
 
+        private static void SendBirthCertificateToNadra(DataBaseDataContext db, In_Patient patient)
+        {
+            if (db == null || patient == null)
+                return;
+
+            Func<string, string> normalizeGender = g =>
+            {
+                var value = (g ?? string.Empty).Trim().ToLowerInvariant();
+                if (value == "m" || value == "male") return "male";
+                if (value == "f" || value == "female") return "female";
+                return value;
+            };
+
+            string baseUrl = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_BaseUrl'");
+            string username = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_Username'");
+            string password = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_Password'");
+            string hospitalName = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_HospitalName'");
+            string hospitalAddress = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_HospitalAddress'");
+
+            if (string.IsNullOrWhiteSpace(baseUrl) || string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                return;
+
+            baseUrl = baseUrl.Trim().TrimEnd('/');
+
+            var authPayload = new
+            {
+                username = username,
+                password = password
+            };
+
+            string fatherIdentity = string.IsNullOrWhiteSpace(patient.Birth_Father_CNIC) ? "" : patient.Birth_Father_CNIC.Trim();
+            string motherIdentity = string.IsNullOrWhiteSpace(patient.Birth_Mother_CNIC) ? "" : patient.Birth_Mother_CNIC.Trim();
+
+            string contactNumber = patient.pat_number;
+            var regPatient = db.Reg_patients.FirstOrDefault(r => r.pat_id == patient.Patient_ID);
+            if (regPatient != null && !string.IsNullOrWhiteSpace(regPatient.Mobile1))
+            {
+                contactNumber = regPatient.Mobile1;
+            }
+
+            string doctorName = "";
+            int doctorId;
+            if (!string.IsNullOrWhiteSpace(patient.Doctor) && int.TryParse(patient.Doctor, out doctorId))
+            {
+                doctorName = db.HR_Employees.Where(e => e.Emp_ID == doctorId).Select(e => e.Emp_Name).FirstOrDefault();
+            }
+
+            var birthData = new
+            {
+                BirthData = new
+                {
+                    refNumber = string.IsNullOrWhiteSpace(patient.Birth_Reg_Number) ? patient.In_Patient_ID.ToString() : patient.Birth_Reg_Number,
+                    hospitalName = string.IsNullOrWhiteSpace(hospitalName) ? "" : hospitalName,
+                    hospitalAddress = string.IsNullOrWhiteSpace(hospitalAddress) ? "" : hospitalAddress,
+                    issuanceDate = DateTime.Now.ToString("dd/MM/yyyy"),
+                    childName = patient.Birth_Child_Name ?? "",
+                    childDateofBirth = patient.Birth_Date.HasValue
+                        ? patient.Birth_Date.Value.ToString("d/M/yyyy", CultureInfo.InvariantCulture)
+                        : DateTime.Now.ToString("d/M/yyyy", CultureInfo.InvariantCulture),
+                    childGender = normalizeGender(patient.Birth_Gender),
+                    placeofOccurrence = "hospital",
+                    placeofBirth = patient.Birth_Place ?? "",
+                    districtofBirth = patient.Birth_City ?? "",
+                    typeofBirth = string.IsNullOrWhiteSpace(patient.Birth_Type) ? "Single" : patient.Birth_Type,
+                    disability = "N",
+                    fatherName = patient.Birth_Father_Name ?? "",
+                    motherName = patient.Birth_Mother_Name ?? "",
+                    FatherIdentityType = "cnic",
+                    FatherIdentityValue = fatherIdentity,
+                    MotherIdentityType = "cnic",
+                    MotherIdentityValue = motherIdentity,
+                    motherBloodGroup = "",
+                    childBloodGroup = "",
+                    contactNumber = contactNumber ?? "",
+                    doctorName = doctorName ?? "",
+                    registrationNo = ""
+                }
+            };
+
+            using (var client = new HttpClient())
+            {
+                var authJson = new JavaScriptSerializer().Serialize(authPayload);
+                var authContent = new StringContent(authJson, Encoding.UTF8, "application/json");
+                var authResponse = client.PostAsync(baseUrl + "/User/Authenticate", authContent).Result;
+                var authResponseString = authResponse.Content.ReadAsStringAsync().Result;
+                var authResult = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(authResponseString);
+
+                string token = authResult != null && authResult.ContainsKey("token") && authResult["token"] != null
+                    ? authResult["token"].ToString()
+                    : "";
+
+                if (string.IsNullOrWhiteSpace(token))
+                    return;
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+                var birthJson = new JavaScriptSerializer().Serialize(birthData);
+                var birthContent = new StringContent(birthJson, Encoding.UTF8, "application/json");
+                var birthResponse = client.PostAsync(baseUrl + "/HealthUnits/BirthData/Save", birthContent).Result;
+                var birthResponseString = birthResponse.Content.ReadAsStringAsync().Result;
+                var birthResult = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(birthResponseString);
+
+                string code = birthResult != null && birthResult.ContainsKey("code") && birthResult["code"] != null
+                    ? birthResult["code"].ToString()
+                    : "";
+
+                string trackingId = birthResult != null && birthResult.ContainsKey("trackingId") && birthResult["trackingId"] != null
+                    ? birthResult["trackingId"].ToString()
+                    : "";
+
+                if (string.IsNullOrWhiteSpace(trackingId))
+                {
+                    throw new Exception("NADRA error: trackingId is null or empty.");
+                }
+
+                patient.NADRA_Response = birthResponseString;
+
+                if (code == "100" || code == "200")
+                {
+                    patient.IsCertificateSentToNADRA = true;
+                    patient.CertificateSentDate = DateTime.Now;
+                }
+
+                patient.BirthCertificateTrackingId = trackingId; // Column does not exist yet.
+            }
+        }
+
+
         private static void RemoveWardAndRooms_Allocation(string BedNo, string RoomNo, int Patient_ID, DataBaseDataContext db)
         {
             if (db != null)
@@ -1338,127 +1475,13 @@ namespace PMS
             public string Gender;
             public string Age;
             public string Mobile;
+            public string NIC;
             public string Address;
             public string Entry_Date;
             public string AdvanceAmount;
             public string RevisitMsg { get; set; }
         }
-        [WebMethod]
-        public static string SendToNADRA(int InPatientID)
-        {
-            try
-            {
-                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    // 1. Get patient record
-                    var patient = db.In_Patients.FirstOrDefault(p => p.In_Patient_ID == InPatientID);
-                    if (patient == null)
-                    {
-                        return "ERROR: Patient not found";
-                    }
-
-                    // 2. Get NADRA credentials from sys_Parms
-                    string baseUrl = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_BaseUrl'");
-                    string username = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_Username'");
-                    string password = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_Password'");
-                    string hospitalName = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_HospitalName'");
-                    string hospitalAddress = DBClass.getField("SELECT Code FROM sys_Parms WHERE Name = 'NADRA_API_HospitalAddress'");
-
-                    // 3. Validate credentials
-                    if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                    {
-                        return "ERROR: NADRA credentials not configured in sys_Parms";
-                    }
-
-                    // 4. Prepare birth data
-                    var birthData = new
-                    {
-                        hospitalName = hospitalName,
-                        hospitalAddress = hospitalAddress,
-                        issuanceDate = DateTime.Now.ToString("dd/MM/yyyy"),
-                        refNumber = patient.Birth_Reg_Number ?? $"REF-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}",
-                        childName = patient.Birth_Child_Name ?? "",
-                        childDateofBirth = patient.Birth_Date?.ToString("dd/MM/yyyy HH:mm:ss") ?? DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-                        childGender = patient.Birth_Gender?.ToLower() ?? "",
-                        placeofOccurrence = "hospital",
-                        placeofBirth = patient.Birth_Place ?? "",
-                        districtofBirth = patient.Birth_City ?? "",
-                        typeofBirth = "Single",
-                        disability = "N",
-                        fatherName = patient.Birth_Father_Name ?? "",
-                        motherName = patient.Birth_Mother_Name ?? "",
-                        FatherIdentityType = "cnic",
-                        FatherIdentityValue = patient.Birth_Father_CNIC ?? "",
-                        MotherIdentityType = "cnic",
-                        MotherIdentityValue = patient.Birth_Mother_CNIC ?? "",
-                        motherBloodGroup = "O+",
-                        childBloodGroup = "O+",
-                        contactNumber = patient.pat_number ?? "",
-                        doctorName = "Dr. Default",
-                        registrationNo = "REG123456"
-                    };
-
-                    // 5. Authenticate with NADRA
-                    using (var client = new HttpClient())
-                    {
-                        // Step 1: Get Token
-                        var authData = new { username = username, password = password };
-                        var authJson = new JavaScriptSerializer().Serialize(authData);
-                        var authContent = new StringContent(authJson, Encoding.UTF8, "application/json");
-
-                        var authResponse = client.PostAsync($"{baseUrl}/Authenticate", authContent).Result;
-                        string authResponseString = authResponse.Content.ReadAsStringAsync().Result;
-
-                        // Parse authentication response properly
-                        var authDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(authResponseString);
-                        string token = authDict.ContainsKey("token") ? authDict["token"]?.ToString() : null;
-                        string authCode = authDict.ContainsKey("code") ? authDict["code"]?.ToString() : null;
-                        string authMessage = authDict.ContainsKey("message") ? authDict["message"]?.ToString() : null;
-
-                        if (string.IsNullOrEmpty(token) || token == "null")
-                        {
-                            return $"ERROR: Authentication failed - {authMessage} (Code: {authCode})";
-                        }
-
-                        // Step 2: Send Birth Data
-                        var request = new { BirthData = birthData };
-                        var birthJson = new JavaScriptSerializer().Serialize(request);
-                        var birthContent = new StringContent(birthJson, Encoding.UTF8, "application/json");
-
-                        client.DefaultRequestHeaders.Clear();
-                        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
-                        var birthResponse = client.PostAsync($"{baseUrl}/AddBirthData", birthContent).Result;
-                        string birthResponseString = birthResponse.Content.ReadAsStringAsync().Result;
-
-                        // Parse birth response
-                        var birthDict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(birthResponseString);
-                        string birthCode = birthDict.ContainsKey("code") ? birthDict["code"]?.ToString() : null;
-                        string birthMessage = birthDict.ContainsKey("message") ? birthDict["message"]?.ToString() : null;
-
-                        // 6. Update database
-                        patient.IsCertificateSentToNADRA = true;
-                        patient.CertificateSentDate = DateTime.Now;
-                        patient.NADRA_Response = birthResponseString;
-                        db.SubmitChanges();
-
-                        // 7. Return result
-                        if (birthCode == "200")
-                        {
-                            return $"SUCCESS: Birth certificate sent to NADRA successfully. {birthMessage}";
-                        }
-                        else
-                        {
-                            return $"SUCCESS but NADRA returned: {birthMessage} (Code: {birthCode})";
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return $"ERROR: {ex.Message}";
-            }
-        }
+        
         [WebMethod]
         public static string PendingAdmisionPatients()
         {
@@ -1637,6 +1660,75 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(data));
         }
 
+        [WebMethod]
+        public static string CNICUpdateCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "CNIC Validation"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
+        public static string SaveCNIC(string Patient_ID, string enteredCNIC)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.NIC = enteredCNIC;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+        [WebMethod]
+        public static string PatientMonitoring(string Patient_ID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+
+                int patId = Convert.ToInt32(Patient_ID);
+
+                var patient = db.Reg_patients.SingleOrDefault(x => x.pat_id == patId);
+
+                if (patient != null)
+                {
+                    patient.Monitoring = true;
+                    db.SubmitChanges();
+
+                    return "SUCCESS";
+                }
+                else
+                {
+                    return "PATIENT_NOT_FOUND";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "ERROR: " + ex.Message;
+            }
+        }
+
+
         [System.Web.Services.WebMethod]
         public static Detail GetDetail(string PatientID)
         {
@@ -1665,6 +1757,7 @@ namespace PMS
                     pt.Entry_Date = pat.Created_time.ToString();
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
+                pt.NIC = pat.NIC;
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 Type = db.GetDataValueName("Patient Type", Type);
                 var inpatid = DBClass.getField("select In_Patient_ID from AR_Advances where Patient_ID=" + PatientID + "order by Advance_ID desc");
@@ -5376,11 +5469,29 @@ namespace PMS
             return list;
         }
         [WebMethod]
-        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string Address, string PatientID, string martail_status, string Age,string txtfees)
+        public static string SavePatientDetail(string Full_Name, string RelationType, string Relation, string Gender, string Mobile, string Date_Of_Birth, string CNIC, string OtherCNIC, string Address, string PatientID, string martail_status, string Age, string txtfees)
         {
             DataBaseDataContext db = new DataBaseDataContext();
             Reg_patient pat = null;
-            if (!string.IsNullOrEmpty(PatientID) && PatientID != "0" && PatientID != "(New)")
+
+            bool isNew = string.IsNullOrEmpty(PatientID) || PatientID == "0" || PatientID == "(New)";
+
+            // CNIC VALIDATION CHECK - Only for new patients
+            if (isNew && !string.IsNullOrWhiteSpace(CNIC))
+            {
+                var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "CNIC Validation" && p.Code == "01");
+                if (cnicValidation != null)
+                {
+                    var existingPatient = db.Reg_patients.FirstOrDefault(p => p.NIC == CNIC && p.iscancel == false);
+                    if (existingPatient != null)
+                    {
+                        return "CNIC_EXISTS";
+                    }
+                }
+            }
+            // END OF CNIC VALIDATION
+
+            if (!isNew)
             {
                 pat = db.Reg_patients.Where(w => w.pat_id == Convert.ToInt32(PatientID)).FirstOrDefault();
 
@@ -5410,6 +5521,7 @@ namespace PMS
                         pat.DOB = dob;
                     }
                     pat.NIC = CNIC;
+                    pat.other_cnic = OtherCNIC;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                     pat.walkin = true;
@@ -5429,6 +5541,7 @@ namespace PMS
                 pat.Age_years = Age;
                 //pat.DOB = Convert.ToDateTime(Date_Of_Birth);
                 pat.NIC = CNIC;
+                pat.other_cnic = OtherCNIC;
                 pat.Permanent_Address = Address;
                 pat.Created_time = DateTime.Now;
                 pat.Created_by = AppConfig.UserID;
@@ -5724,6 +5837,7 @@ namespace PMS
                 pts.Address = pat.Permanent_Address;
                 pts.Mobile = pat.Mobile1;
                 pts.CNIC = pat.NIC;
+                pts.CNIC = pat.other_cnic;
                 pts.Gender = pat.Gender;
                 pts.Reg_PatientID = Reg_Patient_ID;
                 return pts;
@@ -5875,6 +5989,27 @@ namespace PMS
             }
 
             return list;
+        }
+
+        [WebMethod]
+        public static string CNICValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "CNIC Validation"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
         }
     }
 }

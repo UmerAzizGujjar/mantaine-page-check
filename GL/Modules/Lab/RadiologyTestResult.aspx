@@ -1456,6 +1456,23 @@
                 });
 
                 $('#tblLabTest tbody').html(rows);
+
+                $('#tblLabTest tbody tr').each(function (index) {
+                    var rowData = Test[index];
+                    if (!rowData || !rowData.PACS_Study_Url) {
+                        return;
+                    }
+
+                    var actionCell = $(this).find('td:eq(13)');
+                    if (actionCell.find('a[onclick="EditData(this)"]').length === 0) {
+                        return;
+                    }
+
+                    if (actionCell.find('a.pacs-link').length === 0) {
+                        actionCell.append(' | <a class="pacs-link" href="' + rowData.PACS_Study_Url + '" target="_blank" rel="noopener noreferrer">PACS</a>');
+                    }
+                });
+
                 $(".tdemergency").hide();
             });
         }
@@ -3697,18 +3714,17 @@ function cleanPrint() {
                 var $xraySelect = $('#chkXRay_level');
 
                 $xraySelect.empty();
+                $xraySelect.append('<option value="">Please Select</option>');
 
                 if (levels && levels.length > 0) {
                     $.each(levels, function (key, level) {
-                        $xraySelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                        $xraySelect.append(
+                            '<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">'
+                            + level.DataValue_Description +
+                            '</option>'
+                        );
                     });
 
-                    var firstLevel = levels[0];
-                    $xraySelect.val(firstLevel.Levels);
-                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
-                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
-                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
-                    }
                 } else {
                     $xraySelect.append('<option value="">No X-Ray Levels Assigned</option>');
                     $xraySelect.prop('disabled', true);
@@ -3724,18 +3740,17 @@ function cleanPrint() {
                 var $mriSelect = $('#chkMRILevel');
 
                 $mriSelect.empty();
+                $mriSelect.append('<option value="">Please Select</option>');
 
                 if (levels && levels.length > 0) {
                     $.each(levels, function (key, level) {
-                        $mriSelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                        $mriSelect.append(
+                            '<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">'
+                            + level.DataValue_Description +
+                            '</option>'
+                        );
                     });
 
-                    var firstLevel = levels[0];
-                    $mriSelect.val(firstLevel.Levels);
-                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
-                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
-                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
-                    }
                 } else {
                     $mriSelect.append('<option value="">No MRI Levels Assigned</option>');
                     $mriSelect.prop('disabled', true);
@@ -3745,25 +3760,21 @@ function cleanPrint() {
             });
         }
 
-        // Load CTScan Levels (simplified - same pattern as X-Ray)
         function LoadCTScanLevels() {
             PageMethods.GetAll_CTScanLevel(function (response) {
                 var levels = JSON.parse(response);
                 var $ctSelect = $('#chkCTScanLevel');
-
                 $ctSelect.empty();
+                $ctSelect.append('<option value="">Please Select</option>');
 
                 if (levels && levels.length > 0) {
                     $.each(levels, function (key, level) {
-                        $ctSelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                        $ctSelect.append(
+                            '<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">'
+                            + level.DataValue_Description +
+                            '</option>'
+                        );
                     });
-
-                    var firstLevel = levels[0];
-                    $ctSelect.val(firstLevel.Levels);
-                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
-                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
-                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
-                    }
                 } else {
                     $ctSelect.append('<option value="">No CTScan Levels Assigned</option>');
                     $ctSelect.prop('disabled', true);
@@ -3773,25 +3784,23 @@ function cleanPrint() {
             });
         }
 
-        // Load Ultrasound Levels (simplified - same pattern as X-Ray)
         function LoadUltrasoundLevelsUserWise() {
             PageMethods.GetAll_UltrasoundLevelUserWise(function (response) {
                 var levels = JSON.parse(response);
                 var $usSelect = $('#chkUltraSound_level');
 
                 $usSelect.empty();
+                $usSelect.append('<option value="">Please Select</option>');
 
                 if (levels && levels.length > 0) {
                     $.each(levels, function (key, level) {
-                        $usSelect.append('<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">' + level.DataValue_Description + '</option>');
+                        $usSelect.append(
+                            '<option value="' + level.Levels + '" data-fixvalues="' + escapeHtml(level.FixValues) + '">'
+                            + level.DataValue_Description +
+                            '</option>'
+                        );
                     });
 
-                    var firstLevel = levels[0];
-                    $usSelect.val(firstLevel.Levels);
-                    if (firstLevel.FixValues && firstLevel.FixValues !== "") {
-                        var decodedFixValues = $('<textarea/>').html(firstLevel.FixValues).text();
-                        CKEDITOR.instances.txtfixedType.setData(decodedFixValues);
-                    }
                 } else {
                     $usSelect.append('<option value="">No Ultrasound Levels Assigned</option>');
                     $usSelect.prop('disabled', true);

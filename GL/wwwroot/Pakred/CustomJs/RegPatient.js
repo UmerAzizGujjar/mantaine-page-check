@@ -2,7 +2,7 @@ $(document).ready(function () {
 
 
     clearPatient();
-
+    isCNICValidationRequired();
 
     MaskedInput({
         elm: document.getElementById('txt_mobile'),
@@ -12,6 +12,13 @@ $(document).ready(function () {
     });
     MaskedInput({
         elm: document.getElementById('txt_cnic'),
+        format: '_____-_______-_',
+        separator: '-'
+
+    });
+
+    MaskedInput({
+        elm: document.getElementById('txt_OtherCnic'),
         format: '_____-_______-_',
         separator: '-'
 
@@ -116,6 +123,53 @@ $(document).ready(function () {
                 }
             }, 50);
         });
+    });
+
+    if (!$('#txtAge_yearss').hasClass('hasDatepicker')) {
+        $('#txtAge_yearss').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0",
+            dateFormat: "dd/mm/yy",
+            onSelect: function (dateText) {
+                var selectedDate = $(this).datepicker('getDate');
+                if (selectedDate) {
+                    var today = new Date();
+                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
+                    var ageMonths = today.getMonth() - selectedDate.getMonth();
+                    var ageDays = today.getDate() - selectedDate.getDate();
+
+                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+                        ageYears--;
+                    }
+
+                    if (ageYears > 0) {
+                        $('#txt_dob').val(ageYears);
+                        $('#PrefixAge').val('Year').trigger('change');
+                    } else {
+                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
+                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
+                        if (monthDiff > 0) {
+                            $('#txt_dob').val(monthDiff);
+                            $('#PrefixAge').val('Month').trigger('change');
+                        } else {
+                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
+                            if (dayDiff > 0) {
+                                $('#txt_dob').val(dayDiff);
+                                $('#PrefixAge').val('Day').trigger('change');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    $('#txtAge_yearss').off('click').on('click', function () {
+        if ($(this).datepicker('widget').is(':visible')) {
+            return;
+        }
+        $(this).datepicker('show');
     });
 
 });
@@ -227,13 +281,43 @@ function CalculateDateOfBirth() {
     var finalDate = dob.format("DD/MM/YYYY");
 
     var $input = $('#txtAge_yearss');
-
     if (!$input.hasClass('hasDatepicker')) {
         $input.datepicker({
             changeMonth: true,
             changeYear: true,
             yearRange: "-100:+0",
-            dateFormat: "dd/mm/yy"
+            dateFormat: "dd/mm/yy",
+            onSelect: function (dateText) {
+                var selectedDate = $(this).datepicker('getDate');
+                if (selectedDate) {
+                    var today = new Date();
+                    var ageYears = today.getFullYear() - selectedDate.getFullYear();
+                    var ageMonths = today.getMonth() - selectedDate.getMonth();
+                    var ageDays = today.getDate() - selectedDate.getDate();
+
+                    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+                        ageYears--;
+                    }
+
+                    if (ageYears > 0) {
+                        $('#txt_dob').val(ageYears);
+                        $('#PrefixAge').val('Year').trigger('change');
+                    } else {
+                        var monthDiff = (today.getMonth() - selectedDate.getMonth()) +
+                            (12 * (today.getFullYear() - selectedDate.getFullYear()));
+                        if (monthDiff > 0) {
+                            $('#txt_dob').val(monthDiff);
+                            $('#PrefixAge').val('Month').trigger('change');
+                        } else {
+                            var dayDiff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
+                            if (dayDiff > 0) {
+                                $('#txt_dob').val(dayDiff);
+                                $('#PrefixAge').val('Day').trigger('change');
+                            }
+                        }
+                    }
+                }
+            }
         });
     }
 
@@ -256,6 +340,7 @@ function SavePatient() {
     var Age = $('#txt_dob').val();
     var Date_Of_Birth = $('#txtAge_yearss').val();
     var CNIC = $('#txt_cnic').val();
+    var OtherCnic = $('#txt_OtherCnic').val();
     var Address = $('#txt_Address').val();
     var city = $('#txtcity :selected').text();
     var area = $('#txtarea :selected').text();
@@ -266,6 +351,7 @@ function SavePatient() {
     var State = $('#ddlstate').val();
     var Country = $('#ddlCountry :selected').val();
     var cardfee = $('#txtCardFee').val();
+    var Monitoring = $('#chkMonitoring').is(':checked');
     var AntiForgeryToken = $('#ctl00_MainContent_hfAntiForgery').val();
 
     if (PatientName === "") {
@@ -295,6 +381,52 @@ function SavePatient() {
         valid = false;
 
     }
+    var isCNICRequired = isCNICValidationRequired();
+    if (isCNICRequired) {
+        var isCNICEmpty = !CNIC || CNIC === "" || CNIC === "_____-_______-_";
+        var isOtherCNICEmpty = !OtherCnic || OtherCnic === "" || OtherCnic === "_____-_______-_";
+
+        if (isCNICEmpty && isOtherCNICEmpty) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'CNIC Required!',
+                text: 'Please enter  CNIC or Other CNIC',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            });
+            $('#SavePatient_Data').attr('disabled', false);
+            return;
+        } else {
+            if (!isCNICEmpty && CNIC !== "_____-_______-_") {
+                var cnicPattern = /^\d{5}-\d{7}-\d$/;
+                if (!cnicPattern.test(CNIC)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid CNIC Format!',
+                        text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                }
+            }
+            if (!isOtherCNICEmpty && OtherCnic !== "_____-_______-_") {
+                var otherCnicPattern = /^\d{5}-\d{7}-\d$/;
+                if (!otherCnicPattern.test(OtherCnic)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Other CNIC Format!',
+                        text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33'
+                    });
+                    $('#SavePatient_Data').attr('disabled', false);
+                    return;
+                }
+            }
+        }
+    }
     if ((PatientName == "" || Mobile == "+92__________" || Age == "" || Relation == "0" || Address == "0")) {
 
         $('#SavePatient_Data').attr('disabled', false);
@@ -321,6 +453,8 @@ function SavePatient() {
         "State": State,
         "Country": Country,
         "cardfee": cardfee,
+        "OtherCnic": OtherCnic,
+        "Monitoring": Monitoring,
         "AntiForgeryToken": AntiForgeryToken,
 
     });
@@ -332,6 +466,18 @@ function SavePatient() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
+            if (response.d === "CNIC_EXISTS") {
+                Swal.fire({
+                    title: 'CNIC Already Exists!',
+                    text: 'A patient with this CNIC is already registered.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    $('#SavePatient_Data').attr('disabled', false);
+                });
+                return;
+            }
+
             if (data.d.startsWith("ERROR:")) {
                 toasterMessage(true, "Validation Failed", data.d.replace("ERROR: ", ""));
                 $('#SavePatient_Data').attr('disabled', false);
@@ -418,10 +564,15 @@ function Get_Pat_Info(reg_id) {
             $('#txt_Address').val(data.Address);
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#txt_cnic').val(data.CNIC_Masked);
+            $('#txt_OtherCnic').val(data.other_cnic);
             $('#txtAge_yearss').val(data.DOB);
             $('#txtCardFee').val(data.Card_fee);
             //dob
-
+            if (data.Monitoring === true) {
+                $('#chkMonitoring').prop('checked', true).trigger('change');
+            } else {
+                $('#chkMonitoring').prop('checked', false).trigger('change');
+            }
             if (data.MaritalStatus_text)
                 $('#ddl_status').html($('<option>', { value: '', text: data.MaritalStatus_text }).prop('selected', true));
             if (data.Country_text)
@@ -445,4 +596,26 @@ function Get_Pat_Info(reg_id) {
             console.error("AJAX Error: ", response);
         }
     });
+}
+
+
+function isCNICValidationRequired() {
+    var result = false;
+    $.ajax({
+        type: "POST",
+        url: "RegisterPatient.aspx/CNICValidation",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        async: false,
+        success: function (response) {
+            if (response.d === "01") {
+                result = true;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error checking CNIC validation:", error);
+            result = false;
+        }
+    });
+    return result;
 }

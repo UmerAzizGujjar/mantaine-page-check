@@ -95,6 +95,7 @@ namespace PMS
                                     Bill_No = (from bl in _dbContext.Ar_Billings where bl.Bill_ID == R.Bill_ID select bl.Bill_No).FirstOrDefault(),
                                     Refund_Date = R.Refund_Date,
                                     Refund_Amount = R.Refund_Amount,
+                                    Status = R.Status ?? "Created",
                                     MrNo = (from bl in _dbContext.Patients where bl.Patient_ID == R.Patient_ID select bl.mr_no_sequence).FirstOrDefault(),
                                     Remarks = R.Remarks,
                                 };
@@ -185,5 +186,41 @@ namespace PMS
                 throw;
             }
         }
+
+        [WebMethod]
+        public static bool ApproveRefunds(List<string> refundIds)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var userId = AppConfig.UserID; 
+
+                    foreach (var idStr in refundIds)
+                    {
+                        if (int.TryParse(idStr, out int refundId))
+                        {
+                            var refund = db.Refunds.FirstOrDefault(r => r.Refund_ID == refundId);
+                            if (refund != null)
+                            {
+                                refund.approve_by = userId;
+                                refund.approve_date = DateTime.Now;
+                                refund.Status = "Approved";
+                            }
+                        }
+                    }
+                    db.SubmitChanges();
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public Guid? approve_by { get; set; }
+        public DateTime? approve_date { get; set; }
+        public string Status { get; set; }
     }
 }

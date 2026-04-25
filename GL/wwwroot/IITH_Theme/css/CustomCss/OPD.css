@@ -22,7 +22,11 @@
 .mleft {
     margin-left: 15px !important;
 }
-
+.cnic-input {
+    width: 250px !important;
+    margin: 0 auto; /* center it */
+    display: block;
+}
 .quick-actions {
     background: #438eb9;
     color: white;
