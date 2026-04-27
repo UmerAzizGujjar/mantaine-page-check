@@ -21,158 +21,7 @@ namespace PMS
     public partial class SiteMaster : System.Web.UI.MasterPage
     {
 
-        public class TillActionResult
-        {
-            public bool IsSuccess { get; set; }
-            public bool IsActive { get; set; }
-            public bool HideButton { get; set; }
-            public string Message { get; set; }
-            public string StartedAt { get; set; }
-        }
-
-        [WebMethod(EnableSession = true)]
-        public static TillActionResult GetTillStatus()
-        {
-            var result = new TillActionResult
-            {
-                IsSuccess = true,
-                IsActive = false,
-                HideButton = false,
-                Message = string.Empty,
-                StartedAt = string.Empty
-            };
-
-            try
-            {
-                if (HttpContext.Current == null || HttpContext.Current.Session == null || HttpContext.Current.Session["UserID"] == null)
-                {
-                    result.IsSuccess = false;
-                    result.HideButton = true;
-                    result.Message = "Session expired.";
-                    return result;
-                }
-
-                int userId = Convert.ToInt32(HttpContext.Current.Session["UserID"]);
-                string scheduleDate = DateTime.Now.ToString("yyyy-MM-dd");
-
-                // Session-based fallback until table is available
-                bool isActiveFromSession = HttpContext.Current.Session["TillIsActive"] != null && Convert.ToBoolean(HttpContext.Current.Session["TillIsActive"]);
-                bool isEndedFromSession = HttpContext.Current.Session["TillEnded"] != null && Convert.ToBoolean(HttpContext.Current.Session["TillEnded"]);
-                string startedAtFromSession = HttpContext.Current.Session["TillStartedAt"] != null ? Convert.ToString(HttpContext.Current.Session["TillStartedAt"]) : string.Empty;
-
-                  string sql = "SELECT TOP 1 start_time, close_time FROM user_tills WHERE user_id=" + userId + " AND schedule_date='" + scheduleDate + "' ORDER BY id DESC";
-                DataTable dt = DBClass.getDataTable(sql);
-                if (dt.Rows.Count > 0)
-                {
-                    bool hasClose = dt.Rows[0]["close_time"] != DBNull.Value && dt.Rows[0]["close_time"].ToString() != "";
-                    result.IsActive = !hasClose;
-                    result.HideButton = hasClose;
-                    result.StartedAt = dt.Rows[0]["start_time"].ToString();
-                }
-                else
-                {
-                    result.IsActive = false;
-                    result.HideButton = false;
-                }
-
-                result.IsActive = isActiveFromSession;
-                result.HideButton = isEndedFromSession;
-                result.StartedAt = startedAtFromSession;
-            }
-            catch (Exception ex)
-            {
-                result.IsSuccess = false;
-                result.Message = ex.Message;
-            }
-
-            return result;
-        }
-
-        [WebMethod(EnableSession = true)]
-        public static TillActionResult StartTill()
-        {
-            var result = new TillActionResult
-            {
-                IsSuccess = true,
-                IsActive = true,
-                HideButton = false,
-                Message = "Till started.",
-                StartedAt = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")
-            };
-
-            try
-            {
-                if (HttpContext.Current == null || HttpContext.Current.Session == null || HttpContext.Current.Session["UserID"] == null)
-                {
-                    result.IsSuccess = false;
-                    result.IsActive = false;
-                    result.HideButton = true;
-                    result.Message = "Session expired.";
-                    return result;
-                }
-
-                int userId = Convert.ToInt32(HttpContext.Current.Session["UserID"]);
-                string scheduleDate = DateTime.Now.ToString("yyyy-MM-dd");
-                string startTime = DateTime.Now.ToString("HH:mm:ss");
-
-                HttpContext.Current.Session["TillIsActive"] = true;
-                HttpContext.Current.Session["TillEnded"] = false;
-                HttpContext.Current.Session["TillStartedAt"] = result.StartedAt;
-
-                  string insertSql = "INSERT INTO user_tills (user_id, schedule_date, start_time, close_time) VALUES (" + userId + ", '" + scheduleDate + "', '" + startTime + "', NULL)";
-                DBClass.getDataTable(insertSql);
-            }
-            catch (Exception ex)
-            {
-                result.IsSuccess = false;
-                result.IsActive = false;
-                result.Message = ex.Message;
-            }
-
-            return result;
-        }
-
-        [WebMethod(EnableSession = true)]
-        public static TillActionResult EndTill()
-        {
-            var result = new TillActionResult
-            {
-                IsSuccess = true,
-                IsActive = false,
-                HideButton = true,
-                Message = "Till ended.",
-                StartedAt = string.Empty
-            };
-
-            try
-            {
-                if (HttpContext.Current == null || HttpContext.Current.Session == null || HttpContext.Current.Session["UserID"] == null)
-                {
-                    result.IsSuccess = false;
-                    result.HideButton = true;
-                    result.Message = "Session expired.";
-                    return result;
-                }
-
-                int userId = Convert.ToInt32(HttpContext.Current.Session["UserID"]);
-                string scheduleDate = DateTime.Now.ToString("yyyy-MM-dd");
-                string closeTime = DateTime.Now.ToString("HH:mm:ss");
-
-                HttpContext.Current.Session["TillIsActive"] = false;
-                HttpContext.Current.Session["TillEnded"] = true;
-
-                 string updateSql = "UPDATE user_tills SET close_time='" + closeTime + "' WHERE id=(SELECT TOP 1 id FROM user_tills WHERE user_id=" + userId + " AND schedule_date='" + scheduleDate + "' AND close_time IS NULL ORDER BY id DESC)";
-                DBClass.getDataTable(updateSql);
-            }
-            catch (Exception ex)
-            {
-                result.IsSuccess = false;
-                result.HideButton = false;
-                result.Message = ex.Message;
-            }
-
-            return result;
-        }
+       
 
         public void LoadMenus()
         {
@@ -181,24 +30,44 @@ namespace PMS
                 if (Session["UserID"] != null)
                 {
                     string userId = Session["UserID"].ToString();
+                    string allowTill = DBClass.getField("select isnull(user_till,0) from aspnet_Users where UserId='" + userId + "'");
+                    bool isTillUser = allowTill == "1" || allowTill.Equals("true", StringComparison.OrdinalIgnoreCase);
+                    Session["AllowTill"] = isTillUser;
+                    if (!isTillUser)
+                    {
+                        goto SkipTillRestriction;
+                    }
+
+                    bool hasActiveTill = Session["TillIsActive"] != null && Convert.ToBoolean(Session["TillIsActive"]);
+                    bool hasEndedTill = Session["TillEnded"] != null && Convert.ToBoolean(Session["TillEnded"]);
+                    string startedAt = Session["TillStartedAt"] != null ? Session["TillStartedAt"].ToString() : string.Empty;
+                    string endedAt = Session["TillEndedAt"] != null ? Session["TillEndedAt"].ToString() : string.Empty;
+
+                    // Uncomment when table exists
                     string scheduleDate = DateTime.Now.ToString("yyyy-MM-dd");
-
-                    // Session-based fallback until table is available
-                    bool hasActiveTillFromSession = Session["TillIsActive"] != null && Convert.ToBoolean(Session["TillIsActive"]);
-
-                     string tillSql = "SELECT TOP 1 id FROM user_tills WHERE user_id='" + userId + "' AND schedule_date='" + scheduleDate + "' AND close_time IS NULL ORDER BY id DESC";
+                    string tillSql = "SELECT TOP 1 start_time, close_time FROM user_tills WHERE user_id='" + userId + "' AND schedule_date='" + scheduleDate + "' ORDER BY id DESC";
                     DataTable tillDt = DBClass.getDataTable(tillSql);
-                    bool hasActiveTill = tillDt.Rows.Count > 0;
+                    if (tillDt.Rows.Count > 0)
+                    {
+                        bool hasClose = tillDt.Rows[0]["close_time"] != DBNull.Value && tillDt.Rows[0]["close_time"].ToString() != "";
+                        hasActiveTill = !hasClose;
+                        hasEndedTill = hasClose;
+                        startedAt = tillDt.Rows[0]["start_time"].ToString();
+                        endedAt = hasClose ? tillDt.Rows[0]["close_time"].ToString() : string.Empty;
+                    }
 
-                     hasActiveTill = hasActiveTillFromSession;
                     string currentPage = Request.Url.AbsolutePath.ToLower();
                     bool isDefaultPage = currentPage.EndsWith("/default.aspx") || currentPage.EndsWith("default.aspx");
+                    bool isTillApiCall = currentPage.EndsWith("/patientmanagementsection.aspx") || currentPage.EndsWith("patientmanagementsection.aspx");
 
-                    if (!hasActiveTill && !isDefaultPage)
+                    if (!hasActiveTill && !isDefaultPage && !isTillApiCall)
                     {
                         Response.Redirect("~/Default.aspx", false);
                         return;
                     }
+
+                SkipTillRestriction:
+                    ;
                 }
             }
             catch

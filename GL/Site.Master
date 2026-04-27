@@ -1216,6 +1216,7 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
             <div id="quickDateTime" class="dt-value"></div>
             <button type="button" id="quickStartBtn" class="start-btn">Start</button>
             <div id="quickStartInfo" class="start-info"></div>
+            <div id="quickEndInfo" class="start-info"></div>
         </div>
         <button type="button" id="quickTimeToggle" class="quick-time-toggle" title="Show Date/Time">⏱</button>
     </form>
@@ -1308,16 +1309,18 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
                 var dateTime = document.getElementById('quickDateTime');
                 var startBtn = document.getElementById('quickStartBtn');
                 var startInfo = document.getElementById('quickStartInfo');
-                var webMethodBase = '<%= ResolveUrl("~/GL/Site.Master") %>';
+                var endInfo = document.getElementById('quickEndInfo');
+                var webMethodBase = '<%= ResolveUrl("~/PatientManagementSection.aspx/") %>';
 
-                if (!panel || !toggle || !dateTime || !startBtn || !startInfo) {
+                if (!panel || !toggle || !dateTime || !startBtn || !startInfo || !endInfo) {
                     return;
                 }
 
                 function postTill(methodName, onSuccess) {
+                    debugger;
                     $.ajax({
                         type: 'POST',
-                        url: webMethodBase + '/' + methodName,
+                        url: webMethodBase + methodName,
                         data: '{}',
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'json',
@@ -1334,8 +1337,25 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
                 }
 
                 function applyTillState(result) {
+                    if (!result || result.IsTillEnabled === false) {
+                        panel.style.display = 'none';
+                        toggle.style.display = 'none';
+                        return;
+                    }
+
+                    panel.style.display = 'block';
+                    toggle.style.display = 'inline-block';
+
                     if (result && result.StartedAt) {
                         startInfo.innerHTML = 'Started at: ' + result.StartedAt;
+                    } else {
+                        startInfo.innerHTML = '';
+                    }
+
+                    if (result && result.EndedAt) {
+                        endInfo.innerHTML = 'Ended at: ' + result.EndedAt;
+                    } else {
+                        endInfo.innerHTML = '';
                     }
 
                     if (result && result.Message) {
@@ -1343,11 +1363,14 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
                     }
 
                     if (result && result.HideButton === true) {
-                        startBtn.style.display = 'none';
+                        startBtn.style.display = 'inline-block';
+                        startBtn.disabled = true;
+                        startBtn.innerHTML = 'Done';
                         return;
                     }
 
                     startBtn.style.display = 'inline-block';
+                    startBtn.disabled = false;
                     startBtn.innerHTML = result && result.IsActive ? 'End' : 'Start';
                 }
 
