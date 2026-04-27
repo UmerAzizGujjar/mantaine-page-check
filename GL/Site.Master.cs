@@ -60,21 +60,20 @@ namespace PMS
                 bool isEndedFromSession = HttpContext.Current.Session["TillEnded"] != null && Convert.ToBoolean(HttpContext.Current.Session["TillEnded"]);
                 string startedAtFromSession = HttpContext.Current.Session["TillStartedAt"] != null ? Convert.ToString(HttpContext.Current.Session["TillStartedAt"]) : string.Empty;
 
-                // TODO: Uncomment when table exists
-                // string sql = "SELECT TOP 1 start_time, close_time FROM user_tills WHERE user_id=" + userId + " AND schedule_date='" + scheduleDate + "' ORDER BY id DESC";
-                // DataTable dt = DBClass.getDataTable(sql);
-                // if (dt.Rows.Count > 0)
-                // {
-                //     bool hasClose = dt.Rows[0]["close_time"] != DBNull.Value && dt.Rows[0]["close_time"].ToString() != "";
-                //     result.IsActive = !hasClose;
-                //     result.HideButton = hasClose;
-                //     result.StartedAt = dt.Rows[0]["start_time"].ToString();
-                // }
-                // else
-                // {
-                //     result.IsActive = false;
-                //     result.HideButton = false;
-                // }
+                  string sql = "SELECT TOP 1 start_time, close_time FROM user_tills WHERE user_id=" + userId + " AND schedule_date='" + scheduleDate + "' ORDER BY id DESC";
+                DataTable dt = DBClass.getDataTable(sql);
+                if (dt.Rows.Count > 0)
+                {
+                    bool hasClose = dt.Rows[0]["close_time"] != DBNull.Value && dt.Rows[0]["close_time"].ToString() != "";
+                    result.IsActive = !hasClose;
+                    result.HideButton = hasClose;
+                    result.StartedAt = dt.Rows[0]["start_time"].ToString();
+                }
+                else
+                {
+                    result.IsActive = false;
+                    result.HideButton = false;
+                }
 
                 result.IsActive = isActiveFromSession;
                 result.HideButton = isEndedFromSession;
@@ -120,9 +119,8 @@ namespace PMS
                 HttpContext.Current.Session["TillEnded"] = false;
                 HttpContext.Current.Session["TillStartedAt"] = result.StartedAt;
 
-                // TODO: Uncomment when table exists
-                // string insertSql = "INSERT INTO user_tills (user_id, schedule_date, start_time, close_time) VALUES (" + userId + ", '" + scheduleDate + "', '" + startTime + "', NULL)";
-                // DBClass.getDataTable(insertSql);
+                  string insertSql = "INSERT INTO user_tills (user_id, schedule_date, start_time, close_time) VALUES (" + userId + ", '" + scheduleDate + "', '" + startTime + "', NULL)";
+                DBClass.getDataTable(insertSql);
             }
             catch (Exception ex)
             {
@@ -163,9 +161,8 @@ namespace PMS
                 HttpContext.Current.Session["TillIsActive"] = false;
                 HttpContext.Current.Session["TillEnded"] = true;
 
-                // TODO: Uncomment when table exists
-                // string updateSql = "UPDATE user_tills SET close_time='" + closeTime + "' WHERE id=(SELECT TOP 1 id FROM user_tills WHERE user_id=" + userId + " AND schedule_date='" + scheduleDate + "' AND close_time IS NULL ORDER BY id DESC)";
-                // DBClass.getDataTable(updateSql);
+                 string updateSql = "UPDATE user_tills SET close_time='" + closeTime + "' WHERE id=(SELECT TOP 1 id FROM user_tills WHERE user_id=" + userId + " AND schedule_date='" + scheduleDate + "' AND close_time IS NULL ORDER BY id DESC)";
+                DBClass.getDataTable(updateSql);
             }
             catch (Exception ex)
             {
@@ -183,18 +180,17 @@ namespace PMS
             {
                 if (Session["UserID"] != null)
                 {
-                    int userId = Convert.ToInt32(Session["UserID"]);
+                    string userId = Session["UserID"].ToString();
                     string scheduleDate = DateTime.Now.ToString("yyyy-MM-dd");
 
                     // Session-based fallback until table is available
                     bool hasActiveTillFromSession = Session["TillIsActive"] != null && Convert.ToBoolean(Session["TillIsActive"]);
 
-                    // TODO: Uncomment when table exists
-                    // string tillSql = "SELECT TOP 1 id FROM user_tills WHERE user_id=" + userId + " AND schedule_date='" + scheduleDate + "' AND close_time IS NULL ORDER BY id DESC";
-                    // DataTable tillDt = DBClass.getDataTable(tillSql);
-                    // bool hasActiveTill = tillDt.Rows.Count > 0;
+                     string tillSql = "SELECT TOP 1 id FROM user_tills WHERE user_id='" + userId + "' AND schedule_date='" + scheduleDate + "' AND close_time IS NULL ORDER BY id DESC";
+                    DataTable tillDt = DBClass.getDataTable(tillSql);
+                    bool hasActiveTill = tillDt.Rows.Count > 0;
 
-                    bool hasActiveTill = hasActiveTillFromSession;
+                     hasActiveTill = hasActiveTillFromSession;
                     string currentPage = Request.Url.AbsolutePath.ToLower();
                     bool isDefaultPage = currentPage.EndsWith("/default.aspx") || currentPage.EndsWith("default.aspx");
 
