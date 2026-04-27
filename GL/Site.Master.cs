@@ -21,8 +21,59 @@ namespace PMS
     public partial class SiteMaster : System.Web.UI.MasterPage
     {
 
+       
+
         public void LoadMenus()
         {
+            try
+            {
+                if (Session["UserID"] != null)
+                {
+                    string userId = Session["UserID"].ToString();
+                    string allowTill = DBClass.getField("select isnull(user_till,0) from aspnet_Users where UserId='" + userId + "'");
+                    bool isTillUser = allowTill == "1" || allowTill.Equals("true", StringComparison.OrdinalIgnoreCase);
+                    Session["AllowTill"] = isTillUser;
+                    if (!isTillUser)
+                    {
+                        goto SkipTillRestriction;
+                    }
+
+                    bool hasActiveTill = Session["TillIsActive"] != null && Convert.ToBoolean(Session["TillIsActive"]);
+                    bool hasEndedTill = Session["TillEnded"] != null && Convert.ToBoolean(Session["TillEnded"]);
+                    string startedAt = Session["TillStartedAt"] != null ? Session["TillStartedAt"].ToString() : string.Empty;
+                    string endedAt = Session["TillEndedAt"] != null ? Session["TillEndedAt"].ToString() : string.Empty;
+
+                    // Uncomment when table exists
+                    string scheduleDate = DateTime.Now.ToString("yyyy-MM-dd");
+                    string tillSql = "SELECT TOP 1 start_time, close_time FROM user_tills WHERE user_id='" + userId + "' AND schedule_date='" + scheduleDate + "' ORDER BY id DESC";
+                    DataTable tillDt = DBClass.getDataTable(tillSql);
+                    if (tillDt.Rows.Count > 0)
+                    {
+                        bool hasClose = tillDt.Rows[0]["close_time"] != DBNull.Value && tillDt.Rows[0]["close_time"].ToString() != "";
+                        hasActiveTill = !hasClose;
+                        hasEndedTill = hasClose;
+                        startedAt = tillDt.Rows[0]["start_time"].ToString();
+                        endedAt = hasClose ? tillDt.Rows[0]["close_time"].ToString() : string.Empty;
+                    }
+
+                    string currentPage = Request.Url.AbsolutePath.ToLower();
+                    bool isDefaultPage = currentPage.EndsWith("/default.aspx") || currentPage.EndsWith("default.aspx");
+                    bool isTillApiCall = currentPage.EndsWith("/patientmanagementsection.aspx") || currentPage.EndsWith("patientmanagementsection.aspx");
+
+                    if (!hasActiveTill && !isDefaultPage && !isTillApiCall)
+                    {
+                        Response.Redirect("~/Default.aspx", false);
+                        return;
+                    }
+
+                SkipTillRestriction:
+                    ;
+                }
+            }
+            catch
+            {
+            }
+
             string UserName = Session["UserName"].ToString().Trim();
             lblCompanyNameCenter.Text = AppConfig.Company_Name;
             IHome.Title = AppConfig.Company_Name;

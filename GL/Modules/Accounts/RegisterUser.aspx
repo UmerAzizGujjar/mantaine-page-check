@@ -86,6 +86,7 @@
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                     $('#AllowUndischarge').prop('checked', data.AllowUndischarge);
                     $('#AllDoctorTemplate').prop('checked', data.AllDoctorTemplate);
+                    $('#AllowTill').prop('checked', data.AllowTill);
                     
                 },
                 error: function (xhr, status, error) {
@@ -147,6 +148,7 @@
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var AllowUndischarge = $('#AllowUndischarge').prop('checked');
             var AllDoctorTemplate = $('#AllDoctorTemplate').prop('checked');
+            var AllowTill = $('#AllowTill').prop('checked');
             
             var EmpCode = $('#EmpCode').val();
             var ddlcasher = $('#ddlcasher').val();
@@ -281,7 +283,8 @@
                 "AllowRateEdit": AllowRateEdit,
                 "ddlcasher": ddlcasher,
                 "AllowUndischarge": AllowUndischarge,
-                "AllDoctorTemplate": AllDoctorTemplate
+                "AllDoctorTemplate": AllDoctorTemplate,
+                "AllowTill": AllowTill
 
             };
 
@@ -532,6 +535,9 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AllDoctorTemplate" name="AllDoctorTemplate" />
                                                     </div>
+                                                     <div class="form-check">
+                                                         <input type="checkbox" class="form-check-input" id="AllowTill" name="AllowTill" />
+                                                     </div>
                                                     <div class="form-check">
                                                         <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
                                                     </div>
@@ -601,6 +607,9 @@
  </div>
                                                      <div class="form-check">
                                                          <label class="form-check-label" for="AllDoctorTemplate">All Doctor Template</label>
+                                                     </div>
+                                                     <div class="form-check">
+                                                         <label class="form-check-label" for="AllowTill">Allow Till</label>
                                                      </div>
                                                      <div class="form-check">
                                                        <label class="form-check-label" for="EmpCode">Employee Code</label>

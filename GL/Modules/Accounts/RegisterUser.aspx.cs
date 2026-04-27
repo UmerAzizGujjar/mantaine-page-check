@@ -99,7 +99,8 @@ namespace PMS.Modules.Accounts
                              casher = p.cashier,
                              EmpCode=p.Emp_Code,
                              AllowUndischarge = p.allow_undischarge,
-                               AllDoctorTemplate = p.All_doctor_template,
+                                AllDoctorTemplate = p.All_doctor_template,
+                                AllowTill = p.user_till,
                           }).FirstOrDefault();
             string data = string.Empty;
             data = new JavaScriptSerializer().Serialize(users);
@@ -215,6 +216,7 @@ namespace PMS.Modules.Accounts
                     user.AllowRateEdit = data.AllowRateEdit;
                     user.allow_undischarge = data.AllowUndischarge;
                     user.All_doctor_template = data.AllDoctorTemplate;
+                    user.user_till = data.AllowTill;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -300,6 +302,7 @@ namespace PMS.Modules.Accounts
                 newuser.allow_undischarge = data.AllowUndischarge;
           
                  newuser.All_doctor_template = data.AllDoctorTemplate;
+                 newuser.user_till = data.AllowTill;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
                 db.aspnet_Users.InsertOnSubmit(newuser);
 
@@ -418,6 +421,7 @@ namespace PMS.Modules.Accounts
             public bool AllowRateEdit { get; set; }
             public bool AllowUndischarge { get; set; }
             public bool AllDoctorTemplate { get; set; }
+            public bool AllowTill { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }
             public bool AllowemergencyDiscount { get; set; }
