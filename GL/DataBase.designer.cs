@@ -982,8 +982,9 @@ namespace PMS
         partial void Updateuser_till(user_till instance);
         partial void Deleteuser_till(user_till instance);
         #endregion
+
         public DataBaseDataContext() :
-             base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -172673,7 +172674,7 @@ namespace PMS
 
         private int _id;
 
-        private int _user_id;
+        private System.Guid _user_id;
 
         private System.DateTime _schedule_date;
 
@@ -172687,7 +172688,7 @@ namespace PMS
         partial void OnCreated();
         partial void OnidChanging(int value);
         partial void OnidChanged();
-        partial void Onuser_idChanging(int value);
+        partial void Onuser_idChanging(System.Guid value);
         partial void Onuser_idChanged();
         partial void Onschedule_dateChanging(System.DateTime value);
         partial void Onschedule_dateChanged();
@@ -172722,8 +172723,8 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_user_id", DbType = "Int NOT NULL")]
-        public int user_id
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_user_id", DbType = "UniqueIdentifier NOT NULL")]
+        public System.Guid user_id
         {
             get
             {

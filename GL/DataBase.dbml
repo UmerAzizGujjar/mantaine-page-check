@@ -7730,7 +7730,7 @@
   <Table Name="dbo.user_tills" Member="user_tills">
     <Type Name="user_till">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="user_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="user_id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="schedule_date" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
       <Column Name="start_time" Type="System.TimeSpan" DbType="Time NOT NULL" CanBeNull="false" />
       <Column Name="close_time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
