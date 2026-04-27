@@ -1139,6 +1139,85 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
             <uc:Footer runat="server" ID="Footer" />
 
         </div>
+
+        <style type="text/css">
+            .quick-time-toggle {
+    position: fixed;
+    right: 20px;
+    bottom: 10vh; /* Increased to move the button up */
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #f7941d;
+    color: #fff;
+    font-size: 20px;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    
+    /* Added to make it behave like a real button */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Added hover effect to make it pop when a user mouses over it */
+.quick-time-toggle:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+            .quick-time-panel {
+                position: fixed;
+                right: 20px;
+                bottom: 20vh;
+                width: 260px;
+                background: #fff;
+                border-radius: 12px;
+                padding: 14px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+                transform: translateX(120%);
+                transition: transform 0.3s ease;
+                z-index: 9998;
+            }
+
+            .quick-time-panel.open {
+                transform: translateX(0);
+            }
+
+            .quick-time-panel .title {
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+
+            .quick-time-panel .dt-value {
+                font-size: 14px;
+                color: #333;
+                margin-bottom: 10px;
+            }
+
+            .quick-time-panel .start-btn {
+                background: #28a745;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                padding: 8px 14px;
+                font-weight: 600;
+            }
+
+            .quick-time-panel .start-info {
+                margin-top: 8px;
+                font-size: 12px;
+                color: #666;
+            }
+        </style>
+
+        <div id="quickTimePanel" class="quick-time-panel">
+            <div class="title">Current Date &amp; Time</div>
+            <div id="quickDateTime" class="dt-value"></div>
+            <button type="button" id="quickStartBtn" class="start-btn">Start</button>
+            <div id="quickStartInfo" class="start-info"></div>
+        </div>
+        <button type="button" id="quickTimeToggle" class="quick-time-toggle" title="Show Date/Time">⏱</button>
     </form>
 
     <script type="text/javascript">
@@ -1214,6 +1293,100 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
             }
             return false;
         }
+    </script>
+    <script type="text/javascript">
+        (function () {
+            function formatDateTime(now) {
+                var date = now.toLocaleDateString();
+                var time = now.toLocaleTimeString();
+                return date + ' ' + time;
+            }
+
+            function initQuickTimeWidget() {
+                var panel = document.getElementById('quickTimePanel');
+                var toggle = document.getElementById('quickTimeToggle');
+                var dateTime = document.getElementById('quickDateTime');
+                var startBtn = document.getElementById('quickStartBtn');
+                var startInfo = document.getElementById('quickStartInfo');
+                var webMethodBase = '<%= ResolveUrl("~/GL/Site.Master") %>';
+
+                if (!panel || !toggle || !dateTime || !startBtn || !startInfo) {
+                    return;
+                }
+
+                function postTill(methodName, onSuccess) {
+                    $.ajax({
+                        type: 'POST',
+                        url: webMethodBase + '/' + methodName,
+                        data: '{}',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function (response) {
+                            var result = response && response.d ? response.d : response;
+                            if (onSuccess) {
+                                onSuccess(result || {});
+                            }
+                        },
+                        error: function () {
+                            showToast('Unable to process till action.', 'error');
+                        }
+                    });
+                }
+
+                function applyTillState(result) {
+                    if (result && result.StartedAt) {
+                        startInfo.innerHTML = 'Started at: ' + result.StartedAt;
+                    }
+
+                    if (result && result.Message) {
+                        showToast(result.Message, result.IsSuccess === false ? 'warning' : 'success');
+                    }
+
+                    if (result && result.HideButton === true) {
+                        startBtn.style.display = 'none';
+                        return;
+                    }
+
+                    startBtn.style.display = 'inline-block';
+                    startBtn.innerHTML = result && result.IsActive ? 'End' : 'Start';
+                }
+
+                function updateDateTime() {
+                    dateTime.innerHTML = formatDateTime(new Date());
+                }
+
+                updateDateTime();
+                setInterval(updateDateTime, 1000);
+
+                postTill('GetTillStatus', function (result) {
+                    applyTillState(result);
+                });
+
+                toggle.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    panel.classList.toggle('open');
+                });
+
+                startBtn.addEventListener('click', function () {
+                    var isStartMode = startBtn.innerHTML === 'Start';
+                    postTill(isStartMode ? 'StartTill' : 'EndTill', function (result) {
+                        applyTillState(result);
+                    });
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!panel.contains(e.target) && e.target !== toggle) {
+                        panel.classList.remove('open');
+                    }
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initQuickTimeWidget);
+            } else {
+                initQuickTimeWidget();
+            }
+        })();
     </script>
     <script type="text/javascript">
         if ('ontouchstart' in document.documentElement) document.write("<script src='wwwroot/Tibbit_theme/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
