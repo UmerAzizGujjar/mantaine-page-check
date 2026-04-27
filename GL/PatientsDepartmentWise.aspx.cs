@@ -7977,8 +7977,6 @@ namespace PMS
                     ddlShift.DataTextField = "Shift_Name";
                     ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
                     ddlShift.DataBind();
-                    lbShift.Visible = false;
-                    ddlShift.Visible = false;
 
                     DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
                     ddlDoctor.DataSource = dt;

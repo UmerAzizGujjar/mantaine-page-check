@@ -632,6 +632,25 @@
             $('#txtItem').focus();
 
             $('#btnGetAllItems').on('click', function () {
+                if (warehouseCond === '01') {
+                    var warehouseVal = $('#ddlWarehouse').val();
+                    if (!warehouseVal || warehouseVal === '0' || warehouseVal === '') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: 'Please select warehouse first',
+                            showConfirmButton: true,
+                            timer: 3000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        $('#ddlWarehouse').focus();
+                        return false;
+                    }
+                }
                 $('#ctl00_MainContent_ddlPrNo').prop('disabled', true);
                 LoadAllitem('');
             });
