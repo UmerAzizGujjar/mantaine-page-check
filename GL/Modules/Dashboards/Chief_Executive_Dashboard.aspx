@@ -2,30 +2,25 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
-            var today = moment().format('LL');
+            // Initial load for both cards
+            LoadHospitalRevenue("today");
+            LoadOPDSaleRevenue("today");
+            LoadPharmacyRevenue("today");
 
-            $("#startDate, #EndDate").datepicker({
-                dateFormat: 'MM d, yy'
-            }).attr('readonly', 'readonly').val(today);
-            LoadHospitalRevenue(today, today);
-            $("#txtSearch").click(function () {
-                var dt = $('#startDate').val();
-                var dts = $('#EndDate').val();
-                LoadHospitalRevenue(dt, dts);
+
+            $("#ddlPeriod").change(function () {
+                var period = $(this).val();
+                LoadHospitalRevenue(period);
+                LoadOPDSaleRevenue(period);
+                LoadPharmacyRevenue(period);
             });
         });
 
-        function search() {
-            var dt = $('#startDate').val();
-            var dts = $('#EndDate').val();
-            LoadHospitalRevenue(dt, dts);
-        }
-
-        function LoadHospitalRevenue(startdate, enddate) {
+        function LoadHospitalRevenue(period) {
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetHospitalRevenue",
-                data: JSON.stringify({ 'txt_sdate': startdate, 'txt_edate': enddate }),
+                data: JSON.stringify({ 'period': period }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
@@ -39,12 +34,65 @@
                             maximumFractionDigits: 0
                         });
                         $('#lblRevenue').text(formatted);
-                        $('#lblRevenueDate').text(startdate + ' - ' + enddate);
+                        $('#lblRevenueDate').text(result.DateRange);
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error("Revenue Error: " + error);
                     $('#lblRevenue').text('0');
+                }
+            });
+        }
+
+        function LoadOPDSaleRevenue(period) {
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetOPDSaleRevenue",
+                data: JSON.stringify({ 'period': period }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var result = JSON.parse(data.d);
+                    if (result.Error) {
+                        $('#lblOPDRevenue').text('0');
+                        $('#lblOPDDate').text('Error loading data');
+                    } else {
+                        var formatted = parseFloat(result.OPDRevenue).toLocaleString('en-PK', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        });
+                        $('#lblOPDRevenue').text(formatted);
+                        $('#lblOPDDate').text(result.DateRange);
+                    }
+                },
+                error: function () {
+                    $('#lblOPDRevenue').text('0');
+                }
+            });
+        }
+
+        function LoadPharmacyRevenue(period) {
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetPharmacyRevenue",
+                data: JSON.stringify({ 'period': period }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var result = JSON.parse(data.d);
+                    if (result.Error) {
+                        $('#lblPharmacyRevenue').text('0');
+                        $('#lblPharmacyDate').text('Error loading data');
+                    } else {
+                        var formatted = parseFloat(result.PharmacyRevenue).toLocaleString('en-PK', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        });
+                        $('#lblPharmacyRevenue').text(formatted);
+                        $('#lblPharmacyDate').text(result.DateRange);
+                    }
+                },
+                error: function () {
+                    $('#lblPharmacyRevenue').text('0');
                 }
             });
         }
@@ -68,24 +116,34 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
         <div class="col-lg-2">
-            <label>Start Date</label>
-            <input type="text" id="startDate" class="form-control" />
-        </div>
-        <div class="col-lg-2">
-            <label>End Date</label>
-            <input type="text" id="EndDate" class="form-control" />
-        </div>
-        <div class="col-lg-1">
-            <label></label>
-            <input type="button" id="txtSearch" class="btn btn-primry" value="Search" onclick="search()" />
+            <label>Select Period</label>
+            <select id="ddlPeriod" class="form-control">
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+            </select>
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-3 col-md-6">
             <div class="revenue-card">
                 <div class="card-title">Total Hospital Revenue</div>
                 <div class="card-value">Rs. <span id="lblRevenue">0</span></div>
                 <div class="card-date" id="lblRevenueDate">Loading...</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+        <div class="revenue-card" style="border-left-color: #007bff;"> <div class="card-title">OPD Sale Revenue</div>
+            <div class="card-value">Rs. <span id="lblOPDRevenue">0</span></div>
+            <div class="card-date" id="lblOPDDate">Loading...</div>
+        </div>
+    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="revenue-card" style="border-left-color: #dc3545;">
+                <div class="card-title">Pharmacy Sale Revenue</div>
+                <div class="card-value">Rs. <span id="lblPharmacyRevenue">0</span></div>
+                <div class="card-date" id="lblPharmacyDate">Loading...</div>
             </div>
         </div>
     </div>
