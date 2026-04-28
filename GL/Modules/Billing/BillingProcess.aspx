@@ -6688,40 +6688,48 @@
             }
             debugger;
             function EditPatientDetail(id) {
+                // First check permission
+                PageMethods.EditPatient(id, function (msg) {
+                    if (msg === "NotAllowed") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Access Denied',
+                            text: 'You do not have permission to edit this patient.'
+                        });
+                    } else if (msg === "Allowed") {
+                        // Permission granted, proceed with edit
+                        var Patient_ID = $('#hdfPatient_ID').val();
 
-                var Patient_ID = $('#hdfPatient_ID').val();
-                $('#CloseSearchModel').click(function () {
-                    window.location.href = "BillingProcess.aspx";
-                });
-                $('#CloseSearchModels').click();
-                $("#SavePatient_Data").hide();
-                $("#PatientsSearchModel").hide();
-                $('#updatePatient_Data').show();
-                $("#SavePatient_Data").hide();
-                $('#RevistPat').show();
-                $('#updatePatient_Data').show();
-                $('#PatientModel').modal({
-                    backdrop: 'static'
-                });
+                        $('#CloseSearchModel').click(function () {
+                            window.location.href = "BillingProcess.aspx";
+                        });
+                        $('#CloseSearchModels').click();
+                        $("#SavePatient_Data").hide();
+                        $("#PatientsSearchModel").hide();
+                        $('#updatePatient_Data').show();
+                        $("#SavePatient_Data").hide();
+                        $('#RevistPat').show();
+                        $('#updatePatient_Data').show();
+                        $('#PatientModel').modal({
+                            backdrop: 'static'
+                        });
 
-                var ajaxFn = function () {
-                    $.ajax({
-                        type: "POST",
-                        url: "BillingProcess.aspx/GetEditPatientDetails",
-                        data: "{'Reg_Patient_ID':" + id + "}",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: OnSuccessEdit,
-                        failure: function (response) {
-                            alert(response.d);
+                        var ajaxFn = function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "BillingProcess.aspx/GetEditPatientDetails",
+                                data: "{'Reg_Patient_ID':" + id + "}",
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: OnSuccessEdit,
+                                failure: function (response) {
+                                    alert(response.d);
+                                }
+                            });
                         }
-                    });
-
-                }
-                setTimeout(ajaxFn, 3000);
-
-
-
+                        setTimeout(ajaxFn, 3000);
+                    }
+                });
             }
             var Alloweditrate;
             function AllowRateEdit() {
