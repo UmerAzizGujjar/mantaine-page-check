@@ -40,12 +40,12 @@
                 var no_of_emp = $("#txtEmpNo").val() || 0;
                 var email = $("#txtEmail").val();
                 var contact_no = $("#txtContactNo").val();
-                var address = $("#txtAddress").val() || 0;
+                var address = $("#txtAddress").val() ;
                 var discount = $("#txtDiscount").val() || 0;
 
                 var cmp_nameV = $("#txtCompanyName");
-                var panelrate = $("#txtpanelrate").val();
-                var panelrateEmergency = $("#txtpanelrateEmergency").val();
+                var panelrate = $("#txtpanelrate").val() || 0;
+                var panelrateEmergency = $("#txtpanelrateEmergency").val() || 0;
                 var no_of_empV = $("#txtEmpNo") || 0;
                 var emailV = $("#txtEmail");
                 var Glcode = $("#ddlGlAccount").val();
@@ -89,8 +89,7 @@
                 if ($(cmp_nameV).val() == '') $(cmp_nameV).addClass('ErrorAlert'); else $(cmp_nameV).removeClass('ErrorAlert');
                 if ($(no_of_empV).val() == '') $(no_of_empV).addClass('ErrorAlert'); else $(no_of_empV).removeClass('ErrorAlert');
                 if ($(emailV).val() == '') $(emailV).addClass('ErrorAlert'); else $(emailV).removeClass('ErrorAlert');
-                if ($(addressV).val() == '') $(addressV).addClass('ErrorAlert'); else $(addressV).removeClass('ErrorAlert');
-                if ($(discountV).val() == '') $(discountV).addClass('ErrorAlert'); else $(discountV).removeClass('ErrorAlert');
+                if ($(addressV).val() == '') $(addressV).addClass('ErrorAlert'); else $(addressV).removeClass('ErrorAlert');      
                 if ($(emailV).val() == '') $(emailV).addClass('ErrorAlert'); else $(emailV).removeClass('ErrorAlert');
                 if ($(contact_noV).val() == '') $(contact_noV).addClass('ErrorAlert'); else $(contact_noV).removeClass('ErrorAlert');
                 if (!$("#txtCompanyName").hasClass('ErrorAlert') && !$("#txtEmail").hasClass('ErrorAlert') && !$("#txtAddress").hasClass('ErrorAlert') && !$("#txtContactNo").hasClass('ErrorAlert') && !$("#txtDiscount").hasClass('ErrorAlert') && !$("#txtEmpNo").hasClass('ErrorAlert')) {
@@ -274,7 +273,7 @@
             }
 
 
-            var Rate = "";
+            var Rate = 0;
             if (ItemId == 0) {
                 alert("Please Select Service");
                 return false;
@@ -290,7 +289,7 @@
 
             var getTestID = $("#ddlTestList option:selected").attr('testID');
             var CheckTest = $('#ddlTestList option:selected').text();
-            var Rate = "";
+            var Rate = 0;
             if (maindpt == 0) {
                 alert("Please Select Main Department");
                 return false;
@@ -455,7 +454,7 @@
                     var itemID = parsedData[key].Item_ID;
                     var itemName = parsedData[key].name;
                     var Rate = parsedData[key].Rate || "0";
-                    appendRowHtml(itemID, itemName, Rate, "", itemID);
+                    appendRowHtml(itemID, itemName, Rate, "", 0);
                 });
             },
                 function (error) {
@@ -512,7 +511,7 @@
                     var testName = parsedData[key].TestName;
                     var groupCat = parsedData[key].GroupCategory || "";
                     var Rate = parsedData[key].Rate || "0";
-                    appendRowHtml(testID, testName, Rate, groupCat, testID);
+                    appendRowHtml(0, testName, Rate, groupCat, testID);
                 });
             },
                 function (error) {
@@ -528,7 +527,7 @@
                     var testName = parsedData[key].Test_Name;
                     var groupCat = parsedData[key].Group_Category || "";
                     var Rate = parsedData[key].Rate || "0";
-                    appendRowHtml(testID, testName, Rate, groupCat, testID);
+                    appendRowHtml(0, testName, Rate, groupCat, testID);
                 });
             },
                 function (error) {
@@ -543,7 +542,7 @@
                     var testID = parsedData[key].TestID;
                     var testName = parsedData[key].TestName;
                     var Rate = parsedData[key].Rate || "0";
-                    appendRowHtml(testID, testName, Rate, "", testID);
+                    appendRowHtml(testID, testName, Rate, "", 0);
                 });
             },
                 function (error) {
