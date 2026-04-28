@@ -359,10 +359,21 @@
 
             setTimeout(function () {
                 if ($('#ddlGrowth').length && typeof $.fn.select2 !== 'undefined') {
-                    $('#ddlGrowth').select2({ width: '100%' });
-                    $('#ddlOrganism').select2({ width: '100%' });
+                    $('#ddlGrowth').select2({
+                        width: '100%',
+                        dropdownParent: $('#myModal') 
+                    });
+
+                    $('#ddlOrganism').select2({
+                        width: '100%',
+                        dropdownParent: $('#myModal') 
+                    });
                 }
             }, 500);
+
+            $('#myModal').on('shown.bs.modal', function () {
+                $(this).off('focusin.modal');
+            });
             // GetPendingList();   //  21-01-2021
             $('#btnGrowth').click(function () {
 
