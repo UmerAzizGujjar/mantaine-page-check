@@ -6631,35 +6631,54 @@
             return options;
         }
         function EditPatientDetail(id) {
-            var Patient_ID = $('#hdfPatient_ID').val();
-            $('#CloseSearchModel').click(function () {
-                window.location.href = "InPatientsAdmission.aspx";
-            });
-            $('#CloseSearchModels').click();
-            $("#SavePatient_Data").hide();
-            $("#PatientsSearchModel").hide();
-            $("#ReferredPatientsModal").hide();
-            $('#updatePatient_Data').show();
-            $("#SavePatient_Data").hide();
-            $('#RevistPat').show();
-            $('#updatePatient_Data').show();
-            $('#PatientModel').modal({
-                backdrop: 'static'
-            });
-            var ajaxFn = function () {
-                $.ajax({
-                    type: "POST",
-                    url: "InPatientsAdmission.aspx/GetEditPatientDetails",
-                    data: "{'Reg_Patient_ID':" + id + "}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: OnSuccessEdit,
-                    failure: function (response) {
-                        alert(response.d);
+            // First check permission
+            PageMethods.EditPatient(id, function (msg) {
+                if (msg === "NotAllowed") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Access Denied',
+                        text: 'You do not have permission to edit this patient.',
+                        confirmButtonColor: '#d33'
+                    });
+                } else if (msg === "Allowed") {
+                    // Permission granted, proceed with edit
+                    var Patient_ID = $('#hdfPatient_ID').val();
+
+                    $('#CloseSearchModel').click(function () {
+                        window.location.href = "InPatientsAdmission.aspx";
+                    });
+                    $('#CloseSearchModels').click();
+                    $("#SavePatient_Data").hide();
+                    $("#PatientsSearchModel").hide();
+                    $("#ReferredPatientsModal").hide();
+                    $('#updatePatient_Data').show();
+                    $("#SavePatient_Data").hide();
+                    $('#RevistPat').show();
+                    $('#updatePatient_Data').show();
+                    $('#PatientModel').modal({
+                        backdrop: 'static'
+                    });
+
+                    var ajaxFn = function () {
+                        $.ajax({
+                            type: "POST",
+                            url: "InPatientsAdmission.aspx/GetEditPatientDetails",
+                            data: "{'Reg_Patient_ID':" + id + "}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: OnSuccessEdit,
+                            failure: function (response) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.d
+                                });
+                            }
+                        });
                     }
-                });
-            }
-            setTimeout(ajaxFn, 3000);
+                    setTimeout(ajaxFn, 3000);
+                }
+            });
         }
         var inPatientID;
         var Discharged;
@@ -6668,22 +6687,32 @@
             debugger;
             if (data.d != '') {
                 debugger;
+
                 inPatientID = data.d.Inpat;
                 Discharged = data.d.Discharged;
                 $("#txt_Mrno").val(data.d.Mr_No);
                 $("#txt_name").val(data.d.Name);
                 $("#ddl_Gender").val(data.d.Gender).change();
                 var newValue = data.d.Age.replace('Y', '');
+
                 $("#txt_dob").val(newValue);
                 $("#ddl_status").val(data.d.MaritalStatus);
                 $("#ddl_ctgry").val(data.d.Patient_Type).change();
                 $("#ddl_Doc").val(data.d.DocID).change();
                 $('#ddl_pnl_cpy').hide();
-                if (data.d.DOB != null) {
-                    stDate = new Date(parseInt(data.d.DOB.substr(6)));
-                    stDate = moment(stDate).format('L');
+
+                //if (data.d.DOB != null) {
+                //    stDate = new Date(parseInt(data.d.DOB.substr(6)));
+                //    stDate = moment(stDate).format('L');
+                //    $('#txtAge_yearss').val(stDate);
+                //}
+
+                if (data.d.DOB) {
+                    $('#txtAge_yearss').val(data.d.DOB);
                 }
+
                 $("#ddltest_main_dpt").val(data.d.department).change();
+
                 $('#ddlRelation').val(data.d.Relation).trigger('change');
                 $('#ddl_name').val(data.d.Title).trigger('change');
                 $("#txt_relation").val(data.d.FatherName);
@@ -6694,11 +6723,16 @@
                 $("#ddl_bld_grp").val(data.d.Blood_Group).change();
                 $("#ddlRhFactor").val(data.d.Rh_Factor);
                 if (data.d.Patient_Type == "02") {
+
                     $("#ddl_pnl_cpy").val(data.d.PanelComany).change();
                     $("#txt_Emp").val(data.d.TxtEmp);
                     $("#txt_Ref").val(data.d.TxtRef);
+
                 }
                 $('#hdfPatient_ID').val(data.d.Reg_PatientID);
+
+
+
             }
 
         }

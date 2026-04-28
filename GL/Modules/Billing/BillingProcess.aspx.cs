@@ -185,54 +185,17 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(ups);
         }
         [WebMethod]
-        public static string PendingPatients()
+        public static string PendingPatients(string SearchString)
         {
+            string result;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                DateTime last24Hours = DateTime.Now.AddHours(-24);
+                var query = db.Sp_GetLast24Hours_Test(SearchString).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query).ToString();
 
-                var query =
-                    (from ltd in db.Lab_Test_Details
-                    join lt in db.Laboratory_Tests
-                        on ltd.Lab_Test_ID equals lt.Lab_Test_ID
-                    join r in db.Reg_patients
-                        on ltd.Actual_Patient_ID equals r.pat_id
-                    where (ltd.IsBilled ?? false) == false
-                          && lt.Transaction_Type != "Front Desk"
-                          && lt.Created_Time >= last24Hours   // 🟢 Only last 24 hours
-                    select new
-                    {
-                        r.mr_no_sequence,
-                        r.Full_Name,
-                        r.Father_Name,
-                        r.Age_years,
-                        ltd.IsBilled,
-                        lt.Created_Time,
-                        ltd.Actual_Patient_ID
-                    }).Distinct().ToList();
-
-
-                var ipd = (from ip in db.In_Patients 
-                           join r in db.Reg_patients 
-                           on ip.Patient_ID equals r.pat_id
-                           where ip.Discharge_Request == true && (ip.ispackagebilling == null || ip.ispackagebilling == false) select new
-                           {
-                               r.mr_no_sequence,
-                               r.Full_Name,
-                               r.Father_Name,
-                               r.Age_years,
-                               IsBilled = ip.Discharge_Request,
-                               ip.Created_Time,
-                               Actual_Patient_ID = ip.Patient_ID
-                           }).ToList();
-
-                var result = new
-                {
-                    query = query,
-                    ipd = ipd
-                };
-                return new JavaScriptSerializer().Serialize(result);
             }
+            return result;
+            
         }
 
 
@@ -265,7 +228,24 @@ namespace PMS
 
             return new JavaScriptSerializer().Serialize(result);
         }
+        [WebMethod]
+        public static string EditPatient(string PatID)
+        {
+            // Get permission value from DB function (returns '0' or '1' as string)
+            string allowValue = DBClass.getField(
+                $"SELECT dbo.GetRights('AllowPatientEdit', '{AppConfig.UserID}')"
+            );
 
+            // Treat null/empty as '0' (not allowed) for safety
+            if (Convert.ToBoolean(allowValue) == true)
+            {
+                return "Allowed";
+            }
+            else
+            {
+                return "NotAllowed";
+            }
+        }
         [WebMethod]
         public static string CheckRecipeRights()
         {
@@ -505,7 +485,7 @@ namespace PMS
 
             public string Gender;
             public string Age;
-            public DateTime DOB;
+            public string DOB;
 
             public string Mobile;
             public string Address;
@@ -549,7 +529,15 @@ namespace PMS
                 pts.FatherName = pat.Father_Name;
                 pts.Gender = pat.Gender;
                 pts.Relation = pat.Relation_prefix;
-                pts.DOB = Convert.ToDateTime(pat.DOB);
+                //pts.DOB = Convert.ToDateTime(pat.DOB);
+                if (pat.DOB != null)
+                {
+                    pts.DOB = Convert.ToDateTime(pat.DOB).ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    pts.DOB = "";
+                };
                 pts.Age = pat.Age_years.ToString();
                 pts.MaritalStatus = pat.Martial_Status;
                 //pt.Mr_No = Convert.ToString(pat.Patient_No);
@@ -662,6 +650,7 @@ namespace PMS
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.Age_years = Age;
+                    string[] formats = { "dd/MM/yyyy", "MM/dd/yyyy" };
                     if (string.IsNullOrWhiteSpace(Date_Of_Birth))
                     {
                         pat.DOB = null;
@@ -686,6 +675,8 @@ namespace PMS
                     pat.Martial_Status = martail_status;
                     //pat.mr_no_sequence = db.GetSequentialMrNo();
                     pat.walkin = true;
+                    pat.updated_by = AppConfig.UserID;
+                    pat.updated_time = DateTime.Now;
 
                     db.SubmitChanges();
                 }
@@ -972,18 +963,36 @@ namespace PMS
             return result;
         }
 
-
         [WebMethod]
         public static string FetchRecommendedInPatientDetails(int PatientID)
         {
-
             DataBaseDataContext db = new DataBaseDataContext();
 
             var PatNo = (from p in db.Reg_patients
                          where p.pat_id == PatientID
-                         select p.Patient_No
-                          ).FirstOrDefault();
+                         select p.Patient_No).FirstOrDefault();
 
+            // Get the current active inpatient record to check Panel_Company
+            var inpatientData = (from ip in db.In_Patients
+                                 where ip.Patient_ID == PatientID
+                                       && (ip.Discharge == false || ip.Discharge == null)
+                                 orderby ip.Created_Time descending
+                                 select new { ip.In_Patient_ID, ip.Panel_Company, ip.Patient_Discount_Type })
+                                 .FirstOrDefault();
+
+            // Check if panel exists (not null, not 0, not empty)
+            bool hasPanel = inpatientData != null
+                            && !string.IsNullOrEmpty(inpatientData.Panel_Company)
+                            && inpatientData.Panel_Company != "0"
+                            && inpatientData.Panel_Company != "null";
+
+            int? panelCompanyId = null;
+            if (hasPanel && int.TryParse(inpatientData.Panel_Company, out int panelId))
+            {
+                panelCompanyId = panelId;
+            }
+
+            // Fetch individual test details
             var testDetails = (from lbtM in db.Laboratory_Tests
                                join lbtD in db.Lab_Test_Details
                                on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
@@ -993,66 +1002,77 @@ namespace PMS
                                on lbtD.Test_ID equals lbTDdef.Test_ID
                                join p in db.Reg_patients
                                on opat.Patient_ID equals p.pat_id
-                               where p.Patient_No == Convert.ToInt32(PatNo) && (lbtD.IsBilled == null || lbtD.IsBilled == false)
-                                && lbtM.Transaction_Type == "InPatient" && (opat.Discharge == false || opat.Discharge == null)
+                               where p.Patient_No == Convert.ToInt32(PatNo)
+                                     && (lbtD.IsBilled == null || lbtD.IsBilled == false)
+                                     && lbtM.Transaction_Type == "InPatient"
+                                     && (opat.Discharge == false || opat.Discharge == null)
                                select new
                                {
                                    lbtM.Lab_Test_ID,
                                    lbTDdef.Test_ID,
-                                   Category_ID = lbTDdef.Group_Category,
                                    lbtD.Date,
                                    lbtD.Remark,
                                    lbTDdef.Test_Name,
-                                   DepartmentName = (db.GetDataValueName("Main Test Departments", lbTDdef.Main_Department) == null ? "" : db.GetDataValueName("Main Test Departments",lbTDdef.Main_Department)),
-                                   lbTDdef.Group_Category,
-                                   GroupName = db.GetDataValueName("Test Groups", lbTDdef.Group_Category),
                                    ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                    ParentTrans_Type = "Test",
                                    lbtD.Dept_ID,
                                    Rate = (lbTDdef.Rate == 0) ? Convert.ToDecimal(DBClass.getField("select dbo.getTestRate('" + opat.Patient_Discount_Type + "', " + lbTDdef.Test_ID + ", " + p.pat_id + ")")) : lbTDdef.Rate,
                                    lbtM.Created_Time
+                               }).ToList();
 
-
-
-                               }
-
-                ).ToList();
-
-            // Fetching Grouped Categories....
-
+            // Fetch group test details
             var testDetailsGroupswise = (from lbtM in db.Laboratory_Tests
                                          join lbtD in db.Lab_Test_Details
                                          on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
                                          join opat in db.In_Patients
                                          on lbtM.Patient_ID equals opat.In_Patient_ID
                                          join p in db.Reg_patients
-                                          on opat.Patient_ID equals p.pat_id
-                                         where opat.Patient_ID == p.pat_id && lbtD.Test_ID == 0 && p.Patient_No == Convert.ToInt32(PatNo) && (lbtD.IsBilled == null || lbtD.IsBilled == false) && lbtM.Transaction_Type == "InPatient"
-                                         && (opat.Discharge == false || opat.Discharge == null)
+                                         on opat.Patient_ID equals p.pat_id
+                                         where opat.Patient_ID == p.pat_id
+                                               && lbtD.Test_ID == 0
+                                               && p.Patient_No == Convert.ToInt32(PatNo)
+                                               && (lbtD.IsBilled == null || lbtD.IsBilled == false)
+                                               && lbtM.Transaction_Type == "InPatient"
+                                               && (opat.Discharge == false || opat.Discharge == null)
                                          select new
                                          {
                                              lbtD.Lab_Test_ID,
                                              lbtD.Test_ID,
-                                             lbtD.Catagory_ID,
+                                             Catagory_ID = lbtD.Catagory_ID,
                                              lbtD.Date,
                                              lbtD.Remark,
                                              Rate = (from dv in db.DataValues
                                                      join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
                                                      where vs.ValueSet_Name == "Test Groups" && dv.DataValue_Name == lbtD.Catagory_ID
                                                      select dv.Segment1).FirstOrDefault(),
-
                                              Test_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
                                              ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
                                              ParentTrans_Type = "Test Group Category",
                                              lbtD.Dept_ID,
                                              lbtM.Created_Time
-                                         }
-                ).ToList();
+                                         }).ToList();
 
             List<BillingProcessDetails> listRecommendedTests = new List<BillingProcessDetails>();
 
+            // Process individual tests
             foreach (var test in testDetails)
             {
+                decimal finalRate = Convert.ToDecimal(test.Rate);
+
+                // If patient has panel, get rate from Panel_Detail_Services
+                if (hasPanel && panelCompanyId.HasValue && panelCompanyId.Value > 0)
+                {
+                    var panelRate = (from pds in db.Panel_Detail_Services
+                                     where pds.Panel_ID == panelCompanyId.Value
+                                           && pds.Test_ID == test.Test_ID.ToString()
+                                     select pds.Rate).FirstOrDefault();
+
+                    if (panelRate.HasValue)
+                    {
+                        finalRate = panelRate.Value;
+                    }
+                }
+
                 BillingProcessDetails RecommendedService = new BillingProcessDetails();
                 RecommendedService.ParentTrans_ID = test.ParentTrans_ID;
                 RecommendedService.ParentTrans_Type = "Test";
@@ -1063,33 +1083,167 @@ namespace PMS
                 RecommendedService.RecommendedByDoctor = true;
                 RecommendedService.MainDepartment = test.Dept_ID;
                 RecommendedService.CategoryID = "0";
-                RecommendedService.Amount = (test.Rate == null) ? 0 : (decimal)test.Rate;
+                RecommendedService.Amount = finalRate;
                 RecommendedService.Test_CreatedDate = Convert.ToDateTime(test.Created_Time);
                 listRecommendedTests.Add(RecommendedService);
             }
 
-            if (testDetailsGroupswise.Count > 0)
+            // Process group tests
+            foreach (var groups in testDetailsGroupswise)
             {
-                foreach (var group in testDetailsGroupswise)
-                {
-                    BillingProcessDetails RecommendedService = new BillingProcessDetails();
-                    RecommendedService.ParentTrans_ID = group.ParentTrans_ID;
-                    RecommendedService.ParentTrans_Type = "Test Group Category";
-                    RecommendedService.ItemID = group.Test_ID;
-                    RecommendedService.ItemName = group.Test_Name;
-                    RecommendedService.Remarks = group.Remark;
-                    RecommendedService.ItemType = "Test";
-                    RecommendedService.RecommendedByDoctor = true;
-                    RecommendedService.MainDepartment = group.Dept_ID;
-                    RecommendedService.CategoryID = group.Catagory_ID;
-                    RecommendedService.Amount = (group.Rate == null) ? 0 : Convert.ToDecimal(group.Rate);
-                    RecommendedService.Test_CreatedDate = Convert.ToDateTime(group.Created_Time);
+                decimal finalRate = (groups.Rate == null) ? 0 : Convert.ToDecimal(groups.Rate);
 
-                    listRecommendedTests.Add(RecommendedService);
+                // If patient has panel, get rate from Panel_Detail_Services for group category
+                if (hasPanel && panelCompanyId.HasValue && panelCompanyId.Value > 0)
+                {
+                    var panelRate = (from pds in db.Panel_Detail_Services
+                                     where pds.Panel_ID == panelCompanyId.Value
+                                           && pds.GroupCategory == groups.Catagory_ID
+                                     select pds.Rate).FirstOrDefault();
+
+                    if (panelRate.HasValue)
+                    {
+                        finalRate = panelRate.Value;
+                    }
                 }
+
+                BillingProcessDetails RecommendedService = new BillingProcessDetails();
+                RecommendedService.ParentTrans_ID = groups.ParentTrans_ID;
+                RecommendedService.ParentTrans_Type = "Test Group Category";
+                RecommendedService.ItemID = 0;
+                RecommendedService.ItemName = groups.Test_Name;
+                RecommendedService.Remarks = groups.Remark;
+                RecommendedService.ItemType = "Test";
+                RecommendedService.RecommendedByDoctor = true;
+                RecommendedService.MainDepartment = groups.Dept_ID;
+                RecommendedService.CategoryID = groups.Catagory_ID;
+                RecommendedService.Amount = finalRate;
+                RecommendedService.Test_CreatedDate = Convert.ToDateTime(groups.Created_Time);
+
+                listRecommendedTests.Add(RecommendedService);
             }
+
             return (new JavaScriptSerializer()).Serialize(listRecommendedTests);
         }
+        //[WebMethod]
+        //public static string FetchRecommendedInPatientDetails(int PatientID)
+        //{
+
+        //    DataBaseDataContext db = new DataBaseDataContext();
+
+        //    var PatNo = (from p in db.Reg_patients
+        //                 where p.pat_id == PatientID
+        //                 select p.Patient_No
+        //                  ).FirstOrDefault();
+
+        //    var testDetails = (from lbtM in db.Laboratory_Tests
+        //                       join lbtD in db.Lab_Test_Details
+        //                       on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+        //                       join opat in db.In_Patients
+        //                       on lbtM.Patient_ID equals opat.In_Patient_ID
+        //                       join lbTDdef in db.Lab_Tests
+        //                       on lbtD.Test_ID equals lbTDdef.Test_ID
+        //                       join p in db.Reg_patients
+        //                       on opat.Patient_ID equals p.pat_id
+        //                       where p.Patient_No == Convert.ToInt32(PatNo) && (lbtD.IsBilled == null || lbtD.IsBilled == false)
+        //                        && lbtM.Transaction_Type == "InPatient" && (opat.Discharge == false || opat.Discharge == null)
+        //                       select new
+        //                       {
+        //                           lbtM.Lab_Test_ID,
+        //                           lbTDdef.Test_ID,
+        //                           Category_ID = lbTDdef.Group_Category,
+        //                           lbtD.Date,
+        //                           lbtD.Remark,
+        //                           lbTDdef.Test_Name,
+        //                           DepartmentName = (db.GetDataValueName("Main Test Departments", lbTDdef.Main_Department) == null ? "" : db.GetDataValueName("Main Test Departments",lbTDdef.Main_Department)),
+        //                           lbTDdef.Group_Category,
+        //                           GroupName = db.GetDataValueName("Test Groups", lbTDdef.Group_Category),
+        //                           ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
+        //                           ParentTrans_Type = "Test",
+        //                           lbtD.Dept_ID,
+        //                           Rate = (lbTDdef.Rate == 0) ? Convert.ToDecimal(DBClass.getField("select dbo.getTestRate('" + opat.Patient_Discount_Type + "', " + lbTDdef.Test_ID + ", " + p.pat_id + ")")) : lbTDdef.Rate,
+        //                           lbtM.Created_Time
+
+
+
+        //                       }
+
+        //        ).ToList();
+
+        //    // Fetching Grouped Categories....
+
+        //    var testDetailsGroupswise = (from lbtM in db.Laboratory_Tests
+        //                                 join lbtD in db.Lab_Test_Details
+        //                                 on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
+        //                                 join opat in db.In_Patients
+        //                                 on lbtM.Patient_ID equals opat.In_Patient_ID
+        //                                 join p in db.Reg_patients
+        //                                  on opat.Patient_ID equals p.pat_id
+        //                                 where opat.Patient_ID == p.pat_id && lbtD.Test_ID == 0 && p.Patient_No == Convert.ToInt32(PatNo) && (lbtD.IsBilled == null || lbtD.IsBilled == false) && lbtM.Transaction_Type == "InPatient"
+        //                                 && (opat.Discharge == false || opat.Discharge == null)
+        //                                 select new
+        //                                 {
+        //                                     lbtD.Lab_Test_ID,
+        //                                     lbtD.Test_ID,
+        //                                     lbtD.Catagory_ID,
+        //                                     lbtD.Date,
+        //                                     lbtD.Remark,
+        //                                     Rate = (from dv in db.DataValues
+        //                                             join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+        //                                             where vs.ValueSet_Name == "Test Groups" && dv.DataValue_Name == lbtD.Catagory_ID
+        //                                             select dv.Segment1).FirstOrDefault(),
+
+        //                                     Test_Name = db.GetDataValueName("Test Groups", lbtD.Catagory_ID),
+        //                                     ParentTrans_ID = lbtD.Lab_Test_Detail_ID,
+        //                                     ParentTrans_Type = "Test Group Category",
+        //                                     lbtD.Dept_ID,
+        //                                     lbtM.Created_Time
+        //                                 }
+        //        ).ToList();
+
+        //    List<BillingProcessDetails> listRecommendedTests = new List<BillingProcessDetails>();
+
+        //    foreach (var test in testDetails)
+        //    {
+        //        BillingProcessDetails RecommendedService = new BillingProcessDetails();
+        //        RecommendedService.ParentTrans_ID = test.ParentTrans_ID;
+        //        RecommendedService.ParentTrans_Type = "Test";
+        //        RecommendedService.ItemID = test.Test_ID;
+        //        RecommendedService.ItemName = test.Test_Name;
+        //        RecommendedService.Remarks = test.Remark;
+        //        RecommendedService.ItemType = "Test";
+        //        RecommendedService.RecommendedByDoctor = true;
+        //        RecommendedService.MainDepartment = test.Dept_ID;
+        //        RecommendedService.CategoryID = "0";
+        //        RecommendedService.Amount = (test.Rate == null) ? 0 : (decimal)test.Rate;
+        //        RecommendedService.Test_CreatedDate = Convert.ToDateTime(test.Created_Time);
+        //        listRecommendedTests.Add(RecommendedService);
+        //    }
+
+        //    if (testDetailsGroupswise.Count > 0)
+        //    {
+        //        foreach (var group in testDetailsGroupswise)
+        //        {
+        //            BillingProcessDetails RecommendedService = new BillingProcessDetails();
+        //            RecommendedService.ParentTrans_ID = group.ParentTrans_ID;
+        //            RecommendedService.ParentTrans_Type = "Test Group Category";
+        //            RecommendedService.ItemID = group.Test_ID;
+        //            RecommendedService.ItemName = group.Test_Name;
+        //            RecommendedService.Remarks = group.Remark;
+        //            RecommendedService.ItemType = "Test";
+        //            RecommendedService.RecommendedByDoctor = true;
+        //            RecommendedService.MainDepartment = group.Dept_ID;
+        //            RecommendedService.CategoryID = group.Catagory_ID;
+        //            RecommendedService.Amount = (group.Rate == null) ? 0 : Convert.ToDecimal(group.Rate);
+        //            RecommendedService.Test_CreatedDate = Convert.ToDateTime(group.Created_Time);
+
+        //            listRecommendedTests.Add(RecommendedService);
+        //        }
+        //    }
+        //    return (new JavaScriptSerializer()).Serialize(listRecommendedTests);
+        //}
+
+
 
 
         [WebMethod]

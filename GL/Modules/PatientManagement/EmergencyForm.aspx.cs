@@ -474,15 +474,72 @@ namespace PMS.Modules.PatientManagement
             }
             return data;
         }
-
         [WebMethod]
         public static List<PatientsResultRFf> SearchPatients_Rff(string SearchString)
         {
             string SearchSql = "";
 
-            if (string.IsNullOrWhiteSpace(SearchString))
+            // Check the sys_param value - create db context inside the method
+            using (var db = new DataBaseDataContext())
             {
-                SearchSql = @"
+                var cnicValidation = db.sys_Parms.FirstOrDefault(p => p.Name == "Emergency Reffered" && p.Code == "01");
+
+                if (cnicValidation != null) // IF == "01" - Run NEW query with reffer_to = 101
+                {
+                    if (string.IsNullOrWhiteSpace(SearchString))
+                    {
+                        SearchSql = @"
+            SELECT TOP 10 
+                rg.pat_id,
+                ISNULL(rg.mr_no_sequence, '') AS Patient_No,
+                ISNULL(rg.Full_Name, '') AS Full_Name,
+                ISNULL(p.NIC, '') AS NIC,
+                ISNULL(rg.Mobile1, '') AS ContactNo,
+                ISNULL(rg.Father_Name, '') AS Father_Name,
+                ISNULL(op.Out_Patient_ID, '') AS OPDID 
+            FROM reg_patient rg 
+            INNER JOIN patients p ON rg.pat_id = p.Reg_PatId 
+            INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID 
+            WHERE op.reffer_to = 008
+              AND ISNULL(p.isCancel, 0) != 1
+              AND op.Created_Time > '2026-04-28'
+            ORDER BY op.Out_Patient_ID DESC";
+                    }
+                    else
+                    {
+                        string safeSearch = SearchString.Trim().Replace("'", "''");
+
+                        SearchSql = $@"
+            SELECT TOP 10 
+                rg.pat_id,
+                ISNULL(rg.mr_no_sequence, '') AS Patient_No,
+                ISNULL(rg.Full_Name, '') AS Full_Name,
+                ISNULL(p.NIC, '') AS NIC,
+                ISNULL(rg.Mobile1, '') AS ContactNo,
+                ISNULL(rg.Father_Name, '') AS Father_Name,
+                ISNULL(op.Out_Patient_ID, '') AS OPDID 
+            FROM reg_patient rg 
+            INNER JOIN patients p ON rg.pat_id = p.Reg_PatId 
+            INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID 
+            WHERE rg.Patient_No <> 0 
+              AND rg.Patient_No IS NOT NULL 
+              AND ISNULL(rg.isCancel, 0) != 1 
+              AND op.reffer_to = 008
+              AND op.Created_Time > '2026-04-28'
+              AND (
+                  LTRIM(RTRIM(rg.patient_no)) LIKE '%{safeSearch}%' 
+                  OR LTRIM(RTRIM(rg.full_name)) LIKE '%{safeSearch}%' 
+                  OR LTRIM(RTRIM(rg.mobile1)) LIKE '%{safeSearch}%' 
+                  OR LTRIM(RTRIM(rg.nic)) LIKE '%{safeSearch}%'
+              )
+            ORDER BY op.Out_Patient_ID DESC";
+                    }
+                }
+                else // Otherwise - Run EXISTING query with reffer_doc condition
+                {
+                    if (string.IsNullOrWhiteSpace(SearchString))
+                    {
+                        SearchSql = @"
             SELECT TOP 10 
                 rg.pat_id,
                 ISNULL(rg.mr_no_sequence, '') AS Patient_No,
@@ -496,20 +553,20 @@ namespace PMS.Modules.PatientManagement
             INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID 
             WHERE op.reffer_doc != 0 
               AND ISNULL(p.isCancel, 0) != 1
-
+              AND op.Created_Time > '2026-04-28'
             ORDER BY op.Out_Patient_ID DESC";
-            }
-            else
-            {
-                string safeSearch = SearchString.Trim().Replace("'", "''");
+                    }
+                    else
+                    {
+                        string safeSearch = SearchString.Trim().Replace("'", "''");
 
-                SearchSql = $@"
+                        SearchSql = $@"
             SELECT TOP 10 
                 rg.pat_id,
                 ISNULL(rg.mr_no_sequence, '') AS Patient_No,
                 ISNULL(rg.Full_Name, '') AS Full_Name,
                 ISNULL(p.NIC, '') AS NIC,
-               [dbo].[GetDoctorName](op.reffer_doc) AS ContactNo,
+                [dbo].[GetDoctorName](op.reffer_doc) AS ContactNo,
                 ISNULL(rg.Father_Name, '') AS Father_Name,
                 ISNULL(op.Out_Patient_ID, '') AS OPDID 
             FROM reg_patient rg 
@@ -518,6 +575,7 @@ namespace PMS.Modules.PatientManagement
             WHERE rg.Patient_No <> 0 
               AND rg.Patient_No IS NOT NULL 
               AND ISNULL(rg.isCancel, 0) != 1 
+              AND op.Created_Time > '2026-04-28'
               AND (
                   LTRIM(RTRIM(rg.patient_no)) LIKE '%{safeSearch}%' 
                   OR LTRIM(RTRIM(rg.full_name)) LIKE '%{safeSearch}%' 
@@ -525,6 +583,8 @@ namespace PMS.Modules.PatientManagement
                   OR LTRIM(RTRIM(rg.nic)) LIKE '%{safeSearch}%'
               )
             ORDER BY op.Out_Patient_ID DESC";
+                    }
+                }
             }
 
             DataTable dt = DBClass.getDataTable(SearchSql);
@@ -1154,7 +1214,10 @@ namespace PMS.Modules.PatientManagement
                 pat.Country = Country;
                 pat.Card_fee = Convert.ToDecimal(cardfee);
                 pat.Province = Province;
-
+                pat.Card_fee = Convert.ToDecimal(
+                      (from tbl in db.sys_Parms
+                       where tbl.Name == "OPD Fee"
+                       select tbl.Code).FirstOrDefault());
                 var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
                 string companyCode = company?.CompanyCode ?? "HOSP";
                 pat.mr_no_sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";
