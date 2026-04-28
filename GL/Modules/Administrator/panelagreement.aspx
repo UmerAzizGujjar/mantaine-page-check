@@ -26,7 +26,7 @@
                 window.location.href = "PanelView.aspx";
             })
             $('#btnSave').on('click', function () {
-
+                debugger;
                 var id = '<% =Request.QueryString["ID"] %>';
                 if (id != "") {
 
@@ -37,21 +37,21 @@
                 var valid = true;
                 var btnValue = $("#btnSave").val();
                 var cmp_name = $("#txtCompanyName").val();
-                var no_of_emp = $("#txtEmpNo").val();
+                var no_of_emp = $("#txtEmpNo").val() || 0;
                 var email = $("#txtEmail").val();
                 var contact_no = $("#txtContactNo").val();
-                var address = $("#txtAddress").val();
-                var discount = $("#txtDiscount").val();
+                var address = $("#txtAddress").val() || 0;
+                var discount = $("#txtDiscount").val() || 0;
 
                 var cmp_nameV = $("#txtCompanyName");
                 var panelrate = $("#txtpanelrate").val();
                 var panelrateEmergency = $("#txtpanelrateEmergency").val();
-                var no_of_empV = $("#txtEmpNo");
+                var no_of_empV = $("#txtEmpNo") || 0;
                 var emailV = $("#txtEmail");
                 var Glcode = $("#ddlGlAccount").val();
                 var contact_noV = $("#txtContactNo");
                 var addressV = $("#txtAddress");
-                var discountV = $("#txtDiscount");
+                var discountV = $("#txtDiscount") || 0;
 
                 if (cmp_name == "") {
                     valid = false;
@@ -241,7 +241,7 @@
         }
         function appendRowHtml(itemID, itemName, Rate, testGroupCatVal, getTestID) {
             var rows = '<tr>' +
-                '<td style="display:none"><input type="hidden" name="tbltxt_ServicesId" id="tbltxt_ServicesId" value="' + itemID + '"/></td>' +
+                '<td style="display:none"><input type="hidden" name="tbltxt_ServicesId" id="tbltxt_ServicesId" value="0"/></td>' +
                 '<td>' +
                 '<input type="text" name="tbltxt_ServicesName" id="tbltxt_ServicesName" value="' + itemName + '"/>' +
                 '</td>' +
@@ -284,7 +284,7 @@
             }
         }
         function AddTestRow() {
-
+            debugger;
             var maindpt = $('#ddlMainTestDepartment').val();
             var testGroupCatVal = $("#ddlTestList option:selected").attr('groupCat');
 
