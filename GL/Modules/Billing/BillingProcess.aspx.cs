@@ -468,7 +468,7 @@ namespace PMS
 
             public string Gender;
             public string Age;
-            public DateTime DOB;
+            public string DOB;
 
             public string Mobile;
             public string Address;
@@ -512,7 +512,15 @@ namespace PMS
                 pts.FatherName = pat.Father_Name;
                 pts.Gender = pat.Gender;
                 pts.Relation = pat.Relation_prefix;
-                pts.DOB = Convert.ToDateTime(pat.DOB);
+                //pts.DOB = Convert.ToDateTime(pat.DOB);
+                if (pat.DOB != null)
+                {
+                    pts.DOB = Convert.ToDateTime(pat.DOB).ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    pts.DOB = "";
+                };
                 pts.Age = pat.Age_years.ToString();
                 pts.MaritalStatus = pat.Martial_Status;
                 //pt.Mr_No = Convert.ToString(pat.Patient_No);
@@ -625,6 +633,7 @@ namespace PMS
                     pat.Gender = Gender;
                     pat.Mobile1 = Mobile;
                     pat.Age_years = Age;
+                    string[] formats = { "dd/MM/yyyy", "MM/dd/yyyy" };
                     if (string.IsNullOrWhiteSpace(Date_Of_Birth))
                     {
                         pat.DOB = null;
@@ -649,6 +658,8 @@ namespace PMS
                     pat.Martial_Status = martail_status;
                     //pat.mr_no_sequence = db.GetSequentialMrNo();
                     pat.walkin = true;
+                    pat.updated_by = AppConfig.UserID;
+                    pat.updated_time = DateTime.Now;
 
                     db.SubmitChanges();
                 }

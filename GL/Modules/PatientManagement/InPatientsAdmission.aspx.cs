@@ -5519,12 +5519,14 @@ namespace PMS
                             return "ERROR: Date must be in dd/MM/yyyy format (e.g., 19/12/2000).";
                         }
                         pat.DOB = dob;
-                    }
+                    };
                     pat.NIC = CNIC;
                     pat.other_cnic = OtherCNIC;
                     pat.Permanent_Address = Address;
                     pat.Martial_Status = martail_status;
                     pat.walkin = true;
+                    pat.updated_by = AppConfig.UserID;
+                    pat.updated_time = DateTime.Now;
                     db.SubmitChanges();
                 }
             }
@@ -5750,7 +5752,7 @@ namespace PMS
             public string Title;
             public string Gender;
             public string Age;
-            public DateTime DOB;
+            public string DOB;
             public string Mobile;
             public string Address;
             public string Mr_No { get; set; }
@@ -5822,26 +5824,42 @@ namespace PMS
                    where tbl.pat_id == Convert.ToInt32(Reg_Patient_ID)
                    orderby tbl.Created_time descending
                    select tbl).FirstOrDefault();
+
             if (pat != null)
             {
+
+
                 string[] PatientName = pat.Full_Name.Split('.');
                 pts.Title = PatientName[0] + ".";
                 pts.Name = PatientName[PatientName.Length - 1];
                 pts.FatherName = pat.Father_Name;
                 pts.Gender = pat.Gender;
                 pts.Relation = pat.Relation_prefix;
-                pts.DOB = Convert.ToDateTime(pat.DOB);
+                //pts.DOB = Convert.ToDateTime(pat.DOB);
+                if (pat.DOB != null)
+                {
+                    pts.DOB = Convert.ToDateTime(pat.DOB).ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    pts.DOB = "";
+                }
+                ;
                 pts.Age = pat.Age_years.ToString();
                 pts.MaritalStatus = pat.Martial_Status;
+                //pt.Mr_No = Convert.ToString(pat.Patient_No);
                 pts.Mr_No = Convert.ToString(pat.mr_no_sequence);
                 pts.Address = pat.Permanent_Address;
                 pts.Mobile = pat.Mobile1;
                 pts.CNIC = pat.NIC;
-                pts.CNIC = pat.other_cnic;
                 pts.Gender = pat.Gender;
+
+
                 pts.Reg_PatientID = Reg_Patient_ID;
                 return pts;
             }
+
+
             return pts;
         }
 
