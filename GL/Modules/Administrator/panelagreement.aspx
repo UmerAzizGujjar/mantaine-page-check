@@ -240,7 +240,7 @@
         }
         function appendRowHtml(itemID, itemName, Rate, testGroupCatVal, getTestID) {
             var rows = '<tr>' +
-                '<td style="display:none"><input type="hidden" name="tbltxt_ServicesId" id="tbltxt_ServicesId" value="0"/></td>' +
+                '<td style="display:none"><input type="hidden" name="tbltxt_ServicesId" id="tbltxt_ServicesId" value="' + itemID + '"/></td>' +
                 '<td>' +
                 '<input type="text" name="tbltxt_ServicesName" id="tbltxt_ServicesName" value="' + itemName + '"/>' +
                 '</td>' +
@@ -311,7 +311,7 @@
                         '<tr>' +
                         '<td style="display:none"><input type="hidden" name="tbltxt_ServicesId" value="' + (item.ItemID || '') + '"/></td>' +
                         '<td><input type="text" name="tbltxt_ServicesName" value="' + (item.Description || '') + '" readonly/></td>' +
-                        '<td><input type="text" name="tbltxt_Rate" value="' + (item.Rate || '') + '"/></td>' +
+                        '<td><input type="text" name="tbltxt_Rate" value="' + (item.Rate || '0') + '"/></td>' +
                         '<td style="display:none"><input type="text" value="' + (item.GroupCategory || '') + '"/></td>' +
                         '<td style="display:none"><input type="text" value="' + (item.TestID || '') + '"/></td>' +
                         '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">' +
@@ -454,7 +454,7 @@
                     var itemID = parsedData[key].Item_ID;
                     var itemName = parsedData[key].name;
                     var Rate = parsedData[key].Rate || "0";
-                    appendRowHtml(itemID, itemName, Rate, "", 0);
+                    appendRowHtml(itemID, itemName, Rate);
                 });
             },
                 function (error) {
