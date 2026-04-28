@@ -2672,7 +2672,10 @@
             fillPendingPatientsLists();
             $('#queueModal').modal('show');
         }
-
+        function RefreshQueue() {
+            $("#txtSearchmodal").val('')
+            fillPendingPatientsLists()
+        }
         //function fillPendingPatientsLists() {
         //    PageMethods.PendingPatients(function (data) {
         //        debugger;
@@ -2692,7 +2695,8 @@
         //    }, function (exec) { })
         //}
         function fillPendingPatientsLists() {
-            PageMethods.PendingPatients(function (data) {
+            var SearchString = $("#txtSearchmodal").val();
+            PageMethods.PendingPatients(SearchString,function (data) {
 
                 var parsedData = JSON.parse(data);
                 var rows = '';
@@ -2705,6 +2709,8 @@
                     rows += '<tr>' +
                         '<td>' + value.mr_no_sequence + '</td>' +
                         '<td>' + value.Full_Name + '</td>' +
+                        '<td>' + value.Transaction_Type + '</td>' +
+                        '<td>' + value.Referred_By + '</td>' +
                         '<td>' + retdate + '</td>' +
                         '<td>' +
                         '<a href="#" class="btnEdit" ' +
@@ -3508,24 +3514,29 @@
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <div id="QueueList">
-                        <div class="row" style="margin-bottom: 15px">
-
-                            <div class="col-lg-2 text-end">
-                                <a onclick="fillPendingPatientsList()">
+                                            <fieldset class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="txtSearchmodal">Search Your Patients:</label>
+                                <input type="text" id="txtSearchmodal" class="form-control" onkeyup="fillPendingPatientsLists();" autocomplete="off" placeholder="Enter search text" />
+                            </div>
+                                                       
+                            <div class="col-lg-2 text-end" style=" margin-top:28px !important;">
+                                <a onclick="RefreshQueue()">
                                     <i class="fa fa-refresh fa-2x"></i>
                                 </a>
                             </div>
-
                         </div>
-
-
+                    </fieldset>
+                    <div id="QueueList">
                         <div class="table-responsive previewTable">
                             <table class="table table-bordered table-custom" id="tblPendingPatients" style="overflow: auto;">
                                 <thead id="ihead">
                                     <tr>
                                         <th>MR No</th>
                                         <th>Patient Name</th>
+                                        <th>Department</th>
+                                        <th>Referred By</th>
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Select</th>
                                     </tr>
