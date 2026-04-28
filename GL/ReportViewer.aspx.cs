@@ -742,6 +742,7 @@ namespace PMS
                 //string Shift = Request.QueryString["Shift"].ToString();
 
                 string doctorID = Request.QueryString["DoctorID"].ToString();
+                string PatientType = Request.QueryString["PatientType"].ToString();
 
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
@@ -777,6 +778,7 @@ namespace PMS
                 rd.SetParameterValue("@Shift_id", shiftId);
                 rd.SetParameterValue("@DoctorID", doctorID);
                 rd.SetParameterValue("@Department", departmentID);
+                rd.SetParameterValue("@PatientType", PatientType);
             }
 
 
