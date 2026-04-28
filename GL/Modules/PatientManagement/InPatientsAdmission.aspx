@@ -6668,22 +6668,32 @@
             debugger;
             if (data.d != '') {
                 debugger;
+
                 inPatientID = data.d.Inpat;
                 Discharged = data.d.Discharged;
                 $("#txt_Mrno").val(data.d.Mr_No);
                 $("#txt_name").val(data.d.Name);
                 $("#ddl_Gender").val(data.d.Gender).change();
                 var newValue = data.d.Age.replace('Y', '');
+
                 $("#txt_dob").val(newValue);
                 $("#ddl_status").val(data.d.MaritalStatus);
                 $("#ddl_ctgry").val(data.d.Patient_Type).change();
                 $("#ddl_Doc").val(data.d.DocID).change();
                 $('#ddl_pnl_cpy').hide();
-                if (data.d.DOB != null) {
-                    stDate = new Date(parseInt(data.d.DOB.substr(6)));
-                    stDate = moment(stDate).format('L');
+
+                //if (data.d.DOB != null) {
+                //    stDate = new Date(parseInt(data.d.DOB.substr(6)));
+                //    stDate = moment(stDate).format('L');
+                //    $('#txtAge_yearss').val(stDate);
+                //}
+
+                if (data.d.DOB) {
+                    $('#txtAge_yearss').val(data.d.DOB);
                 }
+
                 $("#ddltest_main_dpt").val(data.d.department).change();
+
                 $('#ddlRelation').val(data.d.Relation).trigger('change');
                 $('#ddl_name').val(data.d.Title).trigger('change');
                 $("#txt_relation").val(data.d.FatherName);
@@ -6694,11 +6704,16 @@
                 $("#ddl_bld_grp").val(data.d.Blood_Group).change();
                 $("#ddlRhFactor").val(data.d.Rh_Factor);
                 if (data.d.Patient_Type == "02") {
+
                     $("#ddl_pnl_cpy").val(data.d.PanelComany).change();
                     $("#txt_Emp").val(data.d.TxtEmp);
                     $("#txt_Ref").val(data.d.TxtRef);
+
                 }
                 $('#hdfPatient_ID').val(data.d.Reg_PatientID);
+
+
+
             }
 
         }
