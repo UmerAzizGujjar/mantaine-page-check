@@ -4308,6 +4308,42 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlDischarge_Type;
 
         /// <summary>
+        /// Label136 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label136;
+
+        /// <summary>
+        /// txtFollowUpInstruction control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFollowUpInstruction;
+
+        /// <summary>
+        /// Label88 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label88;
+
+        /// <summary>
+        /// txtOperationalDetails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOperationalDetails;
+
+        /// <summary>
         /// DischargeRequest control.
         /// </summary>
         /// <remarks>

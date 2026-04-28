@@ -3190,10 +3190,10 @@ namespace PMS
                 var Check_Doc = (from data in db.Doctor_Agreements
                                  join dd in db.Doctor_agreement_details on data.Doc_agreemnt_id equals dd.Doc_agreement_id
                                  where data.Doctor == doc_id
-                                 && dd.item_id.ToString() == item_id
+                                 //&& dd.item_id.ToString() == item_id
                                  && dd.AgrementTypeId == Aggreement_Type
                                  && (dd.service_description.Contains(item_name) || dd.test_description.Contains(item_name))
-                                 select new { dd.services }).FirstOrDefault();
+                                 select new { dd.Doc_agreement_id}).FirstOrDefault();
 
                 if (Check_Doc != null)
                 {
@@ -5549,5 +5549,27 @@ namespace PMS
                 return "0";
             }
         }
+
+        [WebMethod]
+        public static string ReamrksValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Billing Remarks"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
     }
 }

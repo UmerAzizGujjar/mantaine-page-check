@@ -18,16 +18,25 @@ namespace PMS
         [WebMethod]
         public static string GetDoctors()
         {
-            var userid = AppConfig.UserID;
-            DataBaseDataContext db = new DataBaseDataContext();
-            var emps = (from emp in db.HR_Employees
-                        where emp.IsDoctor == true && emp.userid == Convert.ToString(userid)
-                        orderby emp.Emp_Name
-                        select new {
-                            emp.Emp_ID, 
-                            Emp_Name = emp.Emp_Name.Replace("Dr.", string.Empty).Replace("Prof.", string.Empty) }).ToList();
-            emps = emps.OrderBy(emp => emp.Emp_ID).ToList();
-            return (new JavaScriptSerializer()).Serialize(emps);
+            var db = new DataBaseDataContext();
+            var userId = Convert.ToString(AppConfig.UserID);
+
+            // Check permission
+            var canSeeAllDoctors = db.aspnet_Users
+                .Any(u => u.UserId == AppConfig.UserID && u.All_doctor_template == true);
+
+            // Get doctors
+            var doctors = db.HR_Employees
+                .Where(e => e.IsDoctor == true && (canSeeAllDoctors || e.userid == userId))
+                .OrderBy(e => e.Emp_Name)
+                .Select(e => new
+                {
+                    e.Emp_ID,
+                    Emp_Name = e.Emp_Name.Replace("Dr.", "").Replace("Prof.", "")
+                })
+                .ToList();
+
+            return new JavaScriptSerializer().Serialize(doctors);
         }
         [WebMethod]
         public static string LoadLabFooter(string id)

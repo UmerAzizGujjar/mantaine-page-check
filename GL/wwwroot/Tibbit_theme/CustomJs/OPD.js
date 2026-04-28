@@ -1484,9 +1484,7 @@ function SaveData() {
         return;
     }
 
-    
-
-
+  
     if (Department == "101" && FilterClinic == "0") {
         Swal.fire({
             icon: 'error',

@@ -45,16 +45,27 @@
          }
      });
      function FillDoctors() {
-
          var options = '<option value="0">Select Doctor</option>';
 
-         PageMethods.GetDoctors(function (data) {
-             $.each(JSON.parse(data), function (key, value) {
-                 options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
-             });
-             $('#ddlDoctor').html(options);
-             $('#ddlDoctor').select2(); 
-             //$('#ddlDoctor').attr('disabled', true); 
+         // Using AJAX instead of PageMethods for better control
+         $.ajax({
+             type: "POST",
+             url: "UltrasoundFooter.aspx/GetDoctors",
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             success: function (response) {
+                 var doctors = JSON.parse(response.d);
+                 $.each(doctors, function (key, value) {
+                     options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
+                 });
+                 $('#ddlDoctor').html(options);
+                 $('#ddlDoctor').select2();
+             },
+             error: function (error) {
+                 console.log("Error loading doctors: " + error);
+                 $('#ddlDoctor').html(options);
+                 $('#ddlDoctor').select2();
+             }
          });
      }
      function loadLabFooter(id) {

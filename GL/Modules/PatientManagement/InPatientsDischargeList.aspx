@@ -4,9 +4,36 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
+        var selectedInPatientIds = {};
+        var canUnDischarge = false;
+
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
             LoadPage();
+
+            $(document).on('change', '#tblResult tbody .row-select', function () {
+                var inPatientId = $(this).data('id');
+                if ($(this).is(':checked')) {
+                    selectedInPatientIds[inPatientId] = true;
+                } else {
+                    delete selectedInPatientIds[inPatientId];
+                }
+                updateSelectAllCheckbox();
+            });
+
+            $(document).on('change', '#selectAllRows', function () {
+                var isChecked = $(this).is(':checked');
+                $('#tblResult tbody .row-select').each(function () {
+                    var inPatientId = $(this).data('id');
+                    $(this).prop('checked', isChecked);
+
+                    if (isChecked) {
+                        selectedInPatientIds[inPatientId] = true;
+                    } else {
+                        delete selectedInPatientIds[inPatientId];
+                    }
+                });
+            });
 
 
         });
@@ -21,6 +48,24 @@
 
         function LoadPage() {
             let savedVisibility = null;
+
+            $.ajax({
+                type: "POST",
+                url: "InPatientsDischargeList.aspx/CanUnDischarge",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    canUnDischarge = response.d === true;
+                },
+                error: function () {
+                    canUnDischarge = false;
+                }
+            });
+
+            if (!canUnDischarge) {
+                $('#selectAllRows').closest('th').hide();
+            }
 
             $.ajax({
                 type: "POST",
@@ -41,28 +86,40 @@
                     console.error("Failed to load column preferences");
                 }
             });
+            var dtButtons = [
+                {
+                    text: 'Add',
+                    className: 'dt-button buttons-copy buttons-html5',
+                    action: function () {
+                        window.location = 'InPatientsDischarge.aspx';
+                    }
+                },
+                'copy', 'excel', 'pdf',
+                {
+                    extend: 'colvis',
+                    text: '<i class="fa fa-columns"></i> Columns',
+                    className: 'dt-button buttons-colvis',
+                    collectionLayout: 'fixed two-column',
+                    postfixButtons: ['colvisRestore']
+                }
+            ];
+
+            if (canUnDischarge) {
+                dtButtons.push({
+                    text: 'UnDischarge',
+                    className: 'dt-button buttons-copy buttons-html5',
+                    action: function () {
+                        UnDischargeSelected();
+                    }
+                });
+            }
+
             $("#tblResult").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
                 "lengthChange": true,
-                "buttons": [
-                    {
-                        text: 'Add',
-                        className: 'dt-button buttons-copy buttons-html5',
-                        action: function () {
-                            window.location = 'InPatientsDischarge.aspx';
-                        }
-                    },
-                    'copy', 'excel', 'pdf',
-                    {
-                        extend: 'colvis',
-                        text: '<i class="fa fa-columns"></i> Columns',
-                        className: 'dt-button buttons-colvis',
-                        collectionLayout: 'fixed two-column',
-                        postfixButtons: ['colvisRestore']
-                    }
-                ],
+                "buttons": dtButtons,
                 "filter": true,
                 "ajax": function (data, callback, settings) {
                     $.ajax({
@@ -92,6 +149,20 @@
                     });
                 },
                 "columns": [
+                    {
+                        "data": null,
+                        "orderable": false,
+                        "searchable": false,
+                        "visible": canUnDischarge,
+                        "width": "3%",
+                        "render": function (data, type, full) {
+                            if (!canUnDischarge) {
+                                return '';
+                            }
+                            var isChecked = selectedInPatientIds[full.In_Patient_ID] ? 'checked="checked"' : '';
+                            return '<input type="checkbox" class="row-select" data-id="' + full.In_Patient_ID + '" ' + isChecked + ' />';
+                        }
+                    },
                     { "data": "In_Patient_ID", "visible": false, "width": "0%" },
                     {
                         "data": "Admission_Date", "name": "Admission_Date",
@@ -117,7 +188,7 @@
                             return date;
                         }, "width": "10%", "orderable": true
                     },
-                    { "data": "Discharge_By", "name": "Discharge_By", "width": "15%", "orderable": true },
+                    { "data": "Discharge_By", "name": "Discharge_By", "width": "10%", "orderable": true },
                     { "data": "AdmitDays", "name": "AdmitDays", "width": "8%", "orderable": true },
                     
                     {
@@ -131,7 +202,7 @@
                             var result;
                             result = res + print;
                             return result;
-                        }, "width": "10%", "orderable": false
+                        }, "width": "15%", "orderable": false
                     }
 
                 ],
@@ -177,6 +248,11 @@
                         label.appendChild(labelText);
                         label.appendChild(lengthDropdown);
                     }
+
+                    updateSelectAllCheckbox();
+                },
+                "drawCallback": function () {
+                    updateSelectAllCheckbox();
                 }
             });
         }
@@ -187,7 +263,42 @@
             window.open("InPatientsDischarge.aspx?ID=" + id + "");
 
         }
-    
+        function updateSelectAllCheckbox() {
+            var totalRows = $('#tblResult tbody .row-select').length;
+            var checkedRows = $('#tblResult tbody .row-select:checked').length;
+            $('#selectAllRows').prop('checked', totalRows > 0 && totalRows === checkedRows);
+        }
+
+        function getSelectedInPatientIds() {
+            var ids = [];
+            for (var id in selectedInPatientIds) {
+                if (selectedInPatientIds.hasOwnProperty(id) && selectedInPatientIds[id]) {
+                    ids.push(parseInt(id));
+                }
+            }
+            return ids;
+        }
+
+        function UnDischargeSelected() {
+            var selectedIds = getSelectedInPatientIds();
+
+            if (selectedIds.length === 0) {
+                alert('Please select at least one patient.');
+                return;
+            }
+
+            PageMethods.UnDischargePatients(selectedIds,
+                function (msg) {
+                    alert(msg);
+                    selectedInPatientIds = {};
+                    $('#selectAllRows').prop('checked', false);
+                    $('#tblResult').DataTable().ajax.reload(null, false);
+                },
+                function () {
+                    alert('Unable to process un-discharge request.');
+                }
+            );
+        }
         function deleteConfirm(anchorTag) {
             debugger;
             var table = $('#tblResult').DataTable();
@@ -214,6 +325,7 @@
             <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
                 <thead id="ihead">
                     <tr>
+                         <th><input type="checkbox" id="selectAllRows" /></th>
                         <th>In_Patient_ID</th>
                         <th>Admission Date</th>
                         <th>MR No #</th>

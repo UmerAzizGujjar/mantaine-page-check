@@ -39,6 +39,8 @@ namespace PMS.Modules.StudentAffair
                                          Balance = SR.Balance,
                                          Remarks = SR.Remarks,
                                          Full_Name = RS.Full_Name,
+                                         Net_Payable = SR.Net_Payable,
+                                         Amount_Received = SR.Amount_Received,
                                          Class = _dbContext.GetDataValueName("Student Class", SR.Class)
                                      };
 
@@ -47,6 +49,9 @@ namespace PMS.Modules.StudentAffair
                     {
                         case "Student_Receipt_No":
                             Student_Receipts = sortColumnDirection == "asc" ? Student_Receipts.OrderBy(a => a.Student_Receipt_No) : Student_Receipts.OrderByDescending(a => a.Student_Receipt_No);
+                            break;
+                        case "Student_Receipt_Date":
+                            Student_Receipts = sortColumnDirection == "asc" ? Student_Receipts.OrderBy(a => a.Student_Receipt_Date) : Student_Receipts.OrderByDescending(a => a.Student_Receipt_Date);
                             break;
                         case "Student_ID":
                             Student_Receipts = sortColumnDirection == "asc" ? Student_Receipts.OrderBy(a => a.Student_ID) : Student_Receipts.OrderByDescending(a => a.Student_ID);

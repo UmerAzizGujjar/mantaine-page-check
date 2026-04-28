@@ -97,8 +97,11 @@ namespace PMS.Modules.Accounts
                              AllowRadiologylist = p.Radiology_result,
                              AllowReferIPD = p.Refer_IPD, 
                              casher = p.cashier,
-                             EmpCode=p.Emp_Code
-                         }).FirstOrDefault();
+                             EmpCode=p.Emp_Code,
+                             AllowUndischarge = p.allow_undischarge,
+                                AllDoctorTemplate = p.All_doctor_template,
+                                AllowTill = p.user_till,
+                          }).FirstOrDefault();
             string data = string.Empty;
             data = new JavaScriptSerializer().Serialize(users);
             return data;
@@ -211,6 +214,9 @@ namespace PMS.Modules.Accounts
                     user.IPD_ALlow_Death_Details = data.AllowDeathDetails;
                     user.cashier = data.ddlcasher;
                     user.AllowRateEdit = data.AllowRateEdit;
+                    user.allow_undischarge = data.AllowUndischarge;
+                    user.All_doctor_template = data.AllDoctorTemplate;
+                    user.user_till = data.AllowTill;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -293,6 +299,10 @@ namespace PMS.Modules.Accounts
                 newuser.IPD_ALlow_Death_Details = data.AllowDeathDetails;
                 newuser.cashier = data.ddlcasher;
                 newuser.AllowRateEdit = data.AllowRateEdit;
+                newuser.allow_undischarge = data.AllowUndischarge;
+          
+                 newuser.All_doctor_template = data.AllDoctorTemplate;
+                 newuser.user_till = data.AllowTill;
                 newuser.LastActivityDate = new DateTime(1754, 1, 1, 0, 0, 0);
                 db.aspnet_Users.InsertOnSubmit(newuser);
 
@@ -409,6 +419,9 @@ namespace PMS.Modules.Accounts
             public bool Allowradiologyapprove { get; set; }
             public bool Rejectradiology { get; set; }
             public bool AllowRateEdit { get; set; }
+            public bool AllowUndischarge { get; set; }
+            public bool AllDoctorTemplate { get; set; }
+            public bool AllowTill { get; set; }
             public bool AllowBillUpdate { get; set; }
             public bool BlockUser { get; set; }
             public bool AllowemergencyDiscount { get; set; }

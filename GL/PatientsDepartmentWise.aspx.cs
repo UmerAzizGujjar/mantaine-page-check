@@ -3369,6 +3369,26 @@ namespace PMS
                     ddlPatientType.Visible = false;
                     lblPatientType.Visible = false;
 
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
+
                 }
                 else if (PageTitle == "SehatSahulatWiseExpensive")
                 {
@@ -3447,6 +3467,7 @@ namespace PMS
                     Master.Label2.Text = x;
                     Master.GetMenuName();
                     tr_Summary.Visible = false;
+                    tr_Export.Visible = true;
                     tr1MedicalSubsidy.Visible = false;
                     lblMainDepartment.Visible = false;
                     ddlDepartments.Visible = false;
@@ -7956,8 +7977,6 @@ namespace PMS
                     ddlShift.DataTextField = "Shift_Name";
                     ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
                     ddlShift.DataBind();
-                    lbShift.Visible = false;
-                    ddlShift.Visible = false;
 
                     DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
                     ddlDoctor.DataSource = dt;

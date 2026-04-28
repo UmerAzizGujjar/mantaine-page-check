@@ -88,7 +88,8 @@ namespace PMS.Modules.PatientManagement
 
                     var inputFieldNames = cleanedRights.Select(r => r.field_name).ToHashSet();
 
-                    var policiesToDelete = currentPolicies.Where(p => !inputFieldNames.Contains(p.field_name.ToLower()));
+                    var policiesToDelete = currentPolicies.Where(p =>
+                        !inputFieldNames.Contains(p.field_name.Substring(OutPatientPrefix.Length).ToLower()));
                     db.company_opd_policies.DeleteAllOnSubmit(policiesToDelete);
 
                     foreach (var item in cleanedRights)

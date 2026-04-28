@@ -138,6 +138,7 @@
                     { "data": "mr_no_sequence", "width": "10%", "name": "mr_no_sequence" },
                     { "data": "Full_Name", "width": "10%" },
                     { "data": "Item_Name", "width": "10%" },
+                    { "data": "Lab_Test_Detail_ID", "width": "10%", "name": "Lab_Test_Detail_ID" },
                     { "data": "Main_Test_Departments", "width": "10%" },
               
                     {
@@ -443,6 +444,7 @@
                                              <th>MR No</th>
                                             <th>Name</th>
                                             <th>Test Name</th>
+                                            <th>Accession Number</th>
                                             <th>Main Test Department</th>
                                              <th>Doctor</th>
                                              <th>Actions</th>
