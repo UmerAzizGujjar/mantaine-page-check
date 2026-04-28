@@ -6631,35 +6631,54 @@
             return options;
         }
         function EditPatientDetail(id) {
-            var Patient_ID = $('#hdfPatient_ID').val();
-            $('#CloseSearchModel').click(function () {
-                window.location.href = "InPatientsAdmission.aspx";
-            });
-            $('#CloseSearchModels').click();
-            $("#SavePatient_Data").hide();
-            $("#PatientsSearchModel").hide();
-            $("#ReferredPatientsModal").hide();
-            $('#updatePatient_Data').show();
-            $("#SavePatient_Data").hide();
-            $('#RevistPat').show();
-            $('#updatePatient_Data').show();
-            $('#PatientModel').modal({
-                backdrop: 'static'
-            });
-            var ajaxFn = function () {
-                $.ajax({
-                    type: "POST",
-                    url: "InPatientsAdmission.aspx/GetEditPatientDetails",
-                    data: "{'Reg_Patient_ID':" + id + "}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: OnSuccessEdit,
-                    failure: function (response) {
-                        alert(response.d);
+            // First check permission
+            PageMethods.EditPatient(id, function (msg) {
+                if (msg === "NotAllowed") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Access Denied',
+                        text: 'You do not have permission to edit this patient.',
+                        confirmButtonColor: '#d33'
+                    });
+                } else if (msg === "Allowed") {
+                    // Permission granted, proceed with edit
+                    var Patient_ID = $('#hdfPatient_ID').val();
+
+                    $('#CloseSearchModel').click(function () {
+                        window.location.href = "InPatientsAdmission.aspx";
+                    });
+                    $('#CloseSearchModels').click();
+                    $("#SavePatient_Data").hide();
+                    $("#PatientsSearchModel").hide();
+                    $("#ReferredPatientsModal").hide();
+                    $('#updatePatient_Data').show();
+                    $("#SavePatient_Data").hide();
+                    $('#RevistPat').show();
+                    $('#updatePatient_Data').show();
+                    $('#PatientModel').modal({
+                        backdrop: 'static'
+                    });
+
+                    var ajaxFn = function () {
+                        $.ajax({
+                            type: "POST",
+                            url: "InPatientsAdmission.aspx/GetEditPatientDetails",
+                            data: "{'Reg_Patient_ID':" + id + "}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: OnSuccessEdit,
+                            failure: function (response) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.d
+                                });
+                            }
+                        });
                     }
-                });
-            }
-            setTimeout(ajaxFn, 3000);
+                    setTimeout(ajaxFn, 3000);
+                }
+            });
         }
         var inPatientID;
         var Discharged;
