@@ -1101,7 +1101,7 @@ namespace PMS
                                            && pds.GroupCategory == groups.Catagory_ID
                                      select pds.Rate).FirstOrDefault();
 
-                    if (panelRate.HasValue && panelRate.Value > 0)
+                    if (panelRate.HasValue)
                     {
                         finalRate = panelRate.Value;
                     }

@@ -4903,7 +4903,11 @@
                     setTimeout(function () {
                         CalculateSummarieDiscountPerWise(rowIndex);
                     }, 1500)
-
+                    var PanelId = $("#ddlpanel").val();
+                    if(PanelId != '0'){
+                        GetpanelServiceRate(PanelId,data[0].Item_ID)
+                    }
+                    
                 });
             }
 
