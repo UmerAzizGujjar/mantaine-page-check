@@ -6831,32 +6831,35 @@
         });
 
         function CheckProcedureTabPermission() {
-            $.ajax({
-                type: "POST",
-                url: "InPatientsCase.aspx/ProcedureTabRights",
-                data: "{}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    if (response.d === "01") {
-                        $('#tabs ul li a[href="#Tab-20"]').parent().show();
-                        $('#Tab-20').show();
-                    } else {
-                        $('#tabs ul li a[href="#Tab-20"]').parent().hide();
-                        var activeTab = $("#tabs").tabs("option", "active");
-                        var procedureTabIndex = $("#tabs ul li a[href='#Tab-20']").parent().index();
-
-                        if (activeTab === procedureTabIndex) {
-                            $("#tabs").tabs("option", "active", 0);
-                        }
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error checking procedure rights:", error);
-                    $('#tabs ul li a[href="#Tab-20"]').parent().hide();
+    $.ajax({
+        type: "POST",
+        url: "InPatientsCase.aspx/ProcedureTabRights",
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.d === "01") {
+                $('#tabs ul li a[href="#Tab-20"]').parent().show();
+                
+               
+            } else {
+                $('#tabs ul li a[href="#Tab-20"]').parent().hide();
+                $('#Tab-20').hide(); 
+                
+                var activeTab = $("#tabs").tabs("option", "active");
+                var procedureTabIndex = $("#tabs ul li a[href='#Tab-20']").parent().index();
+                if (activeTab === procedureTabIndex) {
+                    $("#tabs").tabs("option", "active", 0);
                 }
-            });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error checking procedure rights:", error);
+            $('#tabs ul li a[href="#Tab-20"]').parent().hide();
+            $('#Tab-20').hide(); 
         }
+    });
+}
     </script>
 
 </asp:Content>
