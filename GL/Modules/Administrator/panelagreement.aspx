@@ -298,7 +298,7 @@
                 alert("Please Select Test");
                 return false;
             }
-            appendRowHtml(maindpt, CheckTest, Rate, testGroupCatVal, getTestID);
+            appendRowHtml(0, CheckTest, Rate, testGroupCatVal, getTestID);
         }
 
         function getResponseData(x) {
