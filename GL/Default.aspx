@@ -14,6 +14,53 @@
     border-color: #438eb9 ; 
 }
     </style>
+    <script type="text/javascript">
+        (function () {
+            function showTillModal(result) {
+                if (!result || result.IsTillEnabled === false || result.IsActive === true) {
+                    return;
+                }
+
+                var msg = result.Message || 'Please start your till to access forms.';
+                if (result.StartedAt) {
+                    msg += '<br/>Start: ' + result.StartedAt;
+                }
+                if (result.EndedAt) {
+                    msg += '<br/>End: ' + result.EndedAt;
+                }
+
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Till Status',
+                        html: msg
+                    });
+                } else {
+                    alert(msg.replace(/<br\/>/g, '\n'));
+                }
+            }
+
+            function fetchTillStatus() {
+                $.ajax({
+                    type: 'POST',
+                    url: '<%= ResolveUrl("~/PatientManagementSection.aspx/GetTillStatus") %>',
+                    data: '{}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (response) {
+                        var result = response && response.d ? response.d : response;
+                        showTillModal(result || {});
+                    }
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', fetchTillStatus);
+            } else {
+                fetchTillStatus();
+            }
+        })();
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
