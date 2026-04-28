@@ -188,51 +188,51 @@ namespace PMS
         public static string PendingPatients()
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
-            {
-                DateTime last24Hours = DateTime.Now.AddHours(-24);
+            //{
+            //    DateTime last24Hours = DateTime.Now.AddHours(-24);
 
-                var query =
-                    (from ltd in db.Lab_Test_Details
-                    join lt in db.Laboratory_Tests
-                        on ltd.Lab_Test_ID equals lt.Lab_Test_ID
-                    join r in db.Reg_patients
-                        on ltd.Actual_Patient_ID equals r.pat_id
-                    where (ltd.IsBilled ?? false) == false
-                          && lt.Transaction_Type != "Front Desk"
-                          && lt.Created_Time >= last24Hours   // 🟢 Only last 24 hours
-                    select new
-                    {
-                        r.mr_no_sequence,
-                        r.Full_Name,
-                        r.Father_Name,
-                        r.Age_years,
-                        ltd.IsBilled,
-                        lt.Created_Time,
-                        ltd.Actual_Patient_ID
-                    }).Distinct().ToList();
+            //    var query =
+            //        (from ltd in db.Lab_Test_Details
+            //        join lt in db.Laboratory_Tests
+            //            on ltd.Lab_Test_ID equals lt.Lab_Test_ID
+            //        join r in db.Reg_patients
+            //            on ltd.Actual_Patient_ID equals r.pat_id
+            //        where (ltd.IsBilled ?? false) == false
+            //              && lt.Transaction_Type != "Front Desk"
+            //              && lt.Created_Time >= last24Hours   // 🟢 Only last 24 hours
+            //        select new
+            //        {
+            //            r.mr_no_sequence,
+            //            r.Full_Name,
+            //            r.Father_Name,
+            //            r.Age_years,
+            //            ltd.IsBilled,
+            //            lt.Created_Time,
+            //            ltd.Actual_Patient_ID
+            //        }).Distinct().ToList();
 
 
-                var ipd = (from ip in db.In_Patients 
-                           join r in db.Reg_patients 
-                           on ip.Patient_ID equals r.pat_id
-                           where ip.Discharge_Request == true && (ip.ispackagebilling == null || ip.ispackagebilling == false) select new
-                           {
-                               r.mr_no_sequence,
-                               r.Full_Name,
-                               r.Father_Name,
-                               r.Age_years,
-                               IsBilled = ip.Discharge_Request,
-                               ip.Created_Time,
-                               Actual_Patient_ID = ip.Patient_ID
-                           }).ToList();
+            //    var ipd = (from ip in db.In_Patients 
+            //               join r in db.Reg_patients 
+            //               on ip.Patient_ID equals r.pat_id
+            //               where ip.Discharge_Request == true && (ip.ispackagebilling == null || ip.ispackagebilling == false) select new
+            //               {
+            //                   r.mr_no_sequence,
+            //                   r.Full_Name,
+            //                   r.Father_Name,
+            //                   r.Age_years,
+            //                   IsBilled = ip.Discharge_Request,
+            //                   ip.Created_Time,
+            //                   Actual_Patient_ID = ip.Patient_ID
+            //               }).ToList();
 
-                var result = new
-                {
-                    query = query,
-                    ipd = ipd
-                };
-                return new JavaScriptSerializer().Serialize(result);
-            }
+            //    var result = new
+            //    {
+            //        query = query,
+            //        ipd = ipd
+            //    };
+            //    return new JavaScriptSerializer().Serialize(result);
+            //}
         }
 
 
