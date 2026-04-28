@@ -167,7 +167,6 @@ namespace PMS
                     tr_Summary.Visible = false;      // changed
                     tr_Export.Visible = true;
                     lblMultiSelect.Visible = false;
-                    lblPatientType.Text = "Operators";
                     object valusets;
                     valusets = DBClass.GetValueSet("Patient Main Category");
                     ddlDepartments.DataSource = valusets;
@@ -182,11 +181,11 @@ namespace PMS
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
                     object valusetss = from d in db.aspnet_Users
                                        select new { d.UserName, d.UserId };
-                    ddlPatientType.DataSource = valusetss;
-                    ddlPatientType.DataTextField = "UserName";
-                    ddlPatientType.DataValueField = "UserId";
-                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlPatientType.DataBind();
+                    ddloprators.DataSource = valusetss;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
 
                     //lbShift.Visible = true;
                     //ddlShift.Visible = true;
@@ -196,8 +195,7 @@ namespace PMS
                     //ddlShift.DataTextField = "Shift_Name";
                     //ddlShift.Items.Add(new ListItem() { Value = "0", Text = "All" });
                     //ddlShift.DataBind();
-                    lboperator.Visible = false;
-                    ddloprators.Visible = false;
+
 
                     lbShift.Visible = true;
                     ddlShift.Visible = true;
@@ -216,6 +214,18 @@ namespace PMS
                     ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
                     ddlDoctor.DataBind();
                     lblMultiSelect.Visible = false;
+
+                    lblPatientType.Visible = true;
+                    lblPatientType.Text = "Patient Type";
+                    object valusests;
+                    valusests = DBClass.GetValueSet("Mode Of Registration");
+                    ddlPatientType.DataSource = valusests;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                    ddlPatientType.Visible = true;
+
 
                 }
                 //else if (this.PageTitle == "OPD_Department_Wise_Report")

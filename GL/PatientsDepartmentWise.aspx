@@ -973,11 +973,12 @@
                        //     '&Summary=' + summary +
                             '&Shift=' + encodeURIComponent(ddlShift) +
                             '&DoctorID=' + $('#ctl00_MainContent_ddlDoctor').val() +
-                            '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0") +
-                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0")
-                            + '&ExportPDF=' + exporttopdf;
+                            '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") +
+                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments").val() : "0")+
+                            '&PatientType=' + ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0")+
+                            '&ExportPDF=' + exporttopdf;
 
-                        window.open(url, '_blank');
+                            window.open(url, '_blank');
                     }
                     else if (rptTitle == "PCRS") {
                         debugger;
