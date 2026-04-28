@@ -20,9 +20,30 @@
             }
             window.open(url, '_blank');
         }
-
         function editOpen(id) {
-            window.open("RegisterPatient.aspx?Reg_id=" + id);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You are about to edit this patient`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, edit it!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    PageMethods.EditPatient(id, function (msg) {
+                        if (msg === "NotAllowed") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Access Denied',
+                                text: 'You do not have permission to edit this patient.'
+                            });
+                        } else if (msg === "Allowed") {
+                            window.open("RegisterPatient.aspx?Reg_id=" + id, "_blank");
+                        }
+                    });
+                }
+            });
         }
 
         function LoadPage() {
