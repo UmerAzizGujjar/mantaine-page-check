@@ -982,7 +982,11 @@ namespace PMS
         partial void UpdateReg_patient(Reg_patient instance);
         partial void DeleteReg_patient(Reg_patient instance);
         #endregion
-
+        public DataBaseDataContext() :
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+        {
+            OnCreated();
+        }
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
