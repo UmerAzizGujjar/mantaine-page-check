@@ -5956,7 +5956,7 @@ namespace PMS
             AND rg.Patient_No IS NOT NULL 
             AND ISNULL(rg.isCancel, 0) != 1 
             AND op.Follow_Up = '001'  -- This condition filters for OPD Referrals/Follow-ups
-            AND (op.Discharge = 0 OR op.Discharge IS NULL)";
+            ";
 
             string whereClause = "";
             if (!string.IsNullOrEmpty(SearchString))

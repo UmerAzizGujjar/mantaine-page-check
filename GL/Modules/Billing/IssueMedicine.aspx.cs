@@ -438,13 +438,13 @@ namespace PMS
         }
        
         [WebMethod]
-        public static string PendingPatients()
+        public static string PendingPatients(string SearchString)
         {
             string result;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.Sp_GetLast24Hours_Medicines().ToList();
+                var query = db.Sp_GetLast24Hours_Medicines(SearchString).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
 
             }
