@@ -1067,7 +1067,7 @@ namespace PMS
                                            && pds.Test_ID == test.Test_ID.ToString()
                                      select pds.Rate).FirstOrDefault();
 
-                    if (panelRate.HasValue && panelRate.Value > 0)
+                    if (panelRate.HasValue)
                     {
                         finalRate = panelRate.Value;
                     }
