@@ -45,22 +45,37 @@ namespace PMS
                 }
                 else if (res.Test_ID != null)
                 {
-                    PanelDetailServ obj = new PanelDetailServ();
-                    obj.PanelID = res.Panel_ID.ToString();
-                    obj.ItemID = res.Item_ID;
-                    obj.Rate = Convert.ToDecimal(res.Rate);
-                    obj.GroupCategory = res.GroupCategory;
-                    obj.TestID = res.Test_ID;
-                    obj.Description = (from lt in db.Lab_Tests
-                                       where lt.Test_ID == Convert.ToInt32(res.Test_ID)
-                                       select lt.Test_Name).FirstOrDefault();
-                    if (obj.Description == null)
+                    if (res.Test_ID == res.GroupCategory)
                     {
-                        obj.Description = db.GetDataValueName("Test Groups", res.GroupCategory);
+                        PanelDetailServ obj = new PanelDetailServ();
+                        obj.PanelID = res.Panel_ID.ToString();
+                        obj.ItemID = res.Item_ID;
+                        obj.Rate = Convert.ToDecimal(res.Rate);
+                        obj.GroupCategory = res.GroupCategory;
+                        obj.TestID = res.Test_ID;
 
+                       
+                            obj.Description = db.GetDataValueName("Test Groups", res.GroupCategory);
+
+                        
+                        listObj.Add(obj);
+                        counter++;
                     }
-                    listObj.Add(obj);
-                    counter++;
+                    else {
+                        PanelDetailServ obj = new PanelDetailServ();
+                        obj.PanelID = res.Panel_ID.ToString();
+                        obj.ItemID = res.Item_ID;
+                        obj.Rate = Convert.ToDecimal(res.Rate);
+                        obj.GroupCategory = res.GroupCategory;
+                        obj.TestID = res.Test_ID;
+                        obj.Description = (from lt in db.Lab_Tests
+                                           where lt.Test_ID == Convert.ToInt32(res.Test_ID)
+                                           select lt.Test_Name).FirstOrDefault();
+             
+                        listObj.Add(obj);
+                        counter++;
+                    }
+                    
                 }
             }
             data = (new JavaScriptSerializer()).Serialize(listObj);

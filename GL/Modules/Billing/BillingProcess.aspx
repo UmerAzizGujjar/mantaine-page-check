@@ -4890,7 +4890,8 @@
                                 isMajorMinors = "";
                             }
                             var remarks = $("#ctl00_MainContent_ddlpro_dis").val();
-                            var TestDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[0].Services.substring(6, 19))))
+                            //var TestDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(data[0].CreatedDate.substring(6, 19))))
+                            var TestDate =''
 
                             debugger;
                             servicerow = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="0" /> <input type="hidden" name="hdnParentTrans_Name" value="OPD" /> <input type="hidden" name="hdnParentTrans_Type" value="" /> <input type="hidden" name="hdnItemID" value="' + data[0].Item_ID + '" /> <input type="hidden" name="hdnItemName" value="' + data[0].Description + '" /><input type="hidden" name="hdnProcedure" value="' + isMajorMinors + '" /> <input type="hidden" name="hdnDisPer" value=""/><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + data[0].Sale_Rate + '/><input type="hidden" name="hdnItemType" value="' + itemtype + '" /><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + data[0].Description + '</td><td>' + remarks + '</td><td><input type="text" name="txtQty" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this,' + true + ',' + false + ')"/><input type="hidden" name="txtActualAmount" value="' + data[0].Sale_Rate + '"  /></td><td style="text-align:Right;" id="amnt' + rowIndex + '" name="amnt" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + data[0].Sale_Rate + '</td><td> <input type="text" name="DisPer" value="0" style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">' + data[0].Sale_Rate + '</td><td><input type="number" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td> </tr>'
@@ -4898,18 +4899,19 @@
                     });
                     $('#tblDetails tbody').append(servicerow);
                     $('input[name="DisAmount"]').attr('disabled', true)
-
-
+       //            debugger;
+       //    var PanelId = $("#ddlpanel").val();
+       //  if(PanelId != '0'){
+       //      GetpanelServiceRate(PanelId,data[0].Item_ID)
+       //  }
                     setTimeout(function () {
                         CalculateSummarieDiscountPerWise(rowIndex);
                     }, 1500)
-                    var PanelId = $("#ddlpanel").val();
-                    if(PanelId != '0'){
-                        GetpanelServiceRate(PanelId,data[0].Item_ID)
-                    }
+
                     
                 });
             }
+
 
             function ExcludeFromPayment(anchor) {
                 console.clear();
