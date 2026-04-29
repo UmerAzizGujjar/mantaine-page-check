@@ -530,6 +530,72 @@ namespace PMS.Modules.Dashboards
             }
         }
 
+        [WebMethod]
+        public static string GetDialysisSnapshot(string period)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    DateTime startDate = DateTime.Today;
+                    DateTime endDate = DateTime.Now;
+                    DateTime now = DateTime.Now;
+
+
+                    switch (period.ToLower())
+                    {
+                        case "week":
+                            int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
+                            startDate = now.AddDays(-1 * diff).Date;
+                            break;
+                        case "month":
+                            startDate = new DateTime(now.Year, now.Month, 1);
+                            break;
+                        case "year":
+                            startDate = new DateTime(now.Year, 1, 1);
+                            break;
+                        default:
+                            startDate = DateTime.Today;
+                            endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                            break;
+                    }
+
+                    var registrations = db.Patients.Where(p =>
+                        p.Patient_Main_Category == "042" &&
+                        p.Entry_Date >= startDate &&
+                        p.Entry_Date <= endDate
+                    ).ToList();
+
+                    var regIds = registrations.Select(p => p.Reg_PatId).ToList();
+                    var sessions = db.Out_Patients.Where(op =>
+                        regIds.Contains(op.Reg_PatId) &&
+                        op.Created_Time >= startDate &&
+                        op.Created_Time <= endDate
+                    ).ToList();
+
+                    int performedCount = registrations.Count;
+
+                    int activeCount = registrations.Count(r => {
+                        var session = sessions.OrderByDescending(s => s.Created_Time)
+                                              .FirstOrDefault(s => s.Reg_PatId == r.Reg_PatId);
+
+                        return session == null || (session.Discharge != true);
+                    });
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        ActiveSessions = activeCount,
+                        PerformedToday = performedCount,
+                        ActiveNow = activeCount // Highlighted current load
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
 
     }
 }

@@ -12,6 +12,7 @@
             LoadWaitTimeTrends("today");
             LoadBillingData("today");
             LoadPharmacySnapshot("today");
+            LoadDialysisLive("today");
 
 
             $("#ddlPeriod").change(function () {
@@ -25,6 +26,7 @@
                 LoadWaitTimeTrends(period);
                 LoadBillingData(period);
                 LoadPharmacySnapshot(period);
+                LoadDialysisLive(period);
             });
         });
 
@@ -363,6 +365,35 @@
             });
         }
 
+        function LoadDialysisLive(period) {
+            let periodLabel = "Today's Snapshot";
+            if (period === 'week') periodLabel = "Weekly Overview";
+            if (period === 'month') periodLabel = "Monthly Overview";
+            $('#lblPeriodText').text(periodLabel);
+
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetDialysisSnapshot",
+                data: JSON.stringify({ 'period': period }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const data = JSON.parse(response.d);
+                    $('#txtActiveCount').text(data.ActiveSessions);
+                    $('#txtPerformedCount').text(data.PerformedToday);
+                    $('#lblLargeActive').text(data.ActiveNow);
+                    let maxVal = data.PerformedToday > 0 ? data.PerformedToday : 10;
+                    let activeWidth = (data.ActiveSessions / maxVal) * 100;
+
+                    $('#barActive').css('width', Math.min(activeWidth, 100) + '%');
+                    $('#barPerformed').css('width', '100%');
+                },
+                error: function (error) {
+                    console.error("Dialysis AJAX Error:", error);
+                }
+            });
+        }
+
     </script>
 
      <style type="text/css">
@@ -491,6 +522,53 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-4">
+    <div class="dashboard-card dialysis-card" style="border-radius: 20px; padding: 25px; background: #fff; border: 1px solid #f0f0f0; box-shadow: 0 4px 20px rgba(0,0,0,0.02); min-height: 400px;">
+        
+        <div style="display: flex; align-items: center; margin-bottom: 30px;">
+            <div style="background: #fff1f2; padding: 10px; border-radius: 10px; margin-right: 15px; color: #e11d48;">
+                <i class="fa fa-heartbeat" style="font-size: 18px;"></i>
+            </div>
+            <div>
+                <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: #4b5563; text-transform: uppercase; letter-spacing: 1px;">Dialysis Monitoring</h4>
+                <small style="color: #94a3b8; font-weight: 600;" id="lblPeriodText">Today's Snapshot</small>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 35px;">
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
+                    <span style="font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase;">Active Sessions</span>
+                    <span id="txtActiveCount" style="font-size: 16px; color: #e11d48; font-weight: 800;">0</span>
+                </div>
+                <div style="width: 100%; background: #f1f5f9; height: 10px; border-radius: 5px; overflow: hidden;">
+                    <div id="barActive" style="width: 0%; background: linear-gradient(90deg, #fb7185, #e11d48); height: 100%; transition: width 1s cubic-bezier(0.17, 0.67, 0.83, 0.67);"></div>
+                </div>
+            </div>
+
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
+                    <span style="font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase;">Performed Sessions</span>
+                    <span id="txtPerformedCount" style="font-size: 16px; color: #10b981; font-weight: 800;">0</span>
+                </div>
+                <div style="width: 100%; background: #f1f5f9; height: 10px; border-radius: 5px; overflow: hidden;">
+                    <div id="barPerformed" style="width: 0%; background: linear-gradient(90deg, #34d399, #10b981); height: 100%; transition: width 1s cubic-bezier(0.17, 0.67, 0.83, 0.67);"></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #fff1f2; border-radius: 18px; padding: 22px; border: 1px solid #ffe4e6; position: relative; overflow: hidden;">
+            <div style="position: relative; z-index: 2;">
+                <div style="font-size: 11px; font-weight: 800; color: #e11d48; text-transform: uppercase; margin-bottom: 5px; display: flex; align-items: center;">
+                    <span style="display: inline-block; width: 8px; height: 8px; background: #e11d48; border-radius: 50%; margin-right: 8px; animation: pulse 1.5s infinite;"></span>
+                    Live Now
+                </div>
+                <div style="font-size: 42px; font-weight: 900; color: #1f2937; letter-spacing: -1px;" id="lblLargeActive">0</div>
+            </div>
+            <i class="fa fa-area-chart" style="position: absolute; right: -10px; bottom: -10px; font-size: 80px; color: #fb7185; opacity: 0.1; transform: rotate(-15deg);"></i>
+        </div>
+    </div>
+</div>
         <div class="col-lg-4">
         <div class="card" style="border-radius: 15px; padding: 20px; background: #fff; border: 1px solid #f0f0f0;">
             <div style="display: flex; align-items: center; margin-bottom: 20px; color: #5c6bc0;">
