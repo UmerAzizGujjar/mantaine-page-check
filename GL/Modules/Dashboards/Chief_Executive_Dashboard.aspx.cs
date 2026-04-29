@@ -586,8 +586,62 @@ namespace PMS.Modules.Dashboards
                     {
                         ActiveSessions = activeCount,
                         PerformedToday = performedCount,
-                        ActiveNow = activeCount // Highlighted current load
+                        ActiveNow = activeCount 
                     });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string GetRegionalHeatmap(string period)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    DateTime startDate = DateTime.Today;
+                    DateTime endDate = DateTime.Now;
+                    DateTime now = DateTime.Now;
+
+                    switch (period.ToLower())
+                    {
+                        case "week":
+                            int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
+                            startDate = now.AddDays(-1 * diff).Date;
+                            break;
+                        case "month":
+                            startDate = new DateTime(now.Year, now.Month, 1);
+                            break;
+                        case "year":
+                            startDate = new DateTime(now.Year, 1, 1);
+                            break;
+                        case "today":
+                        default:
+                            startDate = DateTime.Today;
+                            endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                            break;
+                    }
+
+
+                    var heatmapData = (from rg in db.Reg_patients
+                                       join p in db.Patients on rg.pat_id equals p.Reg_PatId
+                                       where p.Created_Time >= startDate && p.Created_Time <= endDate
+                                       group rg by rg.val_area into g
+                                       select new
+                                       {
+                                           AreaName = g.Key,
+                                           Counts = g.Count()
+                                       })
+                                       .Where(x => x.Counts > 0)
+                                       .OrderByDescending(x => x.Counts)
+                                       .Take(10)
+                                       .ToList();
+
+                    return new JavaScriptSerializer().Serialize(heatmapData);
                 }
             }
             catch (Exception ex)

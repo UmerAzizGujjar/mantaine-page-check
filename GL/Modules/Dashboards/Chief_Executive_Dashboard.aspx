@@ -629,4 +629,23 @@
 </div>
 
         </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="dashboard-card" style="border-radius: 20px; padding: 25px; background: #fff; border: 1px solid #f0f0f0; min-height: 400px;">
+
+                <div style="display: flex; align-items: center; margin-bottom: 25px;">
+                    <div style="background: #fef2f2; padding: 10px; border-radius: 10px; margin-right: 15px; color: #ef4444;">
+                        <i class="fa fa-map-marker" style="font-size: 18px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: #4b5563; text-transform: uppercase; letter-spacing: 1px;">Regional Patient Heatmap</h4>
+                        <small style="color: #94a3b8; font-weight: 600;">Distribution by Location</small>
+                    </div>
+                </div>
+
+                <div id="heatmapContainer" style="display: flex; flex-direction: column; gap: 15px;">
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
