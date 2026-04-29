@@ -4827,6 +4827,7 @@
             $("#btnXray").removeClass("btn-danger").addClass("btn-info");
             $('#btnultrasound').removeClass('btn-danger').addClass('btn-info');
             $("#btnCTscan").removeClass("btn-danger").addClass("btn-info");
+
             var ddlXRayLF_ID = IsRotationShow ? $('#ddlXRayLF option:selected').val() : "0";
             var ddl_XRayLF_Name = $('#ddlXRayLF option:selected').text();
             var ddlXRayLF_Namevalue = ',' + ddl_XRayLF_Name;
@@ -4834,64 +4835,84 @@
             var Result = 'Result';
             var test = $('#ddlTestList').val();
             var date = '<%= DateTime.Now%>';
-            var IsRotationShow = $('#divRotation').is(":visible");
-            var Rotation_ID = IsRotationShow ? $('#ddlRotation option:selected').val() : "0";
-            var Rotation_Name = IsRotationShow ? $('#ddlRotation option:selected').text() : " ";
+         var IsRotationShow = $('#divRotation').is(":visible");
+         var Rotation_ID = IsRotationShow ? $('#ddlRotation option:selected').val() : "0";
+         var Rotation_Name = IsRotationShow ? $('#ddlRotation option:selected').text() : " ";
 
-            $.ajax({
-                type: "POST",
-                url: "OutPatients.aspx/GetTestMainDepartmentDetails",
-                data: JSON.stringify({ TestID: test }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
+         $.ajax({
+             type: "POST",
+             url: "InPatientsCase.aspx/GetTestMainDepartmentDetails",
+             data: JSON.stringify({ TestID: test }),
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             success: function (data) {
+                 debugger;
 
+                 var MainDeptName = JSON.parse(data.d);
+                 TestMainDepartmentName = MainDeptName[0].TestMainDepartmentName123;
+                 MainDepartmentName = MainDeptName[0].estMainDepartmen;
 
-                    var MainDeptName = JSON.parse(data.d);
-                    TestMainDepartmentName = MainDeptName[0].TestMainDepartmentName123;
-                    MainDepartmentName = MainDeptName[0].estMainDepartmen;
-                    if (MainDepartmentName != "003") {
-                        ddlXRayLF_Namevalue = "";
-                        ddl_XRayLF_Name = "";
-                    }
-                    var doctorVal;
-                    var doctor;
-                    doctorVal = $('#tblDOctorNotes').find('tbody').find('td input[name=txtDoctorValue]').val();
+                 if (MainDepartmentName != "003") {
+                     ddlXRayLF_Namevalue = "";
+                     ddl_XRayLF_Name = "";
+                 }
 
+                 debugger;
+                 var doctorVal;
+                 var doctor;
+                 doctorVal = $('#tblDOctorNotes').find('tbody').find('td input[name=txtDoctorValue]').val();
+                 doctor = $('#tblDOctorNotes').find('tbody').find('td input[name=txtDoctorName]').val();
 
-                    doctor = $('#tblDOctorNotes').find('tbody').find('td input[name=txtDoctorName]').val();
+                 if (doctor == "" || doctor == undefined || doctor == null || doctor == "NULL" || doctor == "null") {
+                     doctor = "-";
+                 }
 
-                    if (doctor == "" || doctor == undefined || doctor == null || doctor == "NULL" || doctor == "null") {
-                        doctor = "-";
-                    }
+                 if (doctorVal == 0 || doctorVal == undefined) {
+                     doctorVal = "";
+                 }
 
+                 var areaOfIntrest = $('#ctl00_MainContent_txtAreaOfInterest').val();
+                 var SpecialTest = "";
 
-                    if (doctorVal == 0 || doctorVal == undefined) {
-                        doctorVal = "";
+                 // Create the row with txtDeptID for ALL departments (including 002)
+                 var row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + date + '</td>' +
+                     '<td><input type="hidden" name="testID" value="' + test + '" />' +
+                     '<input type="hidden" name="txtRecievedID"/>' +
+                     '<input type="hidden" name="txtIs_Result"/>' +
+                     '<input type="hidden" name="txtIsBIllied"/>' +
+                     '<input type="hidden" name="txtRotation" value="' + Rotation_ID + '">' +
+                     '<input type="hidden" name="txtddlXRayLF_Name" value="' + ddl_XRayLF_Name + '">' +
+                     // ADD THIS LINE - Include txtDeptID for department 002
+                     '<input type="hidden" name="txtDeptID" value="' + MainDepartmentName + '"/>' +
+                     TestMainDepartmentName + ', ' + $('#ddlTestList').find('option:selected').text() + ', ' +
+                     Rotation_Name + ddlXRayLF_Namevalue +
+                     '</td>' +
+                     '<td>No</td>' +
+                     '<td>' + Result + '</td>' +
+                     '<td><input type="hidden" name="txtSpecial_Test" value="' + SpecialTest + '"/>' +
+                     '<input type="hidden" name="txtArea_Of_Interest" value="' + areaOfIntrest + '"/> ' +
+                     areaOfIntrest +
+                     '</td>' +
+                     '<td>' + doctor + ' <input type="hidden" name="Docid" value="' + doctorVal + '"  </td>' +
+                     '<td><input type="hidden" name="rowid" value="' + uuid() + '" />' +
+                     '<a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a>' +
+                     '</td>' +
+                     '</tr>';
 
-                    }
+                 var test_array = $('.tests-table').find('input[name=testID][value="' + test + '"]');
 
-                    var areaOfIntrest = $('#ctl00_MainContent_txtAreaOfInterest').val();
-
-                    var SpecialTest = "";
-                    var row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + date + '</td><td><input type="hidden" name="testID" value="' + test + '" /> <input type="hidden" name="txtRecievedID"/><input type="hidden" name="txtIs_Result"/><input type="hidden" name="txtIsBIllied"/><input type="hidden" name="txtRotation" value="' + Rotation_ID + '"><input type="hidden" name="txtddlXRayLF_Name" value="' + ddl_XRayLF_Name + '">' + TestMainDepartmentName + ', ' + $('#ddlTestList').find('option:selected').text() + ', ' + Rotation_Name + ddlXRayLF_Namevalue + '</td><td>No</td><td>' + Result + '</td> <td><input type="hidden" name="txtSpecial_Test" value="' + SpecialTest + '"/><input type="hidden" name="txtArea_Of_Interest" value="' + areaOfIntrest + '"/> ' + areaOfIntrest + ' </td><td>' + doctor + ' <input type="hidden" name="Docid" value="' + doctorVal + '" </td> <td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
-
-                    var test_array = $('.tests-table').find('input[name=testID][value="' + test + '"]');
-                    if (test_array.length > 0) {
-                        alert('This test already added!');
-                    } else {
-                        $('.tests-table').append(row);
-                        $('#ctl00_MainContent_txtAreaOfInterest').val('');
-
-                    }
-                },
-                failure: function (response) {
-                    alert(response.d);
-                }
-
-            });
-
-        }
+                 if (test_array.length > 0) {
+                     alert('This test already added!');
+                 } else {
+                     $('.tests-table').append(row);
+                     $('#ctl00_MainContent_txtAreaOfInterest').val('');
+                 }
+             },
+             failure: function (response) {
+                 alert(response.d);
+             }
+         });
+     }
         function AddProcedureTest() {
             var Result = 'Result';
             var Procedure = $('#ddlTestList').val();
