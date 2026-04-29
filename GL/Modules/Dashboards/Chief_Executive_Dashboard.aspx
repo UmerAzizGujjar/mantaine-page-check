@@ -13,7 +13,7 @@
             LoadBillingData("today");
             LoadPharmacySnapshot("today");
             LoadDialysisLive("today");
-
+            LoadRegionalHeatmap("today");
 
             $("#ddlPeriod").change(function () {
                 var period = $(this).val();
@@ -27,6 +27,7 @@
                 LoadBillingData(period);
                 LoadPharmacySnapshot(period);
                 LoadDialysisLive(period);
+                LoadRegionalHeatmap(period);
             });
         });
 
@@ -390,6 +391,52 @@
                 },
                 error: function (error) {
                     console.error("Dialysis AJAX Error:", error);
+                }
+            });
+        }
+
+        function LoadRegionalHeatmap(period) {
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetRegionalHeatmap",
+                data: JSON.stringify({ 'period': period }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    const data = JSON.parse(response.d);
+                    const container = $('#heatmapContainer');
+                    container.empty();
+
+                    if (data.length === 0) {
+                        container.append('<div style="text-align:center; padding: 20px; color: #94a3b8;">No data available for this period</div>');
+                        return;
+                    }
+
+                    // Find max count to set relative widths
+                    const maxCount = data[0].Counts;
+
+                    data.forEach(item => {
+                        const percentage = (item.Counts / maxCount) * 100;
+
+                        const rowHtml = `
+                    <div style="display: grid; grid-template-columns: 120px 1fr 40px; align-items: center; gap: 15px;">
+                        <span style="font-size: 12px; font-weight: 700; color: #64748b; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" title="${item.AreaName}">
+                            ${item.AreaName}
+                        </span>
+                        <div style="width: 100%; background: #f8fafc; height: 12px; border-radius: 6px; overflow: hidden;">
+                            <div style="width: ${percentage}%; background: #6366f1; height: 100%; border-radius: 6px; transition: width 1s ease;" 
+                                 title="Total Patients: ${item.Counts}"></div>
+                        </div>
+                        <span style="font-size: 12px; font-weight: 800; color: #1e293b; text-align: right;">
+                            ${item.Counts}
+                        </span>
+                    </div>
+                `;
+                        container.append(rowHtml);
+                    });
+                },
+                error: function (error) {
+                    console.error("Heatmap Error:", error);
                 }
             });
         }

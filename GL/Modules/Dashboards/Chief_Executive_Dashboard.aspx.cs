@@ -626,20 +626,26 @@ namespace PMS.Modules.Dashboards
                             break;
                     }
 
-
-                    var heatmapData = (from rg in db.Reg_patients
+                    var groupedData = (from rg in db.Reg_patients
                                        join p in db.Patients on rg.pat_id equals p.Reg_PatId
                                        where p.Created_Time >= startDate && p.Created_Time <= endDate
                                        group rg by rg.val_area into g
                                        select new
                                        {
-                                           AreaName = g.Key,
+                                           AreaID = g.Key,
                                            Counts = g.Count()
-                                       })
-                                       .Where(x => x.Counts > 0)
-                                       .OrderByDescending(x => x.Counts)
-                                       .Take(10)
-                                       .ToList();
+                                       }).ToList();
+
+                    var heatmapData = groupedData.Select(x => new
+                    {
+                        AreaName = string.IsNullOrEmpty(x.AreaID)
+                                   ? "Not Specified"
+                                   : db.GetDataValueName("Area", x.AreaID),
+                        Counts = x.Counts
+                    })
+                    .OrderByDescending(x => x.Counts)
+                    .Take(10)
+                    .ToList();
 
                     return new JavaScriptSerializer().Serialize(heatmapData);
                 }
