@@ -1067,7 +1067,7 @@ namespace PMS
                                            && pds.Test_ID == test.Test_ID.ToString()
                                      select pds.Rate).FirstOrDefault();
 
-                    if (panelRate.HasValue)
+                    if (panelRate.HasValue && panelRate.Value > 0)
                     {
                         finalRate = panelRate.Value;
                     }
@@ -1101,7 +1101,7 @@ namespace PMS
                                            && pds.GroupCategory == groups.Catagory_ID
                                      select pds.Rate).FirstOrDefault();
 
-                    if (panelRate.HasValue)
+                    if (panelRate.HasValue && panelRate.Value > 0)
                     {
                         finalRate = panelRate.Value;
                     }
