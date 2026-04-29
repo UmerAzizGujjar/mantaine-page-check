@@ -19,6 +19,14 @@
             $('#txtHospitalRefund, #txtDoctorRefund').on('input', updateTotalRefund);
             updateTotalRefund();
             $('#TotalRefundAmount').prop('disabled', true);
+
+            $('#txtRefundDate').datepicker({
+                dateFormat: 'mm/dd/yy',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: '2000:2030',
+                defaultDate: new Date()
+            });
         });
 
         function LoadPatientDetails(refundID) {
@@ -62,6 +70,15 @@
             $('#txtHospitalShare').val((data.Hospital_share || 0).toFixed(2));
             $('#txtActualAmount').val((data.Actual_amount || 0).toFixed(2));
 
+            if (data.Refund_Date) {
+                var refundDate = parseAspNetDate(data.Refund_Date);
+                if (refundDate) {
+                    $('#txtRefundDate').val($.datepicker.formatDate('mm/dd/yy', refundDate));
+                }
+            } else {
+                $('#txtRefundDate').val($.datepicker.formatDate('mm/dd/yy', new Date()));
+            }
+
             $('#btnSave').val('Update');
 
             if (data.Status === "Approved") {
@@ -69,6 +86,7 @@
                 $('#txtHospitalRefund').prop('disabled', true);
                 $('#txtDoctorRefund').prop('disabled', true);
                 $('#txtRemarks').prop('disabled', true);
+                $('#txtRefundDate').prop('disabled', true);
                 $('#colSave').hide();
                 $('#colApprove').hide();
                 $('#colPrint').show();
@@ -168,6 +186,7 @@
                     $('#txtDoctorAmount').val(p.Doctor_Amount);
                     $('#txtHospitalShare').val(p.Hospital_share);
                     $('#txtActualAmount').val(p.Actual_amount);
+                    $('#txtRefundDate').val($.datepicker.formatDate('mm/dd/yy', new Date()));
                     $('#colApprove').hide();
                     $('#colPrint').hide();
                     $('#colSave').show();
@@ -192,6 +211,11 @@
 
             var maxHospitalShare = parseFloat($("#txtHospitalShare").val()) || 0;
             var maxDoctorAmount = parseFloat($("#txtDoctorAmount").val()) || 0;
+
+            var refundDate = $('#txtRefundDate').val();
+            if (!refundDate) {
+                refundDate = $.datepicker.formatDate('mm/dd/yy', new Date());
+            }
 
             if (HospitalRefund > maxHospitalShare) {
                 Swal.fire({
@@ -240,7 +264,7 @@
                 Patient_ID: $("#hdPatientID").text(),
                 Reg_PatId: $("#hdRegPatId").val(),
                 OPD_No: $("#txtOPD_NO").val(),
-                Refund_Date: $("#txtAdvanceDate").val(),
+                Refund_Date: refundDate,
                 Hospital_Refund: HospitalRefund,
                 Doctor_Refund: DoctorRefund,
                 Remarks: $("#txtRemarks").val()
@@ -365,7 +389,6 @@
     <div class="container-fluid">
         <input type="hidden" id="hdRegPatId" />
         <input type="hidden" id="hdPatientID" />
-        <input type="hidden" id="txtAdvanceDate" value="<%= DateTime.Now.ToString("MM/dd/yyyy") %>" /> 
         
         <div class="row">
             <div class="col-lg-5 col-md-5 col-sm-12">
@@ -499,11 +522,15 @@
                 <label>Total Refund</label>
                 <input type="text" id="TotalRefundAmount" class="form-control text-right" />
             </div>
-
+            <div class="col-lg-2 col-md-6 col-sm-12">
+                <label>Refund Date</label>
+                <input type="text" id="txtRefundDate" class="form-control datepicker" />
+            </div>
             <div class="col-lg-2 col-md-6 col-sm-12">
                 <label>Remarks</label>
                 <input type="text" id="txtRemarks" class="form-control" />
             </div>
+            
         </div>
         
         <div class="row mt-3" id="divActionButtons">

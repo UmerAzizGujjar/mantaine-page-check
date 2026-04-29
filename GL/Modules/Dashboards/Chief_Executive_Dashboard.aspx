@@ -11,6 +11,7 @@
             LoadOPDVolume("today");
             LoadWaitTimeTrends("today");
             LoadBillingData("today");
+            LoadPharmacySnapshot("today");
 
 
             $("#ddlPeriod").change(function () {
@@ -22,7 +23,8 @@
                 LoadOPDChart(period);
                 LoadOPDVolume(period);
                 LoadWaitTimeTrends(period);
-                LoadWaitTimeTrends(period);
+                LoadBillingData(period);
+                LoadPharmacySnapshot(period);
             });
         });
 
@@ -239,6 +241,8 @@
             });
         }
 
+        var chartBilling = null; // Variable to hold the ApexChart instance
+
         function LoadBillingData(period) {
             $.ajax({
                 type: "POST",
@@ -248,16 +252,113 @@
                 dataType: "json",
                 success: function (response) {
                     var r = JSON.parse(response.d);
-
                     $('#lblLabOrders').text(r.LabCount);
                     $('#lblUltrasoundOrders').text(r.UltrasoundCount);
                     $('#lblXRayOrders').text(r.XRayCount);
                     $('#lblCardioOrders').text(r.CardioCount);
                     $('#lblPhysioCount').text(r.PhysioCount);
 
-
                     var totalDiag = r.LabCount + r.UltrasoundCount + r.XRayCount + r.CardioCount;
                     $('#lblDiagCount').text(totalDiag);
+                    var options = {
+                        series: [{
+                            name: 'Orders',
+                            data: [r.LabCount, r.UltrasoundCount, r.XRayCount, r.CardioCount]
+                        }],
+                        chart: {
+                            type: 'bar',
+                            height: 150,
+                            toolbar: { show: false }
+                        },
+                        colors: ['#5c6bc0'],
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 4,
+                                columnWidth: '45%',
+                                distributed: false,
+                            }
+                        },
+                        dataLabels: { enabled: false },
+                        xaxis: {
+                            categories: ['LAB', 'U/S', 'X-RAY', 'CARDIO'],
+                            axisBorder: { show: false },
+                            axisTicks: { show: false }
+                        },
+                        yaxis: { show: false },
+                        grid: { show: false }
+                    };
+
+                    if (chartBilling) {
+                        chartBilling.destroy();
+                    }
+
+                    chartBilling = new ApexCharts(document.querySelector("#billingChart"), options);
+                    chartBilling.render();
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error: " + error);
+                }
+            });
+        }
+
+        var pharmacyDistChart = null;
+
+        function LoadPharmacySnapshot(period) {
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetPharmacySnapshot",
+                data: JSON.stringify({ 'period': period }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var r = JSON.parse(response.d);
+
+                    $('#lblPhHospital').text(r.HospitalCount);
+                    $('#lblPhWalkin').text(r.WalkinCount);
+
+                    var options = {
+                        series: [r.HospitalCount, r.WalkinCount],
+                        chart: {
+                            type: 'donut',
+                            height: 280,
+                            toolbar: { show: false }
+                        },
+                        labels: ['Hospital', 'Walk-in'],
+                        colors: ['#10b981', '#94a3b8'],
+                        stroke: {
+                            show: true,
+                            width: 5, 
+                            colors: ['#ffffff']
+                        },
+                        plotOptions: {
+                            pie: {
+                                startAngle: 0,
+                                endAngle: 360,
+                                expandOnClick: false,
+                                donut: {
+                                    size: '75%',
+                                    labels: {
+                                        show: false
+                                    }
+                                }
+                            }
+                        },
+                        fill: {
+                            type: 'solid'
+                        },
+                        dataLabels: { enabled: false },
+                        legend: {
+                            position: 'bottom',
+                            markers: { radius: 12 }
+                        },
+                        tooltip: { enabled: true }
+                    };
+
+                    if (pharmacyDistChart) {
+                        pharmacyDistChart.destroy();
+                    }
+                    pharmacyDistChart = new ApexCharts(document.querySelector("#chartPharmacyDistribution"), options);
+                    pharmacyDistChart.render();
                 }
             });
         }
@@ -390,13 +491,16 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-4">
         <div class="card" style="border-radius: 15px; padding: 20px; background: #fff; border: 1px solid #f0f0f0;">
             <div style="display: flex; align-items: center; margin-bottom: 20px; color: #5c6bc0;">
                 <i class="fa fa-file-text-o" style="margin-right: 10px;"></i>
                 <span style="font-weight: bold; text-transform: uppercase; font-size: 13px;">Lab & Radiology</span>
             </div>
 
-            <div id="chartContainer" style="height: 150px; margin-bottom: 20px;"></div>
+            <div style="height: 150px; margin-bottom: 20px;">
+                <div id="billingChart"></div>
+            </div>
 
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 <div style="display: flex; justify-content: space-between; font-size: 12px;">
@@ -418,4 +522,33 @@
             </div>
         </div>
     </div>
+        <div class="col-lg-4">
+    <div class="revenue-card" style="border-radius: 20px; padding: 25px; background: #fff; border: 1px solid #f0f0f0; border-left: none; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+        
+        <div style="display: flex; align-items: center; margin-bottom: 25px;">
+            <div style="background: #ecfdf5; padding: 8px; border-radius: 8px; margin-right: 12px; color: #10b981;">
+                <i class="fa fa-database"></i>
+            </div>
+            <span style="font-weight: 800; text-transform: uppercase; font-size: 13px; color: #4b5563; letter-spacing: 0.5px;">Pharmacy Branch 1</span>
+        </div>
+
+        <div style="height: 250px; margin-bottom: 30px;">
+            <div id="chartPharmacyDistribution"></div>
+        </div>
+
+        <div style="display: flex; gap: 15px;">
+            <div style="flex: 1; background: #f9fafb; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #f3f4f6;">
+                <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; font-weight: 800; margin-bottom: 5px;">Hospital</div>
+                <div style="font-size: 22px; font-weight: 800; color: #1f2937;" id="lblPhHospital">0</div>
+            </div>
+            <div style="flex: 1; background: #f9fafb; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #f3f4f6;">
+                <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase; font-weight: 800; margin-bottom: 5px;">Walk-in</div>
+                <div style="font-size: 22px; font-weight: 800; color: #1f2937;" id="lblPhWalkin">0</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+        </div>
 </asp:Content>

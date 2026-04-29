@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -479,6 +480,56 @@ namespace PMS.Modules.Dashboards
                 return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
             }
         }
+
+        [WebMethod]
+        public static string GetPharmacySnapshot(string period)
+        {
+            try
+            {
+                DateTime startDate = DateTime.Today;
+                DateTime endDate = DateTime.Now;
+                DateTime now = DateTime.Now;
+
+                switch (period.ToLower())
+                {
+                    case "week":
+                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
+                        startDate = now.AddDays(-1 * diff).Date;
+                        break;
+                    case "month":
+                        startDate = new DateTime(now.Year, now.Month, 1);
+                        break;
+                    case "year":
+                        startDate = new DateTime(now.Year, 1, 1);
+                        break;
+                    default:
+                        startDate = DateTime.Today;
+                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                        break;
+                }
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var pharmacyBills = from bill in db.Ar_Billings
+                                        where bill.IsPharmacy == true
+                                        && bill.Creation_Date >= startDate
+                                        && bill.Creation_Date <= endDate
+                                        select bill;
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        HospitalCount = pharmacyBills.Count(b => b.Patient_ID > 0),
+                        WalkinCount = pharmacyBills.Count(b => b.Patient_ID == 0 || b.Patient_ID == null),
+                        Total = pharmacyBills.Count()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
 
     }
 }
