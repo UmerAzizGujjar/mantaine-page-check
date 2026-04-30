@@ -363,6 +363,8 @@ namespace PMS.Modules.PatientManagement
 
                         if (pat == null)
                             return "ERROR: Patient record not found.";
+                        pat.updated_by = AppConfig.UserID;
+                        pat.updated_time = DateTime.Now;                       
                     }
                     else
                     {

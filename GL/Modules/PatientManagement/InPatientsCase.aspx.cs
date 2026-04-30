@@ -4483,7 +4483,7 @@ namespace PMS
                         {
                             oIn_Patient_Medicine1.Start_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Start_Date_Time);
                         }
-                        if (oIn_Patient_Medicine.Stop_Date_Time == null || oIn_Patient_Medicine.Stop_Date_Time== "null" || oIn_Patient_Medicine.Stop_Date_Time == "") { }
+                        if (oIn_Patient_Medicine.Stop_Date_Time == null || oIn_Patient_Medicine.Stop_Date_Time== "null" || oIn_Patient_Medicine.Stop_Date_Time == ""|| oIn_Patient_Medicine.Stop_Date_Time == " ") { }
                         else
                         {
                             oIn_Patient_Medicine1.Stop_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Stop_Date_Time);

@@ -896,7 +896,7 @@
                      
                     }
 
-                    //checkcardvalidation();
+                    checkcardvalidation();
 
                 },
                 error: function (response) {
@@ -905,8 +905,159 @@
                 }
             });
         }
+        var cardvalidation;
+        function checkcardvalidation() {
+
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/Getcardvalidation",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    debugger;
+                    cardvalidation = JSON.parse(response.d);
+                    if (cardvalidation == '01') {
+                        var reg_id = '<%= Request.QueryString["ID"] %>'
+                var reffered_id = '<%= Request.QueryString["Reffered_id"] %>'
+
+                if (reffered_id == "") {
+                    checkcardfee(reg_id);
+                }
+
+            }
+
+        },
+        error: function (error) {
+            console.error("Error fetching items", error);
+        }
+    });
+}
+        function checkcardfee(reg_id) {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/CheckCardFee",
+                data: JSON.stringify({ reg_id: reg_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = JSON.parse(response.d);
+
+                    if (!data.hasCardFee) {
+                        Swal.fire({
+                            title: 'No Card Fee Found',
+                            text: 'This patient has no card fee. Would you like to charge one?',
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, Charge Fee',
+                            cancelButtonText: 'Cancel',
+                            reverseButtons: true,
+                            allowOutsideClick: false, // 👈 Prevent closing on backdrop click
+                            allowEscapeKey: false     // 👈 Optional: also prevent Esc key dismissal
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                chargeCardFee(reg_id);
+                            } else {
+                                // Any dismissal (cancel, backdrop, esc) → disable save
+                                $('#btnsave').prop('disabled', true);
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Action Required',
+                                    text: 'Card fee must be charged for first time register.',
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                    allowOutsideClick: false
+                                });
+                            }
+                        });
+                    } else {
+                        $('#btnsave').prop('disabled', false);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Card Fee Exists',
+                            text: 'Card fee is already charged for this patient.',
+                            timer: 2500,
+                            showConfirmButton: false,
+                            allowOutsideClick: false
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: xhr.responseText || 'Failed to check card fee.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        allowOutsideClick: false,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                }
+            });
+        }
+        function chargeCardFee(reg_id) {
+
+            Approveviasysparams(reg_id);
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/ChargeCardFee", // ← Replace with your actual page name
+                data: JSON.stringify({ reg_id: reg_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var data = response.d;
+
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
 
 
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Network Error!',
+                        text: 'Failed to connect to server.',
+                        timer: 2500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+
+
+        }
+        function Approveviasysparams(pat_id) {
+            PageMethods.ApproveRegpatient(pat_id, function (Tests) {
+                debugger
+                var message = JSON.parse(Tests);
+                if (message[0].Message != null || message[0].Message != "") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: message[0].Message,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+
+                }
+            });
+        }
         var CNICs;
         function CheckCNICUpdateonCondition() {
 

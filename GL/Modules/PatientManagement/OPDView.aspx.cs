@@ -26,7 +26,7 @@ namespace PMS.Modules.PatientManagement
         {
             // Get permission value from DB function (returns '0' or '1' as string)
             string allowValue = DBClass.getField(
-                $"SELECT dbo.GetRights('AllowPatientDelete', '{AppConfig.UserID}')"
+                $"SELECT dbo.GetRights('AllowPatientEdit', '{AppConfig.UserID}')"
             );
 
             // Treat null/empty as '0' (not allowed) for safety

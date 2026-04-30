@@ -306,6 +306,7 @@ namespace PMS.Modules.PatientManagement
                     Remarks = refund.Remarks ?? "",
                     Advance_Date = refund.Refund_Date ?? refund.Creation_Date,
                     Advance_Amount = refund.Refund_Amount,
+                    Refund_Date = refund.Refund_Date,
                     OPD_No = refund.OPD_No,
                     Hospital_Refund = refund.Hospital_Refund,
                     Doctor_Refund = refund.Doctor_Refund,

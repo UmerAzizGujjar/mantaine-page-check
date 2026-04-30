@@ -11146,13 +11146,6 @@
       <Column Name="G_Phone" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.SpApprove_OPDRefund" Method="SpApprove_OPDRefund">
-    <Parameter Name="Pat_ID" Parameter="pat_ID" Type="System.Int64" DbType="BigInt" />
-    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="SpApprove_OPDRefundResult">
-      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_YearlyInventorySummary" Method="sp_YearlyInventorySummary">
     <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_YearlyInventorySummaryResult">
@@ -12052,6 +12045,13 @@
       <Column Name="Item_Name" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
       <Column Name="Actual_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Referred_By" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SpApprove_OPDRefund" Method="SpApprove_OPDRefund">
+    <Parameter Name="Pat_ID" Parameter="pat_ID" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="SpApprove_OPDRefundResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

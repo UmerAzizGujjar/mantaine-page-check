@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -479,6 +480,182 @@ namespace PMS.Modules.Dashboards
                 return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
             }
         }
+
+        [WebMethod]
+        public static string GetPharmacySnapshot(string period)
+        {
+            try
+            {
+                DateTime startDate = DateTime.Today;
+                DateTime endDate = DateTime.Now;
+                DateTime now = DateTime.Now;
+
+                switch (period.ToLower())
+                {
+                    case "week":
+                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
+                        startDate = now.AddDays(-1 * diff).Date;
+                        break;
+                    case "month":
+                        startDate = new DateTime(now.Year, now.Month, 1);
+                        break;
+                    case "year":
+                        startDate = new DateTime(now.Year, 1, 1);
+                        break;
+                    default:
+                        startDate = DateTime.Today;
+                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                        break;
+                }
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var pharmacyBills = from bill in db.Ar_Billings
+                                        where bill.IsPharmacy == true
+                                        && bill.Creation_Date >= startDate
+                                        && bill.Creation_Date <= endDate
+                                        select bill;
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        HospitalCount = pharmacyBills.Count(b => b.Patient_ID > 0),
+                        WalkinCount = pharmacyBills.Count(b => b.Patient_ID == 0 || b.Patient_ID == null),
+                        Total = pharmacyBills.Count()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string GetDialysisSnapshot(string period)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    DateTime startDate = DateTime.Today;
+                    DateTime endDate = DateTime.Now;
+                    DateTime now = DateTime.Now;
+
+
+                    switch (period.ToLower())
+                    {
+                        case "week":
+                            int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
+                            startDate = now.AddDays(-1 * diff).Date;
+                            break;
+                        case "month":
+                            startDate = new DateTime(now.Year, now.Month, 1);
+                            break;
+                        case "year":
+                            startDate = new DateTime(now.Year, 1, 1);
+                            break;
+                        default:
+                            startDate = DateTime.Today;
+                            endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                            break;
+                    }
+
+                    var registrations = db.Patients.Where(p =>
+                        p.Patient_Main_Category == "042" &&
+                        p.Entry_Date >= startDate &&
+                        p.Entry_Date <= endDate
+                    ).ToList();
+
+                    var regIds = registrations.Select(p => p.Reg_PatId).ToList();
+                    var sessions = db.Out_Patients.Where(op =>
+                        regIds.Contains(op.Reg_PatId) &&
+                        op.Created_Time >= startDate &&
+                        op.Created_Time <= endDate
+                    ).ToList();
+
+                    int performedCount = registrations.Count;
+
+                    int activeCount = registrations.Count(r => {
+                        var session = sessions.OrderByDescending(s => s.Created_Time)
+                                              .FirstOrDefault(s => s.Reg_PatId == r.Reg_PatId);
+
+                        return session == null || (session.Discharge != true);
+                    });
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        ActiveSessions = activeCount,
+                        PerformedToday = performedCount,
+                        ActiveNow = activeCount 
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string GetRegionalHeatmap(string period)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    DateTime startDate = DateTime.Today;
+                    DateTime endDate = DateTime.Now;
+                    DateTime now = DateTime.Now;
+
+                    switch (period.ToLower())
+                    {
+                        case "week":
+                            int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
+                            startDate = now.AddDays(-1 * diff).Date;
+                            break;
+                        case "month":
+                            startDate = new DateTime(now.Year, now.Month, 1);
+                            break;
+                        case "year":
+                            startDate = new DateTime(now.Year, 1, 1);
+                            break;
+                        case "today":
+                        default:
+                            startDate = DateTime.Today;
+                            endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                            break;
+                    }
+
+                    var groupedData = (from rg in db.Reg_patients
+                                       join p in db.Patients on rg.pat_id equals p.Reg_PatId
+                                       where p.Created_Time >= startDate && p.Created_Time <= endDate
+                                       group rg by rg.val_area into g
+                                       select new
+                                       {
+                                           AreaID = g.Key,
+                                           Counts = g.Count()
+                                       }).ToList();
+
+                    var heatmapData = groupedData.Select(x => new
+                    {
+                        AreaName = string.IsNullOrEmpty(x.AreaID)
+                                   ? "Not Specified"
+                                   : db.GetDataValueName("Area", x.AreaID),
+                        Counts = x.Counts
+                    })
+                    .OrderByDescending(x => x.Counts)
+                    .Take(10)
+                    .ToList();
+
+                    return new JavaScriptSerializer().Serialize(heatmapData);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
 
     }
 }

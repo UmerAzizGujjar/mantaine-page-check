@@ -982,11 +982,13 @@ namespace PMS
         partial void UpdateReg_patient(Reg_patient instance);
         partial void DeleteReg_patient(Reg_patient instance);
         #endregion
+
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -5269,13 +5271,6 @@ namespace PMS
             return ((ISingleResult<sp_GetInPatientDetailResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPDRefund")]
-        public ISingleResult<SpApprove_OPDRefundResult> SpApprove_OPDRefund([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, user_id);
-            return ((ISingleResult<SpApprove_OPDRefundResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_YearlyInventorySummary")]
         public ISingleResult<sp_YearlyInventorySummaryResult> sp_YearlyInventorySummary([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Year", DbType = "Int")] System.Nullable<int> year)
         {
@@ -5456,6 +5451,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), search);
             return ((ISingleResult<Sp_GetLast24Hours_TestResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.SpApprove_OPDRefund")]
+        public ISingleResult<SpApprove_OPDRefundResult> SpApprove_OPDRefund([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Pat_ID", DbType = "BigInt")] System.Nullable<long> pat_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "UniqueIdentifier")] System.Nullable<System.Guid> user_id)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), pat_ID, user_id);
+            return ((ISingleResult<SpApprove_OPDRefundResult>)(result.ReturnValue));
         }
     }
 
@@ -212545,32 +212547,6 @@ namespace PMS
         }
     }
 
-    public partial class SpApprove_OPDRefundResult
-    {
-
-        private string _Message;
-
-        public SpApprove_OPDRefundResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
-        public string Message
-        {
-            get
-            {
-                return this._Message;
-            }
-            set
-            {
-                if ((this._Message != value))
-                {
-                    this._Message = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_YearlyInventorySummaryResult
     {
 
@@ -226184,6 +226160,32 @@ namespace PMS
                 if ((this._Referred_By != value))
                 {
                     this._Referred_By = value;
+                }
+            }
+        }
+    }
+
+    public partial class SpApprove_OPDRefundResult
+    {
+
+        private string _Message;
+
+        public SpApprove_OPDRefundResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Message", DbType = "VarChar(300)")]
+        public string Message
+        {
+            get
+            {
+                return this._Message;
+            }
+            set
+            {
+                if ((this._Message != value))
+                {
+                    this._Message = value;
                 }
             }
         }
