@@ -164,7 +164,7 @@ namespace PMS
                     }
                     else if (transType == "ACV")
                     {
-                        VoucherId = DBClass.getField("select Voucher_ID from Student_Receipt where student_receipt_id = " + transID).ToString();
+                        VoucherId = DBClass.getField("select Voucher_ID_Accrued from Student_Receipt where student_receipt_id = " + transID).ToString();
                     }
                     else if (transType == "OPDShare")
                     {
@@ -1754,14 +1754,14 @@ namespace PMS
 
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
-                string Roll_No = Convert.ToString(Request.QueryString["Roll_No"]);
+                string Class_No = Convert.ToString(Request.QueryString["Class_No"]);
 
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Address", companyAddress);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@Stdate", sqlStartDateTime);
                 rd.SetParameterValue("@enDate", sqlEndDateTime);
-                rd.SetParameterValue("@Roll_No", Roll_No);
+                rd.SetParameterValue("@Class_No", Class_No);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
 

@@ -10,7 +10,17 @@
 
         });
         function PrintTest(id) {
-            window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
+            debugger;
+            var locationInfo = window.location;
+            var url = '/ReportViewer.aspx?ReportName=ChallanPrint&ReportTitle=Student Challan Print&TransID=' + id + '';
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/ReportViewer.aspx?ReportName=ChallanPrint&ReportTitle=Student Challan Print&TransID=' + id + '';
+            }
+            window.open(url, '_blank');
+
         }
 
         function LoadPage() {
@@ -80,7 +90,7 @@
 
                             var Del = '<a href="#" class="delListBtn" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px;" onclick="cancelChallan(' + full.Challan_ID + ')"><i class="fa fa-trash"></i></a>';
 
-                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Test_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintTest(' + full.Challan_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             var result;
                             result = res + Del + print;
                             return result;

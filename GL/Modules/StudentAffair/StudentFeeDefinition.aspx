@@ -13,6 +13,7 @@
 
             var date = '<%= DateTime.Now%>';
             $("#txt_feedate").datepicker({ dateFormat: 'mm/dd/yy' }).attr('readonly', 'readonly');
+            $("#txt_feedate").val($.datepicker.formatDate('dd M yy', new Date()));
 
             date = moment(date).format('L');
 
