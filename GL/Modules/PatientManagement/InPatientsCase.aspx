@@ -4989,6 +4989,11 @@
                     $('#ddlXRayLF').hide();
                     $('#divRotation').hide();
                 }
+                else if (maindpt == "008") {  
+                    AddRadialogyTest();  
+                    $('#divRotation').hide();
+                    $('#ddlXRayLF').hide();
+                }
                 else if (maindpt == "009") {
                     AddRadialogyTest('009');
                     $('#divRotation').hide();
