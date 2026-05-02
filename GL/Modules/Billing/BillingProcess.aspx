@@ -8099,7 +8099,7 @@
                     <div id="QueueList">
 
 
-                        <div class="table-responsive previewTable" style="overflow:scroll;" >
+                        <div class="table-responsive previewTable" style="overflow:scroll;overflow-x: scroll;height: 433px;" >
                             <table class="table table-hover table-striped table-bordered" id="tblPendingPatients" style="overflow: scroll; height: auto;">
                                 <thead id="ihead">
                                     <tr>
