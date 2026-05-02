@@ -1472,9 +1472,7 @@
                         $('#btnApprove').show();
                     }
 
-                    setTimeout(function () {
-                        $('#ddlpanel').val(data[0].Panel_Id).trigger('change');
-                    }, 1000)
+                   
 
                     setTimeout(function () {
                         $('#ddlCashInHand').val(data[0].Cash_In_Hand_Account).trigger('change');
@@ -1493,6 +1491,10 @@
                     setTimeout(function () {
                         $('#ddlReffered_By').val(data[0].Referred_By);
                     }, 1000)
+
+                    setTimeout(function () {
+                        $('#ddlpanel').val(data[0].Panel_Id).trigger('change');
+                    }, 2000)
 
                     var Bill_ID = '<%= Request.QueryString["Bill_ID"]%>';
                     if (Bill_ID != "") {
