@@ -132,6 +132,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlStock;
 
         /// <summary>
+        /// tr_Export control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tr_Export;
+
+        /// <summary>
+        /// chkExportPDF control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkExportPDF;
+
+        /// <summary>
         /// warehouseDiv control.
         /// </summary>
         /// <remarks>
