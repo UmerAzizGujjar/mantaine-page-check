@@ -37,6 +37,7 @@ namespace PMS
                         enDate.Visible = false;
                         levelChekBox.Visible = true;
                         HideZerroBalance.Visible = true;
+                        ExportDiv.Visible = true;
                         break;
                     case "BSC":
                         DateDiv.Visible = true;
@@ -49,6 +50,7 @@ namespace PMS
                         AccountDiv.Visible = false;
                         levelChekBox.Visible = true;
                         HideZerroBalance.Visible = true;
+                        ExportDiv.Visible = true;
                         break;
                     case "VL":
                         phMultiLedger.Visible = false;
@@ -117,7 +119,7 @@ namespace PMS
                         AccountDiv.Visible = false;
                         plhAllAcounts.Visible = false;
                         HideZerroBalance.Visible = false;
-                        ExportDiv.Visible = false;
+                        ExportDiv.Visible = true;
                         DateDiv.Visible = true;
                         break;
                     case "PLD":
@@ -126,6 +128,7 @@ namespace PMS
                         HideZerroBalance.Visible = true;
                         AccountInfoDiv.Visible = true;
                         AccountDiv.Visible = false;
+                        ExportDiv.Visible = true;
                         break;
                     case "AB":
                         DateDiv.Visible = true;
@@ -143,6 +146,7 @@ namespace PMS
                         HideZerroBalance.Visible = true;
                         AccountInfoDiv.Visible = true;
                         AccountDiv.Visible = false;
+                        ExportDiv.Visible = true;
                         break;
                     case "DA":
                         DateDiv.Visible = true;
@@ -157,6 +161,7 @@ namespace PMS
                         DateDiv.Visible = true;
                         AccountInfoDiv.Visible = true;
                         AccountDiv.Visible = false;
+                        ExportDiv.Visible = true;
                         levelChekBox.Visible = false;
                         plhAllAcounts.Visible = false;
                         chbAllAccounts.Visible = true;
@@ -200,13 +205,15 @@ namespace PMS
 
                     case "TBD":
                         DateDiv.Visible = true;
-                        levelChekBox.Visible = false;
+                        levelChekBox.Visible = false; 
+                        ExportDiv.Visible = true;
                         AccountInfoDiv.Visible = false;
                         AccountDiv.Visible = false;
                         plhAllAcounts.Visible = false;
                         break;
                     case "TB":
                         DateDiv.Visible = true;
+                        ExportDiv.Visible = true;
                         levelChekBox.Visible = true;
                         AccountInfoDiv.Visible = false;
                         AccountDiv.Visible = false;
@@ -215,12 +222,14 @@ namespace PMS
                     case "TC":
                         DateDiv.Visible = true;
                         AccountInfoDiv.Visible = false;
+                        ExportDiv.Visible = true;
                         AccountDiv.Visible = false;
                         plhAllAcounts.Visible = false;
                         break;
                     case "TBDC":
                         levelChekBox.Visible = true;
                         plhAllAcounts.Visible = false;
+                        ExportDiv.Visible = true;
                         DateDiv.Visible = true;
                         levelChekBox.Visible = true;
                         HideZerroBalance.Visible = true;
@@ -231,6 +240,7 @@ namespace PMS
                         chbAllAccounts.Visible = false;
                         AccountInfoDiv.Visible = true;
                         AccountDiv.Visible = false;
+                        ExportDiv.Visible = true;
                         levelChekBox.Visible = false;
                         DateDiv.Visible = true;
                         CostCenterDiv.Visible = true;
@@ -269,6 +279,7 @@ namespace PMS
                         DepartmentDiv.Visible = true;
                         CostCenterDiv.Visible = true;
                         plhAllAcounts.Visible = true;
+                        ExportDiv.Visible = true;
                         DateDiv.Visible = true;
                         BindCostCenterDDL();
                         BindDepartmentDDL();
@@ -502,13 +513,13 @@ namespace PMS
                         query = "ReportName=InstallmentLedger&ReportTitle=Installment Ledger&Customer_ID=" + txtCustomer.Text + "&StartDate=" + Convert.ToDateTime(txtStart_Date.Text).ToString("dd-MMM-yy") + "&EndDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yy") + "&ProjectID=" + ddlCostCenter.SelectedValue.ToString() + "";
                         break;
                     case "PL":
-                        query = "ReportName=ProfitLoss&ReportTitle=Profit And Loss " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&StartDate=" + Convert.ToDateTime(txtStart_Date.Text).ToString("dd-MMM-yy") + "&EndDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yy");
+                        query = "ReportName=ProfitLoss&ReportTitle=Profit And Loss " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&StartDate=" + Convert.ToDateTime(txtStart_Date.Text).ToString("dd-MMM-yy") + "&EndDate=" + Convert.ToDateTime(txtEnd_Date.Text).ToString("dd-MMM-yy") + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "TB":
-                        query = "ReportName=TrailBalanceAt&ReportTitle=Trial Balance from  " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked;
+                        query = "ReportName=TrailBalanceAt&ReportTitle=Trial Balance from  " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "TBD":
-                        query = "ReportName=TrailByDate&ReportTitle=Trail Balance from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
+                        query = "ReportName=TrailByDate&ReportTitle=Trail Balance from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "TBDC":
                         if (txtStart_Code.Text != "" && txtEnd_Code.Text != "" && rbtAccountSelection.Checked == true)
@@ -521,7 +532,7 @@ namespace PMS
                             StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4");
                             EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4");
                         }
-                        query = "ReportName=TrailBalanceByDateCodeSelection&ReportTitle=Trail By Date With Code Level Selection " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked;
+                        query = "ReportName=TrailBalanceByDateCodeSelection&ReportTitle=Trail By Date With Code Level Selection " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "TBC":
                        
@@ -535,10 +546,10 @@ namespace PMS
                             StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4");
                             EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4");
                         }
-                        query = "ReportName=TrailForCostCenter&ReportTitle=Trail For Cost Center From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.Text + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&AllAccounts=" + rbtAll.Checked.ToString().ToLower();
+                        query = "ReportName=TrailForCostCenter&ReportTitle=Trail For Cost Center From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.Text + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&AllAccounts=" + rbtAll.Checked.ToString().ToLower() + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "LBC":
-                        query = "ReportName=LedgerForCostCenter&ReportTitle=Ledger For Cost Center  From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.SelectedValue + "&Department=" + ddlDepartment.SelectedValue + "&AllAccounts=" + chbAllAccounts.Checked + "&Account_Code=" + Account_Code + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text;
+                        query = "ReportName=LedgerForCostCenter&ReportTitle=Ledger For Cost Center  From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.SelectedValue + "&Department=" + ddlDepartment.SelectedValue + "&AllAccounts=" + chbAllAccounts.Checked + "&Account_Code=" + Account_Code + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "COA":
                         query = "ReportName=ChartOfAccount&ReportTitle=Chart Of Account &Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked;
@@ -581,13 +592,13 @@ namespace PMS
                                 DBClass.executeNonQueryWithoutBegin("Insert into rptSelectionParameters (Code) values  ('" + ddt.Rows[i]["Account_ID"] + "')");
 
                             }
-                            query = "ReportName=MultiLedger&ReportTitle=Account Ledger From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
+                            query = "ReportName=MultiLedger&ReportTitle=Account Ledger From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
                             break;
                         }
                         else
                         {
                             FillSelectionParameters();
-                            query = "ReportName=MultiLedger&ReportTitle=Account Ledger From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
+                            query = "ReportName=MultiLedger&ReportTitle=Account Ledger From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
                             break;
                         }
                     case "VL":
@@ -601,7 +612,7 @@ namespace PMS
                         query = "ReportName=Vendor_Balance&ReportTitle=Vendor Balance Report From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text ;
                         break;
                     case "TC":
-                        query = "ReportName=TrailComparison&ReportTitle=Trail Comparison From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
+                        query = "ReportName=TrailComparison&ReportTitle=Trail Comparison From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     //case "VB":
                     //    query = "ReportName=Vendor_Balance&ReportTitle=Vendor Balance Report From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text;
@@ -609,12 +620,12 @@ namespace PMS
                     case "BSD":
                         StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
                         EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
-                        query = "ReportName=BalanceSheetDetail&ReportTitle=Balance Sheet Detail as on " + txtStart_Date.Text + "&startDate=" + txtStart_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "";
+                        query = "ReportName=BalanceSheetDetail&ReportTitle=Balance Sheet Detail as on " + txtStart_Date.Text + "&startDate=" + txtStart_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "" + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "BSC":
                         StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
                         EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '1%' OR Account_Code LIKE '2%' OR Account_Code LIKE '3%')");
-                        query = "ReportName=BalanceSheetComparison&ReportTitle=Balance Sheet Comparison as on " + txtStart_Date.Text + " to " + txtComarison_DateFrom.Text + "&startDate=" + txtStart_Date.Text + "&ComarisonStartDate=" + txtComarison_DateFrom.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "";
+                        query = "ReportName=BalanceSheetComparison&ReportTitle=Balance Sheet Comparison as on " + txtStart_Date.Text + " to " + txtComarison_DateFrom.Text + "&startDate=" + txtStart_Date.Text + "&ComarisonStartDate=" + txtComarison_DateFrom.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "" + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "PLD":
                         if (txtStart_Code.Text != "" && txtEnd_Code.Text != "" && rbtAccountSelection.Checked == true)
@@ -627,7 +638,7 @@ namespace PMS
                             StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '4%' OR Account_Code LIKE '5%' OR Account_Code LIKE '6%' OR Account_Code LIKE '7%' OR Account_Code LIKE '8%')");
                             EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '4%' OR Account_Code LIKE '5%' OR Account_Code LIKE '6%' OR Account_Code LIKE '7%' OR Account_Code LIKE '8%')");
                         }
-                        query = "ReportName=ProfitLossDetail&ReportTitle=Profit And Loss Detail From" + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "";
+                        query = "ReportName=ProfitLossDetail&ReportTitle=Profit And Loss Detail From" + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "" + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "PLC":
                         if (txtStart_Code.Text != "" && txtEnd_Code.Text != "" && rbtAccountSelection.Checked == true)
@@ -640,7 +651,7 @@ namespace PMS
                             StartAccountCode = DBClass.getField("select ISNULL(min(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '4%' OR Account_Code LIKE '5%' OR Account_Code LIKE '6%' OR Account_Code LIKE '7%' OR Account_Code LIKE '8%')");
                             EndAccountCode = DBClass.getField("select ISNULL(max(account_code),0) as Min_AccountCode from GL_Accounts where Levels=4 and (Account_Code LIKE '4%' OR Account_Code LIKE '5%' OR Account_Code LIKE '6%' OR Account_Code LIKE '7%' OR Account_Code LIKE '8%')");
                         }
-                        query = "ReportName=ProfitLossComparison&ReportTitle=Profit And Loss Comparison " + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ComarisonStartDate=" + txtComarison_DateFrom.Text + "&ComparisonEndDate=" + txtComarison_DateTo.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "";
+                        query = "ReportName=ProfitLossComparison&ReportTitle=Profit And Loss Comparison " + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ComarisonStartDate=" + txtComarison_DateFrom.Text + "&ComparisonEndDate=" + txtComarison_DateTo.Text + "&Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&HideZeroBalance=" + cbHideZeroBalance.Checked + "" + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "TBB":
                         if (txtStart_Code.Text != "" && txtEnd_Code.Text != "" && rbtAccountSelection.Checked == true)

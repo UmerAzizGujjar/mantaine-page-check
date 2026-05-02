@@ -189,6 +189,7 @@ namespace PMS
 
                     default:
                         vendorDiv.Visible = true;
+                        warehouseDiv.Visible = false;
                         vendorTypeDiv.Visible = false;
                         lblVendor.Text = "Department";
                         System.Data.DataTable dtDept = DBClass.getDataTable("Select DataValue_Name,DataValue_Description FROM dbo.DataValues p JOIN dbo.ValueSet v ON p.ValueSet_ID = v.ValueSet_ID WHERE v.ValueSet_Description = 'Department'");
@@ -199,6 +200,7 @@ namespace PMS
                         ddlVendor.AppendDataBoundItems = true;
                         ddlVendor.DataBind();
                         stockDiv.Visible = false;
+                        tr_Export.Visible = true;
                         break;
                 }
             }
@@ -252,7 +254,7 @@ namespace PMS
                     query = "ReportName=GeneralLedger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
                     break;
                 default:
-                    query = "ReportName=Ledger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue;
+                    query = "ReportName=Ledger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
             }
             string path = @"../../ReportViewer.aspx?" + query;
