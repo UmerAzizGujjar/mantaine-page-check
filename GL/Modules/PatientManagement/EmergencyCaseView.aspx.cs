@@ -183,7 +183,8 @@ namespace PMS
                                       updated_time = EP.Created_Time,
 
                                       Patinet_Condition = _dbContext.GetDataValueName("Patient Condition", EP.Emergency_Pat_Condition),
-                                      AdmitDays = SqlMethods.DateDiffDay(EP.Admission_Date, DateTime.Now)
+                                      AdmitDays = SqlMethods.DateDiffDay(EP.Admission_Date, DateTime.Now),
+                                      DateOfDeath = EP.DateOfDeath
                                         };
 
                     if (filterStatus == "Admitted")
