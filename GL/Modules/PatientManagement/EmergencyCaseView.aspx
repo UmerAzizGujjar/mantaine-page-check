@@ -91,10 +91,10 @@
                     });
                 },
                 "columns": [
-                    { "data": "Emergency_ID", "visible": false, "width": "0%", "orderable": false },
-                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "10%" },
-                    { "data": "Full_Name", "width": "18%", "orderable": false },
-                    { "data": "Father_Name", "width": "18%", "orderable": false },
+                    { "data": "Emergency_ID", "name": "Emergency_ID", "width": "0%", "visible": false },
+                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%" },
+                    { "data": "Full_Name", "width": "12%", "orderable": false },
+                    { "data": "Father_Name", "width": "12%", "orderable": false },
                     {
                         "data": "Admission_Date",
                         "name": "Admission_Date",
@@ -104,33 +104,50 @@
                                 ? moment(date).format('DD-MMM-YYYY hh:mm:ss A')
                                 : "";
                         },
-                        "width": "15%",
+                        "width": "12%",
                         "orderable": false
                     },
                     {
-                        "data": "Discharge_On", "name": "Discharge_On",
+                        "data": "Discharge_On",
+                        "name": "Discharge_On",
                         "render": function (data, type, full) {
                             var date = full.Discharge_On;
-                            if (!date) {
-                                return "";
-                            }
-                            date = moment(date).format('DD-MMM-YYYY hh:mm:ss A');
-                            return date;
+                            if (!date) return "";
+                            return moment(date).format('DD-MMM-YYYY hh:mm:ss A');
                         },
                         "width": "10%"
                     },
-                    { "data": "AdmitDays", "width": "10%", "orderable": false },
+                    { "data": "AdmitDays", "width": "8%", "orderable": false },
                     {
-                        "data": "Patinet_Condition", "width": "10%", "orderable": false, "render": function (data, type, full) {
-                            if (data === "Immediate") {
-                                return "Short Stay";
-                            }
-                            else if (data === "OPD") {
-                                return "OPD";
-                            }
-                            else {
-                                return data;
-                            }
+                        "data": "Patinet_Condition",
+                        "width": "8%",
+                        "orderable": false,
+                        "render": function (data, type, full) {
+                            if (data === "Immediate") return "Short Stay";
+                            else if (data === "OPD") return "OPD";
+                            else return data;
+                        }
+                    },
+                    { "data": "CreatedBy", "width": "8%", "orderable": false },
+                    {
+                        "data": "Created_time",
+                        "width": "10%",
+                        "orderable": false,
+                        "render": function (data, type, full) {
+                            return (data && moment(data).isValid())
+                                ? moment(data).format('DD-MMM-YYYY hh:mm:ss A')
+                                : "";
+                        }
+                    },
+                    { "data": "updatedBy", "width": "8%", "orderable": false },
+                    {
+                        "data": "updated_time",
+                        "width": "10%",
+                        "orderable": false,
+                        "render": function (data, type, full) {
+                            return (data && moment(data).isValid())
+                                ? moment(data).format('DD-MMM-YYYY hh:mm:ss A')
+                                : "";
                         }
                     },
                     {
@@ -139,7 +156,9 @@
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintEmergencyPatient(' + full.Emergency_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                             return res + Del + print;
-                        }, "width": "15%", "orderable": false
+                        },
+                        "width": "10%",
+                        "orderable": false
                     }
                 ],
                 "createdRow": function (row, data, dataIndex) {
@@ -241,9 +260,9 @@
                 <div id="POdetails" style="margin-top: 15px;">
                     <div>
                         <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
-                            <thead id="ihead">
+                           <thead id="ihead">
                                 <tr>
-                                    <th>Admission Date</th>
+                                    <th>Emergency ID</th>
                                     <th>MR No.</th>
                                     <th>Patient Name</th>
                                     <th>Father/Husband Name</th>
@@ -251,6 +270,10 @@
                                     <th>Discharge Date</th>
                                     <th>No Of Days</th>
                                     <th>Patient Type</th>
+                                    <th>Created By</th>
+                                    <th>Created Time</th>
+                                    <th>Updated By</th>
+                                    <th>Updated Time</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

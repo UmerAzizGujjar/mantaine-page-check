@@ -5,9 +5,55 @@
 
         $(document).ready(function () {
             $('#ctl00_lblMessage').hide();
-            LoadPage();
+            //LoadPage();
+
+            loadClassOptions();
 
         });
+
+        function loadClassOptions() {
+            $.ajax({
+                type: "POST",
+                url: "StudentReceiptView.aspx/GetClassOptions",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var options = response.d || response;
+                    populateDropdown('#ddlFilterClass', options.Classes);
+                    initSelect2();
+                    LoadPage(); 
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error loading class options:", error);
+                    initSelect2();
+                    LoadPage();
+                }
+            });
+        }
+
+        function populateDropdown(selector, data) {
+            var $select = $(selector);
+            $select.empty();
+            $select.append('<option value="">All Classes</option>');
+            if (data && data.length > 0) {
+                $.each(data, function (index, item) {
+                    if (item) $select.append('<option value="' + item + '">' + item + '</option>');
+                });
+            }
+        }
+
+        function initSelect2() {
+            $('#ddlFilterClass').select2({
+                placeholder: "Select Class...",
+                allowClear: true,
+                width: 'resolve'
+            });
+
+            $('#ddlFilterClass').on('select2:select select2:unselect', function () {
+                if (dataTable) dataTable.ajax.reload();
+            });
+        }
+
         function PrintTest(id) {
             window.open('ReportViewer.aspx?ReportName=TestDefination&ReportTitle= Test Defination&Test_IDs=' + id);
         }
@@ -33,96 +79,93 @@
 
         }
                
-               function LoadPage() {
-                 $("#tbl").DataTable({
-                     "processing": true,
-                     "serverSide": true,
-                     "dom": 'lBfrtip',
-                     "lengthChange": true,
-                     "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'StudentReceipt.aspx'; } }, 'copy', 'excel', 'pdf'],
-                     "filter": true,
-                     "ajax": function (data, callback, settings) {
-                         $.ajax({
-                             type: "POST",
-                             url: "StudentReceiptView.aspx/ViewList",
-                             data: JSON.stringify({
-                                 draw: data.draw,
-                                 start: data.start,
-                                 length: data.length,
-                                 sortColumn: data.columns[data.order[0].column].name,
-                                 sortColumnDirection: data.order[0].dir,
-                                 searchValue: data.search.value
-                             }),
-                             contentType: "application/json; charset=utf-8",
-                             dataType: "json",
-                             success: function (response) {
-                                 callback({
-                                     draw: response.d.draw,
-                                     recordsTotal: response.d.recordsTotal,
-                                     recordsFiltered: response.d.recordsFiltered,
-                                     data: response.d.data
-                                 });
-                             },
-                             error: function (xhr, status, error) {
-                                 console.log(xhr.responseText);
-                             }
-                         });
-                     },
-                     "columns": [
-                         { "data": "Student_Receipt_ID", "visible": false, "width": "0%" },
-                         { "data": "Student_Receipt_No", "name":"Student_Receipt_No", "width": "8%", "orderable": true },
-                         {
-                             "data": "Student_Receipt_Date", "name": "Student_Receipt_Date",
-                             "render": function (data, type, full) {
-                                 debugger;
-                                 var date = full.Student_Receipt_Date;
-                                 date = moment(date).format('DD-MMM-YYYY');
-                                 return date;
-                             }, "width": "10%", "orderable": true
-                         },
-                         { "data": "Full_Name", "name":"Full_Name", "width": "8%", "orderable": true },
-                         { "data": "Class", "name":"Class", "width": "8%", },
-                         { "data": "Status", "width": "8%", "orderable": false },
-                         { "data": "RollNo", "width": "8%", "orderable": false },
-                         { "data": "Net_Payable", "width": "8%", "orderable": false },
-                         { "data": "Amount_Received", "width": "8%", "orderable": false },
-                         { "data": "Balance", "width": "8%", "orderable": false },
-                         { "data": "Remarks", "width": "8%", "orderable": false },
-                         {
-                             render: function (data, type, full) {
-                                 debugger;
-                                 var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Student_Receipt_ID + ', ' + full.Student_ID + ')" style="border-radius: 4px;  color: white; padding: 5px 8px; text-decoration: none; display: inline-block;"><i class="fa fa-pencil" style="color:white !important;"></i></a>';
-                                 var Del = '<a href="#" style="border-radius: 4px; background-color: #ad170c;margin-left: 4px; color: white; padding: 5px 8px;" onclick="cancelReceipt(' + full.Student_Receipt_ID + ')"><i class="fa fa-trash"></i></a>';
-                                 var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.Student_Receipt_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
-                                 var result;
-                                 result = res + Del + print;
-                                 return result;
-                             }, "width": "10%", "orderable": false
-                         }
-                     ],
-                     "initComplete": function (settings, json) {
-                         var lengthContainer = document.querySelector('#tbl_length');
-                         var lengthDropdown = document.querySelector('#tbl_length select');
-                         var label = document.querySelector('#tbl_length label');
+        function LoadPage() {
+            if ($.fn.DataTable.isDataTable('#tbl')) return;
 
-                         if (lengthDropdown && label && lengthContainer) {
-                             var labelText = document.createElement('span');
-                             labelText.textContent = 'Show entries ';
-                             labelText.style.marginTop = '10px';
-                             labelText.style.display = 'inline-block';
+            dataTable = $("#tbl").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": [{ text: 'Add', className: 'dt-button buttons-copy buttons-html5', action: function () { window.location = 'StudentReceipt.aspx'; } }, 'copy', 'excel', 'pdf'],
+                "filter": true,
+                "ajax": function (data, callback, settings) {
+                    var filterClass = $('#ddlFilterClass').val() || "";
 
-                             lengthDropdown.style.width = '60px';
-                             label.innerHTML = '';
-                             label.style.display = 'inline-flex';
-                             label.style.marginTop = '17px';
-                             label.appendChild(labelText);
-                             label.appendChild(lengthDropdown);
-                         } else {
-                             console.log("Length dropdown, label, or container not found");
-                         }
-                     }
-                 });
-             }
+                    $.ajax({
+                        type: "POST",
+                        url: "StudentReceiptView.aspx/ViewList",
+                        data: JSON.stringify({
+                            draw: data.draw,
+                            start: data.start,
+                            length: data.length,
+                            sortColumn: data.columns[data.order[0].column].name,
+                            sortColumnDirection: data.order[0].dir,
+                            searchValue: data.search.value,
+                            filterClass: filterClass
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            callback({
+                                draw: response.d.draw,
+                                recordsTotal: response.d.recordsTotal,
+                                recordsFiltered: response.d.recordsFiltered,
+                                data: response.d.data
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            callback({ data: [] });
+                        }
+                    });
+                },
+                "columns": [
+                    { "data": "Student_Receipt_ID", "visible": false, "width": "0%" },
+                    { "data": "Student_Receipt_No", "name": "Student_Receipt_No", "width": "8%", "orderable": true },
+                    {
+                        "data": "Student_Receipt_Date", "name": "Student_Receipt_Date",
+                        "render": function (data, type, full) {
+                            if (!full.Student_Receipt_Date) return '';
+                            return moment(full.Student_Receipt_Date).format('DD-MMM-YYYY');
+                        }, "width": "10%", "orderable": true
+                    },
+                    { "data": "Full_Name", "name": "Full_Name", "width": "8%", "orderable": true },
+                    { "data": "Class", "name": "Class", "width": "8%", "orderable": true },
+                    { "data": "Status", "width": "8%", "orderable": false },
+                    { "data": "RollNo", "width": "8%", "orderable": false },
+                    { "data": "Net_Payable", "width": "8%", "orderable": false },
+                    { "data": "Amount_Received", "width": "8%", "orderable": false },
+                    { "data": "Balance", "width": "8%", "orderable": false },
+                    { "data": "Remarks", "width": "8%", "orderable": false },
+                    {
+                        render: function (data, type, full) {
+                            var res = '<a class="editListBtn" href="#" onclick="Edit(' + full.Student_Receipt_ID + ', ' + full.Student_ID + ')" style="border-radius: 4px; color: white; padding: 5px 8px; text-decoration: none; display: inline-block;"><i class="fa fa-pencil" style="color:white !important;"></i></a>';
+                            var Del = '<a href="#" style="border-radius: 4px; background-color: #ad170c;margin-left: 4px; color: white; padding: 5px 8px;" onclick="cancelReceipt(' + full.Student_Receipt_ID + ')"><i class="fa fa-trash"></i></a>';
+                            var print = '<a style="border-radius: 4px;background-color:#387024;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.Student_Receipt_ID + ')" id="btnprint"><i class="fa fa-print" style="color:white !important;"></i></a>';
+                            return res + Del + print;
+                        }, "width": "10%", "orderable": false
+                    }
+                ],
+                "initComplete": function (settings, json) {
+                    var lengthContainer = document.querySelector('#tbl_length');
+                    var lengthDropdown = document.querySelector('#tbl_length select');
+                    var label = document.querySelector('#tbl_length label');
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    }
+                }
+            });
+        }
 
 
         function cancelReceipt(ReceiptId) {
@@ -153,6 +196,16 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+     <div class="filter-container">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <label class="filter-label" for="ddlFilterClass">Filter by Class:</label>
+                <select id="ddlFilterClass" class="form-control">
+                    <option value="">All Classes</option>
+                </select>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="table-container">
             <table id="tbl" class="table table-bordered table-hover table-striped">

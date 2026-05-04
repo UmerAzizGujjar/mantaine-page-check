@@ -1,4 +1,5 @@
-﻿using Infragistics.Web.UI.GridControls;
+﻿using Infragistics.Documents.Reports.Report;
+using Infragistics.Web.UI.GridControls;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -176,6 +177,11 @@ namespace PMS
                                       Father_Name = p.Father_Name,
                                       Department =  EP.Department,
                                       Discharge_On = EP.Discharge_On,
+                                      CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == EP.Created_By).Select(x => x.UserName).FirstOrDefault(),
+                                      Created_time = EP.Created_Time,
+                                      updatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == EP.Created_By).Select(x => x.UserName).FirstOrDefault(),
+                                      updated_time = EP.Created_Time,
+
                                       Patinet_Condition = _dbContext.GetDataValueName("Patient Condition", EP.Emergency_Pat_Condition),
                                       AdmitDays = SqlMethods.DateDiffDay(EP.Admission_Date, DateTime.Now)
                                         };
@@ -200,6 +206,18 @@ namespace PMS
                             break;
                         case "Discharge_On":
                             EmergencyCase = sortColumnDirection == "asc" ? EmergencyCase.OrderBy(a => a.Discharge_On) : EmergencyCase.OrderByDescending(a => a.Discharge_On);
+                            break;
+                        case "CreatedBy":
+                            EmergencyCase = sortColumnDirection == "asc" ? EmergencyCase.OrderBy(a => a.CreatedBy) : EmergencyCase.OrderByDescending(a => a.CreatedBy);
+                            break;
+                        case "Created_time":
+                            EmergencyCase = sortColumnDirection == "asc" ? EmergencyCase.OrderBy(a => a.Created_time) : EmergencyCase.OrderByDescending(a => a.Created_time);
+                            break;
+                        case "updatedBy":
+                            EmergencyCase = sortColumnDirection == "asc" ? EmergencyCase.OrderBy(a => a.updatedBy) : EmergencyCase.OrderByDescending(a => a.updatedBy);
+                            break;
+                        case "updated_time":
+                            EmergencyCase = sortColumnDirection == "asc" ? EmergencyCase.OrderBy(a => a.updated_time) : EmergencyCase.OrderByDescending(a => a.updated_time);
                             break;
                         default:
                             EmergencyCase = EmergencyCase.OrderByDescending(a => a.Emergency_ID);
