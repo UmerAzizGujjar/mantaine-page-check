@@ -97,7 +97,8 @@ namespace PMS.Modules.Accounts
                              AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
                              AllowLineDiscount = p.AllowLineDiscount,
-                             AllowReferIPD = p.Refer_IPD, 
+                             AllowReferIPD = p.Refer_IPD,
+                             AllowSamplelist = p.Allow_Sample_list,
                              casher = p.cashier,
                              EmpCode=p.Emp_Code,
                              AllowUndischarge = p.allow_undischarge,
@@ -212,6 +213,7 @@ namespace PMS.Modules.Accounts
                     user.Approve_radiology = data.Allowradiologyapprove;
                     user.Reject_radiology = data.Rejectradiology;
                     user.AllowAddPatient = data.AlllowPAtientAdd;
+                    user.Allow_Sample_list = data.AllowSamplelist;
                     user.AllowActiveItems = data.AllowActiveItems;
                     user.IPD_Allow_birth_Certifcate = data.AllowBirthCertificate;
                     user.IPD_ALlow_Death_Details = data.AllowDeathDetails;
@@ -281,7 +283,7 @@ namespace PMS.Modules.Accounts
                 newuser.IsInventoryUnApprove = data.InventoryUnApprove;
                 newuser.AllowToAccessAllTest = data.AllowToAccessAllTest;
                 newuser.allow_cardio = data.AllowCardio;
-                newuser.AllowAddPatient = data.AlllowPAtientAdd;
+                newuser.Allow_Sample_list = data.AllowSamplelist;
                 newuser.IsNotificationViewed = data.PRFsNotifications;
                 newuser.AllowLineDiscount = data.AllowLineDiscount;
                 newuser.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
@@ -416,6 +418,7 @@ namespace PMS.Modules.Accounts
             public bool AllowRecipe { get; set; }
             public bool AllowActiveItems { get; set; }
             public bool AlllowPAtientAdd { get; set; }
+            public bool AllowSamplelist { get; set; }
             public bool AllowLineDiscount { get; set; }
             public bool AllowBirthCertificate { get; set; }
             public bool AllowDeathDetails { get; set; }

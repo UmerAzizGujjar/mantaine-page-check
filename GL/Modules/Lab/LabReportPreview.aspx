@@ -321,6 +321,18 @@
             }, function (error) {
                 alert('Error checking rights: ' + error.get_message());
             });
+            PageMethods.CheckSamplelistRights(function (response) {
+                var hasRights = JSON.parse(response);
+
+                if (hasRights === true) {
+                    $('#Samplelist').show();
+                    CheckSamplelistRights();
+                } else {
+                    $('#Samplelist').hide();
+                }
+            }, function (error) {
+                alert('Error checking rights: ' + error.get_message());
+            });
             var PatientID = '<%=Request.QueryString["PatientID"]%>';
             if (PatientID != "") {
                 fillTokenInput(PatientID);
@@ -2837,7 +2849,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-3 sm-6">
+            <div class="col-lg-6 col-md-3 sm-6" id="Samplelist">
                 <h1>Sample List</h1>
                 <div class="row" style="overflow: scroll; height: 500px;">
                 <table class="table table-hover table-striped test-table" id="tbl_pending_samples">

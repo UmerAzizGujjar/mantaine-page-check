@@ -982,11 +982,13 @@ namespace PMS
         partial void Updateaspnet_User(aspnet_User instance);
         partial void Deleteaspnet_User(aspnet_User instance);
         #endregion
+
         public DataBaseDataContext() :
-              base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -171430,9 +171432,11 @@ namespace PMS
 
         private System.Nullable<bool> _user_till;
 
-        private System.Nullable<bool> _AllowAddPatient;
+        private System.Nullable<bool> _Allow_Sample_list;
 
         private System.Nullable<bool> _AllowLineDiscount;
+
+        private System.Nullable<bool> _AllowAddPatient;
 
         private EntitySet<aspnet_PersonalizationPerUser> _aspnet_PersonalizationPerUsers;
 
@@ -171562,10 +171566,12 @@ namespace PMS
         partial void OnAll_doctor_templateChanged();
         partial void Onuser_tillChanging(System.Nullable<bool> value);
         partial void Onuser_tillChanged();
-        partial void OnAllowAddPatientChanging(System.Nullable<bool> value);
-        partial void OnAllowAddPatientChanged();
+        partial void OnAllow_Sample_listChanging(System.Nullable<bool> value);
+        partial void OnAllow_Sample_listChanged();
         partial void OnAllowLineDiscountChanging(System.Nullable<bool> value);
         partial void OnAllowLineDiscountChanged();
+        partial void OnAllowAddPatientChanging(System.Nullable<bool> value);
+        partial void OnAllowAddPatientChanged();
         #endregion
 
         public aspnet_User()
@@ -172722,22 +172728,22 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowAddPatient", DbType = "Bit")]
-        public System.Nullable<bool> AllowAddPatient
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_Sample_list", DbType = "Bit")]
+        public System.Nullable<bool> Allow_Sample_list
         {
             get
             {
-                return this._AllowAddPatient;
+                return this._Allow_Sample_list;
             }
             set
             {
-                if ((this._AllowAddPatient != value))
+                if ((this._Allow_Sample_list != value))
                 {
-                    this.OnAllowAddPatientChanging(value);
+                    this.OnAllow_Sample_listChanging(value);
                     this.SendPropertyChanging();
-                    this._AllowAddPatient = value;
-                    this.SendPropertyChanged("AllowAddPatient");
-                    this.OnAllowAddPatientChanged();
+                    this._Allow_Sample_list = value;
+                    this.SendPropertyChanged("Allow_Sample_list");
+                    this.OnAllow_Sample_listChanged();
                 }
             }
         }
@@ -172758,6 +172764,26 @@ namespace PMS
                     this._AllowLineDiscount = value;
                     this.SendPropertyChanged("AllowLineDiscount");
                     this.OnAllowLineDiscountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowAddPatient", DbType = "Bit")]
+        public System.Nullable<bool> AllowAddPatient
+        {
+            get
+            {
+                return this._AllowAddPatient;
+            }
+            set
+            {
+                if ((this._AllowAddPatient != value))
+                {
+                    this.OnAllowAddPatientChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowAddPatient = value;
+                    this.SendPropertyChanged("AllowAddPatient");
+                    this.OnAllowAddPatientChanged();
                 }
             }
         }

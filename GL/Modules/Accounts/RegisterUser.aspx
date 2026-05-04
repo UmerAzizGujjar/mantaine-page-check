@@ -84,6 +84,7 @@
                     $('#Allowradiologyapprove').prop('checked', data.Allowradiologyapprove);
                     $('#Rejectradiology').prop('checked', data.Rejectradiology);
                     $('#AlllowPAtientAdd').prop('checked', data.AllowAddPatient);
+                    $('#AllowSamplelist').prop('checked', data.AllowSamplelist);
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                     $('#AllowUndischarge').prop('checked', data.AllowUndischarge);
                     $('#AllDoctorTemplate').prop('checked', data.AllDoctorTemplate);
@@ -148,6 +149,7 @@
             var Allowradiologyapprove = $('#Allowradiologyapprove').prop('checked');
             var Rejectradiology = $('#Rejectradiology').prop('checked');
             var AlllowPAtientAdd = $('#AlllowPAtientAdd').prop('checked');
+            var AllowSamplelist = $('#AllowSamplelist').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var AllowUndischarge = $('#AllowUndischarge').prop('checked');
             var AllDoctorTemplate = $('#AllDoctorTemplate').prop('checked');
@@ -285,6 +287,7 @@
                 "Allowradiologyapprove": Allowradiologyapprove,
                 "Rejectradiology": Rejectradiology,
                 "AlllowPAtientAdd": AlllowPAtientAdd,
+                "AllowSamplelist": AllowSamplelist,
                 "AllowRateEdit": AllowRateEdit,
                 "ddlcasher": ddlcasher,
                 "AllowUndischarge": AllowUndischarge,
@@ -700,6 +703,9 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="AlllowPAtientAdd" name="AlllowPAtientAdd" style="" />
                                                     </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowSamplelist" name="AllowSamplelist" style="" />
+                                                    </div>
                                              
 
 
@@ -774,6 +780,9 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="AlllowPAtientAdd">Allow Add Patient</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowSamplelist">Allow Sample List</label>
                                                     </div>
                                                 </div>
                                             </div>

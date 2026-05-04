@@ -912,6 +912,17 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string CheckSamplelistRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Allow_Sample_list).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
+        [WebMethod]
         public static Detail GetDetail(string PatientID)
         {
 
