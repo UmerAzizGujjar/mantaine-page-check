@@ -97,9 +97,9 @@
                 },
                 "columns": [
                     { "data": "Emergency_ID", "name": "Emergency_ID", "width": "0%", "visible": false },
-                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%" },
-                    { "data": "Full_Name", "width": "12%", "orderable": false },
-                    { "data": "Father_Name", "width": "12%", "orderable": false },
+                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "7%" },
+                    { "data": "Full_Name", "width": "8%", "orderable": false },
+                    { "data": "Father_Name", "width": "8%", "orderable": false },
                     {
                         "data": "Admission_Date",
                         "name": "Admission_Date",
@@ -109,7 +109,7 @@
                                 ? moment(date).format('DD-MMM-YYYY hh:mm:ss A')
                                 : "";
                         },
-                        "width": "12%",
+                        "width": "8%",
                         "orderable": false
                     },
                     {
@@ -120,7 +120,7 @@
                             if (!date) return "";
                             return moment(date).format('DD-MMM-YYYY hh:mm:ss A');
                         },
-                        "width": "10%"
+                        "width": "8%"
                     },
                     { "data": "AdmitDays", "width": "8%", "orderable": false },
                     {
@@ -136,7 +136,7 @@
                     { "data": "CreatedBy", "width": "8%", "orderable": false },
                     {
                         "data": "Created_time",
-                        "width": "10%",
+                        "width": "8%",
                         "orderable": false,
                         "render": function (data, type, full) {
                             return (data && moment(data).isValid())
@@ -147,7 +147,7 @@
                     { "data": "updatedBy", "width": "8%", "orderable": false },
                     {
                         "data": "updated_time",
-                        "width": "10%",
+                        "width": "8%",
                         "orderable": false,
                         "render": function (data, type, full) {
                             return (data && moment(data).isValid())
@@ -166,7 +166,7 @@
                             }
                             return res + Del + print + printBtn;
                         },
-                        "width": "10%",
+                        "width": "8%",
                         "orderable": false
                     }
                 ],

@@ -1770,5 +1770,40 @@ namespace PMS
             }
         }
 
+        [WebMethod]
+        public static string GetPendingSampleList()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                JavaScriptSerializer serl = new JavaScriptSerializer();
+                serl.MaxJsonLength = int.MaxValue;
+                var rawData = (from m in db.Sample_Masters.AsNoTracking()
+                               join p in db.Reg_patients.AsNoTracking() on m.Patient_ID equals p.pat_id
+                               orderby m.Sample_No descending
+                               select new
+                               {
+                                   Sample_ID = m.Sample_ID,
+                                   Sample_No = m.Sample_No,
+                                   Sample_Collected_Date_Raw = m.Sample_Collected_Date, 
+                                   Expected_Result_Date = m.Expected_Result_Date,
+                                   MR_No = p.Patient_No,
+                                   Full_Name = p.Full_Name
+                               }).Take(200).ToList(); 
+                var result = rawData.Select(x => new
+                {
+                    x.Sample_ID,
+                    x.Sample_No,
+                    Sample_Collected_Date = x.Sample_Collected_Date_Raw.HasValue
+                                            ? x.Sample_Collected_Date_Raw.Value.ToString("dd-MMM-yyyy")
+                                            : "",
+                    x.Expected_Result_Date,
+                    x.MR_No,
+                    x.Full_Name
+                }).ToList();
+
+                return serl.Serialize(result);
+            }
+        }
+
     }
 }

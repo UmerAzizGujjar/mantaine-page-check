@@ -197,23 +197,24 @@ namespace PMS
         //    return result;
 
         //}
-
         [WebMethod]
         public static string PendingPatients(string SearchString)
         {
             string result;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.Sp_GetLast24Hours_Test(SearchString).ToList();
-                if (string.IsNullOrEmpty(SearchString))
+                if (string.IsNullOrWhiteSpace(SearchString))
                 {
-                    query = query.Take(10).ToList();
+                    SearchString = null;
                 }
+
+                var query = db.Sp_GetLast24Hours_Test(SearchString).ToList();
 
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
         }
+
 
 
         [WebMethod]
