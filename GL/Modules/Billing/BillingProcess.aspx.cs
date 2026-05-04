@@ -203,13 +203,18 @@ namespace PMS
             string result;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+                if (string.IsNullOrWhiteSpace(SearchString))
+                {
+                    SearchString = null;
+                }
+
                 var query = db.Sp_GetLast24Hours_Test(SearchString).ToList();
 
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
         }
-        
+
 
 
         [WebMethod]

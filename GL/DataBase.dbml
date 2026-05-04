@@ -12033,6 +12033,13 @@
       <Column Name="Referred_By" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.SpApprove_OPDRefund" Method="SpApprove_OPDRefund">
+    <Parameter Name="Pat_ID" Parameter="pat_ID" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="SpApprove_OPDRefundResult">
+      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.Sp_GetLast24Hours_Test" Method="Sp_GetLast24Hours_Test">
     <Parameter Name="Search" Parameter="search" Type="System.String" DbType="NVarChar(200)" />
     <ElementType Name="Sp_GetLast24Hours_TestResult">
@@ -12046,13 +12053,6 @@
       <Column Name="Item_Name" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
       <Column Name="Actual_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Referred_By" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.SpApprove_OPDRefund" Method="SpApprove_OPDRefund">
-    <Parameter Name="Pat_ID" Parameter="pat_ID" Type="System.Int64" DbType="BigInt" />
-    <Parameter Name="user_id" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="SpApprove_OPDRefundResult">
-      <Column Name="Message" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
