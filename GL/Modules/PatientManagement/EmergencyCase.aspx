@@ -612,7 +612,7 @@ function setDropdownText(selector, text) {
 
             var id = $('#ctl00_MainContent_txtIn_Patient_ID').val();
             if (id != null) {
-                window.open('ReportViewer.aspx?ReportName=EmergencyPrint&ReportTitle=Department Of Pathology&Emergency_ID=' + id);
+                window.open('../../ReportViewer.aspx?ReportName=EmergencyPrint&ReportTitle=Department Of Pathology&Emergency_ID=' + id);
             }
         }
 
