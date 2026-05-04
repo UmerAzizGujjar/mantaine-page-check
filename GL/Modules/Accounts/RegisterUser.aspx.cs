@@ -90,11 +90,13 @@ namespace PMS.Modules.Accounts
                              AllowAdjustment = p.adjustment_Allow,
                              Allowradiologyapprove = p.Approve_radiology,
                              Rejectradiology = p.Reject_radiology,
+                             AllowAddPatient = p.AllowAddPatient,
                              AllowActiveItems = p.AllowActiveItems,
                              AllowBirthCertificate = p.IPD_Allow_birth_Certifcate,
                              AllowDeathDetails = p.IPD_ALlow_Death_Details,
                              AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
+                             AllowLineDiscount = p.AllowLineDiscount,
                              AllowReferIPD = p.Refer_IPD, 
                              casher = p.cashier,
                              EmpCode=p.Emp_Code,
@@ -209,6 +211,7 @@ namespace PMS.Modules.Accounts
                     user.adjustment_Allow = data.AllowAdjustment;
                     user.Approve_radiology = data.Allowradiologyapprove;
                     user.Reject_radiology = data.Rejectradiology;
+                    user.AllowAddPatient = data.AlllowPAtientAdd;
                     user.AllowActiveItems = data.AllowActiveItems;
                     user.IPD_Allow_birth_Certifcate = data.AllowBirthCertificate;
                     user.IPD_ALlow_Death_Details = data.AllowDeathDetails;
@@ -217,6 +220,7 @@ namespace PMS.Modules.Accounts
                     user.allow_undischarge = data.AllowUndischarge;
                     user.All_doctor_template = data.AllDoctorTemplate;
                     user.user_till = data.AllowTill;
+                    user.AllowLineDiscount = data.AllowLineDiscount;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -277,7 +281,9 @@ namespace PMS.Modules.Accounts
                 newuser.IsInventoryUnApprove = data.InventoryUnApprove;
                 newuser.AllowToAccessAllTest = data.AllowToAccessAllTest;
                 newuser.allow_cardio = data.AllowCardio;
+                newuser.AllowAddPatient = data.AlllowPAtientAdd;
                 newuser.IsNotificationViewed = data.PRFsNotifications;
+                newuser.AllowLineDiscount = data.AllowLineDiscount;
                 newuser.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
                 newuser.IsAnonymous = data.IsAnonymous;
                 newuser.EditEmergency = data.EditEmergency;
@@ -409,6 +415,8 @@ namespace PMS.Modules.Accounts
             public bool AllowReferIPD { get; set; }
             public bool AllowRecipe { get; set; }
             public bool AllowActiveItems { get; set; }
+            public bool AlllowPAtientAdd { get; set; }
+            public bool AllowLineDiscount { get; set; }
             public bool AllowBirthCertificate { get; set; }
             public bool AllowDeathDetails { get; set; }
             public bool AllowSaleReturn { get; set; }

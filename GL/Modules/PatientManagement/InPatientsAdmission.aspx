@@ -1377,7 +1377,44 @@
             }
 
         }
-
+        function CheckBillsBeforeUpdate(inpatientId, callback) {
+            $.ajax({
+                type: "POST",
+                url: "InPatientsAdmission.aspx/CheckPatientHasBill",
+                data: JSON.stringify({ inpatientId: inpatientId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false, // Set to false to wait for response
+                success: function (response) {
+                    var result = JSON.parse(response.d);
+                    if (result.hasBill) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot Update!',
+                            text: result.message,
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        callback(false);
+                    } else {
+                        callback(true);
+                    }
+                },
+                error: function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Could not verify bill status. Please try again.',
+                        confirmButtonText: 'OK'
+                    });
+                    callback(false);
+                }
+            });
+        }
         function FillEyeMainTypesAndSubTypes() {
 
             var options = '';
@@ -3560,182 +3597,322 @@
 
         function CheckExistInOutPatient() {
             debugger;
-            <%--var patient_Id = $("#<%= hdfPatient_ID.ClientID%>").val();--%>
             var patient_Id = $("#<%=txtPatient_ID.ClientID%>").val();
+       var inpatientId = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+       var btnSaveValue = $('#btnSave').val();
 
-            $.ajax({
-                type: "POST",
-                url: "InPatientsAdmission.aspx/CheckExistOutPatient",
-                data: JSON.stringify({
-                    "Patient_ID": patient_Id
-                }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    debugger;
-                    var data = JSON.parse(response.d);
-                    if (data == "Exist") {
-                        alert("First Discharge Mr# " + $('#ctl00_MainContent_txtPatient_ID').val() + " from OPD");
-                    }
-                    else {
-                        var Admitcategory = $('#ctl00_MainContent_ddlPatientType').val();
-                        if (Admitcategory == "0") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Please Select Admit Category',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-                            return false;
+       // CHECK FOR BILLS FIRST - Only for UPDATE operations on existing inpatients
+       if (btnSaveValue === "Update" && inpatientId !== "(New)" && inpatientId !== "" && inpatientId !== null) {
+           // Show checking message
+           Swal.fire({
+               title: 'Checking...',
+               text: 'Verifying if patient has existing bills...',
+               allowOutsideClick: false,
+               didOpen: () => {
+                   Swal.showLoading();
+               }
+           });
 
-                        }
-                        var Doctor = $('#ctl00_MainContent_ddlDoctor').val();
-                        var Complain = $('#ctl00_MainContent_txtHealth_Complaints').val();
-                        if (Doctor == "0" || Doctor == null) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Please Select Doctor',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
+           $.ajax({
+               type: "POST",
+               url: "InPatientsAdmission.aspx/CheckInPatientHasBill",
+               data: JSON.stringify({ inpatientId: parseInt(inpatientId) }),
+               contentType: "application/json; charset=utf-8",sio
+               dataType: "json",
+               async: false,
+               success: function (response) {
+                   Swal.close();
+                   var result = JSON.parse(response.d);
 
-                            return false;
-                        }
+                   if (result.hasBill) {
+                       Swal.fire({
+                           icon: 'error',
+                           title: 'Cannot Update Admission!',
+                           html: '<b>' + result.message + '</b><br/><br/>Please note: This patient has bill(s) recorded. Admission details cannot be modified.',
+                           confirmButtonText: 'OK',
+                           confirmButtonColor: '#d33',
+                           customClass: {
+                               popup: 'swal-big-popup',
+                               title: 'swal-big-title',
+                               htmlContainer: 'swal-big-text'
+                           }
+                       }).then(function () {
+                           $('#loadingimage').hide();
+                       });
+                       return false;
+                   }
+               },
+               error: function (error) {
+                   Swal.close();
+                   Swal.fire({
+                       icon: 'warning',
+                       title: 'Verification Error',
+                       text: 'Could not verify bill status. Proceeding with caution.',
+                       confirmButtonText: 'Continue',
+                       customClass: {
+                           popup: 'swal-big-popup',
+                           title: 'swal-big-title',
+                           htmlContainer: 'swal-big-text'
+                       }
+                   });
+               }
+           });
+       }
 
-                        var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
-                        var refer_to = $('#ctl00_MainContent_ddlReferTo').val();
-                        if (refer_to != "0") {
-                            if (refer_to == "001") {
-                                var bedNo = $('#ctl00_MainContent_txtBedno').val();
-                                if (bedNo == "") {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error!',
-                                        text: 'Please Select Bed No',
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        customClass: {
-                                            popup: 'swal-big-popup',
-                                            title: 'swal-big-title',
-                                            htmlContainer: 'swal-big-text'
-                                        }
-                                    });
+       // Continue with existing validation
+       $.ajax({
+           type: "POST",
+           url: "InPatientsAdmission.aspx/CheckExistOutPatient",
+           data: JSON.stringify({
+               "Patient_ID": patient_Id
+           }),
+           contentType: "application/json; charset=utf-8",
+           dataType: "json",
+           success: function (response) {
+               debugger;
+               var data = JSON.parse(response.d);
+               if (data == "Exist") {
+                   Swal.fire({
+                       icon: 'error',
+                       title: 'Error!',
+                       text: "First Discharge Mr# " + $('#ctl00_MainContent_txtPatient_ID').val() + " from OPD",
+                       showConfirmButton: true,
+                       confirmButtonText: 'OK',
+                       customClass: {
+                           popup: 'swal-big-popup',
+                           title: 'swal-big-title',
+                           htmlContainer: 'swal-big-text'
+                       }
+                   });
+                   $('#loadingimage').hide();
+                   return false;
+               }
+               else {
+                   var Admitcategory = $('#ctl00_MainContent_ddlPatientType').val();
+                   if (Admitcategory == "0") {
+                       Swal.fire({
+                           icon: 'error',
+                           title: 'Error!',
+                           text: 'Please Select Admit Category',
+                           showConfirmButton: true,
+                           confirmButtonText: 'OK',
+                           customClass: {
+                               popup: 'swal-big-popup',
+                               title: 'swal-big-title',
+                               htmlContainer: 'swal-big-text'
+                           }
+                       }).then(function () {
+                           $('#loadingimage').hide();
+                       });
+                       return false;
+                   }
 
-                                    return false;
-                                }
-                                SaveWard();
-                            }
-                            else if (refer_to == "002") {
-                                var roomNo = $('#ctl00_MainContent_ddlroom').val();
-                                if (roomNo == "0") {
-                                    localStorage.SelectedTabID
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error!',
-                                        text: 'Please Select Room No',
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        customClass: {
-                                            popup: 'swal-big-popup',
-                                            title: 'swal-big-title',
-                                            htmlContainer: 'swal-big-text'
-                                        }
-                                    });
-                                    return false;
-                                }
-                                SaveRoom();
-                            }
-                            else { return false; }
+                   var Doctor = $('#ctl00_MainContent_ddlDoctor').val();
+                   var Complain = $('#ctl00_MainContent_txtHealth_Complaints').val();
+                   if (Doctor == "0" || Doctor == null) {
+                       Swal.fire({
+                           icon: 'error',
+                           title: 'Error!',
+                           text: 'Please Select Doctor',
+                           showConfirmButton: true,
+                           confirmButtonText: 'OK',
+                           customClass: {
+                               popup: 'swal-big-popup',
+                               title: 'swal-big-title',
+                               htmlContainer: 'swal-big-text'
+                           }
+                       }).then(function () {
+                           $('#loadingimage').hide();
+                       });
+                       return false;
+                   }
 
-                        }
-                        else {
-                            if (ddlIssuance_Of == "0") {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    text: 'Please First Create Admision',
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    customClass: {
-                                        popup: 'swal-big-popup',
-                                        title: 'swal-big-title',
-                                        htmlContainer: 'swal-big-text'
-                                    }
-                                });
-                                return false;
-                            }
+                   var ddlIssuance_Of = $('#ctl00_MainContent_ddlIssuance_Of').val();
+                   var refer_to = $('#ctl00_MainContent_ddlReferTo').val();
 
-                            if (ddlIssuance_Of == "001") {
-                                var bedNo = $('#ctl00_MainContent_txtBed_No').val();
-                                if (bedNo == "") {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error!',
-                                        text: 'Please Select Bed No',
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        customClass: {
-                                            popup: 'swal-big-popup',
-                                            title: 'swal-big-title',
-                                            htmlContainer: 'swal-big-text'
-                                        }
-                                    });
+                   if (refer_to != "0") {
+                       if (refer_to == "001") {
+                           var bedNo = $('#ctl00_MainContent_txtBedno').val();
+                           if (bedNo == "") {
+                               Swal.fire({
+                                   icon: 'error',
+                                   title: 'Error!',
+                                   text: 'Please Select Bed No',
+                                   showConfirmButton: false,
+                                   timer: 2000,
+                                   customClass: {
+                                       popup: 'swal-big-popup',
+                                       title: 'swal-big-title',
+                                       htmlContainer: 'swal-big-text'
+                                   }
+                               });
+                               $('#loadingimage').hide();
+                               return false;
+                           }
+                           SaveWard();
+                       }
+                       else if (refer_to == "002") {
+                           var roomNo = $('#ctl00_MainContent_ddlroom').val();
+                           if (roomNo == "0") {
+                               localStorage.SelectedTabID
+                               Swal.fire({
+                                   icon: 'error',
+                                   title: 'Error!',
+                                   text: 'Please Select Room No',
+                                   showConfirmButton: false,
+                                   timer: 2000,
+                                   customClass: {
+                                       popup: 'swal-big-popup',
+                                       title: 'swal-big-title',
+                                       htmlContainer: 'swal-big-text'
+                                   }
+                               });
+                               $('#loadingimage').hide();
+                               return false;
+                           }
+                           SaveRoom();
+                       }
+                       else {
+                           $('#loadingimage').hide();
+                           return false;
+                       }
+                   }
+                   else {
+                       if (ddlIssuance_Of == "0") {
+                           Swal.fire({
+                               icon: 'error',
+                               title: 'Error!',
+                               text: 'Please First Create Admission',
+                               showConfirmButton: false,
+                               timer: 2000,
+                               customClass: {
+                                   popup: 'swal-big-popup',
+                                   title: 'swal-big-title',
+                                   htmlContainer: 'swal-big-text'
+                               }
+                           });
+                           $('#loadingimage').hide();
+                           return false;
+                       }
 
-                                    return false;
-                                }
-                                SaveWard();
-                            }
-                            else if (ddlIssuance_Of == "002") {
-                                var roomNo = $('#ctl00_MainContent_ddlRoom_No').val();
-                                if (roomNo == "0") {
-                                    localStorage.SelectedTabID
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error!',
-                                        text: 'Please Select Room No',
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        customClass: {
-                                            popup: 'swal-big-popup',
-                                            title: 'swal-big-title',
-                                            htmlContainer: 'swal-big-text'
-                                        }
-                                    });
+                       if (ddlIssuance_Of == "001") {
+                           var bedNo = $('#ctl00_MainContent_txtBed_No').val();
+                           if (bedNo == "") {
+                               Swal.fire({
+                                   icon: 'error',
+                                   title: 'Error!',
+                                   text: 'Please Select Bed No',
+                                   showConfirmButton: false,
+                                   timer: 2000,
+                                   customClass: {
+                                       popup: 'swal-big-popup',
+                                       title: 'swal-big-title',
+                                       htmlContainer: 'swal-big-text'
+                                   }
+                               });
+                               $('#loadingimage').hide();
+                               return false;
+                           }
+                           SaveWard();
+                       }
+                       else if (ddlIssuance_Of == "002") {
+                           var roomNo = $('#ctl00_MainContent_ddlRoom_No').val();
+                           if (roomNo == "0") {
+                               localStorage.SelectedTabID
+                               Swal.fire({
+                                   icon: 'error',
+                                   title: 'Error!',
+                                   text: 'Please Select Room No',
+                                   showConfirmButton: false,
+                                   timer: 2000,
+                                   customClass: {
+                                       popup: 'swal-big-popup',
+                                       title: 'swal-big-title',
+                                       htmlContainer: 'swal-big-text'
+                                   }
+                               });
+                               $('#loadingimage').hide();
+                               return false;
+                           }
+                           SaveRoom();
+                       }
+                       else {
+                           $('#loadingimage').hide();
+                           return false;
+                       }
+                   }
 
-                                    return false;
-                                }
-                                SaveRoom();
-                            }
-                            else { return false; }
-                        }
-
-
-                        localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
-                        localStorage.DoctorID = $("#ctl00_MainContent_ddlMo_Doctor_Name").val();
-                        localStorage.DesignationID = $("#ctl00_MainContent_ddlMO_Doctor_Status").val();
-
-                    }
-                },
-                failure: function (response) {
-                    alert("Failure");
-                }
-            });
-        }
+                   localStorage.SelectedTabID = $("#tabs").tabs("option", "active");
+                   localStorage.DoctorID = $("#ctl00_MainContent_ddlMo_Doctor_Name").val();
+                   localStorage.DesignationID = $("#ctl00_MainContent_ddlMO_Doctor_Status").val();
+               }
+           },
+           error: function (response) {
+               Swal.fire({
+                   icon: 'error',
+                   title: 'Error!',
+                   text: 'An error occurred while checking patient status.',
+                   confirmButtonText: 'OK'
+               });
+               $('#loadingimage').hide();
+           }
+       });
+   }
 
         function SaveInPatientAllRecord() {
             debugger;
+
+            // Get the current inpatient ID
+            var inpatientId = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            var btnSaveValue = $('#btnSave').val();
+
+            // Only check for bills if this is an UPDATE (existing patient)
+            if (btnSaveValue === "Update" && inpatientId !== "(New)" && inpatientId !== "") {
+                // Check if patient has bills before proceeding
+                var hasBills = false;
+
+                $.ajax({
+                    type: "POST",
+                    url: "InPatientsAdmission.aspx/CheckPatientHasBill",
+                    data: JSON.stringify({ inpatientId: inpatientId }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (response) {
+                        var result = JSON.parse(response.d);
+                        if (result.hasBill) {
+                            hasBills = true;
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Cannot Update Admission!',
+                                text: result.message,
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Could not verify bill status. Please try again.',
+                            confirmButtonText: 'OK'
+                        });
+                        hasBills = true; // Treat as blocked if error occurs
+                    }
+                });
+
+                if (hasBills) {
+                    $('#loadingimage').hide();
+                    return false;
+                }
+            }
+
+            // Proceed with saving if no bills exist
             $('#loadingimage').show();
             SaveNextOfKinDetails();
             CheckExistInOutPatient();

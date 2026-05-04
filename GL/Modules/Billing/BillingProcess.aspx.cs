@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -261,6 +262,33 @@ namespace PMS
             }
             else
             {
+                return "NotAllowed";
+            }
+        }
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public static string AddAllowPatient()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            try
+            {
+                // LINQ query to check if user has Add Patient permission
+                var hasPermission = (from user in db.aspnet_Users
+                                     where user.UserId == AppConfig.UserID
+                                     select user.AllowAddPatient).FirstOrDefault();
+
+                // If null or false, return NotAllowed
+                if (hasPermission == null || hasPermission == false)
+                {
+                    return "NotAllowed";
+                }
+
+                return "Allowed";
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
                 return "NotAllowed";
             }
         }
@@ -5680,24 +5708,47 @@ namespace PMS
             }
         }
 
+        //[WebMethod]
+        //public static string AllowLineDiscount()
+        //{
+        //    try
+        //    {
+        //        using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+        //        {
+        //            var linedisc = (from tbl in db.sys_Parms
+        //                            where tbl.Name == "Allow Line Discount"
+        //                            select tbl.Code)
+        //                      .FirstOrDefault();
+
+        //            return linedisc ?? "01";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return "0";
+        //    }
+        //}
+
         [WebMethod]
-        public static string AllowLineDiscount()
+        public static bool AllowLineDiscount()
         {
             try
             {
                 using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    var linedisc = (from tbl in db.sys_Parms
-                                    where tbl.Name == "Allow Line Discount"
-                                    select tbl.Code)
-                              .FirstOrDefault();
+                    // Get the current user's Allow_bill_edit permission
+                    var userDiscountPermission = (from user in db.aspnet_Users
+                                                  where user.UserId == AppConfig.UserID
+                                                  select user.AllowLineDiscount) // This returns bool? (nullable boolean)
+                                           .FirstOrDefault();
 
-                    return linedisc ?? "01";
+                    // Return true if permission is true, false otherwise
+                    return userDiscountPermission == true;
                 }
             }
             catch (Exception ex)
             {
-                return "0";
+                return false;
             }
         }
 

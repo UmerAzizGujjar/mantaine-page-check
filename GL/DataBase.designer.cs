@@ -982,9 +982,8 @@ namespace PMS
         partial void Updateaspnet_User(aspnet_User instance);
         partial void Deleteaspnet_User(aspnet_User instance);
         #endregion
-
         public DataBaseDataContext() :
-                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+              base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -171433,6 +171432,8 @@ namespace PMS
 
         private System.Nullable<bool> _AllowAddPatient;
 
+        private System.Nullable<bool> _AllowLineDiscount;
+
         private EntitySet<aspnet_PersonalizationPerUser> _aspnet_PersonalizationPerUsers;
 
         private EntityRef<aspnet_Profile> _aspnet_Profile;
@@ -171563,6 +171564,8 @@ namespace PMS
         partial void Onuser_tillChanged();
         partial void OnAllowAddPatientChanging(System.Nullable<bool> value);
         partial void OnAllowAddPatientChanged();
+        partial void OnAllowLineDiscountChanging(System.Nullable<bool> value);
+        partial void OnAllowLineDiscountChanged();
         #endregion
 
         public aspnet_User()
@@ -172735,6 +172738,26 @@ namespace PMS
                     this._AllowAddPatient = value;
                     this.SendPropertyChanged("AllowAddPatient");
                     this.OnAllowAddPatientChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowLineDiscount", DbType = "Bit")]
+        public System.Nullable<bool> AllowLineDiscount
+        {
+            get
+            {
+                return this._AllowLineDiscount;
+            }
+            set
+            {
+                if ((this._AllowLineDiscount != value))
+                {
+                    this.OnAllowLineDiscountChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowLineDiscount = value;
+                    this.SendPropertyChanged("AllowLineDiscount");
+                    this.OnAllowLineDiscountChanged();
                 }
             }
         }
