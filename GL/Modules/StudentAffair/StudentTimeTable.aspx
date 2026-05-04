@@ -522,11 +522,33 @@
         function Print() {
 
             var Class = $('#ddlClass').find('option:selected').val();
-         
             var ddlProgram = $("#program").find('option:selected').val();
             var ddlWeek = $("#ddlWeek").find('option:selected').val();
-            window.open('/ReportViewer.aspx?ReportName=StudentTimeTable&ReportTitle=Student Time Table' + '&Class=' + Class + '&Program=' + ddlProgram + '&ddlWeek=' + ddlWeek);
+
+            debugger;
+
+            var locationInfo = window.location;
+
+            var url = "ReportViewer.aspx?ReportName=StudentTimeTable&ReportTitle=Student Time Table"
+                + "&Class=" + Class
+                + "&Program=" + ddlProgram
+                + "&ddlWeek=" + ddlWeek;
+
+            if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+
+                url = "http://" + ip + "/" + foldername + "/ReportViewer.aspx?ReportName=StudentTimeTable&ReportTitle=Student Time Table"
+                    + "&Class=" + Class
+                    + "&Program=" + ddlProgram
+                    + "&ddlWeek=" + ddlWeek;
+            }
+
+            window.open(url, '_blank');
         }
+
 
         var GetStudentSubject;
       
