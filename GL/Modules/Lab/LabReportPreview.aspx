@@ -307,6 +307,7 @@
             $("#ddlrptColumns").val(4);
             AllowLabRights();  
             LoadSharingPolicy();
+            LoadPendingSamples();
             //UltraSoundTestDetail();
             PageMethods.CheckRadiologylistRights(function (response) {
                 var hasRights = JSON.parse(response); 
@@ -2547,6 +2548,42 @@
             });
         }
 
+        function LoadPendingSamples() {
+            PageMethods.GetPendingSampleList(
+                function (data) {
+                    if (data) {
+                        var parsedData = JSON.parse(data);
+                        var rows = '';
+
+                        if (parsedData.length === 0) {
+                            rows = '<tr><td colspan="6" class="text-center">No samples found.</td></tr>';
+                        } else {
+                            $.each(parsedData, function (key, value) {
+
+                                rows += '<tr>';
+                                rows += '<input type="hidden" name="Sample_ID" value="' + value.Sample_ID + '" />';
+                                rows += '<input type="hidden" name="Patient_ID" value="' + value.MR_No + '" />';
+                                rows += '<td>' + (value.Sample_Collected_Date || '-') + '</td>';
+                                rows += '<td>' + value.Sample_No + '</td>';
+                                rows += '<td>' + value.MR_No + '</td>'; 
+                                rows += '<td>' + value.Full_Name + '</td>';
+                                rows += '<td>';
+                                rows += '<a href="#" class="btn btn-sm btn-primary" onclick="fillTokenInput(\'' + value.Sample_No + '\'); return false;">Select</a>';
+                                rows += '</td>';
+
+                                rows += '</tr>';
+                            });
+                        }
+                        $('#tbl_pending_samples tbody').html(rows);
+                    }
+                },
+                function (error) {
+                    console.error(error);
+                    alert("Error loading sample list: " + error.get_message());
+                }
+            );
+        }
+
     </script>
 
 
@@ -2781,27 +2818,45 @@
     </div>        
     
 </div>
-                    <div class="row" >
-    <div class="col-lg-6 col-md-3 sm-6" id="Radiologylist">
-        <h1>Radiology Patients List </h1>
-        <div class="row" style="overflow: scroll; height: 500px;">
-        <table class="table test-table" id="tbl_radilogy" style="overflow: scroll; height: 500px;">
-            <thead>
-                <tr>
-                    <th>Bill Date</th>
-                    <th>Bill No</th>
-                    <th>Name</th>
-                    <th>Test Name</th>
-                    <th>Priority</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tbl_tbodyradiology">
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-lg-6 col-md-3 sm-6" id="Radiologylist">
+                <h1>Radiology Patients List </h1>
+                <div class="row" style="overflow: scroll; height: 500px;">
+                    <table class="table test-table" id="tbl_radilogy" style="overflow: scroll; height: 500px;">
+                        <thead>
+                            <tr>
+                                <th>Bill Date</th>
+                                <th>Bill No</th>
+                                <th>Name</th>
+                                <th>Test Name</th>
+                                <th>Priority</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl_tbodyradiology">
+                        </tbody>
+                    </table>
+                </div>
             </div>
-    </div>
-</div>
+            <div class="col-lg-6 col-md-3 sm-6">
+                <h1>Sample List</h1>
+                <div class="row" style="overflow: scroll; height: 500px;">
+                <table class="table table-hover table-striped test-table" id="tbl_pending_samples">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Sample Collected Date</th>
+                            <th>Sample No</th>
+                            <th>MR No</th>
+                            <th>Patient Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+                </div>
+        </div>
 </div>
 
     <div for="unofficial_work" style="margin-left: 1106px; margin-top: -1px; width: 341px; position: absolute; display: none;">
