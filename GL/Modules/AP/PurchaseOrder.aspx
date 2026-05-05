@@ -1643,11 +1643,10 @@ function scheduleCalcTotal(delay) {
             var TotalDiscAmount = 0;
             var totalBonusTax = 0;
 
-            // Loop through each row individually
             $('#tblItemDescription tbody tr').each(function (key, value) {
                 var $row = $(value);
 
-                // Get values for THIS SPECIFIC ROW only
+
                 var DiscAmount = parseFloat($row.find('input[name=txtDisAmount]').val()) || 0;
                 if (DiscAmount < 0) {
                     DiscAmount = 0;
@@ -1690,17 +1689,14 @@ function scheduleCalcTotal(delay) {
                 $row.find('input[name=txtFurtherTaxAmount]').val(FurtherAmount.toFixed(2));
                 totalFurtherAmount += FurtherAmount;
 
-                // Calculate Advance Tax Amount
                 var AdvAmount = parseFloat((AdvPercent / 100) * baseAmount);
                 $row.find('input[name=txtAdvanceTaxAmount]').val(AdvAmount.toFixed(2));
                 totalAdvAmount += AdvAmount;
 
-                // Calculate Sales Tax Amount
                 var STAmount = parseFloat((STpercent / 100) * baseAmount);
                 $row.find('input[name=txtSalAmount]').val(STAmount.toFixed(2));
                 totalstamount += STAmount;
 
-                // Calculate Bonus Tax
                 var BonusQty = parseFloat($row.find('input[name=txtBonusQty]').val()) || 0;
                 var bonusTaxTotal = 0;
                 var isByDefault = $('#chkByDefault').is(':checked');
@@ -1713,33 +1709,27 @@ function scheduleCalcTotal(delay) {
                 }
                 $row.find('input[name=txtBonusAmount]').val(bonusTaxTotal.toFixed(2));
                 totalBonusTax += bonusTaxTotal;
+                netAmount = parseFloat(amountExclusiveTaxes + STAmount + AdvAmount + FurtherAmount + bonusTaxTotal - DiscAmount);
 
-                // Calculate Net Amount for this row
-                netAmount = parseFloat(amountExclusiveTaxes + STAmount + AdvAmount + FurtherAmount - DiscAmount);
                 $row.find('input[name=txtTotalAmount]').val(netAmount.toFixed(2));
-
-                // Accumulate totals
                 totamount += netAmount;
                 TotalDiscAmount += DiscAmount;
                 totalfinalamount = totamount;
             });
-
-            // Update totals
             $('#txtSub_Total').val(subtotal.toFixed(2));
             $('#txtst_amou').val((totalstamount + totalAdvAmount + totalFurtherAmount).toFixed(2));
             $('#txtAdv_amou').val(totalAdvAmount.toFixed(2));
             $('#txtFurther_amou').val(totalFurtherAmount.toFixed(2));
             $('#txtBonusTaxTotal').val(totalBonusTax.toFixed(2));
-
-            // Calculate final total with freight
             var freightTotal = parseFloat($('#ctl00_MainContent_Freight').val()) || 0;
-            var totalFinalAmt = totalfinalamount + totalBonusTax + freightTotal;
+            var totalFinalAmt = totalfinalamount + freightTotal;
 
             $('#ctl00_MainContent_Net_Amount').val(totalFinalAmt.toFixed(2));
             $('#ctl00_MainContent_txtTotalDiscAmt').val(TotalDiscAmount.toFixed(2));
             $('#txtTotalDiscAmt').val(TotalDiscAmount.toFixed(2));
             $('#txtfreight_charges').val(freightTotal);
-        } {
+        }
+        {
             var netAmount = 0;
             var STpercent = 0;
             var totalstamount = 0;

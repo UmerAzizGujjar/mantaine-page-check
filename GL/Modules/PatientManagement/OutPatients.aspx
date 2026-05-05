@@ -3429,20 +3429,29 @@
         $(document).on('keyup', '.select2-search__field', function () {
             var searchString = $(this).val();
 
-            var options;
+            if (searchString.length < 2) {
+                return;
+            }
+
             $.ajax({
                 url: 'OutPatients.aspx/getpharmacyitems',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ searchString: searchString }),
                 success: function (response) {
-                    var options = '';
                     try {
                         var pharmacyItems = JSON.parse(response.d);
+                        var $select = $('#txtPharmacyItem');
+
                         $.each(pharmacyItems, function (key, value) {
-                            options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
+                            var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
+                            if (!optionExists) {
+                                $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
+                            }
                         });
-                        $('#txtPharmacyItem').append(options).trigger('change');
+
+                        $select.trigger('change');
+
                     } catch (error) {
                         console.error('Error parsing response:', error);
                     }
