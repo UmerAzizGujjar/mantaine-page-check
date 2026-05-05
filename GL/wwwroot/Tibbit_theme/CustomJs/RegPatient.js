@@ -498,9 +498,35 @@ function SavePatient() {
             var ini_patientID = response.d;
             toasterMessage(false, "Success", "Data Saved Successfully");
             Approve(ini_patientID);
-            window.location.reload();
-            var url = "../../ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + ini_patientID;
+            var reportPath;
+            var url;
+            var locationInfo = window.location;
+
+            //if (company_name == 'As-Siraat Serving Humanity') {
+            //    reportPath = '../../ReportViewer.aspx';
+            //} else {
+            //    reportPath = 'ReportViewer.aspx';
+            //}
+
+            var reportParams = '?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=' + ini_patientID;
+
+            if (locationInfo.hostname === "localhost") {
+                // Local development — use relative path
+                url = '../../' + reportPath + reportParams;
+            } else {
+                // Live server — dynamically pick up IP and folder
+                var urlParts = window.location.href.split('/');
+                var protocol = urlParts[0];             // "http:"
+                var ip = urlParts[2];                   // "173.234.137.51"
+                var foldername = urlParts[3];           // "Assiraat_Standard"
+
+                url = protocol + '//' + ip + '/' + foldername + '/' + reportPath + reportParams;
+            }
             window.open(url, '_blank');
+            console.log("Opening URL:", url);
+            window.location.reload();
+            //var url = "../../ReportViewer.aspx?ReportName=Reg_Patient_Print&Title=Register Patient Print &Patient_ID=" + ini_patientID;
+            //window.open(url, '_blank');
         },
         error: function (xhr, status, error) {
             toasterMessage(true, "Request Failed", "An unexpected error occurred.");
