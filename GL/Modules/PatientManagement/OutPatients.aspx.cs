@@ -2277,24 +2277,48 @@ namespace PMS
 
             return (new JavaScriptSerializer().Serialize(Routes));
         }
+        //[WebMethod]
+        //public static string getpharmacyitems(string searchString)
+        //{
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var pharmacyItems = (from d in db.INV_Items
+        //                             where d.IsPharmacyItem == true && d.Description.Contains(searchString)
+        //                             orderby d.Item_ID descending
+        //                             select new
+        //                             {
+        //                                 d.Item_ID,
+        //                                 Description = d.Description
+        //                             }).Take(20).ToList();
+
+        //        return (new JavaScriptSerializer().Serialize(pharmacyItems));
+        //    }
+        //}
+
         [WebMethod]
         public static string getpharmacyitems(string searchString)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var pharmacyItems = (from d in db.INV_Items
-                                     where d.IsPharmacyItem == true && d.Description.Contains(searchString)
-                                     orderby d.Item_ID descending
-                                     select new
-                                     {
-                                         d.Item_ID,
-                                         Description = d.Description
-                                     }).Take(20).ToList();
+                bool excludeWarehouse = db.sys_Parms.Any(p => p.Name == "Exclude Warehouse Medicines"
+                                                           && p.Code == "01" );
+                var query = db.INV_Items.Where(d => d.IsPharmacyItem == true && d.Description.Contains(searchString));
+                if (excludeWarehouse)
+                {
+                    query = query.Where(d => d.InventoryOrg != "009");
+                }
+                var pharmacyItems = query.OrderByDescending(d => d.Item_ID)
+                                         .Take(20)
+                                         .Select(d => new
+                                         {
+                                             d.Item_ID,
+                                             Description = d.Description
+                                         })
+                                         .ToList();
 
-                return (new JavaScriptSerializer().Serialize(pharmacyItems));
+                return new JavaScriptSerializer().Serialize(pharmacyItems);
             }
         }
-
         [WebMethod]
         public static string FillPharmacyItemDropDown()
         {
