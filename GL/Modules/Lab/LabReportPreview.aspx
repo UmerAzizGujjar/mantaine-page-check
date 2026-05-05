@@ -321,6 +321,18 @@
             }, function (error) {
                 alert('Error checking rights: ' + error.get_message());
             });
+            PageMethods.CheckSamplelistRights(function (response) {
+                var hasRights = JSON.parse(response);
+
+                if (hasRights === true) {
+                    $('#Samplelist').show();
+                    CheckSamplelistRights();
+                } else {
+                    $('#Samplelist').hide();
+                }
+            }, function (error) {
+                alert('Error checking rights: ' + error.get_message());
+            });
             var PatientID = '<%=Request.QueryString["PatientID"]%>';
             if (PatientID != "") {
                 fillTokenInput(PatientID);
@@ -2556,21 +2568,21 @@
                         var rows = '';
 
                         if (parsedData.length === 0) {
-                            rows = '<tr><td colspan="6" class="text-center">No samples found.</td></tr>';
+                            rows = '<tr><td colspan="6" class="text-center">No billed samples found.</td></tr>';
                         } else {
                             $.each(parsedData, function (key, value) {
-
                                 rows += '<tr>';
-                                rows += '<input type="hidden" name="Sample_ID" value="' + value.Sample_ID + '" />';
-                                rows += '<input type="hidden" name="Patient_ID" value="' + value.MR_No + '" />';
                                 rows += '<td>' + (value.Sample_Collected_Date || '-') + '</td>';
                                 rows += '<td>' + value.Sample_No + '</td>';
-                                rows += '<td>' + value.MR_No + '</td>'; 
+                                rows += '<td>' + value.MR_No + '</td>';
                                 rows += '<td>' + value.Full_Name + '</td>';
                                 rows += '<td>';
-                                rows += '<a href="#" class="btn btn-sm btn-primary" onclick="fillTokenInput(\'' + value.Sample_No + '\'); return false;">Select</a>';
+                                if (value.Bill_No) {
+                                    rows += '<a href="#" class="btn btn-sm btn-primary" onclick="fillTokenInput(\'' + value.Bill_No + '\'); return false;">Select</a>';
+                                } else {
+                                    rows += '<span class="text-muted">N/A</span>';
+                                }
                                 rows += '</td>';
-
                                 rows += '</tr>';
                             });
                         }
@@ -2578,8 +2590,7 @@
                     }
                 },
                 function (error) {
-                    console.error(error);
-                    alert("Error loading sample list: " + error.get_message());
+                    alert("Error: " + error.get_message());
                 }
             );
         }
@@ -2838,7 +2849,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-3 sm-6">
+            <div class="col-lg-6 col-md-3 sm-6" id="Samplelist">
                 <h1>Sample List</h1>
                 <div class="row" style="overflow: scroll; height: 500px;">
                 <table class="table table-hover table-striped test-table" id="tbl_pending_samples">

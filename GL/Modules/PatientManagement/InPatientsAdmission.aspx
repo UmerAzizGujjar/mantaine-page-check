@@ -3617,7 +3617,7 @@
                type: "POST",
                url: "InPatientsAdmission.aspx/CheckInPatientHasBill",
                data: JSON.stringify({ inpatientId: parseInt(inpatientId) }),
-               contentType: "application/json; charset=utf-8",sio
+               contentType: "application/json; charset=utf-8",
                dataType: "json",
                async: false,
                success: function (response) {
