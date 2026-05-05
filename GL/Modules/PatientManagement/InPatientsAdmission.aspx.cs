@@ -1001,29 +1001,54 @@ namespace PMS
             }
         }
 
+        [WebMethod]
+        public static string CheckPatientHasBill(int inpatientId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    // Check if there's a bill in ar_billings against this inpatient_id
+                    var hasBill = db.Ar_Billings
+                        .Where(b => b.In_Patient_ID == inpatientId )
+                        .Any();
 
+                    if (hasBill)
+                    {
+                        return "{\"hasBill\": true, \"message\": \"Cannot update admission because this patient already has a bill in IPD.\"}";
+                    }
+                    else
+                    {
+                        return "{\"hasBill\": false, \"message\": \"\"}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return "{\"hasBill\": false, \"message\": \"Error checking bills: " + ex.Message + "\"}";
+            }
+        }
         [WebMethod]
         public static string SaveAllRecord(
-      int Patient_ID, string btnsave, string txtAdmission_Date, string patient_name,
-      string patient_age, string patient_number, string ddlDepartment, string ddlDoctor,
-      string txtHealth_Complaints, DateTime txtExpected_Discharge_Date, string ddlIssuance_Of,
-      string ddlWard_No, string txtBed_No, string ddlRoom_No, string txtRoom_Type,
-      string PatientDiscountType, string panelCompany, string admissionType, string sehatCardNo,
-      string visitId, string CardHolderName, string InsuranceCardNo, string PolicyHolderName,
-      string Sehat_Holder, string main_department, string packagetype, string packagename,
-      string packagetypename, string packagenamess, string ipdProcedures, string proc_name,
-      string panelcompanys, string CardNo, string Cardholdername, string CompanyName,
-      string Approvelimit, string Roomlimit, string Cardlimit, string ApproveDays,
-      string Discount, string Privatecharges,
-      // Birth Certificate Parameters
-      string BirthChildName, string BirthGender, string BirthDate, string BirthTime,
-      string BirthPlace, string BirthWeight, string BirthType, string BirthOrder,
-      string BirthFatherName, string BirthFatherCNIC, string BirthFatherOccupation,
-      string BirthFatherNationality, string BirthMotherName, string BirthMotherCNIC,
-      string BirthMotherOccupation, string BirthMotherNationality, string BirthRegNumber,
-      string BirthRegDate, string BirthRegistrar, string BirthUnionCouncil,
-      string BirthAddress, string BirthCity, string BirthProvince, string BirthPostalCode,
-      string BirthReligion, string BirthAttendant, string BirthRemarks,bool isCertificateGenrate)
+        int Patient_ID, string btnsave, string txtAdmission_Date, string patient_name,
+        string patient_age, string patient_number, string ddlDepartment, string ddlDoctor,
+        string txtHealth_Complaints, DateTime txtExpected_Discharge_Date, string ddlIssuance_Of,
+        string ddlWard_No, string txtBed_No, string ddlRoom_No, string txtRoom_Type,
+        string PatientDiscountType, string panelCompany, string admissionType, string sehatCardNo,
+        string visitId, string CardHolderName, string InsuranceCardNo, string PolicyHolderName,
+        string Sehat_Holder, string main_department, string packagetype, string packagename,
+        string packagetypename, string packagenamess, string ipdProcedures, string proc_name,
+        string panelcompanys, string CardNo, string Cardholdername, string CompanyName,
+        string Approvelimit, string Roomlimit, string Cardlimit, string ApproveDays,
+        string Discount, string Privatecharges,
+        string BirthChildName, string BirthGender, string BirthDate, string BirthTime,
+        string BirthPlace, string BirthWeight, string BirthType, string BirthOrder,
+        string BirthFatherName, string BirthFatherCNIC, string BirthFatherOccupation,
+        string BirthFatherNationality, string BirthMotherName, string BirthMotherCNIC,
+        string BirthMotherOccupation, string BirthMotherNationality, string BirthRegNumber,
+        string BirthRegDate, string BirthRegistrar, string BirthUnionCouncil,
+        string BirthAddress, string BirthCity, string BirthProvince, string BirthPostalCode,
+        string BirthReligion, string BirthAttendant, string BirthRemarks, bool isCertificateGenrate)
         {
             In_Patient OPD = null;
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
@@ -1031,6 +1056,28 @@ namespace PMS
                 var InPatientID = 0;
                 try
                 {
+
+                    if (btnsave == "Update")
+                    {
+
+                        var existingInpatient = db.In_Patients
+                            .FirstOrDefault(ip => ip.Patient_ID == Patient_ID && (ip.Discharge == false || ip.Discharge == null));
+
+                        if (existingInpatient != null && existingInpatient.In_Patient_ID > 0)
+                        {
+
+                            var hasBill = db.Ar_Billings
+                                .Where(b => b.In_Patient_ID == existingInpatient.In_Patient_ID)
+                                .Any();
+
+                            if (hasBill)
+                            {
+                                return "BILL_EXISTS"; 
+                            }
+                        }
+                    }
+
+
                     if (btnsave == "Save")
                     {
                         OPD = new In_Patient();
@@ -1055,8 +1102,20 @@ namespace PMS
                         OPD = (from tbl in db.In_Patients
                                where tbl.In_Patient_ID == InPatient_Case_id
                                select tbl).FirstOrDefault();
-                        OPD.Updated_By = AppConfig.UserID;
-                        OPD.Updated_Time = DateTime.Now;
+
+                        if (OPD == null)
+                        {
+                            // Try to get by Patient_ID if InPatient_Case_id not found
+                            OPD = (from tbl in db.In_Patients
+                                   where tbl.Patient_ID == Patient_ID && (tbl.Discharge == false || tbl.Discharge == null)
+                                   select tbl).FirstOrDefault();
+                        }
+
+                        if (OPD != null)
+                        {
+                            OPD.Updated_By = AppConfig.UserID;
+                            OPD.Updated_Time = DateTime.Now;
+                        }
 
                         if (PatientDiscountType == "02")
                         {
@@ -1069,6 +1128,7 @@ namespace PMS
                         }
                     }
 
+                    // Rest of your existing code continues here...
                     string fee = DBClass.getParameter("In Patient Fee").ToString();
                     if (fee.Trim() == string.Empty)
                         fee = "0";
@@ -1125,7 +1185,7 @@ namespace PMS
                     OPD.Issuance_Of = ddlIssuance_Of;
                     OPD.Patient_Discount_Type = PatientDiscountType;
                     OPD.Discharge = false;
-         
+
                     OPD.InsuranceCardNo = CardNo;
                     OPD.CardHolderName = Cardholdername;
                     OPD.CompanyNAme = CompanyName;
@@ -1143,7 +1203,7 @@ namespace PMS
                     OPD.Sehat_Card_Holder_CNIC = Sehat_Holder;
                     OPD.GenrateBirthCertificate = isCertificateGenrate;
 
-                    // Birth Certificate Fields Assignment
+                    // Birth Certificate Fields Assignment (your existing code continues...)
                     OPD.Birth_Child_Name = string.IsNullOrEmpty(BirthChildName) ? null : BirthChildName;
                     OPD.Birth_Gender = string.IsNullOrEmpty(BirthGender) ? null : BirthGender;
 
@@ -1266,14 +1326,13 @@ namespace PMS
                             }
                         }
 
-                        /***********Setting 0 Inpatient id inserted medicine to current In patient id****************/
+                        // Your existing code for medicines, instructions, etc. continues...
                         List<In_Patient_Medicine> list = db.In_Patient_Medicines.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "OutPatient").ToList();
                         foreach (In_Patient_Medicine med in list)
                         {
                             med.Patient_ID = OPD.In_Patient_ID;
                         }
 
-                        /***********Setting 0 Inpatient id inserted Instruction to current In patient id****************/
                         List<InPatient_Instruction> Inslist = db.InPatient_Instructions.Where(p => p.In_Patient_ID == 0).ToList();
                         foreach (InPatient_Instruction Ins in Inslist)
                         {
@@ -1292,21 +1351,16 @@ namespace PMS
                             DOd.In_Patient_ID = OPD.In_Patient_ID;
                         }
 
-                        /***********Setting 0 Inpatient id inserted eyes to current In patient id****************/
                         List<PMS.EyeDetail> eyelist = db.EyeDetails.Where(t => t.TransactionType == "InPatient" && t.TransactionID == 0).ToList();
                         foreach (PMS.EyeDetail eye in eyelist)
                         {
                             eye.TransactionID = OPD.In_Patient_ID;
                         }
 
-                        /***********Setting 0 patient id inserted test to current In patient id****************/
                         Laboratory_Test test = db.Laboratory_Tests.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "InPatient").FirstOrDefault();
                         if (test != null)
                             test.Patient_ID = OPD.In_Patient_ID;
 
-                        var INPATID = OPD.In_Patient_ID;
-
-                        /***********Setting 0 patient id inserted Ortho to current out patient id****************/
                         List<PMS.Ortho> ortholist = db.Orthos.Where(t => t.Patient_Type == "InPatient" && t.Transaction_ID == 0).ToList();
                         foreach (PMS.Ortho orth in ortholist)
                         {
@@ -1324,7 +1378,7 @@ namespace PMS
                 }
                 catch (Exception ex)
                 {
-                    if (OPD.In_Patient_ID == 0)
+                    if (OPD != null && OPD.In_Patient_ID == 0)
                     {
                         RemoveWardAndRooms_Allocation(txtBed_No, ddlRoom_No, Patient_ID, db);
                     }

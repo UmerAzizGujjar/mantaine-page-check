@@ -6,3 +6,9 @@
     margin-bottom: 25px;
     border: 1px solid gray;
 }
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+textarea {
+    text-transform: uppercase;
+}

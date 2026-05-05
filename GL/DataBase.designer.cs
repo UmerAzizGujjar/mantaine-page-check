@@ -988,6 +988,7 @@ namespace PMS
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -171431,6 +171432,10 @@ namespace PMS
 
         private System.Nullable<bool> _user_till;
 
+        private System.Nullable<bool> _Allow_Sample_list;
+
+        private System.Nullable<bool> _AllowLineDiscount;
+
         private System.Nullable<bool> _AllowAddPatient;
 
         private EntitySet<aspnet_PersonalizationPerUser> _aspnet_PersonalizationPerUsers;
@@ -171561,6 +171566,10 @@ namespace PMS
         partial void OnAll_doctor_templateChanged();
         partial void Onuser_tillChanging(System.Nullable<bool> value);
         partial void Onuser_tillChanged();
+        partial void OnAllow_Sample_listChanging(System.Nullable<bool> value);
+        partial void OnAllow_Sample_listChanged();
+        partial void OnAllowLineDiscountChanging(System.Nullable<bool> value);
+        partial void OnAllowLineDiscountChanged();
         partial void OnAllowAddPatientChanging(System.Nullable<bool> value);
         partial void OnAllowAddPatientChanged();
         #endregion
@@ -172715,6 +172724,46 @@ namespace PMS
                     this._user_till = value;
                     this.SendPropertyChanged("user_till");
                     this.Onuser_tillChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_Sample_list", DbType = "Bit")]
+        public System.Nullable<bool> Allow_Sample_list
+        {
+            get
+            {
+                return this._Allow_Sample_list;
+            }
+            set
+            {
+                if ((this._Allow_Sample_list != value))
+                {
+                    this.OnAllow_Sample_listChanging(value);
+                    this.SendPropertyChanging();
+                    this._Allow_Sample_list = value;
+                    this.SendPropertyChanged("Allow_Sample_list");
+                    this.OnAllow_Sample_listChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowLineDiscount", DbType = "Bit")]
+        public System.Nullable<bool> AllowLineDiscount
+        {
+            get
+            {
+                return this._AllowLineDiscount;
+            }
+            set
+            {
+                if ((this._AllowLineDiscount != value))
+                {
+                    this.OnAllowLineDiscountChanging(value);
+                    this.SendPropertyChanging();
+                    this._AllowLineDiscount = value;
+                    this.SendPropertyChanged("AllowLineDiscount");
+                    this.OnAllowLineDiscountChanged();
                 }
             }
         }
