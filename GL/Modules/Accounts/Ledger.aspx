@@ -57,14 +57,22 @@
                 </asp:DropDownList>
             </div>
         </div>
-                <div class="row mb-3">
+        <div class="row mb-3">
             <div class="col-lg-3 col-md-4 col-sm-12" id="tr_Export" runat="server" visible="false">
                 <div class="form-check" style="display: inline-flex; width: 26px;">
                     <input runat="server" class="form-check-input" type="checkbox" id="chkExportPDF" visible="true" />
                     <label class="form-check-label" id="lblExport" for="flexCheckDefault" style="margin-left: 8px; white-space: nowrap;">Export to Excel</label>
                 </div>
             </div>
+
+    <div class="col-lg-3 col-md-4 col-sm-12" id="tr_HideZeroBalance" runat="server">
+        <div class="form-check" style="display: inline-flex; width: 26px;">
+            <input runat="server" class="form-check-input" type="checkbox" id="chkHideZeroBalance" />
+            <label class="form-check-label" for="chkHideZeroBalance" style="margin-left: 8px; white-space: nowrap;">Hide Zero Balance</label>
         </div>
+    </div>
+        </div>
+
 
         <div class="row mb-3" id="warehouseDiv" runat="server"  visible="false">
             <div class="col-lg-3 col-md-3 col-sm-12">

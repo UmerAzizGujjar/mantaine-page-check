@@ -4590,6 +4590,8 @@ namespace PMS
                     rd.SetParameterValue("@Book_ID", AppConfig.Book_ID);
                     rd.SetParameterValue("@start_date", Convert.ToDateTime(Request.QueryString["startDate"]));
                     rd.SetParameterValue("@end_date", Convert.ToDateTime(Request.QueryString["endDate"]));
+                    if (Request.QueryString["HideZeroBalance"] != null && Convert.ToBoolean(Request.QueryString["HideZeroBalance"]))
+                        rd.RecordSelectionFormula = "{@Balance}<>0.00";
 
                 }
             }
@@ -4679,6 +4681,8 @@ namespace PMS
                     {
                         rd.RecordSelectionFormula = "{Ladger.Account_Code} =\"" + Request.QueryString["Account_Code"] + "\"";
                     }
+                    if (Request.QueryString["HideZeroBalance"] != null && Convert.ToBoolean(Request.QueryString["HideZeroBalance"]))
+                        rd.RecordSelectionFormula = "{@Total_Balance}<>0.00";
                 }
             }
             else if (reportName == "VendorWiseLedger")
@@ -4839,6 +4843,8 @@ namespace PMS
                     rd.SetParameterValue("@end_date", Convert.ToDateTime(Request.QueryString["endDate"]));
                     rd.SetParameterValue("@Dept_id", DeptID);
                     rd.SetParameterValue("CompanyLogo", logoPath);
+                    if (Request.QueryString["HideZeroBalance"] != null && Convert.ToBoolean(Request.QueryString["HideZeroBalance"]))
+                        rd.RecordSelectionFormula = "{@Total_Balance}<>0.00";
 
                 }
             }
