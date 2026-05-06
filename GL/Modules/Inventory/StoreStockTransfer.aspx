@@ -16,7 +16,8 @@
         }
         function getstockdetailnum() {
             debugger;
-            var itemid = $("#txtItemCode").val().toString().split('-')[0];
+           // var itemid = $("#txtItemCode").val().toString().split('-')[0];
+            var itemid = itmid;
             var wareHousefrom = $("#ctl00_MainContent_Select_wareHouseFrom").val();
             var date = $("#StockTransferDate").val();
             var batcNo = $('#batchnoddl :selected').text();
@@ -169,7 +170,7 @@
                 $('#batchnoddl').html(_gloabal);
             });
 
-            loadStock($("#txtItemCode").val());
+            loadStock(itemid);
         }
         //function fillbatchno(itemid) {
         //    debugger;
@@ -949,7 +950,8 @@
         }
         function LoadBatchNoDetail() {
             debugger;
-            var itemid = $("#txtItemCode").val().toString().split('-')[0];
+            //var itemid = $("#txtItemCode").val().toString().split('-')[0];
+            var itemid = itmid;
             var warehouse = $("#ctl00_MainContent_Select_wareHouseFrom").val();
             if (itemid.trim() != "") {
                 PageMethods.PerformBatchNoSearch(itemid, warehouse, function (data) {
@@ -965,6 +967,7 @@
                 });
             }
         }
+        var itmid;
         function loadtokenInputsDefaultPRNo() {
             debugger
             $('#txtItemCode').tokenInput("../../json.aspx?Table=INV_Items",
@@ -973,7 +976,7 @@
                     onAdd: function (item) {
                         try {
                             $("#txtItemCode").val(item.name);
-                            var itmid = item.id;
+                             itmid = item.id;
                             fillbatchno(itmid);
                         }
                         catch (err) {
