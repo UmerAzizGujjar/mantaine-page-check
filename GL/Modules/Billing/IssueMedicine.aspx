@@ -1791,6 +1791,7 @@
             });
         }
         function getOPDandIPDNO(pat_id) {
+            debugger;
             PageMethods.GetOPDandIPDNO(pat_id, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
@@ -2731,13 +2732,22 @@
         }
 
         debugger;
+        //function hideModel(pat_id, mr_no_sequence) {
+        //    debugger;
+        //    console.log(pat_id, mr_no_sequence);
+        //    $('#queueModal').modal('hide');
+        //    $('#token-input-txtMRNo').val(mr_no_sequence)
+        //    getOPDandIPDNO(pat_id)
+
+        //}
         function hideModel(pat_id, mr_no_sequence) {
-            debugger;
             console.log(pat_id, mr_no_sequence);
             $('#queueModal').modal('hide');
-            $('#token-input-txtMRNo').val(mr_no_sequence)
-            getOPDandIPDNO(pat_id)
 
+            $("#txtMRNo").tokenInput("clear");
+            $("#txtMRNo").tokenInput("add", { id: pat_id, name: mr_no_sequence });
+
+            getOPDandIPDNO(pat_id);
         }
         function OnSuccess(data) {
             debugger;
