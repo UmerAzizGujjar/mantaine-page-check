@@ -119,6 +119,11 @@ Swal.fire({
                     if (membershipRecord.IsLockedOut)
                         membershipRecord.IsLockedOut = false;
 
+                    var userRecord = db.aspnet_Users.FirstOrDefault(u => u.UserId == userExists.UserId);
+                    if (userRecord != null)
+                    {
+                        userRecord.LastActivityDate = DateTime.Now;
+                    }
                     db.SubmitChanges();
 
                     // 👇 PROCEED WITH LOGIN FLOW
@@ -349,7 +354,16 @@ Swal.fire({{
                 ScriptManager.RegisterStartupScript(this, GetType(), "controlError", "alert('Required login controls not found.');", true);
                 return;
             }
-
+            // UPDATE LAST ACTIVITY DATE IN DATABASE FOR OTP USERS
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var userRecord = db.aspnet_Users.FirstOrDefault(u => u.UserName == username);
+                if (userRecord != null)
+                {
+                    userRecord.LastActivityDate = DateTime.Now;
+                    db.SubmitChanges();
+                }
+            }
             string Book_ID = DBClass.getField("Select Book_ID From sys_Companys Where Company_ID=" + Convert.ToInt32(ddlCompany.SelectedValue));
 
             Session["UserName"] = userNameTextBox.Text;

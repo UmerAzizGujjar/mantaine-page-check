@@ -107,7 +107,8 @@
                             return date;
                         }, "width": "8%", "orderable": true
                     },
-                    { "data": "BillNo", "width": "10%", "orderable": false }, 
+                    { "data": "BillNo", "width": "10%", "orderable": false },
+                    { "data": "FBR_Number", "width": "10%", "orderable": false }, 
                     { "data": "Customer_Name", "width": "10%", "orderable": false },
                     { "data": "Patient_ID", "name": "Patient_ID", "width": "8%", "orderable": true },                    
                     { "data": "Referred_By_value", "width": "10%", "orderable": false },
@@ -188,6 +189,7 @@
                         <th style="display:none;">Bill_ID</th>
                         <th>Invoice Date</th>
                         <th>Inv No</th>
+                        <th>FBR Number</th>
                         <th>Walking Customer</th>
                         <th>MrNo.</th>
                         <th>ReferBy</th>
