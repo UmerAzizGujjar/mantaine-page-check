@@ -5293,8 +5293,13 @@
                             $("#txtDisPer").attr('disabled', true);
                         }
                         if (rows != '')
+                        var PackType = $("#hdn_pkgtype").val();
+                        var packname = $("#hdn_pkgname").val();
+                        if ((PackType != '0' && PackType != null) && (packname != null && packname != "")) {
                             debugger;
-                        CheckItemsinPackages(value.ItemID);
+                            CheckItemsinPackages(value.ItemID);
+                        }
+                            
                         CalculateSummarieDiscountPerWise(rowIndex);
                         rowIndex++;
                     });
