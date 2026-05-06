@@ -201,6 +201,7 @@ namespace PMS
                         ddlVendor.DataBind();
                         stockDiv.Visible = false;
                         tr_Export.Visible = true;
+                        tr_HideZeroBalance.Visible = true; 
                         break;
                 }
             }
@@ -254,7 +255,7 @@ namespace PMS
                     query = "ReportName=GeneralLedger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text;
                     break;
                 default:
-                    query = "ReportName=Ledger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
+                    query = "ReportName=Ledger&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked + "&HideZeroBalance=" + chkHideZeroBalance.Checked;
                     break;
             }
             string path = @"../../ReportViewer.aspx?" + query;
