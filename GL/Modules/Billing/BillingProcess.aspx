@@ -5293,8 +5293,13 @@
                             $("#txtDisPer").attr('disabled', true);
                         }
                         if (rows != '')
+                        var PackType = $("#hdn_pkgtype").val();
+                        var packname = $("#hdn_pkgname").val();
+                        if ((PackType != '0' && PackType != null) && (packname != null && packname != "")) {
                             debugger;
-                        CheckItemsinPackages(value.ItemID);
+                            CheckItemsinPackages(value.ItemID);
+                        }
+                            
                         CalculateSummarieDiscountPerWise(rowIndex);
                         rowIndex++;
                     });
@@ -6713,6 +6718,7 @@
                         '<td>' + value.Item_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +
                         '<td>' + value.Referred_By + '</td>' +
+                        '<td>' + value.Main_Department + '</td>' +
                         '<td>' + retdate + '</td>' +
                         '<td>' +
                         '<a href="#" onclick="AddPatientDetail(\'' + value.Actual_Patient_ID + '\')">' +
@@ -8221,6 +8227,7 @@
                                         <th>Test</th>
                                         <th>Department</th>
                                         <th>Referred By</th>
+                                        <th>Main Department</th>
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Select</th>
                                     </tr>

@@ -161,6 +161,7 @@ namespace PMS
                         DateDiv.Visible = true;
                         AccountInfoDiv.Visible = true;
                         AccountDiv.Visible = false;
+                        HideZerroBalance.Visible = true;
                         ExportDiv.Visible = true;
                         levelChekBox.Visible = false;
                         plhAllAcounts.Visible = false;
@@ -280,6 +281,7 @@ namespace PMS
                         CostCenterDiv.Visible = true;
                         plhAllAcounts.Visible = true;
                         ExportDiv.Visible = true;
+                        HideZerroBalance.Visible = true;
                         DateDiv.Visible = true;
                         BindCostCenterDDL();
                         BindDepartmentDDL();
@@ -549,7 +551,7 @@ namespace PMS
                         query = "ReportName=TrailForCostCenter&ReportTitle=Trail For Cost Center From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.Text + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&stCode=" + StartAccountCode + "&enCode=" + EndAccountCode + "&AllAccounts=" + rbtAll.Checked.ToString().ToLower() + "&ExportPDF=" + chkExportPDF.Checked;
                         break;
                     case "LBC":
-                        query = "ReportName=LedgerForCostCenter&ReportTitle=Ledger For Cost Center  From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.SelectedValue + "&Department=" + ddlDepartment.SelectedValue + "&AllAccounts=" + chbAllAccounts.Checked + "&Account_Code=" + Account_Code + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&ExportPDF=" + chkExportPDF.Checked;
+                        query = "ReportName=LedgerForCostCenter&ReportTitle=Ledger For Cost Center  From " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&CostCenter=" + ddlCostCenter.SelectedValue + "&Department=" + ddlDepartment.SelectedValue + "&AllAccounts=" + chbAllAccounts.Checked + "&Account_Code=" + Account_Code + "&CostCenterName=" + ddlCostCenter.SelectedItem.Text + "&ExportPDF=" + chkExportPDF.Checked + "&HideZeroBalance=" + cbHideZeroBalance.Checked;
                         break;
                     case "COA":
                         query = "ReportName=ChartOfAccount&ReportTitle=Chart Of Account &Level1=" + cbLevel1.Checked + "&Level2=" + cbLevel2.Checked + "&Level3=" + cbLevel3.Checked + "&Level4=" + cbLevel4.Checked;
@@ -592,7 +594,7 @@ namespace PMS
                                 DBClass.executeNonQueryWithoutBegin("Insert into rptSelectionParameters (Code) values  ('" + ddt.Rows[i]["Account_ID"] + "')");
 
                             }
-                            query = "ReportName=MultiLedger&ReportTitle=Account Ledger From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked;
+                            query = "ReportName=MultiLedger&ReportTitle=Account Ledger From " + txtStart_Date.Text + " To " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&ExportPDF=" + chkExportPDF.Checked + "&HideZeroBalance=" + cbHideZeroBalance.Checked;
                             break;
                         }
                         else

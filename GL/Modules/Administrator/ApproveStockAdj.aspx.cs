@@ -98,7 +98,7 @@ namespace PMS
                     }
                     else
                     {
-                        adj.Status = "Pending";
+                        adj.Status = "Created";
                         adj.Approved_Time = DateTime.Now;
                         adj.Approved_By = user_id;
                         db.SubmitChanges();
@@ -125,7 +125,7 @@ namespace PMS
                                 SAL.Remarks = Convert.ToString(adj.Remarks);
                                 SAL.Company_ID = AppConfig.Company_ID;
                                 SAL.IsFinalAprroval = false;
-                                SAL.Entry_Status = "Pending";
+                                SAL.Entry_Status = "Created";
                                 SAL.Approve_By = user_id;
                                 SAL.Approve_Date = DateTime.Now;
                                 SAL.IsRejected = false;

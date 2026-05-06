@@ -5682,7 +5682,7 @@ namespace PMS
                                where dt.Company_ID == companyID
                                select dt).FirstOrDefault();
                 string companyCode = company.CompanyCode;
-                string MR_Sequence = companyCode + "-" + PatientNumber;
+                string MR_Sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";
                 pat.mr_no_sequence = MR_Sequence;
                 pat.Card_fee = Convert.ToDecimal(txtfees);
                 pat.walkin = true;

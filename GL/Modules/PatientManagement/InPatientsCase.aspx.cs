@@ -4589,6 +4589,7 @@ namespace PMS
                                          inPatmedicineList.Start_Date_Time,
                                          inPatmedicineList.Stop_Date_Time,
                                          inPatmedicineList.High_Risk_Drug,
+                                         inPatmedicineList.Item_Code,
 
                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
 
