@@ -157,6 +157,53 @@ namespace PMS
                     ddlDoctor.DataBind();
 
                 }
+                else if (this.PageTitle == "Emergency_Detail_Report")
+                {
+                    string x = "Emergency Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+
+                    tr1MedicalSubsidy.Visible = false;
+                    dpROw.Visible = true;
+                    trDoctor.Visible = true;
+                    tr_Summary.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    tr_Export.Visible = true;
+
+                    lblPatientType.Text = "Operators";
+                    object valusets;
+                    valusets = DBClass.GetValueSet("Patient Main Category");
+
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlDepartments.DataBind();
+
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+
+                    op_PanelCompany.Visible = false;
+                    optRw.Visible = false;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                    var valusetss = from d in db.aspnet_Users
+                                    select new { d.UserName, d.UserId };
+
+                    ddlPatientType.DataSource = valusetss;
+                    ddlPatientType.DataTextField = "UserName";
+                    ddlPatientType.DataValueField = "UserId";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlPatientType.DataBind();
+                    op_FilterClinic.Visible = false;
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                }
                 else if (this.PageTitle == "OPD_Department_Wise_Report")
                 {
                     string x = "Department Wise Report";

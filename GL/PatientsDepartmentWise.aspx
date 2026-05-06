@@ -973,6 +973,39 @@
 
                         window.open(url, '_blank');
                     }
+                    else if (rptTitle == "Emergency_Detail_Report") {
+                        debugger;
+
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
+
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+
+                        // Combine date + time
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+
+                        var doc = $('#ctl00_MainContent_ddlDoctor').val();
+
+                        var url = 'ReportViewer.aspx?ReportName=EmergencyDetailReport' +
+                            '&ReportTitle=Emergency Detail Report from ' + startDateTime + ' to ' + endDateTime +
+                            '&StartDateTime=' + encodeURIComponent(startDateTime) +
+                            '&EndDateTime=' + encodeURIComponent(endDateTime) +
+                            '&Summary=' + summary +
+                            '&DoctorID=' + doc +
+                            '&Operator=' + ((typeof ($("#ctl00_MainContent_ddlOperator").val()) != 'undefined')
+                                ? $("#ctl00_MainContent_ddlOperator").val()
+                                : "0") +
+                            '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments").val()) != 'undefined')
+                                ? $("#ctl00_MainContent_ddlDepartments").val()
+                                : "All") +
+                            '&ExportPDF=' + exporttopdf;
+
+                        window.open(url, '_blank');
+                    }
                     else if (rptTitle == "OPD_Department_Wise_Report") {
                         debugger;
                         //   var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;
