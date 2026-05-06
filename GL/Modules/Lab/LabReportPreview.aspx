@@ -2574,6 +2574,7 @@
                                 rows += '<tr>';
                                 rows += '<td>' + (value.Sample_Collected_Date || '-') + '</td>';
                                 rows += '<td>' + value.Sample_No + '</td>';
+                                rows += '<td>' + value.Bill_No + '</td>';
                                 rows += '<td>' + value.MR_No + '</td>';
                                 rows += '<td>' + value.Full_Name + '</td>';
                                 rows += '<td>';
@@ -2857,6 +2858,7 @@
                         <tr>
                             <th>Sample Collected Date</th>
                             <th>Sample No</th>
+                            <th>Bill No</th>
                             <th>MR No</th>
                             <th>Patient Name</th>
                             <th>Action</th>

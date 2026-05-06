@@ -6713,6 +6713,7 @@
                         '<td>' + value.Item_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +
                         '<td>' + value.Referred_By + '</td>' +
+                        '<td>' + value.Main_Department + '</td>' +
                         '<td>' + retdate + '</td>' +
                         '<td>' +
                         '<a href="#" onclick="AddPatientDetail(\'' + value.Actual_Patient_ID + '\')">' +
@@ -8221,6 +8222,7 @@
                                         <th>Test</th>
                                         <th>Department</th>
                                         <th>Referred By</th>
+                                        <th>Main Department</th>
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Select</th>
                                     </tr>

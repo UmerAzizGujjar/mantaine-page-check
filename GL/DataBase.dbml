@@ -12054,7 +12054,8 @@
       <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="Item_Name" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
       <Column Name="Actual_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Referred_By" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="Main_Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Referred_By" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>

@@ -982,6 +982,7 @@ namespace PMS
         partial void UpdatePharmacy_SaleReturn_Detail(Pharmacy_SaleReturn_Detail instance);
         partial void DeletePharmacy_SaleReturn_Detail(Pharmacy_SaleReturn_Detail instance);
         #endregion
+
         public DataBaseDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
@@ -226094,6 +226095,8 @@ namespace PMS
 
         private System.Nullable<int> _Actual_Patient_ID;
 
+        private string _Main_Department;
+
         private string _Referred_By;
 
         public Sp_GetLast24Hours_TestResult()
@@ -226244,7 +226247,23 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referred_By", DbType = "VarChar(1000)")]
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Main_Department", DbType = "VarChar(150)")]
+        public string Main_Department
+        {
+            get
+            {
+                return this._Main_Department;
+            }
+            set
+            {
+                if ((this._Main_Department != value))
+                {
+                    this._Main_Department = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referred_By", DbType = "VarChar(50) NOT NULL", CanBeNull = false)]
         public string Referred_By
         {
             get
