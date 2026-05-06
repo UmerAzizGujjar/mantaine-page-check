@@ -902,7 +902,16 @@
                         else {
                             $('#tblDetails tbody').append(rows);
                             $('.ddlDoctor').select2();
-                            $('input[name="DisAmount"]').attr('disabled', true);
+                            // Apply discount permissions based on user rights
+                            if (globalAllowLineDiscount === true) {
+                                $('input[name="DisAmount"]').attr('disabled', false);
+                                $('input[name="DisPer"]').attr('disabled', false);
+                                $("#txtDisPer").attr('disabled', false);
+                            } else {
+                                $('input[name="DisAmount"]').attr('disabled', true);
+                                $('input[name="DisPer"]').attr('disabled', true);
+                                $("#txtDisPer").attr('disabled', true);
+                            }
                             if (Alloweditrate == "true") {
                                 $("#amnt" + rowIndex).attr('contenteditable', true);
                             }
@@ -1051,7 +1060,18 @@
                         $('.ddlDoctor').select2();
                         $('#tbltestModelTable tbody').append(rowstbl);
                         debugger;
-                        $('input[name="DisAmount"]').attr('disabled', true);
+                        // Apply discount permissions based on user rights
+                        if (globalAllowLineDiscount === true) {
+                            $('input[name="DisAmount"]').attr('disabled', false);
+                            $('input[name="DisPer"]').attr('disabled', false);
+                            $("#txtDisPer").attr('disabled', false);
+                        } else {
+                            $('input[name="DisAmount"]').attr('disabled', true);
+                            $('input[name="DisPer"]').attr('disabled', true);
+                            $("#txtDisPer").attr('disabled', true);
+                        }
+                        debugger;
+                        //$('input[name="DisAmount"]').attr('disabled', true);
                         if (Alloweditrate == "true") {
                             $("#amnt" + rowIndex).attr('contenteditable', true);
                         }
@@ -1122,8 +1142,16 @@
                         else {
                             $('#tblDetails tbody').append(rows);
                             $('#tbltestModelTable tbody').append(rowstbl);
-
-                            $('input[name="DisAmount"]').attr('disabled', true)
+                            // Apply discount permissions based on user rights
+                            if (globalAllowLineDiscount === true) {
+                                $('input[name="DisAmount"]').attr('disabled', false);
+                                $('input[name="DisPer"]').attr('disabled', false);
+                                $("#txtDisPer").attr('disabled', false);
+                            } else {
+                                $('input[name="DisAmount"]').attr('disabled', true);
+                                $('input[name="DisPer"]').attr('disabled', true);
+                                $("#txtDisPer").attr('disabled', true);
+                            }
                             CalculateSummarieDiscountPerWise(rowIndex);
 
                         }
@@ -4155,6 +4183,16 @@
                                 '</tr>';
 
                             $('#tblDetails tbody').append(row);
+                            // Apply discount permissions based on user rights
+                            if (globalAllowLineDiscount === true) {
+                                $('input[name="DisAmount"]').attr('disabled', false);
+                                $('input[name="DisPer"]').attr('disabled', false);
+                                $("#txtDisPer").attr('disabled', false);
+                            } else {
+                                $('input[name="DisAmount"]').attr('disabled', true);
+                                $('input[name="DisPer"]').attr('disabled', true);
+                                $("#txtDisPer").attr('disabled', true);
+                            }
                             debugger;
                             // If panel is selected, get panel rate for this item
                             if (hasPanel && panelId != "0" && panelId != "") {
@@ -4233,12 +4271,10 @@
                 });
             }
 
-            var globalAllowLineDiscount;
-
+            var globalAllowLineDiscount = false; // Change from "0" to false
 
             function getAllowLineDiscount() {
                 debugger;
-
                 $.ajax({
                     type: "POST",
                     url: "BillingProcess.aspx/AllowLineDiscount",
@@ -4248,17 +4284,39 @@
                         debugger;
                         globalAllowLineDiscount = response.d;
                         console.log("Allow Line Discount value:", globalAllowLineDiscount);
-
-
+                        // Apply to all existing rows and master fields
+                        applyDiscountPermissionsToAllRows();
                     },
                     error: function (xhr, status, error) {
                         console.error("Error fetching discount setting:", error);
-                        globalAllowLineDiscount = "0";
+                        globalAllowLineDiscount = false;
+                        applyDiscountPermissionsToAllRows();
                     }
                 });
             }
 
-
+            function applyDiscountPermissionsToAllRows() {
+                if (globalAllowLineDiscount === true) {
+                    // Enable all discount fields
+                    $('input[name="DisAmount"]').attr('disabled', false);
+                    $('input[name="DisPer"]').attr('disabled', false);
+                    $("#txtDisPer").attr('disabled', false);
+                    $("#txtDisAmt").attr('disabled', false);
+                    console.log("Discount fields ENABLED for all rows");
+                } else {
+                    // Disable all discount fields
+                    $('input[name="DisAmount"]').attr('disabled', true);
+                    $('input[name="DisPer"]').attr('disabled', true);
+                    $("#txtDisPer").attr('disabled', true);
+                    $("#txtDisAmt").attr('disabled', true);
+                    // Clear any existing discount values when disabled
+                    $('input[name="DisAmount"]').val('0');
+                    $('input[name="DisPer"]').val('0');
+                    $("#txtDisPer").val(0);
+                    $("#txtDisAmt").val(0);
+                    console.log("Discount fields DISABLED for all rows");
+                }
+            }
             var Item_Discount = 0;
             var isItemCompeted = false;
             var isItemCompeted_Procedure = false;
@@ -4369,14 +4427,16 @@
 
     }
     var comp_name = '<% =AppConfig.Company_Name %>';
-    if (globalAllowLineDiscount == '01') {
+    if (globalAllowLineDiscount === true) {
         // Enable discount amount fields for Skin Studio
         $('input[name="DisAmount"]').attr('disabled', false);
         $('input[name="DisPer"]').attr('disabled', false);
+        $("#txtDisPer").attr('disabled', false);
     } else {
         // Disable discount amount fields for other companies
         $('input[name="DisAmount"]').attr('disabled', true);
         $('input[name="DisPer"]').attr('disabled', true);
+        $("#txtDisPer").attr('disabled', true);
     }
 
     var remarks = $("#ctl00_MainContent_ddlpro_dis").val();
@@ -4452,14 +4512,16 @@
 
 
      var comp_names = '<% =AppConfig.Company_Name %>';
-     if (globalAllowLineDiscount == '01') {
+        if (globalAllowLineDiscount === true) {
       
          $('input[name="DisAmount"]').attr('disabled', false);
-         $('input[name="DisPer"]').attr('disabled', false);
+            $('input[name="DisPer"]').attr('disabled', false);
+            $("#txtDisPer").attr('disabled', false);
      } else {
          // Disable discount amount fields for newly added rows
          $('input[name="DisAmount"]').attr('disabled', true);
-         $('input[name="DisPer"]').attr('disabled', true);
+            $('input[name="DisPer"]').attr('disabled', true);
+            $("#txtDisPer").attr('disabled', true);
      }
 
 
@@ -4900,7 +4962,16 @@
                         },
                     });
                     $('#tblDetails tbody').append(servicerow);
-                    $('input[name="DisAmount"]').attr('disabled', true)
+                    // Apply discount permissions based on user rights
+                    if (globalAllowLineDiscount === true) {
+                        $('input[name="DisAmount"]').attr('disabled', false);
+                        $('input[name="DisPer"]').attr('disabled', false);
+                        $("#txtDisPer").attr('disabled', false);
+                    } else {
+                        $('input[name="DisAmount"]').attr('disabled', true);
+                        $('input[name="DisPer"]').attr('disabled', true);
+                        $("#txtDisPer").attr('disabled', true);
+                    }
        //            debugger;
        //    var PanelId = $("#ddlpanel").val();
        //  if(PanelId != '0'){
@@ -5169,7 +5240,17 @@
                         rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="OutPatient" /><input type="hidden" name="Main_Department" value="' + value.MainDepartment + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td contenteditable="true">' + remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount"  value="0.00" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + '</td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td></tr>'
                         debugger;
                         $('#tblDetails tbody').append(rows);
-                        $('input[name="DisAmount"]').attr('disabled', true)
+                        $('input[name="DisAmount"]').attr('disabled', true);
+                        // Apply discount permissions based on user rights
+                        if (globalAllowLineDiscount === true) {
+                            $('input[name="DisAmount"]').attr('disabled', false);
+                            $('input[name="DisPer"]').attr('disabled', false);
+                            $("#txtDisPer").attr('disabled', false);
+                        } else {
+                            $('input[name="DisAmount"]').attr('disabled', true);
+                            $('input[name="DisPer"]').attr('disabled', true);
+                            $("#txtDisPer").attr('disabled', true);
+                        }
                         if (rows != '')
                             setTimeout(function () {
                                 CalculateSummarieDiscountPerWise(rowIndex);
@@ -5200,8 +5281,17 @@
                         rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="Main_Department" value="' + value.MainDepartment + '" /> <input type="hidden" name="hdnParentTrans_Name" value="InPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td contenteditable="true">' + value.Remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + ' </td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td> </tr>'
 
                         $('#tblDetails tbody').append(rows);
-
-                        $('input[name="DisAmount"]').attr('disabled', true)
+                        $('input[name="DisAmount"]').attr('disabled', true);
+                        // Apply discount permissions based on user rights
+                        if (globalAllowLineDiscount === true) {
+                            $('input[name="DisAmount"]').attr('disabled', false);
+                            $('input[name="DisPer"]').attr('disabled', false);
+                            $("#txtDisPer").attr('disabled', false);
+                        } else {
+                            $('input[name="DisAmount"]').attr('disabled', true);
+                            $('input[name="DisPer"]').attr('disabled', true);
+                            $("#txtDisPer").attr('disabled', true);
+                        }
                         if (rows != '')
                             debugger;
                         CheckItemsinPackages(value.ItemID);
@@ -5316,7 +5406,17 @@
                         var TestDate = $.datepicker.formatDate('dd M yy', new Date(parseInt(value.Test_CreatedDate.substring(6, 19))))
                         rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '" /> <input type="hidden" name="hdnParentTrans_Name" value="EmergencyPatient" /> <input type="hidden" name="Main_Department" value="' + value.MainDepartment + '" /><input type="hidden" name="hdnParentTrans_Name" value="EmergencyPatient" /> <input type="hidden" name="hdnParentTrans_Type" value="' + value.ParentTrans_Type + '" /> <input type="hidden" name="hdnItemID" value="' + value.ItemID + '"/><input type="hidden" name="hdnItemName" value="' + value.ItemName + '" /> <input type="hidden" name="hdnItemType" value="' + value.ItemType + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + value.Amount + '/><input type="hidden" name="hdnCategory_ID" value="' + value.CategoryID + '" /> <input type="hidden" name="hdnDisPer" value="0" /><input type="hidden" name="hdnParentTrans_ID" value="' + value.ParentTrans_ID + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + value.RecommendedByDoctor + '" />' + value.ItemName + '</td><td contenteditable="true">' + value.Remarks + '</td><td><input type="text" name="txtQty" disabled="disabled" value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + value.Amount + '" /></td><td style="text-align:Right;"> ' + value.Amount + ' </td><td> <input type="text" name="DisPer" value="0"style="width: 75px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;"> ' + value.Amount + ' </td><td><input type="text" name="DocShare" id="ds' + rowIndex + '"  value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '" name="ddlDoctor" onchange="GetDocAgreementValuess(this)" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + TestDate + '"/>' + TestDate + ' </td> </tr>'
                         $('#tblDetails tbody').append(rows);
-                        $('input[name="DisAmount"]').attr('disabled', true)
+                        $('input[name="DisAmount"]').attr('disabled', true);
+                        // Apply discount permissions based on user rights
+                        if (globalAllowLineDiscount === true) {
+                            $('input[name="DisAmount"]').attr('disabled', false);
+                            $('input[name="DisPer"]').attr('disabled', false);
+                            $("#txtDisPer").attr('disabled', false);
+                        } else {
+                            $('input[name="DisAmount"]').attr('disabled', true);
+                            $('input[name="DisPer"]').attr('disabled', true);
+                            $("#txtDisPer").attr('disabled', true);
+                        }
                         if (rows != '')
                             CalculateSummarieDiscountPerWise(rowIndex);
                         rowIndex++;
@@ -6224,20 +6324,30 @@
                         alert(error.get_message());
                     })
             }
-
             function OpenModal() {
                 debugger;
-                $('#PatientsSearchModel').modal({
-                    backdrop: 'static'
 
+                // First check permission to add patient (same pattern as EditPatientDetail)
+                PageMethods.AddAllowPatient(function (msg) {
+                    if (msg === "NotAllowed") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Access Denied',
+                            text: 'You do not have permission to add a new patient. Please contact your administrator.'
+                        });
+                    } else if (msg === "Allowed") {
+                        // Permission granted, proceed with opening modal
+                        $('#PatientsSearchModel').modal({
+                            backdrop: 'static'
+                        });
+
+                        FillPatientsList();
+
+                        $('#srchpat').text("Search Your Patients:");
+                        $('#txtSearch').unmask();
+                        $('#ClosePatientsSearchModel').show();
+                    }
                 });
-                FillPatientsList();
-
-                $('#srchpat').text("Search Your Patients:");
-                $('#txtSearch').unmask();
-                $('#ClosePatientsSearchModel').show();
-
-
             }
 
             function FillPatientsList() {
@@ -6603,6 +6713,7 @@
                         '<td>' + value.Item_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +
                         '<td>' + value.Referred_By + '</td>' +
+                        '<td>' + value.Main_Department + '</td>' +
                         '<td>' + retdate + '</td>' +
                         '<td>' +
                         '<a href="#" onclick="AddPatientDetail(\'' + value.Actual_Patient_ID + '\')">' +
@@ -8111,6 +8222,7 @@
                                         <th>Test</th>
                                         <th>Department</th>
                                         <th>Referred By</th>
+                                        <th>Main Department</th>
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Select</th>
                                     </tr>

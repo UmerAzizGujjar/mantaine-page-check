@@ -63,7 +63,7 @@
                     { "data": "Challan_No", "name": "Challan_No", "width": "10%", "orderable": true },
                     {
                         "data": "IssueDate", "name": "IssueDate",
-                        "render": function (data, type, full) {
+                        "render": function (data, type, full) { 
                             debugger;
                             var date = full.IssueDate;
                             date = moment(date).format('DD-MMM-YYYY');

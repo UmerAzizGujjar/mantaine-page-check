@@ -912,6 +912,17 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string CheckSamplelistRights()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserId == AppConfig.UserID
+                       select St.Allow_Sample_list).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+
+        [WebMethod]
         public static Detail GetDetail(string PatientID)
         {
 
@@ -1767,6 +1778,45 @@ namespace PMS
             catch (Exception ex)
             {
                 return "Error: " + ex.Message;
+            }
+        }
+
+        [WebMethod]
+        public static string GetPendingSampleList()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var rawData = (from sd in db.Sample_Details
+                               join sm in db.Sample_Masters on sd.Sample_ID equals sm.Sample_ID
+                               join ab in db.Ar_Billing_Details on sd.Bill_Detail_ID equals ab.Bill_Details_ID
+                               join bill in db.Ar_Billings on ab.Bill_ID equals bill.Bill_ID
+                               join pat in db.Reg_patients on bill.Patient_ID equals pat.pat_id
+                               where sd.Sample_Collected == true
+                                  && (from ltd in db.Lab_Test_Details
+                                      where ltd.Bill_Details_ID == ab.Bill_Details_ID
+                                      && ltd.Is_Result == false
+                                      select ltd).Any()
+                               group new { sm, pat, bill } by new { sm.Sample_No, sm.Sample_Collected_Date, pat.mr_no_sequence, pat.Full_Name, bill.Bill_No } into g
+                               orderby g.Key.Sample_No descending
+                               select new
+                               {
+                                   Sample_No = g.Key.Sample_No,
+                                   Sample_Collected_Date = g.Key.Sample_Collected_Date,
+                                   MR_No = g.Key.mr_no_sequence,
+                                   Full_Name = g.Key.Full_Name,
+                                   Bill_No = g.Key.Bill_No
+                               }).ToList();
+
+                var formattedData = rawData.Select(x => new
+                {
+                    x.Sample_No,
+                    Sample_Collected_Date = x.Sample_Collected_Date?.ToString("yyyy-MM-dd"),
+                    x.MR_No,
+                    x.Full_Name,
+                    x.Bill_No
+                });
+
+                return Newtonsoft.Json.JsonConvert.SerializeObject(formattedData);
             }
         }
 

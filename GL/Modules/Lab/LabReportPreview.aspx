@@ -307,6 +307,7 @@
             $("#ddlrptColumns").val(4);
             AllowLabRights();  
             LoadSharingPolicy();
+            LoadPendingSamples();
             //UltraSoundTestDetail();
             PageMethods.CheckRadiologylistRights(function (response) {
                 var hasRights = JSON.parse(response); 
@@ -316,6 +317,18 @@
                     UltraSoundTestDetail();
                 } else {
                     $('#Radiologylist').hide();
+                }
+            }, function (error) {
+                alert('Error checking rights: ' + error.get_message());
+            });
+            PageMethods.CheckSamplelistRights(function (response) {
+                var hasRights = JSON.parse(response);
+
+                if (hasRights === true) {
+                    $('#Samplelist').show();
+                    CheckSamplelistRights();
+                } else {
+                    $('#Samplelist').hide();
                 }
             }, function (error) {
                 alert('Error checking rights: ' + error.get_message());
@@ -2547,6 +2560,42 @@
             });
         }
 
+        function LoadPendingSamples() {
+            PageMethods.GetPendingSampleList(
+                function (data) {
+                    if (data) {
+                        var parsedData = JSON.parse(data);
+                        var rows = '';
+
+                        if (parsedData.length === 0) {
+                            rows = '<tr><td colspan="6" class="text-center">No billed samples found.</td></tr>';
+                        } else {
+                            $.each(parsedData, function (key, value) {
+                                rows += '<tr>';
+                                rows += '<td>' + (value.Sample_Collected_Date || '-') + '</td>';
+                                rows += '<td>' + value.Sample_No + '</td>';
+                                rows += '<td>' + value.Bill_No + '</td>';
+                                rows += '<td>' + value.MR_No + '</td>';
+                                rows += '<td>' + value.Full_Name + '</td>';
+                                rows += '<td>';
+                                if (value.Bill_No) {
+                                    rows += '<a href="#" class="btn btn-sm btn-primary" onclick="fillTokenInput(\'' + value.Bill_No + '\'); return false;">Select</a>';
+                                } else {
+                                    rows += '<span class="text-muted">N/A</span>';
+                                }
+                                rows += '</td>';
+                                rows += '</tr>';
+                            });
+                        }
+                        $('#tbl_pending_samples tbody').html(rows);
+                    }
+                },
+                function (error) {
+                    alert("Error: " + error.get_message());
+                }
+            );
+        }
+
     </script>
 
 
@@ -2781,27 +2830,46 @@
     </div>        
     
 </div>
-                    <div class="row" >
-    <div class="col-lg-6 col-md-3 sm-6" id="Radiologylist">
-        <h1>Radiology Patients List </h1>
-        <div class="row" style="overflow: scroll; height: 500px;">
-        <table class="table test-table" id="tbl_radilogy" style="overflow: scroll; height: 500px;">
-            <thead>
-                <tr>
-                    <th>Bill Date</th>
-                    <th>Bill No</th>
-                    <th>Name</th>
-                    <th>Test Name</th>
-                    <th>Priority</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tbl_tbodyradiology">
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-lg-6 col-md-3 sm-6" id="Radiologylist">
+                <h1>Radiology Patients List </h1>
+                <div class="row" style="overflow: scroll; height: 500px;">
+                    <table class="table test-table" id="tbl_radilogy" style="overflow: scroll; height: 500px;">
+                        <thead>
+                            <tr>
+                                <th>Bill Date</th>
+                                <th>Bill No</th>
+                                <th>Name</th>
+                                <th>Test Name</th>
+                                <th>Priority</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl_tbodyradiology">
+                        </tbody>
+                    </table>
+                </div>
             </div>
-    </div>
-</div>
+            <div class="col-lg-6 col-md-3 sm-6" id="Samplelist">
+                <h1>Sample List</h1>
+                <div class="row" style="overflow: scroll; height: 500px;">
+                <table class="table table-hover table-striped test-table" id="tbl_pending_samples">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Sample Collected Date</th>
+                            <th>Sample No</th>
+                            <th>Bill No</th>
+                            <th>MR No</th>
+                            <th>Patient Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+                </div>
+        </div>
 </div>
 
     <div for="unofficial_work" style="margin-left: 1106px; margin-top: -1px; width: 341px; position: absolute; display: none;">

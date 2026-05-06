@@ -83,10 +83,13 @@
                     $('#AllowAdjustment').prop('checked', data.AllowAdjustment);
                     $('#Allowradiologyapprove').prop('checked', data.Allowradiologyapprove);
                     $('#Rejectradiology').prop('checked', data.Rejectradiology);
+                    $('#AlllowPAtientAdd').prop('checked', data.AllowAddPatient);
+                    $('#AllowSamplelist').prop('checked', data.AllowSamplelist);
                     $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                     $('#AllowUndischarge').prop('checked', data.AllowUndischarge);
                     $('#AllDoctorTemplate').prop('checked', data.AllDoctorTemplate);
                     $('#AllowTill').prop('checked', data.AllowTill);
+                    $('#AllowLineDiscount').prop('checked', data.AllowLineDiscount);
                     
                 },
                 error: function (xhr, status, error) {
@@ -145,10 +148,13 @@
             var AllowAdjustment = $('#AllowAdjustment').prop('checked');
             var Allowradiologyapprove = $('#Allowradiologyapprove').prop('checked');
             var Rejectradiology = $('#Rejectradiology').prop('checked');
+            var AlllowPAtientAdd = $('#AlllowPAtientAdd').prop('checked');
+            var AllowSamplelist = $('#AllowSamplelist').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var AllowUndischarge = $('#AllowUndischarge').prop('checked');
             var AllDoctorTemplate = $('#AllDoctorTemplate').prop('checked');
             var AllowTill = $('#AllowTill').prop('checked');
+            var AllowLineDiscount = $('#AllowLineDiscount').prop('checked');
             
             var EmpCode = $('#EmpCode').val();
             var ddlcasher = $('#ddlcasher').val();
@@ -280,11 +286,14 @@
                 "AllowAdjustment": AllowAdjustment,
                 "Allowradiologyapprove": Allowradiologyapprove,
                 "Rejectradiology": Rejectradiology,
+                "AlllowPAtientAdd": AlllowPAtientAdd,
+                "AllowSamplelist": AllowSamplelist,
                 "AllowRateEdit": AllowRateEdit,
                 "ddlcasher": ddlcasher,
                 "AllowUndischarge": AllowUndischarge,
                 "AllDoctorTemplate": AllDoctorTemplate,
-                "AllowTill": AllowTill
+                "AllowTill": AllowTill,
+                "AllowLineDiscount": AllowLineDiscount
 
             };
 
@@ -538,6 +547,9 @@
                                                      <div class="form-check">
                                                          <input type="checkbox" class="form-check-input" id="AllowTill" name="AllowTill" />
                                                      </div>
+                                                     <div class="form-check">
+                                                         <input type="checkbox" class="form-check-input" id="AllowLineDiscount" name="AllowLineDiscount" />
+                                                     </div>
                                                     <div class="form-check">
                                                         <input type="text" class="form-check-input" id="EmpCode" name="EmpCode" style="" />
                                                     </div>
@@ -610,6 +622,9 @@
                                                      </div>
                                                      <div class="form-check">
                                                          <label class="form-check-label" for="AllowTill">Allow Till</label>
+                                                     </div>
+                                                     <div class="form-check">
+                                                         <label class="form-check-label" for="AllowLineDiscount">Allow Bill Discount</label>
                                                      </div>
                                                      <div class="form-check">
                                                        <label class="form-check-label" for="EmpCode">Employee Code</label>
@@ -685,6 +700,12 @@
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="Rejectradiology" name="Rejectradiology" style="" />
                                                     </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AlllowPAtientAdd" name="AlllowPAtientAdd" style="" />
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="AllowSamplelist" name="AllowSamplelist" style="" />
+                                                    </div>
                                              
 
 
@@ -756,6 +777,12 @@
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="Rejectradiologyallow">Reject Radiology</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AlllowPAtientAdd">Allow Add Patient</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="AllowSamplelist">Allow Sample List</label>
                                                     </div>
                                                 </div>
                                             </div>

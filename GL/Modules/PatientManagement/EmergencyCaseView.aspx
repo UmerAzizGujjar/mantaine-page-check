@@ -16,7 +16,12 @@
           
             var url = '../../ReportViewer.aspx?ReportName=Emergencypatient&Title=Emergency Patient Report&Emergency_ID=' + Emergency_ID;
              window.open(url, '_blank');
-         }
+        }
+        function PrintEmergencyPatientCertificate(Emergency_ID) {
+            debugger;
+            var url = '../../ReportViewer.aspx?ReportName=EmergencyPrint&Title=Emergency Patient Report&Emergency_ID=' + Emergency_ID;
+             window.open(url, '_blank');
+        }
 
         function LoadPage() {
             let savedVisibility = null;
@@ -92,9 +97,9 @@
                 },
                 "columns": [
                     { "data": "Emergency_ID", "name": "Emergency_ID", "width": "0%", "visible": false },
-                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%" },
-                    { "data": "Full_Name", "width": "12%", "orderable": false },
-                    { "data": "Father_Name", "width": "12%", "orderable": false },
+                    { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "7%" },
+                    { "data": "Full_Name", "width": "8%", "orderable": false },
+                    { "data": "Father_Name", "width": "8%", "orderable": false },
                     {
                         "data": "Admission_Date",
                         "name": "Admission_Date",
@@ -104,7 +109,7 @@
                                 ? moment(date).format('DD-MMM-YYYY hh:mm:ss A')
                                 : "";
                         },
-                        "width": "12%",
+                        "width": "8%",
                         "orderable": false
                     },
                     {
@@ -115,7 +120,7 @@
                             if (!date) return "";
                             return moment(date).format('DD-MMM-YYYY hh:mm:ss A');
                         },
-                        "width": "10%"
+                        "width": "8%"
                     },
                     { "data": "AdmitDays", "width": "8%", "orderable": false },
                     {
@@ -131,7 +136,7 @@
                     { "data": "CreatedBy", "width": "8%", "orderable": false },
                     {
                         "data": "Created_time",
-                        "width": "10%",
+                        "width": "8%",
                         "orderable": false,
                         "render": function (data, type, full) {
                             return (data && moment(data).isValid())
@@ -142,7 +147,7 @@
                     { "data": "updatedBy", "width": "8%", "orderable": false },
                     {
                         "data": "updated_time",
-                        "width": "10%",
+                        "width": "8%",
                         "orderable": false,
                         "render": function (data, type, full) {
                             return (data && moment(data).isValid())
@@ -155,9 +160,13 @@
                             var res = '<a href="#" onclick="editOpen(' + full.Emergency_ID + ')" class="editListBtn" style="border-radius: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintEmergencyPatient(' + full.Emergency_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
-                            return res + Del + print;
+                            var printBtn = '';
+                            if (full.DateOfDeath) {
+                                printBtn = '<a class="printListBtn" href="#" style="border-radius: 4px; margin-left: 4px; color: white; padding: 5px 8px;" onclick="PrintEmergencyPatientCertificate(' + full.Emergency_ID + ')"><i class="fa fa-print"></i></a>';
+                            }
+                            return res + Del + print + printBtn;
                         },
-                        "width": "10%",
+                        "width": "8%",
                         "orderable": false
                     }
                 ],

@@ -1108,26 +1108,23 @@ namespace PMS.Modules.Lab
             var patientNo = (from p in db.Reg_patients where p.pat_id == Convert.ToInt32(Patient_ID) select p.Patient_No).FirstOrDefault();
             var patientIDs = (from p in db.Reg_patients where p.Patient_No == patientNo select p.pat_id).ToList();
             //Individual Tests
-            var data = (from lt in db.Laboratory_Tests
-                        join ltd in db.Lab_Test_Details
-                        on lt.Lab_Test_ID equals ltd.Lab_Test_ID
-                        join tdef in db.Lab_Tests
-                        on ltd.Test_ID equals tdef.Test_ID
-                        join pa in db.Reg_patients
-                        on lt.Patient_ID equals pa.pat_id
-
-                        join bd in db.Ar_Billing_Details
-
-                        on ltd.Bill_Details_ID equals bd.Bill_Details_ID
-                        join ar in db.Ar_Billings on bd.Bill_ID equals ar.Bill_ID
-                        where ar.Bill_ID == (Bill_ID == 0 ? ar.Bill_ID : Bill_ID)
-
-
-                        && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
-                        && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
-
-                        && bd.Is_Group_Category == false
-                        select new
+           
+           var data = (from lt in db.Laboratory_Tests
+                       join ltd in db.Lab_Test_Details
+                       on lt.Lab_Test_ID equals ltd.Lab_Test_ID
+                       join tdef in db.Lab_Tests
+                       on ltd.Test_ID equals tdef.Test_ID
+                       join pa in db.Reg_patients
+                       on lt.Patient_ID equals pa.pat_id
+                       join bd in db.Ar_Billing_Details
+                       on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+                       join ar in db.Ar_Billings on bd.Bill_ID equals ar.Bill_ID
+                       where ar.Bill_ID == (Bill_ID == 0 ? ar.Bill_ID : Bill_ID)
+                       && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
+                       && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
+                       && bd.Is_Group_Category == false
+                       && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
+                       select new
                         {
                             lt.Parent_Transaction_Type,
                             lt.Parent_Transaction_Type_ID,
@@ -1399,15 +1396,12 @@ namespace PMS.Modules.Lab
                         on lt.Patient_ID equals pa.pat_id
                         join bd in db.Ar_Billing_Details
                         on ltd.Bill_Details_ID equals bd.Bill_Details_ID
-
-
-                        where
-
-                        pa.pat_id == Convert.ToInt32(Convert.ToString(Patient_ID))
+                        join ar in db.Ar_Billings on bd.Bill_ID equals ar.Bill_ID  // Join only - no condition here
+                        where pa.pat_id == Convert.ToInt32(Convert.ToString(Patient_ID))
                         && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
-                         && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
-
+                        && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
                         && bd.Is_Group_Category == false
+                        && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                         select new
                         {
                             lt.Parent_Transaction_Type,
