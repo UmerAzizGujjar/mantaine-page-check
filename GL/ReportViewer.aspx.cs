@@ -9036,7 +9036,7 @@ namespace PMS
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("CompanyLogo", logoPath);
-                rd.SetParameterValue("Title", "Death Certifcate");
+                rd.SetParameterValue("Title", "Death Certificate");
                 rd.SetParameterValue("@Emergency_ID", Convert.ToInt32(Request.QueryString["Emergency_ID"]));
 
             }
