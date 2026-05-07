@@ -124,7 +124,7 @@
                         {
                             "data": "Creation_Time",
                             "render": function (data, type, full) {
-                                var date = moment(full.Creation_Time).format('D-MMM-YYYY');
+                                var date = moment(full.Creation_Time).format('D-MMM-YYYY hh:mm A');
                                 return date;
                             }, "orderable": false
                         },
@@ -137,7 +137,7 @@
                                     return ""; 
                                 }
 
-                                var date = moment(full.Update_Time).format('D-MMM-YYYY');
+                                var date = moment(full.Update_Time).format('D-MMM-YYYY hh:mm A');
                                 return date;
                             },
                             "orderable": false

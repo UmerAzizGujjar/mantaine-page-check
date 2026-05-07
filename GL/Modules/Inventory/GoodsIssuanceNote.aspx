@@ -20,6 +20,11 @@
                 var searchText = $(this).val().trim();
                 LoadAllitem(searchText);
             });
+
+            $('#ddlInventoryOrg').change(function () {
+                $('#tblStoreIssueBote tbody').empty();
+                $('#checkHeader').prop('checked', false);
+            });
             UserRights();  
             $('#ddlInventoryOrg').change(function () {
                 if (warehouseCond == "01") {
@@ -372,31 +377,56 @@
             });
         }
 
-        // Load items from INV_Items table into search modal
         function LoadAllitem(searchText) {
             debugger;
+            var selectedWarehouse = $('#ddlInventoryOrg').val();
+
+            if (!selectedWarehouse || selectedWarehouse == '0') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please select a warehouse first',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return;
+            }
+
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceNote.aspx/GetAllitem",
-                data: JSON.stringify({ searchText: searchText }),
+                data: JSON.stringify({
+                    searchText: searchText,
+                    warehouseId: selectedWarehouse
+                }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
                     var items = JSON.parse(response.d);
                     var tableBody = $('#itemsTableBody');
                     tableBody.empty();
-                    $.each(items, function (index, item) {
-                        var row = '<tr>' +
-                            '<td><input type="checkbox" class="itemCheckbox" onclick="appendSearchItem(this)"></td>' +
-                            '<td style="display:none;">' + item.Item_ID + '</td>' +
-                            '<td>' + item.Item_Code + '</td>' +
-                            '<td>' + item.Description + '</td>' +
-                            '<td>' + item.Unit + '</td>' +
-                            '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
-                            '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
-                            '</tr>';
-                        tableBody.append(row);
-                    });
+
+                    if (items.length === 0) {
+                        tableBody.append('<tr><td colspan="5" class="text-center">No items found for this warehouse</td></tr>');
+                    } else {
+                        $.each(items, function (index, item) {
+                            var row = '<tr>' +
+                                '<td><input type="checkbox" class="itemCheckbox" onclick="appendSearchItem(this)"></td>' +
+                                '<td style="display:none;">' + item.Item_ID + '</td>' +
+                                '<td>' + item.Item_Code + '</td>' +
+                                '<td>' + item.Description + '</td>' +
+                                '<td>' + item.Unit + '</td>' +
+                                '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
+                                '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
+                                '</tr>';
+                            tableBody.append(row);
+                        });
+                    }
                     $('#itemsModal').modal('show');
                 },
                 error: function (error) {

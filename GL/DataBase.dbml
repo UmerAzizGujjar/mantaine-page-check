@@ -4151,23 +4151,6 @@
       <Column Name="warehouse" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Sample_Master" Member="Sample_Masters">
-    <Type Name="Sample_Master">
-      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Sample_Collected_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Expected_Result_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="patient_type_range" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Sample_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Association Name="Sample_Master_Sample_Detail" Member="Sample_Details" ThisKey="Sample_ID" OtherKey="Sample_ID" Type="Sample_Detail" />
-    </Type>
-  </Table>
   <Table Name="dbo.GL_Voucher_Accounts" Member="GL_Voucher_Accounts">
     <Type Name="GL_Voucher_Account">
       <Column Name="Voucher_account_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7741,6 +7724,24 @@
       <Association Name="Pharmacy_SaleReturn_Pharmacy_SaleReturn_Detail" Member="Pharmacy_SaleReturn" ThisKey="Return_ID" OtherKey="Return_ID" Type="Pharmacy_SaleReturn" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Sample_Master" Member="Sample_Masters">
+    <Type Name="Sample_Master">
+      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Sample_Collected_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Expected_Result_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="patient_type_range" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Sample_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Sample_Master_Sample_Detail" Member="Sample_Details" ThisKey="Sample_ID" OtherKey="Sample_ID" Type="Sample_Detail" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -9518,17 +9519,6 @@
       <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="PROJECT" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
       <Column Name="warehouse" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_Sample_Header_Load" Method="sp_Sample_Header_Load">
-    <Parameter Name="SampleID" Parameter="sampleID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_Sample_Header_LoadResult">
-      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="Sample_Collected_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Sample_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_StudentDetailonReceipt" Method="sp_StudentDetailonReceipt">
@@ -12056,6 +12046,17 @@
       <Column Name="Actual_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Main_Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
       <Column Name="Referred_By" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Sample_Header_Load" Method="sp_Sample_Header_Load">
+    <Parameter Name="SampleID" Parameter="sampleID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_Sample_Header_LoadResult">
+      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Sample_Collected_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
