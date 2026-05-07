@@ -9521,17 +9521,6 @@
       <Column Name="warehouse" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_Sample_Header_Load" Method="sp_Sample_Header_Load">
-    <Parameter Name="SampleID" Parameter="sampleID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_Sample_Header_LoadResult">
-      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="Sample_Collected_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
-      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Sample_Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_StudentDetailonReceipt" Method="sp_StudentDetailonReceipt">
     <Parameter Name="StudentID" Parameter="studentID" Type="System.Int32" DbType="Int" />
     <Parameter Name="ClassID" Parameter="classID" Type="System.Int32" DbType="Int" />
@@ -12057,6 +12046,17 @@
       <Column Name="Actual_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Main_Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
       <Column Name="Referred_By" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_Sample_Header_Load" Method="sp_Sample_Header_Load">
+    <Parameter Name="SampleID" Parameter="sampleID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_Sample_Header_LoadResult">
+      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Sample_ID" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="Sample_Collected_Date" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Collected_Emp_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

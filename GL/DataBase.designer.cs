@@ -982,8 +982,9 @@ namespace PMS
         partial void UpdateSample_Master(Sample_Master instance);
         partial void DeleteSample_Master(Sample_Master instance);
         #endregion
+
         public DataBaseDataContext() :
-              base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -4756,13 +4757,6 @@ namespace PMS
             return ((ISingleResult<spCstinvoiceGL_FinancialResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_Sample_Header_Load")]
-        public ISingleResult<sp_Sample_Header_LoadResult> sp_Sample_Header_Load([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SampleID", DbType = "Int")] System.Nullable<int> sampleID)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), sampleID);
-            return ((ISingleResult<sp_Sample_Header_LoadResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_StudentDetailonReceipt")]
         public ISingleResult<sp_StudentDetailonReceiptResult> sp_StudentDetailonReceipt([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StudentID", DbType = "Int")] System.Nullable<int> studentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ClassID", DbType = "Int")] System.Nullable<int> classID)
         {
@@ -5456,6 +5450,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), search);
             return ((ISingleResult<Sp_GetLast24Hours_TestResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_Sample_Header_Load")]
+        public ISingleResult<sp_Sample_Header_LoadResult> sp_Sample_Header_Load([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "SampleID", DbType = "Int")] System.Nullable<int> sampleID)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), sampleID);
+            return ((ISingleResult<sp_Sample_Header_LoadResult>)(result.ReturnValue));
         }
     }
 
@@ -190075,122 +190076,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_Sample_Header_LoadResult
-    {
-
-        private System.Nullable<long> _Sample_No;
-
-        private long _Sample_ID;
-
-        private string _Sample_Collected_Date;
-
-        private System.Nullable<int> _Patient_ID;
-
-        private System.Nullable<int> _Collected_Emp_ID;
-
-        private string _Sample_Status;
-
-        public sp_Sample_Header_LoadResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_No", DbType = "BigInt")]
-        public System.Nullable<long> Sample_No
-        {
-            get
-            {
-                return this._Sample_No;
-            }
-            set
-            {
-                if ((this._Sample_No != value))
-                {
-                    this._Sample_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_ID", DbType = "BigInt NOT NULL")]
-        public long Sample_ID
-        {
-            get
-            {
-                return this._Sample_ID;
-            }
-            set
-            {
-                if ((this._Sample_ID != value))
-                {
-                    this._Sample_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_Collected_Date", DbType = "VarChar(8000)")]
-        public string Sample_Collected_Date
-        {
-            get
-            {
-                return this._Sample_Collected_Date;
-            }
-            set
-            {
-                if ((this._Sample_Collected_Date != value))
-                {
-                    this._Sample_Collected_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int")]
-        public System.Nullable<int> Patient_ID
-        {
-            get
-            {
-                return this._Patient_ID;
-            }
-            set
-            {
-                if ((this._Patient_ID != value))
-                {
-                    this._Patient_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Collected_Emp_ID", DbType = "Int")]
-        public System.Nullable<int> Collected_Emp_ID
-        {
-            get
-            {
-                return this._Collected_Emp_ID;
-            }
-            set
-            {
-                if ((this._Collected_Emp_ID != value))
-                {
-                    this._Collected_Emp_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_Status", DbType = "VarChar(50)")]
-        public string Sample_Status
-        {
-            get
-            {
-                return this._Sample_Status;
-            }
-            set
-            {
-                if ((this._Sample_Status != value))
-                {
-                    this._Sample_Status = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_StudentDetailonReceiptResult
     {
 
@@ -226298,6 +226183,122 @@ namespace PMS
                 if ((this._Referred_By != value))
                 {
                     this._Referred_By = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_Sample_Header_LoadResult
+    {
+
+        private System.Nullable<long> _Sample_No;
+
+        private string _Remarks;
+
+        private long _Sample_ID;
+
+        private string _Sample_Collected_Date;
+
+        private System.Nullable<int> _Patient_ID;
+
+        private System.Nullable<int> _Collected_Emp_ID;
+
+        public sp_Sample_Header_LoadResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_No", DbType = "BigInt")]
+        public System.Nullable<long> Sample_No
+        {
+            get
+            {
+                return this._Sample_No;
+            }
+            set
+            {
+                if ((this._Sample_No != value))
+                {
+                    this._Sample_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "NVarChar(MAX)")]
+        public string Remarks
+        {
+            get
+            {
+                return this._Remarks;
+            }
+            set
+            {
+                if ((this._Remarks != value))
+                {
+                    this._Remarks = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_ID", DbType = "BigInt NOT NULL")]
+        public long Sample_ID
+        {
+            get
+            {
+                return this._Sample_ID;
+            }
+            set
+            {
+                if ((this._Sample_ID != value))
+                {
+                    this._Sample_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sample_Collected_Date", DbType = "VarChar(8000)")]
+        public string Sample_Collected_Date
+        {
+            get
+            {
+                return this._Sample_Collected_Date;
+            }
+            set
+            {
+                if ((this._Sample_Collected_Date != value))
+                {
+                    this._Sample_Collected_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int")]
+        public System.Nullable<int> Patient_ID
+        {
+            get
+            {
+                return this._Patient_ID;
+            }
+            set
+            {
+                if ((this._Patient_ID != value))
+                {
+                    this._Patient_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Collected_Emp_ID", DbType = "Int")]
+        public System.Nullable<int> Collected_Emp_ID
+        {
+            get
+            {
+                return this._Collected_Emp_ID;
+            }
+            set
+            {
+                if ((this._Collected_Emp_ID != value))
+                {
+                    this._Collected_Emp_ID = value;
                 }
             }
         }
