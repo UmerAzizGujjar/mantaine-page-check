@@ -3804,6 +3804,120 @@ namespace PMS
                     ddlShift.Visible = false;
 
                 }
+                if (this.PageTitle == "Student_Receipt_Class_Details_Report_Balance")
+                {
+                    string x = "Student Receipt Class Wise Details Balance";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Student Class");
+                    ddloprators.DataSource = valuset;
+                    ddloprators.DataTextField = "DataValue_Description";
+                    ddloprators.DataValueField = "DataValue_Name";
+                    ddloprators.Items.Clear();
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    lboperator.Text = "Class";
+
+
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+
+                }
+                if (this.PageTitle == "Student_Receipt_Session_Details_Report_Received")
+                {
+                    string x = "Student Receipt Session Wise Details Received";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Session");
+                    ddloprators.DataSource = valuset;
+                    ddloprators.DataTextField = "DataValue_Description";
+                    ddloprators.DataValueField = "DataValue_Name";
+                    ddloprators.Items.Clear();
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    lboperator.Text = "Session";
+
+
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+
+                }
+                if (this.PageTitle == "Student_Receipt_Session_Details_Report_Balance")
+                {
+                    string x = "Student Receipt Session Wise Details Balance";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Session");
+                    ddloprators.DataSource = valuset;
+                    ddloprators.DataTextField = "DataValue_Description";
+                    ddloprators.DataValueField = "DataValue_Name";
+                    ddloprators.Items.Clear();
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    lboperator.Text = "Session";
+
+
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+
+                }
                 if (this.PageTitle == "TimeAndMotion")
                 {
                     string x = "Time and Motion Report";
