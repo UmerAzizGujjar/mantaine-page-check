@@ -863,7 +863,21 @@
                         var url = 'ReportViewer.aspx?ReportName=Student_Receipt_Class_Details_Report_Received&ReportTitle=Student Class Wise Receipts Details from' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Class_No=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
                         window.open(url, '_blank');
                     }
-
+                    else if (rptTitle == 'Student_Receipt_Class_Details_Report_Balance') {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Student_Receipt_Class_Details_Report_Balance&ReportTitle=Student Receipt Class Wise Details Balance from' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Class_No=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == 'Student_Receipt_Session_Details_Report_Received') {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Student_Receipt_Session_Details_Report_Received&ReportTitle=Student Session Wise Fee Details from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Session=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        window.open(url, '_blank');
+                    }
+                    else if (rptTitle == 'Student_Receipt_Session_Details_Report_Balance') {
+                        debugger;
+                        var url = 'ReportViewer.aspx?ReportName=Student_Receipt_Session_Details_Report_Balance&ReportTitle=Student Session Wise Fee Details from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&Session=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");
+                        window.open(url, '_blank');
+                    }
 
                     else if (rptTitle == 'Pharmacy_Profit_and_Loss_Report') {
                         debugger;
