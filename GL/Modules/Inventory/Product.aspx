@@ -565,6 +565,7 @@
                 var OtherServices = $('#chkOtherServices').prop('checked');
                 var billing = $('#chkBillingRequired').prop('checked');
                 var OTProcedure = $("#chkOTProcedure").prop("checked");
+                var ShortItem = $("#chkShortItem").prop("checked");
                 var IsService = $("#chkIsService").prop("checked");
                 var SehatSahulat = $("#chkSehatSahulat").prop("checked");
                 var btnValue = $('#btnValue').val();
@@ -673,6 +674,7 @@
                         "OtherServices": OtherServices,
                         "Billing": billing,
                         "OTProcedure": OTProcedure,
+                        "ShortItem": ShortItem,
                         "IsService": IsService,
                         "SehatSahulat": SehatSahulat,
                         "btnValue": btnValue,
@@ -976,6 +978,9 @@
                     }
                     if (parse.OTProcedure == 1) {
                         $("#chkOTProcedure").prop("checked", true);
+                    }
+                    if (parse.Short_Item == 1) {
+                        $("#chkShortItem").prop("checked", true);
                     }
                     if (parse.Controller_Drug == 1) {
                         $("#controller_drug").prop('checked', true);
@@ -1560,6 +1565,12 @@
                     </td>   
                     <td style="display:none;">
                         <input type="checkbox" id="chkSehatSahulat" name="chkSehatSahulat" />
+                    </td>
+                    <td>
+                        <input type="checkbox" id="chkShortItem" name="chkShortItem" />
+                    </td>
+                    <td>
+                        <label for="chkShortItem">Short Item</label>
                     </td>
                     <td style="width: 84px;display:none;">
                         <label for="chkSehatSahulat">Sehat Sahulat</label>

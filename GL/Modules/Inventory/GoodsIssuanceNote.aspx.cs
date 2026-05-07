@@ -30,7 +30,7 @@ namespace PMS.Inventory
             }
         }
         [WebMethod]
-        public static string GetAllitem(string searchText)
+        public static string GetAllitem(string searchText, string warehouseId)
         {
             try
             {
@@ -43,6 +43,7 @@ namespace PMS.Inventory
 
                              && x.Active == true
                              && x.Services != true
+                             && x.InventoryOrg == warehouseId
                          )
                     .OrderBy(x => x.Item_Code)
                     .Take(200)
