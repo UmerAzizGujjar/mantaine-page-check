@@ -521,7 +521,7 @@
             if (invNo) {
                 $.ajax({
                     type: "post",
-                    url: "IssueMedicine.aspx/AddSaleReturnInvoiceMaster",
+                    url: "IssueMedicine.aspx/SaleReturnInvoiceMaster",
                     data: JSON.stringify({ "invNo": invNo }),
                     dataType: 'JSON',
                     contentType: "application/json; charset=utf-8",
