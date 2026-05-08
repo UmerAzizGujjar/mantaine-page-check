@@ -28,6 +28,20 @@ namespace PMS
                     .Where(dept => dept.User_Id == AppConfig.UserID)
                     .Select(dept => dept.Department)
                     .ToList();
+                var userId = AppConfig.UserID;
+                var formId = 3;
+                var maxApprovalLimit = db.ExecuteQuery<decimal?>(
+                    "SELECT MAX(SASD.MaxApprovalLimit) " +
+                    "FROM Sys_Approval_Stage_Detail SASD " +
+                    "INNER JOIN Sys_Approval_Stage_Master SASM ON SASD.Stage_ID = SASM.Stage_ID " +
+                    "INNER JOIN Sys_Approval_Tempelate_Detail_Stages SATD ON SASM.Stage_ID = SATD.StageId " +
+                    "INNER JOIN Sys_Approval_Tempelate_Detail_Forms SATF ON SATD.Tempelate_ID = SATF.Tempelate_ID " +
+                    "INNER JOIN Sys_Approval_Tempelate_Master SATM ON SATD.Tempelate_ID = SATM.Tempelate_ID " +
+                    "WHERE SASD.UserId = {0} AND SATF.FormId = {1} AND SATM.IsActive = 1 AND SASM.IsDeleted = 0",
+                    userId,
+                    formId).FirstOrDefault();
+                ViewState["MaxApprovalLimit"] = maxApprovalLimit;
+
                 var qry = (from a in db.AP_Purchase_Orders
                            join apoi in db.AP_Purchase_Order_Items
                                 on a.PO_ID equals apoi.PO_ID
@@ -59,6 +73,7 @@ namespace PMS
                                g.Key.Remarks,
                                g.Key.Status,
                                g.Key.PO_Date,
+                               PO_Amount = g.Sum(x => (decimal?)x.apoi.Amount) ?? 0m,
 
                                Creator = db.aspnet_Users
                                    .Where(x => x.UserId == (g.Key.Created_By ?? Guid.Empty))
@@ -95,20 +110,6 @@ namespace PMS
                                                    select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m)
                            });
 
-                var formattedQuery = qry.AsEnumerable().Select(x => new
-                {
-                    x.PO_ID,
-                    x.PO_No,
-                    x.Remarks,
-                    x.Status,
-                    x.Creator,
-                    PO_Date = Convert.ToDateTime(x.PO_Date).ToString("dd-MMM-yyyy"),
-                    x.Approve_By,
-                    x.Department,
-                    x.TotalPRAmount,
-                    x.TotalBudget,
-                    x.RemainingAmount
-                });
                 bool hasEntryBudgetViewBtnRights = false;
                 var uid = AppConfig.UserID;
                 hasEntryBudgetViewBtnRights = (from us in db.aspnet_Users
@@ -116,10 +117,10 @@ namespace PMS
                                                select us).Any();
                 if (hasEntryBudgetViewBtnRights)
                 {
-                    GridView1.Columns[9].Visible = true;
                     GridView1.Columns[10].Visible = true;
                     GridView1.Columns[11].Visible = true;
                     GridView1.Columns[12].Visible = true;
+                    GridView1.Columns[13].Visible = true;
                 }
                 ;
                 GridView1.DataSource = qry;
@@ -130,6 +131,36 @@ namespace PMS
         {
             GridView1.PageIndex = e.NewPageIndex;
             BindGridView();
+        }
+
+        protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow)
+            {
+                return;
+            }
+
+            var chkSelect = e.Row.FindControl("chkSelect") as CheckBox;
+            if (chkSelect == null)
+            {
+                return;
+            }
+
+            var poAmountObj = DataBinder.Eval(e.Row.DataItem, "PO_Amount");
+            decimal poAmount = 0m;
+            if (poAmountObj != null)
+            {
+                decimal.TryParse(poAmountObj.ToString(), out poAmount);
+            }
+
+            var maxApprovalLimit = ViewState["MaxApprovalLimit"] != null
+                ? (decimal?)ViewState["MaxApprovalLimit"]
+                : null;
+
+            if (maxApprovalLimit.HasValue && poAmount >= maxApprovalLimit.Value)
+            {
+                chkSelect.Visible = false;
+            }
         }
 
 
