@@ -132,6 +132,7 @@
                      var MIRQty = $(value).find('td input[name=txtmirQty]').val();
                      var Batch = $(value).find('td input[name=txtBatch]').val();
                      var BatchNum = $(value).find('td select[name=ddlBatchNum]').val();
+                     var lastIssueDate = $(value).find('td input[name=txtLastIsssueDate]').val();
 
                      if ((parseFloat(IssueQty) > parseFloat(StoreStock)) && btnSave == "Save") {
                          Swal.fire({
@@ -188,12 +189,12 @@
                          debugger
                          if (btnSave == "Save") {
                              Item_list.push({
-                                 'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtStoreStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'CGS': parseFloat($(value).find('input[name=txtIssueQty]').val() || 0) * parseFloat($(value).find('input[name=txtCGSRate]').val() || 0), 'Department': $(value).find('td:eq(3)').text()
+                                 'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtStoreStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'lastIssueDate': $(value).find('input[name=txtLastIsssueDate]').val(), 'CGS': parseFloat($(value).find('input[name=txtIssueQty]').val() || 0) * parseFloat($(value).find('input[name=txtCGSRate]').val() || 0), 'Department': $(value).find('td:eq(3)').text()
                              });
                          }
                          if (btnSave == "Update") {
                              Item_list.push({
-                                 'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtSaveTimeStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'CGS': $(value).find('input[name=txtCGSAmount]').val(), 'Department': $(value).find('td:eq(3)').text()
+                                 'mirDetailId': $(value).find('td:eq(0)').text(), 'mir_id': $(value).find('td:eq(1)').text(), 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'Unit': $(value).find('td:eq(6)').text(), 'StoreStock': $(value).find('td input[name=txtSaveTimeStock]').val(), 'Remarks': $(value).find('input[name=txtRemarks]').val(), 'BatchNum': BatchNum, 'Qty': $(value).find('input[name=txtmirQty]').val(), 'IssueQty': $(value).find('input[name=txtIssueQty]').val(), 'BalanceQty': $(value).find('input[name=txtBlncQty]').val(), 'lastIssueDate': $(value).find('input[name=txtLastIsssueDate]').val(), 'CGS': $(value).find('input[name=txtCGSAmount]').val(), 'Department': $(value).find('td:eq(3)').text()
                              });
                          }
 
@@ -444,7 +445,7 @@
             var item_name = $(row).find('td:eq(3)').text().trim();
             var unit = $(row).find('td:eq(4)').text().trim();
             var rate = $(row).find('td:eq(5)').text().trim() || '0';
-            var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
+            var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';        
             var isChecked = $(anchor).prop('checked');
 
             if (!isChecked) {
@@ -515,6 +516,7 @@
                 '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px;  width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtmirQty' + length + '" name="txtmirQty" value="' + Qty + '" disabled/></td>' +
                 '<td style="paddin g-top: 2px;"><input type="text" style=" font-size: 10px; width: 64px!important;  height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + length + '" name="txtIssueQty" value="0"/></td>' +
                 '<td style="padding-top: 2px;"> <input disabled type="text" value="0" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBlncQty' + length + '" name="txtBlncQty" readonly="readonly"/></td>' +
+                '<td style="padding-top: 2px;"> <input disabled type="text" value="" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtLastIsssueDate' + length + '" name="txtLastIsssueDate" readonly="readonly"/></td>' +
                 '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + length + '" name="txtRemarks" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;"/> </td>' +
                 '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + item_id + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtItemId' + length + '" name="txtItemId"/></td>' +
                 '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSRate' + length + '" name="txtCGSRate" value="' + CGSRate + '"/></td>' +
@@ -527,6 +529,7 @@
                 $('#txtIssueQty' + length).prop('disabled', true);
             }
         }
+        debugger;
         function append(anchor) {
             debugger;
             count = 0;
@@ -538,6 +541,7 @@
             var unit = $($(row).find('td')[6]).text();
             var mir_detail_id = $($(row).find('td')[7]).text();
             var mir_date = $($(row).find('td')[8]).text();
+            var txtLastIsssueDate = $($(row).find('td')[14]).text();
             var length = $("#tblStoreIssueBote tr").length;
             var Qty = $($(row).find('td')[4]).text();
             var itemcode = $($(row).find('td')[5]).text();
@@ -546,6 +550,18 @@
             var Stock = $($(row).find('td')[11]).text();
             var balance = $($(row).find('td')[12]).text();
             var CGSRate = $($(row).find('td')[13]).text();
+
+            if (!txtLastIsssueDate || txtLastIsssueDate == "null") {
+                txtLastIsssueDate = '';
+            }
+            else {
+                txtLastIsssueDate = $.datepicker.formatDate(
+                    'dd M yy',
+                    new Date(parseInt(txtLastIsssueDate.substring(6, 19)))
+                );
+            }
+            
+
             if (balance == "null" || balance == "") {
                 balance = 0
             }
@@ -604,6 +620,7 @@
                     '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px;  width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtmirQty' + length + '" name="txtmirQty" value="' + Qty + '" disabled/></td>' +
                     '<td style="paddin g-top: 2px;"><input type="text" style=" font-size: 10px; width: 64px!important;                                        height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + length + '" name="txtIssueQty" value="0" onkeyup="calculateBalanceQty(this)"/></td>' +
                     '<td style="padding-top: 2px;"> <input type="text" value="' + balance + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBlncQty' + length + '" name="txtBlncQty" readonly="readonly"/></td>' +
+                    '<td style="padding-top: 2px;"> <input type="text" value="' + txtLastIsssueDate + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtLastIsssueDate' + length + '" name="txtLastIsssueDate" readonly="readonly"/></td>' +
                     '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + length + '" name="txtRemarks" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;"/> </td>' +
                     '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + item_id + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtItemId' + length + '" name="txtItemId"/></td>' +
                     '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSRate' + length + '" name="txtCGSRate" value="' + CGSRate +'"/></td>' +
@@ -649,7 +666,8 @@
                         '<td style="display:none;">' + parseFloat(parsed_Date[i].Stock).toFixed(2) + '</td>' +
                         '<td style="display:none;">' + parseFloat(parsed_Date[i].Balance).toFixed(2) + '</td>' +
                        /* '<td style="display:none;">' + parseFloat(parsed_Date[i].CGSRate).toFixed(2) + '</td>' +*/
-                        '<td style="display:none;">StoreStock</td>' +
+                    '<td style="display:none;">StoreStock</td>' +
+                    '<td style="display:none;">' + parsed_Date[i].Last_Issue_date + '</td>' +
                         '</tr>';
                     $('#tblMIRItemstModelTable tbody').append(rows);
                 }
@@ -774,6 +792,19 @@
                     if (result[key].Unit == null) {
                         result[key].Unit = " "
                     }
+                    var lastissueDate = result[key].Last_issue_date
+
+                    if (!lastissueDate || lastissueDate == "null") {
+                        lastissueDate = '';
+                    }
+                    else {
+                        lastissueDate = $.datepicker.formatDate(
+                            'dd M yy',
+                            new Date(parseInt(lastissueDate.substring(6, 19)))
+                        );
+                    }
+
+
                     var rows = '<tr>' +
                         '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + result[key].MIR_Detail_Id + ' </td>' +
                         '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + result[key].MIR_Id + ' </td>' +
@@ -787,6 +818,7 @@
                         '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px;  width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtmirQty' + key + '" name="txtmirQty" value="' + parseFloat(result[key].MIR_Qty).toFixed(2) + '" disabled/></td>' +
                         '<td style="padding-top: 2px;"><input type="text" style="font-size: 10px; width: 64px!important;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtIssueQty' + key + '" name="txtIssueQty" value="' + parseFloat(result[key].Issue_Qty).toFixed(2) + '" onkeyup="calculateBalanceQty(this)"/></td>' +
                         '<td style="padding-top: 2px;"> <input type="text" value="' + parseFloat(result[key].Balance_Qty).toFixed(2) + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBlncQty' + key + '" name="txtBlncQty"/></td>' +
+                        '<td style="padding-top: 2px;"> <input type="text" value="' + lastissueDate + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtLastIsssueDate' + key + '" name="txtLastIsssueDate"/></td>' +
                         '<td style="padding-top: 2px;"><input type="text" id="txtRemarks' + key + '" style="width:73px;height: 22px;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" name="txtRemarks" value="' + result[key].Remarks + '"/> </td>' +
                         '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + result[key].Item_Id + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtItemId' + length + '" name="txtItemId"/></td>' +
                         '<td style="display:none;padding-top: 2px;"><input type="hidden" value=" ' + result[key].CGS + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSAmount' + length + '" name="txtCGSAmount"/></td>' +
@@ -1003,6 +1035,7 @@
                         <th>GIR Qty</th>
                         <th>Issue Qty</th>
                         <th>Balance Qty</th>
+                        <th>Last Issue Date</th>
                         <th>Remarks</th>
                         <th>Action</th>
                     </tr>
