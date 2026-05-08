@@ -119,6 +119,7 @@
                         { "data": "ItemDescription", "orderable": false },
                         { "data": "Qty", "orderable": false },
                         { "data": "Rate", "orderable": false },
+                        { "data": "warehouse", "orderable": false },
                         { "data": "Status", "orderable": false },
                         { "data": "Created_By", "orderable": false },
                         {
@@ -224,6 +225,7 @@
                     <th>ItemDescription</th>
                     <th>QTY</th>
                     <th>Rate</th>
+                    <th>warehouse</th>
                     <th>Status</th>
                     <th>Created By</th>
                     <th>Creation Date</th>
