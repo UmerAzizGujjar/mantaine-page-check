@@ -111580,3 +111580,16 @@ Source: System.Web
 URL: http://localhost:28402/Modules/Others/NotFound.aspx?404;http://localhost:28402/wwwroot/Tibbit_theme/Latest_Datatable/pdfmake.min.js.map
 User: VisionPlus
 
+[ERROR:8bbe1f0f 5/8/2026 11:31:12 AM]
+Type: ArgumentException
+Message: Unknown web method AddSaleReturnInvoiceMaster.
+Parameter name: methodName
+Stack Trace:    at System.Web.Script.Services.WebServiceData.GetMethodData(String methodName)
+   at System.Web.Handlers.ScriptModule.OnPostAcquireRequestState(Object sender, EventArgs eventArgs)
+   at System.Web.HttpApplication.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+Source: System.Web.Extensions
+URL: http://localhost:28402/Modules/Billing/IssueMedicine.aspx/AddSaleReturnInvoiceMaster
+User: VisionPlus
+
