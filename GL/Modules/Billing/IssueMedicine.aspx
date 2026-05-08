@@ -521,7 +521,7 @@
             if (invNo) {
                 $.ajax({
                     type: "post",
-                    url: "IssueMedicine.aspx/SaleReturnInvoiceMaster",
+                    url: "IssueMedicine.aspx/AddSaleReturnInvoiceMaster",
                     data: JSON.stringify({ "invNo": invNo }),
                     dataType: 'JSON',
                     contentType: "application/json; charset=utf-8",
@@ -1791,6 +1791,7 @@
             });
         }
         function getOPDandIPDNO(pat_id) {
+            debugger;
             PageMethods.GetOPDandIPDNO(pat_id, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
@@ -2700,17 +2701,27 @@
 
                 var parsedData = JSON.parse(data);
                 var rows = '';
-
+                
                 $.each(parsedData, function (key, value) {
 
                     var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
                     var retdate = moment(TrnsDate).format('LLLL');
+
+                    var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined)
+                        ? value.Ward_Name
+                        : '';
+
+                    var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0)
+                        ? value.Bed_No
+                        : '';
 
                     rows += '<tr>' +
                         '<td>' + value.mr_no_sequence + '</td>' +
                         '<td>' + value.Full_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +
                         '<td>' + value.Referred_By + '</td>' +
+                        '<td>' + (value.Ward_Name || '') + '</td>' +
+                        '<td>' + ((value.Bed_No && value.Bed_No !== 0) ? value.Bed_No : '') + '</td>' +
                         '<td>' + retdate + '</td>' +
                         '<td>' +
                         '<a href="#" class="btnEdit" ' +
@@ -2731,13 +2742,22 @@
         }
 
         debugger;
+        //function hideModel(pat_id, mr_no_sequence) {
+        //    debugger;
+        //    console.log(pat_id, mr_no_sequence);
+        //    $('#queueModal').modal('hide');
+        //    $('#token-input-txtMRNo').val(mr_no_sequence)
+        //    getOPDandIPDNO(pat_id)
+
+        //}
         function hideModel(pat_id, mr_no_sequence) {
-            debugger;
             console.log(pat_id, mr_no_sequence);
             $('#queueModal').modal('hide');
-            $('#token-input-txtMRNo').val(mr_no_sequence)
-            getOPDandIPDNO(pat_id)
 
+            $("#txtMRNo").tokenInput("clear");
+            $("#txtMRNo").tokenInput("add", { id: pat_id, name: mr_no_sequence });
+
+            getOPDandIPDNO(pat_id);
         }
         function OnSuccess(data) {
             debugger;
@@ -3537,6 +3557,8 @@
                                         <th>Patient Name</th>
                                         <th>Department</th>
                                         <th>Referred By</th>
+                                        <th>Ward</th>
+                                        <th>Bed</th>
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Select</th>
                                     </tr>

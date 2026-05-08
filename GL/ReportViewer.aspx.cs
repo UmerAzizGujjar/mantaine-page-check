@@ -1809,7 +1809,75 @@ namespace PMS
                 rd.SetParameterValue("@Class_No", Class_No);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
+            else if (reportName == "Student_Receipt_Class_Details_Report_Balance")
+            {
+                reportPath += "Student/rpt_Student_Wise__Class_Receipt_Details_Bal.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
 
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string Class_No = Convert.ToString(Request.QueryString["Class_No"]);
+
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@Stdate", sqlStartDateTime);
+                rd.SetParameterValue("@enDate", sqlEndDateTime);
+                rd.SetParameterValue("@Class_No", Class_No);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "Student_Receipt_Session_Details_Report_Received")
+            {
+                reportPath += "Student/rpt_Student_Wise__Session_Receipt_Details_Received.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string Session = Convert.ToString(Request.QueryString["Session"]);
+
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@Stdate", sqlStartDateTime);
+                rd.SetParameterValue("@enDate", sqlEndDateTime);
+                rd.SetParameterValue("@Session", Session);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
+            else if (reportName == "Student_Receipt_Session_Details_Report_Balance")
+            {
+                reportPath += "Student/rpt_Student_Wise__Session_Receipt_Details_Bal.rpt";
+                rd.Load(reportPath);
+                rd.SummaryInfo.ReportTitle = reportTitle;
+
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+
+                string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                string Session = Convert.ToString(Request.QueryString["Session"]);
+
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@Stdate", sqlStartDateTime);
+                rd.SetParameterValue("@enDate", sqlEndDateTime);
+                rd.SetParameterValue("@Session", Session);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+            }
             else if (reportName == "Pharmacy_Profit_and_Loss_Report")
             {
                 if (Request.QueryString["StartDateTime"] != null && Request.QueryString["EndDateTime"] != null)
@@ -9036,7 +9104,7 @@ namespace PMS
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("CompanyLogo", logoPath);
-                rd.SetParameterValue("Title", "Death Certifcate");
+                rd.SetParameterValue("Title", "Death Certificate");
                 rd.SetParameterValue("@Emergency_ID", Convert.ToInt32(Request.QueryString["Emergency_ID"]));
 
             }

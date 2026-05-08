@@ -119,12 +119,13 @@
                         { "data": "ItemDescription", "orderable": false },
                         { "data": "Qty", "orderable": false },
                         { "data": "Rate", "orderable": false },
+                        { "data": "warehouse", "orderable": false },
                         { "data": "Status", "orderable": false },
                         { "data": "Created_By", "orderable": false },
                         {
                             "data": "Creation_Time",
                             "render": function (data, type, full) {
-                                var date = moment(full.Creation_Time).format('D-MMM-YYYY');
+                                var date = moment(full.Creation_Time).format('D-MMM-YYYY hh:mm A');
                                 return date;
                             }, "orderable": false
                         },
@@ -137,7 +138,7 @@
                                     return ""; 
                                 }
 
-                                var date = moment(full.Update_Time).format('D-MMM-YYYY');
+                                var date = moment(full.Update_Time).format('D-MMM-YYYY hh:mm A');
                                 return date;
                             },
                             "orderable": false
@@ -224,6 +225,7 @@
                     <th>ItemDescription</th>
                     <th>QTY</th>
                     <th>Rate</th>
+                    <th>warehouse</th>
                     <th>Status</th>
                     <th>Created By</th>
                     <th>Creation Date</th>

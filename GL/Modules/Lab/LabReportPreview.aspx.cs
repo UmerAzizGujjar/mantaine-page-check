@@ -157,10 +157,9 @@ namespace PMS
             if (!fileUploadMultiple.HasFile)
                 return;
 
-            // New root folder
+            // 1. Let IIS handle finding the physical folder dynamically (Universal)
             string dirFullPath = Server.MapPath("~/wwwroot/images/LabTestImg/");
 
-            // Create directory if not exists
             if (!Directory.Exists(dirFullPath))
             {
                 Directory.CreateDirectory(dirFullPath);
@@ -169,43 +168,38 @@ namespace PMS
             for (int i = 0; i < Request.Files.Count; i++)
             {
                 HttpPostedFile fileUpload = Request.Files[i];
+                if (fileUpload.ContentLength == 0) continue;
 
                 Test_Image image = new Test_Image();
                 Lab_Test_Detail ltd = new Lab_Test_Detail();
 
-                // SAME OLD IMAGE NO LOGIC
+                // Safe DB maximum calculation
+                int detailIdInt = Convert.ToInt32(detail_ID);
                 int imageNo = Convert.ToInt32(
                     DBClass.getField(
-                        "SELECT ISNULL(MAX(Image_No),0) + 1 FROM Test_Image WHERE Lab_Test_Detail_ID = " + detail_ID
+                        "SELECT ISNULL(MAX(Image_No),0) + 1 FROM Test_Image WHERE Lab_Test_Detail_ID = " + detailIdInt
                     )
                 );
 
-                // SAME OLD FILE NAME
                 string fileName = imageNo + "-" + detail_ID + ".png";
-
-                // Physical path (NEW FOLDER)
                 string physicalPath = Path.Combine(dirFullPath, fileName);
 
-                // DB path (SAME STRUCTURE IDEA)
-                string image_Path = "~../../../../wwwroot/images/LabTestImg/" + fileName;
+                // STANDARDIZED: Stored safely from the app root
+                string image_Path = "~/wwwroot/images/LabTestImg/" + fileName;
 
-                // SAME OLD DELETE LOGIC
                 if (File.Exists(physicalPath))
                 {
                     File.Delete(physicalPath);
-
-                    //string sql = "DELETE FROM Test_Image WHERE Image_path = '" + image_Path + "'";
-                    //DBClass.executeNonQueryWithoutBegin(sql);
                 }
 
-                // Save file
+                // Save physical file
                 fileUpload.SaveAs(physicalPath);
 
                 // Save DB record
                 image.Image_No = imageNo;
                 image.Image_path = image_Path;
                 ltd.Image_path = image_Path;
-                image.Lab_Test_Detail_ID = Convert.ToInt32(detail_ID);
+                image.Lab_Test_Detail_ID = detailIdInt;
 
                 db.Test_Images.InsertOnSubmit(image);
                 db.SubmitChanges();
@@ -550,25 +544,61 @@ namespace PMS
         public static string LoadimagesDetail(string TestDetailID, string single)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            string folderPath = DBClass.getField("Select Segment3 from Sys_Parms where Name like '%Images Folder Path%'");
-            var data = (from td in db.Test_Images
 
-                        where td.Lab_Test_Detail_ID == int.Parse(TestDetailID)
-                        select new
-                        {
-                            Image_path = td.Image_path.Replace("~/", string.Empty).Contains("LabTestImg") == true ? td.Image_path.Replace("~/", string.Empty) : "LabTestImg/" + td.Image_path.Replace("~/", string.Empty),
-                            td.Lab_Test_Detail_ID,
-                            Single = single,
-                            td.IsCancel,           
-                            td.Cancel_By,         
-                            td.Cancel_Time
-                        }).ToList();
-            if (data.Count != 0)
-            {
+            // Fetch data from database
+            var rawData = (from td in db.Test_Images
+                           where td.Lab_Test_Detail_ID == int.Parse(TestDetailID)
+                           select new
+                           {
+                               td.Image_path,
+                               td.Lab_Test_Detail_ID,
+                               td.IsCancel,
+                               td.Cancel_By,
+                               td.Cancel_Time
+                           }).ToList();
 
+            // Format paths using ASP.NET's VirtualPathUtility to handle server roots automatically
+            var formattedData = rawData.Select(td => {
+                string resolvedPath = td.Image_path;
 
-            }
-            return (new JavaScriptSerializer().Serialize(data));
+                // If it starts with standard "~/", resolve it to a clean root-relative absolute path
+                if (resolvedPath.StartsWith("~/"))
+                {
+                    // SAFE STATIC-METHOD RESOLUTION
+                    if (HttpContext.Current != null)
+                    {
+                        resolvedPath = VirtualPathUtility.ToAbsolute(resolvedPath);
+                    }
+                    else
+                    {
+                        // Fallback if HttpContext is completely missing
+                        resolvedPath = resolvedPath.Replace("~/", "/");
+                    }
+                }
+                else
+                {
+                    // Fallback for any old/legacy DB records that don't have standard structure
+                    resolvedPath = resolvedPath.Replace("~/", string.Empty);
+                    if (!resolvedPath.Contains("LabTestImg"))
+                    {
+                        resolvedPath = "wwwroot/images/LabTestImg/" + resolvedPath;
+                    }
+                    // Ensure it starts with a leading slash from the domain root
+                    resolvedPath = "/" + resolvedPath.TrimStart('/');
+                }
+
+                return new
+                {
+                    Image_path = resolvedPath,
+                    td.Lab_Test_Detail_ID,
+                    Single = single,
+                    td.IsCancel,
+                    td.Cancel_By,
+                    td.Cancel_Time
+                };
+            }).ToList();
+
+            return new JavaScriptSerializer().Serialize(formattedData);
         }
 
         public class TestDetail

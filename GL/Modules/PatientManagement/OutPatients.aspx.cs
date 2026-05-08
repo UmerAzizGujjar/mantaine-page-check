@@ -2302,7 +2302,7 @@ namespace PMS
             {
                 bool excludeWarehouse = db.sys_Parms.Any(p => p.Name == "Exclude Warehouse Medicines"
                                                            && p.Code == "01" );
-                var query = db.INV_Items.Where(d => d.IsPharmacyItem == true && d.Description.Contains(searchString));
+                var query = db.INV_Items.Where(d => d.IsPharmacyItem == true && d.Short_Item == false && d.Description.Contains(searchString));
                 if (excludeWarehouse)
                 {
                     query = query.Where(d => d.InventoryOrg != "009");

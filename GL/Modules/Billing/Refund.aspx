@@ -300,7 +300,7 @@
                 debugger;
                 var Patient_ID = $("#hdPatientID").text();
 
-                var remarks = $("#txtRemarks").text();
+                var remarks = $("#txtRemarks").val();
                 var advanceDate = $("#txtAdvanceDate").val();
                 var saveVal = $('#btnSave').val();
                 var advID = '<% =Request.QueryString["advID"] %>';
