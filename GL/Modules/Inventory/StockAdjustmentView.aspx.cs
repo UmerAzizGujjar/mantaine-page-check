@@ -34,6 +34,7 @@ namespace PMS.Inventory
                                           ItemDescription = item.Description,
                                           Rate = ISA.Rate,
                                           Qty = ISA.Qty,
+                                          warehouse = _dbContext.GetDataValueName("Ware House", ISA.Ware_House),
                                           //Voucher_No = DBClass.getField("select Voucher_No from GL_Vouchers where Voucher_ID =" + ISA.Voucher_ID),
                                           Status = ISA.Status,
                                           Created_By = _dbContext.aspnet_Users.Where(u => u.UserId == ISA.Created_By).Select(u => u.UserName).FirstOrDefault() ?? "",

@@ -2701,17 +2701,27 @@
 
                 var parsedData = JSON.parse(data);
                 var rows = '';
-
+                
                 $.each(parsedData, function (key, value) {
 
                     var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
                     var retdate = moment(TrnsDate).format('LLLL');
+
+                    var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined)
+                        ? value.Ward_Name
+                        : '';
+
+                    var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0)
+                        ? value.Bed_No
+                        : '';
 
                     rows += '<tr>' +
                         '<td>' + value.mr_no_sequence + '</td>' +
                         '<td>' + value.Full_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +
                         '<td>' + value.Referred_By + '</td>' +
+                        '<td>' + (value.Ward_Name || '') + '</td>' +
+                        '<td>' + ((value.Bed_No && value.Bed_No !== 0) ? value.Bed_No : '') + '</td>' +
                         '<td>' + retdate + '</td>' +
                         '<td>' +
                         '<a href="#" class="btnEdit" ' +
@@ -3547,6 +3557,8 @@
                                         <th>Patient Name</th>
                                         <th>Department</th>
                                         <th>Referred By</th>
+                                        <th>Ward</th>
+                                        <th>Bed</th>
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Select</th>
                                     </tr>

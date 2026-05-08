@@ -1428,13 +1428,13 @@
                     }
 
 
-                    if (test_array.length > 0) {
-                        alert('This test already added!');
-                    } else {
+                    //if (test_array.length > 0) {
+                    //    alert('This test already added!');
+                    //} else {
                         $('.tests-table').append(row);
                         $('#ctl00_MainContent_txtAreaOfInterest').val('');
 
-                    }
+                    //}
                 });
 
             }, function (err) { });
@@ -4810,14 +4810,14 @@
                     else {
                         row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + dateValue + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /><input type="hidden" name="txtRecievedID"/><input type="hidden" name="txtIs_Result"/><input type="hidden" name="txtIsBIllied"/><input type="hidden" name="txtRecievedID"/><input type="hidden" name="txtIsBIllied"/> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Group_Category + '"/><input type="hidden" name="txtDeptID" value="001"/> ' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Test_Name + ' </td>   <td>No</td><td>' + Result + '</td> <td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td><td>' + doctor + ' <input type="hidden" name="Docid" value="' + doctorVal + '" </td>  <td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
                     }
-                    var test_array = $('.tests-table').find('input[name=testID][value="' + value.TestID + '"]');
-                    if (test_array.length > 0) {
-                        alert('This test already added!');
-                    } else {
+                    //var test_array = $('.tests-table').find('input[name=testID][value="' + value.TestID + '"]');
+                    //if (test_array.length > 0) {
+                    //    alert('This test already added!');
+                    //} else {
                         $('.tests-table').append(row);
                         $('#ctl00_MainContent_txtAreaOfInterest').val('');
 
-                    }
+                    /*}*/
                 });
             }, function (err) { });
         }
@@ -4899,14 +4899,14 @@
                      '</td>' +
                      '</tr>';
 
-                 var test_array = $('.tests-table').find('input[name=testID][value="' + test + '"]');
+                 //var test_array = $('.tests-table').find('input[name=testID][value="' + test + '"]');
 
-                 if (test_array.length > 0) {
-                     alert('This test already added!');
-                 } else {
+                 //if (test_array.length > 0) {
+                 //    alert('This test already added!');
+                 //} else {
                      $('.tests-table').append(row);
                      $('#ctl00_MainContent_txtAreaOfInterest').val('');
-                 }
+                 /*}*/
              },
              failure: function (response) {
                  alert(response.d);
@@ -5692,12 +5692,12 @@
                 var row = '<tr><td><input type="hidden" name="testDate" value="' + dateValue + '">' + date + '</td><td><input type="hidden" name="testID" value="' + test + '" /> <input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtddlXRayLF_Name" value="0"><input type="hidden" name="txtDeptID" value="0"/> ' + $('#ddlOtherTest').find('option:selected').text() + '</td><td>No</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td><td>' + doctor + ' <input type="hidden" name="Docid" value="' + doctorVal + '" </td> <td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
 
 
-                var test_array = $('.tests-table').find('input[name=testID][value="' + test + '"]');
-                if (test_array.length > 0) {
-                    alert('This test already added!');
-                } else {
+                //var test_array = $('.tests-table').find('input[name=testID][value="' + test + '"]');
+                //if (test_array.length > 0) {
+                //    alert('This test already added!');
+                //} else {
                     $('.tests-table').append(row);
-                }
+                /*}*/
             });
 
             $('#btnAddMedicine').on("click", function (e) {
