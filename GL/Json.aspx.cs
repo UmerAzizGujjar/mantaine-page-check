@@ -227,15 +227,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + "  AND Description like '%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + "  AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND Description like '%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
                         }                        
                         else
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND Description like '%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " and InventoryOrg=" + warehouseID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
                         }
                     }
                     else
@@ -283,15 +283,15 @@ namespace PMS
                     {
                         if (allowPharmacy && allowGeneralItem)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "   AND Description like '%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select * from INV_Items i Where Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "   AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
                         }
                         else if (allowPharmacy)
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "  AND Description like '%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item=1 and IsPharmacyItem=1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + "  AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
                         }                        
                         else
                         {
-                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND Description like '%" + Request.QueryString["q"] + "%'";
+                            sqlQuery = "Select * from INV_Items i Where Pharmacy_Item<>1 and IsPharmacyItem<>1 and Hospital_Services=0 and Services<>1 and Active=1 and Book_ID=" + AppConfig.Book_ID + " AND (Description like '%" + Request.QueryString["q"] + "%' OR Item_Code like '%" + Request.QueryString["q"] + "%')";
                         }
                     }
                     else

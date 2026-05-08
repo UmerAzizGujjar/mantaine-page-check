@@ -2133,13 +2133,6 @@
       <Column Name="Vendor_bit_5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Sys_Approval_Stage_Detail" Member="Sys_Approval_Stage_Details">
-    <Type Name="Sys_Approval_Stage_Detail">
-      <Column Name="Stage_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Stage_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Sys_Approval_Tempelate_Master" Member="Sys_Approval_Tempelate_Masters">
     <Type Name="Sys_Approval_Tempelate_Master">
       <Column Name="Tempelate_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -3580,26 +3573,6 @@
       <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="GRN_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="GRN_Num" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="CGS" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Store_Issue_Detail" Member="Store_Issue_Details">
-    <Type Name="Store_Issue_Detail">
-      <Column Name="Store_Issue_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Store_Issue_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="MIR_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="MIR_Detail_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Company_Stock" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Store_Stock" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Issue_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Balance_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="BatchNum" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="CGS" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </Type>
   </Table>
@@ -7743,6 +7716,35 @@
       <Column Name="Short_Item" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Sys_Approval_Stage_Detail" Member="Sys_Approval_Stage_Details">
+    <Type Name="Sys_Approval_Stage_Detail">
+      <Column Name="Stage_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Stage_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="MaxApprovalLimit" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Store_Issue_Detail" Member="Store_Issue_Details">
+    <Type Name="Store_Issue_Detail">
+      <Column Name="Store_Issue_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Store_Issue_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MIR_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MIR_Detail_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Company_Stock" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Store_Stock" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Issue_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Balance_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="BatchNum" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="CGS" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Last_issue_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -9334,28 +9336,6 @@
       <Column Name="InvOrgId" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="Batch_Balance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_GetMIRDetailByMIRID" Method="sp_GetMIRDetailByMIRID">
-    <Parameter Name="MIRId" Parameter="mIRId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_GetMIRDetailByMIRIDResult">
-      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-      <Column Name="InventoryOrganizationId" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-      <Column Name="Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="MIRDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
-      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="MIRQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Pack_Quantity" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="IsBatch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
-      <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.spSaleReturnMedicinesDetails" Method="spSaleReturnMedicinesDetails">
@@ -12060,6 +12040,35 @@
       <Column Name="Referred_By" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
       <Column Name="Bed_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetMIRDetailByMIRID" Method="sp_GetMIRDetailByMIRID">
+    <Parameter Name="MIRId" Parameter="mIRId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_GetMIRDetailByMIRIDResult">
+      <Column Name="DepartmentId" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="InventoryOrganizationId" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="MIRDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL" CanBeNull="false" />
+      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="MIR_Num" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="MIRQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Pack_Quantity" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Purchase_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="IsBatch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Balance" Type="System.Decimal" DbType="Decimal(38,4)" CanBeNull="true" />
+      <Column Name="Last_Issue_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetLabApprovalStatus" Method="sp_GetLabApprovalStatus">
+    <Parameter Name="Bill_ID" Parameter="bill_ID" Type="System.Int64" DbType="BigInt" />
+    <ElementType Name="sp_GetLabApprovalStatusResult">
+      <Column Name="isApproved" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

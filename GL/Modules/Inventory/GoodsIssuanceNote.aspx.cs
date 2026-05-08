@@ -309,6 +309,10 @@ namespace PMS.Inventory
                 sid.Department = item.Department;
                 sid.Remarks = item.Remarks;
                 sid.BatchNum = item.BatchNum;
+                if (item.lastIssueDate != "")
+                {
+                    sid.Last_issue_date = Convert.ToDateTime(item.lastIssueDate);
+                }
                 sid.CGS = item.CGS;
                 db.Store_Issue_Details.InsertOnSubmit(sid);
                 db.SubmitChanges();
@@ -337,6 +341,7 @@ namespace PMS.Inventory
                              data.Item_Id,
                              data.MIR_Id,
                              data.MIR_Qty,
+                             data.Last_issue_date,
                              data.CGS,
                              data.Remarks,
                              data.Store_Issue_Detail_Id,
@@ -435,6 +440,7 @@ namespace PMS.Inventory
             public string Department { get; set; }
             public string Remarks { get; set; }
             public string BatchNum { get; set; }
+            public string lastIssueDate { get; set; }
             public decimal CGS { get; set; }
         }
 

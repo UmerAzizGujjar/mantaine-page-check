@@ -22,25 +22,7 @@
             }
 
         });
-        function OnSuccess(data) {
-            debugger;
-            if (data.d != '') {
-                if (data.d.Patient_Discount_Type == null)
-                    data.d.Patient_Discount_Type = "";
-                var mydate = new Date(Date.parse(data.d.Entry_Date));
-                var dateR = mydate.toLocaleDateString();
-                $('#lblPatienName').text(ReplaceNullWith_Space(data.d.Name));
-                $('#lblAgeYears').text(ReplaceNullWith_Space(data.d.Age));
-                $('#lblGender').text(ReplaceNullWith_Space(data.d.Gender));
-                $('#lblRegDate').text(dateR);
-                $('#lblAddress').text(ReplaceNullWith_Space(data.d.Address));
-                $('#lblContactNo').text(ReplaceNullWith_Space(data.d.Mobile));
-                $('#lblDepartment').text(ReplaceNullWith_Space(data.d.department));
-                $('#lblPatientCategory').text(ReplaceNullWith_Space(data.d.Patient_Type));
-                $('#lblPatientDiscountType').text(ReplaceNullWith_Space(data.d.Patient_Discount_Type));
-                $('#lblOutputShow').text(ReplaceNullWith_Space(data.d.Balance));
-            }
-        }
+
         function PrintRefund() {
             debugger;
             var refundID = '<% =Request.QueryString["advID"] %>';
@@ -82,6 +64,7 @@
                 var mydate = new Date(Date.parse(parseData.Entry_Date));
                 var dateR = mydate.toLocaleDateString();
                 $('#hdPatientID').text(ReplaceNullWith_Space(parseData.Patient_ID));
+                $('#hdnBillID').val(ReplaceNullWith_Space(parseData.bill_ID));
                 $('#lblMRNo').text(ReplaceNullWith_Space(parseData.Patient_No));
                 $('#lblPatienName').text(ReplaceNullWith_Space(parseData.Full_Name));
                 $('#lblAgeYears').text(ReplaceNullWith_Space(parseData.Age_years));
@@ -199,6 +182,7 @@
                     var rows;
                     debugger;
                     $('#hdPatientID').text(parse[0].Patient_ID);
+                    $('#hdnBillID').val(parse[0].bill_ID);
                     $('#lblMRNo').text(parse[0].Patient_No);
                     $('#lblPatienName').text(parse[0].Full_Name);
                     $('#lblAgeYears').text(parse[0].Age_years);
@@ -294,12 +278,146 @@
                 return Data;
         }
 
+        function CheckBillTestApproved(Bill_ID, callback) {
 
+            $.ajax({
+                type: "POST",
+                url: "Refund.aspx/CheckBillTestApproved",
+                data: JSON.stringify({ Bill_ID: Bill_ID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (response) {
+
+                    if (response.d == true) {
+
+                        //alert("One of the test from this Bill is Approved so You can not refund this bill.");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: "One of the Test from This Bill is Approved You Can't Refund this Bill.",
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        callback(false);
+                    }
+                    else {
+
+                        callback(true);
+                    }
+                },
+
+                error: function (xhr, status, error) {
+
+                    alert("Error : " + error);
+                    callback(false);
+                }
+            });
+        }
         function SaveRecord() {
+
+            if (validateSave()) {
+
+                debugger;
+
+                var Patient_ID = $("#hdPatientID").text();
+                var Bill_ID = $("#hdnBillID").val();
+
+                CheckBillTestApproved(Bill_ID, function (canSave) {
+
+                    // Stop saving if approved test exists
+                    if (!canSave) {
+                        return;
+                    }
+
+                    var remarks = $("#txtRemarks").val();
+                    var advanceDate = $("#txtAdvanceDate").val();
+                    var saveVal = $('#btnSave').val();
+
+                    var ServiceRefund = [];
+
+                    $.each($('#tblDetails tbody tr'), function (key, value) {
+
+                        var Bill_Detial_ID = document.getElementById('tblDetails').rows[key + 1].cells[1].innerText;
+                        var Doctor_Refund = $(value).find('input[name="DocRefund"]').val();
+                        var Hos_Refund = $(value).find('input[name="HosRefund"]').val();
+                        var Item_ID = document.getElementById('tblDetails').rows[key + 1].cells[2].innerText;
+
+                        ServiceRefund.push({
+                            Bill_Detial_ID: Bill_Detial_ID,
+                            Doctor_Refund: Doctor_Refund,
+                            Item_ID: Item_ID,
+                            Hos_Refund: Hos_Refund
+                        });
+                    });
+
+                    var ShareRefund = [];
+
+                    $.each($('#Doctor_Share_Table tbody tr'), function (key, value) {
+
+                        var Emp_ID = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[1].innerText;
+                        var Record_Id = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[2].innerText;
+                        var Refund_Amount = $(value).find('input[name="RefundDis"]').val();
+
+                        ShareRefund.push({
+                            Emp_ID: Emp_ID,
+                            Record_Id: Record_Id,
+                            Refund_Amount: Refund_Amount
+                        });
+                    });
+
+                    var data = {
+                        Patient_ID: Patient_ID,
+                        advanceDate: advanceDate,
+                        remarks: remarks,
+                        ServiceRefund: ServiceRefund,
+                        ShareRefund: ShareRefund
+                    };
+
+                    PageMethods.SaveRefund(JSON.stringify(data), function (res) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Successfully Save',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+                        window.location.reload();
+                        $('#btnSave').attr('disabled', 'disabled');
+
+                    }, function (error) {
+
+                        alert(error.get_message());
+                    });
+
+                });
+            }
+        }
+
+<%--        function SaveRecord() {
             if (validateSave()) {
                 debugger;
                 var Patient_ID = $("#hdPatientID").text();
+                var Bill_ID = $("#hdnBillID").val(); 
+                CheckBillTestApproved(Bill_ID, function (canSave) {
 
+                    // Stop saving if approved test exists
+                    if (!canSave) {
+                        return;
+                    }
+               
                 var remarks = $("#txtRemarks").val();
                 var advanceDate = $("#txtAdvanceDate").val();
                 var saveVal = $('#btnSave').val();
@@ -347,7 +465,7 @@
                     alert(error.get_message());
                 });
             }
-        }
+        }--%>
 
         function validateSave() {
             debugger;
@@ -403,6 +521,7 @@
 
     <div class="container-fluid">
         <input type="hidden" id="hdPatientID" />
+        <input type="hidden" id="hdnBillID" />
         <div class="row">
     <!-- Left Card -->
     <div class="col-lg-5 col-md-5 col-sm-12">
