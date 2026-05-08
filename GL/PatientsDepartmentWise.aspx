@@ -1707,6 +1707,11 @@
                         var url = 'ReportViewer.aspx?ReportName=GRN_PO_Reconciliation_Report&ReportTitle=GRN Vs PO Reconciliation Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
+                    if (rptTitle == "Inventory_Reconciliation_Report") {
+
+                        var url = 'ReportViewer.aspx?ReportName=Inventory_Reconciliation_Report&ReportTitle=GRN Vs PO Vs IGP Vs PR Reconciliation Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        window.open(url, '_blank');
+                    }
                     if (rptTitle == "Purchase_Register_Report") {
 
                         var url = 'ReportViewer.aspx?ReportName=Purchase_Register_Report&ReportTitle=Purchase Register Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&PatientType=' + $('#ctl00_MainContent_ddlDepartments').val();
