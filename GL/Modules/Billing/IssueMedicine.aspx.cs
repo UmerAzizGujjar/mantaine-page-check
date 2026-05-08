@@ -1135,6 +1135,25 @@ namespace PMS
             return result;
         }
         [WebMethod]
+        public static string GetPanel()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+
+                var result = (from gl in db.Panels
+
+                              select new
+                              {
+                                  gl.Panel_ID,
+                                  gl.Company_Name,
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+
+            }
+            return data;
+        }
+        [WebMethod]
         public static string SaleReturnInvoiceMaster(int invNo)
         {
             string result = string.Empty;

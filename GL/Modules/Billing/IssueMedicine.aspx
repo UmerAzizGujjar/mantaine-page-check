@@ -10,6 +10,7 @@
             if (!$('#chkbatch').prop("checked")) {
                 $('#chkbatch').prop("checked", true);
             }
+            fillPanel();
             BalanceAmountCondition();
             CheckSaleReturnAllow();
             $('#chkbatch').on('change', function () {
@@ -3232,7 +3233,26 @@
 
 
         }
+        function fillPanel() {
+            var options = '<option value="0">Please Select</option>';
 
+            $.ajax({
+                url: 'IssueMedicine.aspx/GetPanel',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.Panel_ID + '">' + value.Company_Name + '</option>';
+                    });
+                    $('#ddlpanel').html(options);
+                    $('#ddlpanel').select2();
+                }
+            });
+
+            return options;
+        }
         //function getInvoiceNo_PatWise() {
 
         //    var reg_id = $('#ddlpat_no').val();
@@ -3370,6 +3390,10 @@
                     <label class="batchdiv">Batch No:</label>
                     <select id="batchno" class="form-control batchdiv" tabindex="7" onchange="AddMedicineDetail()"></select>
                 </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label class="paneldiv">Panel</label>
+                    <select id="ddlpanel" class="form-control ddlpanel" tabindex="7" ></select>
+                </div>
 
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%;">
                     <label id="lblbatch">Batch</label>
@@ -3383,9 +3407,7 @@
                 <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-top: 2%; margin-left: -4%;">
                     <input type="checkbox" tabindex="9" id="chkprint" />
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-2" style="margin-top: 2%">
-                    <input type="button" class="btn btn-primry" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
-                </div>
+               
             </div>
 
 
@@ -3416,10 +3438,13 @@
                 <div class="col-lg-1 col-md-4 col-sm-6 margin">
                     <label id="lblHold">Hold</label>
                 </div>
+                 <div class="col-sm-2 col-md-2 col-lg-2">
+                     <input type="button" class="btn btn-primry" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
+                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="col-lg-1 col-md-4 col-sm-6">
                     <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" />
                 </div>
             </div>
