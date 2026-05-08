@@ -115,7 +115,8 @@ namespace PMS
                              select new
                              {
                                  ip.Doctor,
-                                 ip.Department
+                                 ip.Department,
+                                 ip.Panel_Company
                              }).FirstOrDefault();
 
             var itemCodes = (from  ip in db.In_Patient_Medicines 
@@ -618,6 +619,8 @@ namespace PMS
             public decimal linediscount { get; set; }
             public string invNumber { get; set; }
             public int In_Patient_ID { get; set; }
+
+            public string Panel_Id { get; set; }
             public List<Medicindetails> Save_list { get; set; }
         }
 
@@ -687,6 +690,7 @@ namespace PMS
             //var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
             newBill.Ware_House = data.warehouse;
             newBill.In_Patient_ID = data.In_Patient_ID;
+            newBill.Panel_Id = Convert.ToInt32(data.Panel_Id);
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
             newBill.IsPharmacy = true;

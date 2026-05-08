@@ -321,6 +321,7 @@
                     $('#txtDisAmt').attr("disabled", true);
                     $('#txtFlatDisc').attr("disabled", true);
                     $('#txtAmountReceived').attr("disabled", true);
+                    $('#ddlpanel').attr('disabled', false);
                 }
                 else {
                     $('#txtDisPer').attr("disabled", false);
@@ -1355,6 +1356,7 @@
             var getrowindex = row.rowIndex;
             var excatrowindex = parseInt(getrowindex) - parseInt(1);
             CalculateSummarieDiscountPerWise(excatrowindex);
+            CountBalance(); 
         }
         function Invoice() {
             debugger;
@@ -1386,6 +1388,8 @@
             var row = $(anchor).parents('tr')[0];
             row.remove();
             CalculateTotals();
+
+            CountBalance(); 
             debugger;
             $("#tblDetails tbody tr").each(function (key) {
                 debugger;
@@ -1471,29 +1475,44 @@
             else
                 toastr.success(message, title);
         }
+        //function CountBalance() {
+        //    debugger;
+        //    var TtlPayable = $('#txtTotalPayable').val();
+        //    if (TtlPayable == "") {
+        //        TtlPayable = 0;
+        //    }
+        //    var ttlDisc = $('#txtDisAmt').val();
+        //    var tllDisc = $('#txtLineDisc').val();
+        //    var AmtReceived = $('#txtAmountReceived').val();
+        //    var flatdisc = $('#txtFlatDisc').val();
+        //    if (flatdisc == "" || flatdisc == "visionplus") {
+        //        flatdisc = 0;
+        //    }
+        //    if (TtlPayable != '' || TtlPayable != 0) {
+        //        if (AmtReceived != '') {
+        //            $('#txtBalances').val((Math.round(parseFloat(TtlPayable) - parseFloat(ttlDisc) - parseFloat(tllDisc) - parseFloat(flatdisc) - parseFloat(AmtReceived))).toFixed(0));
+        //        }
+        //        else
+        //            $('#txtBalances').val(TtlPayable.toFixed(0));
+        //    }
+        //    else {
+        //        $('#txtBalances').val(TtlPayable.toFixed(0));
+        //    }
+        //}
         function CountBalance() {
             debugger;
-            var TtlPayable = $('#txtTotalPayable').val();
-            if (TtlPayable == "") {
-                TtlPayable = 0;
+            var TtlPayable = parseFloat($('#txtTotalPayable').val()) || 0;
+            var ttlDisc = parseFloat($('#txtDisAmt').val()) || 0;          
+            var tllDisc = parseFloat($('#txtLineDisc').val()) || 0;        
+            var flatdisc = parseFloat($('#txtFlatDisc').val()) || 0;       
+            var AmtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
+
+            var NetPayable = TtlPayable - ttlDisc - tllDisc - flatdisc;
+            var Balance = NetPayable - AmtReceived;
+            if (isNaN(Balance) || Balance < 0) {
+                Balance = 0;
             }
-            var ttlDisc = $('#txtDisAmt').val();
-            var tllDisc = $('#txtLineDisc').val();
-            var AmtReceived = $('#txtAmountReceived').val();
-            var flatdisc = $('#txtFlatDisc').val();
-            if (flatdisc == "" || flatdisc == "visionplus") {
-                flatdisc = 0;
-            }
-            if (TtlPayable != '' || TtlPayable != 0) {
-                if (AmtReceived != '') {
-                    $('#txtBalances').val((Math.round(parseFloat(TtlPayable) - parseFloat(ttlDisc) - parseFloat(tllDisc) - parseFloat(flatdisc) - parseFloat(AmtReceived))).toFixed(0));
-                }
-                else
-                    $('#txtBalances').val(TtlPayable.toFixed(0));
-            }
-            else {
-                $('#txtBalances').val(TtlPayable.toFixed(0));
-            }
+            $('#txtBalances').val(Math.round(Balance));
         }
         function sumdiscount() {
             debugger;
@@ -1758,12 +1777,12 @@
             var discfinalAmnt = $('#txtLineDisc').val() || 0;
             //$('#txtAmountReceived').val(parseFloat(TotalAmount.toFixed()) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc));
 
-            if (blnceCondition == 'true') {
-                $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
-            }
-            else {
-                $('#txtAmountReceived').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
-            }
+            //if (blnceCondition == 'true') {
+            //    $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
+            //}
+            //else {
+            //    $('#txtAmountReceived').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
+            //}
         }
         function CheckSaleReturnAllow() {
             debugger;
@@ -2262,7 +2281,9 @@
                 "DiscAmnt": DiscAmnt,
                 "Save_list": Save_list,
                 "In_Patient_ID": In_Patient_ID,
-                "invNumber": invNumber
+                "invNumber": invNumber,
+                "Panel_Id": $('#ddlpanel').val()
+
             };
             if (patId == undefined) {
                 debugger;
@@ -2438,7 +2459,8 @@
                         "linediscount": linediscount,
                         "DiscAmnt": DiscAmnt,
                         "Save_list": Save_list,
-                        "invNumber": invNumber
+                        "invNumber": invNumber,
+                        "Panel_Id": $('#ddlpanel').val()
                     };
                     if (patId == undefined) {
                         debugger;
@@ -2855,6 +2877,20 @@
                             $('#ddlDepartment').val(department).trigger('change')
                             $('#ddlDoctor').attr('disabled', true);
                             $('#ddlDepartment').attr('disabled', true);
+
+                            var panelCompany = data.DoctorInfo?.Panel_Company || '';
+                            if (panelCompany && panelCompany != "0" && panelCompany != 0) {
+                                setTimeout(function () {
+                                    $('#ddlpanel').val(panelCompany.toString()).trigger('change');
+                                    if ($('input[name="rbtn"]:checked').val() !== 'rbtnHospital') {
+                                        $('#ddlpanel').attr('disabled', true);
+                                    } else {
+                                        $('#ddlpanel').attr('disabled', false);
+                                    }
+                                }, 100);
+                            } else {
+                                $('#ddlpanel').attr('disabled', false);
+                            }
                             getWardAndBed(pat_Id)
                             debugger;
                             $.each(data.ItemCodes, function (key, value) {

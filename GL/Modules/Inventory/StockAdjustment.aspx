@@ -19,9 +19,25 @@
                     $('#ctl00_MainContent_hdbatch').val(1);
                     $('#ctl00_MainContent_hdallowblank').val(1);
                 }
+
             });
 
-            // Batch No dropdown change event
+            $('#ctl00_MainContent_ddlBatchNo').select2({
+                width: '100%',
+                placeholder: '-- Select Batch --',
+                allowClear: true,
+                closeOnSelect: true,
+                dropdownParent: $('#<%= pnlForm.ClientID %>')
+            });
+
+            $('#ctl00_MainContent_ddlBatchNo').on('change select2:close', function () {
+                DisableTextOnDropdownChange();
+                var $ddl = $(this);
+                setTimeout(function () {
+                    $ddl.select2('close');
+                }, 100);
+            });
+
             $('#ctl00_MainContent_ddlBatchNo').on('change', function () {
                 DisableTextOnDropdownChange();
             });
@@ -488,7 +504,7 @@
                             $('#ctl00_MainContent_ddlBatchNo').append('<option value="' + batch.BatchNum + '">' + batch.BatchNum + ' (Adjustment)</option>');
                         });
                     }
-                    $('#ctl00_MainContent_ddlBatchNo').select2();
+                    //$('#ctl00_MainContent_ddlBatchNo').select2();
                 },
                 error: function (error) {
                     console.log("Error loading batches: " + error);
@@ -498,29 +514,38 @@
         function DisableDropdownOnTextInput() {
             var txtBatchNo = $('#ctl00_MainContent_txtBatchNo');
             var ddlBatchNo = $('#ctl00_MainContent_ddlBatchNo');
+            var hdnBatch = $('#ctl00_MainContent_hdnSelectedBatchValue');
 
-            if (txtBatchNo.val() !== '') {
+            if (txtBatchNo.val().trim() !== '') {
                 ddlBatchNo.prop('disabled', true);
-                ddlBatchNo.val('0'); // Reset to default option
+                ddlBatchNo.val('0');
+
+                hdnBatch.val(txtBatchNo.val().trim());
             } else {
                 ddlBatchNo.prop('disabled', false);
+                hdnBatch.val('');
             }
         }
 
-        // Add this function to disable textbox when dropdown is selected
+
         function DisableTextOnDropdownChange() {
             var txtBatchNo = $('#ctl00_MainContent_txtBatchNo');
             var ddlBatchNo = $('#ctl00_MainContent_ddlBatchNo');
+            var hdnBatch = $('#ctl00_MainContent_hdnSelectedBatchValue');
 
-            if (ddlBatchNo.val() !== '0' && ddlBatchNo.val() !== null) {
+            if (ddlBatchNo.val() !== '0' && ddlBatchNo.val() !== null && ddlBatchNo.val() !== '') {
                 txtBatchNo.prop('disabled', true);
-                txtBatchNo.val(''); // Clear the textbox
-                // Remove error class if present
+                txtBatchNo.val('');
+                hdnBatch.val(ddlBatchNo.val());
+
                 txtBatchNo.removeClass('ErrorAlert');
                 $('#ctl00_MainContent_hdbatch').val(0);
                 $('#ctl00_MainContent_hdallowblank').val(0);
             } else {
                 txtBatchNo.prop('disabled', false);
+                if (txtBatchNo.val() === '') {
+                    hdnBatch.val('');
+                }
             }
         }
 
@@ -532,6 +557,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <asp:HiddenField runat="server" ID="hdnSelectedBatchValue" />
     <form id="item">
         <div class="row">
             <div class="col-lg-2 col-md-3 col-sm-4">
