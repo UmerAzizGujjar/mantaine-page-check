@@ -7,8 +7,36 @@
     <script type="text/javascript">
         var Stock_ID = 0;
         $(document).ready(function () {
+            $('#ctl00_MainContent_txtBatchNo').on('change keyup', function () {
+                DisableDropdownOnTextInput();
 
-            
+                if ($(this).val() != '') {
+                    $(this).removeClass('ErrorAlert');
+                    $('#ctl00_MainContent_hdbatch').val(0);
+                    $('#ctl00_MainContent_hdallowblank').val(0);
+                } else {
+                    $(this).addClass('ErrorAlert');
+                    $('#ctl00_MainContent_hdbatch').val(1);
+                    $('#ctl00_MainContent_hdallowblank').val(1);
+                }
+            });
+
+            // Batch No dropdown change event
+            $('#ctl00_MainContent_ddlBatchNo').on('change', function () {
+                DisableTextOnDropdownChange();
+            });
+
+            // Expire date change event
+            $('#ctl00_MainContent_txtExpiredate').on('change', function () {
+                if ($(this).val() != '') {
+                    $(this).removeClass('ErrorAlert');
+                    $('#ctl00_MainContent_hdDate').val(0);
+                } else {
+                    $(this).addClass("ErrorAlert");
+                    $('#ctl00_MainContent_hdDate').val(1);
+                }
+            });
+
             GetWareHouseCondition();
 
             $('#ctl00_MainContent_txtItem_Code').tokenInput(function () {
@@ -39,29 +67,32 @@
                 else {
                     return "../../json.aspx?Table=INV_ItemsforStockAdj"
                 }
-            }, {
-                tokenLimit: 1,
-                hintText: "Select a warehouse first...",
-                noResultsText: "No items found.",
-                searchingText: "Searching...",
+            },
+                {
+                    tokenLimit: 1,
+                    hintText: "Select a warehouse first...",
+                    noResultsText: "No items found.",
+                    searchingText: "Searching...",
 
-                onAdd: function (item) {
-                    calculatecurrentstock(item.id);
+                    onAdd: function (item) {
+                        debugger;
+                        LoadBatches(item.id);
+                        calculatecurrentstock(item.id);
 
-                    if (item.Type === "True") {
-                        $('#ctl00_MainContent_hdbatch').val(1);
-                        $('#ctl00_MainContent_hdDate').val(1);
-                        $('#ctl00_MainContent_hdallowblank').val(1);
+                        if (item.Type === "True") {
+                            $('#ctl00_MainContent_hdbatch').val(1);
+                            $('#ctl00_MainContent_hdDate').val(1);
+                            $('#ctl00_MainContent_hdallowblank').val(1);
 
-                        $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
-                        $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
+                            $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
+                            $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
 
-                        $('#ctl00_MainContent_hdbatch').val(1);
-                        $('#ctl00_MainContent_hdDate').val(1);
-                        $('#ctl00_MainContent_hdallowblank').val(0);
+                            $('#ctl00_MainContent_hdbatch').val(1);
+                            $('#ctl00_MainContent_hdDate').val(1);
+                            $('#ctl00_MainContent_hdallowblank').val(0);
+                        }
                     }
-                }
-            });
+                });
             debugger;
                <% if (Request.QueryString["ID"] != null)
         { %>
@@ -87,7 +118,7 @@
             if (hiddenDate == "1") $('#ctl00_MainContent_txtExpiredate').addClass("ErrorAlert");
             if (hiddenbatch == "1") $('#ctl00_MainContent_txtBatchNo').addClass("ErrorAlert");
         }
-        
+
         //function loadtokenInputsDefaultPRNo() {
         //    debugger;
         //    var warehouseVal = $('#ctl00_MainContent_ddl_Ware_House').val();
@@ -344,15 +375,15 @@
                 reportPath = 'ReportViewer.aspx'; // same folder
             }
 
-             var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + id + '&TransType=Adj';
-             if (!locationInfo.origin.includes('localhost')) {
-                 var urlInfo = window.location.href.split('/');
-                 var ip = urlInfo[2];
-                 var foldername = urlInfo[3];
-                 url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + id + '&TransType=Adj';
-             }
-             window.open(url, '_blank');
-         }
+            var url = '/ReportViewer.aspx?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + id + '&TransType=Adj';
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=Voucher&ReportTitle=Adj Voucher&TransID=' + id + '&TransType=Adj';
+            }
+            window.open(url, '_blank');
+        }
         var amountonedit = 0;
         function calculatecurrentstock(item_id) {
             debugger;
@@ -371,7 +402,7 @@
                 PageMethods.calculateStock(itemID, wareHouse, function (res) {
                     debugger;
                     $('#ctl00_MainContent_txtcurrentStock').val(res);
-                   
+
                 });
             }
         }
@@ -407,7 +438,7 @@
                     alert("Failed to retrieve User UnApprove Button Rights.");
                 }
             });
-        }     
+        }
         function showTooltip(input) {
             var tooltip = document.getElementById("tooltipQuantity");
             tooltip.style.display = "inline";
@@ -418,7 +449,86 @@
         function hideTooltip() {
             document.getElementById("tooltipQuantity").style.display = "none";
         }
+        function LoadBatches(item_id) {
+            debugger;
+            if (!item_id || item_id == "") {
+                console.log("No item ID provided");
+                return;
+            }
 
+            console.log("Loading batches for item_id: " + item_id);
+
+            // Enable both fields before loading new batches
+            EnableBothFields();
+
+            $.ajax({
+                type: "POST",
+                url: "StockAdjustment.aspx/Getbatch_grn",
+                data: JSON.stringify({ item_id: item_id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var result = JSON.parse(response.d);
+
+                    // Clear existing options
+                    $('#ctl00_MainContent_ddlBatchNo').empty();
+                    $('#ctl00_MainContent_ddlBatchNo').append('<option value="0">-- Select Batch --</option>');
+
+                    // Add batches from GRN
+                    if (result.GRN_Details && result.GRN_Details.length > 0) {
+                        $.each(result.GRN_Details, function (i, batch) {
+                            $('#ctl00_MainContent_ddlBatchNo').append('<option value="' + batch.BatchNum + '">' + batch.BatchNum + ' (GRN)</option>');
+                        });
+                    }
+
+                    // Add batches from Stock Adjustment
+                    if (result.Stock_Adjustment_Details && result.Stock_Adjustment_Details.length > 0) {
+                        $.each(result.Stock_Adjustment_Details, function (i, batch) {
+                            $('#ctl00_MainContent_ddlBatchNo').append('<option value="' + batch.BatchNum + '">' + batch.BatchNum + ' (Adjustment)</option>');
+                        });
+                    }
+                    $('#ctl00_MainContent_ddlBatchNo').select2();
+                },
+                error: function (error) {
+                    console.log("Error loading batches: " + error);
+                }
+            });
+        }
+        function DisableDropdownOnTextInput() {
+            var txtBatchNo = $('#ctl00_MainContent_txtBatchNo');
+            var ddlBatchNo = $('#ctl00_MainContent_ddlBatchNo');
+
+            if (txtBatchNo.val() !== '') {
+                ddlBatchNo.prop('disabled', true);
+                ddlBatchNo.val('0'); // Reset to default option
+            } else {
+                ddlBatchNo.prop('disabled', false);
+            }
+        }
+
+        // Add this function to disable textbox when dropdown is selected
+        function DisableTextOnDropdownChange() {
+            var txtBatchNo = $('#ctl00_MainContent_txtBatchNo');
+            var ddlBatchNo = $('#ctl00_MainContent_ddlBatchNo');
+
+            if (ddlBatchNo.val() !== '0' && ddlBatchNo.val() !== null) {
+                txtBatchNo.prop('disabled', true);
+                txtBatchNo.val(''); // Clear the textbox
+                // Remove error class if present
+                txtBatchNo.removeClass('ErrorAlert');
+                $('#ctl00_MainContent_hdbatch').val(0);
+                $('#ctl00_MainContent_hdallowblank').val(0);
+            } else {
+                txtBatchNo.prop('disabled', false);
+            }
+        }
+
+        // Function to enable both fields when clearing
+        function EnableBothFields() {
+            $('#ctl00_MainContent_txtBatchNo').prop('disabled', false);
+            $('#ctl00_MainContent_ddlBatchNo').prop('disabled', false).val('0');
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -489,8 +599,15 @@
                 <asp:TextBox runat="server" ID="txtcurrentStock" ReadOnly="True" />               
                 <asp:HiddenField ID="hndcheckbatch" runat="server" />                 
             </div>
+         
         </div>
         <div class="row">
+               <div class="col-lg-2 col-md-3 col-sm-4">
+               <asp:Label Text="Batch No" runat="server" ID="Label5" />
+               <asp:DropDownList runat="server" ID="ddlBatchNo" Style="width: 100%; height: 35px;" onchange="DisableTextBatch()">
+                   <asp:ListItem Text="-- Select Batch --" Value="0" />
+               </asp:DropDownList>
+           </div>
             <div class="col-lg-4 col-md-3 col-sm-4">
                 <asp:Label ID="lbl_Reason_Needed" runat="server" Text="Reason Needed"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlReasonNeeded" Style="height: 35px;" AppendDataBoundItems="true">

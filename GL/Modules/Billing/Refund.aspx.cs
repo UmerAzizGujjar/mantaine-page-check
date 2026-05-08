@@ -51,7 +51,8 @@ namespace PMS
                            Patient_Discount_Type = db.GetDataValueName("Patient Type", Type),
                            data.Remarks,
                            data.Refund_Date,
-                          data.Refund_Amount,
+                           data.Bill_ID,                          
+                           data.Refund_Amount,
                            Balance = Convert.ToInt32(db.getAdvance_Balance(Convert.ToInt32(InPatientId), "In_Patient"))
                            }).FirstOrDefault();
 
