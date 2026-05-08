@@ -197,6 +197,35 @@
             $('#lblPatientCategory').text(parse[0].Patient_Type);
 
         }
+
+        function PrintShareDistribution() {
+            var Bill_ID = $("#hdBillID").val();
+
+            //if (!Bill_ID || Bill_ID == '') {
+            //    Swal.fire({
+            //        icon: 'warning',
+            //        title: 'Warning!',
+            //        text: 'Please search and load a bill first.',
+            //        showConfirmButton: false,
+            //        timer: 2000,
+            //        customClass: {
+            //            popup: 'swal-big-popup',
+            //            title: 'swal-big-title',
+            //            htmlContainer: 'swal-big-text'
+            //        }
+            //    });
+            //    return;
+            //}
+
+            var Dist_ID = '<%= Request.QueryString["ID"] %>';
+
+            if (Dist_ID != '') {
+                window.open('../../ReportViewer.aspx?ReportName=IPD_Distribution_Bill_Print&ReportTitle=Share Distribution&Bill_ID=' + Bill_ID + '&Dist_ID=' + Dist_ID);
+            } else {
+                window.open('../../ReportViewer.aspx?ReportName=IPD_Distribution_Bill_Print&ReportTitle=Share Distribution&Bill_ID=' + Bill_ID);
+            }
+        }
+
         function GetPatientDetailByBill() {
             debugger;
             var Bill_No = $('#txtBillNo').val();
@@ -870,6 +899,10 @@
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <input type="button" id="btnApprove" class="btn btn-primry" value="Approve" onclick="Approve()" />
             </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" id="btnPrint" class="btn btn-primry" value="Print" onclick="PrintShareDistribution();" />
+            </div> 
+
         </div>
     </div>
 </asp:Content>
