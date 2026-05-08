@@ -278,28 +278,146 @@
                 return Data;
         }
 
-        function CheckBillTestApproved(Bill_ID) {
+        function CheckBillTestApproved(Bill_ID, callback) {
+
             $.ajax({
                 type: "POST",
                 url: "Refund.aspx/CheckBillTestApproved",
-                data: "{'Bill_ID':" + Bill_ID + "}",
+                data: JSON.stringify({ Bill_ID: Bill_ID }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: OnSuccess,
-                failure: function (response) {
 
-                    alert(response.d);
+                success: function (response) {
+
+                    if (response.d == true) {
+
+                        //alert("One of the test from this Bill is Approved so You can not refund this bill.");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: "One of the Test from This Bill is Approved You Can't Refund this Bill.",
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        callback(false);
+                    }
+                    else {
+
+                        callback(true);
+                    }
+                },
+
+                error: function (xhr, status, error) {
+
+                    alert("Error : " + error);
+                    callback(false);
                 }
             });
         }
-
-
         function SaveRecord() {
+
+            if (validateSave()) {
+
+                debugger;
+
+                var Patient_ID = $("#hdPatientID").text();
+                var Bill_ID = $("#hdnBillID").val();
+
+                CheckBillTestApproved(Bill_ID, function (canSave) {
+
+                    // Stop saving if approved test exists
+                    if (!canSave) {
+                        return;
+                    }
+
+                    var remarks = $("#txtRemarks").val();
+                    var advanceDate = $("#txtAdvanceDate").val();
+                    var saveVal = $('#btnSave').val();
+
+                    var ServiceRefund = [];
+
+                    $.each($('#tblDetails tbody tr'), function (key, value) {
+
+                        var Bill_Detial_ID = document.getElementById('tblDetails').rows[key + 1].cells[1].innerText;
+                        var Doctor_Refund = $(value).find('input[name="DocRefund"]').val();
+                        var Hos_Refund = $(value).find('input[name="HosRefund"]').val();
+                        var Item_ID = document.getElementById('tblDetails').rows[key + 1].cells[2].innerText;
+
+                        ServiceRefund.push({
+                            Bill_Detial_ID: Bill_Detial_ID,
+                            Doctor_Refund: Doctor_Refund,
+                            Item_ID: Item_ID,
+                            Hos_Refund: Hos_Refund
+                        });
+                    });
+
+                    var ShareRefund = [];
+
+                    $.each($('#Doctor_Share_Table tbody tr'), function (key, value) {
+
+                        var Emp_ID = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[1].innerText;
+                        var Record_Id = document.getElementById('Doctor_Share_Table').rows[key + 1].cells[2].innerText;
+                        var Refund_Amount = $(value).find('input[name="RefundDis"]').val();
+
+                        ShareRefund.push({
+                            Emp_ID: Emp_ID,
+                            Record_Id: Record_Id,
+                            Refund_Amount: Refund_Amount
+                        });
+                    });
+
+                    var data = {
+                        Patient_ID: Patient_ID,
+                        advanceDate: advanceDate,
+                        remarks: remarks,
+                        ServiceRefund: ServiceRefund,
+                        ShareRefund: ShareRefund
+                    };
+
+                    PageMethods.SaveRefund(JSON.stringify(data), function (res) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Data Successfully Save',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+                        window.location.reload();
+                        $('#btnSave').attr('disabled', 'disabled');
+
+                    }, function (error) {
+
+                        alert(error.get_message());
+                    });
+
+                });
+            }
+        }
+
+<%--        function SaveRecord() {
             if (validateSave()) {
                 debugger;
                 var Patient_ID = $("#hdPatientID").text();
                 var Bill_ID = $("#hdnBillID").val(); 
-                CheckBillTestApproved(Bill_ID);
+                CheckBillTestApproved(Bill_ID, function (canSave) {
+
+                    // Stop saving if approved test exists
+                    if (!canSave) {
+                        return;
+                    }
+               
                 var remarks = $("#txtRemarks").val();
                 var advanceDate = $("#txtAdvanceDate").val();
                 var saveVal = $('#btnSave').val();
@@ -347,7 +465,7 @@
                     alert(error.get_message());
                 });
             }
-        }
+        }--%>
 
         function validateSave() {
             debugger;

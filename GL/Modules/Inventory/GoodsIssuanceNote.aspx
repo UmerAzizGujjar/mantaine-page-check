@@ -741,7 +741,7 @@
                 setTimeout(function () {
                     $('#ddlInventoryOrg').val(organizationId).trigger('change');
                     $('#ddlInventoryOrg').attr('disabled', 'disabled');
-                }, 2000);
+                }, 1000);
                 setTimeout(function () {
                     $('#ddlDepartment').val(result[0].Department_Id).trigger('change');
                     $('#ddlDepartment').attr('disabled', 'disabled');

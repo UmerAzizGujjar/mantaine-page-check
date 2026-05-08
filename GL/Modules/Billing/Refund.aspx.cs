@@ -34,6 +34,7 @@ namespace PMS
              
               var query = (from data in db.Refunds
                            join pat in db.Reg_patients on data.Patient_ID equals pat.pat_id
+                           where data.Refund_ID == Convert.ToInt32 (AdvanceId)
                            select new 
                            {
                            pat.Patient_No,
@@ -62,7 +63,14 @@ namespace PMS
         public static string LoadShareDetails(string advID)
         {
              DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-             var shareDetail = (from rds in db.Refund_Detail_Services join dt in db.Ar_Billing_Details on rds.Bill_Detail_ID equals dt.Bill_Details_ID select new { 
+             var shareDetail = (from ds in db.Refunds join
+                                rds in db.Refund_Detail_Services 
+                                on ds.Refund_ID equals rds.Refund_ID
+                                join dt in db.Ar_Billing_Details 
+                                on rds.Bill_Detail_ID equals dt.Bill_Details_ID
+                                where ds.Refund_ID ==Convert.ToInt32( advID)
+
+                                select new { 
               dt.Item_Name,
               dt.Doctor_Share,
               Net_Amount = dt.Net_Amount - (dt.Doctor_Share == null ? 0 : dt.Doctor_Share),
@@ -185,6 +193,28 @@ namespace PMS
                 catch (Exception ex)
                 {
                     return (new JavaScriptSerializer().Serialize(ex.Message));
+                }
+            }
+        }
+        [WebMethod]
+        public static bool CheckBillTestApproved(int Bill_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                try
+                {
+                    var pat = db.sp_GetLabApprovalStatus(Bill_ID).ToList();
+
+                    if (pat == null || pat.Count == 0)
+                        return false;
+
+                    bool isApproved = pat.Any(x => x.isApproved != null && x.isApproved == true);
+
+                    return isApproved;
+                }
+                catch (Exception)
+                {
+                    return false;
                 }
             }
         }
