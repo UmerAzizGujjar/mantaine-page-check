@@ -225,16 +225,15 @@ namespace PMS
                                                  Patient_No = "IPD-" + ipd.IPD_No,
                                                  Patient_ID = ipd.In_Patient_ID
                                              }).ToList();
-                var Emergency_NO = (from ipd in db.Emergency_Patients
-                                    where ipd.Patient_ID == pat_id
-                              && (ipd.Discharge == null || ipd.Discharge == false)
-
-
-                              select new
-                              {
-                                  Patient_No = "EMR-" + ipd.Emergency_No,
-                                  Patient_ID = ipd.Emergency_ID
-                              }).ToList();
+                var Emergency_NO = (from ipd in db.Emergencies
+                                    join ep in db.Emergency_Patients on ipd.Reg_PatId equals ep.Patient_ID
+                                    where ipd.Reg_PatId == pat_id
+                                          && (ipd.Discharge == null || ipd.Discharge == false)
+                                    select new
+                                    {
+                                        Patient_No = "EMR-" + ipd.Emergency_No,
+                                        Patient_ID = ep.Emergency_ID
+                                    }).ToList();
 
                 var combinedResult = new
                 {
@@ -1134,6 +1133,25 @@ namespace PMS
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
+        }
+        [WebMethod]
+        public static string GetPanel()
+        {
+            string data = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+
+                var result = (from gl in db.Panels
+
+                              select new
+                              {
+                                  gl.Panel_ID,
+                                  gl.Company_Name,
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+
+            }
+            return data;
         }
         [WebMethod]
         public static string SaleReturnInvoiceMaster(int invNo)

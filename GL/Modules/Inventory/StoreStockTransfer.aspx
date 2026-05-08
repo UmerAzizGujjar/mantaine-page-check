@@ -170,7 +170,7 @@
                 $('#batchnoddl').html(_gloabal);
             });
 
-            loadStock(itemid);
+            //loadStock(itemid);
         }
         //function fillbatchno(itemid) {
         //    debugger;

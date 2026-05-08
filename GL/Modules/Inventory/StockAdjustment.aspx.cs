@@ -5,10 +5,12 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using static PMS.IssueMedicine;
 
 namespace PMS
 {
@@ -33,7 +35,84 @@ namespace PMS
         ///  Load BranChes Only
         /// </summary>
 
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public static string Getbatch_grn(int item_id)
+        {
+            string data = string.Empty;
+            var batchStockListgrn = new List<BatchStock>();
+            var batchStockListst = new List<BatchStock>();
 
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var PICondition = (from sys in db.sys_Parms where sys.Name == "Direct PO ON Purchase Invoice" select sys.Code).FirstOrDefault();
+
+                if (PICondition == "01")
+                {
+                    var grnResult = (from dv in db.INV_Items
+                                     join ds in db.Purchase_Invoice_Details
+                                     on dv.Item_ID equals ds.ItemId
+                                     where ds.ItemId == item_id
+                                     select new
+                                     {
+                                         BatchNum = ds.BatchNum,
+                                         uomqty = Convert.ToInt32(dv.UOM_Qty),
+                                     }).ToList();
+                    foreach (var batchNum in grnResult)
+                    {
+                        batchStockListgrn.Add(new BatchStock
+                        {
+                            BatchNum = batchNum.BatchNum,
+                            uomqty = batchNum.uomqty,
+                        });
+                    }
+                }
+                else
+                {
+                    var grnResult = (from dv in db.INV_Items
+                                     join ds in db.GRN_Details
+                                     on dv.Item_ID equals ds.Item_Id
+                                     where ds.Item_Id == item_id
+                                     select new
+                                     {
+                                         BatchNum = ds.BatchNum,
+                                         uomqty = ds.UOM_Qty,
+                                     }).ToList();
+                    foreach (var batchNum in grnResult)
+                    {
+                        batchStockListgrn.Add(new BatchStock
+                        {
+                            BatchNum = batchNum.BatchNum,
+                            uomqty = batchNum.uomqty,
+                        });
+                    }
+                }
+
+                var stockAdjustmentResult = (from inv in db.INV_Stock_Adjustments
+                                             where inv.Item_Id == Convert.ToString(item_id)
+                                              && inv.Status == "Approved"
+                                             orderby inv.Creation_Time descending
+                                             select new
+                                             {
+                                                 BatchNum = inv.Batch_No
+                                             }).ToList();
+                foreach (var batchNum in stockAdjustmentResult)
+                {
+                    batchStockListst.Add(new BatchStock
+                    {
+                        BatchNum = batchNum.BatchNum,
+                    });
+                }
+
+                var combinedResult = new
+                {
+                    GRN_Details = batchStockListgrn,
+                    Stock_Adjustment_Details = batchStockListst
+                };
+                data = new JavaScriptSerializer().Serialize(combinedResult);
+            }
+            return data;
+        }
         [WebMethod]
         public static string calculateStock(string Item_code, string ware_house)
         {

@@ -2874,6 +2874,48 @@ namespace PMS
                     ddlDepartments.DataBind();
 
                 }
+                else if (this.PageTitle == "Inventory_Reconciliation_Report")
+                {
+                    string x = "Inventory Reconciliation Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+
+                    Stock_Movement.Visible = true;
+
+                    ddlItemCategory.Visible = false;
+                    lbItemCategory.Visible = false;
+                    lblItemCode.Visible = false;
+                    txtItemCode.Visible = false;
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+
+                    lblDepartment.Text = "Vendor";
+                    DataTable dtPanel = DBClass.getDataTable("select Vendor_ID,Vendor_Name from AP_Vendors where IsActive=1");
+                    ddlDepartments.DataSource = dtPanel;
+                    ddlDepartments.DataTextField = "Vendor_Name";
+                    ddlDepartments.DataValueField = "Vendor_ID";
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.Items.Add(new ListItem("Please Select", "0"));
+                    ddlDepartments.DataBind();
+
+                }
                 else if (this.PageTitle == "Purchase_Order_Report")
                 {
                     string x = "Purchase Order Report";
@@ -3798,6 +3840,120 @@ namespace PMS
                     ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddloprators.DataBind();
                     lboperator.Text = "Class";
+
+
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+
+                }
+                if (this.PageTitle == "Student_Receipt_Class_Details_Report_Balance")
+                {
+                    string x = "Student Receipt Class Wise Details Balance";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Student Class");
+                    ddloprators.DataSource = valuset;
+                    ddloprators.DataTextField = "DataValue_Description";
+                    ddloprators.DataValueField = "DataValue_Name";
+                    ddloprators.Items.Clear();
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    lboperator.Text = "Class";
+
+
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+
+                }
+                if (this.PageTitle == "Student_Receipt_Session_Details_Report_Received")
+                {
+                    string x = "Student Receipt Session Wise Details Received";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Session");
+                    ddloprators.DataSource = valuset;
+                    ddloprators.DataTextField = "DataValue_Description";
+                    ddloprators.DataValueField = "DataValue_Name";
+                    ddloprators.Items.Clear();
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    lboperator.Text = "Session";
+
+
+                    lbShift.Visible = false;
+                    ddlShift.Visible = false;
+
+                }
+                if (this.PageTitle == "Student_Receipt_Session_Details_Report_Balance")
+                {
+                    string x = "Student Receipt Session Wise Details Balance";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                    lblMainDepartment.Visible = false;
+                    ddlDepartments.Visible = false;
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+                    optRw.Visible = true;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    lblMainDepartment.Visible = false;
+                    lblMedical.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    SetDepartent();
+                    dpROw.Visible = false;
+
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Session");
+                    ddloprators.DataSource = valuset;
+                    ddloprators.DataTextField = "DataValue_Description";
+                    ddloprators.DataValueField = "DataValue_Name";
+                    ddloprators.Items.Clear();
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    lboperator.Text = "Session";
 
 
                     lbShift.Visible = false;

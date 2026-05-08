@@ -22,25 +22,7 @@
             }
 
         });
-        function OnSuccess(data) {
-            debugger;
-            if (data.d != '') {
-                if (data.d.Patient_Discount_Type == null)
-                    data.d.Patient_Discount_Type = "";
-                var mydate = new Date(Date.parse(data.d.Entry_Date));
-                var dateR = mydate.toLocaleDateString();
-                $('#lblPatienName').text(ReplaceNullWith_Space(data.d.Name));
-                $('#lblAgeYears').text(ReplaceNullWith_Space(data.d.Age));
-                $('#lblGender').text(ReplaceNullWith_Space(data.d.Gender));
-                $('#lblRegDate').text(dateR);
-                $('#lblAddress').text(ReplaceNullWith_Space(data.d.Address));
-                $('#lblContactNo').text(ReplaceNullWith_Space(data.d.Mobile));
-                $('#lblDepartment').text(ReplaceNullWith_Space(data.d.department));
-                $('#lblPatientCategory').text(ReplaceNullWith_Space(data.d.Patient_Type));
-                $('#lblPatientDiscountType').text(ReplaceNullWith_Space(data.d.Patient_Discount_Type));
-                $('#lblOutputShow').text(ReplaceNullWith_Space(data.d.Balance));
-            }
-        }
+
         function PrintRefund() {
             debugger;
             var refundID = '<% =Request.QueryString["advID"] %>';
@@ -82,6 +64,7 @@
                 var mydate = new Date(Date.parse(parseData.Entry_Date));
                 var dateR = mydate.toLocaleDateString();
                 $('#hdPatientID').text(ReplaceNullWith_Space(parseData.Patient_ID));
+                $('#hdnBillID').val(ReplaceNullWith_Space(parseData.bill_ID));
                 $('#lblMRNo').text(ReplaceNullWith_Space(parseData.Patient_No));
                 $('#lblPatienName').text(ReplaceNullWith_Space(parseData.Full_Name));
                 $('#lblAgeYears').text(ReplaceNullWith_Space(parseData.Age_years));
@@ -199,6 +182,7 @@
                     var rows;
                     debugger;
                     $('#hdPatientID').text(parse[0].Patient_ID);
+                    $('#hdnBillID').val(parse[0].bill_ID);
                     $('#lblMRNo').text(parse[0].Patient_No);
                     $('#lblPatienName').text(parse[0].Full_Name);
                     $('#lblAgeYears').text(parse[0].Age_years);
@@ -294,13 +278,29 @@
                 return Data;
         }
 
+        function CheckBillTestApproved(Bill_ID) {
+            $.ajax({
+                type: "POST",
+                url: "Refund.aspx/CheckBillTestApproved",
+                data: "{'Bill_ID':" + Bill_ID + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: OnSuccess,
+                failure: function (response) {
+
+                    alert(response.d);
+                }
+            });
+        }
+
 
         function SaveRecord() {
             if (validateSave()) {
                 debugger;
                 var Patient_ID = $("#hdPatientID").text();
-
-                var remarks = $("#txtRemarks").text();
+                var Bill_ID = $("#hdnBillID").val(); 
+                CheckBillTestApproved(Bill_ID);
+                var remarks = $("#txtRemarks").val();
                 var advanceDate = $("#txtAdvanceDate").val();
                 var saveVal = $('#btnSave').val();
                 var advID = '<% =Request.QueryString["advID"] %>';
@@ -403,6 +403,7 @@
 
     <div class="container-fluid">
         <input type="hidden" id="hdPatientID" />
+        <input type="hidden" id="hdnBillID" />
         <div class="row">
     <!-- Left Card -->
     <div class="col-lg-5 col-md-5 col-sm-12">

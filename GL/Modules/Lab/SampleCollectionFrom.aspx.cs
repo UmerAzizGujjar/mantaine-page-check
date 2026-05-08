@@ -195,7 +195,7 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(dept);
         }
         [WebMethod]
-        public static String SaveTest(DateTime CollectedDate, string sampleStatus, string ddlPat_type, int PatientID, string[][] SaveCheckedTest, int EmployeeID, string[][] rem)
+        public static String SaveTest(DateTime CollectedDate, string sampleStatus, string ddlPat_type,string Remarks, int PatientID, string[][] SaveCheckedTest, int EmployeeID, string[][] rem)
         {
             var sampleid = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
@@ -211,6 +211,7 @@ namespace PMS
                 {
                     Sample_No = SampleNo,
                     patient_type_range = ddlPat_type,
+                    Remarks = Remarks,
                     Sample_Collected_Date = CollectedDate,
                     Patient_ID = PatientID,
                     Sample_Status = sampleStatus,
@@ -311,7 +312,7 @@ namespace PMS
 
         }
         [WebMethod]
-        public static String UpdateTest(DateTime CollectedDate, string sampleStatus, string ddlPat_type, string[][] SaveCheckedTest, int EmployeeID, int SampleID, string[][] rem)
+        public static String UpdateTest(DateTime CollectedDate, string sampleStatus, string ddlPat_type,string Remarks, string[][] SaveCheckedTest, int EmployeeID, int SampleID, string[][] rem)
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
@@ -327,6 +328,7 @@ namespace PMS
                 SampleMaster.Sample_Collected_Date = CollectedDate;
                 SampleMaster.Collected_Emp_ID = EmployeeID;
                 SampleMaster.patient_type_range = ddlPat_type;
+                SampleMaster.Remarks = Remarks;
                 SampleMaster.Sample_Status = sampleStatus;
                 SampleMaster.Updated_By = AppConfig.UserID;
                 SampleMaster.Updated_Time = DateTime.Now;

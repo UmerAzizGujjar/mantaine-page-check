@@ -339,6 +339,7 @@
                         $('#token-input-txtMR_No').attr('disabled', 'disabled');
                         $("#txtSample_No").val(parse[0].Sample_No);
                         $("#hdSample_ID").val(parse[0].Sample_ID);
+                        $("#txtRemarks").val(parse[0].Remarks);
                         $("#txtSampleCollected_Date").val(parse[0].Sample_Collected_Date);
                         FillTokenInputForMRNo(parse[0].Patient_ID);
                         $("#Emp_Name").val(parse[0].Collected_Emp_ID);
@@ -892,6 +893,7 @@
                 var employeeID = cbEmployee.options[cbEmployee.selectedIndex].value;
                 debugger;
                 var collectedDate = $("#txtSampleCollected_Date").val();
+                var Remarks = $("#txtRemarks").val();
                 var sampleStatus = $("#ddlSample_Status   option:selected").val();
                 var ddlPat_type = $("#ddlPat_type").val();
 
@@ -946,6 +948,7 @@
                                 url: "SampleCollectionFrom.aspx/SaveTest",
                                 data: JSON.stringify({
                                     "CollectedDate": collectedDate,
+                                    "Remarks": Remarks,
                                     "sampleStatus": sampleStatus,
                                     "PatientID": mrNo,
                                     "SaveCheckedTest": saveCheckedTest,
@@ -1000,6 +1003,7 @@
                                 data: JSON.stringify({
                                     "CollectedDate": collectedDate,
                                     "sampleStatus": sampleStatus,
+                                    "Remarks": Remarks,
 
                                     "SaveCheckedTest": saveCheckedTest,
                                     "EmployeeID": employeeID,
@@ -1376,11 +1380,11 @@
                 <input type="text" disabled="disabled" id="txtSampleCode" class="form-control" />
             </div>
 
-            <div class="col-lg-2 col-md-3 col-sm-4">
+            <div class="col-lg-1 col-md-3 col-sm-4">
                 <label id="lblSample_Date" style="display: inline-block;">Collected Date*</label>
                 <input type="text" readonly="readonly" id="txtSampleCollected_Date" class="form-control" />
             </div>
-            <div class="col-lg-2 col-md-3 col-sm-4">
+            <div class="col-lg-1 col-md-3 col-sm-4">
                 <label id="" style="display: inline-block;">Patient Type<span style="color: red;">*</span></label>
                 <select id="ddlPat_type" class="form-control"></select>
             </div>
@@ -1394,6 +1398,10 @@
                     <option value="">Loading...</option>
                 </select>
             </div>
+              <div class="col-lg-2 col-md-3 col-sm-4">
+      <label id="lblremarks" style="display: inline-block;">Remarks</label>
+      <input type="text"  id="txtRemarks" class="form-control" />
+  </div>
         </div>
     </form>
 

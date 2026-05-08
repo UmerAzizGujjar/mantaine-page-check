@@ -10,6 +10,7 @@
             if (!$('#chkbatch').prop("checked")) {
                 $('#chkbatch').prop("checked", true);
             }
+            fillPanel();
             BalanceAmountCondition();
             CheckSaleReturnAllow();
             $('#chkbatch').on('change', function () {
@@ -521,7 +522,7 @@
             if (invNo) {
                 $.ajax({
                     type: "post",
-                    url: "IssueMedicine.aspx/AddSaleReturnInvoiceMaster",
+                    url: "IssueMedicine.aspx/SaleReturnInvoiceMaster",
                     data: JSON.stringify({ "invNo": invNo }),
                     dataType: 'JSON',
                     contentType: "application/json; charset=utf-8",
@@ -1791,6 +1792,7 @@
             });
         }
         function getOPDandIPDNO(pat_id) {
+            debugger;
             PageMethods.GetOPDandIPDNO(pat_id, function (data) {
                 var parsedData = JSON.parse(data);
                 var options = '<option value="0" >Please Select</option>';
@@ -2700,17 +2702,27 @@
 
                 var parsedData = JSON.parse(data);
                 var rows = '';
-
+                
                 $.each(parsedData, function (key, value) {
 
                     var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
                     var retdate = moment(TrnsDate).format('LLLL');
+
+                    var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined)
+                        ? value.Ward_Name
+                        : '';
+
+                    var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0)
+                        ? value.Bed_No
+                        : '';
 
                     rows += '<tr>' +
                         '<td>' + value.mr_no_sequence + '</td>' +
                         '<td>' + value.Full_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +
                         '<td>' + value.Referred_By + '</td>' +
+                        '<td>' + (value.Ward_Name || '') + '</td>' +
+                        '<td>' + ((value.Bed_No && value.Bed_No !== 0) ? value.Bed_No : '') + '</td>' +
                         '<td>' + retdate + '</td>' +
                         '<td>' +
                         '<a href="#" class="btnEdit" ' +
@@ -2731,13 +2743,22 @@
         }
 
         debugger;
+        //function hideModel(pat_id, mr_no_sequence) {
+        //    debugger;
+        //    console.log(pat_id, mr_no_sequence);
+        //    $('#queueModal').modal('hide');
+        //    $('#token-input-txtMRNo').val(mr_no_sequence)
+        //    getOPDandIPDNO(pat_id)
+
+        //}
         function hideModel(pat_id, mr_no_sequence) {
-            debugger;
             console.log(pat_id, mr_no_sequence);
             $('#queueModal').modal('hide');
-            $('#token-input-txtMRNo').val(mr_no_sequence)
-            getOPDandIPDNO(pat_id)
 
+            $("#txtMRNo").tokenInput("clear");
+            $("#txtMRNo").tokenInput("add", { id: pat_id, name: mr_no_sequence });
+
+            getOPDandIPDNO(pat_id);
         }
         function OnSuccess(data) {
             debugger;
@@ -3212,7 +3233,26 @@
 
 
         }
+        function fillPanel() {
+            var options = '<option value="0">Please Select</option>';
 
+            $.ajax({
+                url: 'IssueMedicine.aspx/GetPanel',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    var data = response.d ? JSON.parse(response.d) : response;
+                    $.each(data, function (key, value) {
+                        options += '<option value="' + value.Panel_ID + '">' + value.Company_Name + '</option>';
+                    });
+                    $('#ddlpanel').html(options);
+                    $('#ddlpanel').select2();
+                }
+            });
+
+            return options;
+        }
         //function getInvoiceNo_PatWise() {
 
         //    var reg_id = $('#ddlpat_no').val();
@@ -3350,6 +3390,10 @@
                     <label class="batchdiv">Batch No:</label>
                     <select id="batchno" class="form-control batchdiv" tabindex="7" onchange="AddMedicineDetail()"></select>
                 </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label class="paneldiv">Panel</label>
+                    <select id="ddlpanel" class="form-control ddlpanel" tabindex="7" ></select>
+                </div>
 
                 <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%;">
                     <label id="lblbatch">Batch</label>
@@ -3363,9 +3407,7 @@
                 <div class="col-sm-2 col-md-2 col-lg-1 text-center" style="margin-top: 2%; margin-left: -4%;">
                     <input type="checkbox" tabindex="9" id="chkprint" />
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-2" style="margin-top: 2%">
-                    <input type="button" class="btn btn-primry" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
-                </div>
+               
             </div>
 
 
@@ -3396,10 +3438,13 @@
                 <div class="col-lg-1 col-md-4 col-sm-6 margin">
                     <label id="lblHold">Hold</label>
                 </div>
+                 <div class="col-sm-2 col-md-2 col-lg-2">
+                     <input type="button" class="btn btn-primry" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
+                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="col-lg-1 col-md-4 col-sm-6">
                     <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" />
                 </div>
             </div>
@@ -3537,6 +3582,8 @@
                                         <th>Patient Name</th>
                                         <th>Department</th>
                                         <th>Referred By</th>
+                                        <th>Ward</th>
+                                        <th>Bed</th>
                                         <th style="width: 173px;">Created Time</th>
                                         <th>Select</th>
                                     </tr>

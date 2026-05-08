@@ -285,6 +285,24 @@ namespace PMS
         protected global::System.Web.UI.WebControls.HiddenField hndcheckbatch;
 
         /// <summary>
+        /// Label5 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label5;
+
+        /// <summary>
+        /// ddlBatchNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlBatchNo;
+
+        /// <summary>
         /// lbl_Reason_Needed control.
         /// </summary>
         /// <remarks>
