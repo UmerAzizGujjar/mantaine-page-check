@@ -3304,7 +3304,7 @@ namespace PMS
             else if (reportName == "HospitalServices")
             {
 
-                string rptFileName = "TransactionalDetails/rptHospital_Services_Detail.rpt";
+                string rptFileName = "TransactionalDetails/c.rpt";
                 string patientTpe = Request.QueryString["Patient_Type"].ToString();
                 string serviceID = Request.QueryString["ServiceID"].ToString();
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
