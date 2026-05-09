@@ -323,6 +323,13 @@
                     $('#txtAmountReceived').attr("disabled", true);
                     $('#ddlpanel').attr('disabled', false);
                 }
+                else if (chkbtn == 'rbtnbank') {
+                    $('#txtDisPer').attr("disabled", false);
+                    $('#txtDisAmt').attr("disabled", false);
+                    $('#txtFlatDisc').attr("disabled", false);
+                    $('#txtAmountReceived').attr("disabled", false).val(0);
+                    CountBalance();
+                }
                 else {
                     $('#txtDisPer').attr("disabled", false);
                     $('#txtDisAmt').attr("disabled", false);
@@ -1777,12 +1784,12 @@
             var discfinalAmnt = $('#txtLineDisc').val() || 0;
             //$('#txtAmountReceived').val(parseFloat(TotalAmount.toFixed()) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc));
 
-            //if (blnceCondition == 'true') {
-            //    $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
-            //}
-            //else {
-            //    $('#txtAmountReceived').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
-            //}
+            if (blnceCondition == 'true') {
+                $('#txtBalances').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
+            }
+            else {
+                $('#txtAmountReceived').val((parseFloat(TotalAmount) - parseFloat(discfinalAmnt) - parseFloat(FlatDisc)).toFixed());
+            }
         }
         function CheckSaleReturnAllow() {
             debugger;

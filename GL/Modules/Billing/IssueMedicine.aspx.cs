@@ -887,6 +887,7 @@ namespace PMS
 
             return (new JavaScriptSerializer()).Serialize(PharmacyDetail);
         }
+
         [WebMethod]
         public static PatientDetail LoadPatientDetails(string PatientID)
         {
