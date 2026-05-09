@@ -144,31 +144,44 @@ namespace PMS
             string StockAdjID = "";
             if (!Page.IsValid)
                 return;
+
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             INV_Stock_Adjustment Stock_Adj;
+
             var hiddenbatch = hdbatch.Value;
             var hiddenDate = hdDate.Value;
             var hiddenallowblank = hdallowblank.Value;
+            var batchFromHidden = hdnSelectedBatchValue.Value != null ? hdnSelectedBatchValue.Value.Trim() : "";
+            var batchText = txtBatchNo.Text != null ? txtBatchNo.Text.Trim() : "";
+
             var getitemcode = "";
             if (hiddenDate == "1" || hiddenbatch == "1")
             {
                 ScriptManager.RegisterStartupScript(this, typeof(string), "OPEN_WINDOW", "hiddenVal('" + hiddenDate + "','" + hiddenbatch + "','" + hiddenallowblank + "');", true);
                 return;
             }
+
             decimal qty = 0;
-            qty = Convert.ToDecimal(txtQuantity.Text);
-            var getbatch = hndcheckbatch.Value;
-            var batch = txtBatchNo.Text;
-            if (getbatch == "true" && batch == "")
+            if (!decimal.TryParse(txtQuantity.Text, out qty))
             {
-                ScriptManager.RegisterStartupScript(this, typeof(string), "Batch_ALERT", "alert('Please Select Batch This item is Batch Item.');", true);
+                ScriptManager.RegisterStartupScript(this, typeof(string), "QUANTITY_ALERT", "alert('Invalid Quantity.');", true);
                 return;
             }
+
+            var getbatch = hndcheckbatch.Value;
+
+            if (getbatch == "true" && string.IsNullOrWhiteSpace(batchText) && string.IsNullOrWhiteSpace(batchFromHidden))
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Batch_ALERT", "alert('Please Select Batch. This item is a Batch Item.');", true);
+                return;
+            }
+
             if (qty == 0)
             {
                 ScriptManager.RegisterStartupScript(this, typeof(string), "QUANTITY_ALERT", "alert('Quantity must be greater than 0.');", true);
                 return;
             }
+
             if (btnSave.Text == "Save")
             {
                 Stock_Adj = new INV_Stock_Adjustment();
@@ -190,6 +203,7 @@ namespace PMS
                 Stock_Adj.Adjustment_No = Convert.ToInt32(txtAdjustment_ID.Text);
                 #endregion
             }
+
             var itemcodess = txtItem_Code.Text;
             if (btnSave.Text == "Save")
             {
@@ -203,39 +217,53 @@ namespace PMS
                 Stock_Adj.Item_Id = getitemcode;
                 Stock_Adj.Item_Code = txtItem_Code.Text;
             }
+
             Stock_Adj.Reason_Why = ddlReasonNeeded.SelectedValue;
-            var itemcode = Stock_Adj.Item_Code;
+
             if (txtQuantity.Text != "")
                 Stock_Adj.Qty = Convert.ToDecimal(txtQuantity.Text);
+
             if (txtRate.Text != "")
-            Stock_Adj.Rate = Convert.ToDecimal(txtRate.Text);
+                Stock_Adj.Rate = Convert.ToDecimal(txtRate.Text);
+
             var Amount = Convert.ToDecimal(txtQuantity.Text) * Convert.ToDecimal(txtRate.Text);
             Stock_Adj.Ware_House = ddl_Ware_House.SelectedValue;
             Stock_Adj.Amount = Convert.ToDecimal(Amount);
+
             if (txtRemarks.Text != "")
-            Stock_Adj.Remarks = txtRemarks.Text;
-            var checkbatch = txtBatchNo.Text;
-            var txtempiry = txtExpiredate.Text;
-            Stock_Adj.Batch_No = txtBatchNo.Text;
+                Stock_Adj.Remarks = txtRemarks.Text;
+            string finalBatch = string.Empty;
+            if (!string.IsNullOrWhiteSpace(batchText))
+            {
+                finalBatch = batchText;
+            }
+            else if (!string.IsNullOrWhiteSpace(batchFromHidden))
+            {
+                finalBatch = batchFromHidden;
+            }
+
+            Stock_Adj.Batch_No = finalBatch;
+
             if (txtAdustment_date.Text != "")
             {
                 DateTime dateOnly = Convert.ToDateTime(txtAdustment_date.Text);
                 DateTime fullDateTime = dateOnly.Date.Add(DateTime.Now.TimeOfDay);
                 Stock_Adj.Adjustment_Date = fullDateTime;
             }
+
             if (txtExpiredate.Text != "")
                 Stock_Adj.Expire_Date = Convert.ToDateTime(txtExpiredate.Text);
-
 
             if (btnSave.Text == "Save")
             {
                 db.INV_Stock_Adjustments.InsertOnSubmit(Stock_Adj);
-                lblMessage.Text = "Data has been save successfully";
+                lblMessage.Text = "Data has been saved successfully";
             }
             else
             {
-                lblMessage.Text = "Data has been update successfully";
+                lblMessage.Text = "Data has been updated successfully";
             }
+
             db.SubmitChanges();
             StockAdjID = Stock_Adj.Adjustment_ID.ToString();
             lblMessage.CssClass = "sucessfullMessage";

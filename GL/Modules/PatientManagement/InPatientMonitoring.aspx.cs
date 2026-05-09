@@ -1999,6 +1999,7 @@ namespace PMS
             {
                 var pharmacyItems = (from d in db.INV_Items
                                      where d.IsPharmacyItem == true && d.Description.Contains(searchString)
+                                     && (d.Short_Item == false || d.Short_Item == null)
                                      orderby d.Item_ID descending
                                      select new
                                      {
