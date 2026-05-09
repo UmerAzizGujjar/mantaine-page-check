@@ -244,6 +244,11 @@
                 } else {
                     console.log("Length dropdown, label, or container not found");
                 }
+            },
+            createdRow: function (row, data, dataIndex) {
+                if (data.STATUS && data.STATUS.toString().toLowerCase().trim() === 'pending') {
+                    $(row).css('background-color', '#ffe066');
+                }
             }
 
         });
