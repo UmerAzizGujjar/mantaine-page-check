@@ -117,13 +117,18 @@ namespace PMS.GL
             for (int i = 1; i < approvalDetail.Length; i++)
             {
                 Sys_Approval_Stage_Detail apdetail = new Sys_Approval_Stage_Detail();
-                    apdetail.Stage_ID = appp.Stage_ID;
+                apdetail.Stage_ID = appp.Stage_ID;
                 var a = approvalDetail[i][0].ToString();
                 if (Guid.TryParse(approvalDetail[i][0], out Guid userId))
                 {
                     apdetail.UserId = userId;
-                }               
-                    db.Sys_Approval_Stage_Details.InsertOnSubmit(apdetail);              
+                }
+                //if (!string.IsNullOrWhiteSpace(approvalDetail[i][1]) &&
+                //    int.TryParse(approvalDetail[i][1], out int maxApprovalLimit))
+                //{
+                //    apdetail.MaxApprovalLimit = maxApprovalLimit;
+                //}
+                db.Sys_Approval_Stage_Details.InsertOnSubmit(apdetail);
             }
             db.SubmitChanges();
             if (btnValue == "Save")

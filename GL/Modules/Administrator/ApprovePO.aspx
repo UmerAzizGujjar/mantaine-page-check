@@ -105,17 +105,24 @@
                 var searchText = $('#txt_search').val().toLowerCase();
                 var tbl = document.getElementById('ctl00_MainContent_GridView1');
                 debugger
+                var getCellText = function (row, index) {
+                    var cell = row.cells[index];
+                    return cell ? cell.innerText.toLowerCase() : '';
+                };
+
                 for (var i = 1; i < tbl.rows.length; i++) {
                     var row = tbl.rows[i];
-                    var ponum = row.cells[1].innerText.toLowerCase();
-                    var podate = row.cells[2].innerText.toLowerCase();
-                    var remarks = row.cells[4].innerText.toLowerCase();
-                    var status = row.cells[5].innerText.toLowerCase();
-                    var department = row.cells[8].innerText.toLowerCase();
+                    var ponum = getCellText(row, 1);
+                    var podate = getCellText(row, 2);
+                    var poamount = getCellText(row, 3);
+                    var remarks = getCellText(row, 5) || getCellText(row, 4);
+                    var status = getCellText(row, 6) || getCellText(row, 5);
+                    var department = getCellText(row, 9) || getCellText(row, 8);
 
                     if (searchText.trim() === '' ||
                         ponum.includes(searchText) ||
                         podate.includes(searchText) ||
+                        poamount.includes(searchText) ||
                         remarks.includes(searchText) ||
                         status.includes(searchText) ||
                         department.includes(searchText)
@@ -173,7 +180,8 @@
     CssClass="custom-gridview"
     PagerStyle-CssClass="pagination-container"
     PagerSettings-Mode="Numeric"
-    OnPageIndexChanging="GridView1_PageIndexChanging">
+    OnPageIndexChanging="GridView1_PageIndexChanging"
+    OnRowDataBound="GridView1_RowDataBound">
         <PagerSettings Mode="NumericFirstLast" NextPageText="Next »" PreviousPageText="« Previous"
             FirstPageText="« First" LastPageText="Last »" />
 
@@ -194,6 +202,7 @@
             </asp:TemplateField>
             <asp:BoundField DataField="PO_No" HeaderText="PO No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px" />
             <asp:BoundField DataField="PO_Date" HeaderText="PO Date" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:d}" ItemStyle-Width="100px" />
+            <asp:BoundField DataField="PO_Amount" HeaderText="PO Amount" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:N2}" ItemStyle-Width="120px" />
             <asp:BoundField DataField="Creator" HeaderText="Creator" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="120px" />
             <asp:TemplateField HeaderText="Remarks">
                 <ItemTemplate>

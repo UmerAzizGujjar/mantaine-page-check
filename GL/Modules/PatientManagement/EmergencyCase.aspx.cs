@@ -2266,7 +2266,7 @@ namespace PMS
 
         [WebMethod]
         public static string SaveRecord(int Patient_ID, string btnsave, /*string txtAdmission_Date, string ddlDepartment, string ddlDoctor,*/ string ddlCallToDoctor, string txtHealth_Complaints,/* string ddlIssuance_Of, string ddlWard_No, string txtBed_No,*/ string RateBeats,string txtbsr,  string BP_mm_Hg, string Temp_C, string Respiration_Min, string txtRN_Special_Instruction, string txtReceiving_Date, string Provisional_Diagnosis, string Reffer_To, string HistoryOfPeresentIllness, string HistoryOfFamily, string HistoryOfPastIllness, string SocioEconomicHistory, string Birth_History, string Reffer_No, string Drug_History, string Personal_History, string ObstetricHistory, string AllergiesHistory, string TreatmentHistory, string VaccinationHistory, string AnyOtherHistory, string ENT_Throat_IDL, string ENT_Throat_Nose, string ENT_Ear_Right, string Ent_Ear_Left, bool ENT_Rinnes_Right_PosNeg, bool ENT_Rinnes_Lft_PosNeg, bool ENT_Rinnes_Right_FalseNeg, bool ENT_Rinnes_Lft_FalseNeg, bool ENT_Webber_Central, bool ENT_Webber_Lateralized, bool ENT_Investigation_PTA, bool ENT_Investigation_Tympanometry, bool ENT_Rinnes_Right_Neg, bool ENT_Rinnes_Lft_Neg, bool ENT_Rinnes_Right_FNeg, bool ENT_Rinnes_Lft_FNeg, string txtInformant, string txtSourceOfReferral, bool chkNeckHolding, bool chkWalking, bool chkTalking, bool chkOthers, string txtMenarche, string txtMenstrual, string txtAttachmentSeparationfromParents, string txtHealth, bool chkNailBiting, bool chkTemperTantrums, bool chkBedWetting, string txtAcademics, string txtPeerRelationship, string txtBehaviour, string txtOccupationalHistory, string txtMaritalRelationshipSexualHistory, string txtSubstanceUse, string txtForensicUse, string txtRelationship, string txtLeisureActivities, string txtAttitudetoSelfandStandards, string txtPrevallingMood, string txtReactionPattrentoStress, string txtReligiousPracticesAttitute, string txtFather, string txtMother, string txtSiblings, string txtHomeAtmosphererelationshipsocialclass, string txtFamilialIllness, string txtActualandapparentage, string txtRace, string txtTattoosbodypiercingandscars, string txtBodyHabitus, string txttxtDress, string txtHygiene, string txtPsychomotorActivity, string txtInvoluntarymovements, string txtDystoniaEPS, string txtTardivedyskinesia, string txtTics, string txtTremors, string txtAttentivenesstointerview, string txtEyeContact, string txtLevelofConsciousness, string txtRate, string txtRhythm, string txtVolume, string txtTone, string txtModulationvar, string txtDepressed, string txtElated, string txtIrritable, string txtLabile, string txtIncongruent, string txtbluntingflatteningapathy, string txtThinkingPremeditation, string txtPlans,
-            string txtActions, string txtPreservative, string txtLoosAssociation, string txtTangentiaility, string txtCircumstantiality, string txtFlightofIdeas, string txtThoughtInsertion, string txtThoughtWithdrawal, string txtThoughBroadcasting, string txtThoughControl, string txtDellusion, string txtovervaluedideas, string txtDepresonalization, string txtDerealization, string txtthrougObsession, string txtthrougPhobies, string txtthrougHomocidialIdeas, string txtillusion, string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, string txtorientationtime, string txtplace, string txtperson, string txtAttentionConcentrationSerial7Test, string txtOrDaysOfWeekReverseOrder, string txtImmediatememory, string txtshorttermrecentevents, string txtadressrecallafter2minutes, string txtlongtermremoteevents, string txtadressrecallafter5minues, string txtgeneralknowledgequestion, string txtsimplearthemeticcalculation, string txtabstrationconcertethinking, string txtinsight, string DermaFace, string DermaNeck, string DermaTrunk, string DermaUpperLimb, string DermaLowerLimb, string DermaFlexures, string DermaGenitalias, string DermaHair, string DermaNail, string DermaMucousMembrane, string DermaEyes, string DermaEars, string DermaNose, string DermaLips, string HBM_Problem, string HBM_Caused, string HBM_Started, string HBM_Course, string HBM_Treatment, string HBM_Effects, string PE_Pluse, string PE_BP, string PE_Temperature, string PE_Weight, string PE_RespiratoryRate, string PE_Jaundice, string PE_Anemia, string PE_Cyanosis, string PE_Clubbing, string PE_JVP, string PE_LymphNodes, string PE_Edema, string PE_Respiratory, string PE_Cardiovascular, string PE_Gastro_Intestinal, string PE_Observation, string PE_Cranial_Nerves, string PE_Limb_Strength, string PE_Spasticity, string PE_Position, string PE_Vibration, string PE_Stereognosis, string PE_Pain, string PE_Biceps, string PE_Triceps, string PE_Brachioradialis, string PE_Quadriceps, string PE_Patellar, string PE_Achilles, string PE_Extensor, string PE_Frontal, string PE_Finger, string PE_Heel, string PE_Movements, string PE_Gait, bool PE_Neck_Rigidity, bool PE_Kerning_Sign, bool PE_Brudzinki_Sign, string For_Summary, string For_Diagnosis, string For_AxisI, string For_AxisII, string For_AxisIII, string For_AxisIV, string For_AxisV, string For_PredisposingFactors, string For_PrecipitatingFactors, string For_PrepetuatingFactors, string For_Investigation, string For_Medical, string For_Psychological, string For_Major_Issues, string For_Strengths, string For_Goals, string For_Strategies, string txtPeads_weight, string txtPeads_Length, string txtPeads_HC, string txtPeads_General_Appearance, bool chkPeads_Cyanosis, bool chkPeads_Jaundice, bool chkPeads_Lethargy, bool chkPeads_Rash, string txtPeads_Others, bool chkPeads_Caput, bool chkPeads_Cephalhematoma, bool rdbPeads_Anterioropen, bool rdbPeads_AnteriorClose, bool chkPeads_Dextrocardia, bool chkPeads_Bulging, bool chkPeads_Murmur, string txtPeads_HeartSound, bool chkPeads_Nasal, bool chkPeads_Recessions, string txtPeads_AddedSounds, bool rdbPeads_Flat, bool rdbPeads_Distended, bool rdbPeads_Scaphoid, bool chkPeads_Liver, bool chkPeads_Spleen, string txtPeads_GITOthers, bool chkPeads_Sucking, bool chkPeads_Rooting, bool chkPeads_Moro, string txtPeads_CNSOthers, bool chkPeads_FullTerm, bool chkPeads_PreTerm, DateTime txtPeads_DateOfDelivery, string txtPeads_TimeOfDelivery, bool rdbPeads_Booked, bool rdbPeads_UnBooked, bool chkPeads_DAIHandling, bool chkPeads_ANTURash, bool chkPeads_PIH, bool chkPeads_GDM, bool chkPeads_Vacinated, string txtPeads_ANTOthers, bool rdbPeads_SVD, bool rdbPeads_LSCS, bool rdbPeads_Emergency, bool rdbPeads_Elective, string txtPeads_PlaceOfDelivery, string txtPeads_IndicationForLSCS, string Peads_apgerScore1min, string Peads_apgerScore5min, bool chkPeads_Resuscitation, string txtPeads_NatalOthers, bool chkPeads_Moaning, bool chkPeads_RespDistress, bool chkPeads_PostNATALCyanosis, bool chkPeads_Fits, bool chkPeads_ReluctanceToFeed, string txtPeads_PostNatalOthers, string txtDischarge_On, string ddlDischarge_By, string txtNext_Visit, /*string ddlPatientCondition,*/ string txtAdvice, bool chkdischarge, string patienttype, string Saturation, string OthersRN, string DischargeStatus, string ddlEmrgRhythm, string ddlEmrgVolume, string Procedure_Recommended, string IdentificationMarks, string Diagnosis, string DateOfDeath, string TimeOfDeath, string PlaceOfDeath, string CauseOfDeath, string IssuingOfficerName, string DeathCertifiedby1, string DeathCertifiedby2, string BodyHandedOverTo, string FamilyPersonName, string CNIC, string RelationWithDeceased, string CMO_Police, string TreatmentGiven, string PhysicalFinding, string GeneralPhysicalExamination, string ClinicalSummary, string TreatmentAtDischarge, string FollowUpPlanInstructions, string CauseOfReferral, string ReferredTo,/* string TreatmentTime,*/ string CallingDoctorDepartment, string CallingDoctorMobile, string O2_Saturation_Oxygen1, string O2_Saturation_Oxygen2, bool? HMFIntact, bool? CranialNerves, bool? SignsOfMeningism, bool? HeartSound, bool? Arrhythmias, bool? Murmur, bool? AnyOtherAddedSound, bool? AnyOtherFindings, bool? NVB_Right, bool? NVB_Left, bool? Crepitation_Right, bool? Crepitation_Left, bool? Wheeze, bool? Ranchi, bool? AnyOtherSound, bool? AbdomenSoft, bool? Tenderness, bool? Guarding, bool? BowelSound, bool? Distention, bool? FluidThrill, bool? ShiftingDullness, bool? EpigastriaDiscomfort, bool? RetrosternalBurning, bool? Jondus, bool? Pallor, bool? Dehydration, bool? GCSOrientation, bool? ConsciousOrientely, string FurtherExplanation, string ID, string TextBoxCns, string TextBoxCvs, string TextBoxResp, string TextBoxGit, string TextBoxGpe, string eye_response, string motor_response, string verbal_Response, string accumulated_response, string PulseRate, string BPDischarge, string Rhythmdischarge, string Tempdisch, string volumedisc, string RespRateDesc, string Oxygen2_desc, string saturationDis, string Oxygen1, string otherecdesc, string Special_Instruction_Desc, string Receiving_DateDesc,string remrks_call_to_doc, string emer_doc_id, bool ReferToOPD/*,string Discount,string patientcateg,string Remarks*/)
+            string txtActions, string txtPreservative, string txtLoosAssociation, string txtTangentiaility, string txtCircumstantiality, string txtFlightofIdeas, string txtThoughtInsertion, string txtThoughtWithdrawal, string txtThoughBroadcasting, string txtThoughControl, string txtDellusion, string txtovervaluedideas, string txtDepresonalization, string txtDerealization, string txtthrougObsession, string txtthrougPhobies, string txtthrougHomocidialIdeas, string txtillusion, string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, string txtorientationtime, string txtplace, string txtperson, string txtAttentionConcentrationSerial7Test, string txtOrDaysOfWeekReverseOrder, string txtImmediatememory, string txtshorttermrecentevents, string txtadressrecallafter2minutes, string txtlongtermremoteevents, string txtadressrecallafter5minues, string txtgeneralknowledgequestion, string txtsimplearthemeticcalculation, string txtabstrationconcertethinking, string txtinsight, string DermaFace, string DermaNeck, string DermaTrunk, string DermaUpperLimb, string DermaLowerLimb, string DermaFlexures, string DermaGenitalias, string DermaHair, string DermaNail, string DermaMucousMembrane, string DermaEyes, string DermaEars, string DermaNose, string DermaLips, string HBM_Problem, string HBM_Caused, string HBM_Started, string HBM_Course, string HBM_Treatment, string HBM_Effects, string PE_Pluse, string PE_BP, string PE_Temperature, string PE_Weight, string PE_RespiratoryRate, string PE_Jaundice, string PE_Anemia, string PE_Cyanosis, string PE_Clubbing, string PE_JVP, string PE_LymphNodes, string PE_Edema, string PE_Respiratory, string PE_Cardiovascular, string PE_Gastro_Intestinal, string PE_Observation, string PE_Cranial_Nerves, string PE_Limb_Strength, string PE_Spasticity, string PE_Position, string PE_Vibration, string PE_Stereognosis, string PE_Pain, string PE_Biceps, string PE_Triceps, string PE_Brachioradialis, string PE_Quadriceps, string PE_Patellar, string PE_Achilles, string PE_Extensor, string PE_Frontal, string PE_Finger, string PE_Heel, string PE_Movements, string PE_Gait, bool PE_Neck_Rigidity, bool PE_Kerning_Sign, bool PE_Brudzinki_Sign, string For_Summary, string For_Diagnosis, string For_AxisI, string For_AxisII, string For_AxisIII, string For_AxisIV, string For_AxisV, string For_PredisposingFactors, string For_PrecipitatingFactors, string For_PrepetuatingFactors, string For_Investigation, string For_Medical, string For_Psychological, string For_Major_Issues, string For_Strengths, string For_Goals, string For_Strategies, string txtPeads_weight, string txtPeads_Length, string txtPeads_HC, string txtPeads_General_Appearance, bool chkPeads_Cyanosis, bool chkPeads_Jaundice, bool chkPeads_Lethargy, bool chkPeads_Rash, string txtPeads_Others, bool chkPeads_Caput, bool chkPeads_Cephalhematoma, bool rdbPeads_Anterioropen, bool rdbPeads_AnteriorClose, bool chkPeads_Dextrocardia, bool chkPeads_Bulging, bool chkPeads_Murmur, string txtPeads_HeartSound, bool chkPeads_Nasal, bool chkPeads_Recessions, string txtPeads_AddedSounds, bool rdbPeads_Flat, bool rdbPeads_Distended, bool rdbPeads_Scaphoid, bool chkPeads_Liver, bool chkPeads_Spleen, string txtPeads_GITOthers, bool chkPeads_Sucking, bool chkPeads_Rooting, bool chkPeads_Moro, string txtPeads_CNSOthers, bool chkPeads_FullTerm, bool chkPeads_PreTerm, DateTime txtPeads_DateOfDelivery, string txtPeads_TimeOfDelivery, bool rdbPeads_Booked, bool rdbPeads_UnBooked, bool chkPeads_DAIHandling, bool chkPeads_ANTURash, bool chkPeads_PIH, bool chkPeads_GDM, bool chkPeads_Vacinated, string txtPeads_ANTOthers, bool rdbPeads_SVD, bool rdbPeads_LSCS, bool rdbPeads_Emergency, bool rdbPeads_Elective, string txtPeads_PlaceOfDelivery, string txtPeads_IndicationForLSCS, string Peads_apgerScore1min, string Peads_apgerScore5min, bool chkPeads_Resuscitation, string txtPeads_NatalOthers, bool chkPeads_Moaning, bool chkPeads_RespDistress, bool chkPeads_PostNATALCyanosis, bool chkPeads_Fits, bool chkPeads_ReluctanceToFeed, string txtPeads_PostNatalOthers, string txtDischarge_On, string ddlDischarge_By, string txtNext_Visit, /*string ddlPatientCondition,*/ string txtAdvice, bool chkdischarge, string patienttype, string Saturation, string OthersRN, string DischargeStatus, string ddlEmrgRhythm, string ddlEmrgVolume, string Procedure_Recommended, string IdentificationMarks, string Diagnosis, string DateOfDeath, string TimeOfDeath, string PlaceOfDeath, string CauseOfDeath, string IssuingOfficerName, string DeathCertifiedby1, string DeathCertifiedby2, string BodyHandedOverTo, string FamilyPersonName, string CNIC, string RelationWithDeceased, string CMO_Police, string TreatmentGiven, string PhysicalFinding, string GeneralPhysicalExamination, string ClinicalSummary, string TreatmentAtDischarge, string FollowUpPlanInstructions, string CauseOfReferral, string ReferredTo,/* string TreatmentTime,*/ string CallingDoctorDepartment, string CallingDoctorMobile, string O2_Saturation_Oxygen1, string O2_Saturation_Oxygen2, bool? HMFIntact, bool? CranialNerves, bool? SignsOfMeningism, bool? HeartSound, bool? Arrhythmias, bool? Murmur, bool? AnyOtherAddedSound, bool? AnyOtherFindings, bool? NVB_Right, bool? NVB_Left, bool? Crepitation_Right, bool? Crepitation_Left, bool? Wheeze, bool? Ranchi, bool? AnyOtherSound, bool? AbdomenSoft, bool? Tenderness, bool? Guarding, bool? BowelSound, bool? Distention, bool? FluidThrill, bool? ShiftingDullness, bool? EpigastriaDiscomfort, bool? RetrosternalBurning, bool? Jondus, bool? Pallor, bool? Dehydration, bool? GCSOrientation, bool? ConsciousOrientely, string FurtherExplanation, string ID, string TextBoxCns, string TextBoxCvs, string TextBoxResp, string TextBoxGit, string TextBoxGpe, string eye_response, string motor_response, string verbal_Response, string accumulated_response, string PulseRate, string BPDischarge, string Rhythmdischarge, string Tempdisch, string volumedisc, string RespRateDesc, string Oxygen2_desc, string saturationDis, string Oxygen1, string otherecdesc, string Special_Instruction_Desc, string Receiving_DateDesc,string remrks_call_to_doc, string emer_doc_id, string hdfReceivingNoteID, string hdfVitalDischargeID, bool ReferToOPD/*,string Discount,string patientcateg,string Remarks*/)
         {
             try
             {
@@ -2832,14 +2832,35 @@ namespace PMS
                     }
                     db.SubmitChanges();
 
+                    // ==========================================
+                    // 1. EMERGENCY RECEIVING NOTE UPDATE/INSERT
+                    // ==========================================
                     if (RateBeats != "" || txtbsr != "" || (!string.IsNullOrEmpty(ddlEmrgRhythm) && ddlEmrgRhythm != "0") || (!string.IsNullOrEmpty(ddlEmrgVolume) && ddlEmrgVolume != "0") || OthersRN != "" || BP_mm_Hg != "" || Temp_C != "" || Respiration_Min != "" || Saturation != "" || txtRN_Special_Instruction != "")
                     {
-                        ReceivingNote rcvNote = new ReceivingNote();
+                        int noteId = 0;
+                        int.TryParse(hdfReceivingNoteID, out noteId);
+
+                        ReceivingNote rcvNote = null;
+                        bool isNewNote = false;
+
+                        // Check if we have an ID to update
+                        if (noteId > 0)
+                        {
+                            rcvNote = db.ReceivingNotes.FirstOrDefault(x => x.ReceivingNoteID == noteId);
+                        }
+
+                        // If it doesn't exist or ID is 0, create a new one
+                        if (rcvNote == null)
+                        {
+                            rcvNote = new ReceivingNote();
+                            isNewNote = true;
+                        }
+
+                        // Map values
                         rcvNote.Patient_ID = Convert.ToInt32(Patient_ID);
                         rcvNote.Emergency_ID = OPD.Emergency_ID;
                         rcvNote.RateBeats = RateBeats;
                         rcvNote.BSR = txtbsr;
-                      
                         rcvNote.Emergency_Rhythm = ddlEmrgRhythm;
                         rcvNote.Emergency_Volume = ddlEmrgVolume;
                         rcvNote.OthersRecieveNote = OthersRN;
@@ -2848,38 +2869,77 @@ namespace PMS
                         rcvNote.RespirationRate = Respiration_Min;
                         rcvNote.O2_Saturation = Saturation;
                         rcvNote.RN_Special_Instruction = txtRN_Special_Instruction;
-                        rcvNote.Receiving_Date = Convert.ToDateTime(txtReceiving_Date);
+
+                        if (!string.IsNullOrEmpty(txtReceiving_Date))
+                            rcvNote.Receiving_Date = Convert.ToDateTime(txtReceiving_Date);
+
                         rcvNote.O2_Saturation_Oxygen1 = O2_Saturation_Oxygen1;
                         rcvNote.O2_Saturation_Oxygen2 = O2_Saturation_Oxygen2;
                         rcvNote.user_id = AppConfig.UserID;
                         rcvNote.Type_Nursing = "Receiving Note Emergency";
-                        db.ReceivingNotes.InsertOnSubmit(rcvNote);
+
+                        if (isNewNote)
+                        {
+                            db.ReceivingNotes.InsertOnSubmit(rcvNote);
+                        }
+
                         db.SubmitChanges();
                     }
+
+                    // ==========================================
+                    // 2. DISCHARGE RECEIVING NOTE UPDATE/INSERT
+                    // ==========================================
                     if (PulseRate != "" || txtbsr != "" || (!string.IsNullOrEmpty(Rhythmdischarge) && Rhythmdischarge != "0") || (!string.IsNullOrEmpty(volumedisc) && volumedisc != "0") || otherecdesc != "" || BPDischarge != "" || Tempdisch != "" || RespRateDesc != "" || Oxygen2_desc != "" || Special_Instruction_Desc != "")
                     {
-                        ReceivingNote rcvNote = new ReceivingNote();
-                        rcvNote.Patient_ID = Convert.ToInt32(Patient_ID);
-                        rcvNote.Emergency_ID = OPD.Emergency_ID;
-                        rcvNote.RateBeats = PulseRate;
-                        rcvNote.BSR = txtbsr;
-                        rcvNote.Emergency_Rhythm = Rhythmdischarge;
-                        rcvNote.Emergency_Volume = volumedisc;
-                        rcvNote.OthersRecieveNote = otherecdesc;
-                        rcvNote.BloodPressure = BPDischarge;
-                        rcvNote.Temperature = Tempdisch;
-                        rcvNote.RespirationRate = RespRateDesc;
-                        rcvNote.O2_Saturation = saturationDis;
-                        rcvNote.RN_Special_Instruction = Special_Instruction_Desc;
-                        rcvNote.Receiving_Date = Convert.ToDateTime(Receiving_DateDesc);
-                        rcvNote.O2_Saturation_Oxygen1 = Oxygen1;
-                        rcvNote.O2_Saturation_Oxygen2 = Oxygen2_desc;
-                        rcvNote.user_id = AppConfig.UserID;
-                        rcvNote.Type_Nursing = "Discharge Receiving Note";
-                        db.ReceivingNotes.InsertOnSubmit(rcvNote);
+                        int dischargeNoteId = 0;
+                        int.TryParse(hdfVitalDischargeID, out dischargeNoteId);
+
+                        ReceivingNote rcvNoteDesc = null;
+                        bool isNewDescNote = false;
+
+                        // Check if we have an ID to update
+                        if (dischargeNoteId > 0)
+                        {
+                            rcvNoteDesc = db.ReceivingNotes.FirstOrDefault(x => x.ReceivingNoteID == dischargeNoteId);
+                        }
+
+                        // If it doesn't exist or ID is 0, create a new one
+                        if (rcvNoteDesc == null)
+                        {
+                            rcvNoteDesc = new ReceivingNote();
+                            isNewDescNote = true;
+                        }
+
+                        // Map values
+                        rcvNoteDesc.Patient_ID = Convert.ToInt32(Patient_ID);
+                        rcvNoteDesc.Emergency_ID = OPD.Emergency_ID;
+                        rcvNoteDesc.RateBeats = PulseRate;
+                        rcvNoteDesc.BSR = txtbsr;
+                        rcvNoteDesc.Emergency_Rhythm = Rhythmdischarge;
+                        rcvNoteDesc.Emergency_Volume = volumedisc;
+                        rcvNoteDesc.OthersRecieveNote = otherecdesc;
+                        rcvNoteDesc.BloodPressure = BPDischarge;
+                        rcvNoteDesc.Temperature = Tempdisch;
+                        rcvNoteDesc.RespirationRate = RespRateDesc;
+                        rcvNoteDesc.O2_Saturation = saturationDis;
+                        rcvNoteDesc.RN_Special_Instruction = Special_Instruction_Desc;
+
+                        if (!string.IsNullOrEmpty(Receiving_DateDesc))
+                            rcvNoteDesc.Receiving_Date = Convert.ToDateTime(Receiving_DateDesc);
+
+                        rcvNoteDesc.O2_Saturation_Oxygen1 = Oxygen1;
+                        rcvNoteDesc.O2_Saturation_Oxygen2 = Oxygen2_desc;
+                        rcvNoteDesc.user_id = AppConfig.UserID;
+                        rcvNoteDesc.Type_Nursing = "Discharge Receiving Note";
+
+                        if (isNewDescNote)
+                        {
+                            db.ReceivingNotes.InsertOnSubmit(rcvNoteDesc);
+                        }
+
                         db.SubmitChanges();
                     }
-                   
+
                     var Emergency_ID = OPD.Emergency_ID;
                     return Emergency_ID.ToString();
                 }
@@ -6498,33 +6558,69 @@ namespace PMS
 
         public class VitalParameterClass
         {
-
-            public string Pulse_Min;
-            public string Rate_Beats;
-            public string Weight_Kg;
-            public string Height_Cm;
-            public string Rhythm;
-            public string Volume;
-            public string OthersRcvNote;
-            public string BP_mm_Hg;
-            public string O2_Saturation;
-            public string O2_Saturation_Oxygen1;
-            public string O2_Saturation_Oxygen2;
-            public DateTime Created_Time;
-            public string Respiration_Min;
-            public string Temp_C;
-            public string L_M_P;
-            public string Test_ID;
-            public DateTime Receiving_date;
-            public string RN_Special_Instruction;
-            public string RN_Patient_General_Condition;
-            public string Status;
-            public string BMI;
-            public string GCS;
-            public string user;
-            public string BSR;
+            // Change these to Properties
+            public string ReceivingNoteID { get; set; }
+            public string Pulse_Min { get; set; }
+            public string Rate_Beats { get; set; }
+            public string Weight_Kg { get; set; }
+            public string Height_Cm { get; set; }
+            public string Rhythm { get; set; }
+            public string Volume { get; set; }
+            public string OthersRcvNote { get; set; }
+            public string BP_mm_Hg { get; set; }
+            public string O2_Saturation { get; set; }
+            public string O2_Saturation_Oxygen1 { get; set; }
+            public string O2_Saturation_Oxygen2 { get; set; }
+            public DateTime Created_Time { get; set; }
+            public string Respiration_Min { get; set; }
+            public string Temp_C { get; set; }
+            public string L_M_P { get; set; }
+            public string Test_ID { get; set; }
+            public DateTime Receiving_date { get; set; }
+            public string RN_Special_Instruction { get; set; }
+            public string RN_Patient_General_Condition { get; set; }
+            public string Status { get; set; }
+            public string BMI { get; set; }
+            public string GCS { get; set; }
+            public string user { get; set; }
+            public string BSR { get; set; }
         }
+        [WebMethod]
+        public static string GetReceivingNoteByID(int NoteID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
+            // 1. Fetch the data from the DB first (without formatting)
+            var rawNote = (from op in db.ReceivingNotes
+                           where op.ReceivingNoteID == NoteID
+                           select op).FirstOrDefault();
+
+            if (rawNote == null) return null;
+
+            // 2. Project into your anonymous object in C# (In-Memory)
+            var note = new
+            {
+                rawNote.ReceivingNoteID,
+                rawNote.RateBeats,
+                rawNote.BSR,
+                rawNote.BloodPressure,
+                rawNote.Emergency_Rhythm,
+                rawNote.Emergency_Volume,
+                rawNote.OthersRecieveNote,
+                rawNote.RespirationRate,
+                rawNote.Temperature,
+                // Now it's safe to use .ToString() because we are in C# memory
+                Receiving_Date = rawNote.Receiving_Date.HasValue
+                                 ? rawNote.Receiving_Date.Value.ToString("MM/dd/yyyy hh:mm tt")
+                                 : "",
+                rawNote.RN_Special_Instruction,
+                rawNote.O2_Saturation,
+                rawNote.O2_Saturation_Oxygen1,
+                rawNote.O2_Saturation_Oxygen2
+            };
+
+            return (new System.Web.Script.Serialization.JavaScriptSerializer()).Serialize(note);
+        }
         [WebMethod]
         public static string LoadVitalParametersHistoryDicharge(int PatientID)
         {
@@ -6540,6 +6636,7 @@ namespace PMS
 
                                         select new
                                         {
+                                            op.ReceivingNoteID,
                                             op.RateBeats,
                                             op.BSR,
                                             op.BloodPressure,
@@ -6564,6 +6661,7 @@ namespace PMS
 
                                   select new
                                   {
+
                                       op.pulse_Min,
                                       op.BP_mm_Hg,
                                       op.Weight_Kg,
@@ -6579,6 +6677,7 @@ namespace PMS
             foreach (var item in outpatientlist)
             {
                 VitalParameterClass obj = new VitalParameterClass();
+                
                 obj.Pulse_Min = item.pulse_Min;
                 obj.BP_mm_Hg = item.BP_mm_Hg;
                 obj.Weight_Kg = item.Weight_Kg;
@@ -6600,6 +6699,7 @@ namespace PMS
             foreach (var item in EmergencyPatientList)
             {
                 VitalParameterClass obj = new VitalParameterClass();
+                obj.ReceivingNoteID = item.ReceivingNoteID.ToString();
                 obj.Rhythm = db.GetDataValueName("Emergency Rhythm", item.Emergency_Rhythm);
                 obj.Volume = db.GetDataValueName("Emergency Volume", item.Emergency_Volume);
                 obj.BP_mm_Hg = item.BloodPressure;
@@ -6635,6 +6735,7 @@ namespace PMS
                                            && op.Type_Nursing == "Receiving Note Emergency"
                                         select new
                                         {
+                                            op.ReceivingNoteID,
                                             op.RateBeats,
                                             op.BSR,
                                             op.BloodPressure,
@@ -6691,6 +6792,7 @@ namespace PMS
             foreach (var item in EmergencyPatientList)
             {
                 VitalParameterClass obj = new VitalParameterClass();
+                obj.ReceivingNoteID = item.ReceivingNoteID.ToString();
                 obj.Rhythm = db.GetDataValueName("Emergency Rhythm", item.Emergency_Rhythm);
                 obj.Volume = db.GetDataValueName("Emergency Volume", item.Emergency_Volume);
                 obj.BP_mm_Hg = item.BloodPressure;
