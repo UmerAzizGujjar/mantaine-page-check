@@ -5385,8 +5385,6 @@ namespace PMS
                 {
                     rd.Load(Server.MapPath("~/Reports/Billings/rptBillBasePrintHalf_Hospital.rpt"));
                 }
-
-                // Set parameters
                 rd.SetParameterValue("@Bill_Id", billId);
                 rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
 
