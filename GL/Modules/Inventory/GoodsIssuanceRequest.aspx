@@ -30,9 +30,9 @@
                 hintText: "Select a warehouse first...",
                 noResultsText: "No items found.",
                 searchingText: "Searching...",
-
+               
                 onAdd: function (item) {
-
+                    debugger;
                     $("#hditemID").val(item.id);
                     $("#txtItem").val(item.name);
                     GetItemDetail();

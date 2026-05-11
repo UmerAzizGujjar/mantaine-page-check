@@ -98,6 +98,8 @@
     <script type="text/javascript">        
         $(document).ready(function () {
             debugger
+            highlightPendingRows();
+
             $('#txt_search').keyup(function (e) {
                 debugger
                 var searchText = $('#txt_search').val().toLowerCase();
@@ -132,6 +134,23 @@
                 }
             });
         });
+
+        function highlightPendingRows() {
+            var tbl = document.getElementById('<%= GridView1.ClientID %>');
+            if (!tbl) return;
+
+            for (var i = 1; i < tbl.rows.length; i++) {
+                var row = tbl.rows[i];
+                var statusCell = row.cells[5];
+
+                if (statusCell) {
+                    var statusText = statusCell.innerText.trim().toLowerCase();
+                    if (statusText === "pending") {
+                        row.style.backgroundColor = "#ffe066";
+                    }
+                }
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

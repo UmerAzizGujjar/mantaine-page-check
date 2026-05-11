@@ -321,12 +321,23 @@
                     $('#txtDisAmt').attr("disabled", true);
                     $('#txtFlatDisc').attr("disabled", true);
                     $('#txtAmountReceived').attr("disabled", true);
+                    $('#ddlpanel').attr('disabled', false);
+                }
+                else if (chkbtn == 'rbtnbank') {
+                    $('#txtDisPer').attr("disabled", false);
+                    $('#txtDisAmt').attr("disabled", false);
+                    $('#txtFlatDisc').attr("disabled", false);
+                    $('#txtAmountReceived').attr("disabled", false).val(0);
+                    blnceCondition = 'true'
+                    CountBalance();
                 }
                 else {
                     $('#txtDisPer').attr("disabled", false);
                     $('#txtDisAmt').attr("disabled", false);
                     $('#txtFlatDisc').attr("disabled", false);
                     $('#txtAmountReceived').attr("disabled", false);
+                    $('#txtAmountReceived').attr("disabled", false).val(0);
+                    blnceCondition = 'false'
                 }
             });
             $('#SearchModel').on('keypress', function (event) {
@@ -1355,6 +1366,7 @@
             var getrowindex = row.rowIndex;
             var excatrowindex = parseInt(getrowindex) - parseInt(1);
             CalculateSummarieDiscountPerWise(excatrowindex);
+            CountBalance(); 
         }
         function Invoice() {
             debugger;
@@ -1386,6 +1398,8 @@
             var row = $(anchor).parents('tr')[0];
             row.remove();
             CalculateTotals();
+
+            CountBalance(); 
             debugger;
             $("#tblDetails tbody tr").each(function (key) {
                 debugger;
@@ -1471,29 +1485,44 @@
             else
                 toastr.success(message, title);
         }
+        //function CountBalance() {
+        //    debugger;
+        //    var TtlPayable = $('#txtTotalPayable').val();
+        //    if (TtlPayable == "") {
+        //        TtlPayable = 0;
+        //    }
+        //    var ttlDisc = $('#txtDisAmt').val();
+        //    var tllDisc = $('#txtLineDisc').val();
+        //    var AmtReceived = $('#txtAmountReceived').val();
+        //    var flatdisc = $('#txtFlatDisc').val();
+        //    if (flatdisc == "" || flatdisc == "visionplus") {
+        //        flatdisc = 0;
+        //    }
+        //    if (TtlPayable != '' || TtlPayable != 0) {
+        //        if (AmtReceived != '') {
+        //            $('#txtBalances').val((Math.round(parseFloat(TtlPayable) - parseFloat(ttlDisc) - parseFloat(tllDisc) - parseFloat(flatdisc) - parseFloat(AmtReceived))).toFixed(0));
+        //        }
+        //        else
+        //            $('#txtBalances').val(TtlPayable.toFixed(0));
+        //    }
+        //    else {
+        //        $('#txtBalances').val(TtlPayable.toFixed(0));
+        //    }
+        //}
         function CountBalance() {
             debugger;
-            var TtlPayable = $('#txtTotalPayable').val();
-            if (TtlPayable == "") {
-                TtlPayable = 0;
+            var TtlPayable = parseFloat($('#txtTotalPayable').val()) || 0;
+            var ttlDisc = parseFloat($('#txtDisAmt').val()) || 0;          
+            var tllDisc = parseFloat($('#txtLineDisc').val()) || 0;        
+            var flatdisc = parseFloat($('#txtFlatDisc').val()) || 0;       
+            var AmtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
+
+            var NetPayable = TtlPayable - ttlDisc - tllDisc - flatdisc;
+            var Balance = NetPayable - AmtReceived;
+            if (isNaN(Balance) || Balance < 0) {
+                Balance = 0;
             }
-            var ttlDisc = $('#txtDisAmt').val();
-            var tllDisc = $('#txtLineDisc').val();
-            var AmtReceived = $('#txtAmountReceived').val();
-            var flatdisc = $('#txtFlatDisc').val();
-            if (flatdisc == "" || flatdisc == "visionplus") {
-                flatdisc = 0;
-            }
-            if (TtlPayable != '' || TtlPayable != 0) {
-                if (AmtReceived != '') {
-                    $('#txtBalances').val((Math.round(parseFloat(TtlPayable) - parseFloat(ttlDisc) - parseFloat(tllDisc) - parseFloat(flatdisc) - parseFloat(AmtReceived))).toFixed(0));
-                }
-                else
-                    $('#txtBalances').val(TtlPayable.toFixed(0));
-            }
-            else {
-                $('#txtBalances').val(TtlPayable.toFixed(0));
-            }
+            $('#txtBalances').val(Math.round(Balance));
         }
         function sumdiscount() {
             debugger;
@@ -1942,18 +1971,18 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="number" name="txtQty" value="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="number" name="txtQty" value="1" style="width: 4% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
-                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
+                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 4% !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
 
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
-                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="width: 75px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="4% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
 
                         '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 100px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
 
                         '<td style="text-align:Right;"></td>' +
-                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 6% !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
@@ -2055,17 +2084,17 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="text" name="txtQty" value="1" min="1" style="width: 4% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
-                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
+                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 4% !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
 
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
-                        '<td><input type="number" name="DisPer" min="0" value="0"' + disDisabledAttr + ' class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+                        '<td><input type="number" name="DisPer" min="0" value="0"' + disDisabledAttr + ' class="height_height orderchange" style="width: 4% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
                         '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
 
                         '<td style="text-align:Right;"></td>' +
-                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 103px !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 6% !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
@@ -2262,7 +2291,9 @@
                 "DiscAmnt": DiscAmnt,
                 "Save_list": Save_list,
                 "In_Patient_ID": In_Patient_ID,
-                "invNumber": invNumber
+                "invNumber": invNumber,
+                "Panel_Id": $('#ddlpanel').val()
+
             };
             if (patId == undefined) {
                 debugger;
@@ -2438,7 +2469,8 @@
                         "linediscount": linediscount,
                         "DiscAmnt": DiscAmnt,
                         "Save_list": Save_list,
-                        "invNumber": invNumber
+                        "invNumber": invNumber,
+                        "Panel_Id": $('#ddlpanel').val()
                     };
                     if (patId == undefined) {
                         debugger;
@@ -2578,20 +2610,24 @@
                     debugger;
                     var data = JSON.parse(msg.d);
                     if (data == '01') {
-                        blnceCondition = 'true'
+                        //blnceCondition = 'true'
+                        $('#chkcash').prop('checked', true);
+
                     }
                     else {
-                        blnceCondition = 'false'
-                        $('#divBalance').hide();
-                        $('#txtAmountReceived').attr("disabled", true);
-
+                        //blnceCondition = 'false'
+                        //$('#divBalance').hide();
+                        //$('#txtAmountReceived').attr("disabled", true);
+                        $('#chkBank').prop('checked', true);
 
                     }
 
                 },
-           
+
             });
         }
+
+
         //function getIPDID(pat_id) {
         //    debugger;
 
@@ -2855,6 +2891,20 @@
                             $('#ddlDepartment').val(department).trigger('change')
                             $('#ddlDoctor').attr('disabled', true);
                             $('#ddlDepartment').attr('disabled', true);
+
+                            var panelCompany = data.DoctorInfo?.Panel_Company || '';
+                            if (panelCompany && panelCompany != "0" && panelCompany != 0) {
+                                setTimeout(function () {
+                                    $('#ddlpanel').val(panelCompany.toString()).trigger('change');
+                                    if ($('input[name="rbtn"]:checked').val() !== 'rbtnHospital') {
+                                        $('#ddlpanel').attr('disabled', true);
+                                    } else {
+                                        $('#ddlpanel').attr('disabled', false);
+                                    }
+                                }, 100);
+                            } else {
+                                $('#ddlpanel').attr('disabled', false);
+                            }
                             getWardAndBed(pat_Id)
                             debugger;
                             $.each(data.ItemCodes, function (key, value) {
@@ -2964,9 +3014,9 @@
                             '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
                             '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
                             '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
-                            '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 73px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
+                            '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 4% !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
                             '<td style="text-align: right;" ><input type="text" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
-                        '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 95px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+                        '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 4% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
                             '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
                             '<td style="text-align:Right;"></td>' +
                             '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
@@ -3445,7 +3495,7 @@
                     <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
                 </div>
                 <div class="col-lg-1 col-md-4 col-sm-6">
-                    <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" />
+                    <input type="button" class="btn-primry" value="Queue" id="Queue" onclick="openQueue()" style="width:144% !important" />
                 </div>
             </div>
 
@@ -3510,19 +3560,19 @@
         <table class="table table-bordered table-striped" id="tblDetails">
             <thead>
                 <tr>
-                    <th style="width: 32px; text-align: left;">Sr. </th>
+                    <th style="/*width: 32px; */text-align: left;">Sr. </th>
                     <th style="text-align: left; width: 220px;">Description </th>
                     <th style="text-align: left; width: 43px;">Pack Qty </th>
-                    <th style="width: 25px; text-align: left;">Qty </th>
-                    <th style="width: 25px; text-align: left;">Stock</th>
+                    <th style="/*width: 25px;*/ text-align: left;">Qty </th>
+                    <th style="/*width: 25px; */text-align: left;">Stock</th>
                     <th style="width: 60px; text-align: right;">Rate </th>
-                    <th style="width: 60px; text-align: left;">Dis % </th>
-                    <th style="width: 60px; text-align: left;">Dis Amount </th>
-                    <th style="width: 60px; text-align: left;">Net Amount </th>
-                    <th style="width: 60px; text-align: left;">BatchNo</th>
-                    <th style="width: 70px; text-align: left;">Expiry Date </th>
-                    <th style="width: 80px; text-align: left;">Line Discount</th>
-                    <th style="width: 53px; text-align: left;">Action </th>
+                    <th style="/*width: 60px;*/ text-align: left;">Dis % </th>
+                    <th style="/*width: 60px;*/ text-align: left;">Dis Amount </th>
+                    <th style="/*width: 60px; */text-align: left;">Net Amount </th>
+                    <th style="/*width: 60px;*/ text-align: left;">BatchNo</th>
+                    <th style="/*width: 70px; */text-align: left;">Expiry Date </th>
+                    <th style="/*width: 80px; */text-align: left;">Line Discount</th>
+                    <th style="/*width: 53px; */text-align: left;">Action </th>
                 </tr>
             </thead>
             <tbody id="tblbody">

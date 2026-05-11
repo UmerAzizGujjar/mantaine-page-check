@@ -2463,8 +2463,8 @@ namespace PMS
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var pharmacyItems = (from d in db.INV_Items
-                                     where d.IsPharmacyItem == true 
-                                     && d.Short_Item == false
+                                     where d.IsPharmacyItem == true
+                                     && (d.Short_Item == false || d.Short_Item == null)
                                      && d.Description.Contains(searchString)
                                      orderby d.Item_ID descending
                                      select new
