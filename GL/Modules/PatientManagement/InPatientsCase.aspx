@@ -1440,35 +1440,90 @@
             }, function (err) { });
 
         }
-
-        function LoadVitalParametersHistoryDischarge(PatientID) {
-
+        function LoadVitalParametersHistory(PatientID) {
             if (PatientID != "(New)") {
-                PageMethods.LoadVitalParametersHistoryDischarge(PatientID, function (res) {
+                PageMethods.LoadVitalParametersHistory(PatientID, function (res) {
                     var Data = JSON.parse(res);
                     var rows = '';
                     var gcs = "";
                     $.each(Data, function (key, value) {
-
                         if (value.RateBeats == "" && value.Emergency_Rhythm == null && value.Emergency_Volume == null && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.BP_mm_Hg == "___/___" && value.O2_Saturation == "" && value.O2_Saturation_Oxygen1 == "" && value.O2_Saturation_Oxygen2 == "" && (value.RN_Special_Instruction == "<li></li>" || value.RN_Special_Instruction == "") && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.Temp_C == "") {
-
+                            // Do nothing
                         }
                         else {
                             if (value.GCS == null) {
-
                                 GCS = "";
-                            }
-                            else {
+                            } else {
                                 gcs = value.GCS;
                             }
                             if (value.Emergency_Rhythm == null) value.Emergency_Rhythm = "";
                             if (value.Emergency_Volume == null) value.Emergency_Volume = "";
 
                             var TrnsDateRec = parseInt(value.Receiving_date.substr(6, 10));
+                            var retdateRec = moment.unix(TrnsDateRec).format('M/D/YYYY h:mm:ss A');
 
-                            var retdateRec = moment.unix(TrnsDateRec).format('MM/DD/YYYY hh:mm:ss A');
+                            // Action Column Logic
+                            var actionHtml = '<td></td>';
+                            if (value.ReceivingNoteID != null && value.ReceivingNoteID !== undefined && value.ReceivingNoteID !== "") {
+                                actionHtml = '<td>' +
+                                    '<a href="javascript:void(0)" onclick="EditIPDReceivingVital(' + value.ReceivingNoteID + ')" class="btn btn-sm btn-primary">Edit</a>' +
+                                    '</td>';
+                            }
+
                             rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.RateBeats
-                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.Blood_Suger + '</td><td>' + value.BMI + '</td><td>' + value.Weight_Kg + '</td><td>' + value.Height_cm + '</td><td>' + value.User_Name + '</td></tr>';
+                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.RespirationRate + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.Blood_Suger + '</td><td>' + value.BMI + '</td><td>' + value.Weight_Kg + '</td><td>' + value.Height_cm + '</td><td>' + value.User_Name + '</td>' + actionHtml + '</tr>';
+                        }
+                    });
+
+                    $('#tblVitalParametersHistory tbody tr').remove();
+                    $('#tblVitalParametersHistory tbody').html(rows);
+                    $('#tblHistoryHeader').html('<h2 class="color">Previous History</h2>');
+
+                    $("#ctl00_MainContent_txtRateBeats").val("");
+                    $("#ctl00_MainContent_ddlRhythm").val("");
+                    $("#ctl00_MainContent_ddlVolume").val("");
+                    $("#ctl00_MainContent_txtOthersRcvNote").val("");
+                    $("#ctl00_MainContent_txtTemp").val("");
+                    $("#ctl00_MainContent_txtRespiration").val("");
+                    $("#ctl00_MainContent_txtSaturation").val("");
+                    $("#ctl00_MainContent_txtRN_Special_Instruction").val("");
+                    $("#ctl00_MainContent_txtSaturation_Oxygen1").val("");
+                    $("#ctl00_MainContent_txtSaturation_Oxygen2").val("");
+                }, function (e) { });
+            }
+        }
+        function LoadVitalParametersHistoryDischarge(PatientID) {
+            if (PatientID != "(New)") {
+                PageMethods.LoadVitalParametersHistoryDischarge(PatientID, function (res) {
+                    var Data = JSON.parse(res);
+                    var rows = '';
+                    var gcs = "";
+                    $.each(Data, function (key, value) {
+                        if (value.RateBeats == "" && value.Emergency_Rhythm == null && value.Emergency_Volume == null && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.BP_mm_Hg == "___/___" && value.O2_Saturation == "" && value.O2_Saturation_Oxygen1 == "" && value.O2_Saturation_Oxygen2 == "" && (value.RN_Special_Instruction == "<li></li>" || value.RN_Special_Instruction == "") && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.Temp_C == "") {
+                            // Do nothing
+                        }
+                        else {
+                            if (value.GCS == null) {
+                                GCS = "";
+                            } else {
+                                gcs = value.GCS;
+                            }
+                            if (value.Emergency_Rhythm == null) value.Emergency_Rhythm = "";
+                            if (value.Emergency_Volume == null) value.Emergency_Volume = "";
+
+                            var TrnsDateRec = parseInt(value.Receiving_date.substr(6, 10));
+                            var retdateRec = moment.unix(TrnsDateRec).format('MM/DD/YYYY hh:mm:ss A');
+
+                            // Action Column Logic
+                            var actionHtml = '<td></td>';
+                            if (value.ReceivingNoteID != null && value.ReceivingNoteID !== undefined && value.ReceivingNoteID !== "") {
+                                actionHtml = '<td>' +
+                                    '<a href="javascript:void(0)" onclick="EditIPDDischargeVital(' + value.ReceivingNoteID + ')" class="btn btn-sm btn-info">Edit</a>' +
+                                    '</td>';
+                            }
+
+                            rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.RateBeats
+                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.Respiration_Min + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.Blood_Suger + '</td><td>' + value.BMI + '</td><td>' + value.Weight_Kg + '</td><td>' + value.Height_cm + '</td><td>' + value.User_Name + '</td>' + actionHtml + '</tr>';
                         }
                     });
 
@@ -1477,7 +1532,52 @@
                 });
             }
         }
+        function EditIPDReceivingVital(noteID) {
+            // Set hidden field ID
+            $("[id$='hdfReceivingNoteID']").val(noteID);
 
+            PageMethods.GetReceivingNoteByID(noteID, function (res) {
+                if (res) {
+                    var data = JSON.parse(res);
+                    $("[id$='txtRateBeats']").val(data.RateBeats);
+                    $("[id$='txtBP']").val(data.BloodPressure);
+                    $("[id$='ddlRhythm']").val(data.Emergency_Rhythm);
+                    $("[id$='txtTemp']").val(data.Temperature);
+                    $("[id$='ddlVolume']").val(data.Emergency_Volume);
+                    $("[id$='txtRespiration']").val(data.RespirationRate);
+                    $("[id$='txtSaturation_Oxygen2']").val(data.O2_Saturation_Oxygen2);
+                    $("[id$='txtbsr']").val(data.BSR);
+                    $("[id$='txtSaturation']").val(data.O2_Saturation);
+                    $("[id$='txtSaturation_Oxygen1']").val(data.O2_Saturation_Oxygen1);
+                    $("[id$='txtReceiving_Date']").val(data.Receiving_Date);
+                    $("[id$='txtOthersRcvNote']").val(data.OthersRecieveNote);
+                    $("[id$='txtRN_Special_Instruction']").val(data.RN_Special_Instruction);
+                }
+            }, function (err) { console.error("Error fetching IPD Receiving Note:", err); });
+        }
+
+        function EditIPDDischargeVital(noteID) {
+            // Set hidden field ID
+            $("[id$='hdfVitalDischargeID']").val(noteID);
+
+            PageMethods.GetReceivingNoteByID(noteID, function (res) {
+                if (res) {
+                    var data = JSON.parse(res);
+                    $("[id$='txtPulseRate']").val(data.RateBeats);
+                    $("[id$='txtBPDischarge']").val(data.BloodPressure);
+                    $("[id$='ddlRhythmdischarge']").val(data.Emergency_Rhythm);
+                    $("[id$='txtTempdisch']").val(data.Temperature);
+                    $("[id$='ddlvolumedisc']").val(data.Emergency_Volume);
+                    $("[id$='txtRespRateDesc']").val(data.RespirationRate);
+                    $("[id$='txtSaturation_Oxygen2_desc']").val(data.O2_Saturation_Oxygen2);
+                    $("[id$='txtotherecdesc']").val(data.OthersRecieveNote);
+                    $("[id$='txttxtReceiving_DateDesc']").val(data.Receiving_Date);
+                    $("[id$='txtRN_Special_Instruction_Desc']").val(data.RN_Special_Instruction);
+                    $("[id$='txtsaturationDis']").val(data.O2_Saturation);
+                    $("[id$='txtOxygen1']").val(data.O2_Saturation_Oxygen1);
+                }
+            }, function (err) { console.error("Error fetching IPD Discharge Note:", err); });
+        }
         function LoadDischargeMedicinesrpt(PatientID) {
             ID = $('#<%=txtPatient_ID.ClientID%>').val();
             oUTID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
@@ -1712,7 +1812,8 @@
             var btnsave = $('#btnSave').val();
             var Patient_ID = $("#<%= hdfPatient_ID.ClientID%>").val();
             var txtAdmission_Date = $('#ctl00_MainContent_txtAdmission_Date').val();
-
+            var hdfReceivingNoteID = $("#hdfReceivingNoteID").val() || "0";
+            var hdfVitalDischargeID = $("#hdfVitalDischargeID").val() || "0";
             var txtHealth_Complaints = $('#ctl00_MainContent_txtHealth_Complaints').val();
             var txtExpected_Discharge_Date = $('#ctl00_MainContent_txtExpected_Discharge_Date').val();
 
@@ -2307,7 +2408,7 @@
                 txtshorttermrecentevents, txtadressrecallafter2minutes, txtlongtermremoteevents, txtadressrecallafter5minues, txtgeneralknowledgequestion, txtsimplearthemeticcalculation, txtabstrationconcertethinking, txtinsight, DermaFace, DermaNeck, DermaTrunk, DermaUpperLimb, DermaLowerLimb,
                 DermaFlexures, DermaGenitalias, DermaHair, DermaNail, DermaMucousMembrane,
                 DermaEyes, DermaEars, DermaNose, DermaLips, HBM_Problem, HBM_Caused, HBM_Started, HBM_Course, HBM_Treatment, HBM_Effects, PE_Pluse, PE_BP, PE_Temperature, PE_Weight, PE_RespiratoryRate, PE_Jaundice, PE_Anemia, PE_Cyanosis, PE_Clubbing, PE_JVP, PE_LymphNodes, PE_Edema, PE_Respiratory, PE_Cardiovascular, PE_Gastro_Intestinal, PE_Observation, PE_Cranial_Nerves, PE_Limb_Strength, PE_Spasticity, PE_Position, PE_Vibration, PE_Stereognosis, PE_Pain, PE_Biceps, PE_Triceps, PE_Brachioradialis, PE_Quadriceps, PE_Patellar, PE_Achilles, PE_Extensor, PE_Frontal, PE_Finger, PE_Heel, PE_Movements, PE_Gait, PE_Neck_Rigidity, PE_Kerning_Sign, PE_Brudzinki_Sign, For_Summary, For_Diagnosis, For_AxisI, For_AxisII, For_AxisIII, For_AxisIV, For_AxisV, For_PredisposingFactors, For_PrecipitatingFactors, For_PrepetuatingFactors, For_Investigation, For_Medical, For_Psychological, For_Major_Issues, For_Strengths, For_Goals, For_Strategies, txtPeads_weight, txtPeads_Length, txtPeads_HC, txtPeads_General_Appearance, chkPeads_Cyanosis, chkPeads_Jaundice, chkPeads_Lethargy, chkPeads_Rash, txtPeads_Others, chkPeads_Caput, chkPeads_Cephalhematoma, rdbPeads_Anterioropen, rdbPeads_AnteriorClose, chkPeads_Dextrocardia, chkPeads_Bulging, chkPeads_Murmur, txtPeads_HeartSound, chkPeads_Nasal, chkPeads_Recessions, txtPeads_AddedSounds, rdbPeads_Flat, rdbPeads_Distended, rdbPeads_Scaphoid, chkPeads_Liver, chkPeads_Spleen, txtPeads_GITOthers, chkPeads_Sucking, chkPeads_Rooting, chkPeads_Moro, txtPeads_CNSOthers, chkPeads_FullTerm, chkPeads_PreTerm, txtPeads_DateOfDelivery, txtPeads_TimeOfDelivery, rdbPeads_Booked, rdbPeads_UnBooked, chkPeads_DAIHandling, chkPeads_ANTURash, chkPeads_PIH, chkPeads_GDM, chkPeads_Vacinated, txtPeads_ANTOthers, rdbPeads_SVD, rdbPeads_LSCS, rdbPeads_Emergency, rdbPeads_Elective, txtPeads_PlaceOfDelivery, txtPeads_IndicationForLSCS, Peads_apgerScore1min, Peads_apgerScore5min, chkPeads_Resuscitation, txtPeads_NatalOthers, chkPeads_Moaning, chkPeads_RespDistress, chkPeads_PostNATALCyanosis, chkPeads_Fits, chkPeads_ReluctanceToFeed, txtPeads_PostNatalOthers, txtProcedure_Operation, txtProcedure_Detail, txtDignosis, txtDischarge_On, ddlDischarge_By, txtNext_Visit, txtAdvice, chkdischarge, patienttype, referto, referward, referbed_no, referroomno, referroomtype, RateBeats, ddlEmrgRhythm, ddlEmrgVolume, OthersRN, O2_Saturation_Oxygen1, O2_Saturation_Oxygen2, Saturation, HMFIntact, CranialNerves, SignsOfMeningism, HeartSound, Arrhythmias, AnyOtherAddedSound, AnyOtherFindings, NVB_Right, NVB_Left, Crepitation_Right, Crepitation_Left, Wheeze, Ranchi, AnyOtherSound, AbdomenSoft, Tenderness, Guarding, BowelSound, Distention, FluidThrill, ShiftingDullness, EpigastriaDiscomfort, RetrosternalBurning, Jondus, Pallor, Dehydration, GCSOrientation, ConsciousOrientely, Murmur, TextBoxCns, TextBoxCvs, TextBoxResp, TextBoxGit, TextBoxGpe, eye_response, motor_response, verbal_Response, accumulated_response, FurtherExplanation, PulseRate, BPDischarge, WeightDischarge, HeightDischarge, BMIDischarge, BSRDischarge, Tempdisch, volumedisc, RespRateDesc, Rhythmdischarge, Oxygen2_desc, saturationDis, Oxygen1, otherecdesc, Special_Instruction_Desc, FollowUpInstruction, OperationalDetails, Receiving_Date_Discharge, IdentificationMarks, DateOfDeath, TimeOfDeath, PlaceOfDeath, CauseOfDeath, IssuingOfficerName, DeathCertifiedby1, DeathCertifiedby2, BodyHandedOverTo, FamilyPersonName, CNIC, RelationWithDeceased, CMO_Police, ID, SULR, SULL, SLLR, SLLL, PULR, PULL, PLLR, PLLL, Torso, clinical_Notes, Doctor_Notes, Provisional_Diagnosis_Examination, doc, JVP, Edema, Cyanosis, Discharge_Request, ddlDischarge_Type, procedureContent, 
-                procedureId,
+                procedureId, hdfReceivingNoteID, hdfVitalDischargeID, 
                 function (response) {
                     debugger;
 
@@ -2318,6 +2419,8 @@
                         window.location = "InPatientsCase.aspx?ID=" + response;
                         //window.open('../../ReportViewer.aspx?ReportName=InpatientDetail&Title=In Patient Detail Report&In_Patient_ID=' + response);
                         $('#btnSave').val("Update");
+                        $("#hdfReceivingNoteID").val("0");
+                        $("#hdfVitalDischargeID").val("0");
                     }
                     else if (btn == 'btnsaveprint') {
                         PrintAdmisionDetails(response);
@@ -2557,57 +2660,7 @@
             }, function (e) { });
         }
 
-        function LoadVitalParametersHistory(PatientID) {
-
-            if (PatientID != "(New)") {
-                PageMethods.LoadVitalParametersHistory(PatientID, function (res) {
-
-                    var Data = JSON.parse(res);
-                    var rows = '';
-                    var gcs = "";
-                    $.each(Data, function (key, value) {
-                        ;
-                        if (value.RateBeats == "" && value.Emergency_Rhythm == null && value.Emergency_Volume == null && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.BP_mm_Hg == "___/___" && value.O2_Saturation == "" && value.O2_Saturation_Oxygen1 == "" && value.O2_Saturation_Oxygen2 == "" && (value.RN_Special_Instruction == "<li></li>" || value.RN_Special_Instruction == "") && (value.OthersRecieveNote == "<li></li>" || value.OthersRecieveNote == "") && value.Temp_C == "") {
-
-                        }
-                        else {
-                            if (value.GCS == null) {
-
-                                GCS = "";
-                            }
-                            else {
-                                gcs = value.GCS;
-                            }
-                            if (value.Emergency_Rhythm == null) value.Emergency_Rhythm = "";
-                            if (value.Emergency_Volume == null) value.Emergency_Volume = "";
-
-                            var TrnsDateRec = parseInt(value.Receiving_date.substr(6, 10));
-                            var retdateRec = moment.unix(TrnsDateRec).format('M/D/YYYY h:m:s A');
-                            rows += '<tr><td> ' + retdateRec + ' </td><td> ' + value.Status + ' </td> <td> ' + value.Temp_C
-                                + ' </td> <td> ' + value.Temp_C + ' </td> <td> ' + value.Emergency_Rhythm + ' </td><td> ' + value.Emergency_Volume + ' </td> <td> ' + value.BP_mm_Hg + ' </td><td> ' + value.OthersRecieveNote + ' </td> <td> ' + value.RespirationRate + ' </td><td> ' + value.RN_Special_Instruction + ' </td><td> ' + value.O2_Saturation + ' </td><td>' + value.O2_Saturation_Oxygen1 + '</td><td>' + value.O2_Saturation_Oxygen2 + '</td><td>' + value.Blood_Suger + '</td><td>' + value.BMI + '</td><td>' + value.Weight_Kg + '</td><td>' + value.Height_cm + '</td><td>' + value.User_Name + '</td></tr>';
-                        }
-                    });
-
-                    $('#tblVitalParametersHistory tbody tr').remove();
-                    $('#tblVitalParametersHistory tbody').html(rows);
-
-                    $('#tblHistoryHeader').html('<h2 class="color">Previous History</h2>');
-
-                    $("#ctl00_MainContent_txtRateBeats").val("");
-                    $("#ctl00_MainContent_ddlRhythm").val("");
-                    $("#ctl00_MainContent_ddlVolume").val("");
-                    $("#ctl00_MainContent_txtOthersRcvNote").val("");
-
-
-                    $("#ctl00_MainContent_txtTemp").val("");
-                    $("#ctl00_MainContent_txtRespiration").val("");
-                    $("#ctl00_MainContent_txtSaturation").val("");
-                    $("#ctl00_MainContent_txtRN_Special_Instruction").val("");
-                    $("#ctl00_MainContent_txtSaturation_Oxygen1").val("");
-                    $("#ctl00_MainContent_txtSaturation_Oxygen2").val("");
-                }, function (e) { });
-            }
-        }
+ 
         function calculateBMI() {
             var height_in_cm = parseFloat($('#ctl00_MainContent_txtHeight').val());
             var weight_kg = parseFloat($('#ctl00_MainContent_txtWeight').val());
@@ -7618,38 +7671,39 @@
                                 <td>
                                     <div style="overflow:scroll;margin-left:-9px">
                                     <table class="table" id="tblVitalParametersHistory">
-                                        <thead>
-                                            <tr>
-                                                <td colspan="20">
-                                                    <div id="tblHistoryHeader">
-                                                        <h2 class="color">Previous History</h2>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Receiving Date & Time </th>
-                                                <th style="width: 84px;">Status</th>
-                                                <th>Rate_Beats</th>
-                                                <th>Temperature</th>
-                                                <th>Rhythm</th>
-                                                <th>Volume</th>
-                                                <th>Blood Pressure</th>
-                                                <th>Others </th>                                                
-                                                <th>Respiration </th>
-                                                <th>Instruction </th>
-                                                <th>O2 Saturation</th>                                                
-                                                <th>O2 Saturation_Oxygen1</th>
-                                                <th>O2 Saturation_Oxygen2</th>
-                                                <th>BSR</th>
-                                                <th>BMI</th>
-                                                <th>Wt</th>
-                                                <th>Ht</th>
-                                                   <th>Username</th>                                             
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+    <thead>
+        <tr>
+            <td colspan="21">
+                <div id="tblHistoryHeader">
+                    <h2 class="color">Previous History</h2>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>Receiving Date & Time </th>
+            <th style="width: 84px;">Status</th>
+            <th>Rate_Beats</th>
+            <th>Temperature</th>
+            <th>Rhythm</th>
+            <th>Volume</th>
+            <th>Blood Pressure</th>
+            <th>Others </th>                                                
+            <th>Respiration </th>
+            <th>Instruction </th>
+            <th>O2 Saturation</th>                                                
+            <th>O2 Saturation_Oxygen1</th>
+            <th>O2 Saturation_Oxygen2</th>
+            <th>BSR</th>
+            <th>BMI</th>
+            <th>Wt</th>
+            <th>Ht</th>
+            <th>Username</th>    
+            <th>Action</th> <!-- ACTION COLUMN ADDED HERE -->                                         
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
                                         </div>
                                 </td>
                             </tr>
@@ -9990,38 +10044,39 @@
                             <tr>
                                 <td>
                                     <table class="table" id="tblVitalParametersHistoryDesc" >
-                                        <thead>
-                                            <tr>
-                                                <td colspan="20">
-                                                    <div id="tblHistoryHeaderDesc">
-                                                        <h2 class="color">Previous History</h2>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Receiving Date & Time </th>
-                                                <th style="width: 84px;">Status</th>
-                                                <th>Rate_Beats</th>
-                                                <th>Temperature</th>
-                                                <th>Rhythm</th>
-                                                <th>Volume</th>
-                                                <th>Blood Pressure</th>
-                                                <th>Others </th>                                                
-                                                <th>Respiration </th>
-                                                <th>Instruction </th>
-                                                <th>O2 Saturation</th>                                                
-                                                <th>O2 Saturation_Oxygen1</th>
-                                                <th>O2 Saturation_Oxygen2</th>
-                                                <th>O2 BSR</th>
-                                                <th>O2 BMI</th>
-                                                <th>O2 Wt</th>
-                                                <th>O2 Ht</th>
-                                                 <th>Username</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+    <thead>
+        <tr>
+            <td colspan="21">
+                <div id="tblHistoryHeaderDesc">
+                    <h2 class="color">Previous History</h2>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>Receiving Date & Time </th>
+            <th style="width: 84px;">Status</th>
+            <th>Rate_Beats</th>
+            <th>Temperature</th>
+            <th>Rhythm</th>
+            <th>Volume</th>
+            <th>Blood Pressure</th>
+            <th>Others </th>                                                
+            <th>Respiration </th>
+            <th>Instruction </th>
+            <th>O2 Saturation</th>                                                
+            <th>O2 Saturation_Oxygen1</th>
+            <th>O2 Saturation_Oxygen2</th>
+            <th>O2 BSR</th>
+            <th>O2 BMI</th>
+            <th>O2 Wt</th>
+            <th>O2 Ht</th>
+            <th>Username</th>
+            <th>Action</th> <!-- ACTION COLUMN ADDED HERE -->
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
                                 </td>
                             </tr>
                         </table>
@@ -12901,6 +12956,8 @@
 
             </div>
             <asp:HiddenField ID="queryString" runat="server"/>
+            <input type="hidden" id="hdfReceivingNoteID" value="0" />
+<input type="hidden" id="hdfVitalDischargeID" value="0" />
         </div>
     </div>
 </asp:Content>
