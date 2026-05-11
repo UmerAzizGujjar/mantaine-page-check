@@ -98,6 +98,7 @@
                 var table = $('#tblItemDescriptionDetail');
                 table.find('tr').each(function (key, value) {
                     var ddlUser = $("#tblddlUser" + (key + 1) + " option:selected").val();
+                    var txtMaxApprovalLimit = $("#txtMaxApprovalLimit" + (key + 1)).val();
                     if (ddlUser == "") {
                         Swal.fire({
                             icon: 'error',
@@ -113,7 +114,22 @@
                         });
                         return false;
                     }
-                    approvalList[key + 1] = new Array(ddlUser);
+                    if (txtMaxApprovalLimit !== "" && !txtMaxApprovalLimit.match(/^\d+$/)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Please Enter a valid Max Approval Limit',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return false;
+                    }
+                    approvalList[key + 1] = new Array(ddlUser, txtMaxApprovalLimit);
                 });
                 $.ajax({
                     type: "POST",
@@ -180,6 +196,7 @@
                 $.each(data, function (key, value) {
                     rows += '<tr>' +
                         '<td><select class="form-control ddlUser" id="tblddlUser' + (key + 1) + '" name="tblddlUser" style="width:100% !important"></select></td>' +
+                        '<td><input type="text" class="form-control" id="txtMaxApprovalLimit' + (key + 1) + '" placeholder="Max Approval Limit" /></td>' +
                         '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
                         '</td>' +
                         '</tr>';
@@ -228,6 +245,7 @@
                 '<select name="tblddlUser" style="width:100% !important" id="tblddlUser' + rowlength + '">' +
                 '</select>' +
                 '</td>' +
+                '<td><input type="text" class="form-control" id="txtMaxApprovalLimit' + rowlength + '" placeholder="Max Approval Limit" /></td>' +
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
                 '</td>' +
                 '</tr>'
@@ -329,7 +347,8 @@
                 <table class="table table-bordered" id="tblItemDescription">
                     <thead>
                         <tr>
-                            <th style="width: 65%;">User Name</th>
+                            <th style="width: 55%;">User Name</th>
+                            <th style="width: 25%;">Max Approval Limit</th>
                             <th style="width: 10%">Action</th>
                         </tr>
                     </thead>

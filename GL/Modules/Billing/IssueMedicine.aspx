@@ -328,6 +328,7 @@
                     $('#txtDisAmt').attr("disabled", false);
                     $('#txtFlatDisc').attr("disabled", false);
                     $('#txtAmountReceived').attr("disabled", false).val(0);
+                    blnceCondition = 'true'
                     CountBalance();
                 }
                 else {
@@ -335,6 +336,8 @@
                     $('#txtDisAmt').attr("disabled", false);
                     $('#txtFlatDisc').attr("disabled", false);
                     $('#txtAmountReceived').attr("disabled", false);
+                    $('#txtAmountReceived').attr("disabled", false).val(0);
+                    blnceCondition = 'false'
                 }
             });
             $('#SearchModel').on('keypress', function (event) {
@@ -2607,20 +2610,24 @@
                     debugger;
                     var data = JSON.parse(msg.d);
                     if (data == '01') {
-                        blnceCondition = 'true'
+                        //blnceCondition = 'true'
+                        $('#chkcash').prop('checked', true);
+
                     }
                     else {
-                        blnceCondition = 'false'
-                        $('#divBalance').hide();
-                        $('#txtAmountReceived').attr("disabled", true);
-
+                        //blnceCondition = 'false'
+                        //$('#divBalance').hide();
+                        //$('#txtAmountReceived').attr("disabled", true);
+                        $('#chkBank').prop('checked', true);
 
                     }
 
                 },
-           
+
             });
         }
+
+
         //function getIPDID(pat_id) {
         //    debugger;
 
