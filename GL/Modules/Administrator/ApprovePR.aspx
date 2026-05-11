@@ -4,34 +4,54 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Approvepr.css" rel="stylesheet" />
     <script type="text/javascript">        
         $(document).ready(function () {
-            debugger
-            $('#txt_search').keyup(function (e) {
-                debugger
-                var searchText = $('#txt_search').val().toLowerCase();
-                var tbl = document.getElementById('ctl00_MainContent_GridView1');
-                debugger
-                for (var i = 1; i < tbl.rows.length; i++) {
-                    var row = tbl.rows[i];
-                    var prnum = row.cells[1].innerText.toLowerCase();
-                    var prdate = row.cells[2].innerText.toLowerCase();
-                    var remarks = row.cells[4].innerText.toLowerCase();
-                    var status = row.cells[5].innerText.toLowerCase();
-                    var department = row.cells[8].innerText.toLowerCase();
 
-                    if (searchText.trim() === '' ||
-                        prnum.includes(searchText) ||
-                        prdate.includes(searchText) ||
-                        remarks.includes(searchText) ||
-                        status.includes(searchText) ||
-                        department.includes(searchText)
-                    ) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
+
+            highlightPendingRows();
+            $('#txt_search').keyup(function (e) {
+                var searchText = $('#txt_search').val().toLowerCase();
+                var tbl = document.getElementById('<%= GridView1.ClientID %>');
+            
+            if (!tbl) return;
+
+            for (var i = 1; i < tbl.rows.length; i++) {
+                var row = tbl.rows[i];
+                var prnum = row.cells[2] ? row.cells[2].innerText.toLowerCase() : "";
+                var prdate = row.cells[3] ? row.cells[3].innerText.toLowerCase() : "";
+                var remarks = row.cells[5] ? row.cells[5].innerText.toLowerCase() : "";
+                var status = row.cells[6] ? row.cells[6].innerText.toLowerCase() : ""; 
+                var department = row.cells[8] ? row.cells[8].innerText.toLowerCase() : "";
+
+                if (searchText.trim() === '' ||
+                    prnum.includes(searchText) ||
+                    prdate.includes(searchText) ||
+                    remarks.includes(searchText) ||
+                    status.includes(searchText) ||
+                    department.includes(searchText)
+                ) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+    });
+
+    function highlightPendingRows() {
+        var tbl = document.getElementById('<%= GridView1.ClientID %>');
+            if (!tbl) return;
+
+            for (var i = 1; i < tbl.rows.length; i++) {
+                var row = tbl.rows[i];
+                var statusCell = row.cells[5];
+
+                if (statusCell) {
+                    var statusText = statusCell.innerText.trim().toLowerCase();
+                    if (statusText === "pending") {
+                        row.style.backgroundColor = "#ffe066"; 
                     }
                 }
-            });
-        });
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -54,12 +74,11 @@
         </div>
     </div>
     <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"
-    AllowPaging="True" PageSize="10"
-    CssClass="gridview-style"
-    PagerStyle-CssClass="pagination-container"
-    PagerSettings-Mode="Numeric"
-      
-    OnPageIndexChanging="GridView1_PageIndexChanging">
+        AllowPaging="True" PageSize="10"
+        CssClass="gridview-style"
+        PagerStyle-CssClass="pagination-container"
+        PagerSettings-Mode="Numeric"
+        OnPageIndexChanging="GridView1_PageIndexChanging">
      
         <Columns>
             <asp:TemplateField HeaderStyle-Width="30px">

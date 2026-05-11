@@ -9,6 +9,9 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            highlightPendingRows();
+
             $('#txt_search').keyup(function (e) {
                 var searchText = $(this).val().toLowerCase();
                 var tbl = document.getElementById('<%= GridView1.ClientID %>');
@@ -39,6 +42,23 @@
                 }
             });
         });
+
+        function highlightPendingRows() {
+            var tbl = document.getElementById('<%= GridView1.ClientID %>');
+            if (!tbl) return;
+
+            for (var i = 1; i < tbl.rows.length; i++) {
+                var row = tbl.rows[i];
+                var statusCell = row.cells[6];
+
+                if (statusCell) {
+                    var statusText = statusCell.innerText.trim().toLowerCase();
+                    if (statusText === "pending") {
+                        row.style.backgroundColor = "#ffe066";
+                    }
+                }
+            }
+        }
     </script>
 </asp:Content>
 
