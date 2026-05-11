@@ -91,6 +91,7 @@
                 "dom": 'lBfrtip',
                 "lengthChange": true,
                 "pageLength": 50,
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],  
                 "buttons": [{
                     text: 'Save',
                     className: 'dt-button buttons-copy buttons-html5',
@@ -99,17 +100,20 @@
                     }
                 }, 'copy', 'excel', 'pdf'],
                 "ajax": function (data, callback, settings) {
-                    // Get date values - they will have values from the initialized date pickers
                     var startDateVal = $('#startDate').val() || '';
                     var endDateVal = $('#endDate').val() || '';
-                    
+                    var length = data.length;
+                    if (length === -1) {
+                        length = 1000000; 
+                    }
+
                     $.ajax({
                         type: "POST",
                         url: "RadiologyAcknolgment.aspx/GetRadiologyAcknowledgment",
                         data: JSON.stringify({
                             draw: data.draw,
                             start: data.start,
-                            length: data.length,
+                            length: length, 
                             sortColumn: data.columns[data.order[0].column].name,
                             sortDirection: data.order[0].dir,
                             searchValue: data.search.value,
@@ -200,7 +204,7 @@
                         "data": "IsAcknowledge",
                         "name": "IsAcknowledge",
                         "render": function (data, type, row) {
-                            if (row.IsApproved === true ) {
+                            if (row.IsApproved === true) {
                                 return '<span class="">Approved</span>';
                             }
                             else if (row.IsAcknowledge === true && row.IsApproved === false) {
@@ -217,12 +221,12 @@
                         "render": function (data) {
                             var selectedPriority = data || 'Medium';
                             return `
-                                <select class="form-control priority-select" name="status">
-                                    <option value="Low" ${selectedPriority === 'Low' ? 'selected' : ''}>Low</option>
-                                    <option value="Medium" ${selectedPriority === 'Medium' ? 'selected' : ''}>Medium</option>
-                                    <option value="High" ${selectedPriority === 'High' ? 'selected' : ''}>High</option>
-                                </select>
-                            `;
+                        <select class="form-control priority-select" name="status">
+                            <option value="Low" ${selectedPriority === 'Low' ? 'selected' : ''}>Low</option>
+                            <option value="Medium" ${selectedPriority === 'Medium' ? 'selected' : ''}>Medium</option>
+                            <option value="High" ${selectedPriority === 'High' ? 'selected' : ''}>High</option>
+                        </select>
+                    `;
                         }
                     },
                     {
@@ -230,7 +234,7 @@
                         "orderable": false,
                         "render": function (data, type, row) {
                             return `<button type="button" class="btn btn-sm btn-info history-btn" data-history="${(row.History || '').replace(/"/g, '&quot;')}">History</button>
-                                    <input type="hidden" class="history-value" value="${(row.History || '').replace(/"/g, '&quot;')}">`;
+                            <input type="hidden" class="history-value" value="${(row.History || '').replace(/"/g, '&quot;')}">`;
                         }
                     },
                     { "data": "Lab_Test_Detail_ID", "name": "Lab_Test_Detail_ID", "visible": false }
