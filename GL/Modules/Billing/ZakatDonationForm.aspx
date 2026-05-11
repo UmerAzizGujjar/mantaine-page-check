@@ -1,0 +1,461 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ZakatDonationForm.aspx.cs" Inherits="PMS.Modules.Billing.ZakatDonationForm" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Toaster.css" rel="stylesheet" />
+    <script src="../../wwwroot/Tibbit_theme/CustomJs/RegPatient.js" type="text/javascript"></script>
+    <link href="../../wwwroot/Tibbit_theme/css/RegPat.css" rel="stylesheet" />
+    <style>
+        .required-field::after {
+            content: " *";
+            color: red;
+        }
+        .validation-error {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Initialize form
+            initializeForm();
+            
+            // Load next IDs
+            loadNextIds();
+            
+            // Load dropdowns from backend DataValues
+            loadDropdowns();
+            
+            // Handle payment type change
+            $('#ddlPaymentType').change(function () {
+                var val = $(this).val();
+                if (val === 'Cheque') {
+                    $('#divChequeNo').show();
+                    $('#txtChequeNo').attr('required', 'required');
+                } else {
+                    $('#divChequeNo').hide();
+                    $('#txtChequeNo').removeAttr('required');
+                    $('#txtChequeNo').val('');
+                }
+            });
+            
+            // Set current datetime
+            setCurrentDateTime();
+        });
+
+        function initializeForm() {
+            // Set default datetime to now
+            var now = new Date();
+            var yyyy = now.getFullYear();
+            var mm = String(now.getMonth() + 1).padStart(2, '0');
+            var dd = String(now.getDate()).padStart(2, '0');
+            var hh = String(now.getHours()).padStart(2, '0');
+            var min = String(now.getMinutes()).padStart(2, '0');
+            $('#txtDateTime').val(yyyy + '-' + mm + '-' + dd + 'T' + hh + ':' + min);
+        }
+
+        function setCurrentDateTime() {
+            var now = new Date();
+            var yyyy = now.getFullYear();
+            var mm = String(now.getMonth() + 1).padStart(2, '0');
+            var dd = String(now.getDate()).padStart(2, '0');
+            var hh = String(now.getHours()).padStart(2, '0');
+            var min = String(now.getMinutes()).padStart(2, '0');
+            $('#txtDateTime').val(yyyy + '-' + mm + '-' + dd + 'T' + hh + ':' + min);
+        }
+
+        function loadNextIds() {
+            $.ajax({
+                type: "POST",
+                url: "ZakatDonationForm.aspx/GetNextDonorID",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $('#txtDonorID').val(response.d);
+                },
+                error: function () {
+                    $('#txtDonorID').val(1);
+                    showError('Failed to load Donor ID');
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "ZakatDonationForm.aspx/GetNextReceiptNo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $('#txtReceiptNo').val(response.d);
+                },
+                error: function () {
+                    $('#txtReceiptNo').val(1);
+                    showError('Failed to load Receipt No');
+                }
+            });
+        }
+
+        function loadDropdowns() {
+            // Load Project Names
+            $.ajax({
+                type: "POST",
+                url: "ZakatDonationForm.aspx/GetProjectNames",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d && response.d.length > 0) {
+                        var html = '<option value="">-- Select Project --</option>';
+                        $.each(response.d, function (i, item) {
+                            html += '<option value="' + escapeHtml(item.DataValue_Name) + '">' + escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
+                        });
+                        $('#ddlProjectName').html(html);
+                    }
+                },
+                error: function () {
+                    console.log('Failed to load Project Names');
+                }
+            });
+
+            // Load Donation Types
+            $.ajax({
+                type: "POST",
+                url: "ZakatDonationForm.aspx/GetDonationTypes",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d && response.d.length > 0) {
+                        var html = '<option value="">-- Select Type --</option>';
+                        $.each(response.d, function (i, item) {
+                            html += '<option value="' + escapeHtml(item.DataValue_Name) + '">' + escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
+                        });
+                        $('#ddlDonationType').html(html);
+                    }
+                },
+                error: function () {
+                    console.log('Failed to load Donation Types');
+                }
+            });
+
+            // Load Payment Types
+            $.ajax({
+                type: "POST",
+                url: "ZakatDonationForm.aspx/GetPaymentTypes",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d && response.d.length > 0) {
+                        var html = '<option value="">-- Select Type --</option>';
+                        $.each(response.d, function (i, item) {
+                            html += '<option value="' + escapeHtml(item.DataValue_Name) + '">' + escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
+                        });
+                        $('#ddlPaymentType').html(html);
+                    }
+                },
+                error: function () {
+                    console.log('Failed to load Payment Types');
+                }
+            });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return $('<div>').text(text).html();
+        }
+
+        function validateForm() {
+            var name = $('#txtDonorName').val().trim();
+            var amount = $('#txtAmount').val().trim();
+            var phone = $('#txtPhone').val().trim();
+            var address = $('#txtAddress').val().trim();
+            var donationType = $('#ddlDonationType').val();
+            var paymentType = $('#ddlPaymentType').val();
+            var cheque = $('#txtChequeNo').val().trim();
+            var details = $('#txtDetails').val().trim();
+
+            // Clear previous errors
+            $('.validation-error').hide();
+
+            // Required field validations
+            if (name === '') {
+                showFieldError('#txtDonorName', 'Donor Name is required');
+                return false;
+            }
+            if (!/^[a-zA-Z\s\.\-']+$/.test(name) || name.length > 255) {
+                showFieldError('#txtDonorName', 'Name must contain only letters, spaces, dots or hyphens (max 255 chars)');
+                return false;
+            }
+
+            if (amount === '' || isNaN(amount) || Number(amount) <= 0) {
+                showFieldError('#txtAmount', 'Enter a valid positive Amount');
+                return false;
+            }
+
+            if (phone !== '' && !/^\+?92?[0-9]{10}$|^[0-9\-\s\(\)]{10,20}$/.test(phone)) {
+                showFieldError('#txtPhone', 'Enter a valid Phone Number (e.g., +923001234567)');
+                return false;
+            }
+
+            if (address !== '' && address.length > 500) {
+                showFieldError('#txtAddress', 'Address must be 500 characters or less');
+                return false;
+            }
+
+            if (donationType === '') {
+                showFieldError('#ddlDonationType', 'Donation Type is required');
+                return false;
+            }
+
+            if (paymentType === '') {
+                showFieldError('#ddlPaymentType', 'Payment Type is required');
+                return false;
+            }
+
+            if (paymentType === 'Cheque' && cheque === '') {
+                showFieldError('#txtChequeNo', 'Cheque No is required for Cheque payments');
+                return false;
+            }
+
+            if (cheque !== '' && !/^\d{6,20}$/.test(cheque)) {
+                showFieldError('#txtChequeNo', 'Cheque No must be 6-20 digits');
+                return false;
+            }
+
+            if (details !== '' && details.length > 1000) {
+                showFieldError('#txtDetails', 'Details must be 1000 characters or less');
+                return false;
+            }
+
+            return true;
+        }
+
+        function showFieldError(fieldSelector, message) {
+            alert(message);
+        }
+
+        function showError(message) {
+            alert('Error: ' + message);
+        }
+
+        function showSuccess(message) {
+            alert('Success: ' + message);
+        }
+
+        function SaveDonation() {
+            if (!validateForm()) return;
+
+            var recordId = parseInt($('#txtRecordID').val() || '0');
+            var isNew = recordId === 0;
+
+            var dto = {
+                RecordID: recordId,
+                DonorID: parseInt($('#txtDonorID').val() || '0'),
+                DonorReceiptNo: parseInt($('#txtReceiptNo').val() || '0'),
+                DonorName: $('#txtDonorName').val(),
+                PhoneNo: $('#txtPhone').val(),
+                DonorAddress: $('#txtAddress').val(),
+                ProjectName: $('#ddlProjectName').val(),
+                DonationType: $('#ddlDonationType').val(),
+                PaymentType: $('#ddlPaymentType').val(),
+                ChequeNo: $('#txtChequeNo').val(),
+                DonorDetail: $('#txtDetails').val(),
+                ReceiptAmount: parseFloat($('#txtAmount').val()),
+                TransactionDateTime: $('#txtDateTime').val()
+            };
+
+            var antiForgeryToken = '<%= Session["AntiForgeryToken"] %>';
+
+            $.ajax({
+                type: "POST",
+                url: "ZakatDonationForm.aspx/SaveDonation",
+                data: JSON.stringify({ donation: dto, AntiForgeryToken: antiForgeryToken }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = response.d;
+                    if (typeof result === 'string') {
+                        result = JSON.parse(result);
+                    }
+                    
+                    if (result && result.Success) {
+                        showSuccess(result.Message + ' RecordID: ' + result.RecordID);
+                        
+                        if (isNew) {
+                            // For new records, reset form
+                            $('#txtRecordID').val('0');
+                            $('#txtDonorID').val(result.NextDonorID);
+                            $('#txtReceiptNo').val(result.NextReceiptNo);
+                            clearForm();
+                            setCurrentDateTime();
+                        } else {
+                            // For updates, show updated message
+                            alert('Record updated successfully');
+                        }
+                    } else {
+                        showError(result.Message || 'Save failed');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    showError('Error while saving: ' + error);
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
+        function clearForm() {
+            $('#txtDonorName').val('');
+            $('#txtPhone').val('');
+            $('#txtAddress').val('');
+            $('#ddlProjectName').val('');
+            $('#ddlDonationType').val('');
+            $('#ddlPaymentType').val('');
+            $('#txtChequeNo').val('');
+            $('#txtDetails').val('');
+            $('#txtAmount').val('');
+            $('#divChequeNo').hide();
+            setCurrentDateTime();
+        }
+
+        function LoadForEdit(recordId) {
+            $.ajax({
+                type: "POST",
+                url: "ZakatDonationForm.aspx/GetDonation",
+                data: JSON.stringify({ recordId: recordId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var d = response.d;
+                    if (!d) {
+                        showError('Record not found');
+                        return;
+                    }
+                    
+                    $('#txtRecordID').val(d.RecordID);
+                    $('#txtDonorID').val(d.DonorID);
+                    $('#txtReceiptNo').val(d.DonorReceiptNo);
+                    $('#txtDonorName').val(d.DonorName);
+                    $('#txtPhone').val(d.PhoneNo);
+                    $('#txtAddress').val(d.DonorAddress);
+                    $('#ddlProjectName').val(d.ProjectName);
+                    $('#ddlDonationType').val(d.DonationType);
+                    $('#ddlPaymentType').val(d.PaymentType);
+                    
+                    // Trigger payment type change to show/hide cheque field
+                    if (d.PaymentType === 'Cheque') {
+                        $('#divChequeNo').show();
+                        $('#txtChequeNo').val(d.ChequeNo);
+                    } else {
+                        $('#divChequeNo').hide();
+                    }
+                    
+                    $('#txtDetails').val(d.DonorDetail);
+                    $('#txtAmount').val(d.ReceiptAmount);
+                    $('#txtDateTime').val(formatDateForInput(d.TransactionDateTime));
+                },
+                error: function () {
+                    showError('Error loading record');
+                }
+            });
+        }
+
+        function formatDateForInput(d) {
+            if (!d) return '';
+            var dt = new Date(d);
+            var yyyy = dt.getFullYear();
+            var mm = (dt.getMonth() + 1).toString().padStart(2, '0');
+            var dd = dt.getDate().toString().padStart(2, '0');
+            var hh = dt.getHours().toString().padStart(2, '0');
+            var min = dt.getMinutes().toString().padStart(2, '0');
+            return yyyy + '-' + mm + '-' + dd + 'T' + hh + ':' + min;
+        }
+    </script>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="row">
+        <div class="col-lg-10">
+            <div class="card">
+                <h4>Donation Record Form</h4>
+                <hr />
+                
+                <!-- Hidden field to track edit mode -->
+                <input type="hidden" id="txtRecordID" value="0" />
+                
+                <div class="row">
+                    <div class="col-lg-1">
+                        <label>Donor ID</label>
+                        <input type="text" id="txtDonorID" class="form-control" disabled />
+                    </div>
+                    <div class="col-lg-2">
+                        <label>Receipt No</label>
+                        <input type="text" id="txtReceiptNo" class="form-control" disabled />
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="required-field">Donor Name</label>
+                        <input type="text" id="txtDonorName" class="form-control" placeholder="Enter donor name" maxlength="255" />
+                    </div>
+                    <div class="col-lg-2">
+                        <label>Phone</label>
+                        <input type="text" id="txtPhone" class="form-control" placeholder="+923001234567" />
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Address</label>
+                        <input type="text" id="txtAddress" class="form-control" placeholder="Enter address" maxlength="500" />
+                    </div>
+                </div>
+                
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-lg-3">
+                        <label class="required-field">Project Name</label>
+                        <select id="ddlProjectName" class="form-control">
+                            <option value="">-- Loading --</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="required-field">Donation Type</label>
+                        <select id="ddlDonationType" class="form-control">
+                            <option value="">-- Loading --</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="required-field">Payment Type</label>
+                        <select id="ddlPaymentType" class="form-control">
+                            <option value="">-- Loading --</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2" id="divChequeNo" style="display:none;">
+                        <label>Cheque No</label>
+                        <input type="text" id="txtChequeNo" class="form-control" placeholder="Enter cheque number" />
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="required-field">Amount</label>
+                        <input type="text" id="txtAmount" class="form-control" placeholder="Enter amount" />
+                    </div>
+                </div>
+                
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-lg-8">
+                        <label>Details / Notes</label>
+                        <textarea id="txtDetails" class="form-control" rows="3" placeholder="Enter additional details" maxlength="1000"></textarea>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="required-field">Transaction Date/Time</label>
+                        <input type="datetime-local" id="txtDateTime" class="form-control" />
+                    </div>
+                </div>
+                
+                <div class="row" style="margin-top:15px;">
+                    <div class="col-lg-2">
+                        <input type="button" class="btn btn-primary" value="Save" onclick="SaveDonation();" />
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="button" class="btn btn-secondary" value="View List" onclick="window.location='ZakatDonationList.aspx'" />
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="button" class="btn btn-danger" value="Clear" onclick="clearForm();" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>
