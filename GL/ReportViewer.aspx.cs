@@ -1659,6 +1659,9 @@ namespace PMS
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string Operator = Convert.ToString(Request.QueryString["Operator"]);
+                string Doctor = Convert.ToString(Request.QueryString["Doctor"]);
+                string PerformingDoctor = Convert.ToString(Request.QueryString["PerformingDoctor"]);
+                string Department = Convert.ToString(Request.QueryString["Department"]);
 
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Address", companyAddress);
@@ -1666,6 +1669,9 @@ namespace PMS
                 rd.SetParameterValue("@stDate", sqlStartDateTime);
                 rd.SetParameterValue("@endDate", sqlEndDateTime);
                 rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Doctor", Doctor);
+                rd.SetParameterValue("@PerformingDoctor", PerformingDoctor);
+                rd.SetParameterValue("@Department", Department);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
