@@ -247,6 +247,8 @@
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
     <Content Include="Modules\Billing\BillApproval.aspx" />
     <Content Include="Modules\Billing\FBRBillingView.aspx" />
+    <Content Include="Modules\Billing\ZakatDonationForm.aspx" />
+    <Content Include="Modules\Billing\ZakatDonationList.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
     <Content Include="Modules\Billing\Share_Distribution.aspx" />
     <Content Include="Modules\Billing\Share_Distribution_List.aspx" />
@@ -26036,6 +26038,20 @@
     </Compile>
     <Compile Include="Modules\Billing\FBRBillingView.aspx.designer.cs">
       <DependentUpon>FBRBillingView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\ZakatDonationForm.aspx.cs">
+      <DependentUpon>ZakatDonationForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\ZakatDonationForm.aspx.designer.cs">
+      <DependentUpon>ZakatDonationForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\ZakatDonationList.aspx.cs">
+      <DependentUpon>ZakatDonationList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\ZakatDonationList.aspx.designer.cs">
+      <DependentUpon>ZakatDonationList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\SaleReturnList.aspx.cs">
       <DependentUpon>SaleReturnList.aspx</DependentUpon>

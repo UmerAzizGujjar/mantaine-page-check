@@ -21,15 +21,13 @@ namespace PMS
             {
                 DataBaseDataContext db = new DataBaseDataContext();
 
-                // Parse dates - if empty, use yesterday to today (last 24 hours)
                 DateTime startDateTime;
                 DateTime endDateTime;
 
                 if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
                 {
-                    // Default: last 24 hours (yesterday to today)
-                    endDateTime = DateTime.Now.Date.AddDays(1); // Today end (midnight next day)
-                    startDateTime = DateTime.Now.Date.AddDays(-1); // Yesterday start
+                    endDateTime = DateTime.Now.Date.AddDays(1);
+                    startDateTime = DateTime.Now.Date.AddDays(-1); 
                 }
                 else
                 {
@@ -97,14 +95,12 @@ namespace PMS
 
                 var queryList = query.ToList();
 
-                // Apply doctor filter
                 if (!string.IsNullOrEmpty(ddlDoctorFilter) && ddlDoctorFilter != "0")
                 {
                     int doctorId = Convert.ToInt32(ddlDoctorFilter);
                     queryList = queryList.Where(x => x.Billing_DoctorID == doctorId || x.LabTest_DoctorID == doctorId).ToList();
                 }
 
-                // Apply main department filter
                 if (!string.IsNullOrEmpty(mainDepartmentFilter) && mainDepartmentFilter != "All")
                 {
                     if (mainDepartmentFilter == "WalkIn")
@@ -117,7 +113,6 @@ namespace PMS
                     }
                 }
 
-                // Apply status filter
                 if (!string.IsNullOrEmpty(statusFilter) && statusFilter != "All")
                 {
                     if (statusFilter == "Approved")
@@ -134,13 +129,11 @@ namespace PMS
                     }
                 }
 
-                // Apply main test department filter
                 if (!string.IsNullOrEmpty(mainTestDepartmentFilter) && mainTestDepartmentFilter != "All")
                 {
                     queryList = queryList.Where(x => x.RawTestDeptCode == mainTestDepartmentFilter).ToList();
                 }
 
-                // Apply search filter
                 if (!string.IsNullOrEmpty(searchValue))
                 {
                     queryList = queryList.Where(x =>
@@ -151,7 +144,14 @@ namespace PMS
                     ).ToList();
                 }
 
-                // Apply sorting
+                int totalRecords = queryList.Count();
+
+                if (length > 100000) 
+                {
+                    start = 0;
+                    length = totalRecords;
+                }
+
                 switch (sortColumn)
                 {
                     case "Bill_No":
@@ -174,7 +174,6 @@ namespace PMS
                         break;
                 }
 
-                int totalRecords = queryList.Count();
                 var finalList = queryList.Skip(start).Take(length).ToList();
 
                 return new
