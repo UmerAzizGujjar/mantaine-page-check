@@ -28,7 +28,22 @@
     border: none;
     padding: 10px;
 }
+#PatientModel input[type="text"]:not(#txtAge_yearss),
+#PatientModel input[type="tel"],
+#PatientModel input[type="email"],
+#PatientModel textarea {
+    text-transform: uppercase;
+}
 
+/* Keep the Age/DOB placeholder input as normal case */
+#PatientModel #txtAge_yearss {
+    text-transform: none;
+}
+
+/* Optional: Keep select dropdowns normal (if you don't want them uppercase) */
+#PatientModel select {
+    text-transform: none;
+}
 #tabs ul li.ui-tabs-active a {
     border-bottom: 1px solid aliceblue !important;
     color: white !important;

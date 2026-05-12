@@ -3284,6 +3284,7 @@ namespace PMS
                             data.Bill_Department,
                             data.Sales_Tax_ID,
                             data.Sales_Tax_Percentage,
+                            Referred_By_Text = db.HR_Employees.Where(e => e.Emp_ID == (data.Referred_By != null ? Convert.ToInt32(data.Referred_By) : 0)).Select(e => e.Emp_Name).FirstOrDefault() ?? "",
                             Bill_Department_text = db.GetDataValueName("Patient Main Category", data.Bill_Department),
                             Bill_Category_text = db.GetDataValueName("Mode Of Registration", data.Bill_Category),
                             Patient_Discount_Type = (from tbl in db.In_Patients
