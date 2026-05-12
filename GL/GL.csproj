@@ -246,7 +246,6 @@
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
     <Content Include="Modules\Billing\BillApproval.aspx" />
-    <Content Include="Modules\Billing\DROPDOWN_FIX_TEST.txt" />
     <Content Include="Modules\Billing\FBRBillingView.aspx" />
     <Content Include="Modules\Billing\ZakatDonationForm.aspx" />
     <Content Include="Modules\Billing\ZakatDonationList.aspx" />
@@ -3856,9 +3855,6 @@
     <Content Include="upload\UploadVoucherFiles.ashx" />
     <Content Include="Reports\Student\rptAttendanceDetails.rpt" />
     <Content Include="upload\RadiologyImageUpload.ashx" />
-    <Content Include="Modules\Billing\ZAKAT_DONATION_IMPLEMENTATION.md" />
-    <Content Include="Modules\Billing\ZAKAT_QUICK_REFERENCE.md" />
-    <Content Include="Modules\Billing\DROPDOWN_TROUBLESHOOTING.md" />
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />

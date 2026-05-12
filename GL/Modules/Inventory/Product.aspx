@@ -515,6 +515,9 @@
                 var packUnit = $('#ddlpack_unit').val();
                 var uomQty = $('#UOMQty').val();
                 var menu = $('#ddlmanu').val();
+                if (menu === "Please select" || menu === "Please Select" || menu === "" || menu === null) {
+                    menu = "0";
+                }
                 var itemType = $('#ddlitem_type').val();
                 var itemCategory = $("#ddlitem_Qty").val();
                 var fianceIntegration = $('#ddlfiance_integration').val();
@@ -553,6 +556,9 @@
                 var PharmacyItem = $('#PharmacyItem').prop('checked');
                 var refregrator = $('#Refregrator').prop('checked');
                 var procedureTypes = $('#ddlProcedureTypes').val();
+                if (procedureTypes === "Please select" || procedureTypes === "Please Select" || procedureTypes === "0") {
+                    procedureTypes = "0";
+                }
                 var notes = $('#Note').val();
                 var radioCharges = $('#radio_charges').prop('checked');
                 var dentalItem = $('#Dental_Item').prop('checked');
