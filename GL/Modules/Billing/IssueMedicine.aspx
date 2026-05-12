@@ -320,23 +320,28 @@
                     $('#txtDisPer').attr("disabled", true);
                     $('#txtDisAmt').attr("disabled", true);
                     $('#txtFlatDisc').attr("disabled", true);
+        
                     $('#txtAmountReceived').attr("disabled", true);
                     $('#ddlpanel').attr('disabled', false);
                 }
                 else if (chkbtn == 'rbtnbank') {
                     $('#txtDisPer').attr("disabled", false);
-                    $('#txtDisAmt').attr("disabled", false);
-                    $('#txtFlatDisc').attr("disabled", false);
+                   $('#txtDisAmt').attr("disabled", true);
+                   $('#txtFlatDisc').attr("disabled", true);
+                    $('#divBalance').show();
                     $('#txtAmountReceived').attr("disabled", false).val(0);
                     blnceCondition = 'true'
                     CountBalance();
                 }
                 else {
                     $('#txtDisPer').attr("disabled", false);
-                    $('#txtDisAmt').attr("disabled", false);
-                    $('#txtFlatDisc').attr("disabled", false);
-                    $('#txtAmountReceived').attr("disabled", false);
-                    $('#txtAmountReceived').attr("disabled", false).val(0);
+                   $('#txtDisAmt').attr("disabled", true);
+                   $('#txtFlatDisc').attr("disabled", true);
+
+          
+                    $('#txtAmountReceived').attr("disabled", true);
+                    $('#txtAmountReceived').attr("disabled", true).val(0);
+                      $('#divBalance').hide();
                     blnceCondition = 'false'
                 }
             });
@@ -377,32 +382,7 @@
 
         });
 
-        //function loadInvoiceNumbers() {
-
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "IssueMedicine.aspx/AllInvoiceNumbers",
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        data: JSON.stringify({ searchTerm: "" }),
-
-        //        success: function (response) {
-
-        //            var data = JSON.parse(response.d);
-
-        //            $('#ddlInvoiceNumber').select2({
-        //                placeholder: "Please Select",
-        //                data: data
-        //            });
-
-        //        },
-
-        //        error: function (xhr) {
-        //            console.log(xhr.responseText);
-        //        }
-        //    });
-
-        //}
+       
         function loadInvoiceNumbers() {
             // Destroy existing select2 if any
             if ($('#ddlInvoiceNumber').data('select2')) {
@@ -2614,13 +2594,17 @@
                     if (data == '01') {
                         //blnceCondition = 'true'
                         $('#chkcash').prop('checked', true);
+                        $('#txtAmountReceived').attr('disabled',true);
+                        $('#divBalance').hide();
+                       
 
                     }
                     else {
-                        //blnceCondition = 'false'
-                        //$('#divBalance').hide();
-                        //$('#txtAmountReceived').attr("disabled", true);
+                      
                         $('#chkBank').prop('checked', true);
+                          $('#txtAmountReceived').attr('disabled',false);
+                       
+                          $('#divBalance').show();
 
                     }
 
@@ -3550,7 +3534,7 @@
                         <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()" />
                     </div>
                     <div class="col-lg-6 d-flex align-items-center" id="divBalance">
-                        <label class="ms-3">Balance</label>
+                        <label class="ms-3" id="blnc">Balance</label>
                         <input type="text" id="txtBalances" tabindex="22" class="form-control text-end text-primary" disabled />
                     </div>
                 </div>
