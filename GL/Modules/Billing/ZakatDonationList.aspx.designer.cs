@@ -7,9 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS {
-    
-    
-    public partial class RefundList {
+namespace PMS.Modules.Billing
+{
+
+
+    public partial class ZakatDonationList
+    {
     }
 }
