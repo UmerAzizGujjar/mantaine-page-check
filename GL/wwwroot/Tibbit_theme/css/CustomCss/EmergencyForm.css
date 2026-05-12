@@ -226,6 +226,21 @@ select {
         text-shadow: 0 0 5px rgba(193, 23, 24, 0.6);
     }
 }
+#PatientModel input[type="text"]:not(#txtAge_yearss),
+#PatientModel input[type="tel"],
+#PatientModel input[type="email"],
+#PatientModel textarea {
+    text-transform: uppercase;
+}
 
+/* Keep the Age/DOB placeholder input as normal case */
+#PatientModel #txtAge_yearss {
+    text-transform: none;
+}
+
+/* Optional: Keep select dropdowns normal (if you don't want them uppercase) */
+#PatientModel select {
+    text-transform: none;
+}
 
 
