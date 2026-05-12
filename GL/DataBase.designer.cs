@@ -981,6 +981,9 @@ namespace PMS
         partial void InsertEmergency_Patient(Emergency_Patient instance);
         partial void UpdateEmergency_Patient(Emergency_Patient instance);
         partial void DeleteEmergency_Patient(Emergency_Patient instance);
+        partial void InsertDonationRecord(DonationRecord instance);
+        partial void UpdateDonationRecord(DonationRecord instance);
+        partial void DeleteDonationRecord(DonationRecord instance);
         #endregion
 
         public DataBaseDataContext() :
@@ -988,6 +991,7 @@ namespace PMS
         {
             OnCreated();
         }
+
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {
@@ -173110,8 +173114,10 @@ namespace PMS
     }
 
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.DonationRecords")]
-    public partial class DonationRecord
+    public partial class DonationRecord : INotifyPropertyChanging, INotifyPropertyChanged
     {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 
         private int _RecordID;
 
@@ -173147,11 +173153,52 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _UpdatedAt;
 
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnRecordIDChanging(int value);
+        partial void OnRecordIDChanged();
+        partial void OnDonorIDChanging(System.Nullable<int> value);
+        partial void OnDonorIDChanged();
+        partial void OnDonorReceiptNoChanging(System.Nullable<int> value);
+        partial void OnDonorReceiptNoChanged();
+        partial void OnDonorNameChanging(string value);
+        partial void OnDonorNameChanged();
+        partial void OnPhoneNoChanging(string value);
+        partial void OnPhoneNoChanged();
+        partial void OnDonorAddressChanging(string value);
+        partial void OnDonorAddressChanged();
+        partial void OnProjectNameChanging(string value);
+        partial void OnProjectNameChanged();
+        partial void OnDonationTypeChanging(string value);
+        partial void OnDonationTypeChanged();
+        partial void OnPaymentTypeChanging(string value);
+        partial void OnPaymentTypeChanged();
+        partial void OnChequeNoChanging(string value);
+        partial void OnChequeNoChanged();
+        partial void OnDonorDetailChanging(string value);
+        partial void OnDonorDetailChanged();
+        partial void OnReceiptAmountChanging(System.Nullable<decimal> value);
+        partial void OnReceiptAmountChanged();
+        partial void OnTransactionDateTimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnTransactionDateTimeChanged();
+        partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreatedByChanged();
+        partial void OnCreatedAtChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreatedAtChanged();
+        partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdatedByChanged();
+        partial void OnUpdatedAtChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdatedAtChanged();
+        #endregion
+
         public DonationRecord()
         {
+            OnCreated();
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RecordID", AutoSync = AutoSync.Always, DbType = "Int NOT NULL IDENTITY", IsDbGenerated = true)]
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RecordID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
         public int RecordID
         {
             get
@@ -173162,7 +173209,11 @@ namespace PMS
             {
                 if ((this._RecordID != value))
                 {
+                    this.OnRecordIDChanging(value);
+                    this.SendPropertyChanging();
                     this._RecordID = value;
+                    this.SendPropertyChanged("RecordID");
+                    this.OnRecordIDChanged();
                 }
             }
         }
@@ -173178,7 +173229,11 @@ namespace PMS
             {
                 if ((this._DonorID != value))
                 {
+                    this.OnDonorIDChanging(value);
+                    this.SendPropertyChanging();
                     this._DonorID = value;
+                    this.SendPropertyChanged("DonorID");
+                    this.OnDonorIDChanged();
                 }
             }
         }
@@ -173194,7 +173249,11 @@ namespace PMS
             {
                 if ((this._DonorReceiptNo != value))
                 {
+                    this.OnDonorReceiptNoChanging(value);
+                    this.SendPropertyChanging();
                     this._DonorReceiptNo = value;
+                    this.SendPropertyChanged("DonorReceiptNo");
+                    this.OnDonorReceiptNoChanged();
                 }
             }
         }
@@ -173210,7 +173269,11 @@ namespace PMS
             {
                 if ((this._DonorName != value))
                 {
+                    this.OnDonorNameChanging(value);
+                    this.SendPropertyChanging();
                     this._DonorName = value;
+                    this.SendPropertyChanged("DonorName");
+                    this.OnDonorNameChanged();
                 }
             }
         }
@@ -173226,7 +173289,11 @@ namespace PMS
             {
                 if ((this._PhoneNo != value))
                 {
+                    this.OnPhoneNoChanging(value);
+                    this.SendPropertyChanging();
                     this._PhoneNo = value;
+                    this.SendPropertyChanged("PhoneNo");
+                    this.OnPhoneNoChanged();
                 }
             }
         }
@@ -173242,7 +173309,11 @@ namespace PMS
             {
                 if ((this._DonorAddress != value))
                 {
+                    this.OnDonorAddressChanging(value);
+                    this.SendPropertyChanging();
                     this._DonorAddress = value;
+                    this.SendPropertyChanged("DonorAddress");
+                    this.OnDonorAddressChanged();
                 }
             }
         }
@@ -173258,7 +173329,11 @@ namespace PMS
             {
                 if ((this._ProjectName != value))
                 {
+                    this.OnProjectNameChanging(value);
+                    this.SendPropertyChanging();
                     this._ProjectName = value;
+                    this.SendPropertyChanged("ProjectName");
+                    this.OnProjectNameChanged();
                 }
             }
         }
@@ -173274,7 +173349,11 @@ namespace PMS
             {
                 if ((this._DonationType != value))
                 {
+                    this.OnDonationTypeChanging(value);
+                    this.SendPropertyChanging();
                     this._DonationType = value;
+                    this.SendPropertyChanged("DonationType");
+                    this.OnDonationTypeChanged();
                 }
             }
         }
@@ -173290,7 +173369,11 @@ namespace PMS
             {
                 if ((this._PaymentType != value))
                 {
+                    this.OnPaymentTypeChanging(value);
+                    this.SendPropertyChanging();
                     this._PaymentType = value;
+                    this.SendPropertyChanged("PaymentType");
+                    this.OnPaymentTypeChanged();
                 }
             }
         }
@@ -173306,7 +173389,11 @@ namespace PMS
             {
                 if ((this._ChequeNo != value))
                 {
+                    this.OnChequeNoChanging(value);
+                    this.SendPropertyChanging();
                     this._ChequeNo = value;
+                    this.SendPropertyChanged("ChequeNo");
+                    this.OnChequeNoChanged();
                 }
             }
         }
@@ -173322,7 +173409,11 @@ namespace PMS
             {
                 if ((this._DonorDetail != value))
                 {
+                    this.OnDonorDetailChanging(value);
+                    this.SendPropertyChanging();
                     this._DonorDetail = value;
+                    this.SendPropertyChanged("DonorDetail");
+                    this.OnDonorDetailChanged();
                 }
             }
         }
@@ -173338,7 +173429,11 @@ namespace PMS
             {
                 if ((this._ReceiptAmount != value))
                 {
+                    this.OnReceiptAmountChanging(value);
+                    this.SendPropertyChanging();
                     this._ReceiptAmount = value;
+                    this.SendPropertyChanged("ReceiptAmount");
+                    this.OnReceiptAmountChanged();
                 }
             }
         }
@@ -173354,7 +173449,11 @@ namespace PMS
             {
                 if ((this._TransactionDateTime != value))
                 {
+                    this.OnTransactionDateTimeChanging(value);
+                    this.SendPropertyChanging();
                     this._TransactionDateTime = value;
+                    this.SendPropertyChanged("TransactionDateTime");
+                    this.OnTransactionDateTimeChanged();
                 }
             }
         }
@@ -173370,7 +173469,11 @@ namespace PMS
             {
                 if ((this._CreatedBy != value))
                 {
+                    this.OnCreatedByChanging(value);
+                    this.SendPropertyChanging();
                     this._CreatedBy = value;
+                    this.SendPropertyChanged("CreatedBy");
+                    this.OnCreatedByChanged();
                 }
             }
         }
@@ -173386,7 +173489,11 @@ namespace PMS
             {
                 if ((this._CreatedAt != value))
                 {
+                    this.OnCreatedAtChanging(value);
+                    this.SendPropertyChanging();
                     this._CreatedAt = value;
+                    this.SendPropertyChanged("CreatedAt");
+                    this.OnCreatedAtChanged();
                 }
             }
         }
@@ -173402,7 +173509,11 @@ namespace PMS
             {
                 if ((this._UpdatedBy != value))
                 {
+                    this.OnUpdatedByChanging(value);
+                    this.SendPropertyChanging();
                     this._UpdatedBy = value;
+                    this.SendPropertyChanged("UpdatedBy");
+                    this.OnUpdatedByChanged();
                 }
             }
         }
@@ -173418,8 +173529,32 @@ namespace PMS
             {
                 if ((this._UpdatedAt != value))
                 {
+                    this.OnUpdatedAtChanging(value);
+                    this.SendPropertyChanging();
                     this._UpdatedAt = value;
+                    this.SendPropertyChanged("UpdatedAt");
+                    this.OnUpdatedAtChanged();
                 }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }
