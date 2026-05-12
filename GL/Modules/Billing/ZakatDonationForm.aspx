@@ -18,6 +18,8 @@
         }
     </style>
     <script type="text/javascript">
+        var currentRecordId = 0;
+
         $(document).ready(function () {
             // Initialize form
             initializeForm();
@@ -41,8 +43,18 @@
                 }
             });
             
-            // Set current datetime
-            setCurrentDateTime();
+            // Check if editing existing record
+            var urlParams = new URLSearchParams(window.location.search);
+            var recordId = urlParams.get('recordId');
+            if (recordId) {
+                currentRecordId = parseInt(recordId);
+                $('#txtRecordID').val(currentRecordId);
+                setTimeout(function() {
+                    LoadForEdit(currentRecordId);
+                }, 500);
+            } else {
+                setCurrentDateTime();
+            }
         });
 
         function initializeForm() {
@@ -67,33 +79,36 @@
         }
 
         function loadNextIds() {
-            $.ajax({
-                type: "POST",
-                url: "ZakatDonationForm.aspx/GetNextDonorID",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    $('#txtDonorID').val(response.d);
-                },
-                error: function () {
-                    $('#txtDonorID').val(1);
-                    showError('Failed to load Donor ID');
-                }
-            });
+            // Only load next IDs if creating new record
+            if (currentRecordId === 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "ZakatDonationForm.aspx/GetNextDonorID",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $('#txtDonorID').val(response.d);
+                    },
+                    error: function () {
+                        $('#txtDonorID').val(1);
+                        showError('Failed to load Donor ID');
+                    }
+                });
 
-            $.ajax({
-                type: "POST",
-                url: "ZakatDonationForm.aspx/GetNextReceiptNo",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    $('#txtReceiptNo').val(response.d);
-                },
-                error: function () {
-                    $('#txtReceiptNo').val(1);
-                    showError('Failed to load Receipt No');
-                }
-            });
+                $.ajax({
+                    type: "POST",
+                    url: "ZakatDonationForm.aspx/GetNextReceiptNo",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $('#txtReceiptNo').val(response.d);
+                    },
+                    error: function () {
+                        $('#txtReceiptNo').val(1);
+                        showError('Failed to load Receipt No');
+                    }
+                });
+            }
         }
 
         function loadDropdowns() {
@@ -104,16 +119,31 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    if (response.d && response.d.length > 0) {
-                        var html = '<option value="">-- Select Project --</option>';
-                        $.each(response.d, function (i, item) {
-                            html += '<option value="' + escapeHtml(item.DataValue_Name) + '">' + escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
-                        });
-                        $('#ddlProjectName').html(html);
+                    try {
+                        // Parse the JSON string from response.d
+                        var data = response.d;
+                        if (typeof data === 'string') {
+                            data = JSON.parse(data);
+                        }
+                        
+                        if (data && data.length > 0) {
+                            var html = '<option value="">-- Select Project --</option>';
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + escapeHtml(item.DataValue_Name) + '">' + 
+                                        escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
+                            });
+                            $('#ddlProjectName').html(html);
+                        } else {
+                            $('#ddlProjectName').html('<option value="">-- No Projects Available --</option>');
+                        }
+                    } catch (e) {
+                        console.error('Error parsing Project Names:', e);
+                        $('#ddlProjectName').html('<option value="">-- Error Loading --</option>');
                     }
                 },
-                error: function () {
-                    console.log('Failed to load Project Names');
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error loading Project Names:', error, xhr.responseText);
+                    $('#ddlProjectName').html('<option value="">-- Error Loading --</option>');
                 }
             });
 
@@ -124,16 +154,31 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    if (response.d && response.d.length > 0) {
-                        var html = '<option value="">-- Select Type --</option>';
-                        $.each(response.d, function (i, item) {
-                            html += '<option value="' + escapeHtml(item.DataValue_Name) + '">' + escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
-                        });
-                        $('#ddlDonationType').html(html);
+                    try {
+                        // Parse the JSON string from response.d
+                        var data = response.d;
+                        if (typeof data === 'string') {
+                            data = JSON.parse(data);
+                        }
+                        
+                        if (data && data.length > 0) {
+                            var html = '<option value="">-- Select Type --</option>';
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + escapeHtml(item.DataValue_Name) + '">' + 
+                                        escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
+                            });
+                            $('#ddlDonationType').html(html);
+                        } else {
+                            $('#ddlDonationType').html('<option value="">-- No Types Available --</option>');
+                        }
+                    } catch (e) {
+                        console.error('Error parsing Donation Types:', e);
+                        $('#ddlDonationType').html('<option value="">-- Error Loading --</option>');
                     }
                 },
-                error: function () {
-                    console.log('Failed to load Donation Types');
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error loading Donation Types:', error, xhr.responseText);
+                    $('#ddlDonationType').html('<option value="">-- Error Loading --</option>');
                 }
             });
 
@@ -144,16 +189,34 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    if (response.d && response.d.length > 0) {
-                        var html = '<option value="">-- Select Type --</option>';
-                        $.each(response.d, function (i, item) {
-                            html += '<option value="' + escapeHtml(item.DataValue_Name) + '">' + escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
-                        });
-                        $('#ddlPaymentType').html(html);
+                    try {
+                        // Parse the JSON string from response.d
+                        var data = response.d;
+                        if (typeof data === 'string') {
+                            data = JSON.parse(data);
+                        }
+                        
+                        if (data && data.length > 0) {
+                            var html = '<option value="">-- Select Type --</option>';
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + escapeHtml(item.DataValue_Name) + '">' + 
+                                        escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
+                            });
+                            $('#ddlPaymentType').html(html);
+                        } else {
+                            // Provide default payment types if none found
+                            $('#ddlPaymentType').html('<option value="">-- Select Type --</option><option value="Cash">Cash</option><option value="Cheque">Cheque</option>');
+                        }
+                    } catch (e) {
+                        console.error('Error parsing Payment Types:', e);
+                        // Provide default payment types on error
+                        $('#ddlPaymentType').html('<option value="">-- Select Type --</option><option value="Cash">Cash</option><option value="Cheque">Cheque</option>');
                     }
                 },
-                error: function () {
-                    console.log('Failed to load Payment Types');
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error loading Payment Types:', error, xhr.responseText);
+                    // Provide default payment types on error
+                    $('#ddlPaymentType').html('<option value="">-- Select Type --</option><option value="Cash">Cash</option><option value="Cheque">Cheque</option>');
                 }
             });
         }
@@ -178,59 +241,55 @@
 
             // Required field validations
             if (name === '') {
-                showFieldError('#txtDonorName', 'Donor Name is required');
+                alert('Donor Name is required');
                 return false;
             }
             if (!/^[a-zA-Z\s\.\-']+$/.test(name) || name.length > 255) {
-                showFieldError('#txtDonorName', 'Name must contain only letters, spaces, dots or hyphens (max 255 chars)');
+                alert('Name must contain only letters, spaces, dots or hyphens (max 255 chars)');
                 return false;
             }
 
             if (amount === '' || isNaN(amount) || Number(amount) <= 0) {
-                showFieldError('#txtAmount', 'Enter a valid positive Amount');
+                alert('Enter a valid positive Amount');
                 return false;
             }
 
             if (phone !== '' && !/^\+?92?[0-9]{10}$|^[0-9\-\s\(\)]{10,20}$/.test(phone)) {
-                showFieldError('#txtPhone', 'Enter a valid Phone Number (e.g., +923001234567)');
+                alert('Enter a valid Phone Number (e.g., +923001234567)');
                 return false;
             }
 
             if (address !== '' && address.length > 500) {
-                showFieldError('#txtAddress', 'Address must be 500 characters or less');
+                alert('Address must be 500 characters or less');
                 return false;
             }
 
             if (donationType === '') {
-                showFieldError('#ddlDonationType', 'Donation Type is required');
+                alert('Donation Type is required');
                 return false;
             }
 
             if (paymentType === '') {
-                showFieldError('#ddlPaymentType', 'Payment Type is required');
+                alert('Payment Type is required');
                 return false;
             }
 
             if (paymentType === 'Cheque' && cheque === '') {
-                showFieldError('#txtChequeNo', 'Cheque No is required for Cheque payments');
+                alert('Cheque No is required for Cheque payments');
                 return false;
             }
 
             if (cheque !== '' && !/^\d{6,20}$/.test(cheque)) {
-                showFieldError('#txtChequeNo', 'Cheque No must be 6-20 digits');
+                alert('Cheque No must be 6-20 digits');
                 return false;
             }
 
             if (details !== '' && details.length > 1000) {
-                showFieldError('#txtDetails', 'Details must be 1000 characters or less');
+                alert('Details must be 1000 characters or less');
                 return false;
             }
 
             return true;
-        }
-
-        function showFieldError(fieldSelector, message) {
-            alert(message);
         }
 
         function showError(message) {
@@ -287,9 +346,12 @@
                             $('#txtReceiptNo').val(result.NextReceiptNo);
                             clearForm();
                             setCurrentDateTime();
+                            currentRecordId = 0;
                         } else {
-                            // For updates, show updated message
-                            alert('Record updated successfully');
+                            // For updates, go back to list after 1 second
+                            setTimeout(function() {
+                                window.location = 'ZakatDonationList.aspx';
+                            }, 1000);
                         }
                     } else {
                         showError(result.Message || 'Save failed');
@@ -373,10 +435,9 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div class="col-lg-10">
+        <div class="col-lg-12">
             <div class="card">
-                <h4>Donation Record Form</h4>
-                <hr />
+             
                 
                 <!-- Hidden field to track edit mode -->
                 <input type="hidden" id="txtRecordID" value="0" />
@@ -446,13 +507,13 @@
                 
                 <div class="row" style="margin-top:15px;">
                     <div class="col-lg-2">
-                        <input type="button" class="btn btn-primary" value="Save" onclick="SaveDonation();" />
+                        <input type="button" class="btn btn-primry" value="Save" onclick="SaveDonation();" />
                     </div>
                     <div class="col-lg-2">
-                        <input type="button" class="btn btn-secondary" value="View List" onclick="window.location='ZakatDonationList.aspx'" />
+                        <input type="button" class="btn btn-gray" value="View List" onclick="window.location='ZakatDonationList.aspx'" />
                     </div>
                     <div class="col-lg-2">
-                        <input type="button" class="btn btn-danger" value="Clear" onclick="clearForm();" />
+                        <input type="button" class="btn btn-primry" value="Clear" onclick="clearForm();" />
                     </div>
                 </div>
             </div>
