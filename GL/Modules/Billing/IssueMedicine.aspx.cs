@@ -112,6 +112,7 @@ namespace PMS
 
             var depAndDoc = (from ip in db.In_Patients
                              where ip.In_Patient_ID == Pat_Id
+                             
                              select new
                              {
                                  ip.Doctor,
@@ -119,8 +120,10 @@ namespace PMS
                                  ip.Panel_Company
                              }).FirstOrDefault();
 
-            var itemCodes = (from  ip in db.In_Patient_Medicines 
+            var itemCodes = (from ip in db.In_Patient_Medicines
                              where ip.Patient_ID == Pat_Id
+                             && ip.Item_Code != null
+                             && ip.Item_Code != "0"
                              select ip.Item_Code).ToList();
 
             var result = new
@@ -137,6 +140,8 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext();
             var itemCodes = (from  ip in db.In_Patient_Medicines 
                              where ip.Patient_ID == Pat_Id
+                             && ip.Item_Code != null
+                             && ip.Item_Code != "0"
                              select ip.Item_Code).ToList();
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 
@@ -638,6 +643,8 @@ namespace PMS
             public decimal Stock { get; set; }
             public string batchno { get; set; }
             public decimal CGSAmount { get; set; }
+
+            public string Remarks { get; set; }
         }
 
         [WebMethod]
@@ -796,6 +803,7 @@ namespace PMS
                 newBillDetails.Net_Amount = dtls.NetAmount;
                 newBillDetails.Qty = dtls.Qty;
                 newBillDetails.Batch_No = dtls.batchno;
+                newBillDetails.Remarks = dtls.Remarks;
                 var TotalRemainStock = dtls.Stock - dtls.Qty;
                 newBillDetails.CGS = dtls.CGSAmount;
                 var getttlStock = DBClass.getField("update INV_Items set Total_Qty= '" + TotalRemainStock + "' where Item_ID =" + dtls.Itemid);

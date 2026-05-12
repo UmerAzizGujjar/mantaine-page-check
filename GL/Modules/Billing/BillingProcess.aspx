@@ -1470,6 +1470,16 @@
                     $('#txtOver_and_Above').val(data[0].Over_and_Above);
                     $('#txtcashinhand').val(data[0].Cash_In_Hand);
                     $('#txtbankcash').val(data[0].Bank_Cash);
+
+
+               
+                    $('#ddlReffered_By').html(
+                        $('<option>', {
+                            value: data[0].Referred_By,
+                            text: data[0].Referred_By_Text
+                        })
+                    );
+
                     debugger;
                     LoadSalesTaxDefinitions(
                         data[0].Sales_Tax_ID,
@@ -1516,10 +1526,7 @@
                     setTimeout(function () {
                         $('#ddlcasher').val(data[0].Casher).trigger('change');
                     }, 1000)
-                    setTimeout(function () {
-                        $('#ddlReffered_By').val(data[0].Referred_By);
-                    }, 1000)
-
+                   
                     setTimeout(function () {
                         $('#ddlpanel').val(data[0].Panel_Id).trigger('change');
                     }, 2000)
@@ -1537,7 +1544,7 @@
                     LoadBillDetails(Bill_ID);
                     LoadDoctorShare(Bill_ID);
 
-                    $('#ddlReffered_By').val(data[0].Referred_By).trigger('change');
+                   /* $('#ddlReffered_By').val(data[0].Referred_By).trigger('change');*/
                 },
                     function (error) {
                         alert(error.get_message());
@@ -4066,13 +4073,14 @@
             }
             var doctors = '';
             function FillDoctors() {
-
+                debugger;
                 var options = '<option value="0">Select Doctor</option>';
 
                 PageMethods.GetDoctors(function (data) {
                     $.each(JSON.parse(data), function (key, value) {
                         options += '<option value="' + value.Emp_ID + '" >' + value.Emp_Name + '</option>';
                     });
+                    debugger;
                     $('#ddlDoctor').html(options);
                     $('#ddlReffered_By').html(options);
                     doctors = options;
@@ -5846,7 +5854,16 @@
 
                     var doc = data.d.refferedoc;
                     var hasDoctor = (doc && doc != "" && doc != "There is no row at position 0.");
-                    $('#ddlReffered_By').val(doc).trigger('change').prop('disabled', hasDoctor);
+                    debugger;
+
+                    var billidEdit = '<%= Request.QueryString["Bill_ID"]%>';
+                    if (billidEdit != '') {
+
+                    }
+                    else {
+
+                        $('#ddlReffered_By').val(doc).trigger('change').prop('disabled', hasDoctor);
+                    }
                     $('#txtadmitdate').val(data.d.Admission_Date);
                     $('#txtdischargedate').val(data.d.Discharge_On);
                     $('#wardtype').val(data.d.Ward_Name);

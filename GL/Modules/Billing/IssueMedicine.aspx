@@ -320,23 +320,28 @@
                     $('#txtDisPer').attr("disabled", true);
                     $('#txtDisAmt').attr("disabled", true);
                     $('#txtFlatDisc').attr("disabled", true);
+        
                     $('#txtAmountReceived').attr("disabled", true);
                     $('#ddlpanel').attr('disabled', false);
                 }
                 else if (chkbtn == 'rbtnbank') {
                     $('#txtDisPer').attr("disabled", false);
-                    $('#txtDisAmt').attr("disabled", false);
-                    $('#txtFlatDisc').attr("disabled", false);
+                   $('#txtDisAmt').attr("disabled", true);
+                   $('#txtFlatDisc').attr("disabled", true);
+                    $('#divBalance').show();
                     $('#txtAmountReceived').attr("disabled", false).val(0);
                     blnceCondition = 'true'
                     CountBalance();
                 }
                 else {
                     $('#txtDisPer').attr("disabled", false);
-                    $('#txtDisAmt').attr("disabled", false);
-                    $('#txtFlatDisc').attr("disabled", false);
-                    $('#txtAmountReceived').attr("disabled", false);
-                    $('#txtAmountReceived').attr("disabled", false).val(0);
+                   $('#txtDisAmt').attr("disabled", true);
+                   $('#txtFlatDisc').attr("disabled", true);
+
+          
+                    $('#txtAmountReceived').attr("disabled", true);
+                    $('#txtAmountReceived').attr("disabled", true).val(0);
+                      $('#divBalance').hide();
                     blnceCondition = 'false'
                 }
             });
@@ -377,32 +382,7 @@
 
         });
 
-        //function loadInvoiceNumbers() {
-
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "IssueMedicine.aspx/AllInvoiceNumbers",
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json",
-        //        data: JSON.stringify({ searchTerm: "" }),
-
-        //        success: function (response) {
-
-        //            var data = JSON.parse(response.d);
-
-        //            $('#ddlInvoiceNumber').select2({
-        //                placeholder: "Please Select",
-        //                data: data
-        //            });
-
-        //        },
-
-        //        error: function (xhr) {
-        //            console.log(xhr.responseText);
-        //        }
-        //    });
-
-        //}
+       
         function loadInvoiceNumbers() {
             // Destroy existing select2 if any
             if ($('#ddlInvoiceNumber').data('select2')) {
@@ -1971,9 +1951,9 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="number" name="txtQty" value="1" style="width: 4% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="number" name="txtQty" value="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
-                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 4% !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
+                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
 
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
@@ -2084,9 +2064,9 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="text" name="txtQty" value="1" min="1" style="width: 4% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="text" name="txtQty" value="1" min="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
-                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 4% !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
+                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
 
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
@@ -2100,6 +2080,7 @@
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
+                        '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                         '</tr>';
                     $('#tblDetails #tblbody').append(rows);
@@ -2409,6 +2390,7 @@
                         var Itemid = $($(value).find('td input[name=ItemID]')[0]).val();
                         var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
                         var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
+                        var Remarks = $(value).find('input[name="Remarks"]').val() || '';
                         var CGSAmount = CGSRate * Qty;
                        
                         if (batchno == null) {
@@ -2444,7 +2426,7 @@
                         }
                         var NetAmount = $($(value).find('td')[11]).text();
                         Save_list.push({
-                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount,
+                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks,
                         });
                     });
                     debugger;
@@ -2612,13 +2594,17 @@
                     if (data == '01') {
                         //blnceCondition = 'true'
                         $('#chkcash').prop('checked', true);
+                        $('#txtAmountReceived').attr('disabled',true);
+                        $('#divBalance').hide();
+                       
 
                     }
                     else {
-                        //blnceCondition = 'false'
-                        //$('#divBalance').hide();
-                        //$('#txtAmountReceived').attr("disabled", true);
+                      
                         $('#chkBank').prop('checked', true);
+                          $('#txtAmountReceived').attr('disabled',false);
+                       
+                          $('#divBalance').show();
 
                     }
 
@@ -3014,7 +3000,7 @@
                             '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
                             '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
                             '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
-                            '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 4% !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
+                            '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
                             '<td style="text-align: right;" ><input type="text" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
                         '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 4% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
                             '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
@@ -3026,6 +3012,7 @@
                             '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
                             '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
+                            '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                             '</tr>';                            
                         $('#tblDetails tbody').append(rows);
@@ -3474,7 +3461,7 @@
                     <input type="radio" name="rbtn" tabindex="12" id="chkBank" value="rbtnbank" />
                 </div>
                 <div class="col-lg-1 col-md-4 col-sm-6 margin">
-                    <label for="lblbank">Card</label>
+                    <label for="lblbank">Credit</label>
                 </div>
                 <div class="col-lg-1 col-md-4 col-sm-6">
                     <input type="radio" name="rbtn" tabindex="13" id="chkHospital" value="rbtnHospital" />
@@ -3547,7 +3534,7 @@
                         <input type="text" id="txtAmountReceived" tabindex="20" class="form-control text-end" onkeyup="CountBalance()" />
                     </div>
                     <div class="col-lg-6 d-flex align-items-center" id="divBalance">
-                        <label class="ms-3">Balance</label>
+                        <label class="ms-3" id="blnc">Balance</label>
                         <input type="text" id="txtBalances" tabindex="22" class="form-control text-end text-primary" disabled />
                     </div>
                 </div>
@@ -3564,14 +3551,15 @@
                     <th style="text-align: left; width: 220px;">Description </th>
                     <th style="text-align: left; width: 43px;">Pack Qty </th>
                     <th style="/*width: 25px;*/ text-align: left;">Qty </th>
-                    <th style="/*width: 25px; */text-align: left;">Stock</th>
+                    <th style="width: 75px; text-align: left;">Stock</th>
                     <th style="width: 60px; text-align: right;">Rate </th>
                     <th style="/*width: 60px;*/ text-align: left;">Dis % </th>
-                    <th style="/*width: 60px;*/ text-align: left;">Dis Amount </th>
+                    <th style="width: 112px; text-align: left;">Dis Amount </th>
                     <th style="/*width: 60px; */text-align: left;">Net Amount </th>
                     <th style="/*width: 60px;*/ text-align: left;">BatchNo</th>
                     <th style="/*width: 70px; */text-align: left;">Expiry Date </th>
                     <th style="/*width: 80px; */text-align: left;">Line Discount</th>
+                    <th style="/*width: 80px; */text-align: left;">Remarks</th>
                     <th style="/*width: 53px; */text-align: left;">Action </th>
                 </tr>
             </thead>
