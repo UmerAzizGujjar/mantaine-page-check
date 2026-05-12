@@ -132,6 +132,7 @@ namespace PMS
                                   IN_Patient_ID = ipd.In_Patient_ID,
                                   Full_Name = p.Full_Name,
                                   Father_Name = p.Father_Name,
+                                  Death_Date = ipd.DateOfDeath,
                                   Department = _dbContext.GetDataValueName("Patient Main Category", ipd.Department),
 
 

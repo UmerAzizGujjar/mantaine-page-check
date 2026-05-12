@@ -25,6 +25,12 @@
             window.open(url, '_blank');
 
         }
+        function PrintInPatientDeathCertificate(IN_Patient_ID) {
+            debugger;
+            var url = '../../ReportViewer.aspx?ReportName=Certificate_In_Patient&Title=In Patient Detail Print&In_Patient_ID=' + IN_Patient_ID;
+            window.open(url, '_blank');
+
+        }
 
         function LoadPage() {
             let savedVisibility = null;
@@ -140,8 +146,13 @@
                             var Del = '<a href="#" class="delListBtn" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintInPatient(' + full.IN_Patient_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            var printBtn = '';
+                            if (full.Death_Date)
+                            {
+                                var printBtn = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintInPatientDeathCertificate(' + full.IN_Patient_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                            }
                             var result;
-                            result = res + Del + print;
+                            result = res + Del + print + printBtn;
                             return result;
 
                         }, "width": "10%", "orderable": false

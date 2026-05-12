@@ -21,16 +21,12 @@
         var currentRecordId = 0;
 
         $(document).ready(function () {
-            // Initialize form
             initializeForm();
-            
-            // Load next IDs
             loadNextIds();
-            
-            // Load dropdowns from backend DataValues
             loadDropdowns();
-            
-            // Handle payment type change
+
+            initializeSelect2();
+
             $('#ddlPaymentType').change(function () {
                 var val = $(this).val();
                 if (val === 'Cheque') {
@@ -42,20 +38,31 @@
                     $('#txtChequeNo').val('');
                 }
             });
-            
-            // Check if editing existing record
+
             var urlParams = new URLSearchParams(window.location.search);
             var recordId = urlParams.get('recordId');
             if (recordId) {
                 currentRecordId = parseInt(recordId);
                 $('#txtRecordID').val(currentRecordId);
-                setTimeout(function() {
+                setTimeout(function () {
                     LoadForEdit(currentRecordId);
                 }, 500);
             } else {
                 setCurrentDateTime();
             }
         });
+
+        function initializeSelect2() {
+            if ($.fn.select2) {
+                $('#ddlProjectName,#ddlDonationType,#ddlPaymentType').select2({ width: '100%' });
+            }
+        }
+
+        function refreshSelect2(id) {
+            if ($.fn.select2 && $(id).hasClass('select2-hidden-accessible')) {
+                $(id).trigger('change.select2');
+            }
+        }
 
         function initializeForm() {
             // Set default datetime to now
@@ -133,17 +140,21 @@
                                         escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
                             });
                             $('#ddlProjectName').html(html);
+                            refreshSelect2('#ddlProjectName');
                         } else {
                             $('#ddlProjectName').html('<option value="">-- No Projects Available --</option>');
+                            refreshSelect2('#ddlProjectName');
                         }
                     } catch (e) {
                         console.error('Error parsing Project Names:', e);
                         $('#ddlProjectName').html('<option value="">-- Error Loading --</option>');
+                        refreshSelect2('#ddlProjectName');
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX Error loading Project Names:', error, xhr.responseText);
                     $('#ddlProjectName').html('<option value="">-- Error Loading --</option>');
+                    refreshSelect2('#ddlProjectName');
                 }
             });
 
@@ -168,17 +179,21 @@
                                         escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
                             });
                             $('#ddlDonationType').html(html);
+                            refreshSelect2('#ddlDonationType');
                         } else {
                             $('#ddlDonationType').html('<option value="">-- No Types Available --</option>');
+                            refreshSelect2('#ddlDonationType');
                         }
                     } catch (e) {
                         console.error('Error parsing Donation Types:', e);
                         $('#ddlDonationType').html('<option value="">-- Error Loading --</option>');
+                        refreshSelect2('#ddlDonationType');
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX Error loading Donation Types:', error, xhr.responseText);
                     $('#ddlDonationType').html('<option value="">-- Error Loading --</option>');
+                    refreshSelect2('#ddlDonationType');
                 }
             });
 
@@ -203,20 +218,24 @@
                                         escapeHtml(item.DataValue_Description || item.DataValue_Name) + '</option>';
                             });
                             $('#ddlPaymentType').html(html);
+                            refreshSelect2('#ddlPaymentType');
                         } else {
                             // Provide default payment types if none found
                             $('#ddlPaymentType').html('<option value="">-- Select Type --</option><option value="Cash">Cash</option><option value="Cheque">Cheque</option>');
+                            refreshSelect2('#ddlPaymentType');
                         }
                     } catch (e) {
                         console.error('Error parsing Payment Types:', e);
                         // Provide default payment types on error
                         $('#ddlPaymentType').html('<option value="">-- Select Type --</option><option value="Cash">Cash</option><option value="Cheque">Cheque</option>');
+                        refreshSelect2('#ddlPaymentType');
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX Error loading Payment Types:', error, xhr.responseText);
                     // Provide default payment types on error
                     $('#ddlPaymentType').html('<option value="">-- Select Type --</option><option value="Cash">Cash</option><option value="Cheque">Cheque</option>');
+                    refreshSelect2('#ddlPaymentType');
                 }
             });
         }
@@ -241,51 +260,51 @@
 
             // Required field validations
             if (name === '') {
-                alert('Donor Name is required');
+                showError('Donor Name is required');
                 return false;
             }
             if (!/^[a-zA-Z\s\.\-']+$/.test(name) || name.length > 255) {
-                alert('Name must contain only letters, spaces, dots or hyphens (max 255 chars)');
+                showError('Name must contain only letters, spaces, dots or hyphens (max 255 chars)');
                 return false;
             }
 
             if (amount === '' || isNaN(amount) || Number(amount) <= 0) {
-                alert('Enter a valid positive Amount');
+                showError('Enter a valid positive Amount');
                 return false;
             }
 
             if (phone !== '' && !/^\+?92?[0-9]{10}$|^[0-9\-\s\(\)]{10,20}$/.test(phone)) {
-                alert('Enter a valid Phone Number (e.g., +923001234567)');
+                showError('Enter a valid Phone Number (e.g., +923001234567)');
                 return false;
             }
 
             if (address !== '' && address.length > 500) {
-                alert('Address must be 500 characters or less');
+                showError('Address must be 500 characters or less');
                 return false;
             }
 
             if (donationType === '') {
-                alert('Donation Type is required');
+                showError('Donation Type is required');
                 return false;
             }
 
             if (paymentType === '') {
-                alert('Payment Type is required');
+                showError('Payment Type is required');
                 return false;
             }
 
             if (paymentType === 'Cheque' && cheque === '') {
-                alert('Cheque No is required for Cheque payments');
+                showError('Cheque No is required for Cheque payments');
                 return false;
             }
 
             if (cheque !== '' && !/^\d{6,20}$/.test(cheque)) {
-                alert('Cheque No must be 6-20 digits');
+                showError('Cheque No must be 6-20 digits');
                 return false;
             }
 
             if (details !== '' && details.length > 1000) {
-                alert('Details must be 1000 characters or less');
+                showError('Details must be 1000 characters or less');
                 return false;
             }
 
@@ -293,19 +312,19 @@
         }
 
         function showError(message) {
-            alert('Error: ' + message);
+            Swal.fire({ icon: 'error', title: 'Error', text: message });
         }
 
-        function showSuccess(message) {
-            alert('Success: ' + message);
+        function showSuccess(message, cb) {
+            Swal.fire({ icon: 'success', title: 'Success', text: message }).then(function () {
+                if (cb) cb();
+            });
         }
 
         function SaveDonation() {
             if (!validateForm()) return;
 
             var recordId = parseInt($('#txtRecordID').val() || '0');
-            var isNew = recordId === 0;
-
             var dto = {
                 RecordID: recordId,
                 DonorID: parseInt($('#txtDonorID').val() || '0'),
@@ -332,27 +351,12 @@
                 dataType: "json",
                 success: function (response) {
                     var result = response.d;
-                    if (typeof result === 'string') {
-                        result = JSON.parse(result);
-                    }
-                    
+                    if (typeof result === 'string') result = JSON.parse(result);
+
                     if (result && result.Success) {
-                        showSuccess(result.Message + ' RecordID: ' + result.RecordID);
-                        
-                        if (isNew) {
-                            // For new records, reset form
-                            $('#txtRecordID').val('0');
-                            $('#txtDonorID').val(result.NextDonorID);
-                            $('#txtReceiptNo').val(result.NextReceiptNo);
-                            clearForm();
-                            setCurrentDateTime();
-                            currentRecordId = 0;
-                        } else {
-                            // For updates, go back to list after 1 second
-                            setTimeout(function() {
-                                window.location = 'ZakatDonationList.aspx';
-                            }, 1000);
-                        }
+                        showSuccess(result.Message + ' RecordID: ' + result.RecordID, function () {
+                            window.location = 'ZakatDonationForm.aspx';
+                        });
                     } else {
                         showError(result.Message || 'Save failed');
                     }
@@ -368,9 +372,9 @@
             $('#txtDonorName').val('');
             $('#txtPhone').val('');
             $('#txtAddress').val('');
-            $('#ddlProjectName').val('');
-            $('#ddlDonationType').val('');
-            $('#ddlPaymentType').val('');
+            $('#ddlProjectName').val('').trigger('change');
+            $('#ddlDonationType').val('').trigger('change');
+            $('#ddlPaymentType').val('').trigger('change');
             $('#txtChequeNo').val('');
             $('#txtDetails').val('');
             $('#txtAmount').val('');
@@ -387,29 +391,29 @@
                 dataType: "json",
                 success: function (response) {
                     var d = response.d;
+                    if (typeof d === 'string') d = JSON.parse(d);
                     if (!d) {
                         showError('Record not found');
                         return;
                     }
-                    
+
                     $('#txtRecordID').val(d.RecordID);
                     $('#txtDonorID').val(d.DonorID);
                     $('#txtReceiptNo').val(d.DonorReceiptNo);
                     $('#txtDonorName').val(d.DonorName);
                     $('#txtPhone').val(d.PhoneNo);
                     $('#txtAddress').val(d.DonorAddress);
-                    $('#ddlProjectName').val(d.ProjectName);
-                    $('#ddlDonationType').val(d.DonationType);
-                    $('#ddlPaymentType').val(d.PaymentType);
-                    
-                    // Trigger payment type change to show/hide cheque field
+                    $('#ddlProjectName').val(d.ProjectName).trigger('change');
+                    $('#ddlDonationType').val(d.DonationType).trigger('change');
+                    $('#ddlPaymentType').val(d.PaymentType).trigger('change');
+
                     if (d.PaymentType === 'Cheque') {
                         $('#divChequeNo').show();
                         $('#txtChequeNo').val(d.ChequeNo);
                     } else {
                         $('#divChequeNo').hide();
                     }
-                    
+
                     $('#txtDetails').val(d.DonorDetail);
                     $('#txtAmount').val(d.ReceiptAmount);
                     $('#txtDateTime').val(formatDateForInput(d.TransactionDateTime));
@@ -421,14 +425,33 @@
         }
 
         function formatDateForInput(d) {
-            if (!d) return '';
-            var dt = new Date(d);
+            var dt = parseServerDate(d);
+            if (!dt) return '';
             var yyyy = dt.getFullYear();
             var mm = (dt.getMonth() + 1).toString().padStart(2, '0');
             var dd = dt.getDate().toString().padStart(2, '0');
             var hh = dt.getHours().toString().padStart(2, '0');
             var min = dt.getMinutes().toString().padStart(2, '0');
             return yyyy + '-' + mm + '-' + dd + 'T' + hh + ':' + min;
+        }
+
+        function parseServerDate(value) {
+            if (!value) return null;
+
+            if (Object.prototype.toString.call(value) === '[object Date]') {
+                return isNaN(value.getTime()) ? null : value;
+            }
+
+            if (typeof value === 'string') {
+                var msJson = /\/Date\((\d+)\)\//.exec(value);
+                if (msJson && msJson[1]) {
+                    var fromMs = new Date(parseInt(msJson[1], 10));
+                    return isNaN(fromMs.getTime()) ? null : fromMs;
+                }
+            }
+
+            var parsed = new Date(value);
+            return isNaN(parsed.getTime()) ? null : parsed;
         }
     </script>
 </asp:Content>
@@ -501,7 +524,7 @@
                     </div>
                     <div class="col-lg-4">
                         <label class="required-field">Transaction Date/Time</label>
-                        <input type="datetime-local" id="txtDateTime" class="form-control" />
+                        <input type="datetime-local" id="txtDateTime" class="form-control" disabled="disabled" />
                     </div>
                 </div>
                 

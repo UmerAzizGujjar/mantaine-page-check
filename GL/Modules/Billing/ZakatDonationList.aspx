@@ -13,6 +13,23 @@
             border-radius: 4px;
             font-size: 12px;
         }
+        .editListBtn,
+        .printListBtn {
+            border-radius: 4px;
+            margin-left: 4px;
+            color: white;
+            padding: 5px 8px 5px 8px;
+            display: inline-block;
+            background: transparent;
+        }
+        .editListBtn:hover,
+        .printListBtn:hover {
+            background: #000 !important;
+        }
+        .editListBtn:hover i,
+        .printListBtn:hover i {
+            color: #fff !important;
+        }
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -55,8 +72,8 @@
 
                 buttons: [
                     {
-                        text: '<i class="fa fa-plus"></i> Add New',
-                        className: 'dt-button buttons-primary',
+                        text: 'Add New',
+                        className: 'dt-button buttons-excel',
                         action: function () {
                             window.location = 'ZakatDonationForm.aspx';
                         }
@@ -85,7 +102,7 @@
                     }
                 ],
 
-                order: [[1, "desc"]],
+                order: [[1, "desc"], [2, "asc"]],
 
                 ajax: function (data, callback) {
                     $.ajax({
@@ -145,20 +162,9 @@
                         searchable: false,
                         render: function (data, type, full) {
                             return `
-                            <div class="action-buttons">
-                                <a href="javascript:void(0);" onclick="editDonation(${full.RecordID})" 
-                                   class="btn btn-sm btn-primary" title="Edit">
-                                    <i class="fa fa-pencil"></i> Edit
-                                </a>
-                                <a href="javascript:void(0);" onclick="deleteDonation(${full.RecordID})" 
-                                   class="btn btn-sm btn-danger" title="Delete">
-                                    <i class="fa fa-trash"></i> Delete
-                                </a>
-                                <a href="javascript:void(0);" onclick="viewDetails(${full.RecordID})" 
-                                   class="btn btn-sm btn-info" title="View Details">
-                                    <i class="fa fa-eye"></i> View
-                                </a>
-                            </div>`;
+      <a href="#" onclick="editDonation(${full.RecordID})" class="editListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" title="Edit">
+          <i class="fa fa-pencil" style="color: #667eea;"></i>
+      </a>`;
                         }
                     }
                 ],
@@ -246,19 +252,7 @@
         }
 
         function editDonation(recordId) {
-            Swal.fire({
-                title: 'Edit Donation',
-                text: 'You are about to edit this donation record',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, edit it!',
-                cancelButtonText: 'Cancel',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location = 'ZakatDonationForm.aspx?recordId=' + recordId;
-                }
-            });
+            window.location = 'ZakatDonationForm.aspx?recordId=' + recordId;
         }
 
         function deleteDonation(recordId) {
@@ -360,9 +354,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div class="col-lg-12">
-            <h3 style="margin-bottom: 20px;">Zakat & Donation Records</h3>
-        </div>
+      
         <div class="table-container col-lg-12 col-md-12 col-sm-12">
             <table id="donationTable" class="table table-striped table-bordered display" style="width:100%">
                 <thead>
