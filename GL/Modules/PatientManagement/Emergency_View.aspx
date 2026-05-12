@@ -86,6 +86,12 @@
          window.open(url, '_blank');
 
      }
+     function PrintLTR(Emer_id) {
+         debugger;
+         var url = '../../ReportViewer.aspx?ReportName=Emergency_Patient_Print_LTR&Title=Emergency Print&Emergency_Id=' + Emer_id;
+         window.open(url, '_blank');
+
+     }
      function LoadPage() {
          const table = $("#tblResult").DataTable({
              "processing": true,
@@ -168,7 +174,8 @@
                          let res = `<a href="#" onclick="editOpen(${full.Emer_id})" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>`;
                          let Del = `<a class="delListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="cancelPatient(${full.Emer_id}, '${full.Full_Name.replace(/'/g, "\\'")}')"><i class="fa fa-trash"></i></a>`;
                          let print = `<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="Print(${full.Emer_id})"><i class="fa fa-print"></i></a>`;
-                         return res + Del + print;
+                         let btnprint = `<a class="printBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px;" href="#" onclick="PrintLTR(${full.Emer_id})"><i class="fa fa-print"></i></a>`;
+                         return res + Del + print + btnprint;
                      },
                      "width": "20%",
                      "orderable": false
