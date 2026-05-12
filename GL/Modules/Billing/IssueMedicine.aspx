@@ -1957,14 +1957,14 @@
 
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
-                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="4% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="3% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
 
-                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 100px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
+                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
 
                         '<td style="text-align:Right;"></td>' +
-                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 6% !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 5% !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
@@ -2071,12 +2071,12 @@
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
                         '<td><input type="number" name="DisPer" min="0" value="0"' + disDisabledAttr + ' class="height_height orderchange" style="width: 4% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
-                        '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
+                        '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
 
                         '<td style="text-align:Right;"></td>' +
-                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 6% !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 5% !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                        '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
@@ -3003,12 +3003,12 @@
                             '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
                             '<td style="text-align: right;" ><input type="text" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
                         '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 4% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
-                            '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
+                            '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
                             '<td style="text-align:Right;"></td>' +
                             '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' +
-                            '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                            '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 103px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                            '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                            '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
                             '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
                             '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
@@ -3554,10 +3554,10 @@
                     <th style="width: 75px; text-align: left;">Stock</th>
                     <th style="width: 60px; text-align: right;">Rate </th>
                     <th style="/*width: 60px;*/ text-align: left;">Dis % </th>
-                    <th style="width: 112px; text-align: left;">Dis Amount </th>
-                    <th style="/*width: 60px; */text-align: left;">Net Amount </th>
+                    <th style="width: 70px; text-align: left;">Dis Amount </th>
+                    <th style="width: 60px; text-align: left;">Net Amount </th>
                     <th style="/*width: 60px;*/ text-align: left;">BatchNo</th>
-                    <th style="/*width: 70px; */text-align: left;">Expiry Date </th>
+                    <th style="width: 95px; text-align: left;">Expiry Date </th>
                     <th style="/*width: 80px; */text-align: left;">Line Discount</th>
                     <th style="/*width: 80px; */text-align: left;">Remarks</th>
                     <th style="/*width: 53px; */text-align: left;">Action </th>
