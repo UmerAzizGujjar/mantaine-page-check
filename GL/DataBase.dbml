@@ -7749,7 +7749,7 @@
   </Table>
   <Table Name="dbo.DonationRecords" Member="DonationRecords">
     <Type Name="DonationRecord">
-      <Column Name="RecordID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RecordID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="DonorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="DonorReceiptNo" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="DonorName" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />

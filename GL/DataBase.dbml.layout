@@ -2110,10 +2110,10 @@
         <elementListCompartment Id="0dc446fe-0bf2-434e-b62d-b896cdd8b56b" absoluteBounds="76.265, 53.085, 1.9700000000000002, 95.630900065104157" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="182577ba-3b86-470f-a267-f4403119a160" absoluteBounds="5.875, 74, 2, 4.0785139973958326">
+    <classShape Id="0a1df672-2b46-48f1-b1d5-2ad9dbb6d6e1" absoluteBounds="6.125, 74.625, 2, 4.0785139973958326">
       <DataClassMoniker Name="/DataBaseDataContext/DonationRecord" />
       <nestedChildShapes>
-        <elementListCompartment Id="d2892315-2de8-475c-b3a0-bd14560ac7f7" absoluteBounds="5.89, 74.46, 1.9700000000000002, 3.518513997395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="6979f313-38a1-4ed7-965a-0d752d3bd902" absoluteBounds="6.14, 75.085, 1.9700000000000002, 3.518513997395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>
