@@ -37,21 +37,7 @@
            });
        });
 
-        // =============================================
-        //  PRINT
-        // =============================================
-        function PrintRefund() {
-            var refundID = '<% =Request.QueryString["advID"] %>';
-            var locationInfo = window.location;
-            var url = "/ReportViewer.aspx?ReportName=PrintRefundReport&Title=Refund Print &Refund_ID=" + refundID;
-            if (!locationInfo.origin.includes('localhost')) {
-                var urlInfo = window.location.href.split('/');
-                var ip = urlInfo[2];
-                var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + "/ReportViewer.aspx?ReportName=PrintRefundReport&Title=Refund Print &Refund_ID=" + refundID;
-            }
-            window.open(url, '_blank');
-        }
+       
 
         // =============================================
         //  LOAD PATIENT DETAILS (via advID query string)
