@@ -124,6 +124,7 @@
                     },
                     { "data": "Department", "orderable": false },
                     { "data": "Remarks", "orderable": false },
+                    { "data": "Closing_Remarks", "orderable": false },
                     {
                         "data": "CreatedBY",
                         "createdCell": function (td, cellData, rowData, row, col) {
@@ -216,6 +217,7 @@
                         <th>Pirority</th>
                         <th>Department</th>
                         <th>Remarks</th>
+                        <th>Closing Remarks</th>
                         <th>Request BY</th>
                         <th>Status</th>
                         <th>Creation Date</th>
