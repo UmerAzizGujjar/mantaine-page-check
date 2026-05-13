@@ -106,6 +106,13 @@
                     },
                     { "data": "Status", "orderable": false },
                     {
+                        "data": "Approved_Time",
+                        "render": function (data, type, full) {
+                            return full.Approved_Time ? moment(full.Approved_Time).format('D-MMM-YYYY hh:mm A') : '';
+                        },
+                        "orderable": false
+                    },
+                    {
                         "render": function (data, type, full) {
                             var res = '<a href="#"  class="editListBtn" onclick="Edit(' + full.Store_Issue_Id + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
@@ -117,7 +124,7 @@
                                 result = res + print;
                             }
                             return result;
-                        }, "orderable": false
+                        }, "orderable": false ,"width": "12%",
                     }
                 ],
                 "rowCallback": function (row, data, index) {
@@ -169,6 +176,7 @@
                     <th>Updated By</th>
                     <th>Updated Time</th>
                     <th>Status</th>
+                    <th>Approved Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
