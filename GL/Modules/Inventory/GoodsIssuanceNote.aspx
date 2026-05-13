@@ -31,7 +31,7 @@
                         return false;
                     }
 
-                    var GIR = $('#ddlMIR').val();
+                    var GIR = $('#mir_id').val();
 
                     if (!GIR || GIR === "0") {
                         Swal.fire({
@@ -934,7 +934,7 @@
                             new Date(parseInt(lastissueDate.substring(6, 19)))
                         );
                     }
-
+                    $("#mir_id").val(result[key].MIR_Id);
 
                     var rows = '<tr>' +
                         '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + result[key].MIR_Detail_Id + ' </td>' +
@@ -1104,6 +1104,7 @@
     <form id="item">
         <div class="row">
             <input type="hidden" id="hdiemID" />
+            <input type="hidden" id="mir_id" />
             <div class="col-lg-2 col-md-6 col-sm-12">
                 <label class="">Store issue no</label>
                 <input type="text" readonly="readonly" id="txtStoreissueNo" class="form-control" name="txtStoreissueNo" value="New" />
