@@ -247,6 +247,7 @@
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
     <Content Include="Modules\Billing\BillApproval.aspx" />
     <Content Include="Modules\Billing\FBRBillingView.aspx" />
+    <Content Include="Modules\Billing\DiscountAssigned.aspx" />
     <Content Include="Modules\Billing\ZakatDonationForm.aspx" />
     <Content Include="Modules\Billing\ZakatDonationList.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
@@ -26038,6 +26039,13 @@
     </Compile>
     <Compile Include="Modules\Billing\FBRBillingView.aspx.designer.cs">
       <DependentUpon>FBRBillingView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\DiscountAssigned.aspx.cs">
+      <DependentUpon>DiscountAssigned.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\DiscountAssigned.aspx.designer.cs">
+      <DependentUpon>DiscountAssigned.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\ZakatDonationForm.aspx.cs">
       <DependentUpon>ZakatDonationForm.aspx</DependentUpon>
