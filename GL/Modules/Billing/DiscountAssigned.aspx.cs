@@ -253,6 +253,7 @@ namespace PMS.Modules.Billing
             public string remarks { get; set; }
             public int Bill_Id { get; set; }
             public decimal Total_Discount { get; set; }
+            public decimal Total_Amount { get; set; }
             public List<ServiceDiscount> ServiceDiscount { get; set; }
       
         }
@@ -293,6 +294,7 @@ namespace PMS.Modules.Billing
             discount.Status = "Created";
             discount.Created_By = AppConfig.UserID;
             discount.Creation_Date = DateTime.Now;
+            discount.Total_amount = dt.Total_Amount;
 
             // Create detail records list
             List<Discount_Assign_Detail_bill> ListOfDiscountDetails = new List<Discount_Assign_Detail_bill>();
@@ -320,10 +322,19 @@ namespace PMS.Modules.Billing
 
             // Update Ar_Billings table
             var arBill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == dt.Bill_Id);
+            var arreceipt = db.Receipts.FirstOrDefault(x => x.Bill_ID == dt.Bill_Id);
             if (arBill != null)
             {
                 arBill.Discount_Amount = dt.Total_Discount;
-                arBill.Received_Amount = dt.Total_amount;
+                arBill.Received_Amount = dt.Total_Amount;
+                arBill.Cash_In_Hand = dt.Total_Amount;
+                arBill.Net_Amount = dt.Total_Amount;
+               
+            }
+            if (arreceipt != null)
+            {
+                arreceipt.Receipt_Amount = dt.Total_Amount;
+               
                
             }
             foreach (ServiceDiscount service in dt.ServiceDiscount)

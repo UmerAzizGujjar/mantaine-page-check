@@ -59,6 +59,7 @@
         }
 
         function OnSuccesss(data) {
+            debugger;
             var parseData = JSON.parse(data.d);
             if (data.d != '') {
                 var mydate = new Date(Date.parse(parseData.Entry_Date));
@@ -75,7 +76,7 @@
                 $('#lblPatientCategory').text(ReplaceNullWith_Space(parseData.Patient_Main_Category));
                 $('#lblPatientDiscountType').text(ReplaceNullWith_Space(parseData.Patient_Discount_Type));
                 $('#txtRemarks').val(ReplaceNullWith_Space(parseData.Remarks));
-                $('#lblOutputShow').text(ReplaceNullWith_Space(parseData.Balance));
+                $('#lblOutputShow').val(ReplaceNullWith_Space(parseData.Balance));
                 var date = $.datepicker.formatDate('mm-dd-yy', new Date(parseInt(parseData.Refund_Date.substring(6, 19))));
                 $('#txtdiscountdate').val(ReplaceNullWith_Space(date));
             }
@@ -188,8 +189,12 @@
                             Swal.fire({ title: "Already Refunded", text: "This bill is already refund", icon: "warning" });
                             return;
                         }
-                    }
 
+                        if (parse[0].Received_Amount <= 0) {
+                            Swal.fire({ title: "Invalid Amount", text: " Received Amount cannot be zero", icon: "warning" });
+                            return;
+                        }
+                    }
                     // ---- Populate patient header fields ----
                     $('#hdPatientID').text(parse[0].Patient_ID);
                    
@@ -203,7 +208,7 @@
                     $('#lblContactNo').text(parse[0].Mobile1);
                     $('#lblDepartment').text(parse[0].Department);
                     $('#lblPatientCategory').text(parse[0].Patient_Type);
-
+                    $('#txtReceivedAmount').val(Received_Amount.toFixed(2));
                     var rows = '';
                     var totalAmount = 0;
 
@@ -234,11 +239,11 @@
                     $('#tblDetails tbody').append(rows);
 
                     // ---- Reset summary fields ----
-                    $('#txtReceivedAmount').val(totalAmount.toFixed(2));
+                  
                     $('#hdRegID').val(parse[0].pat_id);
                     $('#txttotaldiscount').val('0');
                     $('#txtDisPer').val('0');
-                    $('#lblOutputShow').text(totalAmount.toFixed(2));
+                    $('#lblOutputShow').val(totalAmount.toFixed(2));
                 }
             });
         }
@@ -395,7 +400,7 @@
             var totalDiscount = parseFloat($('#txttotaldiscount').val()) || 0;
             var net = totalAmount - totalDiscount;
             net = Math.max(0, net);
-            $('#lblOutputShow').text(net.toFixed(2));
+            $('#lblOutputShow').val(net.toFixed(2));
         }
 
         // =============================================
@@ -414,6 +419,7 @@
                 var remarks = $("#txtRemarks").val();
                 var discountDate = $("#txtdiscountdate").val();
                 var totalDiscount = $('#txttotaldiscount').val();
+                var Total_Amount = $('#lblOutputShow').val();
 
                 var ServiceDiscount = [];
                 $('#tblDetails tbody tr').each(function (key, value) {
@@ -446,6 +452,7 @@
                     remarks: remarks,
                     Bill_Id: parseInt(Bill_ID),
                     Total_Discount: parseFloat(totalDiscount),
+                    Total_Amount: parseFloat(Total_Amount),
                     ServiceDiscount: ServiceDiscount
                 };
 
@@ -541,10 +548,7 @@
                                     <div class="col-lg-4 col-md-5 col-sm-6"><label>Reg. Date :</label></div>
                                     <div class="col-lg-8 col-md-7 col-sm-6"><label id="lblRegDate"></label></div>
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-4 col-md-5 col-sm-6"><label>Gender :</label></div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6"><label id="lblGender"></label></div>
-                                </div>
+                               
                             </div>
                         </div>
                     </div>
@@ -571,10 +575,11 @@
                             <div class="col-lg-4"><label>Department :</label></div>
                             <div class="col-lg-8"><label id="lblDepartment"></label></div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-4"><label>Discount Type :</label></div>
-                            <div class="col-lg-8"><label id="lblPatientDiscountType"></label></div>
-                        </div>
+                         <div class="row mb-3">
+                             <div class="col-lg-4 col-md-5 col-sm-6"><label>Gender :</label></div>
+                             <div class="col-lg-8 col-md-7 col-sm-6"><label id="lblGender"></label></div>
+                         </div>
+                   
                         <div class="row mb-3" style="display:none">
                             <div class="col-lg-4"><label>MR No *:</label></div>
                             <div class="col-lg-8"><label id="lblMRNo"></label></div>
@@ -604,17 +609,7 @@
             </div>
         </div>
 
-        <%-- ======================== DETAIL TABLE ========================
-             COLUMN ORDER (hidden first, then visible):
-             0: Patient ID     [hidden]
-             1: Bill Detail ID [hidden]
-             2: Item ID        [hidden]
-             3: Item Name
-             4: Existing Discount Amount
-             5: Net Amount
-             6: Discount %     (input[name="DisPer"])
-             7: Discount Amount(input[name="DisAmount"])
-        --%>
+    
         <div class="row mt-3">
             <div class="col-12 table-responsive">
                 <table id="tblDetails" class="table table-bordered">
@@ -635,7 +630,7 @@
             </div>
         </div>
 
-        <%-- ======================== SUMMARY FIELDS ======================== --%>
+   
         <div class="row mt-3">
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <label class="summary-label">Total Received Amount:</label>
@@ -651,7 +646,8 @@
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <label class="summary-label">Net Payable Amount:</label>
-                <label id="lblOutputShow" class="form-control net-total" style="background-color:#e9ecef;">0</label>
+                   <input type="text" id="lblOutputShow" disabled="disabled" class="form-control" value="0" />
+                
             </div>
         </div>
 
