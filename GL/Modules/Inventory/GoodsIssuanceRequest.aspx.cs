@@ -226,6 +226,7 @@ namespace PMS.Inventory
                 obj.MaterialRequest_Id = Convert.ToInt64(item.MIRId);
                 obj.MIRQty = Convert.ToDecimal(item.MIRQty);
                 obj.Remarks = item.remarks;
+                obj.Last_MIR_Qty = Convert.ToDecimal(item.Last_MIR_Qty);
                 db.MaterialIssueRequest_Details.InsertOnSubmit(obj);
                 try
                 {
@@ -315,6 +316,7 @@ namespace PMS.Inventory
                                      itemId = Convert.ToString(data.Item_Id),
                                      MIRId = Convert.ToString(data.MaterialRequest_Id),
                                      MIRQty = Convert.ToString(data.MIRQty),
+                                     Last_MIR_Qty = Convert.ToString(data.Last_MIR_Qty),
                                      remarks = data.Remarks,
                                  }).ToList();
                     result = (new JavaScriptSerializer()).Serialize(listItems).ToString();
@@ -339,6 +341,7 @@ namespace PMS.Inventory
         public class MIRDetail
         {
             public string MIRQty { get; set; }
+            public string Last_MIR_Qty { get; set; }
             public string remarks { get; set; }
             public string MIRId { get; set; }
             public string itemId { get; set; }

@@ -9,6 +9,7 @@
             $('#ddlMIR').select2();
             LoadOrganizations();
             GetWareHouseCondition();   
+            GetGIRCloseCondition();   
             LoadDepartments();
             
             $('#btnGetAllItems').on('click', function () {
@@ -102,6 +103,85 @@
                     },
                     error: function (error) {
                         console.error("Error fetching items", error);
+                    }
+                });
+            }
+            var GIRCloseCond;
+            function GetGIRCloseCondition() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "GoodsIssuanceNote.aspx/GetGIRCloseCondition",
+                    data: JSON.stringify({}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        GIRCloseCond = JSON.parse(response.d);
+                        if (GIRCloseCond == '01') {
+                            $('#isCloseGIR').show();
+                        }
+                        else {
+                             $('#isCloseGIR').hide();                          
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching items", error);
+                    }
+                });
+            }
+            function CloseGIR() {
+
+                var GIR = $('#ddlMIR').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "GoodsIssuanceNote.aspx/CloseGIR",
+                    data: JSON.stringify({ GIR: GIR }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    success: function (response) {
+
+                        if (response.d == "success") {
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'GIR Closed Successfully.',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+                        } else {
+
+                            alert("There is some issue closing this GIR");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'There is some issue closing this GIR.',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    popup: 'swal-big-popup',
+                                    title: 'swal-big-title',
+                                    htmlContainer: 'swal-big-text'
+                                }
+                            });
+
+                        }
+                    },
+
+                    error: function (error) {
+
+                        console.error("Error fetching items", error);
+                        alert("Server Error");
+
                     }
                 });
             }
@@ -1070,6 +1150,10 @@
 </div>
         <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden">
             <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
+            &nbsp;
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6" id="isCloseGIR">
+            <input type="button"  class="btn btn-primry" value="Close GIR" id="CloseGIR" onclick="CloseGIR()" />
             &nbsp;
         </div>
         

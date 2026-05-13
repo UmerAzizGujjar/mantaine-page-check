@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -71,6 +72,17 @@ namespace PMS.Inventory
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var dept = (from data in db.sys_Parms
                         where data.Name == "WareHouse For PO"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
+        public static string GetGIRCloseCondition()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "GIR Close"
                         select
                           data.Code
                         ).FirstOrDefault();
@@ -458,6 +470,25 @@ namespace PMS.Inventory
             DataBaseDataContext db = new DataBaseDataContext();
             var Details = db.spUnApproveSIN(Convert.ToInt32(SINId), Convert.ToString(userid));
             return (new JavaScriptSerializer()).Serialize(Details);
+        }
+        
+        [WebMethod]
+        public static string CloseGIR(string GIR)
+        {
+            var userid = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+           string status = "Fail";
+            MaterialIssueRequest p = new MaterialIssueRequest();
+            var query = db.MaterialIssueRequests.SingleOrDefault(x => x.MaterialRequest_Id == Convert.ToInt32( GIR));
+            if (query != null)
+            {
+                query.Is_Closed_GIR = true;
+        
+                db.SubmitChanges();
+                status = "success";
+            }
+
+            return status;
         }
 
     }
