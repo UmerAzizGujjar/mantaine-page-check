@@ -130,61 +130,7 @@
                     }
                 });
             }
-            function CloseGIR() {
-
-                var GIR = $('#ddlMIR').val();
-
-                $.ajax({
-                    type: "POST",
-                    url: "GoodsIssuanceNote.aspx/CloseGIR",
-                    data: JSON.stringify({ GIR: GIR }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-
-                    success: function (response) {
-
-                        if (response.d == "success") {
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'GIR Closed Successfully.',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-
-                        } else {
-
-                            alert("There is some issue closing this GIR");
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'There is some issue closing this GIR.',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            });
-
-                        }
-                    },
-
-                    error: function (error) {
-
-                        console.error("Error fetching items", error);
-                        alert("Server Error");
-
-                    }
-                });
-            }
+     
              $('#btnSave').on('click', function () {
                  debugger;
                  var checkstock = false;
@@ -401,6 +347,62 @@
                 function (error) {
                     alert(error.get_message());
                 })
+        }
+        debugger;
+        function CloseGIRs() {
+            debugger;
+            var GIR = $('#ddlMIR').val();
+
+            $.ajax({
+                type: "POST",
+                url: "GoodsIssuanceNote.aspx/CloseGIR",
+                data: JSON.stringify({ 'GIR': GIR }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (response) {
+
+                    if (response.d == "success") {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'GIR Closed Successfully.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+                    } else {
+
+                        alert("There is some issue closing this GIR");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'There is some issue closing this GIR.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+
+                    }
+                },
+
+                error: function (error) {
+
+                    console.error("Error fetching items", error);
+                    alert("Server Error");
+
+                }
+            });
         }
         function LoadDepartments() {
             PageMethods.LoadDepartments(function (res) {
@@ -1153,7 +1155,7 @@
             &nbsp;
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6" id="isCloseGIR">
-            <input type="button"  class="btn btn-primry" value="Close GIR" id="CloseGIR" onclick="CloseGIR()" />
+            <input type="button"  class="btn btn-primry" value="Close GIR" id="CloseGIR" onclick="CloseGIRs()" />
             &nbsp;
         </div>
         
