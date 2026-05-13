@@ -181,6 +181,7 @@
         //  LOAD PATIENT + BILL DETAILS BY BILL NO
         // =============================================
         function GetPatientDetailByBill() {
+            debugger;
             var Bill_No = $('#txtBillNo').val();
             if (!Bill_No) {
                 Swal.fire({ title: "Error!", text: "Please enter Bill No", icon: "error" });
@@ -205,6 +206,7 @@
 
                     // ---- Populate patient header fields ----
                     $('#hdPatientID').text(parse[0].Patient_ID);
+                   
                     $('#hdnBillID').val(parse[0].bill_ID);
                     $('#lblMRNo').text(parse[0].Patient_No);
                     $('#lblPatienName').text(parse[0].Full_Name);
@@ -240,13 +242,14 @@
                             '</td>' +
                             '</tr>';
                     }
-
+                    debugger;
                     // ---- Clear old rows and append new ----
                     $('#tblDetails tbody tr').remove();
                     $('#tblDetails tbody').append(rows);
 
                     // ---- Reset summary fields ----
                     $('#txtReceivedAmount').val(totalAmount.toFixed(2));
+                    $('#hdRegID').val(parse[0].pat_id);
                     $('#txttotaldiscount').val('0');
                     $('#txtDisPer').val('0');
                     $('#lblOutputShow').text(totalAmount.toFixed(2));
@@ -417,6 +420,7 @@
         //  SAVE RECORD
         // =============================================
         function SaveRecord() {
+            debugger;
             if (validateSave()) {
                 var Patient_ID = $("#hdPatientID").text();
                 var Reg_ID = $("#hdRegID").val();
@@ -448,7 +452,7 @@
                         Net_Amount: Net_Amount
                     });
                 });
-
+                debugger;
                 var data = {
                     Patient_ID: parseInt(Patient_ID),
                     Reg_ID: parseInt(Reg_ID),
@@ -516,6 +520,7 @@
 
         <input type="hidden" id="hdPatientID" />
         <input type="hidden" id="hdnBillID" />
+        <input type="hidden" id="hdRegID" />
 
         <%-- ======================== PATIENT INFO ROW ======================== --%>
         <div class="row">
@@ -664,16 +669,19 @@
             </div>
         </div>
 
-        <%-- ======================== ACTION BUTTONS ======================== --%>
+
         <div class="row mt-3">
-            <div class="col-lg-3">
-                <input type="button" value="Save Discount" id="btnSave" class="btn btn-success"
-                    onclick="SaveRecord()" />
+            <div class="col-lg-8 col-md-6 col-sm-6">
+                 <div class="col-lg-2">
+     <input type="button" value="Save Discount" id="btnSave" class="btn btn-primry"
+         onclick="SaveRecord()" />
+ </div>
+ <div class="col-lg-2">
+     <input type="button" value="Print" id="btnPrint" class="btn btn-primry"
+         onclick="PrintRefund()" />
+ </div>
             </div>
-            <div class="col-lg-3">
-                <input type="button" value="Print" id="btnPrint" class="btn btn-info"
-                    onclick="PrintRefund()" />
-            </div>
+           
         </div>
 
     </div>
