@@ -310,8 +310,6 @@ namespace PMS.Modules.Billing
                 detail.Discount_Percentage = service.Discount_Percentage;
                 detail.Discount_Amount = service.Discount_Amount;
                 detail.Net_Amount = service.Net_Amount;
-                //detail.Created_By = AppConfig.UserID;
-                //detail.Creation_Date = DateTime.Now;
 
                 ListOfDiscountDetails.Add(detail);
             }
@@ -319,6 +317,25 @@ namespace PMS.Modules.Billing
             // Insert into database using LINQ
             db.Discount_Assign_Bills.InsertOnSubmit(discount);
             db.Discount_Assign_Detail_bills.InsertAllOnSubmit(ListOfDiscountDetails);
+
+            // Update Ar_Billings table
+            var arBill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == dt.Bill_Id);
+            if (arBill != null)
+            {
+                arBill.Discount_Amount = dt.Total_Discount;
+                arBill.Received_Amount = dt.Total_amount;
+               
+            }
+            foreach (ServiceDiscount service in dt.ServiceDiscount)
+            {
+                var arBillDetail = db.Ar_Billing_Details.FirstOrDefault(d => d.Bill_Details_ID == service.Bill_Detail_ID);
+                if (arBillDetail != null)
+                {
+                    arBillDetail.Discount_Percentage = service.Discount_Percentage;
+                    arBillDetail.Discount_Amount = service.Discount_Amount;
+                    arBillDetail.Net_Amount = service.Net_Amount;
+                }
+            }
             db.SubmitChanges();
 
             value = Discount_Assign_ID;
