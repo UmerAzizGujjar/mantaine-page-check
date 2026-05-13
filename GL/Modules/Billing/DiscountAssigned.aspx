@@ -656,16 +656,22 @@
             </div>
         </div>
 
-
+        <br />
         <div class="row mt-3">
             <div class="col-lg-8 col-md-6 col-sm-6">
                  <div class="col-lg-2">
-     <input type="button" value="Save Discount" id="btnSave" class="btn btn-primry"
+     <input type="button" value="Save" id="btnSave" class="btn btn-primry"
          onclick="SaveRecord()" />
  </div>
  <div class="col-lg-2">
      <input type="button" value="Print" id="btnPrint" class="btn btn-primry"
          onclick="PrintRefund()" />
+ </div>
+ <div class="col-lg-2">
+     <input type="button" value="New" id="btnnew" class="btn btn-primry" onclick="window.location = 'DiscountAssigned.aspx'" />
+ </div>
+ <div class="col-lg-2">
+     <input type="button" value="List" id="btnlist" class="btn btn-primry" onclick="window.location = 'DiscountAssignedList.aspx'" />
  </div>
             </div>
            
