@@ -60,6 +60,7 @@ namespace PMS
                                                                                        select gmm.Created_By).FirstOrDefault()).Select(x => x.UserName).FirstOrDefault(),
                                    Issuer = _dbContext.aspnet_Users.Where(x => x.UserId == SI.Created_by).Select(x => x.UserName).FirstOrDefault(),
                                    Status = SI.Status,
+                                   Approved_Time = SI.Approved_Time,
                                };
 
                     var FilteredCount = StoreIssues.Count();

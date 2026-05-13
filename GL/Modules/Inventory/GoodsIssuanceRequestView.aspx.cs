@@ -99,6 +99,8 @@ namespace PMS.Inventory
                                             Remarks = MIR.Remarks,
                                             Status = MIR.Status,
                                             CreatedBY = _dbContext.aspnet_Users.Where(x => x.UserId == MIR.Created_By).Select(x => x.UserName).FirstOrDefault(),
+                                            Creation_Date = MIR.Creation_Date,
+                                            Approved_Time = MIR.Approved_Time
                                         };
 
                     var FilteredCount = MaterialIssue.Count();

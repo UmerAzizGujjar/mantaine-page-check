@@ -1122,6 +1122,7 @@
                         var DisPer = $('#txtSaleReturnDisPer').val() || 0;
                         var TotalDisAmt = $('#txtSaleReturnDisAmt').val() || 0;
                         var AdjustmentAmt = $('#txtSaleReturnFlatDisc').val() || 0;
+                        var Remarks = $('#txtSaleReturnRemarks').val() || '';
                         debugger;
                         //var WareHouse = $('#ddl_Warehouse').val() || 0;
                         //if (WareHouse == 0) {
@@ -1158,6 +1159,7 @@
                             var Batch_No = $(this).find('input[name="txtRBatch_No"]').val();
                             var CGSRate = $(this).find('input[name="txtRCGSRate"]').val() || 0;
                             var lineDiscount = $(this).find('input[name="txtLineTotal"]').val() || 0;
+                            
 
                             debugger;
                             var CGSAmount = CGSRate * qty;
@@ -1209,6 +1211,7 @@
                             'TotalDisAmt': TotalDisAmt,
                             'AdjustmentAmt': AdjustmentAmt,
                             'Total': Total,
+                            'Remarks': Remarks,
                             'ItemList': Item_list
                         };
 
@@ -3658,13 +3661,13 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
-                                                <div class="col-lg-2 col-md-4 col-sm-6">
-    <label>WareHouse</label>
-    <select id="ddl_Warehouse" class="form-select" onchange="DisableSaleReturnWareHouse()">
-        <option value="0">Please Select</option>
-        <!-- other options -->
-    </select>
-</div>
+                        <div class="col-lg-2 col-md-4 col-sm-6">
+                            <label>WareHouse</label>
+                            <select id="ddl_Warehouse" class="form-select" onchange="DisableSaleReturnWareHouse()">
+                                <option value="0">Please Select</option>
+                                <!-- other options -->
+                            </select>
+                        </div>
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <label>Mr No</label>
                             <select id="ddlpat_no" onchange="getInvoiceNo_PatWise();"></select>
@@ -3719,6 +3722,10 @@
                                     </td>
                                 </tr>
                             </table>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6" style="margin-top:-7% !important">
+                            <label>Remarks</label>
+                            <input type="text" id="txtSaleReturnRemarks" class="form-control" placeholder="Enter remarks" />
                         </div>
                     </div>
                     <table id="saleReturnTable" class="table table-bordered table-responsive-lg table-responsive-md">
