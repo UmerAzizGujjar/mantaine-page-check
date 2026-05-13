@@ -179,7 +179,7 @@ namespace PMS.Modules.Billing
                 try
                 {
                     int billNo = Convert.ToInt32(Bill_No);
-                    var pat = db.spGetBillServices(billNo).ToList();
+                    var pat = db.spGetBillDetails(billNo).ToList();
                     return (new JavaScriptSerializer().Serialize(pat));
                 }
                 catch (Exception ex)

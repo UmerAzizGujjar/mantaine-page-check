@@ -138,7 +138,7 @@
                     },
                     {
                         "data": "Approved_Time", "name": "Approved_Time",
-                        "render": (data, type, full) => moment(full.Approved_Time).format('DD-MMM-YYYY hh:mm A'),
+                        "render": (data, type, full) => full.Approved_Time ? moment(full.Approved_Time).format('DD-MMM-YYYY hh:mm A') : '',
                         "width": "12%"
                     },
                     {
