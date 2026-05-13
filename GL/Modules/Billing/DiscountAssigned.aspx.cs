@@ -140,8 +140,8 @@ namespace PMS.Modules.Billing
                     pt.Entry_Date = pat.Created_time.ToString();
                 pt.Address = pat.Permanent_Address;
                 pt.Mobile = pat.Mobile1;
-                pt.department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category);
-                pt.Patient_Type = db.GetDataValueName("Patient Type", pat.Patient_Type);
+                //pt.department = db.GetDataValueName("Patient Main Category", pat.Patient_Main_Category);
+                //pt.Patient_Type = db.GetDataValueName("Patient Type", pat.Patient_Type);
                 pt.Gender = db.GetDataValueName("Gender", pat.Gender);
                 var Patientno = pat.Patient_No.ToString();
                 var count = (db.Reg_patients.Where(v => v.Patient_No == Convert.ToInt32(Patientno)).ToList());
