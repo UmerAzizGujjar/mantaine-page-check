@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="As_Siraat(4May26)" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -2009,18 +2009,6 @@
       <Column Name="Status" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Approved_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Approved_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.MaterialIssueRequest_Detail" Member="MaterialIssueRequest_Details">
-    <Type Name="MaterialIssueRequest_Detail">
-      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="MIRQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="Technical_Specifications" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="FilePath" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="File_Type" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.INV_ITEM_COMPANY_STORES" Member="INV_ITEM_COMPANY_STOREs">
@@ -7768,6 +7756,19 @@
       <Column Name="UpdatedAt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.MaterialIssueRequest_Detail" Member="MaterialIssueRequest_Details">
+    <Type Name="MaterialIssueRequest_Detail">
+      <Column Name="MaterialRequestDetail_Id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MaterialRequest_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Item_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="MIRQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Technical_Specifications" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="FilePath" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="File_Type" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Last_MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
     <Parameter Name="ValueSetName" Parameter="valueSetName" Type="System.String" DbType="VarChar(150)" />
     <Parameter Name="DataValueName" Parameter="dataValueName" Type="System.String" DbType="VarChar(50)" />
@@ -8123,16 +8124,6 @@
   <Function Name="dbo.GetPONumberagainstGRNID" Method="GetPONumberagainstGRNID" IsComposable="true">
     <Parameter Name="GRNId" Parameter="gRNId" Type="System.Int64" DbType="BigInt" />
     <Return Type="System.String" />
-  </Function>
-  <Function Name="dbo.spGetitemsDetails" Method="spGetitemsDetails">
-    <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="spGetitemsDetailsResult">
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </ElementType>
   </Function>
   <Function Name="dbo.SP_CheckAssetAccounts" Method="SP_CheckAssetAccounts">
     <Parameter Name="ACC_ID" Parameter="aCC_ID" Type="System.Int32" DbType="Int" />
@@ -12095,6 +12086,17 @@
       <Column Name="Referred_By" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
       <Column Name="Bed_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.spGetitemsDetails" Method="spGetitemsDetails">
+    <Parameter Name="itemId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="spGetitemsDetailsResult">
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Last_MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
