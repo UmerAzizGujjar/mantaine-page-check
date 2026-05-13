@@ -290,16 +290,16 @@ namespace PMS.Modules.Billing
             discount.Discount_Date = dt.DiscountDate;
             discount.Total_Discount = dt.Total_Discount;
             discount.Remarks = dt.remarks;
-            discount.Status = "Active";
+            discount.Status = "Created";
             discount.Created_By = AppConfig.UserID;
             discount.Creation_Date = DateTime.Now;
 
             // Create detail records list
-            List<Discount_Assign_Detail> ListOfDiscountDetails = new List<Discount_Assign_Detail>();
+            List<Discount_Assign_Detail_bill> ListOfDiscountDetails = new List<Discount_Assign_Detail_bill>();
 
             foreach (ServiceDiscount service in dt.ServiceDiscount)
             {
-                Discount_Assign_Detail detail = new Discount_Assign_Detail();
+                Discount_Assign_Detail_bill detail = new Discount_Assign_Detail_bill();
 
                 detail.Discount_Assign_ID = Convert.ToInt32(Discount_Assign_ID);
                 detail.Bill_Detail_ID = service.Bill_Detail_ID;
@@ -310,15 +310,15 @@ namespace PMS.Modules.Billing
                 detail.Discount_Percentage = service.Discount_Percentage;
                 detail.Discount_Amount = service.Discount_Amount;
                 detail.Net_Amount = service.Net_Amount;
-                detail.Created_By = AppConfig.UserID;
-                detail.Creation_Date = DateTime.Now;
+                //detail.Created_By = AppConfig.UserID;
+                //detail.Creation_Date = DateTime.Now;
 
                 ListOfDiscountDetails.Add(detail);
             }
 
             // Insert into database using LINQ
             db.Discount_Assign_Bills.InsertOnSubmit(discount);
-            db.Discount_Assign_Details.InsertAllOnSubmit(ListOfDiscountDetails);
+            db.Discount_Assign_Detail_bills.InsertAllOnSubmit(ListOfDiscountDetails);
             db.SubmitChanges();
 
             value = Discount_Assign_ID;

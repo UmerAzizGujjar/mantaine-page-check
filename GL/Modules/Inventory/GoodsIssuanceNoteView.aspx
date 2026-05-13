@@ -94,6 +94,7 @@
                     },
                     { "data": "Department", "orderable": false },
                     { "data": "WareHouse", "orderable": false },
+                    { "data": "RequestNo", "orderable": false },
                     { "data": "Requester", "orderable": false },
                     { "data": "Issuer", "orderable": false },
                     { "data": "Updated_By", "orderable": false },  // ← NEW
@@ -171,6 +172,7 @@
                     <th>Date</th>
                     <th>Department</th>
                     <th>WareHouse</th>
+                    <th>MIR No</th>
                     <th>Request BY</th>
                     <th>Issue BY</th>
                     <th>Updated By</th>
