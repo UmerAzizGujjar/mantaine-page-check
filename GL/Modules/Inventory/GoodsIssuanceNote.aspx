@@ -11,7 +11,102 @@
             GetWareHouseCondition();   
             GetGIRCloseCondition();   
             LoadDepartments();
-            
+            // Move this OUTSIDE the document ready function or ensure it's properly bound
+            // Use event delegation or ensure the DOM is ready
+            $(document).ready(function () {
+                // Your existing document ready code remains here...
+
+                // Add this event handler inside document ready
+                $(document).on('click', '#confirmCloseBtn', function () {
+                    var remarks = $('#remarks').val().trim();
+
+                    if (remarks === "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: 'Please enter remarks before closing.',
+                            showConfirmButton: true,
+                            timer: 2000
+                        });
+                        return false;
+                    }
+
+                    var GIR = $('#ddlMIR').val();
+
+                    if (!GIR || GIR === "0") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: 'Please select a GIR first.',
+                            showConfirmButton: true,
+                            timer: 2000
+                        });
+                        return false;
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: "GoodsIssuanceNote.aspx/CloseGIR",
+                        data: JSON.stringify({ 'GIR': GIR, 'remarks': remarks }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+
+                        beforeSend: function () {
+                            $('#confirmCloseBtn').prop('disabled', true).text('Processing...');
+                        },
+
+                        success: function (response) {
+                            if (response.d == "success") {
+                                $('#remarksModal').modal('hide');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'GIR Closed Successfully.',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                }).then(function () {
+                                    location.reload();
+                                });
+                            } else {
+                                $('#remarksModal').modal('hide');
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'There is some issue closing this GIR.',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                            }
+                        },
+
+                        error: function (xhr, status, error) {
+                            console.error("Error closing GIR:", error);
+                            console.error("Response:", xhr.responseText);
+                            $('#remarksModal').modal('hide');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Server Error: ' + (xhr.responseText || 'Please try again later.'),
+                                showConfirmButton: true
+                            });
+                        },
+
+                        complete: function () {
+                            $('#confirmCloseBtn').prop('disabled', false).text('Confirm Close');
+                        }
+                    });
+                });
+            });
             $('#btnGetAllItems').on('click', function () {
                 $('#btnAdd').prop('disabled', true);
                 LoadAllitem('');
@@ -350,60 +445,14 @@
         }
         debugger;
         function CloseGIRs() {
-            debugger;
-            var GIR = $('#ddlMIR').val();
+            // Clear previous remarks
+            $('#remarks').val('');
 
-            $.ajax({
-                type: "POST",
-                url: "GoodsIssuanceNote.aspx/CloseGIR",
-                data: JSON.stringify({ 'GIR': GIR }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-
-                success: function (response) {
-
-                    if (response.d == "success") {
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'GIR Closed Successfully.',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-
-                    } else {
-
-                        alert("There is some issue closing this GIR");
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'There is some issue closing this GIR.',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-
-                    }
-                },
-
-                error: function (error) {
-
-                    console.error("Error fetching items", error);
-                    alert("Server Error");
-
-                }
-            });
+            // Show the modal
+            $('#remarksModal').modal('show');
         }
+
+       
         function LoadDepartments() {
             PageMethods.LoadDepartments(function (res) {
                 var parsed_Date = JSON.parse(res);
@@ -1230,6 +1279,30 @@
                 <div class="col-lg-2 col-md-2 col-sm-2 float-end">
                     <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Remarks Modal -->
+<div class="modal fade" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="remarksModalLabel">Close GIR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="remarks">Remarks <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="remarks" rows="4" placeholder="Enter closing remarks..."></textarea>
+                    <small class="form-text text-muted">Please provide reason for closing this GIR</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmCloseBtn">Confirm Close</button>
             </div>
         </div>
     </div>
