@@ -18,7 +18,47 @@ namespace PMS
         protected void Page_Load(object sender, EventArgs e)
         {
         }
+        [WebMethod]
+        public static object GetMasterAndDetail(int invoiceId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                // Master record
+                var master = (from m in db.Store_Issues
+                              where m.Store_Issue_Id == invoiceId
+                              select new
+                              {
+                                  ID = m.Store_Issue_Id,
+                                  Number = m.Store_Issue_No,
+                                  Date = m.Created_Time,
+                                  //VendorName = DBClass.getField("select Vendor_Name from AP_Vendors where Vendor_ID=" + m.Vendor_ID),
+                                  Status = m.Status,
+                                  //Remarks = m.rem
+                              }).FirstOrDefault();
 
+                // Detail rows
+                var detail = (from d in db.Store_Issue_Details join
+                              mid in db.MaterialIssueRequest_Details on d.MIR_Detail_Id equals Convert.ToInt32( mid.MaterialRequestDetail_Id)
+                              join mir in db.MaterialIssueRequests on mid.MaterialRequest_Id equals mir.MaterialRequest_Id
+                              join inv in db.INV_Items on d.Item_Id equals inv.Item_ID
+                              where d.Store_Issue_Id == invoiceId
+                              select new
+                              {
+                                  inv.Item_Code,
+                                  inv.Description,
+                                  d.Issue_Qty,
+                                  mid.MIRQty,
+                                  blnc_Qty = mid.MIRQty - d.Issue_Qty,
+                                  d.MIR_Detail_Id
+                              }).ToList();
+
+                return new
+                {
+                    Master = master,
+                    Detail = detail
+                };
+            }
+        }
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {
