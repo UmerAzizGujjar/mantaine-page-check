@@ -150,9 +150,11 @@
                          UserUnApproveButtonRights();
                          $('#btnSave').attr("disabled", 'disabled');
                          $('#btnVoucher').show();
+                         $('#isCloseGIR').show();
                      }
                      if (status == "Created") {
                          $('#btnVoucher').hide();
+                         $('#isCloseGIR').hide();
                      }
                  }, 2000);
              }
@@ -1202,11 +1204,11 @@
 </div>
         <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden">
             <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-            &nbsp;
+            
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6" id="isCloseGIR">
             <input type="button"  class="btn btn-primry" value="Close GIR" id="CloseGIR" onclick="CloseGIRs()" />
-            &nbsp;
+          
         </div>
         
             </div>
