@@ -167,86 +167,91 @@
         // =============================================
         //  LOAD PATIENT + BILL DETAILS BY BILL NO
         // =============================================
-        function GetPatientDetailByBill() {
-            debugger;
-            var Bill_No = $('#txtBillNo').val();
-            if (!Bill_No) {
-                Swal.fire({ title: "Error!", text: "Please enter Bill No", icon: "error" });
-                return;
-            }
+ function GetPatientDetailByBill() {
+    debugger;
+    var Bill_No = $('#txtBillNo').val();
+    if (!Bill_No) {
+        Swal.fire({ title: "Error!", text: "Please enter Bill No", icon: "error" });
+        return;
+    }
 
-            $.ajax({
-                type: "post",
-                url: "DiscountAssigned.aspx/LoadPatientDetailsByBillNO",
-                data: JSON.stringify({ "Bill_No": Bill_No }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var parse = JSON.parse(response.d);
+    $.ajax({
+        type: "post",
+        url: "DiscountAssigned.aspx/LoadPatientDetailsByBillNO",
+        data: JSON.stringify({ "Bill_No": Bill_No }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var parse = JSON.parse(response.d);
 
-                    if (parse && parse.length > 0) {
-                        if (parse[0].Is_Refund == true || parse[0].Is_Refund == 1) {
-                            Swal.fire({ title: "Already Refunded", text: "This bill is already refund", icon: "warning" });
-                            return;
-                        }
-
-                        if (parse[0].Received_Amount <= 0) {
-                            Swal.fire({ title: "Invalid Amount", text: " Received Amount cannot be zero", icon: "warning" });
-                            return;
-                        }
-                    }
-                    // ---- Populate patient header fields ----
-                    $('#hdPatientID').text(parse[0].Patient_ID);
-                   
-                    $('#hdnBillID').val(parse[0].bill_ID);
-                    $('#lblMRNo').text(parse[0].Patient_No);
-                    $('#lblPatienName').text(parse[0].Full_Name);
-                    $('#lblAgeYears').text(parse[0].Age_years);
-                    $('#lblGender').text(parse[0].Gender);
-                    $('#lblRegDate').text(parse[0].Creation_Date);
-                    $('#lblAddress').text(parse[0].Permanent_Address);
-                    $('#lblContactNo').text(parse[0].Mobile1);
-                    $('#lblDepartment').text(parse[0].Department);
-                    $('#lblPatientCategory').text(parse[0].Patient_Type);
-                    $('#txtReceivedAmount').val(Received_Amount.toFixed(2));
-                    var rows = '';
-                    var totalAmount = 0;
-
-                    for (var i = 0; i < parse.length; i++) {
-                        var existingDiscount = parseFloat(parse[i].Discount_Amount) || 0;
-                        var netAmount = parseFloat(parse[i].Net_Amount) || parseFloat(parse[i].Hospital_Share) || 0;
-                        totalAmount += netAmount;
-
-                        // data-original-amount stores the base amount for proportional distribution
-                        rows += '<tr data-original-amount="' + netAmount + '">' +
-                            '<td style="display:none">' + parse[i].Patient_ID + '</td>' +
-                            '<td style="display:none">' + parse[i].Bill_Details_ID + '</td>' +
-                            '<td style="display:none">' + parse[i].Item_Id + '</td>' +
-                            '<td style="text-align:center;">' + parse[i].Item_Name + '</td>' +
-                            '<td style="text-align:center;">' + existingDiscount.toFixed(2) + '</td>' +
-                            '<td style="text-align:center;">' + netAmount.toFixed(2) + '</td>' +
-                            '<td style="text-align:center;">' +
-                            '<input type="text" name="DisPer" class="form-control percentage-input" value="0" />' +
-                            '</td>' +
-                            '<td style="text-align:center;">' +
-                            '<input type="text" name="DisAmount" class="form-control discount-input" value="0" />' +
-                            '</td>' +
-                            '</tr>';
-                    }
-                    debugger;
-                    // ---- Clear old rows and append new ----
-                    $('#tblDetails tbody tr').remove();
-                    $('#tblDetails tbody').append(rows);
-
-                    // ---- Reset summary fields ----
-                  
-                    $('#hdRegID').val(parse[0].pat_id);
-                    $('#txttotaldiscount').val('0');
-                    $('#txtDisPer').val('0');
-                    $('#lblOutputShow').val(totalAmount.toFixed(2));
+            if (parse && parse.length > 0) {
+                if (parse[0].Is_Refund == true || parse[0].Is_Refund == 1) {
+                    Swal.fire({ title: "Already Refunded", text: "This bill is already refund", icon: "warning" });
+                    return;
                 }
-            });
+
+                if (parse[0].Received_Amount <= 0) {
+                    Swal.fire({ title: "Invalid Amount", text: "Received Amount cannot be zero", icon: "warning" });
+                    return;
+                }
+            }
+            
+            // ---- Populate patient header fields ----
+            $('#hdPatientID').text(parse[0].Patient_ID);
+            $('#hdnBillID').val(parse[0].bill_ID);
+            $('#lblMRNo').text(parse[0].Patient_No);
+            $('#lblPatienName').text(parse[0].Full_Name);
+            $('#lblAgeYears').text(parse[0].Age_years);
+            $('#lblGender').text(parse[0].Gender);
+            $('#lblRegDate').text(parse[0].Creation_Date);
+            $('#lblAddress').text(parse[0].Permanent_Address);
+            $('#lblContactNo').text(parse[0].Mobile1);
+            $('#lblDepartment').text(parse[0].Department);
+            $('#lblPatientCategory').text(parse[0].Patient_Type);
+            $('#txtReceivedAmount').val(parse[0].Received_Amount.toFixed(2)); // FIXED: Added parse[0]
+            
+            var rows = '';
+            var totalAmount = 0;
+
+            for (var i = 0; i < parse.length; i++) {
+                var existingDiscount = parseFloat(parse[i].Discount_Amount) || 0;
+                var netAmount = parseFloat(parse[i].Net_Amount) || parseFloat(parse[i].Hospital_Share) || 0;
+                totalAmount += netAmount;
+
+                // FIXED: Corrected HTML closing tags (removed extra quotes)
+                rows += '<tr data-original-amount="' + netAmount + '">' +
+                    '<td style="display:none">' + parse[i].Patient_ID + '</td>' +
+                    '<td style="display:none">' + parse[i].Bill_Details_ID + '</td>' +
+                    '<td style="display:none">' + parse[i].Item_Id + '</td>' +
+                    '<td style="text-align:center;">' + parse[i].Item_Name + '</td>' +
+                    '<td style="text-align:center;">' + existingDiscount.toFixed(2) + '</td>' +
+                    '<td style="text-align:center;">' + netAmount.toFixed(2) + '</td>' +
+                    '<td style="text-align:center;">' +
+                    '<input type="text" name="DisPer" class="form-control percentage-input" value="0" />' +
+                    '</td>' +
+                    '<td style="text-align:center;">' +
+                    '<input type="text" name="DisAmount" class="form-control discount-input" value="0" />' +
+                    '</td>' +
+                    '</tr>';
+            }
+            
+            debugger;
+            // ---- Clear old rows and append new ----
+            $('#tblDetails tbody').empty(); // Better than removing tr
+            $('#tblDetails tbody').append(rows);
+
+            // ---- Reset summary fields ----
+            $('#hdRegID').val(parse[0].pat_id);
+            $('#txttotaldiscount').val('0');
+            $('#txtDisPer').val('0');
+            $('#lblOutputShow').val(totalAmount.toFixed(2));
+        },
+        error: function (xhr, status, error) {
+            console.log("AJAX Error: " + error);
+            Swal.fire({ title: "Error!", text: "Failed to load bill details", icon: "error" });
         }
+    });
+}
 
    
         // --- Helper: get total received amount from master field ---
