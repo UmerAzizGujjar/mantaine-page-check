@@ -162,7 +162,7 @@
                         "render": function (data, type, full) {
 
                             return full.Update_Time
-                                ? moment(full.Update_Time).format('D-MMM-YYYY')
+                                ? moment(full.Update_Time).format('D-MMM-YYYY hh:mm A')
                                 : '';
 
                         },

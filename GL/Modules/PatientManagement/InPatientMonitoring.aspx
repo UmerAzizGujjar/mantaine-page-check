@@ -2173,6 +2173,7 @@
             var MedicinesList = [];
             var MedicinesListPRN = [];
             var MedicinesListSTAT = [];
+
             table.find('tbody tr').each(function (key, value) {
                 debugger;
                 MedicinesList.push({
@@ -2180,8 +2181,6 @@
                     'Medicine_Name': $($(value).find('td')[1]).text(),
                     'Frequency': $($(value).find('td')[4]).text(),
                     'Oral': $($(value).find('td')[6]).text(),
-                    //'Issue_Qty': $($(value).find('td')[7]).text(),
-                    //'Rec_Qty': $($(value).find('td')[8]).text(),
                     'Issue_Qty': $(value).find('td:eq(7) input').val(),
                     'Rec_Qty': $(value).find('td:eq(8) input').val(),
                     'Injection': $($(value).find('td')[5]).text(),
@@ -2193,7 +2192,6 @@
                     'ItemCode': $($(value).find('td')[14]).text(),
                     'Start_Date_Time': $($(value).find('td')[0]).text(),
                     'Stop_Date_Time': $($(value).find('td')[9]).text(),
-                    // 'High_Risk': $($(value).find('td')[10]).text(),
                     'User': $($(value).find('td')[12]).text(),
                     'Max_PRN': "",
                     "Regular": true,
@@ -2201,6 +2199,7 @@
                     "PRN": false,
                 });
             });
+
             tableStat.find('tbody tr').each(function (key, value) {
                 debugger;
                 MedicinesList.push({
@@ -2225,6 +2224,7 @@
                     "PRN": false,
                 });
             });
+
             tablePRN.find('tbody tr').each(function (key, value) {
                 debugger;
                 MedicinesList.push({
@@ -2249,11 +2249,20 @@
                     "PRN": true,
                 });
             });
+
             debugger;
             var InPatID = $('#<%= txtInPatient_Mon_ID.ClientID%>').val();
-            var MedicineDetails = { PatientID: InPatID == '(New)' ? 0 : InPatID, MedicineList: MedicinesList }
+            var ActualPatientID = $('#<%= hdfPatient_ID.ClientID%>').val(); 
 
-            PageMethods.SaveMedicinesforMon(JSON.stringify(MedicineDetails), function (response) { SaveInTake(); });
+            var MedicineDetails = {
+                PatientID: InPatID == '(New)' ? 0 : InPatID,
+                ActualPatientID: ActualPatientID, 
+                MedicineList: MedicinesList
+            }
+
+            PageMethods.SaveMedicinesforMon(JSON.stringify(MedicineDetails), function (response) {
+                SaveInTake();
+            });
         }
         function SaveAlRecord() {
             $('#btnSave').attr('disabled', true);

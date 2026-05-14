@@ -236,23 +236,126 @@
 
                 return false;
             }
-            else {
-                var rows = '';
-                var rowlength = tblItemDescription.rows.length;
+
+            var exists = false;
+            $('#tblItemDescriptionDetail tr').each(function () {
+                var existingDept = $(this).find('td input[name=txt_deptwisedoc_id]').val();
+                if (existingDept == Department_id) {
+                    exists = true;
+                    return false;
+                }
+            });
+
+            if (exists) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'This department is already added for this user',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return false;
+            }
+
+            var rows = '';
+            var rowlength = tblItemDescription.rows.length;
+            rows += '<tr>' +
+                '<td class="th_Sp_Color" style="display:none;">' + user_id + '</td>' +
+                '<td class="th_Sp_Color">' +
+                '<input type="text" name="txt_UserName" style="width: 100%;" id="txt_UserName' + rowlength + '" readonly="readonly" value="' + username + '"  />' +
+                '</td>' +
+                '<td class="th_Sp_Color" style="display:none;"><input type="text" name="txt_deptwisedoc_id" id="txt_deptwisedoc_id' + rowlength + '" value=' + Department_id + ' />' + Department_id + '</td>' +
+                '<td class="th_Sp_Color">' +
+                '<input type="text" name="txt_dept" style="width: 100%;" id="txt_dept' + rowlength + '" value="' + Department + '" readonly="readonly"/>' +
+                '  </td>' +
+                '<td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td>' +
+                '</tr>'
+            $('#tblItemDescriptionDetail').append(rows);
+            $('#ddl_users').attr('disabled', 'disabled');
+        }
+
+        function AddAllDepartments() {
+            debugger;
+            var user_id = $('#ddl_users').val();
+            var username = $('#ddl_users :selected').text();
+
+            if (user_id == 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select User First',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return false;
+            }
+
+            var allDepartments = [];
+            $('#ddlDepartment option').each(function () {
+                var deptId = $(this).val();
+                var deptName = $(this).text();
+                if (deptId != '0') {
+                    allDepartments.push({ id: deptId, name: deptName });
+                }
+            });
+
+            if (allDepartments.length == 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'No Departments Available',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return false;
+            }
+            $('#tblItemDescriptionDetail').empty();
+            var rows = '';
+
+            $.each(allDepartments, function (key, dept) {
                 rows += '<tr>' +
                     '<td class="th_Sp_Color" style="display:none;">' + user_id + '</td>' +
                     '<td class="th_Sp_Color">' +
-                    '<input type="text" name="txt_UserName" style="width: 100%;" id="txt_UserName' + rowlength + '" readonly="readonly" value="' + username + '"  />' +
+                    '<input type="text" name="txt_UserName" style="width: 100%;" id="txt_UserName' + (key + 1) + '" readonly="readonly" value="' + username + '"  />' +
                     '</td>' +
-                    '<td class="th_Sp_Color" style="display:none;"><input type="text" name="txt_deptwisedoc_id" id="txt_deptwisedoc_id' + rowlength + '" value=' + Department_id + ' />' + Department_id + '</td>' +
+                    '<td class="th_Sp_Color" style="display:none;"><input type="text" name="txt_deptwisedoc_id" id="txt_deptwisedoc_id' + (key + 1) + '" value="' + dept.id + '" />' + dept.id + '</td>' +
                     '<td class="th_Sp_Color">' +
-                    '<input type="text" name="txt_dept" style="width: 100%;" id="txt_dept' + rowlength + '" value="' + Department + '" readonly="readonly"/>' +
-                    ' </td>' +
+                    '<input type="text" name="txt_dept" style="width: 100%;" id="txt_dept' + (key + 1) + '" value="' + dept.name + '" readonly="readonly"/>' +
+                    '  </td>' +
                     '<td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td>' +
-                    '</tr>'
-                $('#tblItemDescriptionDetail').append(rows);
-                $('#ddl_users').attr('disabled', 'disabled');
-            }
+                    '</tr>';
+            });
+
+            $('#tblItemDescriptionDetail').append(rows);
+            $('#ddl_users').attr('disabled', 'disabled');
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'All departments have been added successfully',
+                showConfirmButton: false,
+                timer: 2000,
+                customClass: {
+                    popup: 'swal-big-popup',
+                    title: 'swal-big-title',
+                    htmlContainer: 'swal-big-text'
+                }
+            });
         }
     </script>
 </asp:Content>
@@ -269,6 +372,9 @@
         </div>
         <div class="col-lg-1 col-md-4 col-sm-6">
             <input type="button" onclick="Addrow()" value="+" id="AddAccount" class="btn-primry" style="margin-top: 20px;" />
+        </div>
+        <div class="col-lg-1 col-md-4 col-sm-6">
+            <input type="button" onclick="AddAllDepartments()" value="All Dept" id="btnAllDepartment" class="btn-primry" style="margin-top: 20px;" />
         </div>
     </div>
 </div>

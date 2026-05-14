@@ -4915,13 +4915,19 @@
                  debugger;
                  var doctorVal;
                  var doctor;
-                 doctorVal = $('#tblDOctorNotes').find('tbody').find('td input[name=txtDoctorValue]').val();
-                 doctor = $('#tblDOctorNotes').find('tbody').find('td input[name=txtDoctorName]').val();
+                 var invDoctor = $('#ctl00_MainContent_DdlDocName').val();
+
+                 if (invDoctor && invDoctor != "0" && invDoctor != "" && invDoctor != null) {
+                     doctorVal = invDoctor;
+                     doctor = $('#ctl00_MainContent_DdlDocName').find('option:selected').text();
+                 } else {
+                     doctorVal = $('#tblDOctorNotes').find('tbody').find('td input[name=txtDoctorValue]').val();
+                     doctor = $('#tblDOctorNotes').find('tbody').find('td input[name=txtDoctorName]').val();
+                 }
 
                  if (doctor == "" || doctor == undefined || doctor == null || doctor == "NULL" || doctor == "null") {
                      doctor = "-";
                  }
-
                  if (doctorVal == 0 || doctorVal == undefined) {
                      doctorVal = "";
                  }
