@@ -226,6 +226,14 @@ namespace PMS.Inventory
                 obj.MaterialRequest_Id = Convert.ToInt64(item.MIRId);
                 obj.MIRQty = Convert.ToDecimal(item.MIRQty);
                 obj.Remarks = item.remarks;
+                if(item.Last_MIR_Qty != "null")
+                {
+                    obj.Last_MIR_Qty = Convert.ToDecimal(item.Last_MIR_Qty);
+                }
+                else
+                {
+                    obj.Last_MIR_Qty = 0;
+                }
                 obj.Last_MIR_Qty = Convert.ToDecimal(item.Last_MIR_Qty);
                 db.MaterialIssueRequest_Details.InsertOnSubmit(obj);
                 try
