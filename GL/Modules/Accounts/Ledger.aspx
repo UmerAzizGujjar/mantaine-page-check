@@ -65,7 +65,7 @@
                 </div>
             </div>
 
-    <div class="col-lg-3 col-md-4 col-sm-12" id="tr_HideZeroBalance" runat="server">
+    <div class="col-lg-3 col-md-4 col-sm-12" id="tr_HideZeroBalance" runat="server" visible="false">
         <div class="form-check" style="display: inline-flex; width: 26px;">
             <input runat="server" class="form-check-input" type="checkbox" id="chkHideZeroBalance" />
             <label class="form-check-label" for="chkHideZeroBalance" style="margin-left: 8px; white-space: nowrap;">Hide Zero Balance</label>

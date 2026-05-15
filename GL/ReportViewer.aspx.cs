@@ -5577,7 +5577,7 @@ namespace PMS
                 string vendorID = Request.QueryString["Vendor_ID"].ToString();
                 rd.SetParameterValue("@stDate", stDate);
                 rd.SetParameterValue("@endDate", endDate);
-                rd.SetParameterValue("@Vendor_ID", Convert.ToInt32(vendorID));
+                rd.SetParameterValue("@Vendor_ID", vendorID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
             }
