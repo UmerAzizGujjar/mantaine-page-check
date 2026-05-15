@@ -248,6 +248,7 @@ namespace PMS.Modules.Billing
         public class DiscountDetail
         {
             public int Patient_ID { get; set; }
+            public int Discount_Assign_ID { get; set; }
             public int Reg_ID { get; set; }
             public DateTime DiscountDate { get; set; }
             public string remarks { get; set; }
@@ -278,65 +279,103 @@ namespace PMS.Modules.Billing
             var dt = JSS.Deserialize<DiscountDetail>(data);
 
             string value = string.Empty;
-            var BillID = string.Empty;
 
-            // Create master record
-            Discount_Assign_Bill discount = new Discount_Assign_Bill();
-            var Discount_Assign_ID = DBClass.GetNewNumber("Discount_Assign_ID", "Discount_Assign_Bill", "").ToString();
-
-            discount.Discount_Assign_ID = Convert.ToInt32(Discount_Assign_ID);
-            discount.Bill_ID = dt.Bill_Id;
-            discount.Patient_ID = dt.Patient_ID;
-            discount.Reg_ID = dt.Reg_ID;
-            discount.Discount_Date = dt.DiscountDate;
-            discount.Total_Discount = dt.Total_Discount;
-            discount.Remarks = dt.remarks;
-            discount.Status = "Created";
-            discount.Created_By = AppConfig.UserID;
-            discount.Creation_Date = DateTime.Now;
-            discount.Total_amount = dt.Total_Amount;
-
-            // Create detail records list
-            List<Discount_Assign_Detail_bill> ListOfDiscountDetails = new List<Discount_Assign_Detail_bill>();
-
-            foreach (ServiceDiscount service in dt.ServiceDiscount)
+            if (dt.Discount_Assign_ID > 0)
             {
-                Discount_Assign_Detail_bill detail = new Discount_Assign_Detail_bill();
+                var discountMaster = db.Discount_Assign_Bills
+                    .FirstOrDefault(d => d.Discount_Assign_ID == dt.Discount_Assign_ID);
 
-                detail.Discount_Assign_ID = Convert.ToInt32(Discount_Assign_ID);
-                detail.Bill_Detail_ID = service.Bill_Detail_ID;
-                detail.Item_ID = service.Item_ID;
-                detail.Item_Name = service.Item_Name;
-                detail.Item_Type = service.Item_Type;
-                detail.Original_Amount = service.Original_Amount;
-                detail.Discount_Percentage = service.Discount_Percentage;
-                detail.Discount_Amount = service.Discount_Amount;
-                detail.Net_Amount = service.Net_Amount;
+                if (discountMaster != null)
+                {
+                    discountMaster.Discount_Date = dt.DiscountDate;
+                    discountMaster.Total_Discount = dt.Total_Discount;
+                    discountMaster.Remarks = dt.remarks;
+                    discountMaster.Total_amount = dt.Total_Amount;
+                    discountMaster.Modified_By = AppConfig.UserID;
+                    discountMaster.Modification_Date = DateTime.Now;
 
-                ListOfDiscountDetails.Add(detail);
+                    var existingDetails = db.Discount_Assign_Detail_bills
+                        .Where(d => d.Discount_Assign_ID == dt.Discount_Assign_ID).ToList();
+                    db.Discount_Assign_Detail_bills.DeleteAllOnSubmit(existingDetails);
+
+                    List<Discount_Assign_Detail_bill> ListOfDiscountDetails = new List<Discount_Assign_Detail_bill>();
+
+                    foreach (ServiceDiscount service in dt.ServiceDiscount)
+                    {
+                        Discount_Assign_Detail_bill detail = new Discount_Assign_Detail_bill();
+                        detail.Discount_Assign_ID = dt.Discount_Assign_ID;
+                        detail.Bill_Detail_ID = service.Bill_Detail_ID;
+                        detail.Item_ID = service.Item_ID;
+                        detail.Item_Name = service.Item_Name;
+                        detail.Item_Type = service.Item_Type;
+                        detail.Original_Amount = service.Original_Amount;
+                        detail.Discount_Percentage = service.Discount_Percentage;
+                        detail.Discount_Amount = service.Discount_Amount;
+                        detail.Net_Amount = service.Net_Amount;
+
+                        ListOfDiscountDetails.Add(detail);
+                    }
+
+                    db.Discount_Assign_Detail_bills.InsertAllOnSubmit(ListOfDiscountDetails);
+                    value = dt.Discount_Assign_ID.ToString();
+                }
+            }
+            else
+            {
+                var Discount_Assign_ID = DBClass.GetNewNumber("Discount_Assign_ID", "Discount_Assign_Bill", "").ToString();
+
+                Discount_Assign_Bill discount = new Discount_Assign_Bill();
+                discount.Discount_Assign_ID = Convert.ToInt32(Discount_Assign_ID);
+                discount.Bill_ID = dt.Bill_Id;
+                discount.Patient_ID = dt.Patient_ID;
+                discount.Reg_ID = dt.Reg_ID;
+                discount.Discount_Date = dt.DiscountDate;
+                discount.Total_Discount = dt.Total_Discount;
+                discount.Remarks = dt.remarks;
+                discount.Status = "Created";
+                discount.Created_By = AppConfig.UserID;
+                discount.Creation_Date = DateTime.Now;
+                discount.Total_amount = dt.Total_Amount;
+
+                List<Discount_Assign_Detail_bill> ListOfDiscountDetails = new List<Discount_Assign_Detail_bill>();
+
+                foreach (ServiceDiscount service in dt.ServiceDiscount)
+                {
+                    Discount_Assign_Detail_bill detail = new Discount_Assign_Detail_bill();
+                    detail.Discount_Assign_ID = Convert.ToInt32(Discount_Assign_ID);
+                    detail.Bill_Detail_ID = service.Bill_Detail_ID;
+                    detail.Item_ID = service.Item_ID;
+                    detail.Item_Name = service.Item_Name;
+                    detail.Item_Type = service.Item_Type;
+                    detail.Original_Amount = service.Original_Amount;
+                    detail.Discount_Percentage = service.Discount_Percentage;
+                    detail.Discount_Amount = service.Discount_Amount;
+                    detail.Net_Amount = service.Net_Amount;
+
+                    ListOfDiscountDetails.Add(detail);
+                }
+
+                db.Discount_Assign_Bills.InsertOnSubmit(discount);
+                db.Discount_Assign_Detail_bills.InsertAllOnSubmit(ListOfDiscountDetails);
+                value = Discount_Assign_ID;
             }
 
-            // Insert into database using LINQ
-            db.Discount_Assign_Bills.InsertOnSubmit(discount);
-            db.Discount_Assign_Detail_bills.InsertAllOnSubmit(ListOfDiscountDetails);
-
-            // Update Ar_Billings table
             var arBill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == dt.Bill_Id);
             var arreceipt = db.Receipts.FirstOrDefault(x => x.Bill_ID == dt.Bill_Id);
+
             if (arBill != null)
             {
                 arBill.Discount_Amount = dt.Total_Discount;
                 arBill.Received_Amount = dt.Total_Amount;
                 arBill.Cash_In_Hand = dt.Total_Amount;
                 arBill.Net_Amount = dt.Total_Amount;
-               
             }
+
             if (arreceipt != null)
             {
                 arreceipt.Receipt_Amount = dt.Total_Amount;
-               
-               
             }
+
             foreach (ServiceDiscount service in dt.ServiceDiscount)
             {
                 var arBillDetail = db.Ar_Billing_Details.FirstOrDefault(d => d.Bill_Details_ID == service.Bill_Detail_ID);
@@ -347,11 +386,100 @@ namespace PMS.Modules.Billing
                     arBillDetail.Net_Amount = service.Net_Amount;
                 }
             }
+
             db.SubmitChanges();
 
-            value = Discount_Assign_ID;
-
             return value;
+        }
+
+        [WebMethod]
+        public static string GetDiscountDataForEdit(string Discount_Assign_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                try
+                {
+                    int discountId = Convert.ToInt32(Discount_Assign_ID);
+
+                    var discountMaster = db.Discount_Assign_Bills
+                        .FirstOrDefault(d => d.Discount_Assign_ID == discountId);
+
+                    if (discountMaster == null)
+                        return "{}";
+
+                    if (discountMaster.Bill_ID <= 0)
+                        return "{}";
+
+                    var arBill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == discountMaster.Bill_ID);
+                    if (arBill == null)
+                        return "{}";
+
+                    long billNo = Convert.ToInt32(arBill.Bill_No);
+                    if (billNo == 0)
+                        return "{}";
+
+                    var billDetails = db.spGetBillDetails(billNo).ToList();
+
+                    var discountDetails = db.Discount_Assign_Detail_bills
+                        .Where(d => d.Discount_Assign_ID == discountId)
+                        .ToList();
+
+                    var patient = billDetails.FirstOrDefault();
+
+                    var result = new
+                    {
+                        Master = new
+                        {
+                            discountMaster.Discount_Assign_ID,
+                            discountMaster.Bill_ID,
+                            discountMaster.Patient_ID,
+                            discountMaster.Reg_ID,
+                            Discount_Date = discountMaster.Discount_Date.ToString("MM/dd/yyyy"),                            
+                            Total_Discount = discountMaster.Total_Discount,
+                            Total_amount = discountMaster.Total_amount ?? 0,
+                            discountMaster.Remarks
+                        },
+                        Patient = patient != null ? new
+                        {
+                            patient.Patient_No,
+                            patient.Full_Name,
+                            patient.Age_years,
+                            patient.Gender,
+                            patient.Permanent_Address,
+                            patient.Mobile1,
+                            patient.Creation_Date
+                        } : null,
+                        BillItems = billDetails.Select(b => new
+                        {
+                            b.pat_id,
+                            b.Bill_Details_ID,
+                            b.Item_Id,
+                            b.Item_Name,
+                            b.Discount_Amount,
+                            Net_Amount = b.Net_Amount,  
+                            b.Hospital_Share,
+                            Received_Amount = billDetails.FirstOrDefault() != null ? billDetails.First().Received_Amount : 0
+                        }).ToList(),
+                        DiscountItems = discountDetails.Select(d => new
+                        {
+                            d.Bill_Detail_ID,
+                            d.Item_ID,
+                            d.Item_Name,
+                            d.Item_Type,
+                            d.Original_Amount,
+                            d.Discount_Percentage,
+                            d.Discount_Amount,
+                            d.Net_Amount
+                        }).ToList()
+                    };
+
+                    return (new JavaScriptSerializer()).Serialize(result);
+                }
+                catch (Exception ex)
+                {
+                    return (new JavaScriptSerializer()).Serialize(new { error = ex.Message });
+                }
+            }
         }
     }
 }

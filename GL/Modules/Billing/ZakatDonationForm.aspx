@@ -536,7 +536,7 @@
                         <input type="button" class="btn btn-gray" value="View List" onclick="window.location='ZakatDonationList.aspx'" />
                     </div>
                     <div class="col-lg-2">
-                        <input type="button" class="btn btn-primry" value="Clear" onclick="clearForm();" />
+                        <input type="button" class="btn btn-primry" value="New" onclick="window.location='ZakatDonationForm.aspx'" />
                     </div>
                 </div>
             </div>

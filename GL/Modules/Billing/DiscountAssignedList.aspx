@@ -280,7 +280,7 @@
         }
 
         function editOpen(id) {
-            window.open("DiscountAssigned.aspx?Discount_Assign_ID=" + id + "");
+            window.location.href = "DiscountAssigned.aspx?Discount_Assign_ID=" + id;
         }
 
         
