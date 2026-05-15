@@ -231,6 +231,7 @@
                             return data ? moment(data).format('DD-MMM-YYYY HH:mm') : '-';
                         }
                     },
+                    { data: "Dispatched_By", name: "Dispatched_By" },
                     {
                         data: null,
                         orderable: false,
@@ -493,6 +494,7 @@
                         <th>Outsource Lab</th>
                         <th>Dispatch Status</th>
                         <th>Dispatch Date</th>
+                        <th>Dispatch By</th>
                         <th>Action</th>
                     </tr>
                 </thead>
