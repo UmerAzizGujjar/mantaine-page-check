@@ -621,8 +621,13 @@
             var TotalQty = 0;
             $.each($('#tblPackage tbody tr'), function (key, value) {
                 debugger;
-                var Qty = $($(value).find('td input[name=Qty]')[0]).val();
-                TotalQty += parseFloat(Qty);
+                var inputElement = $(value).find('td input[name=Qty]')[0];
+                var Qty = $(inputElement).val();
+
+                console.log('Row:', key, 'Input element:', inputElement, 'Value:', Qty); // Debug log
+
+                var parsedQty = parseFloat(Qty) || 0;
+                TotalQty += parsedQty;
             });
             debugger;
             $('#totQty').val(TotalQty);

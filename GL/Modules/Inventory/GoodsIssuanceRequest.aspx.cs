@@ -234,7 +234,7 @@ namespace PMS.Inventory
                 {
                     obj.Last_MIR_Qty = 0;
                 }
-                obj.Last_MIR_Qty = Convert.ToDecimal(item.Last_MIR_Qty);
+                
                 db.MaterialIssueRequest_Details.InsertOnSubmit(obj);
                 try
                 {
