@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "National_Hospital")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "As_Siraat(4May26)")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -992,7 +992,7 @@ namespace PMS
         partial void DeleteMaterialIssueRequest(MaterialIssueRequest instance);
         #endregion
         public DataBaseDataContext() :
-        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -5503,6 +5503,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), bill_No);
             return ((ISingleResult<spGetBillDetailsResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetMIRBalanceQty")]
+        public ISingleResult<sp_GetMIRBalanceQtyResult> sp_GetMIRBalanceQty([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Sid", DbType = "Int")] System.Nullable<int> sid)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), sid);
+            return ((ISingleResult<sp_GetMIRBalanceQtyResult>)(result.ReturnValue));
         }
     }
 
@@ -228395,6 +228402,104 @@ namespace PMS
                 if ((this._Is_Refund != value))
                 {
                     this._Is_Refund = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetMIRBalanceQtyResult
+    {
+
+        private long _MIR;
+
+        private System.Nullable<long> _MIR_No;
+
+        private System.Nullable<decimal> _MIRQty;
+
+        private decimal _Issue_Qty;
+
+        private System.Nullable<decimal> _Blnc_Qty;
+
+        public sp_GetMIRBalanceQtyResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR", DbType = "BigInt NOT NULL")]
+        public long MIR
+        {
+            get
+            {
+                return this._MIR;
+            }
+            set
+            {
+                if ((this._MIR != value))
+                {
+                    this._MIR = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIR_No", DbType = "BigInt")]
+        public System.Nullable<long> MIR_No
+        {
+            get
+            {
+                return this._MIR_No;
+            }
+            set
+            {
+                if ((this._MIR_No != value))
+                {
+                    this._MIR_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_MIRQty", DbType = "Decimal(18,4)")]
+        public System.Nullable<decimal> MIRQty
+        {
+            get
+            {
+                return this._MIRQty;
+            }
+            set
+            {
+                if ((this._MIRQty != value))
+                {
+                    this._MIRQty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Issue_Qty", DbType = "Decimal(18,4) NOT NULL")]
+        public decimal Issue_Qty
+        {
+            get
+            {
+                return this._Issue_Qty;
+            }
+            set
+            {
+                if ((this._Issue_Qty != value))
+                {
+                    this._Issue_Qty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Blnc_Qty", DbType = "Decimal(19,4)")]
+        public System.Nullable<decimal> Blnc_Qty
+        {
+            get
+            {
+                return this._Blnc_Qty;
+            }
+            set
+            {
+                if ((this._Blnc_Qty != value))
+                {
+                    this._Blnc_Qty = value;
                 }
             }
         }

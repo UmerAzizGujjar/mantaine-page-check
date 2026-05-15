@@ -371,6 +371,7 @@
     <Content Include="Modules\PatientManagement\NewEmergencyCase.aspx" />
     <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OldOutPatient.aspx" />
+    <Content Include="Modules\PatientManagement\BirthCetificate.aspx" />
     <Content Include="Modules\PatientManagement\OPD.aspx" />
     <Content Include="Modules\PatientManagement\OutPatientPolicy.aspx" />
     <Content Include="Modules\PatientManagement\OPDPolicy.aspx" />
@@ -27034,6 +27035,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\OldOutPatient.aspx.designer.cs">
       <DependentUpon>OldOutPatient.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\BirthCetificate.aspx.cs">
+      <DependentUpon>BirthCetificate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\BirthCetificate.aspx.designer.cs">
+      <DependentUpon>BirthCetificate.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD.aspx.cs">
       <DependentUpon>OPD.aspx</DependentUpon>

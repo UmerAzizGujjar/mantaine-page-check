@@ -471,21 +471,32 @@ namespace PMS.Inventory
             var Details = db.spUnApproveSIN(Convert.ToInt32(SINId), Convert.ToString(userid));
             return (new JavaScriptSerializer()).Serialize(Details);
         }
-        
+
         [WebMethod]
-        public static string CloseGIR(string GIR)
+        public static string CloseGIR(string GIR, string remarks)
         {
             var userid = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
-           string status = "Fail";
-            MaterialIssueRequest p = new MaterialIssueRequest();
-            var query = db.MaterialIssueRequests.SingleOrDefault(x => x.MaterialRequest_Id == Convert.ToInt32( GIR));
-            if (query != null)
+            string status = "Fail";
+
+            try
             {
-                query.Is_Closed_GIR = true;
-        
-                db.SubmitChanges();
-                status = "success";
+                var query = db.MaterialIssueRequests.SingleOrDefault(x => x.MaterialRequest_Id == Convert.ToInt32(GIR));
+                if (query != null)
+                {
+                    query.Is_Closed_GIR = true;
+                    query.Closing_Remarks = remarks; // Save remarks to new column
+                    //query.Closed_By = userid; // Optional: track who closed it
+                    //query.Closed_Date = DateTime.Now; // Optional: track when it was closed
+
+                    db.SubmitChanges();
+                    status = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+                status = "Fail";
             }
 
             return status;
