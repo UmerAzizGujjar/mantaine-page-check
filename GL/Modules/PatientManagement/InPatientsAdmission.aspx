@@ -5143,9 +5143,12 @@
                 LoadDischargeMedicines();
                 LoadBirthCertificateData();
             }
+            debugger;
             var Reg_ID = '<%= Request.QueryString["Reg_ID"]%>';
             $('#hdfPatient_ID').val(Reg_ID);
+            debugger;
             if (Reg_ID != "") {
+                debugger;
                 setTimeout(function () {
                     //FillTokenInputForMRNo();
                     selectPatient(Reg_ID)
@@ -6069,6 +6072,7 @@
         //}
 
         function loadtokenInputsDefault() {
+            debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("../../json.aspx?Table=Patients", {
                 tokenLimit: 1,
                 onAdd: function (item) {
@@ -8358,8 +8362,8 @@
                         </table>
 
                     </div>
-                    <div id="Tab-14" style="display: none;">
-                    <div class="row compact-row">
+     <div id="Tab-14" style="display: none;">
+         <div class="row compact-row">
         <!-- Child Information Card -->
         <div class="col-lg-12">
             <div class="compact-card">
