@@ -45,7 +45,9 @@ namespace PMS
                                     Test_Name = lt.Test_Name,
                                     OutSource = sd.OutSource,
                                     dispatch_status = sd.dispatch_status ?? "Pending",  // Uncommented
-                                    dispatch_date = sd.dispatch_date  // Uncommented
+                                    dispatch_date = sd.dispatch_date ,
+                                    Dispatched_By = _dbContext.aspnet_Users.Where(x => x.UserId == sd.Dispatched_By).Select(x => x.UserName).FirstOrDefault(),
+                                    
                                 };
 
                     // Apply search filter
@@ -124,7 +126,7 @@ namespace PMS
                         {
                             sampleDetail.dispatch_status = "Dispatched";
                             sampleDetail.dispatch_date = DateTime.Now;
-                            // sampleDetail.Dispatched_By = AppConfig.UserID;
+                            sampleDetail.Dispatched_By = AppConfig.UserID;
                         }
                     }
 

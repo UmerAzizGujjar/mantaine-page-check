@@ -55,7 +55,7 @@ namespace PMS.Modules.Billing
                             Discount = sortColumnDirection == "asc" ? Discount.OrderBy(a => a.Discount_Date) : Discount.OrderByDescending(a => a.Discount_Date);
                             break;
                         default:
-                            Discount = Discount.OrderByDescending(a => a.Discount_Date);
+                            Discount = Discount.OrderByDescending(a => a.Discount_Assign_ID);
                             break;
                     }
 

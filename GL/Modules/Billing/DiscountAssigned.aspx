@@ -13,6 +13,11 @@
             $("#txtdiscountdate").val($.datepicker.formatDate('mm/dd/yy', new Date()));
             LoadTokenInputsDefaultMRNo();
 
+            var discountAssignID = '<% =Request.QueryString["Discount_Assign_ID"] %>';
+            if (discountAssignID != "") {
+                LoadDiscountForEdit(discountAssignID);
+            }
+
             var advID = '<% =Request.QueryString["advID"] %>';
            if (advID != "") {
                LoadPatientDetails(advID);
@@ -37,7 +42,146 @@
            });
        });
 
-       
+        function LoadDiscountForEdit(discountAssignID) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "DiscountAssigned.aspx/GetDiscountDataForEdit",
+                data: JSON.stringify({ Discount_Assign_ID: discountAssignID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log("Full response:", response);
+                    if (response.d && response.d.indexOf("error") > -1) {
+                        var errorData = JSON.parse(response.d);
+                        if (errorData.error) {
+                            Swal.fire({ title: "Error!", text: errorData.error, icon: "error" });
+                            return;
+                        }
+                    }
+
+                    var data = JSON.parse(response.d);
+                    console.log("Parsed data:", data);
+                    debugger;
+
+                    if (data.Master) {
+                        $('#hdPatientID').text(data.Master.Patient_ID || '');
+                        $('#hdnBillID').val(data.Master.Bill_ID || '');
+                        $('#hdRegID').val(data.Master.Reg_ID || '');
+                        $('#hdnDiscountAssignID').val(data.Master.Discount_Assign_ID || '');
+
+                        if (data.Patient) {
+                            $('#lblMRNo').text(ReplaceNullWith_Space(data.Patient.Patient_No));
+                            $('#lblPatienName').text(ReplaceNullWith_Space(data.Patient.Full_Name));
+                            $('#lblAgeYears').text(ReplaceNullWith_Space(data.Patient.Age_years));
+                            $('#lblGender').text(ReplaceNullWith_Space(data.Patient.Gender));
+                            $('#lblAddress').text(ReplaceNullWith_Space(data.Patient.Permanent_Address));
+                            $('#lblContactNo').text(ReplaceNullWith_Space(data.Patient.Mobile1));
+                            if (data.Patient.Creation_Date) {
+                                $('#lblRegDate').text(data.Patient.Creation_Date);
+                            }
+                        }
+
+                        if (data.Master.Discount_Date) {
+                            $('#txtdiscountdate').val(data.Master.Discount_Date);
+                        }
+                        $('#txtRemarks').val(ReplaceNullWith_Space(data.Master.Remarks));
+
+                        var originalTotalAmount = 0;
+                        if (data.BillItems && data.BillItems.length > 0) {
+                            for (var i = 0; i < data.BillItems.length; i++) {
+                                var netAmount = parseFloat(data.BillItems[i].Net_Amount) || 0;
+                                var discountAmount = parseFloat(data.BillItems[i].Discount_Amount) || 0;
+                                originalTotalAmount += (netAmount + discountAmount);
+                            }
+                            $('#txtReceivedAmount').val(originalTotalAmount.toFixed(2));
+                            console.log("Original Total Amount:", originalTotalAmount);
+                        }
+
+                        var rows = '';
+                        if (data.BillItems && data.BillItems.length > 0) {
+                            console.log("Number of BillItems:", data.BillItems.length);
+
+                            for (var i = 0; i < data.BillItems.length; i++) {
+                                var item = data.BillItems[i];
+                                var existingDiscountPer = 0;
+                                var existingDiscountAmount = 0;
+
+                                console.log("Processing item:", item.Item_Name);
+                                console.log("Bill_Details_ID:", item.Bill_Details_ID);
+
+                                if (data.DiscountItems && data.DiscountItems.length > 0) {
+                                    var discountItem = data.DiscountItems.find(d => d.Bill_Detail_ID == item.Bill_Details_ID);
+                                    if (discountItem) {
+                                        existingDiscountPer = discountItem.Discount_Percentage;
+                                        existingDiscountAmount = discountItem.Discount_Amount;
+                                        console.log("Found discount - Per:", existingDiscountPer, "Amount:", existingDiscountAmount);
+                                    }
+                                }
+
+                                var originalAmount = (parseFloat(item.Net_Amount) || 0) + (parseFloat(item.Discount_Amount) || 0);
+                                console.log("Original Amount:", originalAmount);
+
+                                rows += '<tr data-original-amount="' + originalAmount + '">' +
+                                    '<td style="display:none">' + (item.pat_id || '') + '</td>' +
+                                    '<td style="display:none">' + (item.Bill_Details_ID || '') + '</td>' +
+                                    '<td style="display:none">' + (item.Item_Id || '') + '</td>' +
+                                    '<td style="text-align:center;">' + (item.Item_Name || '') + '</td>' +
+                                    '<td style="text-align:center;">' + (parseFloat(item.Discount_Amount) || 0).toFixed(2) + '</td>' +
+                                    '<td style="text-align:center;">' + originalAmount.toFixed(2) + '</td>' +  
+                                    '<td style="text-align:center;">' +
+                                    '<input type="text" name="DisPer" class="form-control percentage-input" value="' + existingDiscountPer.toFixed(2) + '" />' +
+                                    '</td>' +
+                                    '<td style="text-align:center;">' +
+                                    '<input type="text" name="DisAmount" class="form-control discount-input" value="' + existingDiscountAmount.toFixed(2) + '" />' +
+                                    '</td>' +
+                                    '</td>';
+                            }
+                        } else {
+                            console.warn("No BillItems found!");
+                            rows = '<tr><td colspan="8" style="text-align:center;">No items found for this bill</td></tr>';
+                        }
+
+                        $('#tblDetails tbody').empty();
+                        $('#tblDetails tbody').append(rows);
+                        console.log("Table populated with", $('#tblDetails tbody tr').length, "rows");
+
+                        var totalDiscountAmount = parseFloat(data.Master.Total_Discount) || 0;
+                        var totalNetAmount = parseFloat(data.Master.Total_amount) || 0;
+
+                        var totalDiscountPercentage = 0;
+                        if (originalTotalAmount > 0 && totalDiscountAmount > 0) {
+                            totalDiscountPercentage = (totalDiscountAmount / originalTotalAmount) * 100;
+                        }
+
+                        $('#txttotaldiscount').val(totalDiscountAmount.toFixed(2));
+                        $('#lblOutputShow').val(totalNetAmount.toFixed(2));
+                        $('#txtDisPer').val(totalDiscountPercentage.toFixed(2));
+
+                        $('#btnSave').val('Update');
+                        enableAllDiscountFields();
+
+                        console.log("Edit mode loaded successfully");
+                        console.log("Total Discount Amount:", totalDiscountAmount);
+                        console.log("Total Discount Percentage:", totalDiscountPercentage);
+                    } else {
+                        console.error("No Master data found");
+                        Swal.fire({ title: "Error!", text: "No discount data found for ID: " + discountAssignID, icon: "error" });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error Details:");
+                    console.error("Status:", status);
+                    console.error("Error:", error);
+                    console.error("Response Text:", xhr.responseText);
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to load discount data: " + error + "\nCheck console for details",
+                        icon: "error"
+                    });
+                }
+            });
+        }
 
         // =============================================
         //  LOAD PATIENT DETAILS (via advID query string)
@@ -408,13 +552,7 @@
             $('#lblOutputShow').val(net.toFixed(2));
         }
 
-        // =============================================
-        //  END DISCOUNT CALCULATION FUNCTIONS
-        // =============================================
-
-        // =============================================
-        //  SAVE RECORD
-        // =============================================
+    
         function SaveRecord() {
             debugger;
             if (validateSave()) {
@@ -425,6 +563,7 @@
                 var discountDate = $("#txtdiscountdate").val();
                 var totalDiscount = $('#txttotaldiscount').val();
                 var Total_Amount = $('#lblOutputShow').val();
+                var Discount_Assign_ID = $('#hdnDiscountAssignID').val(); 
 
                 var ServiceDiscount = [];
                 $('#tblDetails tbody tr').each(function (key, value) {
@@ -435,8 +574,7 @@
                     var Discount_Percentage = $(this).find('input[name="DisPer"]').val() || '0';
                     var Discount_Amount = $(this).find('input[name="DisAmount"]').val() || '0';
                     var Net_Amount = parseFloat(Original_Amount) - parseFloat(Discount_Amount);
-
-                    var Item_Type = "Service"; // You can modify this logic based on your needs
+                    var Item_Type = "Service";
 
                     ServiceDiscount.push({
                         Bill_Detail_ID: parseInt(Bill_Detail_ID),
@@ -449,8 +587,10 @@
                         Net_Amount: Net_Amount
                     });
                 });
+
                 debugger;
                 var data = {
+                    Discount_Assign_ID: Discount_Assign_ID ? parseInt(Discount_Assign_ID) : 0, // 0 means new record
                     Patient_ID: parseInt(Patient_ID),
                     Reg_ID: parseInt(Reg_ID),
                     DiscountDate: discountDate,
@@ -465,10 +605,10 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'Discount Successfully Saved',
+                        text: Discount_Assign_ID ? 'Discount Successfully Updated' : 'Discount Successfully Saved',
                         timer: 2500
                     });
-                    setTimeout(function () { window.location.reload(); }, 2500);
+                    setTimeout(function () { window.location = 'DiscountAssignedList.aspx'; }, 2500);
                     $('#btnSave').attr('disabled', 'disabled');
                 }, function (error) {
                     alert(error.get_message());
@@ -519,6 +659,7 @@
         <input type="hidden" id="hdPatientID" />
         <input type="hidden" id="hdnBillID" />
         <input type="hidden" id="hdRegID" />
+        <input type="hidden" id="hdnDiscountAssignID" />
 
         <%-- ======================== PATIENT INFO ROW ======================== --%>
         <div class="row">
@@ -537,21 +678,21 @@
                             <div class="col-lg-8 col-md-7 col-sm-6">
                                 <div class="row mb-3">
                                     <div class="col-lg-4 col-md-5 col-sm-6"><label>Bill No:</label></div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6">
+                                    <div class="col-lg-8 col-md-7 col-sm-6 top">
                                         <input type="text" id="txtBillNo" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-4 col-md-5 col-sm-6"><label>Patient Name :</label></div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6"><label id="lblPatienName"></label></div>
+                                    <div class="col-lg-8 col-md-7 col-sm-6 top"><label id="lblPatienName"></label></div>
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col-lg-4 col-md-5 col-sm-6"><label>Contact No :</label></div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6"><label id="lblContactNo"></label></div>
+                                    <div class="col-lg-4 col-md-5 col-sm-6 formrgn"><label>Contact No :</label></div>
+                                    <div class="col-lg-8 col-md-7 col-sm-6 top"><label id="lblContactNo"></label></div>
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col-lg-4 col-md-5 col-sm-6"><label>Reg. Date :</label></div>
-                                    <div class="col-lg-8 col-md-7 col-sm-6"><label id="lblRegDate"></label></div>
+                                    <div class="col-lg-4 col-md-5 col-sm-6 formrgn"><label>Reg. Date :</label></div>
+                                    <div class="col-lg-8 col-md-7 col-sm-6 top"><label id="lblRegDate"></label></div>
                                 </div>
                                
                             </div>
@@ -565,23 +706,23 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row mb-3">
-                            <div class="col-lg-4"><label>Age Years :</label></div>
+                            <div class="col-lg-4 formrgn"><label>Age Years :</label></div>
                             <div class="col-lg-8"><label id="lblAgeYears"></label></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-lg-4"><label>Address :</label></div>
+                            <div class="col-lg-4 formrgn"><label>Address :</label></div>
                             <div class="col-lg-8"><label id="lblAddress"></label></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-lg-4"><label>Patient Category :</label></div>
+                            <div class="col-lg-4 formrgn"><label>Patient Category :</label></div>
                             <div class="col-lg-8"><label id="lblPatientCategory"></label></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-lg-4"><label>Department :</label></div>
+                            <div class="col-lg-4 formrgn"><label>Department :</label></div>
                             <div class="col-lg-8"><label id="lblDepartment"></label></div>
                         </div>
                          <div class="row mb-3">
-                             <div class="col-lg-4 col-md-5 col-sm-6"><label>Gender :</label></div>
+                             <div class="col-lg-4 col-md-5 col-sm-6 formrgn"><label>Gender :</label></div>
                              <div class="col-lg-8 col-md-7 col-sm-6"><label id="lblGender"></label></div>
                          </div>
                    
