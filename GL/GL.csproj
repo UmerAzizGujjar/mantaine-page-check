@@ -281,6 +281,7 @@
     <Content Include="Modules\Inventory\FurtherTaxDefinition.aspx" />
     <Content Include="Modules\Inventory\GoodsRerturnNote.aspx" />
     <Content Include="Modules\Inventory\GoodsRerturnNoteView.aspx" />
+    <Content Include="Modules\Inventory\ItemSelection.aspx" />
     <Content Include="Modules\Inventory\PharmacyView.aspx" />
     <Content Include="Modules\Inventory\Service.aspx" />
     <Content Include="Modules\Inventory\ServiceView.aspx" />
@@ -26279,6 +26280,13 @@
     </Compile>
     <Compile Include="Modules\Inventory\GoodsRerturnNoteView.aspx.designer.cs">
       <DependentUpon>GoodsRerturnNoteView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Inventory\ItemSelection.aspx.cs">
+      <DependentUpon>ItemSelection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Inventory\ItemSelection.aspx.designer.cs">
+      <DependentUpon>ItemSelection.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Inventory\PharmacyView.aspx.cs">
       <DependentUpon>PharmacyView.aspx</DependentUpon>

@@ -2529,6 +2529,7 @@
       <Column Name="Approved_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="is_auto_Adv" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Project" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="GRN_Master_ItemSelection_Barcode" Member="ItemSelection_Barcodes" ThisKey="GRN_ID" OtherKey="GRN_ID" Type="ItemSelection_Barcode" />
     </Type>
   </Table>
   <Table Name="dbo.Igp_master" Member="Igp_masters">
@@ -7803,6 +7804,66 @@
       <Column Name="dispatch_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Dispatched_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Association Name="Sample_Master_Sample_Detail" Member="Sample_Master" ThisKey="Sample_ID" OtherKey="Sample_ID" Type="Sample_Master" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ItemSelection_Barcode" Member="ItemSelection_Barcodes">
+    <Type Name="ItemSelection_Barcode">
+      <Column Name="Barcode_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Selection_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Selection_Detail_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="GRN_Detail_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ItemCode" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="ItemName" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Barcode_Number" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Serial_Number" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Quantity" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="IsUsed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Used_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Used_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Generation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="GRN_Master_ItemSelection_Barcode" Member="GRN_Master" ThisKey="GRN_ID" OtherKey="GRN_ID" Type="GRN_Master" IsForeignKey="true" />
+      <Association Name="ItemSelection_Master_ItemSelection_Barcode" Member="ItemSelection_Master" ThisKey="Selection_ID" OtherKey="Selection_ID" Type="ItemSelection_Master" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ItemSelection_Detail" Member="ItemSelection_Details">
+    <Type Name="ItemSelection_Detail">
+      <Column Name="Selection_Detail_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Selection_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="GRN_Detail_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ItemCode" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ItemName" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="GRN_Qty" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Selected_Qty" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+      <Column Name="BatchNum" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Association Name="ItemSelection_Master_ItemSelection_Detail" Member="ItemSelection_Master" ThisKey="Selection_ID" OtherKey="Selection_ID" Type="ItemSelection_Master" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ItemSelection_Master" Member="ItemSelection_Masters">
+    <Type Name="ItemSelection_Master">
+      <Column Name="Selection_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Selection_Num" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Selection_Date" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="GRN_Num" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="VendorId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="VendorName" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="WarehouseId" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="WarehouseName" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Status" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Total_Items" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Total_Barcodes" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="Creation_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="ItemSelection_Master_ItemSelection_Barcode" Member="ItemSelection_Barcodes" ThisKey="Selection_ID" OtherKey="Selection_ID" Type="ItemSelection_Barcode" />
+      <Association Name="ItemSelection_Master_ItemSelection_Detail" Member="ItemSelection_Details" ThisKey="Selection_ID" OtherKey="Selection_ID" Type="ItemSelection_Detail" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
