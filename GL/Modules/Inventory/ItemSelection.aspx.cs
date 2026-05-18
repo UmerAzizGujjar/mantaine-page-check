@@ -24,7 +24,7 @@ namespace PMS.Modules.Inventory
             {
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var eligibleGRNs = db.GRN_Masters.Where(gm => gm.Status == "Created").OrderByDescending(gm => gm.GRN_Num).ToList();
+                    var eligibleGRNs = db.GRN_Masters.Where(gm => gm.Status == "Approved").OrderByDescending(gm => gm.GRN_Num).ToList();
 
                     var grnList = new List<GRNListDto>();
                     foreach (var gm in eligibleGRNs)
