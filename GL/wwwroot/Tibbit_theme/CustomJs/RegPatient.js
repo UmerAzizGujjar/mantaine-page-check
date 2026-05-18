@@ -328,6 +328,7 @@ function CalculateDateOfBirth() {
 
 function SavePatient() {
     debugger;
+
     $('#SavePatient_Data').attr('disabled', true);
     $('.span_txt').hide();
     var Prefix_PatientName = $('#ddl_name').val();

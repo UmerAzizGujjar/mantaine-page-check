@@ -1008,6 +1008,27 @@
             }
             window.open(url, '_blank');
         }
+        function btn_Print2() {
+            var id = '<% =Request.QueryString["SI_ID"] %>';
+            var locationInfo = window.location;
+
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
+            var url = '/ReportViewer.aspx?ReportName=StoreIssueBasePrint_Thermal&ReportTitle=Store Issue Note&SI_ID=' + id;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=StoreIssueBasePrint_Thermal&ReportTitle=Store Issue Note&SI_ID=' + id;
+            }
+            window.open(url, '_blank');
+        }
         function sendFile(ID) {
             debugger;
             var fileInput = $('#choseGINfile')[0];
@@ -1190,6 +1211,9 @@
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <input type="button" name="" value="Print" class="btn btn-primry" onclick="btn_Print()" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" name="" value="Print2" class="btn btn-primry" onclick="btn_Print2()" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
             <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsIssuanceNoteView.aspx'" />

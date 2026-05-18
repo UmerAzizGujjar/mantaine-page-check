@@ -2916,6 +2916,33 @@ namespace PMS
                     ddlDepartments.DataBind();
 
                 }
+                else if (this.PageTitle == "Death_Certificate_Detail_Report")
+                {
+                    string x = "Death Certificate Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    tr_Summary.Visible = false;
+                    tr_Export.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    lblMultiSelect.Visible = false;
+                    trDoctor.Visible = false;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = false;
+                    ddlPatientType.Visible = false;
+                    lblPatientType.Visible = false;
+                    
+                }
+                else if (this.PageTitle == "Birth_Certificate_Detail_Report")
+                {
+                    string x = "Birth Certificate Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    AllowPatientRecord = false;
+                   
+                }
                 else if (this.PageTitle == "Purchase_Order_Report")
                 {
                     string x = "Purchase Order Report";

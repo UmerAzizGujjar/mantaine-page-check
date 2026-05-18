@@ -29,6 +29,24 @@
             }
             window.open(url, '_blank');
         }
+        function PrintReport2(ID) {
+            var locationInfo = window.location;
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+            var url = '/ReportViewer.aspx?ReportName=StoreIssueBasePrint_Thermal&ReportTitle=Store Issue Note&SI_ID=' + ID;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=StoreIssueBasePrint_Thermal&ReportTitle=Store Issue Note&SI_ID=' + ID;
+            }
+            window.open(url, '_blank');
+        }
 
         function Edit(ID) {
             window.location.href = "GoodsIssuanceNote.aspx?SI_ID=" + ID;
@@ -200,8 +218,13 @@
                                 'onclick="PrintReport(' + full.Store_Issue_Id + ')" ' +
                                 'style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;">' +
                                 '<i class="fa fa-print"></i></a>';
+                            var printBtn2 =
+                                '<a href="#" class="printListBtn2" ' +
+                                'onclick="PrintReport2(' + full.Store_Issue_Id + ')" ' +
+                                'style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;">' +
+                                '<i class="fa fa-print"></i></a>';
 
-                            return editBtn + printBtn;
+                            return editBtn + printBtn + printBtn2;
 
                         },
                         "orderable": false,

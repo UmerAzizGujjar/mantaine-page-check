@@ -1441,9 +1441,9 @@
                 }
             }
             var IPDDiscount = "";
-            debugger
+            debugger;
             function LoadBill(Bill_ID) {
-
+                 debugger;
                 PageMethods.LoadBillHeader(Bill_ID, function (resp) {
                     debugger
                     var data = JSON.parse(resp);
@@ -1453,7 +1453,8 @@
                     $('#txtBillNo').val(data[0].Bill_No);
                     $("#txtBillDate").val(TrnsDate);
                     $('#txtRemarks').val(data[0].Remarks);
-                    $('#txtTotalPayable').val(data[0].Total_Amount);
+                    $('#txtTotalPayable').val(data[0].Net_Amount);
+                    $('#txtTotalAmount').val(data[0].Total_Amount);
                     $('#txtDisPer').val(parseFloat(data[0].Discount_Percentage.toFixed(2)));
                     $('#hdntxtDisPer').val(data[0].Discount_Percentage);
                     $('#txtDisAmt').val(data[0].Discount_Amount);
