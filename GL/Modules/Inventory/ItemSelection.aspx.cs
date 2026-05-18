@@ -14,7 +14,15 @@ namespace PMS.Modules.Inventory
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+            string selectionId = Request.QueryString["Selection_ID"];
+            if (!string.IsNullOrEmpty(selectionId))
+            {
+                Session["EditSelectionID"] = selectionId;
+            }
+            else
+            {
+                Session["EditSelectionID"] = null;
+            }
         }
 
         [WebMethod]
@@ -24,32 +32,59 @@ namespace PMS.Modules.Inventory
             {
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var eligibleGRNs = db.GRN_Masters.Where(gm => gm.Status == "Approved").OrderByDescending(gm => gm.GRN_Num).ToList();
 
-                    var grnList = new List<GRNListDto>();
-                    foreach (var gm in eligibleGRNs)
+                    string editSelectionId = System.Web.HttpContext.Current.Session["EditSelectionID"] as string;
+
+                    List<GRNListDto> grnList = new List<GRNListDto>();
+
+                    if (!string.IsNullOrEmpty(editSelectionId))
                     {
-                        string vendorName = "Unknown";
+                        int selectionId = int.Parse(editSelectionId);
+                        var selection = db.ItemSelection_Masters.FirstOrDefault(s => s.Selection_ID == selectionId);
 
-                        if (!string.IsNullOrEmpty(gm.VendorId))
+                        if (selection != null)
                         {
-                            int vendorIdInt = 0;
-                            if (int.TryParse(gm.VendorId, out vendorIdInt) && vendorIdInt > 0)
+                            var grnMaster = db.GRN_Masters.FirstOrDefault(gm => gm.GRN_ID == selection.GRN_ID);
+                            if (grnMaster != null && grnMaster.Status == "Approved")
                             {
-                                var vendor = db.AP_Vendors.FirstOrDefault(v => v.Vendor_ID == vendorIdInt);
-                                if (vendor != null)
+                                string vendorName = GetVendorName(db, grnMaster.VendorId);
+                                grnList.Add(new GRNListDto
                                 {
-                                    vendorName = vendor.Vendor_Name;
-                                }
+                                    GRN_ID = grnMaster.GRN_ID,
+                                    GRN_Num = Convert.ToString(grnMaster.GRN_Num),
+                                    VendorName = vendorName
+                                });
                             }
                         }
+                    }
+                    else
+                    {
+                        var eligibleGRNs = db.GRN_Masters.Where(gm => gm.Status == "Approved").OrderByDescending(gm => gm.GRN_Num).ToList();
 
-                        grnList.Add(new GRNListDto
+                        foreach (var gm in eligibleGRNs)
                         {
-                            GRN_ID = gm.GRN_ID,
-                            GRN_Num = Convert.ToString(gm.GRN_Num),
-                            VendorName = vendorName
-                        });
+                            string vendorName = "Unknown";
+
+                            if (!string.IsNullOrEmpty(gm.VendorId))
+                            {
+                                int vendorIdInt = 0;
+                                if (int.TryParse(gm.VendorId, out vendorIdInt) && vendorIdInt > 0)
+                                {
+                                    var vendor = db.AP_Vendors.FirstOrDefault(v => v.Vendor_ID == vendorIdInt);
+                                    if (vendor != null)
+                                    {
+                                        vendorName = vendor.Vendor_Name;
+                                    }
+                                }
+                            }
+
+                            grnList.Add(new GRNListDto
+                            {
+                                GRN_ID = gm.GRN_ID,
+                                GRN_Num = Convert.ToString(gm.GRN_Num),
+                                VendorName = vendorName
+                            });
+                        }
                     }
 
                     return new JavaScriptSerializer().Serialize(new
@@ -98,6 +133,21 @@ namespace PMS.Modules.Inventory
                     };
 
                     var grnDetails = db.GRN_Details.Where(gd => gd.GRNId == grnId).ToList();
+                    string editSelectionId = System.Web.HttpContext.Current.Session["EditSelectionID"] as string;
+
+                    Dictionary<int, decimal> selectedQuantities = new Dictionary<int, decimal>();
+                    if (!string.IsNullOrEmpty(editSelectionId))
+                    {
+                        int selectionId = int.Parse(editSelectionId);
+                        var existingDetails = db.ItemSelection_Details
+                            .Where(d => d.Selection_ID == selectionId && d.GRN_ID == grnId)
+                            .ToList();
+
+                        foreach (var detail in existingDetails)
+                        {
+                            selectedQuantities[detail.GRN_Detail_Id] = detail.Selected_Qty;
+                        }
+                    }
 
                     foreach (var detail in grnDetails)
                     {
@@ -112,7 +162,13 @@ namespace PMS.Modules.Inventory
                             unitName = db.GetDataValueName("UOM", item.Unit);
 
                             string inventoryOrg = grnMaster.InvOrgId;
-                            currentStock = db.GetInvenrtoryItemUomTotalStock(detail.Item_Id ?? 0,Convert.ToString(inventoryOrg)) ?? 0;
+                            currentStock = db.GetInvenrtoryItemUomTotalStock(detail.Item_Id ?? 0, Convert.ToString(inventoryOrg)) ?? 0;
+                        }
+
+
+                        if (selectedQuantities.ContainsKey(detail.GRN_detail_Id))
+                        {
+                            currentStock += selectedQuantities[detail.GRN_detail_Id];
                         }
 
                         result.Items.Add(new GRNItemDto
@@ -126,14 +182,236 @@ namespace PMS.Modules.Inventory
                             Rate = detail.Rate ?? 0,
                             ItemName = itemName,
                             Unit = unitName,
-                            CurrentStock = currentStock
+                            CurrentStock = currentStock,
+                            Selected_Qty = selectedQuantities.ContainsKey(detail.GRN_detail_Id) ? selectedQuantities[detail.GRN_detail_Id] : 0
                         });
                     }
 
                     return new JavaScriptSerializer().Serialize(new
                     {
                         Success = true,
-                        Data = result
+                        Data = result,
+                        IsEditMode = !string.IsNullOrEmpty(editSelectionId)
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
+        [WebMethod]
+        public static string GetExistingBarcodes(int selectionId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var barcodes = db.ItemSelection_Barcodes
+                        .Where(b => b.Selection_ID == selectionId)
+                        .OrderBy(b => b.Serial_Number)
+                        .Select(b => new BarcodeDto
+                        {
+                            Barcode_Number = b.Barcode_Number,
+                            Serial_Number = b.Serial_Number,
+                            ItemCode = b.ItemCode,
+                            ItemName = b.ItemName,
+                            Quantity = b.Quantity ?? 0m,
+                            Generation_Date = b.Generation_Date ?? DateTime.Now,
+                            IsUsed = b.IsUsed ?? false,
+                            GRN_ID = b.GRN_ID
+                        })
+                        .ToList();
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        Success = true,
+                        Data = new
+                        {
+                            TotalBarcodes = barcodes.Count,
+                            Barcodes = barcodes
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
+        [WebMethod]
+        public static string GetSelectionDataForEdit()
+        {
+            try
+            {
+                string editSelectionId = System.Web.HttpContext.Current.Session["EditSelectionID"] as string;
+                if (string.IsNullOrEmpty(editSelectionId))
+                {
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        Success = false,
+                        Message = "No selection ID found"
+                    });
+                }
+
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    int selectionId = int.Parse(editSelectionId);
+                    var selection = db.ItemSelection_Masters.FirstOrDefault(s => s.Selection_ID == selectionId);
+
+                    if (selection == null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            Success = false,
+                            Message = "Selection not found"
+                        });
+                    }
+
+                    var selectionDetails = db.ItemSelection_Details
+                        .Where(d => d.Selection_ID == selectionId)
+                        .ToList();
+
+                    var selectedItems = new List<SelectedItemWithQtyDto>();
+                    foreach (var detail in selectionDetails)
+                    {
+                        selectedItems.Add(new SelectedItemWithQtyDto
+                        {
+                            GRN_Detail_Id = detail.GRN_Detail_Id,
+                            Item_Id = detail.Item_Id,
+                            Selected_Qty = detail.Selected_Qty
+                        });
+                    }
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        Success = true,
+                        Data = new
+                        {
+                            Selection = new
+                            {
+                                Selection_ID = selection.Selection_ID,
+                                Selection_Num = selection.Selection_Num,
+                                Selection_Date = selection.Selection_Date.ToString("yyyy-MM-dd"),
+                                GRN_ID = selection.GRN_ID,
+                                Remarks = selection.Remarks ?? ""
+                            },
+                            SelectedItems = selectedItems
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+
+        [WebMethod]
+        public static string UpdateSelection(string selectionId, string selectionDate, int grnId, string remarks, List<SelectedItemDto> selectedItems)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    int selId = int.Parse(selectionId);
+                    var selection = db.ItemSelection_Masters.FirstOrDefault(s => s.Selection_ID == selId);
+
+                    if (selection == null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            Success = false,
+                            Message = "Selection not found"
+                        });
+                    }
+
+                    selection.Selection_Date = DateTime.Parse(selectionDate);
+                    selection.GRN_ID = grnId;
+                    selection.Remarks = remarks ?? "";
+                    selection.Status = "Updated";
+                   // selection.Modified_Date = DateTime.Now;
+                   // selection.Modified_By = GetCurrentUserId(db);
+
+                    var existingDetails = db.ItemSelection_Details.Where(d => d.Selection_ID == selId).ToList();
+
+                    var selectedDetailIds = selectedItems.Where(s => s.Selected_Qty > 0).Select(s => s.GRN_Detail_Id).ToList();
+                    var detailsToRemove = existingDetails.Where(d => !selectedDetailIds.Contains(d.GRN_Detail_Id)).ToList();
+                    db.ItemSelection_Details.DeleteAllOnSubmit(detailsToRemove);
+
+                    int totalSelectedQty = 0;
+
+                    foreach (var selectedItem in selectedItems)
+                    {
+                        var existingDetail = existingDetails.FirstOrDefault(d => d.GRN_Detail_Id == selectedItem.GRN_Detail_Id);
+
+                        if (selectedItem.Selected_Qty > 0)
+                        {
+                            var grnDetail = db.GRN_Details.FirstOrDefault(gd => gd.GRN_detail_Id == selectedItem.GRN_Detail_Id);
+                            var item = db.INV_Items.FirstOrDefault(i => i.Item_ID == selectedItem.Item_Id);
+
+                            if (existingDetail != null)
+                            {
+                                existingDetail.Selected_Qty = selectedItem.Selected_Qty;
+                            }
+                            else
+                            {
+                                string unitName = db.GetDataValueName("UOM", item?.Unit);
+
+                                ItemSelection_Detail detail = new ItemSelection_Detail
+                                {
+                                    Selection_ID = selId,
+                                    GRN_Detail_Id = selectedItem.GRN_Detail_Id,
+                                    GRN_ID = grnId,
+                                    ItemCode = grnDetail?.ItemCode ?? "",
+                                    Item_Id = selectedItem.Item_Id,
+                                    ItemName = item != null ? item.Description : "",
+                                    GRN_Qty = selectedItem.Max_Qty,
+                                    Selected_Qty = selectedItem.Selected_Qty,
+                                    BatchNum = grnDetail?.BatchNum ?? "",
+                                    Unit = unitName,
+                                    Rate = grnDetail?.Rate ?? 0
+                                };
+
+                                db.ItemSelection_Details.InsertOnSubmit(detail);
+                            }
+
+                            totalSelectedQty += (int)selectedItem.Selected_Qty;
+                        }
+                    }
+
+                    selection.Total_Items = selectedItems.Count(s => s.Selected_Qty > 0);
+                    selection.Total_Barcodes = totalSelectedQty;
+
+                    db.SubmitChanges();
+
+                    System.Web.HttpContext.Current.Session["EditSelectionID"] = null;
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        Success = true,
+                        Data = new
+                        {
+                            SelectionID = selection.Selection_ID,
+                            SelectionNum = selection.Selection_Num,
+                            TotalItems = selection.Total_Items,
+                            TotalSelectedQty = totalSelectedQty
+                        },
+                        Message = "Selection updated successfully!"
                     });
                 }
             }
@@ -585,6 +863,15 @@ namespace PMS.Modules.Inventory
         public string ItemName { get; set; }
         public string Unit { get; set; }
         public decimal CurrentStock { get; set; }
+
+        public decimal Selected_Qty { get; set; }
+    }
+
+    public class SelectedItemWithQtyDto
+    {
+        public int GRN_Detail_Id { get; set; }
+        public int Item_Id { get; set; }
+        public decimal Selected_Qty { get; set; }
     }
 
     public class SelectedItemDto
