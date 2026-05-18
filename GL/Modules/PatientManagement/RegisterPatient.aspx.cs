@@ -1,16 +1,17 @@
-﻿using System.Drawing.Imaging;
-using QRCoder;
-using System.Drawing;
-using System.IO;
+﻿using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
-using System.Text.RegularExpressions;
-using System.Globalization;
 
 namespace PMS.Modules.PatientManagement
 {
@@ -171,6 +172,7 @@ namespace PMS.Modules.PatientManagement
 
             public decimal Card_fee { get; set; }
             public bool Monitoring { get; set; }
+            public bool IsRefunded { get; set; }
 
         }
 
@@ -487,7 +489,40 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-        
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public static object ProcessRefund(string regId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                   
+                    var patient = db.Reg_patients.FirstOrDefault(p => p.pat_id == Convert.ToInt32(regId));
+
+                    if (patient != null)
+                    {
+                        
+                        patient.Card_fee = 0;
+                        patient.IsRefunded = true; 
+                        patient.Refund_by = AppConfig.UserID; 
+                        patient.Refund_date = DateTime.Now; 
+
+                        db.SubmitChanges();
+
+                        return new { success = true, message = "Card fee refunded successfully!" };
+                    }
+                    else
+                    {
+                        return new { success = false, message = "Patient not found!" };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new { success = false, message = "Error: " + ex.Message };
+            }
+        }
 
         [WebMethod]
         public static string GetRegData(int reg_id)
@@ -517,7 +552,8 @@ namespace PMS.Modules.PatientManagement
                                       rg.pat_id,
                                       rg.other_cnic,
                                       rg.Monitoring,
-                                      rg.DOB 
+                                      rg.DOB,
+                                      rg.IsRefunded
                                   }).FirstOrDefault();
 
                 if (patientRaw == null)
@@ -546,7 +582,8 @@ namespace PMS.Modules.PatientManagement
                     DOB = patientRaw.DOB.HasValue
                           ? patientRaw.DOB.Value.ToString("dd/MM/yyyy")
                           : "",
-                          Monitoring = patientRaw.Monitoring ?? false
+                          Monitoring = patientRaw.Monitoring ?? false,
+                          IsRefunded = patientRaw.IsRefunded ?? false
                 };
 
                 return new JavaScriptSerializer().Serialize(patient);
@@ -583,6 +620,26 @@ namespace PMS.Modules.PatientManagement
                 {
                     var linedisc = (from tbl in db.sys_Parms
                                     where tbl.Name == "Monitoring checkbox"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return linedisc ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+        [WebMethod]
+        public static string AllowRefund()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var linedisc = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Refund Card"
                                     select tbl.Code)
                               .FirstOrDefault();
 

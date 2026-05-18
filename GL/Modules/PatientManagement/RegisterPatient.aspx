@@ -9,6 +9,7 @@
           $(document).ready(function () {
               loadCardfee();
               checkMonitoringVisibility();
+              allowRefunds();
               var reg_id = '<%= Request.QueryString["Reg_id"] %>'
          if (reg_id != "") {
             
@@ -109,6 +110,98 @@
                   error: function (xhr, status, error) {
                       console.error("Error checking Monitoring checkbox:", error);
                       $('#MonitoringDiv').hide();
+                  }
+              });
+          }
+          function allowRefunds() {
+              $.ajax({
+                  type: "POST",
+                  url: "RegisterPatient.aspx/AllowRefund",
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  success: function (response) {
+
+                      if (response.d === "01") {
+                          $('#btnRefund').show(); 
+                      } else {
+                          $('#btnRefund').hide();
+                      }
+
+                  },
+                  error: function (xhr, status, error) {
+                      console.error("Error checking Monitoring checkbox:", error);
+                      $('#btnRefund').hide();
+                  }
+              });
+          }
+          function RefundRegisterFee() {
+              var reg_id = '<%= Request.QueryString["Reg_id"] %>';
+
+              if (!reg_id || reg_id == "") {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error',
+                      text: 'No patient registration found to refund!'
+                  });
+                  return;
+              }
+
+              Swal.fire({
+                  title: 'Are you sure?',
+                  text: "You want to refund the card fee for this patient?",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#d33',
+                  cancelButtonColor: '#3085d6',
+                  confirmButtonText: 'Yes, Refund it!',
+                  cancelButtonText: 'Cancel'
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      // Show loading state
+                      Swal.fire({
+                          title: 'Processing...',
+                          text: 'Please wait while processing refund',
+                          allowOutsideClick: false,
+                          didOpen: () => {
+                              Swal.showLoading();
+                          }
+                      });
+
+                      // Call server-side method to process refund
+                      $.ajax({
+                          type: "POST",
+                          url: "RegisterPatient.aspx/ProcessRefund",
+                          contentType: "application/json; charset=utf-8",
+                          data: JSON.stringify({ regId: reg_id }),
+                          dataType: "json",
+                          success: function (response) {
+                              if (response.d.success) {
+                                  Swal.fire({
+                                      icon: 'success',
+                                      title: 'Refund Successful!',
+                                      text: response.d.message,
+                                      confirmButtonColor: '#3085d6'
+                                  }).then(() => {
+                                      // Optionally reload the page or update UI
+                                      location.reload();
+                                  });
+                              } else {
+                                  Swal.fire({
+                                      icon: 'error',
+                                      title: 'Refund Failed!',
+                                      text: response.d.message
+                                  });
+                              }
+                          },
+                          error: function (xhr, status, error) {
+                              Swal.fire({
+                                  icon: 'error',
+                                  title: 'Error!',
+                                  text: 'An error occurred while processing refund. Please try again.'
+                              });
+                              console.error("Refund error:", error);
+                          }
+                      });
                   }
               });
           }
@@ -267,6 +360,9 @@
 
                     <div class="col-lg-2 col-md-2 col-sm-3">
                         <input type="button" id="btnPrint" class="btn btn-primry" onclick="PrintReceipt()" value="Print" />
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3">
+                        <input type="button" id="btnRefund" class="btn btn-primry" onclick="RefundRegisterFee()" value="Refund" />
                     </div>
 
                     <div class="col-lg-2 col-md-2 col-sm-3">

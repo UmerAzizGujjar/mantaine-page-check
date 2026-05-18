@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ItemSelection.aspx.cs" Inherits="PMS.Modules.Inventory.ItemSelection" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    
+
     <script type="text/javascript">
         let currentSelectionID = 0;
         let currentGRNData = null;
@@ -43,6 +45,7 @@
                         $.each(grns, function (i, grn) {
                             ddl.append(`<option value="${grn.GRN_ID}">${grn.GRN_Num} - ${grn.VendorName}</option>`);
                         });
+                        $("#ddlGRNNumber").select2();
                     } else {
                         showToast(result.Message || 'Error loading GRN list', 'error');
                     }
@@ -52,6 +55,7 @@
                     showLoading(false);
                     showToast('Error loading GRN list: ' + error, 'error');
                 }
+                
             });
         }
 
@@ -344,7 +348,7 @@
                 </td>
                 <td style="text-align: center; padding: 10px;">
                     <button class="btn btn-sm btn-info" onclick="event.stopPropagation(); copyToClipboard('${barcode.Barcode_Number}')">
-                        <i class="fas fa-copy"></i> Copy
+                        <i class="fas fa-print"></i> Print
                     </button>
                 </td>
             </tr>
@@ -380,22 +384,9 @@
             }
         }
 
-        window.copyToClipboard = function (barcode) {
-            navigator.clipboard.writeText(barcode).then(function () {
-                showToast(`✓ Barcode "${barcode}" copied to clipboard!`, 'success');
-                event.stopPropagation();
-            }).catch(function () {
-                showToast('Failed to copy barcode', 'error');
-            });
-        };
+    
 
-        window.copyToClipboard = function (barcode) {
-            navigator.clipboard.writeText(barcode).then(function () {
-                showToast(`Barcode ${barcode} copied to clipboard!`, 'success');
-            }).catch(function () {
-                showToast('Failed to copy barcode', 'error');
-            });
-        };
+     
 
         function printBarcodes() {
             const printContent = $('#barcodesSection').clone();
@@ -465,8 +456,13 @@
         }
 
         $(document).ready(function () {
-            const today = new Date().toISOString().split('T')[0];
-            $('#txtSelectionDate').val(today);
+            
+           
+
+            var date = '<%= DateTime.Now%>';
+            $("#txtSelectionDate").datepicker({ dateFormat: 'mm/dd/yy', changeMonth: true, changeYear: true, yearRange: "-50:+50" }).attr('readonly', 'readonly');
+            date = moment(date).format('L');
+            $("#txtSelectionDate").val(date);
 
             loadGRNDropdown();
 
@@ -491,7 +487,7 @@
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-12">
                 <label>SELECTION DATE <span class="required">*</span></label>
-                <input type="date" id="txtSelectionDate" class="form-control" />
+                <input type="text" id="txtSelectionDate" class="form-control" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-12">
                 <label>SELECTION NUMBER</label>
