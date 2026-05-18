@@ -33,13 +33,13 @@ namespace PMS.Modules.PatientManagement
         protected global::System.Web.UI.WebControls.TextBox txtPatient_ID;
 
         /// <summary>
-        /// hdfPatient_ID control.
+        /// hdfPatient_IDs control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdfPatient_ID;
+        protected global::System.Web.UI.WebControls.HiddenField hdfPatient_IDs;
 
         /// <summary>
         /// rfvPatient_ID control.

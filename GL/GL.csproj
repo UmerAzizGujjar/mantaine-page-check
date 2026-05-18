@@ -363,6 +363,7 @@
     <Content Include="Modules\Administrator\DoctorPayableView.aspx" />
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
     <Content Include="Modules\PatientManagement\Birthcertificate.aspx" />
+    <Content Include="Modules\PatientManagement\BirthCertificateView.aspx" />
     <Content Include="Modules\PatientManagement\DialysisForm.aspx" />
     <Content Include="Modules\PatientManagement\DialysisView.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyAdmission.aspx" />
@@ -26980,6 +26981,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\Birthcertificate.aspx.designer.cs">
       <DependentUpon>Birthcertificate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\BirthCertificateView.aspx.cs">
+      <DependentUpon>BirthCertificateView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\BirthCertificateView.aspx.designer.cs">
+      <DependentUpon>BirthCertificateView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\DialysisForm.aspx.cs">
       <DependentUpon>DialysisForm.aspx</DependentUpon>

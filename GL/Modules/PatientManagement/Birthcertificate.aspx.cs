@@ -17,8 +17,30 @@ namespace PMS.Modules.PatientManagement
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            //if (!IsPostBack)
+            //{
+            //    var id = Request.Url.PathAndQuery;
+            //var s = Request.QueryString;
+            //if (Request.QueryString["BC_ID"] != null)
+            //{
+            //    string QS = id.Split('=')[1];
+            //    PopulateInPatientData(Convert.ToInt32(QS));
+            //    //InPatient_Case_id = Convert.ToInt32(QS)/*;*/
+            //}
+            
+             
+            //}
         }
+        private void PopulateInPatientData(int InPatient_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var data = (from bc in db.Birth_Certificates where bc.Birth_Certificate_ID == InPatient_ID select bc).FirstOrDefault();
+                hdfPatient_IDs.Value = data.Patient_ID.ToString();
+
+            }
+        }
+
         public class Detail
         {
             public string Name;
@@ -283,6 +305,120 @@ namespace PMS.Modules.PatientManagement
                 db.SubmitChanges();
             }
             return pat.pat_id.ToString();
+        }
+        [WebMethod]
+        public static string GetBirthCertificate(int Birth_Certificate_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var data = db.Birth_Certificates
+                    .Where(x => x.Birth_Certificate_ID == Birth_Certificate_ID)
+                    .Select(x => new
+                    {
+                        x.Birth_Certificate_ID,
+                        x.Patient_ID,
+                        x.Birth_Certificate_No,
+
+                        // Child Information
+                        x.Child_Name,
+                        x.Gender,
+                        x.Date_of_Birth,
+                        x.Time_of_Birth,
+                        x.Place_of_Birth,
+                        x.Birth_Weight,
+                        x.Birth_Type,
+                        x.Birth_Order,
+
+                        // Father Information
+                        x.Father_Name,
+                        x.Father_CNIC,
+                        x.Father_Occupation,
+                        x.Father_Nationality,
+
+                        // Mother Information
+                        x.Mother_Name,
+                        x.Mother_CNIC,
+                        x.Mother_Occupation,
+                        x.Mother_Nationality,
+
+                        // Registration Information
+                        x.Registration_Number,
+                        x.Registration_Date,
+                        x.Registrar_Name,
+                        x.Union_Council,
+
+                        // Address Information
+                        x.Address,
+                        x.City,
+                        x.Province,
+                        x.Postal_Code,
+
+                        // Additional Information
+                        x.Religion,
+                        x.Birth_Attendant,
+                        x.Remarks,
+                        x.IsGenerated
+                    })
+                    .FirstOrDefault();
+
+                // Format Dates AFTER fetching from DB
+                var result = new
+                {
+                    data.Birth_Certificate_ID,
+                    data.Patient_ID,
+                    data.Birth_Certificate_No,
+
+                    // Child Information
+                    data.Child_Name,
+                    data.Gender,
+
+                    Date_of_Birth = data.Date_of_Birth == null
+                        ? ""
+                        : Convert.ToDateTime(data.Date_of_Birth).ToString("MM/dd/yyyy"),
+
+                    data.Time_of_Birth,
+                    data.Place_of_Birth,
+                    data.Birth_Weight,
+                    data.Birth_Type,
+                    data.Birth_Order,
+
+                    // Father Information
+                    data.Father_Name,
+                    data.Father_CNIC,
+                    data.Father_Occupation,
+                    data.Father_Nationality,
+
+                    // Mother Information
+                    data.Mother_Name,
+                    data.Mother_CNIC,
+                    data.Mother_Occupation,
+                    data.Mother_Nationality,
+
+                    // Registration Information
+                    data.Registration_Number,
+
+                    Registration_Date = data.Registration_Date == null
+                        ? ""
+                        : Convert.ToDateTime(data.Registration_Date).ToString("MM/dd/yyyy"),
+
+                    data.Registrar_Name,
+                    data.Union_Council,
+
+                    // Address Information
+                    data.Address,
+                    data.City,
+                    data.Province,
+                    data.Postal_Code,
+
+                    // Additional Information
+                    data.Religion,
+                    data.Birth_Attendant,
+                    data.Remarks,
+                    data.IsGenerated
+                };
+
+                return Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            }
         }
         [WebMethod]
         public static string Getmr_noss()
@@ -588,207 +724,248 @@ namespace PMS.Modules.PatientManagement
                 return "0";
             }
         }
-
         [WebMethod]
         public static string SaveAllRecord(
-        int Patient_ID, string btnsave, 
-        string Discount, string Privatecharges,
-        string BirthChildName, string BirthGender, string BirthDate, string BirthTime,
-        string BirthPlace, string BirthWeight, string BirthType, string BirthOrder,
-        string BirthFatherName, string BirthFatherCNIC, string BirthFatherOccupation,
-        string BirthFatherNationality, string BirthMotherName, string BirthMotherCNIC,
-        string BirthMotherOccupation, string BirthMotherNationality, string BirthRegNumber,
-        string BirthRegDate, string BirthRegistrar, string BirthUnionCouncil,
-        string BirthAddress, string BirthCity, string BirthProvince, string BirthPostalCode,
-        string BirthReligion, string BirthAttendant, string BirthRemarks, bool isCertificateGenrate)
+int Patient_ID,
+int Birth_Id,
+string btnsave,
+string BirthChildName,
+string BirthGender,
+string BirthDate,
+string BirthTime,
+string BirthPlace,
+string BirthWeight,
+string BirthType,
+string BirthOrder,
+string BirthFatherName,
+string BirthFatherCNIC,
+string BirthFatherOccupation,
+string BirthFatherNationality,
+string BirthMotherName,
+string BirthMotherCNIC,
+string BirthMotherOccupation,
+string BirthMotherNationality,
+string BirthRegNumber,
+string BirthRegDate,
+string BirthRegistrar,
+string BirthUnionCouncil,
+string BirthAddress,
+string BirthCity,
+string BirthProvince,
+string BirthPostalCode,
+string BirthReligion,
+string BirthAttendant,
+string BirthRemarks,
+bool isCertificateGenrate)
         {
-            In_Patient OPD = null;
+            Birth_Certificate OPD = null;
+
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
             {
-                var InPatientID = 0;
+                int BirthCertificateID = 0;
+
                 try
                 {
-
-                    if (btnsave == "Update")
-                    {
-
-                        var existingInpatient = db.In_Patients
-                            .FirstOrDefault(ip => ip.Patient_ID == Patient_ID && (ip.Discharge == false || ip.Discharge == null));
-
-                        if (existingInpatient != null && existingInpatient.In_Patient_ID > 0)
-                        {
-
-                            var hasBill = db.Ar_Billings
-                                .Where(b => b.In_Patient_ID == existingInpatient.In_Patient_ID)
-                                .Any();
-
-                            if (hasBill)
-                            {
-                                return "BILL_EXISTS";
-                            }
-                        }
-                    }
-
-
+                    // SAVE
                     if (btnsave == "Save")
                     {
-                        OPD = new In_Patient();
-                        OPD.Patient_ID = Convert.ToInt32(Patient_ID);
-                        OPD.IPD_No = DBClass.getMaxEntry_No("In_Patient", "IPD_No");
+                        OPD = new Birth_Certificate();
 
-                        if (PatientDiscountType == "02")
-                        {
-                            var query = (from v in db.ValueSets
-                                         join d in db.DataValues
-                                         on v.ValueSet_ID equals d.ValueSet_ID
-                                         where v.ValueSet_Name == "Patient Type"
-                                         && (d.DataValue_Description == "Private")
-                                         select d.Segment1).FirstOrDefault();
-                        }
-                        OPD.pat_name = patient_name;
-                        OPD.pat_number = patient_number;
-                        OPD.pat_age = patient_age;
+                        OPD.Patient_ID = Patient_ID;
+
+                        OPD.Birth_Certificate_No = Convert.ToInt32(
+                            DBClass.getMaxEntry_No("Birth_Certificate", "Birth_Certificate_No")
+                        );
+
+                        OPD.Created_By = AppConfig.UserID;
+                        OPD.Created_Time = DateTime.Now;
+
+                        db.Birth_Certificates.InsertOnSubmit(OPD);
                     }
+                    // UPDATE
                     else
                     {
-                        OPD = (from tbl in db.In_Patients
-                               where tbl.In_Patient_ID == InPatient_Case_id
-                               select tbl).FirstOrDefault();
+                        OPD = db.Birth_Certificates
+                                .FirstOrDefault(x => x.Birth_Certificate_ID == Birth_Id);
 
                         if (OPD == null)
                         {
-                            // Try to get by Patient_ID if InPatient_Case_id not found
-                            OPD = (from tbl in db.In_Patients
-                                   where tbl.Patient_ID == Patient_ID && (tbl.Discharge == false || tbl.Discharge == null)
-                                   select tbl).FirstOrDefault();
+                            return "RECORD_NOT_FOUND";
                         }
 
-                        if (OPD != null)
-                        {
-                            OPD.Updated_By = AppConfig.UserID;
-                            OPD.Updated_Time = DateTime.Now;
-                        }
-
-                        if (PatientDiscountType == "02")
-                        {
-                            var query = (from v in db.ValueSets
-                                         join d in db.DataValues
-                                         on v.ValueSet_ID equals d.ValueSet_ID
-                                         where v.ValueSet_Name == "Patient Type"
-                                         && (d.DataValue_Description == "Private")
-                                         select d.Segment1).FirstOrDefault();
-                        }
+                        OPD.Updated_By = AppConfig.UserID;
+                        OPD.Updated_Time = DateTime.Now;
                     }
 
-                    // Rest of your existing code continues here...
+                    // =========================
+                    // Child Information
+                    // =========================
 
+                    OPD.Child_Name = string.IsNullOrWhiteSpace(BirthChildName)
+                        ? null
+                        : BirthChildName.Trim();
 
+                    OPD.Gender = string.IsNullOrWhiteSpace(BirthGender)
+                        ? null
+                        : BirthGender.Trim();
 
-                    OPD.Birth_Child_Name = string.IsNullOrEmpty(BirthChildName) ? null : BirthChildName;
-                    OPD.Birth_Gender = string.IsNullOrEmpty(BirthGender) ? null : BirthGender;
-
-                    if (!string.IsNullOrEmpty(BirthDate))
-                    {
-                        try
-                        {
-                            OPD.Birth_Date = Convert.ToDateTime(BirthDate);
-                        }
-                        catch
-                        {
-                            OPD.Birth_Date = null;
-                        }
-                    }
+                    DateTime dob;
+                    if (DateTime.TryParse(BirthDate, out dob))
+                        OPD.Date_of_Birth = dob;
                     else
-                    {
-                        OPD.Birth_Date = null;
-                    }
+                        OPD.Date_of_Birth = null;
 
-                    OPD.Birth_Time = string.IsNullOrEmpty(BirthTime) ? null : BirthTime;
-                    OPD.Birth_Place = string.IsNullOrEmpty(BirthPlace) ? null : BirthPlace;
+                    OPD.Time_of_Birth = string.IsNullOrWhiteSpace(BirthTime)
+                        ? null
+                        : BirthTime.Trim();
 
-                    if (!string.IsNullOrEmpty(BirthWeight))
-                    {
-                        decimal weightValue;
-                        if (decimal.TryParse(BirthWeight, out weightValue))
-                        {
-                            OPD.Birth_Weight = weightValue;
-                        }
-                        else
-                        {
-                            OPD.Birth_Weight = null;
-                        }
-                    }
+                    OPD.Place_of_Birth = string.IsNullOrWhiteSpace(BirthPlace)
+                        ? null
+                        : BirthPlace.Trim();
 
-                    OPD.Birth_Type = string.IsNullOrEmpty(BirthType) ? null : BirthType;
-                    OPD.Birth_Order = string.IsNullOrEmpty(BirthOrder) ? null : BirthOrder;
-                    OPD.Birth_Father_Name = string.IsNullOrEmpty(BirthFatherName) ? null : BirthFatherName;
-                    OPD.Birth_Father_CNIC = string.IsNullOrEmpty(BirthFatherCNIC) ? null : BirthFatherCNIC;
-                    OPD.Birth_Father_Occupation = string.IsNullOrEmpty(BirthFatherOccupation) ? null : BirthFatherOccupation;
-                    OPD.Birth_Father_Nationality = string.IsNullOrEmpty(BirthFatherNationality) ? null : BirthFatherNationality;
-                    OPD.Birth_Mother_Name = string.IsNullOrEmpty(BirthMotherName) ? null : BirthMotherName;
-                    OPD.Birth_Mother_CNIC = string.IsNullOrEmpty(BirthMotherCNIC) ? null : BirthMotherCNIC;
-                    OPD.Birth_Mother_Occupation = string.IsNullOrEmpty(BirthMotherOccupation) ? null : BirthMotherOccupation;
-                    OPD.Birth_Mother_Nationality = string.IsNullOrEmpty(BirthMotherNationality) ? null : BirthMotherNationality;
-                    OPD.Birth_Reg_Number = string.IsNullOrEmpty(BirthRegNumber) ? null : BirthRegNumber;
-
-                    if (!string.IsNullOrEmpty(BirthRegDate))
-                    {
-                        try
-                        {
-                            OPD.Birth_Reg_Date = Convert.ToDateTime(BirthRegDate);
-                        }
-                        catch
-                        {
-                            OPD.Birth_Reg_Date = null;
-                        }
-                    }
+                    decimal weight;
+                    if (decimal.TryParse(BirthWeight, out weight))
+                        OPD.Birth_Weight = weight;
                     else
-                    {
-                        OPD.Birth_Reg_Date = null;
-                    }
+                        OPD.Birth_Weight = null;
 
-                    OPD.Birth_Registrar = string.IsNullOrEmpty(BirthRegistrar) ? null : BirthRegistrar;
-                    OPD.Birth_Union_Council = string.IsNullOrEmpty(BirthUnionCouncil) ? null : BirthUnionCouncil;
-                    OPD.Birth_Address = string.IsNullOrEmpty(BirthAddress) ? null : BirthAddress;
-                    OPD.Birth_City = string.IsNullOrEmpty(BirthCity) ? null : BirthCity;
-                    OPD.Birth_Province = string.IsNullOrEmpty(BirthProvince) ? null : BirthProvince;
-                    OPD.Birth_Postal_Code = string.IsNullOrEmpty(BirthPostalCode) ? null : BirthPostalCode;
-                    OPD.Birth_Religion = string.IsNullOrEmpty(BirthReligion) ? null : BirthReligion;
-                    OPD.Birth_Attendant = string.IsNullOrEmpty(BirthAttendant) ? null : BirthAttendant;
-                    OPD.Birth_Remarks = string.IsNullOrEmpty(BirthRemarks) ? null : BirthRemarks;
+                    OPD.Birth_Type = string.IsNullOrWhiteSpace(BirthType)
+                        ? null
+                        : BirthType.Trim();
 
-                    if (btnsave == "Save")
-                    {
-                        OPD.Book_ID = AppConfig.Book_ID;
-                        OPD.Created_By = AppConfig.UserID;
-                        OPD.Created_Time = DateTime.Now;
-                        OPD.Company_ID = AppConfig.Company_ID;
-                        db.In_Patients.InsertOnSubmit(OPD);
-                    }
+                    OPD.Birth_Order = string.IsNullOrWhiteSpace(BirthOrder)
+                        ? null
+                        : BirthOrder.Trim();
+
+                    // =========================
+                    // Father Information
+                    // =========================
+
+                    OPD.Father_Name = string.IsNullOrWhiteSpace(BirthFatherName)
+                        ? null
+                        : BirthFatherName.Trim();
+
+                    OPD.Father_CNIC = string.IsNullOrWhiteSpace(BirthFatherCNIC)
+                        ? null
+                        : BirthFatherCNIC.Trim();
+
+                    OPD.Father_Occupation = string.IsNullOrWhiteSpace(BirthFatherOccupation)
+                        ? null
+                        : BirthFatherOccupation.Trim();
+
+                    OPD.Father_Nationality = string.IsNullOrWhiteSpace(BirthFatherNationality)
+                        ? null
+                        : BirthFatherNationality.Trim();
+
+                    // =========================
+                    // Mother Information
+                    // =========================
+
+                    OPD.Mother_Name = string.IsNullOrWhiteSpace(BirthMotherName)
+                        ? null
+                        : BirthMotherName.Trim();
+
+                    OPD.Mother_CNIC = string.IsNullOrWhiteSpace(BirthMotherCNIC)
+                        ? null
+                        : BirthMotherCNIC.Trim();
+
+                    OPD.Mother_Occupation = string.IsNullOrWhiteSpace(BirthMotherOccupation)
+                        ? null
+                        : BirthMotherOccupation.Trim();
+
+                    OPD.Mother_Nationality = string.IsNullOrWhiteSpace(BirthMotherNationality)
+                        ? null
+                        : BirthMotherNationality.Trim();
+
+                    // =========================
+                    // Registration Information
+                    // =========================
+
+                    OPD.Registration_Number = string.IsNullOrWhiteSpace(BirthRegNumber)
+                        ? null
+                        : BirthRegNumber.Trim();
+
+                    DateTime regDate;
+                    if (DateTime.TryParse(BirthRegDate, out regDate))
+                        OPD.Registration_Date = regDate;
+                    else
+                        OPD.Registration_Date = null;
+
+                    OPD.Registrar_Name = string.IsNullOrWhiteSpace(BirthRegistrar)
+                        ? null
+                        : BirthRegistrar.Trim();
+
+                    OPD.Union_Council = string.IsNullOrWhiteSpace(BirthUnionCouncil)
+                        ? null
+                        : BirthUnionCouncil.Trim();
+
+                    // =========================
+                    // Address Information
+                    // =========================
+
+                    OPD.Address = string.IsNullOrWhiteSpace(BirthAddress)
+                        ? null
+                        : BirthAddress.Trim();
+
+                    OPD.City = string.IsNullOrWhiteSpace(BirthCity)
+                        ? null
+                        : BirthCity.Trim();
+
+                    OPD.Province = string.IsNullOrWhiteSpace(BirthProvince)
+                        ? null
+                        : BirthProvince.Trim();
+
+                    OPD.Postal_Code = string.IsNullOrWhiteSpace(BirthPostalCode)
+                        ? null
+                        : BirthPostalCode.Trim();
+
+                    // =========================
+                    // Additional Information
+                    // =========================
+
+                    OPD.Religion = string.IsNullOrWhiteSpace(BirthReligion)
+                        ? null
+                        : BirthReligion.Trim();
+
+                    OPD.Birth_Attendant = string.IsNullOrWhiteSpace(BirthAttendant)
+                        ? null
+                        : BirthAttendant.Trim();
+
+                    OPD.Remarks = string.IsNullOrWhiteSpace(BirthRemarks)
+                        ? null
+                        : BirthRemarks.Trim();
+
+                    OPD.IsGenerated = isCertificateGenrate;
+
+                    // =========================
+                    // SAVE CHANGES
+                    // =========================
 
                     db.SubmitChanges();
 
+                    // =========================
+                    // NADRA Integration
+                    // =========================
+
                     if (isCertificateGenrate)
                     {
-                        SendBirthCertificateToNadra(db, OPD);
+                       // SendBirthCertificateToNadra(db, OPD);
                         db.SubmitChanges();
                     }
 
-                  
-                    InPatientID = OPD.In_Patient_ID;
+                    BirthCertificateID = OPD.Birth_Certificate_ID;
+
+                    return BirthCertificateID.ToString();
                 }
                 catch (Exception ex)
                 {
-                   
-                    throw ex;
+                    return ex.Message;
                 }
-
-                return InPatientID.ToString();
             }
         }
 
 
-        private static void SendBirthCertificateToNadra(DataBaseDataContext db, In_Patient patient)
+        private static void SendBirthCertificateToNadra(DataBaseDataContext db, Birth_Certificate patient)
         {
             if (db == null || patient == null)
                 return;
@@ -818,10 +995,10 @@ namespace PMS.Modules.PatientManagement
                 password = password
             };
 
-            string fatherIdentity = string.IsNullOrWhiteSpace(patient.Birth_Father_CNIC) ? "" : patient.Birth_Father_CNIC.Trim();
-            string motherIdentity = string.IsNullOrWhiteSpace(patient.Birth_Mother_CNIC) ? "" : patient.Birth_Mother_CNIC.Trim();
+            string fatherIdentity = string.IsNullOrWhiteSpace(patient.Father_CNIC) ? "" : patient.Father_CNIC.Trim();
+            string motherIdentity = string.IsNullOrWhiteSpace(patient.Mother_CNIC) ? "" : patient.Mother_CNIC.Trim();
 
-            string contactNumber = patient.pat_number;
+            string contactNumber = "";
             var regPatient = db.Reg_patients.FirstOrDefault(r => r.pat_id == patient.Patient_ID);
             if (regPatient != null && !string.IsNullOrWhiteSpace(regPatient.Mobile1))
             {
@@ -830,31 +1007,31 @@ namespace PMS.Modules.PatientManagement
 
             string doctorName = "";
             int doctorId;
-            if (!string.IsNullOrWhiteSpace(patient.Doctor) && int.TryParse(patient.Doctor, out doctorId))
-            {
-                doctorName = db.HR_Employees.Where(e => e.Emp_ID == doctorId).Select(e => e.Emp_Name).FirstOrDefault();
-            }
+            //if (!string.IsNullOrWhiteSpace(patient.Doctor) && int.TryParse(patient.Doctor, out doctorId))
+            //{
+            //    doctorName = db.HR_Employees.Where(e => e.Emp_ID == doctorId).Select(e => e.Emp_Name).FirstOrDefault();
+            //}
 
             var birthData = new
             {
                 BirthData = new
                 {
-                    refNumber = string.IsNullOrWhiteSpace(patient.Birth_Reg_Number) ? patient.In_Patient_ID.ToString() : patient.Birth_Reg_Number,
+                    refNumber = string.IsNullOrWhiteSpace(patient.Registrar_Name) ? patient.Birth_Certificate_ID.ToString() : patient.Registration_Number,
                     hospitalName = string.IsNullOrWhiteSpace(hospitalName) ? "" : hospitalName,
                     hospitalAddress = string.IsNullOrWhiteSpace(hospitalAddress) ? "" : hospitalAddress,
                     issuanceDate = DateTime.Now.ToString("dd/MM/yyyy"),
-                    childName = patient.Birth_Child_Name ?? "",
-                    childDateofBirth = patient.Birth_Date.HasValue
-                        ? patient.Birth_Date.Value.ToString("d/M/yyyy", CultureInfo.InvariantCulture)
+                    childName = patient.Child_Name ?? "",
+                    childDateofBirth = patient.Date_of_Birth.HasValue
+                        ? patient.Date_of_Birth.Value.ToString("d/M/yyyy", CultureInfo.InvariantCulture)
                         : DateTime.Now.ToString("d/M/yyyy", CultureInfo.InvariantCulture),
-                    childGender = normalizeGender(patient.Birth_Gender),
+                    childGender = normalizeGender(patient.Gender),
                     placeofOccurrence = "hospital",
-                    placeofBirth = patient.Birth_Place ?? "",
-                    districtofBirth = patient.Birth_City ?? "",
+                    placeofBirth = patient.Place_of_Birth ?? "",
+                    districtofBirth = patient.City ?? "",
                     typeofBirth = string.IsNullOrWhiteSpace(patient.Birth_Type) ? "Single" : patient.Birth_Type,
                     disability = "N",
-                    fatherName = patient.Birth_Father_Name ?? "",
-                    motherName = patient.Birth_Mother_Name ?? "",
+                    fatherName = patient.Father_Name ?? "",
+                    motherName = patient.Mother_Name ?? "",
                     FatherIdentityType = "cnic",
                     FatherIdentityValue = fatherIdentity,
                     MotherIdentityType = "cnic",
@@ -908,11 +1085,11 @@ namespace PMS.Modules.PatientManagement
 
                 if (code == "100" || code == "200")
                 {
-                    patient.IsCertificateSentToNADRA = true;
-                    patient.CertificateSentDate = DateTime.Now;
+                    patient.Is_Sent_To_NADRA = true;
+                    patient.Sent_Date = DateTime.Now;
                 }
 
-                patient.BirthCertificateTrackingId = trackingId; // Column does not exist yet.
+                patient.Tracking_ID = trackingId; 
             }
         }
     }

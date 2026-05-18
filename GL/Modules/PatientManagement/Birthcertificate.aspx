@@ -13,41 +13,7 @@
                 format: '_____-_______-_',
                 separator: '-'
             });
-            //MaskedInput({
-            //    elm: document.getElementById('txtBP'),
-            //    format: '___/___',
-            //    separator: '-'
-            //});
-            //MaskedInput({
-            //    elm: document.getElementById('txtEOR'),
-            //    format: '_/4',
-            //    separator: '/'
-            //});
-            //MaskedInput({
-            //    elm: document.getElementById('txtMR'),
-            //    format: '_/5',
-            //    separator: '/'
-            //});
-            //MaskedInput({
-            //    elm: document.getElementById('txtVR'),
-            //    format: '_/6',
-            //    separator: '/'
-            //});
-            //MaskedInput({
-            //    elm: document.getElementById('txtAcc'),
-            //    format: '_/15',
-            //    separator: '/'
-            //});
-            //MaskedInput({
-            //    elm: document.getElementById('txtG_CNIC'),
-            //    format: '_____-_______-_',
-            //    separator: '-'
-            //});
-            //MaskedInput({
-            //    elm: document.getElementById('txtG_Phone'),
-            //    format: '____-_______',
-            //    separator: '-'
-            //});
+
 
             $('#txt_cnic').attr('placeholder', '_____-_______-_');
             $('#txt_Othercnic').attr('placeholder', '_____-_______-_');
@@ -75,7 +41,14 @@
                 var cursorPosition = 3;
                 phoneInput.setSelectionRange(cursorPosition, cursorPosition);
             });
-            bindControls();
+            debugger;
+            var BC_ID = '<%= Request.QueryString["BC_ID"]%>';
+            if (BC_ID != "") {
+                debugger;
+                LoadBirthCertificate(BC_ID);
+                $("#btnsave").val("Update")
+            }
+            
             fillgender();
             fillmartial();
             fillmrnos();
@@ -101,8 +74,9 @@
                     FillPatientsList();
             });
 
-
+            bindControls();
             var Reg_ID = '<%= Request.QueryString["Reg_ID"]%>';
+            
             $('#hdfPatient_ID').val(Reg_ID);
             if (Reg_ID != "") {
                 setTimeout(function () {
@@ -112,20 +86,10 @@
                 }, 1000)
 
             }
+            
         });
-        //function FillTokenInputForMRNo() {
-        //    debugger;
-        //    var PatientID = $('#hdfPatient_ID').val();
-        //    if (PatientID == '') {
-        //        loadtokenInputsDefault();
-        //    }
-        //    else {
-        //        var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + PatientID);
-        //        //$('#txtMRNo').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name, readonly: true });
-        //        //loadtokenInputs(JSON.parse(tokendata));
-        //        loadAjax()
-        //    }
-        //}
+
+    
         debugger;
         function bindControls() {
             debugger;
@@ -138,6 +102,73 @@
             else {
                 loadtokenInputsDefault();
             }
+        }
+        function LoadBirthCertificate(Birth_Certificate_ID) {
+
+            $.ajax({
+                type: "POST",
+                url: "BirthCertificate.aspx/GetBirthCertificate",
+                data: JSON.stringify({
+                    Birth_Certificate_ID: Birth_Certificate_ID
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (response) {
+
+                    var data = JSON.parse(response.d);
+                    debugger;
+                    if (data != null) {
+
+                        $('#hdfPatient_ID').val(data.Patient_ID);
+                        $('#hdfBC_ID').val(data.Birth_Certificate_ID);
+                        $('#txtBirthChildName').val(data.Child_Name);
+                        $('#ctl00_MainContent_txtIn_Patient_ID').val(data.Birth_Certificate_No);
+                        $('#ddlBirthGender').val(data.Gender);
+                        $('#txtBirthDate').val(data.Date_of_Birth);
+                        $('#txtBirthTime').val(data.Time_of_Birth);
+                        $('#txtBirthPlace').val(data.Place_of_Birth);
+                        $('#txtBirthWeight').val(data.Birth_Weight);
+                        $('#ddlBirthType').val(data.Birth_Type);
+                        $('#txtBirthOrder').val(data.Birth_Order);
+
+                        // Father
+                        $('#txtBirthFatherName').val(data.Father_Name);
+                        $('#txtBirthFatherCNIC').val(data.Father_CNIC);
+                        $('#txtBirthFatherOccupation').val(data.Father_Occupation);
+                        $('#txtBirthFatherNationality').val(data.Father_Nationality);
+
+                        // Mother
+                        $('#txtBirthMotherName').val(data.Mother_Name);
+                        $('#txtBirthMotherCNIC').val(data.Mother_CNIC);
+                        $('#txtBirthMotherOccupation').val(data.Mother_Occupation);
+                        $('#txtBirthMotherNationality').val(data.Mother_Nationality);
+
+                        // Registration
+                        $('#txtBirthRegNumber').val(data.Registration_Number);
+                        $('#txtBirthRegDate').val(data.Registration_Date);
+                        $('#txtBirthRegistrar').val(data.Registrar_Name);
+                        $('#txtBirthUnionCouncil').val(data.Union_Council);
+
+                        // Address
+                        $('#txtBirthAddress').val(data.Address);
+                        $('#txtBirthCity').val(data.City);
+                        $('#ddlBirthProvince').val(data.Province);
+                        $('#txtBirthPostalCode').val(data.Postal_Code);
+
+                        // Additional
+                        $('#ddlBirthReligion').val(data.Religion);
+                        $('#txtBirthAttendant').val(data.Birth_Attendant);
+                        $('#txtBirthRemarks').val(data.Remarks);
+                        //loadAjax()
+                    }
+                },
+
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+
         }
         function loadtokenInputsDefault() {
             debugger;
@@ -157,7 +188,8 @@
                         }
 
                     }
-                });
+                }
+            );
         }
         function loadtokenInputs(data) {
             debugger;
@@ -175,7 +207,7 @@
 
         function loadAjax() {
             debugger;
-            var Patient_ID = $("#<%= hdfPatient_ID.ClientID%>").val();
+            var Patient_ID = $("#hdfPatient_ID").val();
             $.ajax({
                 type: "POST",
                 url: "Birthcertificate.aspx/GetDetail",
@@ -254,7 +286,6 @@
                                     },
 
                                     inputValidator: (value) => {
-                                        /*  if (!value) return 'CNIC is required!';*/
                                         if (value.includes('_')) return 'Complete CNIC first!';
                                     }
 
@@ -279,8 +310,23 @@
 
             }
         }
-     
-       function selectPatient(Patient_ID) {
+
+        function selectPatient(Patient_ID) {
+            debugger;
+            $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
+            var tokenData = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
+            var parsedData = JSON.parse(tokenData);
+            $('#ctl00_MainContent_txtPatient_ID').tokenInput("add", { id: JSON.parse(tokenData)[0].id, name: JSON.parse(tokenData)[0].name });
+
+            $('#<%= txtPatient_ID.ClientID%>').val(Patient_ID);
+            $('#<%= hdfPatient_IDs.ClientID%>').val(Patient_ID);
+          //  checkRepeat();
+            loadAjax();
+            $('#btnSave').val("Save");
+            $('#ctl00_MainContent_txtIn_Patient_ID').val("(New)");
+            //LoadHistory();
+        }
+       <%--function selectPatient(Patient_ID) {
             debugger;
             $('#ctl00_MainContent_txtPatient_ID').tokenInput('clear');
             var tokenData = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
@@ -292,7 +338,7 @@
             loadAjax();
             $('#btnSave').val("Save");
             $('#txtIn_Patient_ID').val("(New)");
-        }
+        }--%>
         function OpenModal() {
             debugger;
             $('#PatientsSearchModel').modal({
@@ -662,7 +708,7 @@
                 return;
             }
             $('#ClosePatientsSearchModel').click();
-            fillmrnos();
+           // fillmrnos();
             setTimeout(function () {
                 $('#txt_mobile').val(unmaskedValue);
             }, 100);
@@ -899,8 +945,17 @@
 
         function SaveAllRecords() {
             debugger;
-            var btnsave = $('#btnSave').val();
-            var Patient_ID = $("#<%=txtPatient_ID.ClientID%>").val();
+            var btnsave = $('#btnsave').val();
+            var Patient_ID = $("#hdfPatient_ID").val();
+           
+            var BC_ID = '<%= Request.QueryString["BC_ID"]%>';
+            if (BC_ID == "") {
+                debugger;
+                var Birth_Id = 0;
+            }
+            else {
+                var Birth_Id = $("#hdfBC_ID").val();
+            }
             // Birth Certificate Fields
             var BirthChildName = $('#txtBirthChildName').val();
             var BirthGender = $('#ddlBirthGender').val();
@@ -932,8 +987,7 @@
             var isCertificateGenrate = window.isCertificateGenrate || false;
 
             PageMethods.SaveAllRecord(
-                Patient_ID, btnsave,
-                // Birth Certificate Parameters
+                Patient_ID, Birth_Id, btnsave,
                 BirthChildName, BirthGender, BirthDate, BirthTime, BirthPlace, BirthWeight,
                 BirthType, BirthOrder, BirthFatherName, BirthFatherCNIC, BirthFatherOccupation,
                 BirthFatherNationality, BirthMotherName, BirthMotherCNIC, BirthMotherOccupation,
@@ -1262,7 +1316,10 @@
                         </div>
                         <div class="col-lg-7 col-md-7 col-sm-6">
                             <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
-                              <asp:HiddenField ID="hdfPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />
+                              <asp:HiddenField ID="hdfPatient_IDs" runat="server" Value="(New)" ClientIDMode="Static" />
+                            <input type="hidden" id ="hdfPatient_ID" value="(New)" />
+                            <input type="hidden" id ="hdfBC_ID"  />
+                              <%--<asp:HiddenField ID="hdfPatient_ID" runat="server" Value="(New)" ClientIDMode="Static" />--%>
                             <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ControlToValidate="txtPatient_ID" ErrorMessage="Select Patient ID" Text="*"></asp:RequiredFieldValidator>
                         </div>
                     </div>
@@ -1698,6 +1755,7 @@
             <div class="compact-card">
                 <div class="card-header">
                     <h4><i class="fa fa-child"></i> Child Information</h4>
+                    <input type="hidden" id="Birth_Id" />
                 </div>
 
                 <div class="card-body">
@@ -1962,4 +2020,8 @@
 
     </div>
 </div>
+    <div class="row">
+        <input type="button" class="btn-primry" id="btnsave" value="Save" onclick="SaveAllRecords();" />
+
+    </div>
 </asp:Content>
