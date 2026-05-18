@@ -1,11 +1,13 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ItemSelection.aspx.cs" Inherits="PMS.Modules.Inventory.ItemSelection" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    
+
 
     <script type="text/javascript">
         let currentSelectionID = 0;
         let currentGRNData = null;
 
+        $('<style>.hide-barcode-div { display: none !important; }</style>').appendTo('head');
 
         function showToast(message, type = 'success') {
             const toast = $('#toast');
@@ -115,49 +117,51 @@
         }
 
         function loadItemsTable(items) {
-            const tbody = $('#tblItemsBody');
+    const tbody = $('#tblItemsBody');
 
-            if (!items || items.length === 0) {
-                tbody.html('<tr><td colspan="9" style="text-align: center; padding: 40px;"><i class="fas fa-box-open" style="font-size: 24px; color: #cbd5e0;"></i><br/>No items found in this GRN</td></tr>');
-                return;
-            }
+    if (!items || items.length === 0) {
+        tbody.html('<tr><td colspan="9" style="text-align: center; padding: 40px;"><i class="fas fa-box-open" style="font-size: 24px; color: #cbd5e0;"></i><br/>No items found in this GRN</td></tr>');
+        return;
+    }
 
-            let html = '';
-            $.each(items, function (i, item) {
-                let statusClass = 'badge-success';
-                let statusText = 'IN STOCK';
-                let maxSelectableQty = item.CurrentStock; 
-
-                if (item.CurrentStock <= 0) {
-                    statusClass = 'badge-danger';
-                    statusText = 'OUT OF STOCK';
-                    maxSelectableQty = 0;
-                } else if (item.CurrentStock < 10) {
-                    statusClass = 'badge-warning';
-                    statusText = 'LOW STOCK';
-                }
-
-                let stockDisplay = `<span class="${item.CurrentStock <= 0 ? 'text-danger' : (item.CurrentStock < 10 ? 'text-warning' : 'text-success')}">
-                                <strong>${parseFloat(item.CurrentStock).toFixed(2)}</strong> ${escapeHtml(item.Unit || '')}
-                            </span>`;
-
-                html += `<tr data-grndetailid="${item.GRN_Detail_Id}" data-itemid="${item.Item_Id}" data-maxqty="${maxSelectableQty}">
-                    <td><strong>${escapeHtml(item.ItemCode || '-')}</strong></td>
-                    <td>${escapeHtml(item.ItemName || '-')}</td>
-                    <td>${stockDisplay}</td>
-                    <td>${parseFloat(item.GRNQty).toFixed(2)}</td>
-                    <td><span class="badge badge-info">${escapeHtml(item.BatchNum || '-')}</span></td>
-                    <td>${escapeHtml(item.Unit || '-')}</td>
-                    <td>${parseFloat(item.Rate || 0).toFixed(2)}</td>
-                    <td>
-                        <input type="number" class="qty-input" value="0" min="0" max="${maxSelectableQty}" step="any" 
-                               onchange="updateQuantity(this, ${item.GRN_Detail_Id}, ${maxSelectableQty})" />
-                    </td>
-                    <td><span class="badge ${statusClass}">${statusText}</span></td>
-                 </tr>`;
-            });
-            tbody.html(html);
+    let html = '';
+    $.each(items, function (i, item) {
+        let statusClass = 'badge-success';
+        let statusText = 'IN STOCK';
+        let maxSelectableQty = item.CurrentStock;
+        
+        let preselectedQty = item.Selected_Qty || 0;
+        
+        if (item.CurrentStock <= 0) {
+            statusClass = 'badge-danger';
+            statusText = 'OUT OF STOCK';
+            maxSelectableQty = 0;
+        } else if (item.CurrentStock < 10) {
+            statusClass = 'badge-warning';
+            statusText = 'LOW STOCK';
         }
+
+        let stockDisplay = `<span class="${item.CurrentStock <= 0 ? 'text-danger' : (item.CurrentStock < 10 ? 'text-warning' : 'text-success')}">
+                        <strong>${parseFloat(item.CurrentStock).toFixed(2)}</strong> ${escapeHtml(item.Unit || '')}
+                    </span>`;
+
+        html += `<tr data-grndetailid="${item.GRN_Detail_Id}" data-itemid="${item.Item_Id}" data-maxqty="${maxSelectableQty}">
+            <td><strong>${escapeHtml(item.ItemCode || '-')}</strong></td>
+            <td>${escapeHtml(item.ItemName || '-')}</td>
+            <td>${stockDisplay}</td>
+            <td>${parseFloat(item.GRNQty).toFixed(2)}</td>
+            <td><span class="badge badge-info">${escapeHtml(item.BatchNum || '-')}</span></td>
+            <td>${escapeHtml(item.Unit || '-')}</td>
+            <td>${parseFloat(item.Rate || 0).toFixed(2)}</td>
+            <td>
+                <input type="number" class="qty-input" value="${preselectedQty}" min="0" max="${maxSelectableQty}" step="any" 
+                       onchange="updateQuantity(this, ${item.GRN_Detail_Id}, ${maxSelectableQty})" />
+             </td>
+            <td><span class="badge ${statusClass}">${statusText}</span></td>
+          </tr>`;
+    });
+    tbody.html(html);
+}
 
         function escapeHtml(text) {
             if (!text) return '';
@@ -177,127 +181,159 @@
         };
 
         function saveSelection() {
-            const selectionDate = $('#txtSelectionDate').val();
-            const grnId = $('#ddlGRNNumber').val();
-            const remarks = $('#txtRemarks').val();
+    const selectionDate = $('#txtSelectionDate').val();
+    const grnId = $('#ddlGRNNumber').val();
+    const remarks = $('#txtRemarks').val();
 
-            if (!selectionDate) {
-                showToast('Please select selection date', 'error');
-                return;
-            }
+    if (!selectionDate) {
+        showToast('Please select selection date', 'error');
+        return;
+    }
 
-            if (!grnId) {
-                showToast('Please select GRN number', 'error');
-                return;
-            }
+    if (!grnId) {
+        showToast('Please select GRN number', 'error');
+        return;
+    }
 
-            const selectedItems = [];
-            let hasSelection = false;
-            let totalSelectedQty = 0;
+    const selectedItems = [];
+    let hasSelection = false;
+    let totalSelectedQty = 0;
 
-            $('#tblItemsBody tr').each(function () {
-                const grnDetailId = $(this).data('grndetailid');
-                const itemId = $(this).data('itemid');
-                const maxQty = $(this).data('maxqty');
-                const qtyInput = $(this).find('.qty-input');
-                const selectedQty = parseFloat(qtyInput.val()) || 0;
+    $('#tblItemsBody tr').each(function () {
+        const grnDetailId = $(this).data('grndetailid');
+        const itemId = $(this).data('itemid');
+        const maxQty = $(this).data('maxqty');
+        const qtyInput = $(this).find('.qty-input');
+        const selectedQty = parseFloat(qtyInput.val()) || 0;
 
-                if (selectedQty > 0) {
-                    hasSelection = true;
-                    totalSelectedQty += selectedQty;
-                    selectedItems.push({
-                        GRN_Detail_Id: grnDetailId,
-                        Item_Id: itemId,
-                        Selected_Qty: selectedQty,
-                        Max_Qty: maxQty
-                    });
-                }
-            });
-
-            if (!hasSelection) {
-                showToast('Please select at least one item with quantity greater than 0', 'error');
-                return;
-            }
-
-            showLoading(true, 'Saving selection...');
-            $.ajax({
-                url: 'ItemSelection.aspx/SaveSelection',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    selectionDate: selectionDate,
-                    grnId: grnId,
-                    remarks: remarks,
-                    selectedItems: selectedItems
-                }),
-                dataType: 'json',
-                success: function (response) {
-                    const result = JSON.parse(response.d);
-                    if (result.Success) {
-                        currentSelectionID = result.Data.SelectionID;
-                        $('#txtSelectionNum').val(result.Data.SelectionNum);
-                        $('#summarySection').show();
-                        $('#lblSelectionID').text(result.Data.SelectionID);
-                        $('#lblTotalItems').text(result.Data.TotalItems);
-                        $('#lblTotalSelectedQty').text(result.Data.TotalSelectedQty);
-                        $('#lblStatus').text('Saved').removeClass().addClass('badge badge-success');
-                        $('#btnGenerateBarcodes').prop('disabled', false);
-                        showToast('Selection saved successfully!', 'success');
-                    } else {
-                        showToast(result.Message || 'Error saving selection', 'error');
-                    }
-                    showLoading(false);
-                },
-                error: function (xhr, status, error) {
-                    showLoading(false);
-                    showToast('Error saving selection: ' + error, 'error');
-                }
+        if (selectedQty > 0) {
+            hasSelection = true;
+            totalSelectedQty += selectedQty;
+            selectedItems.push({
+                GRN_Detail_Id: grnDetailId,
+                Item_Id: itemId,
+                Selected_Qty: selectedQty,
+                Max_Qty: maxQty
             });
         }
+    });
 
+    if (!hasSelection) {
+        showToast('Please select at least one item with quantity greater than 0', 'error');
+        return;
+    }
+
+    showLoading(true, 'Saving selection...');
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectionId = urlParams.get('Selection_ID');
+    
+    let ajaxUrl = 'ItemSelection.aspx/SaveSelection';
+    let ajaxData = {
+        selectionDate: selectionDate,
+        grnId: grnId,
+        remarks: remarks,
+        selectedItems: selectedItems
+    };
+    
+    if (selectionId) {
+        ajaxUrl = 'ItemSelection.aspx/UpdateSelection';
+        ajaxData.selectionId = selectionId;
+    }
+    
+    $.ajax({
+        url: ajaxUrl,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(ajaxData),
+        dataType: 'json',
+        success: function (response) {
+            const result = JSON.parse(response.d);
+            if (result.Success) {
+                currentSelectionID = result.Data.SelectionID;
+                $('#txtSelectionNum').val(result.Data.SelectionNum);
+                
+                $('#summarySection').hide();
+                Swal.fire({
+                    icon: 'success',
+                    title: selectionId ? 'Updated Successfully!' : 'Saved Successfully!',
+                    text: selectionId ? 'Selection has been updated successfully.' : 'Data has been saved successfully.',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+                $('#btnGenerateBarcodes').prop('disabled', false);
+                $('#btnGenerateBarcodes').parent().removeClass('hide-barcode-div');
+                if (selectionId) {
+                    setTimeout(function() {
+                        window.location.href = 'ItemSelectionList.aspx';
+                    }, 2500);
+                }
+                
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: result.Message || 'Error saving selection',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            }
+            showLoading(false);
+        },
+        error: function (xhr, status, error) {
+            showLoading(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Error saving selection: ' + error,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+}
         function generateBarcodes() {
-            if (!currentSelectionID) {
-                showToast('Please save selection first', 'error');
-                return;
-            }
+    if (!currentSelectionID) {
+        showToast('Please save selection first', 'error');
+        return;
+    }
 
-            showLoading(true, 'Generating barcodes...');
-            $.ajax({
-                url: 'ItemSelection.aspx/GenerateBarcodes',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ selectionId: currentSelectionID }),
-                dataType: 'json',
-                success: function (response) {
-                    const result = JSON.parse(response.d);
-                    if (result.Success) {
-                        displayBarcodes(result.Data.Barcodes);
-                        $('#btnPrintBarcodes').prop('disabled', false);
-                        $('#lblStatus').text('Barcodes Generated').removeClass().addClass('badge badge-info');
-                        showToast(`${result.Data.TotalBarcodes} barcodes generated successfully!`, 'success');
-                    } else {
-                        showToast(result.Message || 'Error generating barcodes', 'error');
-                    }
-                    showLoading(false);
-                },
-                error: function (xhr, status, error) {
-                    showLoading(false);
-                    showToast('Error generating barcodes: ' + error, 'error');
-                }
-            });
+    showLoading(true, 'Generating barcodes...');
+    $.ajax({
+        url: 'ItemSelection.aspx/GenerateBarcodes',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ selectionId: currentSelectionID }),
+        dataType: 'json',
+        success: function (response) {
+            const result = JSON.parse(response.d);
+            if (result.Success) {
+                displayBarcodes(result.Data.Barcodes);
+                $('#btnPrintBarcodes').prop('disabled', false);
+                showToast(`${result.Data.TotalBarcodes} barcodes generated successfully!`, 'success');
+            } else {
+                showToast(result.Message || 'Error generating barcodes', 'error');
+            }
+            showLoading(false);
+        },
+        error: function (xhr, status, error) {
+            showLoading(false);
+            showToast('Error generating barcodes: ' + error, 'error');
         }
+    });
+}
 
         function displayBarcodes(barcodes) {
-            const section = $('#barcodesSection');
-            const grid = $('#barcodesGrid');
+    const section = $('#barcodesSection');
+    const grid = $('#barcodesGrid');
 
-            if (!barcodes || barcodes.length === 0) {
-                grid.html('<p style="text-align: center; padding: 40px;"><i class="fas fa-barcode" style="font-size: 48px; color: #cbd5e0;"></i><br/>No barcodes generated</p>');
-                return;
-            }
+    if (!barcodes || barcodes.length === 0) {
+        grid.html('<p style="text-align: center; padding: 40px;"><i class="fas fa-barcode" style="font-size: 48px; color: #cbd5e0;"></i><br/>No barcodes generated</p>');
+        return;
+    }
 
-            let html = `
-        <div class="table-responsive">
+    let html = `
+        <div class="table">
             <table class="table table-bordered table-hover" id="barcodesTable" style="width: 100%;">
                 <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                     <tr>
@@ -314,41 +350,41 @@
                 <tbody>
     `;
 
-            $.each(barcodes, function (i, barcode) {
-                let formattedDate = 'Invalid Date';
-                let generationDate = barcode.Generation_Date;
+    $.each(barcodes, function (i, barcode) {
+        let formattedDate = 'Invalid Date';
+        let generationDate = barcode.Generation_Date;
 
-                if (generationDate) {
-                    let dateObj = null;
+        if (generationDate) {
+            let dateObj = null;
 
-                    if (typeof generationDate === 'string') {
-                        if (generationDate.indexOf('/Date(') === 0) {
-                            let milliseconds = parseInt(generationDate.match(/\d+/)[0]);
-                            dateObj = new Date(milliseconds);
-                        }
-                        else {
-                            dateObj = new Date(generationDate);
-                        }
-                    }
-                    else if (typeof generationDate === 'number') {
-                        dateObj = new Date(generationDate);
-                    }
-
-                    if (dateObj && !isNaN(dateObj.getTime())) {
-                        formattedDate = dateObj.toLocaleString('en-PK', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                            hour12: false
-                        });
-                    }
+            if (typeof generationDate === 'string') {
+                if (generationDate.indexOf('/Date(') === 0) {
+                    let milliseconds = parseInt(generationDate.match(/\d+/)[0]);
+                    dateObj = new Date(milliseconds);
                 }
+                else {
+                    dateObj = new Date(generationDate);
+                }
+            }
+            else if (typeof generationDate === 'number') {
+                dateObj = new Date(generationDate);
+            }
 
-                html += `
-            <tr style="cursor: pointer;" onclick="copyToClipboard('${barcode.Barcode_Number}')">
+            if (dateObj && !isNaN(dateObj.getTime())) {
+                formattedDate = dateObj.toLocaleString('en-PK', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                });
+            }
+        }
+
+        html += `
+            <tr>
                 <td style="text-align: center; padding: 10px;">${i + 1}</td>
                 <td style="text-align: center; padding: 10px;">
                     <code style="background: #f4f4f4; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${escapeHtml(barcode.Barcode_Number)}</code>
@@ -365,44 +401,55 @@
                     <i class="fas fa-calendar-alt" style="color: #667eea;"></i> ${formattedDate}
                 </td>
                 <td style="text-align: center; padding: 10px;">
-                  <button class="btn btn-sm btn-info"
-                    onclick="event.stopPropagation(); PrintINVBarcode(${barcode.Barcode_ID})" 
-                    style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;">
-                    <i class="fa fa-print"></i>
+                    <button class="btn btn-sm btn-info" onclick="event.stopPropagation(); copyToClipboard('${barcode.Barcode_Number}')">
+                        <i class="fas fa-print"></i> Print
                     </button>
                 </td>
             </tr>
         `;
-            });
+    });
 
-            html += `
+    html += `
                 </tbody>
             </table>
         </div>
         <div style="margin-top: 15px; text-align: right; padding: 10px;">
             <small class="text-muted">
-                <i class="fas fa-info-circle"></i> Click on any row or click "Copy" to copy barcode number
+                <i class="fas fa-info-circle"></i> Click copy button to copy barcode number
             </small>
         </div>
     `;
 
-            grid.html(html);
-            $('#barcodeCount').text(`(${barcodes.length} barcodes)`);
-            section.fadeIn(300);
+    grid.html(html);
+    $('#barcodeCount').text(`(${barcodes.length} barcodes)`);
+    section.show(); 
 
-            if ($.fn.DataTable) {
-                $('#barcodesTable').DataTable({
-                    "pageLength": 10,
-                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                    "order": [[0, "asc"]],
-                    "language": {
-                        "search": "Search:",
-                        "lengthMenu": "Show _MENU_ entries",
-                        "info": "Showing _START_ to _END_ of _TOTAL_ barcodes"
-                    }
-                });
-            }
+    if ($.fn.DataTable) {
+        if ($.fn.DataTable.isDataTable('#barcodesTable')) {
+            $('#barcodesTable').DataTable().destroy();
         }
+        
+        $('#barcodesTable').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "order": [[0, "asc"]],
+            "language": {
+                "search": "Search:",
+                "lengthMenu": "Show _MENU_ entries",
+                "info": "Showing _START_ to _END_ of _TOTAL_ barcodes"
+            }
+        });
+    }
+}
+
+// Add this helper function for copying to clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        showToast('Barcode copied to clipboard!', 'success');
+    }).catch(function() {
+        showToast('Failed to copy barcode', 'error');
+    });
+}
 
     
 
@@ -475,6 +522,93 @@
             }
         }
 
+        function loadExistingBarcodes(selectionId) {
+    $.ajax({
+        url: 'ItemSelection.aspx/GetExistingBarcodes',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ selectionId: selectionId }),
+        dataType: 'json',
+        success: function (response) {
+            const result = JSON.parse(response.d);
+            if (result.Success && result.Data.Barcodes.length > 0) {
+                displayBarcodes(result.Data.Barcodes);
+                $('#btnGenerateBarcodes').prop('disabled', false);
+                $('#btnPrintBarcodes').prop('disabled', false);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error loading existing barcodes: ' + error);
+        }
+    });
+}
+
+        function checkEditMode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectionId = urlParams.get('Selection_ID');
+    
+    if (selectionId) {
+         $('#btnSaveSelection').val('UPDATE');
+        showLoading(true, 'Loading selection data...');
+        $.ajax({
+            url: 'ItemSelection.aspx/GetSelectionDataForEdit',
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                const result = JSON.parse(response.d);
+                if (result.Success) {
+                    currentSelectionID = result.Data.Selection.Selection_ID;
+                    $('#txtSelectionNum').val(result.Data.Selection.Selection_Num);
+                    $('#txtSelectionDate').val(result.Data.Selection.Selection_Date);
+                    $('#txtRemarks').val(result.Data.Selection.Remarks);
+                    
+                     loadExistingBarcodes(selectionId);
+
+                    loadGRNDropdownForEdit(result.Data.Selection.GRN_ID);
+                } else {
+                    showToast(result.Message || 'Error loading selection data', 'error');
+                }
+                showLoading(false);
+            },
+            error: function (xhr, status, error) {
+                showLoading(false);
+                showToast('Error loading selection data: ' + error, 'error');
+            }
+        });
+    }
+}
+
+function loadGRNDropdownForEdit(grnId) {
+    $.ajax({
+        url: 'ItemSelection.aspx/GetGRNList',
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+            const result = JSON.parse(response.d);
+            if (result.Success) {
+                const ddl = $('#ddlGRNNumber');
+                ddl.empty();
+                
+                $.each(result.Data, function (i, grn) {
+                    ddl.append(`<option value="${grn.GRN_ID}" ${grn.GRN_ID == grnId ? 'selected' : ''}>${grn.GRN_Num} - ${grn.VendorName}</option>`);
+                });
+                $("#ddlGRNNumber").select2();
+                
+                if (grnId) {
+                    loadGRNDetails(grnId);
+                }
+            } else {
+                showToast(result.Message || 'Error loading GRN list', 'error');
+            }
+        },
+        error: function (xhr, status, error) {
+            showToast('Error loading GRN list: ' + error, 'error');
+        }
+    });
+}
+
         $(document).ready(function () {
             
            
@@ -486,48 +620,52 @@
 
             loadGRNDropdown();
 
+            checkEditMode();
+
             $('#ddlGRNNumber').change(function () {
                 loadGRNDetails($(this).val());
             });
 
+           $('#btnGenerateBarcodes').parent().addClass('hide-barcode-div');
+
             $('#btnSaveSelection').click(saveSelection);
             $('#btnGenerateBarcodes').click(generateBarcodes);
             $('#btnPrintBarcodes').click(printBarcodes);
-            $('#btnReset').click(resetForm);
+            //$('#btnReset').click(resetForm);
         });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-        <div id="loadingOverlay" class="loading-overlay">
-            <div class="loading-content">
-                <div class="spinner"></div>
-                <div id="loadingMessage">Processing...</div>
-            </div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div id="loadingMessage">Processing...</div>
         </div>
-        <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-12">
-                <label>SELECTION DATE <span class="required">*</span></label>
-                <input type="text" id="txtSelectionDate" class="form-control" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
-                <label>SELECTION NUMBER</label>
-                <input type="text" id="txtSelectionNum" class="form-control" readonly="readonly" placeholder="Auto-generated on save" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
-                <label>GRN NUMBER</label>
-                <select id="ddlGRNNumber" class="form-control">
-                    <option value="">Select GRN Number</option>
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
-                <label>WAREHOUSE / STORE LOCATION</label>
-                <input type="text" id="txtWarehouse" class="form-control" readonly="readonly" />
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-12">
-                <label>VENDOR</label>
-                <input type="text" id="txtVendor" class="form-control" readonly="readonly" />
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-12">
+            <label>SELECTION DATE <span class="required">*</span></label>
+            <input type="text" id="txtSelectionDate" class="form-control" />
         </div>
+        <div class="col-lg-2 col-md-4 col-sm-12">
+            <label>SELECTION NUMBER</label>
+            <input type="text" id="txtSelectionNum" class="form-control" readonly="readonly" placeholder="Auto-generated on save" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12">
+            <label>GRN NUMBER</label>
+            <select id="ddlGRNNumber" class="form-control">
+                <option value="">Select GRN Number</option>
+            </select>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12">
+            <label>WAREHOUSE / STORE LOCATION</label>
+            <input type="text" id="txtWarehouse" class="form-control" readonly="readonly" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12">
+            <label>VENDOR</label>
+            <input type="text" id="txtVendor" class="form-control" readonly="readonly" />
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-4 col-md-8 col-sm-12">
             <label>REMARKS</label>
@@ -535,75 +673,59 @@
         </div>
 
     </div>
-        <div id="toast" class="toast-notification"></div>    
-        <div class="form-card">        
-            <div id="summarySection" class="summary-section" style="display: none;">
-                <div class="summary-item">
-                    <span class="summary-label"><i class="fas fa-hashtag"></i> Selection ID:</span>
-                    <span class="summary-value" id="lblSelectionID">-</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label"><i class="fas fa-box"></i> Total Items:</span>
-                    <span class="summary-value" id="lblTotalItems">0</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label"><i class="fas fa-calculator"></i> Selected Quantity:</span>
-                    <span class="summary-value" id="lblTotalSelectedQty">0</span>
-                </div>
-                <div class="summary-item">
-                    <span class="summary-label"><i class="fas fa-chart-line"></i> Status:</span>
-                    <span class="badge badge-info" id="lblStatus">Pending</span>
-                </div>
-            </div>
-            
-            <div class="table-responsive">
-                <table class="table" id="tblItems">
-                    <thead>
-                        <tr>
-                            <th>Item Code</th>
-                            <th>Item Name</th>
-                            <th>Current Stock</th>
-                            <th>GRN Quantity</th>
-                            <th>Batch Number</th>
-                            <th>Unit</th>
-                            <th>Rate</th>
-                            <th>Qty to Select</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tblItemsBody">
-                        <tr>
-                            <td colspan="8" style="text-align: center; padding: 40px;">
-                                <i class="fas fa-info-circle" style="font-size: 24px; color: #cbd5e0;"></i><br/>
-                                Please select a GRN number to load items
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-lg-9 col-md-10 col-sm-12">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-4 col-sm-12">
-                            <input type="button" id="btnSaveSelection" class="btn btn-primry" value="SAVE" />
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12">
-                            <input type="button" id="btnGenerateBarcodes" class="btn btn-primry" value="BARCODES" />
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12">
-                            <input type="button" id="btnReset" class="btn btn-primry" value="RESET" />
-                        </div>
+    <div id="toast" class="toast-notification"></div>
+    <div class="form-card">
+       
+
+        <div class="table-responsive">
+            <table class="table" id="tblItems">
+                <thead>
+                    <tr>
+                        <th>Item Code</th>
+                        <th>Item Name</th>
+                        <th>Current Stock</th>
+                        <th>GRN Quantity</th>
+                        <th>Batch Number</th>
+                        <th>Unit</th>
+                        <th>Rate</th>
+                        <th>Qty to Select</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tblItemsBody">
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-info-circle" style="font-size: 24px; color: #cbd5e0;"></i>
+                            <br />
+                            Please select a GRN number to load items
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-lg-9 col-md-10 col-sm-12">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" id="btnSaveSelection" class="btn btn-primry" value="SAVE" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" id="btnGenerateBarcodes" class="btn btn-primry" value="BARCODES" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" id="btnReset" class="btn btn-primry"  value="NEW" onclick="window.location.href='ItemSelection.aspx';" /> 
                     </div>
                 </div>
             </div>
         </div>
-        <div id="barcodesSection" class="form-card" style="display: none;">
-            <div class="card-title">
-                <i class="fas fa-qrcode"></i> Generated Barcodes 
+    </div>
+    <div id="barcodesSection" class="form-card" style="display: none;">
+        <div class="card-title">
+            <i class="fas fa-qrcode"></i>Generated Barcodes 
                 <span id="barcodeCount" style="font-size: 12px; color: #667eea;"></span>
-            </div>
-            <div id="barcodesContainer" class="barcode-container">
-                <div class="barcode-grid" id="barcodesGrid"></div>
-            </div>
         </div>
+        <div id="barcodesContainer" class="barcode-container">
+            <div class="barcode-grid" id="barcodesGrid"></div>
+        </div>
+    </div>
 </asp:Content>
