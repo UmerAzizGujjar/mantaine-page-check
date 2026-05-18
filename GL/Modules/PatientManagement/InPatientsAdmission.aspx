@@ -6433,7 +6433,10 @@
         debugger;
         function SavePatient() {
             debugger;
+
+            // Disable the save button immediately to prevent multiple clicks
             $('#SavePatient_Data').attr('disabled', true);
+
             var Prefix_PatientName = $('#ddl_name').val();
             var PatientName = $('#txt_name').val();
             var PatientID = $('#hdfPatient_ID').val();
@@ -6452,7 +6455,7 @@
             var martail_status = $('#ddl_status').val();
             var txtfees = $('#txtfees').val();
 
-            if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == ""  || Address == "")) {
+            if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || Address == "")) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -6479,11 +6482,12 @@
                     Swal.fire({
                         icon: 'warning',
                         title: 'CNIC Required!',
-                        text: 'Please enter  CNIC or Other CNIC',
+                        text: 'Please enter CNIC or Other CNIC',
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#3085d6'
+                    }).then(function () {
+                        $('#SavePatient_Data').attr('disabled', false);
                     });
-                    $('#SavePatient_Data').attr('disabled', false);
                     return;
                 } else {
                     if (!isCNICEmpty && CNIC !== "_____-_______-_") {
@@ -6495,8 +6499,9 @@
                                 text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
                                 confirmButtonText: 'OK',
                                 confirmButtonColor: '#d33'
+                            }).then(function () {
+                                $('#SavePatient_Data').attr('disabled', false);
                             });
-                            $('#SavePatient_Data').attr('disabled', false);
                             return;
                         }
                     }
@@ -6509,8 +6514,9 @@
                                 text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
                                 confirmButtonText: 'OK',
                                 confirmButtonColor: '#d33'
+                            }).then(function () {
+                                $('#SavePatient_Data').attr('disabled', false);
                             });
-                            $('#SavePatient_Data').attr('disabled', false);
                             return;
                         }
                     }
@@ -6579,6 +6585,8 @@
                     }
 
                     var Reg_Patient_ID = response.d;
+
+                    // Show success message
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -6594,7 +6602,11 @@
 
                     $('#PatientModel').modal('hide');
                     AddPatientDetail(Reg_Patient_ID);
-                    $('#SavePatient_Data').attr('disabled', false);
+
+                    // Re-enable the button after success (with slight delay to prevent double clicks)
+                    setTimeout(function () {
+                        $('#SavePatient_Data').attr('disabled', false);
+                    }, 2600);
                 },
                 error: function (response) {
                     Swal.fire({

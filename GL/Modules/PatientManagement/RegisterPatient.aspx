@@ -9,7 +9,7 @@
           $(document).ready(function () {
               loadCardfee();
               checkMonitoringVisibility();
-              allowRefund();
+              allowRefunds();
               var reg_id = '<%= Request.QueryString["Reg_id"] %>'
          if (reg_id != "") {
             
@@ -113,7 +113,7 @@
                   }
               });
           }
-          function MonitoringCheckbox() {
+          function allowRefunds() {
               $.ajax({
                   type: "POST",
                   url: "RegisterPatient.aspx/AllowRefund",
