@@ -313,7 +313,7 @@
                             alert('Please select a year');
                             return;
                         }
-                        var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear;
+                        var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "SAR") {
@@ -1774,6 +1774,11 @@
                     if (rptTitle == "Death_Certificate_Detail_Report") {
 
                         var url = 'ReportViewer.aspx?ReportName=Death_Certificate_Detail_Report&ReportTitle=Death Certificate Detail Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val();
+                        window.open(url, '_blank');
+                    }
+                    if (rptTitle == "Patient_Quality_Check_Report") {
+
+                        var url = 'ReportViewer.aspx?ReportName=Patient_Quality_Check_Report&ReportTitle=Patient Quality Check Detail Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val();
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "GOP_Patient_Detail") {
