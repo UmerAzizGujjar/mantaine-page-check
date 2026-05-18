@@ -999,9 +999,12 @@ namespace PMS
         partial void InsertReg_patient(Reg_patient instance);
         partial void UpdateReg_patient(Reg_patient instance);
         partial void DeleteReg_patient(Reg_patient instance);
+        partial void InsertBirth_Certificate(Birth_Certificate instance);
+        partial void UpdateBirth_Certificate(Birth_Certificate instance);
+        partial void DeleteBirth_Certificate(Birth_Certificate instance);
         #endregion
         public DataBaseDataContext() :
-              base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+      base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -3642,6 +3645,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Reg_patient>();
+            }
+        }
+
+        public System.Data.Linq.Table<Birth_Certificate> Birth_Certificates
+        {
+            get
+            {
+                return this.GetTable<Birth_Certificate>();
             }
         }
 
@@ -174845,6 +174856,8 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _Refund_date;
 
+        private EntitySet<Birth_Certificate> _Birth_Certificates;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -174939,6 +174952,7 @@ namespace PMS
 
         public Reg_patient()
         {
+            this._Birth_Certificates = new EntitySet<Birth_Certificate>(new Action<Birth_Certificate>(this.attach_Birth_Certificates), new Action<Birth_Certificate>(this.detach_Birth_Certificates));
             OnCreated();
         }
 
@@ -175798,6 +175812,1046 @@ namespace PMS
                     this._Refund_date = value;
                     this.SendPropertyChanged("Refund_date");
                     this.OnRefund_dateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "Reg_patient_Birth_Certificate", Storage = "_Birth_Certificates", ThisKey = "pat_id", OtherKey = "Patient_ID")]
+        public EntitySet<Birth_Certificate> Birth_Certificates
+        {
+            get
+            {
+                return this._Birth_Certificates;
+            }
+            set
+            {
+                this._Birth_Certificates.Assign(value);
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void attach_Birth_Certificates(Birth_Certificate entity)
+        {
+            this.SendPropertyChanging();
+            entity.Reg_patient = this;
+        }
+
+        private void detach_Birth_Certificates(Birth_Certificate entity)
+        {
+            this.SendPropertyChanging();
+            entity.Reg_patient = null;
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Birth_Certificate")]
+    public partial class Birth_Certificate : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Birth_Certificate_ID;
+
+        private System.Nullable<int> _Birth_Certificate_No;
+
+        private int _Patient_ID;
+
+        private string _Child_Name;
+
+        private string _Gender;
+
+        private System.Nullable<System.DateTime> _Date_of_Birth;
+
+        private string _Time_of_Birth;
+
+        private string _Place_of_Birth;
+
+        private System.Nullable<decimal> _Birth_Weight;
+
+        private string _Birth_Type;
+
+        private string _Birth_Order;
+
+        private string _Father_Name;
+
+        private string _Father_CNIC;
+
+        private string _Father_Occupation;
+
+        private string _Father_Nationality;
+
+        private string _Mother_Name;
+
+        private string _Mother_CNIC;
+
+        private string _Mother_Occupation;
+
+        private string _Mother_Nationality;
+
+        private string _Registration_Number;
+
+        private System.Nullable<System.DateTime> _Registration_Date;
+
+        private string _Registrar_Name;
+
+        private string _Union_Council;
+
+        private string _Address;
+
+        private string _City;
+
+        private string _Province;
+
+        private string _Postal_Code;
+
+        private string _Religion;
+
+        private string _Birth_Attendant;
+
+        private string _Remarks;
+
+        private System.Nullable<bool> _IsGenerated;
+
+        private string _Tracking_ID;
+
+        private System.Nullable<bool> _Is_Sent_To_NADRA;
+
+        private string _NADRA_Response;
+
+        private System.Nullable<System.DateTime> _Sent_Date;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        private EntityRef<Reg_patient> _Reg_patient;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnBirth_Certificate_IDChanging(int value);
+        partial void OnBirth_Certificate_IDChanged();
+        partial void OnBirth_Certificate_NoChanging(System.Nullable<int> value);
+        partial void OnBirth_Certificate_NoChanged();
+        partial void OnPatient_IDChanging(int value);
+        partial void OnPatient_IDChanged();
+        partial void OnChild_NameChanging(string value);
+        partial void OnChild_NameChanged();
+        partial void OnGenderChanging(string value);
+        partial void OnGenderChanged();
+        partial void OnDate_of_BirthChanging(System.Nullable<System.DateTime> value);
+        partial void OnDate_of_BirthChanged();
+        partial void OnTime_of_BirthChanging(string value);
+        partial void OnTime_of_BirthChanged();
+        partial void OnPlace_of_BirthChanging(string value);
+        partial void OnPlace_of_BirthChanged();
+        partial void OnBirth_WeightChanging(System.Nullable<decimal> value);
+        partial void OnBirth_WeightChanged();
+        partial void OnBirth_TypeChanging(string value);
+        partial void OnBirth_TypeChanged();
+        partial void OnBirth_OrderChanging(string value);
+        partial void OnBirth_OrderChanged();
+        partial void OnFather_NameChanging(string value);
+        partial void OnFather_NameChanged();
+        partial void OnFather_CNICChanging(string value);
+        partial void OnFather_CNICChanged();
+        partial void OnFather_OccupationChanging(string value);
+        partial void OnFather_OccupationChanged();
+        partial void OnFather_NationalityChanging(string value);
+        partial void OnFather_NationalityChanged();
+        partial void OnMother_NameChanging(string value);
+        partial void OnMother_NameChanged();
+        partial void OnMother_CNICChanging(string value);
+        partial void OnMother_CNICChanged();
+        partial void OnMother_OccupationChanging(string value);
+        partial void OnMother_OccupationChanged();
+        partial void OnMother_NationalityChanging(string value);
+        partial void OnMother_NationalityChanged();
+        partial void OnRegistration_NumberChanging(string value);
+        partial void OnRegistration_NumberChanged();
+        partial void OnRegistration_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnRegistration_DateChanged();
+        partial void OnRegistrar_NameChanging(string value);
+        partial void OnRegistrar_NameChanged();
+        partial void OnUnion_CouncilChanging(string value);
+        partial void OnUnion_CouncilChanged();
+        partial void OnAddressChanging(string value);
+        partial void OnAddressChanged();
+        partial void OnCityChanging(string value);
+        partial void OnCityChanged();
+        partial void OnProvinceChanging(string value);
+        partial void OnProvinceChanged();
+        partial void OnPostal_CodeChanging(string value);
+        partial void OnPostal_CodeChanged();
+        partial void OnReligionChanging(string value);
+        partial void OnReligionChanged();
+        partial void OnBirth_AttendantChanging(string value);
+        partial void OnBirth_AttendantChanged();
+        partial void OnRemarksChanging(string value);
+        partial void OnRemarksChanged();
+        partial void OnIsGeneratedChanging(System.Nullable<bool> value);
+        partial void OnIsGeneratedChanged();
+        partial void OnTracking_IDChanging(string value);
+        partial void OnTracking_IDChanged();
+        partial void OnIs_Sent_To_NADRAChanging(System.Nullable<bool> value);
+        partial void OnIs_Sent_To_NADRAChanged();
+        partial void OnNADRA_ResponseChanging(string value);
+        partial void OnNADRA_ResponseChanged();
+        partial void OnSent_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnSent_DateChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        #endregion
+
+        public Birth_Certificate()
+        {
+            this._Reg_patient = default(EntityRef<Reg_patient>);
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Birth_Certificate_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Birth_Certificate_ID
+        {
+            get
+            {
+                return this._Birth_Certificate_ID;
+            }
+            set
+            {
+                if ((this._Birth_Certificate_ID != value))
+                {
+                    this.OnBirth_Certificate_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Birth_Certificate_ID = value;
+                    this.SendPropertyChanged("Birth_Certificate_ID");
+                    this.OnBirth_Certificate_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Birth_Certificate_No", DbType = "Int")]
+        public System.Nullable<int> Birth_Certificate_No
+        {
+            get
+            {
+                return this._Birth_Certificate_No;
+            }
+            set
+            {
+                if ((this._Birth_Certificate_No != value))
+                {
+                    this.OnBirth_Certificate_NoChanging(value);
+                    this.SendPropertyChanging();
+                    this._Birth_Certificate_No = value;
+                    this.SendPropertyChanged("Birth_Certificate_No");
+                    this.OnBirth_Certificate_NoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
+        public int Patient_ID
+        {
+            get
+            {
+                return this._Patient_ID;
+            }
+            set
+            {
+                if ((this._Patient_ID != value))
+                {
+                    if (this._Reg_patient.HasLoadedOrAssignedValue)
+                    {
+                        throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+                    }
+                    this.OnPatient_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Patient_ID = value;
+                    this.SendPropertyChanged("Patient_ID");
+                    this.OnPatient_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Child_Name", DbType = "NVarChar(200)")]
+        public string Child_Name
+        {
+            get
+            {
+                return this._Child_Name;
+            }
+            set
+            {
+                if ((this._Child_Name != value))
+                {
+                    this.OnChild_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Child_Name = value;
+                    this.SendPropertyChanged("Child_Name");
+                    this.OnChild_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Gender", DbType = "NVarChar(50)")]
+        public string Gender
+        {
+            get
+            {
+                return this._Gender;
+            }
+            set
+            {
+                if ((this._Gender != value))
+                {
+                    this.OnGenderChanging(value);
+                    this.SendPropertyChanging();
+                    this._Gender = value;
+                    this.SendPropertyChanged("Gender");
+                    this.OnGenderChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Date_of_Birth", DbType = "Date")]
+        public System.Nullable<System.DateTime> Date_of_Birth
+        {
+            get
+            {
+                return this._Date_of_Birth;
+            }
+            set
+            {
+                if ((this._Date_of_Birth != value))
+                {
+                    this.OnDate_of_BirthChanging(value);
+                    this.SendPropertyChanging();
+                    this._Date_of_Birth = value;
+                    this.SendPropertyChanged("Date_of_Birth");
+                    this.OnDate_of_BirthChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Time_of_Birth", DbType = "NVarChar(50)")]
+        public string Time_of_Birth
+        {
+            get
+            {
+                return this._Time_of_Birth;
+            }
+            set
+            {
+                if ((this._Time_of_Birth != value))
+                {
+                    this.OnTime_of_BirthChanging(value);
+                    this.SendPropertyChanging();
+                    this._Time_of_Birth = value;
+                    this.SendPropertyChanged("Time_of_Birth");
+                    this.OnTime_of_BirthChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Place_of_Birth", DbType = "NVarChar(200)")]
+        public string Place_of_Birth
+        {
+            get
+            {
+                return this._Place_of_Birth;
+            }
+            set
+            {
+                if ((this._Place_of_Birth != value))
+                {
+                    this.OnPlace_of_BirthChanging(value);
+                    this.SendPropertyChanging();
+                    this._Place_of_Birth = value;
+                    this.SendPropertyChanged("Place_of_Birth");
+                    this.OnPlace_of_BirthChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Birth_Weight", DbType = "Decimal(10,2)")]
+        public System.Nullable<decimal> Birth_Weight
+        {
+            get
+            {
+                return this._Birth_Weight;
+            }
+            set
+            {
+                if ((this._Birth_Weight != value))
+                {
+                    this.OnBirth_WeightChanging(value);
+                    this.SendPropertyChanging();
+                    this._Birth_Weight = value;
+                    this.SendPropertyChanged("Birth_Weight");
+                    this.OnBirth_WeightChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Birth_Type", DbType = "NVarChar(50)")]
+        public string Birth_Type
+        {
+            get
+            {
+                return this._Birth_Type;
+            }
+            set
+            {
+                if ((this._Birth_Type != value))
+                {
+                    this.OnBirth_TypeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Birth_Type = value;
+                    this.SendPropertyChanged("Birth_Type");
+                    this.OnBirth_TypeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Birth_Order", DbType = "NVarChar(50)")]
+        public string Birth_Order
+        {
+            get
+            {
+                return this._Birth_Order;
+            }
+            set
+            {
+                if ((this._Birth_Order != value))
+                {
+                    this.OnBirth_OrderChanging(value);
+                    this.SendPropertyChanging();
+                    this._Birth_Order = value;
+                    this.SendPropertyChanged("Birth_Order");
+                    this.OnBirth_OrderChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Father_Name", DbType = "NVarChar(200)")]
+        public string Father_Name
+        {
+            get
+            {
+                return this._Father_Name;
+            }
+            set
+            {
+                if ((this._Father_Name != value))
+                {
+                    this.OnFather_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Father_Name = value;
+                    this.SendPropertyChanged("Father_Name");
+                    this.OnFather_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Father_CNIC", DbType = "NVarChar(50)")]
+        public string Father_CNIC
+        {
+            get
+            {
+                return this._Father_CNIC;
+            }
+            set
+            {
+                if ((this._Father_CNIC != value))
+                {
+                    this.OnFather_CNICChanging(value);
+                    this.SendPropertyChanging();
+                    this._Father_CNIC = value;
+                    this.SendPropertyChanged("Father_CNIC");
+                    this.OnFather_CNICChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Father_Occupation", DbType = "NVarChar(200)")]
+        public string Father_Occupation
+        {
+            get
+            {
+                return this._Father_Occupation;
+            }
+            set
+            {
+                if ((this._Father_Occupation != value))
+                {
+                    this.OnFather_OccupationChanging(value);
+                    this.SendPropertyChanging();
+                    this._Father_Occupation = value;
+                    this.SendPropertyChanged("Father_Occupation");
+                    this.OnFather_OccupationChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Father_Nationality", DbType = "NVarChar(50)")]
+        public string Father_Nationality
+        {
+            get
+            {
+                return this._Father_Nationality;
+            }
+            set
+            {
+                if ((this._Father_Nationality != value))
+                {
+                    this.OnFather_NationalityChanging(value);
+                    this.SendPropertyChanging();
+                    this._Father_Nationality = value;
+                    this.SendPropertyChanged("Father_Nationality");
+                    this.OnFather_NationalityChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mother_Name", DbType = "NVarChar(200)")]
+        public string Mother_Name
+        {
+            get
+            {
+                return this._Mother_Name;
+            }
+            set
+            {
+                if ((this._Mother_Name != value))
+                {
+                    this.OnMother_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Mother_Name = value;
+                    this.SendPropertyChanged("Mother_Name");
+                    this.OnMother_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mother_CNIC", DbType = "NVarChar(50)")]
+        public string Mother_CNIC
+        {
+            get
+            {
+                return this._Mother_CNIC;
+            }
+            set
+            {
+                if ((this._Mother_CNIC != value))
+                {
+                    this.OnMother_CNICChanging(value);
+                    this.SendPropertyChanging();
+                    this._Mother_CNIC = value;
+                    this.SendPropertyChanged("Mother_CNIC");
+                    this.OnMother_CNICChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mother_Occupation", DbType = "NVarChar(200)")]
+        public string Mother_Occupation
+        {
+            get
+            {
+                return this._Mother_Occupation;
+            }
+            set
+            {
+                if ((this._Mother_Occupation != value))
+                {
+                    this.OnMother_OccupationChanging(value);
+                    this.SendPropertyChanging();
+                    this._Mother_Occupation = value;
+                    this.SendPropertyChanged("Mother_Occupation");
+                    this.OnMother_OccupationChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mother_Nationality", DbType = "NVarChar(50)")]
+        public string Mother_Nationality
+        {
+            get
+            {
+                return this._Mother_Nationality;
+            }
+            set
+            {
+                if ((this._Mother_Nationality != value))
+                {
+                    this.OnMother_NationalityChanging(value);
+                    this.SendPropertyChanging();
+                    this._Mother_Nationality = value;
+                    this.SendPropertyChanged("Mother_Nationality");
+                    this.OnMother_NationalityChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Registration_Number", DbType = "NVarChar(100)")]
+        public string Registration_Number
+        {
+            get
+            {
+                return this._Registration_Number;
+            }
+            set
+            {
+                if ((this._Registration_Number != value))
+                {
+                    this.OnRegistration_NumberChanging(value);
+                    this.SendPropertyChanging();
+                    this._Registration_Number = value;
+                    this.SendPropertyChanged("Registration_Number");
+                    this.OnRegistration_NumberChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Registration_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Registration_Date
+        {
+            get
+            {
+                return this._Registration_Date;
+            }
+            set
+            {
+                if ((this._Registration_Date != value))
+                {
+                    this.OnRegistration_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Registration_Date = value;
+                    this.SendPropertyChanged("Registration_Date");
+                    this.OnRegistration_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Registrar_Name", DbType = "NVarChar(200)")]
+        public string Registrar_Name
+        {
+            get
+            {
+                return this._Registrar_Name;
+            }
+            set
+            {
+                if ((this._Registrar_Name != value))
+                {
+                    this.OnRegistrar_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Registrar_Name = value;
+                    this.SendPropertyChanged("Registrar_Name");
+                    this.OnRegistrar_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Union_Council", DbType = "NVarChar(200)")]
+        public string Union_Council
+        {
+            get
+            {
+                return this._Union_Council;
+            }
+            set
+            {
+                if ((this._Union_Council != value))
+                {
+                    this.OnUnion_CouncilChanging(value);
+                    this.SendPropertyChanging();
+                    this._Union_Council = value;
+                    this.SendPropertyChanged("Union_Council");
+                    this.OnUnion_CouncilChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Address", DbType = "NVarChar(500)")]
+        public string Address
+        {
+            get
+            {
+                return this._Address;
+            }
+            set
+            {
+                if ((this._Address != value))
+                {
+                    this.OnAddressChanging(value);
+                    this.SendPropertyChanging();
+                    this._Address = value;
+                    this.SendPropertyChanged("Address");
+                    this.OnAddressChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_City", DbType = "NVarChar(100)")]
+        public string City
+        {
+            get
+            {
+                return this._City;
+            }
+            set
+            {
+                if ((this._City != value))
+                {
+                    this.OnCityChanging(value);
+                    this.SendPropertyChanging();
+                    this._City = value;
+                    this.SendPropertyChanged("City");
+                    this.OnCityChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Province", DbType = "NVarChar(50)")]
+        public string Province
+        {
+            get
+            {
+                return this._Province;
+            }
+            set
+            {
+                if ((this._Province != value))
+                {
+                    this.OnProvinceChanging(value);
+                    this.SendPropertyChanging();
+                    this._Province = value;
+                    this.SendPropertyChanged("Province");
+                    this.OnProvinceChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Postal_Code", DbType = "NVarChar(20)")]
+        public string Postal_Code
+        {
+            get
+            {
+                return this._Postal_Code;
+            }
+            set
+            {
+                if ((this._Postal_Code != value))
+                {
+                    this.OnPostal_CodeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Postal_Code = value;
+                    this.SendPropertyChanged("Postal_Code");
+                    this.OnPostal_CodeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Religion", DbType = "NVarChar(50)")]
+        public string Religion
+        {
+            get
+            {
+                return this._Religion;
+            }
+            set
+            {
+                if ((this._Religion != value))
+                {
+                    this.OnReligionChanging(value);
+                    this.SendPropertyChanging();
+                    this._Religion = value;
+                    this.SendPropertyChanged("Religion");
+                    this.OnReligionChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Birth_Attendant", DbType = "NVarChar(200)")]
+        public string Birth_Attendant
+        {
+            get
+            {
+                return this._Birth_Attendant;
+            }
+            set
+            {
+                if ((this._Birth_Attendant != value))
+                {
+                    this.OnBirth_AttendantChanging(value);
+                    this.SendPropertyChanging();
+                    this._Birth_Attendant = value;
+                    this.SendPropertyChanged("Birth_Attendant");
+                    this.OnBirth_AttendantChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "NVarChar(500)")]
+        public string Remarks
+        {
+            get
+            {
+                return this._Remarks;
+            }
+            set
+            {
+                if ((this._Remarks != value))
+                {
+                    this.OnRemarksChanging(value);
+                    this.SendPropertyChanging();
+                    this._Remarks = value;
+                    this.SendPropertyChanged("Remarks");
+                    this.OnRemarksChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsGenerated", DbType = "Bit")]
+        public System.Nullable<bool> IsGenerated
+        {
+            get
+            {
+                return this._IsGenerated;
+            }
+            set
+            {
+                if ((this._IsGenerated != value))
+                {
+                    this.OnIsGeneratedChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsGenerated = value;
+                    this.SendPropertyChanged("IsGenerated");
+                    this.OnIsGeneratedChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Tracking_ID", DbType = "NVarChar(100)")]
+        public string Tracking_ID
+        {
+            get
+            {
+                return this._Tracking_ID;
+            }
+            set
+            {
+                if ((this._Tracking_ID != value))
+                {
+                    this.OnTracking_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Tracking_ID = value;
+                    this.SendPropertyChanged("Tracking_ID");
+                    this.OnTracking_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Is_Sent_To_NADRA", DbType = "Bit")]
+        public System.Nullable<bool> Is_Sent_To_NADRA
+        {
+            get
+            {
+                return this._Is_Sent_To_NADRA;
+            }
+            set
+            {
+                if ((this._Is_Sent_To_NADRA != value))
+                {
+                    this.OnIs_Sent_To_NADRAChanging(value);
+                    this.SendPropertyChanging();
+                    this._Is_Sent_To_NADRA = value;
+                    this.SendPropertyChanged("Is_Sent_To_NADRA");
+                    this.OnIs_Sent_To_NADRAChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_NADRA_Response", DbType = "NVarChar(MAX)")]
+        public string NADRA_Response
+        {
+            get
+            {
+                return this._NADRA_Response;
+            }
+            set
+            {
+                if ((this._NADRA_Response != value))
+                {
+                    this.OnNADRA_ResponseChanging(value);
+                    this.SendPropertyChanging();
+                    this._NADRA_Response = value;
+                    this.SendPropertyChanged("NADRA_Response");
+                    this.OnNADRA_ResponseChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sent_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Sent_Date
+        {
+            get
+            {
+                return this._Sent_Date;
+            }
+            set
+            {
+                if ((this._Sent_Date != value))
+                {
+                    this.OnSent_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Sent_Date = value;
+                    this.SendPropertyChanged("Sent_Date");
+                    this.OnSent_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "Reg_patient_Birth_Certificate", Storage = "_Reg_patient", ThisKey = "Patient_ID", OtherKey = "pat_id", IsForeignKey = true)]
+        public Reg_patient Reg_patient
+        {
+            get
+            {
+                return this._Reg_patient.Entity;
+            }
+            set
+            {
+                Reg_patient previousValue = this._Reg_patient.Entity;
+                if (((previousValue != value)
+                            || (this._Reg_patient.HasLoadedOrAssignedValue == false)))
+                {
+                    this.SendPropertyChanging();
+                    if ((previousValue != null))
+                    {
+                        this._Reg_patient.Entity = null;
+                        previousValue.Birth_Certificates.Remove(this);
+                    }
+                    this._Reg_patient.Entity = value;
+                    if ((value != null))
+                    {
+                        value.Birth_Certificates.Add(this);
+                        this._Patient_ID = value.pat_id;
+                    }
+                    else
+                    {
+                        this._Patient_ID = default(int);
+                    }
+                    this.SendPropertyChanged("Reg_patient");
                 }
             }
         }

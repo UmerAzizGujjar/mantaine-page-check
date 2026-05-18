@@ -52,6 +52,11 @@
             fillgender();
             fillmartial();
             fillmrnos();
+            fillNationality();
+            fillProvince();
+            fillReligion();
+            fillBirthType();
+            fillBirthGender();
             $("#txtSearch").keypress(function (event) {
                 var SearchString = $('#txtSearch').val();
                 if (event.which == 13) {
@@ -88,7 +93,71 @@
             }
             
         });
+        function fillBirthGender() {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetGender(function (data) {
+                if (data) {
+                    var genderList = JSON.parse(data);
+                    $.each(genderList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlBirthGender').html(options);
+                }
+            });
+        }
 
+        function fillBirthType() {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetBirthType(function (data) {
+                if (data) {
+                    var typeList = JSON.parse(data);
+                    $.each(typeList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlBirthType').html(options);
+                }
+            });
+        }
+
+        function fillReligion() {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetReligion(function (data) {
+                if (data) {
+                    var religionList = JSON.parse(data);
+                    $.each(religionList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlBirthReligion').html(options);
+                }
+            });
+        }
+
+        function fillProvince() {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetProvince(function (data) {
+                if (data) {
+                    var provinceList = JSON.parse(data);
+                    $.each(provinceList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#ddlBirthProvince').html(options);
+                }
+            });
+        }
+        
+        function fillNationality() {
+            var options = '<option value="0">Select</option>';
+            PageMethods.GetNationality(function (data) {
+                if (data) {
+                    var nationalityList = JSON.parse(data);
+                    $.each(nationalityList, function (key, value) {
+                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
+                    });
+                    $('#txtBirthFatherNationality').html(options);
+                    $('#txtBirthMotherNationality').html(options);
+                }
+            });
+        }
     
         debugger;
         function bindControls() {

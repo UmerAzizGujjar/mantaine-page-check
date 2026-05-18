@@ -7867,6 +7867,51 @@
       <Column Name="IsRefunded" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Refund_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Refund_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Reg_patient_Birth_Certificate" Member="Birth_Certificates" ThisKey="pat_id" OtherKey="Patient_ID" Type="Birth_Certificate" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Birth_Certificate" Member="Birth_Certificates">
+    <Type Name="Birth_Certificate">
+      <Column Name="Birth_Certificate_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Birth_Certificate_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Child_Name" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Date_of_Birth" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Time_of_Birth" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Place_of_Birth" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Birth_Weight" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="Birth_Type" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Birth_Order" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Father_Name" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Father_CNIC" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Father_Occupation" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Father_Nationality" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Mother_Name" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Mother_CNIC" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Mother_Occupation" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Mother_Nationality" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Registration_Number" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Registration_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Registrar_Name" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Union_Council" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Province" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Postal_Code" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Religion" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Birth_Attendant" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="IsGenerated" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Tracking_ID" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Is_Sent_To_NADRA" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="NADRA_Response" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Sent_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Reg_patient_Birth_Certificate" Member="Reg_patient" ThisKey="Patient_ID" OtherKey="pat_id" Type="Reg_patient" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
