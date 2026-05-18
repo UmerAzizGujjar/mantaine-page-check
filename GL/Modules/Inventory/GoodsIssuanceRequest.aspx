@@ -329,13 +329,14 @@
             var remarks = $('#txtRemarks').val();
             var itemId = $('#hditemID').val();
             var btnValue = $("#btnsave").val();
-            if (MIRNum == '') $('#txtReq_Num').addClass('ErrorAlert'); else $('#txtPr_Num').removeClass('ErrorAlert');
+
+            if (MIRNum == '') $('#txtReq_Num').addClass('ErrorAlert'); else $('#txtReq_Num').removeClass('ErrorAlert');
             if (MIRDate == '') $('#txtMIR_Date').addClass('ErrorAlert'); else $('#txtMIR_Date').removeClass('ErrorAlert');
             if (dept == '0') $('#ddldept').addClass('ErrorAlert'); else $('#ddldept').removeClass('ErrorAlert');
             if (WareHouse == '0') $('#ddlwarehouse').addClass('ErrorAlert'); else $('#ddlwarehouse').removeClass('ErrorAlert');
+
             var tblLength = $("#tblPackage tr:gt(0)").length;
             if (tblLength == '0') {
-
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -348,13 +349,16 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-
-
-                 $('#tblPackage').addClass('ErrorAlert');
+                $('#tblPackage').addClass('ErrorAlert');
             } else {
                 $('#tblPackage').removeClass('ErrorAlert');
             }
+
             if (!$('#txtReq_Num').hasClass('ErrorAlert') && !$('#txtMIR_Date').hasClass('ErrorAlert') && !$('#txtRemarks').hasClass('ErrorAlert') && !$('#ddldept').hasClass('ErrorAlert') && !$('#ddlwarehouse').hasClass('ErrorAlert') && !$('#tblPackage').hasClass('ErrorAlert')) {
+
+                // DISABLE SAVE BUTTON AFTER VALIDATION PASSES
+                $('#btnsave').prop('disabled', true);
+
                 $.each($("#tblPackage").find('tbody').find('tr'), function (index) {
                     var MIRQty = $(this).find('td input[name=Qty]').val();
                     if (MIRQty == "" || MIRQty == 0 || MIRQty < 0) {
@@ -365,13 +369,15 @@
                         status = true;
                     }
                 })
+
                 if (status == "QtyError") {
-                    debugger;
+                    // RE-ENABLE BUTTON IF QTY VALIDATION FAILS
+                    $('#btnsave').prop('disabled', false);
 
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: 'Please Enter MIR Qty Or MIR  Qty Must be Greater than zero',
+                        text: 'Please Enter MIR Qty Or MIR Qty Must be Greater than zero',
                         showConfirmButton: false,
                         timer: 2000,
                         customClass: {
@@ -380,12 +386,9 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
-
-                     return false;
+                    return false;
                 }
                 else {
-                    $('#btnsave').attr('disabled', true);
                     $.ajax({
                         type: "post",
                         url: "GoodsIssuanceRequest.aspx/SaveMIR",
@@ -411,10 +414,11 @@
                             SaveMIRDetail(id);
                         },
                         failure: function (response) {
+                            // RE-ENABLE BUTTON ON AJAX FAILURE
+                            $('#btnsave').prop('disabled', false);
                             alert("In failure method");
                         }
                     });
-
                 }
             }
         }
@@ -464,15 +468,7 @@
                         else {
                             append_data.append('ID', arr);
                         }
-                        //var options = {};
-                        //options.url = "../../upload/UploadPurchaseRequsitionDetail.ashx";
-                        //options.type = "POST";
-                        //options.data = append_data;
-                        //options.contentType = false;
-                        //options.processData = false;
-                        //options.success = function (result) { alert(result) };
-                        //options.error = function (err) { };
-                        //$.ajax(options);
+
                         if (btnValue == "Save") {
                             Swal.fire({
                                 icon: 'success',
@@ -486,7 +482,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                             $("#btnsave").prop("disabled", true);
+                            // Button already disabled, no need to disable again
                         }
                         else {
                             Swal.fire({
@@ -501,11 +497,13 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                             $("#btnsave").prop("disabled", true);
+                            // Button already disabled, no need to disable again
                         }
                         window.location.href = 'GoodsIssuanceRequestView.aspx';
                     },
                     failure: function (response) {
+                        // RE-ENABLE BUTTON ON FAILURE
+                        $('#btnsave').prop('disabled', false);
                         alert("In failure method");
                     }
                 });
