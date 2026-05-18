@@ -993,18 +993,18 @@ namespace PMS
         partial void InsertItemSelection_Detail(ItemSelection_Detail instance);
         partial void UpdateItemSelection_Detail(ItemSelection_Detail instance);
         partial void DeleteItemSelection_Detail(ItemSelection_Detail instance);
-        partial void InsertItemSelection_Master(ItemSelection_Master instance);
-        partial void UpdateItemSelection_Master(ItemSelection_Master instance);
-        partial void DeleteItemSelection_Master(ItemSelection_Master instance);
         partial void InsertReg_patient(Reg_patient instance);
         partial void UpdateReg_patient(Reg_patient instance);
         partial void DeleteReg_patient(Reg_patient instance);
         partial void InsertBirth_Certificate(Birth_Certificate instance);
         partial void UpdateBirth_Certificate(Birth_Certificate instance);
         partial void DeleteBirth_Certificate(Birth_Certificate instance);
+        partial void InsertItemSelection_Master(ItemSelection_Master instance);
+        partial void UpdateItemSelection_Master(ItemSelection_Master instance);
+        partial void DeleteItemSelection_Master(ItemSelection_Master instance);
         #endregion
         public DataBaseDataContext() :
-      base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -3632,14 +3632,6 @@ namespace PMS
             }
         }
 
-        public System.Data.Linq.Table<ItemSelection_Master> ItemSelection_Masters
-        {
-            get
-            {
-                return this.GetTable<ItemSelection_Master>();
-            }
-        }
-
         public System.Data.Linq.Table<Reg_patient> Reg_patients
         {
             get
@@ -3653,6 +3645,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Birth_Certificate>();
+            }
+        }
+
+        public System.Data.Linq.Table<ItemSelection_Master> ItemSelection_Masters
+        {
+            get
+            {
+                return this.GetTable<ItemSelection_Master>();
             }
         }
 
@@ -174286,484 +174286,6 @@ namespace PMS
         }
     }
 
-    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.ItemSelection_Master")]
-    public partial class ItemSelection_Master : INotifyPropertyChanging, INotifyPropertyChanged
-    {
-
-        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-
-        private int _Selection_ID;
-
-        private string _Selection_Num;
-
-        private System.DateTime _Selection_Date;
-
-        private int _GRN_ID;
-
-        private string _GRN_Num;
-
-        private int _VendorId;
-
-        private string _VendorName;
-
-        private string _WarehouseId;
-
-        private string _WarehouseName;
-
-        private string _Remarks;
-
-        private string _Status;
-
-        private System.Nullable<int> _Total_Items;
-
-        private System.Nullable<int> _Total_Barcodes;
-
-        private System.Guid _Created_By;
-
-        private System.Nullable<System.DateTime> _Creation_Date;
-
-        private System.Nullable<int> _Company_ID;
-
-        private EntitySet<ItemSelection_Barcode> _ItemSelection_Barcodes;
-
-        private EntitySet<ItemSelection_Detail> _ItemSelection_Details;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
-        partial void OnValidate(System.Data.Linq.ChangeAction action);
-        partial void OnCreated();
-        partial void OnSelection_IDChanging(int value);
-        partial void OnSelection_IDChanged();
-        partial void OnSelection_NumChanging(string value);
-        partial void OnSelection_NumChanged();
-        partial void OnSelection_DateChanging(System.DateTime value);
-        partial void OnSelection_DateChanged();
-        partial void OnGRN_IDChanging(int value);
-        partial void OnGRN_IDChanged();
-        partial void OnGRN_NumChanging(string value);
-        partial void OnGRN_NumChanged();
-        partial void OnVendorIdChanging(int value);
-        partial void OnVendorIdChanged();
-        partial void OnVendorNameChanging(string value);
-        partial void OnVendorNameChanged();
-        partial void OnWarehouseIdChanging(string value);
-        partial void OnWarehouseIdChanged();
-        partial void OnWarehouseNameChanging(string value);
-        partial void OnWarehouseNameChanged();
-        partial void OnRemarksChanging(string value);
-        partial void OnRemarksChanged();
-        partial void OnStatusChanging(string value);
-        partial void OnStatusChanged();
-        partial void OnTotal_ItemsChanging(System.Nullable<int> value);
-        partial void OnTotal_ItemsChanged();
-        partial void OnTotal_BarcodesChanging(System.Nullable<int> value);
-        partial void OnTotal_BarcodesChanged();
-        partial void OnCreated_ByChanging(System.Guid value);
-        partial void OnCreated_ByChanged();
-        partial void OnCreation_DateChanging(System.Nullable<System.DateTime> value);
-        partial void OnCreation_DateChanged();
-        partial void OnCompany_IDChanging(System.Nullable<int> value);
-        partial void OnCompany_IDChanged();
-        #endregion
-
-        public ItemSelection_Master()
-        {
-            this._ItemSelection_Barcodes = new EntitySet<ItemSelection_Barcode>(new Action<ItemSelection_Barcode>(this.attach_ItemSelection_Barcodes), new Action<ItemSelection_Barcode>(this.detach_ItemSelection_Barcodes));
-            this._ItemSelection_Details = new EntitySet<ItemSelection_Detail>(new Action<ItemSelection_Detail>(this.attach_ItemSelection_Details), new Action<ItemSelection_Detail>(this.detach_ItemSelection_Details));
-            OnCreated();
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Selection_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
-        public int Selection_ID
-        {
-            get
-            {
-                return this._Selection_ID;
-            }
-            set
-            {
-                if ((this._Selection_ID != value))
-                {
-                    this.OnSelection_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Selection_ID = value;
-                    this.SendPropertyChanged("Selection_ID");
-                    this.OnSelection_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Selection_Num", DbType = "NVarChar(50) NOT NULL", CanBeNull = false)]
-        public string Selection_Num
-        {
-            get
-            {
-                return this._Selection_Num;
-            }
-            set
-            {
-                if ((this._Selection_Num != value))
-                {
-                    this.OnSelection_NumChanging(value);
-                    this.SendPropertyChanging();
-                    this._Selection_Num = value;
-                    this.SendPropertyChanged("Selection_Num");
-                    this.OnSelection_NumChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Selection_Date", DbType = "Date NOT NULL")]
-        public System.DateTime Selection_Date
-        {
-            get
-            {
-                return this._Selection_Date;
-            }
-            set
-            {
-                if ((this._Selection_Date != value))
-                {
-                    this.OnSelection_DateChanging(value);
-                    this.SendPropertyChanging();
-                    this._Selection_Date = value;
-                    this.SendPropertyChanged("Selection_Date");
-                    this.OnSelection_DateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_ID", DbType = "Int NOT NULL")]
-        public int GRN_ID
-        {
-            get
-            {
-                return this._GRN_ID;
-            }
-            set
-            {
-                if ((this._GRN_ID != value))
-                {
-                    this.OnGRN_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._GRN_ID = value;
-                    this.SendPropertyChanged("GRN_ID");
-                    this.OnGRN_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_Num", DbType = "NVarChar(50) NOT NULL", CanBeNull = false)]
-        public string GRN_Num
-        {
-            get
-            {
-                return this._GRN_Num;
-            }
-            set
-            {
-                if ((this._GRN_Num != value))
-                {
-                    this.OnGRN_NumChanging(value);
-                    this.SendPropertyChanging();
-                    this._GRN_Num = value;
-                    this.SendPropertyChanged("GRN_Num");
-                    this.OnGRN_NumChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorId", DbType = "Int NOT NULL")]
-        public int VendorId
-        {
-            get
-            {
-                return this._VendorId;
-            }
-            set
-            {
-                if ((this._VendorId != value))
-                {
-                    this.OnVendorIdChanging(value);
-                    this.SendPropertyChanging();
-                    this._VendorId = value;
-                    this.SendPropertyChanged("VendorId");
-                    this.OnVendorIdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorName", DbType = "NVarChar(200)")]
-        public string VendorName
-        {
-            get
-            {
-                return this._VendorName;
-            }
-            set
-            {
-                if ((this._VendorName != value))
-                {
-                    this.OnVendorNameChanging(value);
-                    this.SendPropertyChanging();
-                    this._VendorName = value;
-                    this.SendPropertyChanged("VendorName");
-                    this.OnVendorNameChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WarehouseId", DbType = "VarChar(50) NOT NULL", CanBeNull = false)]
-        public string WarehouseId
-        {
-            get
-            {
-                return this._WarehouseId;
-            }
-            set
-            {
-                if ((this._WarehouseId != value))
-                {
-                    this.OnWarehouseIdChanging(value);
-                    this.SendPropertyChanging();
-                    this._WarehouseId = value;
-                    this.SendPropertyChanged("WarehouseId");
-                    this.OnWarehouseIdChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WarehouseName", DbType = "NVarChar(200)")]
-        public string WarehouseName
-        {
-            get
-            {
-                return this._WarehouseName;
-            }
-            set
-            {
-                if ((this._WarehouseName != value))
-                {
-                    this.OnWarehouseNameChanging(value);
-                    this.SendPropertyChanging();
-                    this._WarehouseName = value;
-                    this.SendPropertyChanged("WarehouseName");
-                    this.OnWarehouseNameChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "NVarChar(500)")]
-        public string Remarks
-        {
-            get
-            {
-                return this._Remarks;
-            }
-            set
-            {
-                if ((this._Remarks != value))
-                {
-                    this.OnRemarksChanging(value);
-                    this.SendPropertyChanging();
-                    this._Remarks = value;
-                    this.SendPropertyChanged("Remarks");
-                    this.OnRemarksChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "NVarChar(50)")]
-        public string Status
-        {
-            get
-            {
-                return this._Status;
-            }
-            set
-            {
-                if ((this._Status != value))
-                {
-                    this.OnStatusChanging(value);
-                    this.SendPropertyChanging();
-                    this._Status = value;
-                    this.SendPropertyChanged("Status");
-                    this.OnStatusChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Items", DbType = "Int")]
-        public System.Nullable<int> Total_Items
-        {
-            get
-            {
-                return this._Total_Items;
-            }
-            set
-            {
-                if ((this._Total_Items != value))
-                {
-                    this.OnTotal_ItemsChanging(value);
-                    this.SendPropertyChanging();
-                    this._Total_Items = value;
-                    this.SendPropertyChanged("Total_Items");
-                    this.OnTotal_ItemsChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Barcodes", DbType = "Int")]
-        public System.Nullable<int> Total_Barcodes
-        {
-            get
-            {
-                return this._Total_Barcodes;
-            }
-            set
-            {
-                if ((this._Total_Barcodes != value))
-                {
-                    this.OnTotal_BarcodesChanging(value);
-                    this.SendPropertyChanging();
-                    this._Total_Barcodes = value;
-                    this.SendPropertyChanged("Total_Barcodes");
-                    this.OnTotal_BarcodesChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier NOT NULL")]
-        public System.Guid Created_By
-        {
-            get
-            {
-                return this._Created_By;
-            }
-            set
-            {
-                if ((this._Created_By != value))
-                {
-                    this.OnCreated_ByChanging(value);
-                    this.SendPropertyChanging();
-                    this._Created_By = value;
-                    this.SendPropertyChanged("Created_By");
-                    this.OnCreated_ByChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Creation_Date", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Creation_Date
-        {
-            get
-            {
-                return this._Creation_Date;
-            }
-            set
-            {
-                if ((this._Creation_Date != value))
-                {
-                    this.OnCreation_DateChanging(value);
-                    this.SendPropertyChanging();
-                    this._Creation_Date = value;
-                    this.SendPropertyChanged("Creation_Date");
-                    this.OnCreation_DateChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
-        public System.Nullable<int> Company_ID
-        {
-            get
-            {
-                return this._Company_ID;
-            }
-            set
-            {
-                if ((this._Company_ID != value))
-                {
-                    this.OnCompany_IDChanging(value);
-                    this.SendPropertyChanging();
-                    this._Company_ID = value;
-                    this.SendPropertyChanged("Company_ID");
-                    this.OnCompany_IDChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "ItemSelection_Master_ItemSelection_Barcode", Storage = "_ItemSelection_Barcodes", ThisKey = "Selection_ID", OtherKey = "Selection_ID")]
-        public EntitySet<ItemSelection_Barcode> ItemSelection_Barcodes
-        {
-            get
-            {
-                return this._ItemSelection_Barcodes;
-            }
-            set
-            {
-                this._ItemSelection_Barcodes.Assign(value);
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "ItemSelection_Master_ItemSelection_Detail", Storage = "_ItemSelection_Details", ThisKey = "Selection_ID", OtherKey = "Selection_ID")]
-        public EntitySet<ItemSelection_Detail> ItemSelection_Details
-        {
-            get
-            {
-                return this._ItemSelection_Details;
-            }
-            set
-            {
-                this._ItemSelection_Details.Assign(value);
-            }
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void SendPropertyChanging()
-        {
-            if ((this.PropertyChanging != null))
-            {
-                this.PropertyChanging(this, emptyChangingEventArgs);
-            }
-        }
-
-        protected virtual void SendPropertyChanged(String propertyName)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        private void attach_ItemSelection_Barcodes(ItemSelection_Barcode entity)
-        {
-            this.SendPropertyChanging();
-            entity.ItemSelection_Master = this;
-        }
-
-        private void detach_ItemSelection_Barcodes(ItemSelection_Barcode entity)
-        {
-            this.SendPropertyChanging();
-            entity.ItemSelection_Master = null;
-        }
-
-        private void attach_ItemSelection_Details(ItemSelection_Detail entity)
-        {
-            this.SendPropertyChanging();
-            entity.ItemSelection_Master = this;
-        }
-
-        private void detach_ItemSelection_Details(ItemSelection_Detail entity)
-        {
-            this.SendPropertyChanging();
-            entity.ItemSelection_Master = null;
-        }
-    }
-
     [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Reg_patient")]
     public partial class Reg_patient : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -176874,6 +176396,532 @@ namespace PMS
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.ItemSelection_Master")]
+    public partial class ItemSelection_Master : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Selection_ID;
+
+        private string _Selection_Num;
+
+        private System.DateTime _Selection_Date;
+
+        private int _GRN_ID;
+
+        private string _GRN_Num;
+
+        private int _VendorId;
+
+        private string _VendorName;
+
+        private string _WarehouseId;
+
+        private string _WarehouseName;
+
+        private string _Remarks;
+
+        private string _Status;
+
+        private System.Nullable<int> _Total_Items;
+
+        private System.Nullable<int> _Total_Barcodes;
+
+        private System.Guid _Created_By;
+
+        private System.Nullable<System.DateTime> _Creation_Date;
+
+        private System.Nullable<int> _Company_ID;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Date;
+
+        private EntitySet<ItemSelection_Barcode> _ItemSelection_Barcodes;
+
+        private EntitySet<ItemSelection_Detail> _ItemSelection_Details;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnSelection_IDChanging(int value);
+        partial void OnSelection_IDChanged();
+        partial void OnSelection_NumChanging(string value);
+        partial void OnSelection_NumChanged();
+        partial void OnSelection_DateChanging(System.DateTime value);
+        partial void OnSelection_DateChanged();
+        partial void OnGRN_IDChanging(int value);
+        partial void OnGRN_IDChanged();
+        partial void OnGRN_NumChanging(string value);
+        partial void OnGRN_NumChanged();
+        partial void OnVendorIdChanging(int value);
+        partial void OnVendorIdChanged();
+        partial void OnVendorNameChanging(string value);
+        partial void OnVendorNameChanged();
+        partial void OnWarehouseIdChanging(string value);
+        partial void OnWarehouseIdChanged();
+        partial void OnWarehouseNameChanging(string value);
+        partial void OnWarehouseNameChanged();
+        partial void OnRemarksChanging(string value);
+        partial void OnRemarksChanged();
+        partial void OnStatusChanging(string value);
+        partial void OnStatusChanged();
+        partial void OnTotal_ItemsChanging(System.Nullable<int> value);
+        partial void OnTotal_ItemsChanged();
+        partial void OnTotal_BarcodesChanging(System.Nullable<int> value);
+        partial void OnTotal_BarcodesChanged();
+        partial void OnCreated_ByChanging(System.Guid value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreation_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreation_DateChanged();
+        partial void OnCompany_IDChanging(System.Nullable<int> value);
+        partial void OnCompany_IDChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_DateChanged();
+        #endregion
+
+        public ItemSelection_Master()
+        {
+            this._ItemSelection_Barcodes = new EntitySet<ItemSelection_Barcode>(new Action<ItemSelection_Barcode>(this.attach_ItemSelection_Barcodes), new Action<ItemSelection_Barcode>(this.detach_ItemSelection_Barcodes));
+            this._ItemSelection_Details = new EntitySet<ItemSelection_Detail>(new Action<ItemSelection_Detail>(this.attach_ItemSelection_Details), new Action<ItemSelection_Detail>(this.detach_ItemSelection_Details));
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Selection_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Selection_ID
+        {
+            get
+            {
+                return this._Selection_ID;
+            }
+            set
+            {
+                if ((this._Selection_ID != value))
+                {
+                    this.OnSelection_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Selection_ID = value;
+                    this.SendPropertyChanged("Selection_ID");
+                    this.OnSelection_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Selection_Num", DbType = "NVarChar(50) NOT NULL", CanBeNull = false)]
+        public string Selection_Num
+        {
+            get
+            {
+                return this._Selection_Num;
+            }
+            set
+            {
+                if ((this._Selection_Num != value))
+                {
+                    this.OnSelection_NumChanging(value);
+                    this.SendPropertyChanging();
+                    this._Selection_Num = value;
+                    this.SendPropertyChanged("Selection_Num");
+                    this.OnSelection_NumChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Selection_Date", DbType = "Date NOT NULL")]
+        public System.DateTime Selection_Date
+        {
+            get
+            {
+                return this._Selection_Date;
+            }
+            set
+            {
+                if ((this._Selection_Date != value))
+                {
+                    this.OnSelection_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Selection_Date = value;
+                    this.SendPropertyChanged("Selection_Date");
+                    this.OnSelection_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_ID", DbType = "Int NOT NULL")]
+        public int GRN_ID
+        {
+            get
+            {
+                return this._GRN_ID;
+            }
+            set
+            {
+                if ((this._GRN_ID != value))
+                {
+                    this.OnGRN_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._GRN_ID = value;
+                    this.SendPropertyChanged("GRN_ID");
+                    this.OnGRN_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_Num", DbType = "NVarChar(50) NOT NULL", CanBeNull = false)]
+        public string GRN_Num
+        {
+            get
+            {
+                return this._GRN_Num;
+            }
+            set
+            {
+                if ((this._GRN_Num != value))
+                {
+                    this.OnGRN_NumChanging(value);
+                    this.SendPropertyChanging();
+                    this._GRN_Num = value;
+                    this.SendPropertyChanged("GRN_Num");
+                    this.OnGRN_NumChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorId", DbType = "Int NOT NULL")]
+        public int VendorId
+        {
+            get
+            {
+                return this._VendorId;
+            }
+            set
+            {
+                if ((this._VendorId != value))
+                {
+                    this.OnVendorIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._VendorId = value;
+                    this.SendPropertyChanged("VendorId");
+                    this.OnVendorIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_VendorName", DbType = "NVarChar(200)")]
+        public string VendorName
+        {
+            get
+            {
+                return this._VendorName;
+            }
+            set
+            {
+                if ((this._VendorName != value))
+                {
+                    this.OnVendorNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._VendorName = value;
+                    this.SendPropertyChanged("VendorName");
+                    this.OnVendorNameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WarehouseId", DbType = "VarChar(50) NOT NULL", CanBeNull = false)]
+        public string WarehouseId
+        {
+            get
+            {
+                return this._WarehouseId;
+            }
+            set
+            {
+                if ((this._WarehouseId != value))
+                {
+                    this.OnWarehouseIdChanging(value);
+                    this.SendPropertyChanging();
+                    this._WarehouseId = value;
+                    this.SendPropertyChanged("WarehouseId");
+                    this.OnWarehouseIdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WarehouseName", DbType = "NVarChar(200)")]
+        public string WarehouseName
+        {
+            get
+            {
+                return this._WarehouseName;
+            }
+            set
+            {
+                if ((this._WarehouseName != value))
+                {
+                    this.OnWarehouseNameChanging(value);
+                    this.SendPropertyChanging();
+                    this._WarehouseName = value;
+                    this.SendPropertyChanged("WarehouseName");
+                    this.OnWarehouseNameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Remarks", DbType = "NVarChar(500)")]
+        public string Remarks
+        {
+            get
+            {
+                return this._Remarks;
+            }
+            set
+            {
+                if ((this._Remarks != value))
+                {
+                    this.OnRemarksChanging(value);
+                    this.SendPropertyChanging();
+                    this._Remarks = value;
+                    this.SendPropertyChanged("Remarks");
+                    this.OnRemarksChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Status", DbType = "NVarChar(50)")]
+        public string Status
+        {
+            get
+            {
+                return this._Status;
+            }
+            set
+            {
+                if ((this._Status != value))
+                {
+                    this.OnStatusChanging(value);
+                    this.SendPropertyChanging();
+                    this._Status = value;
+                    this.SendPropertyChanged("Status");
+                    this.OnStatusChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Items", DbType = "Int")]
+        public System.Nullable<int> Total_Items
+        {
+            get
+            {
+                return this._Total_Items;
+            }
+            set
+            {
+                if ((this._Total_Items != value))
+                {
+                    this.OnTotal_ItemsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Total_Items = value;
+                    this.SendPropertyChanged("Total_Items");
+                    this.OnTotal_ItemsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Barcodes", DbType = "Int")]
+        public System.Nullable<int> Total_Barcodes
+        {
+            get
+            {
+                return this._Total_Barcodes;
+            }
+            set
+            {
+                if ((this._Total_Barcodes != value))
+                {
+                    this.OnTotal_BarcodesChanging(value);
+                    this.SendPropertyChanging();
+                    this._Total_Barcodes = value;
+                    this.SendPropertyChanged("Total_Barcodes");
+                    this.OnTotal_BarcodesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier NOT NULL")]
+        public System.Guid Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Creation_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Creation_Date
+        {
+            get
+            {
+                return this._Creation_Date;
+            }
+            set
+            {
+                if ((this._Creation_Date != value))
+                {
+                    this.OnCreation_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Creation_Date = value;
+                    this.SendPropertyChanged("Creation_Date");
+                    this.OnCreation_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
+        public System.Nullable<int> Company_ID
+        {
+            get
+            {
+                return this._Company_ID;
+            }
+            set
+            {
+                if ((this._Company_ID != value))
+                {
+                    this.OnCompany_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Company_ID = value;
+                    this.SendPropertyChanged("Company_ID");
+                    this.OnCompany_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Date
+        {
+            get
+            {
+                return this._Updated_Date;
+            }
+            set
+            {
+                if ((this._Updated_Date != value))
+                {
+                    this.OnUpdated_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Date = value;
+                    this.SendPropertyChanged("Updated_Date");
+                    this.OnUpdated_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "ItemSelection_Master_ItemSelection_Barcode", Storage = "_ItemSelection_Barcodes", ThisKey = "Selection_ID", OtherKey = "Selection_ID")]
+        public EntitySet<ItemSelection_Barcode> ItemSelection_Barcodes
+        {
+            get
+            {
+                return this._ItemSelection_Barcodes;
+            }
+            set
+            {
+                this._ItemSelection_Barcodes.Assign(value);
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "ItemSelection_Master_ItemSelection_Detail", Storage = "_ItemSelection_Details", ThisKey = "Selection_ID", OtherKey = "Selection_ID")]
+        public EntitySet<ItemSelection_Detail> ItemSelection_Details
+        {
+            get
+            {
+                return this._ItemSelection_Details;
+            }
+            set
+            {
+                this._ItemSelection_Details.Assign(value);
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void attach_ItemSelection_Barcodes(ItemSelection_Barcode entity)
+        {
+            this.SendPropertyChanging();
+            entity.ItemSelection_Master = this;
+        }
+
+        private void detach_ItemSelection_Barcodes(ItemSelection_Barcode entity)
+        {
+            this.SendPropertyChanging();
+            entity.ItemSelection_Master = null;
+        }
+
+        private void attach_ItemSelection_Details(ItemSelection_Detail entity)
+        {
+            this.SendPropertyChanging();
+            entity.ItemSelection_Master = this;
+        }
+
+        private void detach_ItemSelection_Details(ItemSelection_Detail entity)
+        {
+            this.SendPropertyChanging();
+            entity.ItemSelection_Master = null;
         }
     }
 

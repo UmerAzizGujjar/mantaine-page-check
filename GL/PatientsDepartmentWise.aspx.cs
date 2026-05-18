@@ -2943,6 +2943,15 @@ namespace PMS
                     AllowPatientRecord = false;
                    
                 }
+                else if (this.PageTitle == "Patient_Quality_Check_Report")
+                {
+                    string x = "Patient Quality Check Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    AllowPatientRecord = false;
+                }
                 else if (this.PageTitle == "Purchase_Order_Report")
                 {
                     string x = "Purchase Order Report";
@@ -4851,6 +4860,25 @@ namespace PMS
                     lblMedical.Visible = false;
                     dpROw.Visible = false;
                     YearDiv.Visible = true;
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
 
                 }
 
