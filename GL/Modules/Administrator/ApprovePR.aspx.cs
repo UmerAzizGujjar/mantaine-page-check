@@ -30,6 +30,18 @@ namespace PMS
                       .Where(dept => dept.User_Id == AppConfig.UserID)
                       .Select(dept => dept.Department)
                       .ToList();
+                
+                var user_id = AppConfig.UserID;
+                var form_id = 1;
+                
+                // Get the user's approval limit
+                var userApprovalLimit = (from SASD in db.Sys_Approval_Stage_Details
+                                        join SASM in db.Sys_Approval_Stage_Masters on SASD.Stage_ID equals SASM.Stage_ID
+                                        join SATD in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATD.StageId
+                                        join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATD.Tempelate_ID equals SATF.Tempelate_ID
+                                        where SASD.UserId == user_id && SATF.FormId == form_id && SASM.IsDeleted == false
+                                        select SASD.MaxApprovalLimit).FirstOrDefault() ?? 0m;
+                
                 var qry = from a in db.Purchase_Requisitions
                           where (a.Status == "Created" || a.Status == "Pending") && a.IsDeleted == false && userDepartments.Contains(a.Department)
                           orderby a.PR_Id ascending
@@ -47,6 +59,9 @@ namespace PMS
                                                               where a.PR_Id == SAL.Entry_ID && SAL.Form_ID == 1
                                                               select usr.UserName ?? "").Distinct()),
                               Department = db.GetDataValueName("Department", a.Department),
+                              PRAmount = (from prd in db.Purchase_Requisition_Details
+                                         where prd.PR_ID == a.PR_Id
+                                         select (decimal?)prd.EstimateCost).Sum() ?? 0m,
                               TotalPRAmount = (from prd in db.Purchase_Requisition_Details
                                                join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
                                                where pr.Status == "Approved" && pr.Department == a.Department
@@ -61,23 +76,13 @@ namespace PMS
                                                   select (decimal?)ba.DR).Sum() ?? 0m) - ((from prd in db.Purchase_Requisition_Details
                                                                                            join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
                                                                                            where pr.Status == "Approved" && pr.Department == a.Department
-                                                                                           select (decimal?)prd.EstimateCost).Sum() ?? 0m)
+                                                                                           select (decimal?)prd.EstimateCost).Sum() ?? 0m),
+                              UserApprovalLimit = userApprovalLimit,
+                              CanApprove = userApprovalLimit == -1m || ((from prd in db.Purchase_Requisition_Details
+                                                                         join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                                                                         where pr.Status == "Approved" && pr.Department == a.Department
+                                                                         select (decimal?)prd.EstimateCost).Sum() ?? 0m) <= userApprovalLimit
                           };
-
-                var formattedQuery = qry.AsEnumerable().Select(x => new
-                {
-                    x.PR_Id,
-                    x.PR_Num,
-                    x.Remarks,
-                    x.Status,
-                    x.Creator,
-                    PRDate = Convert.ToDateTime(x.PRDate).ToString("dd-MMM-yyyy"),
-                    x.Approve_By,
-                    x.Department,
-                    x.TotalPRAmount,
-                    x.TotalBudget,
-                    x.RemainingAmount
-                });
 
                 bool hasEntryBudgetViewBtnRights = false;
                 var uid = AppConfig.UserID;
@@ -93,6 +98,28 @@ namespace PMS
                 }
                 GridView1.DataSource = qry;
                 GridView1.DataBind();
+                
+                // Disable checkboxes for rows where user doesn't have approval limit
+                foreach (GridViewRow row in GridView1.Rows)
+                {
+                    CheckBox chk = row.FindControl("chkSelect") as CheckBox;
+                    Label lblCanApprove = row.FindControl("lblCanApprove") as Label;
+                    Label lblPRAmount = row.FindControl("lblPRAmount") as Label;
+                    Label lblUserApprovalLimit = row.FindControl("lblUserApprovalLimit") as Label;
+                    
+                    if (chk != null && lblCanApprove != null && bool.TryParse(lblCanApprove.Text, out bool canApprove))
+                    {
+                        if (!canApprove)
+                        {
+                            chk.Enabled = false;
+                            decimal prAmount = 0;
+                            decimal.TryParse(lblPRAmount?.Text ?? "0", out prAmount);
+                            decimal approvalLimit = 0;
+                            decimal.TryParse(lblUserApprovalLimit?.Text ?? "0", out approvalLimit);
+                            chk.ToolTip = $"PR Amount ({prAmount}) exceeds your approval limit ({(approvalLimit == -1m ? "Unlimited" : approvalLimit.ToString())})";
+                        }
+                    }
+                }
             }
         }
         //protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -353,6 +380,10 @@ namespace PMS
         }
     }
 }
+
+
+
+
 
 
 
