@@ -79,7 +79,8 @@ namespace PMS
                                                                                            select (decimal?)prd.EstimateCost).Sum() ?? 0m),
                               UserApprovalLimit = userApprovalLimit,
                               CanApprove = userApprovalLimit == -1m || ((from prd in db.Purchase_Requisition_Details
-                                                                         where prd.PR_ID == a.PR_Id
+                                                                         join pr in db.Purchase_Requisitions on prd.PR_ID equals pr.PR_Id
+                                                                         where pr.Status == "Approved" && pr.Department == a.Department
                                                                          select (decimal?)prd.EstimateCost).Sum() ?? 0m) <= userApprovalLimit
                           };
 
