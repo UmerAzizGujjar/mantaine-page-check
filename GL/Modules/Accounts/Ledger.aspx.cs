@@ -104,6 +104,7 @@ namespace PMS
                         vendorDiv.Visible = true;
                         accountDiv.Visible = false;
                         vendorTypeDiv.Visible = false;
+                        tr_Export.Visible = false;
                         stockDiv.Visible = false;
                         string sqlLUnin = "Select 0 as Vendor_ID, 'All' as Vendor_Name union all ";
                         System.Data.DataTable dtVende = DBClass.getDataTable(sqlLUnin + " Select Vendor_ID, (convert(Varchar,Vendor_ID) + ' - ' + Vendor_Name) as Vendor_Name from AP_Vendors");

@@ -211,7 +211,7 @@
                     }
                     else {
                         if (parse[0].Active == true) {
-                            $("#tblbodyPackage").append("<tr><td style='padding-top: 7px!important;'>" + length + "</td><td style='padding-top: 7px!important;padding-right: 3px!important; */'>" + parse[0].Item_Code + "</td><td style='padding-left: 8px!important;padding-top: 7px!important;'>" + parse[0].Description + "</td><td style='text-align:center;'>" + parse[0].Unit + "</td><td style='text-align: center;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size: 11px;width: 100%!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeQty(this)'/></td><td style='padding-top: 7px!important;padding-left: 8px!important;display:none;' contenteditable></td><td style='padding-top: 7px!important;padding-left: 8px!important' contenteditable></td><td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td><td style='display:none'>" + parse[0].Item_ID + "</td><td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;'></i></a></td></tr>")
+                            $("#tblbodyPackage").append("<tr><td style='padding-top: 7px!important;'>" + length + "</td><td style='padding-top: 7px!important;padding-right: 3px!important; */'>" + parse[0].Item_Code + "</td><td style='padding-left: 8px!important;padding-top: 7px!important;'>" + parse[0].Description + "</td><td style='text-align:center;'>" + parse[0].Unit + "</td><td style='text-align: center;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size: 11px;width: 100%!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeQty(this)'/></td><td style='padding-top: 7px!important;text-align:center;padding-left: 8px!important;' contenteditable>" + parse[0].Last_MIR_Qty + "</td><td style='padding-top: 7px!important;padding-left: 8px!important' contenteditable></td><td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td><td style='display:none'>" + parse[0].Item_ID + "</td><td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;'></i></a></td></tr>")
                             length++;
                             $("#txtItem").tokenInput("clear");
                         }
@@ -329,13 +329,14 @@
             var remarks = $('#txtRemarks').val();
             var itemId = $('#hditemID').val();
             var btnValue = $("#btnsave").val();
-            if (MIRNum == '') $('#txtReq_Num').addClass('ErrorAlert'); else $('#txtPr_Num').removeClass('ErrorAlert');
+
+            if (MIRNum == '') $('#txtReq_Num').addClass('ErrorAlert'); else $('#txtReq_Num').removeClass('ErrorAlert');
             if (MIRDate == '') $('#txtMIR_Date').addClass('ErrorAlert'); else $('#txtMIR_Date').removeClass('ErrorAlert');
             if (dept == '0') $('#ddldept').addClass('ErrorAlert'); else $('#ddldept').removeClass('ErrorAlert');
             if (WareHouse == '0') $('#ddlwarehouse').addClass('ErrorAlert'); else $('#ddlwarehouse').removeClass('ErrorAlert');
+
             var tblLength = $("#tblPackage tr:gt(0)").length;
             if (tblLength == '0') {
-
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -348,13 +349,16 @@
                         htmlContainer: 'swal-big-text'
                     }
                 });
-
-
-                 $('#tblPackage').addClass('ErrorAlert');
+                $('#tblPackage').addClass('ErrorAlert');
             } else {
                 $('#tblPackage').removeClass('ErrorAlert');
             }
+
             if (!$('#txtReq_Num').hasClass('ErrorAlert') && !$('#txtMIR_Date').hasClass('ErrorAlert') && !$('#txtRemarks').hasClass('ErrorAlert') && !$('#ddldept').hasClass('ErrorAlert') && !$('#ddlwarehouse').hasClass('ErrorAlert') && !$('#tblPackage').hasClass('ErrorAlert')) {
+
+                // DISABLE SAVE BUTTON AFTER VALIDATION PASSES
+                $('#btnsave').prop('disabled', true);
+
                 $.each($("#tblPackage").find('tbody').find('tr'), function (index) {
                     var MIRQty = $(this).find('td input[name=Qty]').val();
                     if (MIRQty == "" || MIRQty == 0 || MIRQty < 0) {
@@ -365,13 +369,15 @@
                         status = true;
                     }
                 })
+
                 if (status == "QtyError") {
-                    debugger;
+                    // RE-ENABLE BUTTON IF QTY VALIDATION FAILS
+                    $('#btnsave').prop('disabled', false);
 
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: 'Please Enter MIR Qty Or MIR  Qty Must be Greater than zero',
+                        text: 'Please Enter MIR Qty Or MIR Qty Must be Greater than zero',
                         showConfirmButton: false,
                         timer: 2000,
                         customClass: {
@@ -380,12 +386,9 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
-
-
-                     return false;
+                    return false;
                 }
                 else {
-                    $('#btnsave').attr('disabled', true);
                     $.ajax({
                         type: "post",
                         url: "GoodsIssuanceRequest.aspx/SaveMIR",
@@ -411,10 +414,11 @@
                             SaveMIRDetail(id);
                         },
                         failure: function (response) {
+                            // RE-ENABLE BUTTON ON AJAX FAILURE
+                            $('#btnsave').prop('disabled', false);
                             alert("In failure method");
                         }
                     });
-
                 }
             }
         }
@@ -427,6 +431,7 @@
                 debugger
                 details = {};
                 details.MIRQty = $(this).find('td:eq(4) input').val();
+                details.Last_MIR_Qty = $(this).find('td:eq(5)').text();
                 details.Remarks = $(this).find('td:eq(6)').text();
                 details.MIRId = id;
                 details.itemId = $(this).find('td:eq(8)').text();
@@ -463,15 +468,7 @@
                         else {
                             append_data.append('ID', arr);
                         }
-                        //var options = {};
-                        //options.url = "../../upload/UploadPurchaseRequsitionDetail.ashx";
-                        //options.type = "POST";
-                        //options.data = append_data;
-                        //options.contentType = false;
-                        //options.processData = false;
-                        //options.success = function (result) { alert(result) };
-                        //options.error = function (err) { };
-                        //$.ajax(options);
+
                         if (btnValue == "Save") {
                             Swal.fire({
                                 icon: 'success',
@@ -485,7 +482,7 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                             $("#btnsave").prop("disabled", true);
+                            // Button already disabled, no need to disable again
                         }
                         else {
                             Swal.fire({
@@ -500,11 +497,13 @@
                                     htmlContainer: 'swal-big-text'
                                 }
                             });
-                             $("#btnsave").prop("disabled", true);
+                            // Button already disabled, no need to disable again
                         }
                         window.location.href = 'GoodsIssuanceRequestView.aspx';
                     },
                     failure: function (response) {
+                        // RE-ENABLE BUTTON ON FAILURE
+                        $('#btnsave').prop('disabled', false);
                         alert("In failure method");
                     }
                 });
@@ -584,7 +583,7 @@
                     $.each(parse, function (key, value) {
                         debugger;
                         var len = key + 1;
-                        row += '<tr><td style="padding-top: 7px!important;">' + len + '</td><td style="padding-top: 7px!important;padding-right: 3px!important; */">' + parse[key].itemCode + '</td><td style="padding-left: 8px!important;padding-top: 7px!important;">' + parse[key].Description + '</td><td style="text-align:center;">' + parse[key].Unit + '</td><td style="text-align: center;"><input type="text"  value="' + parseFloat(parse[key].MIRQty).toFixed(2) + '" name="Qty" id="txtQty ' + counter + '" style="font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;" autocomplete="off" onkeyup="calcutaeQty(this)"/></td><td style="padding-top: 7px!important;padding-left: 8px!important;display:none;" contenteditable></td><td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td><td> <label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td><td style="display:none">' + parse[key].itemId + '</td><td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td></tr>';
+                        row += '<tr><td style="padding-top: 7px!important;">' + len + '</td><td style="padding-top: 7px!important;padding-right: 3px!important; */">' + parse[key].itemCode + '</td><td style="padding-left: 8px!important;padding-top: 7px!important;">' + parse[key].Description + '</td><td style="text-align:center;">' + parse[key].Unit + '</td><td style="text-align: center;"><input type="text"  value="' + parseFloat(parse[key].MIRQty).toFixed(2) + '" name="Qty" id="txtQty ' + counter + '" style="font-size: 9px;width: 52px!important;text-align: right;margin-top: 2px;" autocomplete="off" onkeyup="calcutaeQty(this)"/></td><td style="padding-top: 7px!important;text-align:center;padding-left: 8px!important;" contenteditable>' + parse[key].Last_MIR_Qty + '</td><td style="padding-top: 7px!important;padding-left: 8px!important" contenteditable>' + parse[key].remarks + '</td><td> <label class="fileContainer" style="font-size: 13px;margin-top: -3px;"><i class="glyphicon glyphicon-paperclip"></i><input type="file" name="fileuploadlist" id="fileuploadlist' + key + '"></label></td><td style="display:none">' + parse[key].itemId + '</td><td><a href="#" onclick="Delete(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;"></i></a></td></tr>';
                     });
                     $("#tblPackage").append(row);
                     calcutaeQty();
@@ -620,8 +619,13 @@
             var TotalQty = 0;
             $.each($('#tblPackage tbody tr'), function (key, value) {
                 debugger;
-                var Qty = $($(value).find('td input[name=Qty]')[0]).val();
-                TotalQty += parseFloat(Qty);
+                var inputElement = $(value).find('td input[name=Qty]')[0];
+                var Qty = $(inputElement).val();
+
+                console.log('Row:', key, 'Input element:', inputElement, 'Value:', Qty); // Debug log
+
+                var parsedQty = parseFloat(Qty) || 0;
+                TotalQty += parsedQty;
             });
             debugger;
             $('#totQty').val(TotalQty);
@@ -703,6 +707,7 @@
                     <th style="width: 205px; text-align: center;">Description</th>
                     <th style="width: 35px; text-align: center;">Unit</th>
                     <th style="width: 43px; text-align: center;">GIR Qty</th>
+                    <th style="width: 43px; text-align: center;">Last GIR Qty</th>
                     <th style="width: 112px; text-align: center; display: none;">Technical Specifications</th>
                     <th style="width: 126px; text-align: center;">Remarks</th>
                     <th style="width: 32px!important; text-align: center;">Attachment</th>

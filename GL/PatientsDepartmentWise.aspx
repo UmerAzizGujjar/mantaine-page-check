@@ -313,7 +313,7 @@
                             alert('Please select a year');
                             return;
                         }
-                        var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear;
+                        var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "SAR") {
@@ -1714,7 +1714,7 @@
                     }
                     if (rptTitle == "Purchase_Register_Report") {
 
-                        var url = 'ReportViewer.aspx?ReportName=Purchase_Register_Report&ReportTitle=Purchase Register Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&PatientType=' + $('#ctl00_MainContent_ddlDepartments').val();
+                        var url = 'ReportViewer.aspx?ReportName=Purchase_Register_Report&ReportTitle=Purchase Register Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Vendor=' + $('#ctl00_MainContent_ddlDepartments').val();
                         window.open(url, '_blank');
                     }
                     if (rptTitle == "AdmitPatientList") {
@@ -1766,7 +1766,21 @@
                         var url = 'ReportViewer.aspx?ReportName=ApAgingSummary&ReportTitle=Ap Aging Summary Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&VendorId=' + $('#ctl00_MainContent_ddlDepartments').val();
                         window.open(url, '_blank');
                     }
+                    if (rptTitle == "Birth_Certificate_Detail_Report") {
 
+                        var url = 'ReportViewer.aspx?ReportName=Birth_Certificate_Detail_Report&ReportTitle=Birth Certificate Detail Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val();
+                        window.open(url, '_blank');
+                    }
+                    if (rptTitle == "Death_Certificate_Detail_Report") {
+
+                        var url = 'ReportViewer.aspx?ReportName=Death_Certificate_Detail_Report&ReportTitle=Death Certificate Detail Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val();
+                        window.open(url, '_blank');
+                    }
+                    if (rptTitle == "Patient_Quality_Check_Report") {
+
+                        var url = 'ReportViewer.aspx?ReportName=Patient_Quality_Check_Report&ReportTitle=Patient Quality Check Detail Report From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val();
+                        window.open(url, '_blank');
+                    }
                     if (rptTitle == "GOP_Patient_Detail") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var url = 'ReportViewer.aspx?ReportName=GOP_Details&ReportTitle=OPD Patient Detail From  ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0");

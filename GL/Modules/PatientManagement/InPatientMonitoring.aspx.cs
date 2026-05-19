@@ -993,6 +993,8 @@ namespace PMS
         public class Medicine
         {
             public int PatientID { get; set; }
+
+            public int ActualPatientID { get; set; }
             public List<MedicineDetails> MedicineList { get; set; }
         }
         public class MedicineDetails
@@ -1151,37 +1153,52 @@ namespace PMS
                 var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    var In_pat = (from ip in db.In_Patients
-                                  join ipm in db.InPatient_Monitorings on ip.Patient_ID equals ipm.Patient_ID
-                                  where ipm.InPatient_Mon_ID == MedicineDetail.PatientID
-                                  orderby ip.In_Patient_ID descending
-                                  select ip.In_Patient_ID).FirstOrDefault();
+                    int targetPatientId = 0;
 
-                    /********************Deleting Previous 0 Value Saved Rows.***********************************/
-                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "InPatient" && i.chkDiccharge == false).ToList();
+                    if (MedicineDetail.PatientID > 0)
+                    {
+                        var In_pat = (from ip in db.In_Patients
+                                      join ipm in db.InPatient_Monitorings on ip.Patient_ID equals ipm.Patient_ID
+                                      where ipm.InPatient_Mon_ID == MedicineDetail.PatientID
+                                      orderby ip.In_Patient_ID descending
+                                      select ip.In_Patient_ID).FirstOrDefault();
+                        targetPatientId = In_pat;
+                    }
+                    else 
+                    {
+                        var latestInPatient = (from ip in db.In_Patients
+                                               where ip.Patient_ID == MedicineDetail.ActualPatientID
+                                               orderby ip.In_Patient_ID descending
+                                               select ip.In_Patient_ID).FirstOrDefault();
+                        targetPatientId = latestInPatient;
+                    }
+
+                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines
+                        .Where(i => i.Patient_ID == 0 && i.Transaction_Type == "InPatient" && i.chkDiccharge == false).ToList();
                     db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
                     db.SubmitChanges();
+
                     int couterNewRecords = 0;
-                    if (MedicineDetail.PatientID != 0)
+
+                    if (targetPatientId > 0)
                     {
-                        /*********************Deleting Previous Entry On Every Insert Or Update*************************/
-                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == In_pat && p.Transaction_Type == "InPatient" && (p.chkDiccharge == false || p.chkDiccharge == null)).ToList();
+                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines
+                            .Where(p => p.Patient_ID == targetPatientId && p.Transaction_Type == "InPatient"
+                                && (p.chkDiccharge == false || p.chkDiccharge == null)).ToList();
                         if (inPatmedicineList != null)
                         {
                             db.In_Patient_Medicines.DeleteAllOnSubmit(inPatmedicineList);
-                            couterNewRecords++;
+                            db.SubmitChanges();
                         }
                     }
-                    couterNewRecords = 0;
 
-                    /*********************Inserting New Entry On Every Insert Or Update*************************/
                     foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
                     {
                         In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine();
 
                         var itemid = db.INV_Items.Where(p => p.Item_Code == oIn_Patient_Medicine.ItemCode).Select(p => p.Item_ID).FirstOrDefault();
 
-                        oIn_Patient_Medicine1.Patient_ID = Convert.ToInt32(In_pat);
+                        oIn_Patient_Medicine1.Patient_ID = targetPatientId; 
                         oIn_Patient_Medicine1.Item_Code = Convert.ToString(itemid);
                         oIn_Patient_Medicine1.Medicine_Name = oIn_Patient_Medicine.Medicine_Name;
                         oIn_Patient_Medicine1.Transaction_Type = "InPatient";
@@ -1192,28 +1209,35 @@ namespace PMS
                         oIn_Patient_Medicine1.AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff;
                         oIn_Patient_Medicine1.Frequency = oIn_Patient_Medicine.Frequency;
                         oIn_Patient_Medicine1.Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty;
-                        oIn_Patient_Medicine1.Rcv_Qty =Convert.ToDecimal( oIn_Patient_Medicine.Rec_Qty);
-                        oIn_Patient_Medicine1.Req_Qty =Convert.ToDecimal( oIn_Patient_Medicine.Issue_Qty);
+                        oIn_Patient_Medicine1.Rcv_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty);
+                        oIn_Patient_Medicine1.Req_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty);
                         oIn_Patient_Medicine1.Other_Instruction = oIn_Patient_Medicine.Other_Instruction;
                         oIn_Patient_Medicine1.Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular);
                         oIn_Patient_Medicine1.STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT);
                         oIn_Patient_Medicine1.PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN);
+
                         if (oIn_Patient_Medicine.Start_Date_Time == null || oIn_Patient_Medicine.Start_Date_Time == "null" || oIn_Patient_Medicine.Start_Date_Time == "") { }
                         else
                         {
                             oIn_Patient_Medicine1.Start_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Start_Date_Time);
                         }
-                        if (oIn_Patient_Medicine.Stop_Date_Time == null || oIn_Patient_Medicine.Stop_Date_Time == "null" || oIn_Patient_Medicine.Stop_Date_Time == "") { }
+                        //if (oIn_Patient_Medicine.Stop_Date_Time == null || oIn_Patient_Medicine.Stop_Date_Time == "null" || oIn_Patient_Medicine.Stop_Date_Time == "") { }
+                        //else
+                        //{
+                        //    oIn_Patient_Medicine1.Stop_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Stop_Date_Time);
+                        //}
+                        DateTime stopDateTime;
+                        if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Stop_Date_Time) && oIn_Patient_Medicine.Stop_Date_Time != "null" && DateTime.TryParse(oIn_Patient_Medicine.Stop_Date_Time, out stopDateTime))
+                        {
+                            oIn_Patient_Medicine1.Stop_Date_Time = stopDateTime;
+                        }
                         else
                         {
-                            oIn_Patient_Medicine1.Stop_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Stop_Date_Time);
+                            oIn_Patient_Medicine1.Stop_Date_Time = null; 
                         }
                         oIn_Patient_Medicine1.Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN;
                         oIn_Patient_Medicine1.Username = oIn_Patient_Medicine.User;
                         oIn_Patient_Medicine1.High_Risk_Drug = oIn_Patient_Medicine.High_Risk;
-
-
-
 
                         db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
                         couterNewRecords++;
@@ -1223,7 +1247,6 @@ namespace PMS
             }
             catch (Exception ex)
             {
-
             }
             return "";
         }

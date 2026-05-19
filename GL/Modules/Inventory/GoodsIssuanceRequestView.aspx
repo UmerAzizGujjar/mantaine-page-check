@@ -124,6 +124,7 @@
                     },
                     { "data": "Department", "orderable": false },
                     { "data": "Remarks", "orderable": false },
+                    { "data": "Closing_Remarks", "orderable": false },
                     {
                         "data": "CreatedBY",
                         "createdCell": function (td, cellData, rowData, row, col) {
@@ -131,6 +132,16 @@
                         }, "orderable": false
                     },
                     { "data": "Status", "orderable": false },
+                    {
+                        "data": "Creation_Date", "name": "Creation_Date",
+                        "render": (data, type, full) => moment(full.Creation_Date).format('DD-MMM-YYYY hh:mm A'),
+                        "width": "12%"
+                    },
+                    {
+                        "data": "Approved_Time", "name": "Approved_Time",
+                        "render": (data, type, full) => full.Approved_Time ? moment(full.Approved_Time).format('DD-MMM-YYYY hh:mm A') : '',
+                        "width": "12%"
+                    },
                     {
                         "render": function (data, type, full) {
                             var res = ' <a href="#"  class="editListBtn" onclick="Edit(' + full.MaterialRequest_Id + ')" style="border-radius: 4px;margin-right: 4px; color: white; padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i>';
@@ -206,8 +217,11 @@
                         <th>Pirority</th>
                         <th>Department</th>
                         <th>Remarks</th>
+                        <th>Closing Remarks</th>
                         <th>Request BY</th>
                         <th>Status</th>
+                        <th>Creation Date</th>
+                        <th>Approved Date</th>
                         <th>Actions</th>
                     </tr>
 

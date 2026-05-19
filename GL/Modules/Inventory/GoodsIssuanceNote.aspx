@@ -9,8 +9,104 @@
             $('#ddlMIR').select2();
             LoadOrganizations();
             GetWareHouseCondition();   
+            GetGIRCloseCondition();   
             LoadDepartments();
-            
+            // Move this OUTSIDE the document ready function or ensure it's properly bound
+            // Use event delegation or ensure the DOM is ready
+            $(document).ready(function () {
+                // Your existing document ready code remains here...
+
+                // Add this event handler inside document ready
+                $(document).on('click', '#confirmCloseBtn', function () {
+                    var remarks = $('#remarks').val().trim();
+
+                    if (remarks === "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: 'Please enter remarks before closing.',
+                            showConfirmButton: true,
+                            timer: 2000
+                        });
+                        return false;
+                    }
+
+                    var GIR = $('#mir_id').val();
+
+                    if (!GIR || GIR === "0") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: 'Please select a GIR first.',
+                            showConfirmButton: true,
+                            timer: 2000
+                        });
+                        return false;
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: "GoodsIssuanceNote.aspx/CloseGIR",
+                        data: JSON.stringify({ 'GIR': GIR, 'remarks': remarks }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+
+                        beforeSend: function () {
+                            $('#confirmCloseBtn').prop('disabled', true).text('Processing...');
+                        },
+
+                        success: function (response) {
+                            if (response.d == "success") {
+                                $('#remarksModal').modal('hide');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'GIR Closed Successfully.',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                }).then(function () {
+                                    location.reload();
+                                });
+                            } else {
+                                $('#remarksModal').modal('hide');
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'There is some issue closing this GIR.',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                            }
+                        },
+
+                        error: function (xhr, status, error) {
+                            console.error("Error closing GIR:", error);
+                            console.error("Response:", xhr.responseText);
+                            $('#remarksModal').modal('hide');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Server Error: ' + (xhr.responseText || 'Please try again later.'),
+                                showConfirmButton: true
+                            });
+                        },
+
+                        complete: function () {
+                            $('#confirmCloseBtn').prop('disabled', false).text('Confirm Close');
+                        }
+                    });
+                });
+            });
             $('#btnGetAllItems').on('click', function () {
                 $('#btnAdd').prop('disabled', true);
                 LoadAllitem('');
@@ -54,9 +150,11 @@
                          UserUnApproveButtonRights();
                          $('#btnSave').attr("disabled", 'disabled');
                          $('#btnVoucher').show();
+                         $('#isCloseGIR').show();
                      }
                      if (status == "Created") {
                          $('#btnVoucher').hide();
+                         $('#isCloseGIR').hide();
                      }
                  }, 2000);
              }
@@ -105,6 +203,31 @@
                     }
                 });
             }
+            var GIRCloseCond;
+            function GetGIRCloseCondition() {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "GoodsIssuanceNote.aspx/GetGIRCloseCondition",
+                    data: JSON.stringify({}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+                        GIRCloseCond = JSON.parse(response.d);
+                        if (GIRCloseCond == '01') {
+                            $('#isCloseGIR').show();
+                        }
+                        else {
+                             $('#isCloseGIR').hide();                          
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error fetching items", error);
+                    }
+                });
+            }
+     
              $('#btnSave').on('click', function () {
                  debugger;
                  var checkstock = false;
@@ -322,6 +445,16 @@
                     alert(error.get_message());
                 })
         }
+        debugger;
+        function CloseGIRs() {
+            // Clear previous remarks
+            $('#remarks').val('');
+
+            // Show the modal
+            $('#remarksModal').modal('show');
+        }
+
+       
         function LoadDepartments() {
             PageMethods.LoadDepartments(function (res) {
                 var parsed_Date = JSON.parse(res);
@@ -803,7 +936,7 @@
                             new Date(parseInt(lastissueDate.substring(6, 19)))
                         );
                     }
-
+                    $("#mir_id").val(result[key].MIR_Id);
 
                     var rows = '<tr>' +
                         '<td style="padding-top: 9px;height: 27px !important;text-align: center;padding-top: 6px !important;">' + result[key].MIR_Detail_Id + ' </td>' +
@@ -872,6 +1005,27 @@
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
                 url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=StoreIssueBasePrint&ReportTitle=Store Issue Note&SI_ID=' + id;
+            }
+            window.open(url, '_blank');
+        }
+        function btn_Print2() {
+            var id = '<% =Request.QueryString["SI_ID"] %>';
+            var locationInfo = window.location;
+
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
+            var url = '/ReportViewer.aspx?ReportName=StoreIssueBasePrint_Thermal&ReportTitle=Store Issue Note&SI_ID=' + id;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=StoreIssueBasePrint_Thermal&ReportTitle=Store Issue Note&SI_ID=' + id;
             }
             window.open(url, '_blank');
         }
@@ -973,6 +1127,7 @@
     <form id="item">
         <div class="row">
             <input type="hidden" id="hdiemID" />
+            <input type="hidden" id="mir_id" />
             <div class="col-lg-2 col-md-6 col-sm-12">
                 <label class="">Store issue no</label>
                 <input type="text" readonly="readonly" id="txtStoreissueNo" class="form-control" name="txtStoreissueNo" value="New" />
@@ -1058,6 +1213,9 @@
             <input type="button" name="" value="Print" class="btn btn-primry" onclick="btn_Print()" />
         </div>
         <div class="col-lg-2 col-md-4 col-sm-6">
+            <input type="button" name="" value="Print2" class="btn btn-primry" onclick="btn_Print2()" />
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
             <input type="button" class="btn-gray" value="List" onclick="window.location = 'GoodsIssuanceNoteView.aspx'" />
             &nbsp;
         </div>
@@ -1070,7 +1228,11 @@
 </div>
         <div class="col-lg-2 col-md-4 col-sm-6" id="btnUnApproveToBeHidden">
             <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />
-            &nbsp;
+            
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6" id="isCloseGIR">
+            <input type="button"  class="btn btn-primry" value="Close GIR" id="CloseGIR" onclick="CloseGIRs()" />
+          
         </div>
         
             </div>
@@ -1144,6 +1306,30 @@
                 <div class="col-lg-2 col-md-2 col-sm-2 float-end">
                     <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Remarks Modal -->
+<div class="modal fade" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="remarksModalLabel">Close GIR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="remarks">Remarks <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="remarks" rows="4" placeholder="Enter closing remarks..."></textarea>
+                    <small class="form-text text-muted">Please provide reason for closing this GIR</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmCloseBtn">Confirm Close</button>
             </div>
         </div>
     </div>

@@ -246,8 +246,9 @@
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
     <Content Include="Modules\Billing\BillApproval.aspx" />
-    <Content Include="Modules\Billing\DROPDOWN_FIX_TEST.txt" />
+    <Content Include="Modules\Billing\DiscountAssignedList.aspx" />
     <Content Include="Modules\Billing\FBRBillingView.aspx" />
+    <Content Include="Modules\Billing\DiscountAssigned.aspx" />
     <Content Include="Modules\Billing\ZakatDonationForm.aspx" />
     <Content Include="Modules\Billing\ZakatDonationList.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
@@ -280,6 +281,8 @@
     <Content Include="Modules\Inventory\FurtherTaxDefinition.aspx" />
     <Content Include="Modules\Inventory\GoodsRerturnNote.aspx" />
     <Content Include="Modules\Inventory\GoodsRerturnNoteView.aspx" />
+    <Content Include="Modules\Inventory\ItemSelection.aspx" />
+    <Content Include="Modules\Inventory\ItemSelectionList.aspx" />
     <Content Include="Modules\Inventory\PharmacyView.aspx" />
     <Content Include="Modules\Inventory\Service.aspx" />
     <Content Include="Modules\Inventory\ServiceView.aspx" />
@@ -361,6 +364,8 @@
     <Content Include="Modules\Administrator\AssetSelection.aspx" />
     <Content Include="Modules\Administrator\DoctorPayableView.aspx" />
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
+    <Content Include="Modules\PatientManagement\Birthcertificate.aspx" />
+    <Content Include="Modules\PatientManagement\BirthCertificateView.aspx" />
     <Content Include="Modules\PatientManagement\DialysisForm.aspx" />
     <Content Include="Modules\PatientManagement\DialysisView.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyAdmission.aspx" />
@@ -370,6 +375,7 @@
     <Content Include="Modules\PatientManagement\NewEmergencyCase.aspx" />
     <Content Include="Modules\PatientManagement\NewOutPatient.aspx" />
     <Content Include="Modules\PatientManagement\OldOutPatient.aspx" />
+    <Content Include="Modules\PatientManagement\BirthCetificate.aspx" />
     <Content Include="Modules\PatientManagement\OPD.aspx" />
     <Content Include="Modules\PatientManagement\OutPatientPolicy.aspx" />
     <Content Include="Modules\PatientManagement\OPDPolicy.aspx" />
@@ -3856,9 +3862,6 @@
     <Content Include="upload\UploadVoucherFiles.ashx" />
     <Content Include="Reports\Student\rptAttendanceDetails.rpt" />
     <Content Include="upload\RadiologyImageUpload.ashx" />
-    <Content Include="Modules\Billing\ZAKAT_DONATION_IMPLEMENTATION.md" />
-    <Content Include="Modules\Billing\ZAKAT_QUICK_REFERENCE.md" />
-    <Content Include="Modules\Billing\DROPDOWN_TROUBLESHOOTING.md" />
     <None Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.js" />
     <Content Include="wwwroot\ASsiratTheme\Scripts\jquery-1.12.4.min.js" />
@@ -26036,12 +26039,26 @@
     <Compile Include="Modules\Billing\BillApproval.aspx.designer.cs">
       <DependentUpon>BillApproval.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Billing\DiscountAssignedList.aspx.cs">
+      <DependentUpon>DiscountAssignedList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\DiscountAssignedList.aspx.designer.cs">
+      <DependentUpon>DiscountAssignedList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Billing\FBRBillingView.aspx.cs">
       <DependentUpon>FBRBillingView.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Billing\FBRBillingView.aspx.designer.cs">
       <DependentUpon>FBRBillingView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\DiscountAssigned.aspx.cs">
+      <DependentUpon>DiscountAssigned.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\DiscountAssigned.aspx.designer.cs">
+      <DependentUpon>DiscountAssigned.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\ZakatDonationForm.aspx.cs">
       <DependentUpon>ZakatDonationForm.aspx</DependentUpon>
@@ -26266,6 +26283,20 @@
     </Compile>
     <Compile Include="Modules\Inventory\GoodsRerturnNoteView.aspx.designer.cs">
       <DependentUpon>GoodsRerturnNoteView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Inventory\ItemSelection.aspx.cs">
+      <DependentUpon>ItemSelection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Inventory\ItemSelection.aspx.designer.cs">
+      <DependentUpon>ItemSelection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Inventory\ItemSelectionList.aspx.cs">
+      <DependentUpon>ItemSelectionList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Inventory\ItemSelectionList.aspx.designer.cs">
+      <DependentUpon>ItemSelectionList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Inventory\PharmacyView.aspx.cs">
       <DependentUpon>PharmacyView.aspx</DependentUpon>
@@ -26960,6 +26991,20 @@
     <Compile Include="Modules\Administrator\Doctor_Payable.aspx.designer.cs">
       <DependentUpon>Doctor_Payable.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\PatientManagement\Birthcertificate.aspx.cs">
+      <DependentUpon>Birthcertificate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\Birthcertificate.aspx.designer.cs">
+      <DependentUpon>Birthcertificate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\BirthCertificateView.aspx.cs">
+      <DependentUpon>BirthCertificateView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\BirthCertificateView.aspx.designer.cs">
+      <DependentUpon>BirthCertificateView.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\PatientManagement\DialysisForm.aspx.cs">
       <DependentUpon>DialysisForm.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -27022,6 +27067,13 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\OldOutPatient.aspx.designer.cs">
       <DependentUpon>OldOutPatient.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\BirthCetificate.aspx.cs">
+      <DependentUpon>BirthCetificate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\BirthCetificate.aspx.designer.cs">
+      <DependentUpon>BirthCetificate.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\OPD.aspx.cs">
       <DependentUpon>OPD.aspx</DependentUpon>

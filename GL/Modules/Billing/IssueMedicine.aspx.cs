@@ -1229,6 +1229,7 @@ namespace PMS
             saleReturn.Created_Date = DateTime.Now;
             saleReturn.Created_By = AppConfig.UserID;
             saleReturn.IsDeleted = false;
+            saleReturn.Remarks = record.Remarks;
             db.Pharmacy_SaleReturns.InsertOnSubmit(saleReturn);
             db.SubmitChanges();
 
@@ -1269,6 +1270,7 @@ namespace PMS
             public decimal TotalDisAmt { get; set; }
             public decimal AdjustmentAmt { get; set; }
             public decimal Total { get; set; }
+            public string Remarks { get; set; }
             public List<SaleReturnDetail> ItemList { get; set; }
         }
 

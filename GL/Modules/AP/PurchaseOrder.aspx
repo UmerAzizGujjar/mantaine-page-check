@@ -287,6 +287,27 @@
             }
             window.open(url, '_blank');
         }
+        function PrintPurchaseOrderDetail2() {
+            debugger;
+            var id = '<% =Request.QueryString["PO_ID"] %>';
+            var locationInfo = window.location;
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
+            var url = '/ReportViewer.aspx?ReportName=PurchaseOrderList2&ReportTitle=Purchase Order List&POid=' + id;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=PurchaseOrderList2&ReportTitle=Purchase Order List&POid=' + id;
+            }
+            window.open(url, '_blank');
+        }
 
       function append(anchor, isBulk = false)
       {
@@ -2629,6 +2650,9 @@ function scheduleCalcTotal(delay) {
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" id="btnPrint" value="Print" class="btn btn-primry" name="name" onclick="PrintPurchaseOrderDetail();" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <input type="button" id="btnPrint2" value="Print2" class="btn btn-primry" name="name" onclick="PrintPurchaseOrderDetail2();" />
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <input type="button" style="display: none" class="btn btn-primry" value="UnApprove" id="btnUnApprove" onclick="UnApprove()" />

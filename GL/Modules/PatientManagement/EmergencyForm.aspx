@@ -1517,6 +1517,10 @@
         }
         function SavePatient() {
             debugger;
+
+            // Disable the save button immediately to prevent multiple clicks
+            $('#SavePatient_Data').attr('disabled', true);
+
             var Prefix_PatientName = $('#ddl_name').val();
             var PatientName = $('#txt_name').val();
             var PatientID = $('#hdfPatient_ID').val();
@@ -1566,7 +1570,7 @@
                     Swal.fire({
                         icon: 'warning',
                         title: 'CNIC Required!',
-                        text: 'Please enter  CNIC or Other CNIC',
+                        text: 'Please enter CNIC or Other CNIC',
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#3085d6'
                     });
@@ -1649,6 +1653,7 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
+                        $('#SavePatient_Data').attr('disabled', false);
                         return;
                     }
 
@@ -1666,23 +1671,20 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
+                        $('#SavePatient_Data').attr('disabled', false);
                         return;
                     }
 
                     var ini_patientID = response.d;
+                    alert('Your Record Saved and Loaded Successfully');
+                  
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Your Record Saved Successfully.',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
+                    // Button stays disabled during this time
+                    // Re-enable after a short delay to ensure no double clicks during the success message
+                    setTimeout(function () {
+                        $('#SavePatient_Data').attr('disabled', false);
+                    }, 2600); // Slightly longer than the success message timer
+
                     //Approve(ini_patientID)
                     get_pat_initial_info(ini_patientID);
 
@@ -1701,6 +1703,8 @@
                             htmlContainer: 'swal-big-text'
                         }
                     });
+                    // Re-enable the button on error
+                    $('#SavePatient_Data').attr('disabled', false);
                 }
             });
         }

@@ -1441,9 +1441,9 @@
                 }
             }
             var IPDDiscount = "";
-            debugger
+            debugger;
             function LoadBill(Bill_ID) {
-
+                 debugger;
                 PageMethods.LoadBillHeader(Bill_ID, function (resp) {
                     debugger
                     var data = JSON.parse(resp);
@@ -1453,7 +1453,8 @@
                     $('#txtBillNo').val(data[0].Bill_No);
                     $("#txtBillDate").val(TrnsDate);
                     $('#txtRemarks').val(data[0].Remarks);
-                    $('#txtTotalPayable').val(data[0].Total_Amount);
+                    $('#txtTotalPayable').val(data[0].Net_Amount);
+                    $('#txtTotalAmount').val(data[0].Total_Amount);
                     $('#txtDisPer').val(parseFloat(data[0].Discount_Percentage.toFixed(2)));
                     $('#hdntxtDisPer').val(data[0].Discount_Percentage);
                     $('#txtDisAmt').val(data[0].Discount_Amount);
@@ -1779,7 +1780,7 @@
                         //}
                         var Bill_Date = $('#txtBillDate').val();
                         var Remarks = $('#txtRemarks').val();
-                        var TotalPayable = $('#txtTotalPayable').val();
+                        var TotalPayable = $('#txtTotalAmount').val();
                         var Discount_Percentage = $('#txtDisPer').val();
                         Discount_Percentage = $('#hdntxtDisPer').val();
                         var Discount_Amount = $('#txtDisAmt').val();
@@ -6400,143 +6401,149 @@
                 }
             }
             debugger;
-           function SavePatient() {
-    debugger;
-    $('#SavePatient_Data').attr('disabled', true);
-    var Prefix_PatientName = $('#ddl_name').val();
-    var PatientName = $('#txt_name').val();
-    var PatientID = $('#hdfPatient_ID').val();
+            function SavePatient() {
+                debugger;
 
-    var Full_Name = Prefix_PatientName + PatientName;
-    debugger;
-    var RelationType = $('#ddlRelation').val();
-    var Relation = $('#txt_relation').val();
-    var Gender = $('#ddl_Gender').val();
+                // Disable the button immediately to prevent multiple clicks
+                $('#SavePatient_Data').attr('disabled', true);
 
-    var Mobile = $('#txt_mobile').val();
-    var PreFix_DOB = $('#ddl_dob').val();
-    var Age = $('#txt_dob').val();
-    var Date_Of_Birth = $('#txtAge_yearss').val();
-    var CNIC = $('#txt_cnic').val();
-    var OtherCNIC = $('#txt_Othercnic').val();
-    var Address = $('#txt_Address').val();
-    var martail_status = $('#ddl_status').val();
-    var txtfees = $('#txtfees').val();
-    
-    if ((PatientName == "" || Mobile == "")) {
-        alert("Please Enter compulsory Fields");
-        $('#SavePatient_Data').attr('disabled', false);
-        return;
-    }
+                var Prefix_PatientName = $('#ddl_name').val();
+                var PatientName = $('#txt_name').val();
+                var PatientID = $('#hdfPatient_ID').val();
 
-               var isCNICRequired = isCNICValidationRequired();
-               if (isCNICRequired) {
-                   var isCNICEmpty = !CNIC || CNIC === "" || CNIC === "_____-_______-_";
-                   var isOtherCNICEmpty = !OtherCNIC || OtherCNIC === "" || OtherCNIC === "_____-_______-_";
+                var Full_Name = Prefix_PatientName + PatientName;
+                debugger;
+                var RelationType = $('#ddlRelation').val();
+                var Relation = $('#txt_relation').val();
+                var Gender = $('#ddl_Gender').val();
 
-                   if (isCNICEmpty && isOtherCNICEmpty) {
-                       Swal.fire({
-                           icon: 'warning',
-                           title: 'CNIC Required!',
-                           text: 'Please enter  CNIC or Other CNIC',
-                           confirmButtonText: 'OK',
-                           confirmButtonColor: '#3085d6'
-                       });
-                       $('#SavePatient_Data').attr('disabled', false);
-                       return;
-                   } else {
-                       if (!isCNICEmpty && CNIC !== "_____-_______-_") {
-                           var cnicPattern = /^\d{5}-\d{7}-\d$/;
-                           if (!cnicPattern.test(CNIC)) {
-                               Swal.fire({
-                                   icon: 'error',
-                                   title: 'Invalid CNIC Format!',
-                                   text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
-                                   confirmButtonText: 'OK',
-                                   confirmButtonColor: '#d33'
-                               });
-                               $('#SavePatient_Data').attr('disabled', false);
-                               return;
-                           }
-                       }
-                       if (!isOtherCNICEmpty && OtherCNIC !== "_____-_______-_") {
-                           var otherCnicPattern = /^\d{5}-\d{7}-\d$/;
-                           if (!otherCnicPattern.test(OtherCNIC)) {
-                               Swal.fire({
-                                   icon: 'error',
-                                   title: 'Invalid Other CNIC Format!',
-                                   text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
-                                   confirmButtonText: 'OK',
-                                   confirmButtonColor: '#d33'
-                               });
-                               $('#SavePatient_Data').attr('disabled', false);
-                               return;
-                           }
-                       }
-                   }
-               }
+                var Mobile = $('#txt_mobile').val();
+                var PreFix_DOB = $('#ddl_dob').val();
+                var Age = $('#txt_dob').val();
+                var Date_Of_Birth = $('#txtAge_yearss').val();
+                var CNIC = $('#txt_cnic').val();
+                var OtherCNIC = $('#txt_Othercnic').val();
+                var Address = $('#txt_Address').val();
+                var martail_status = $('#ddl_status').val();
+                var txtfees = $('#txtfees').val();
 
-    var data = JSON.stringify({
-        "Full_Name": Full_Name,
-        "RelationType": RelationType,
-        "Relation": Relation,
-        "Gender": Gender,
-        "Mobile": Mobile,
-        "Date_Of_Birth": Date_Of_Birth,
-        "CNIC": CNIC,
-        "Address": Address,
-        "PatientID": PatientID,
-        "martail_status": martail_status,
-        "Age": Age,
-        "txtfees": txtfees,
-        "OtherCNIC": OtherCNIC,
-    });
-    
-    $.ajax({
-        type: "POST",
-        url: "BillingProcess.aspx/SavePatientDetail",
-        data: data,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            debugger;
-            
-            // Check if CNIC already exists
-            if (response.d === "CNIC_EXISTS") {
-                Swal.fire({
-                    title: 'CNIC Already Exists!',
-                    text: 'A patient with this CNIC is already registered.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                }).then(function() {
+                if ((PatientName == "" || Mobile == "")) {
+                    alert("Please Enter compulsory Fields");
                     $('#SavePatient_Data').attr('disabled', false);
-                });
-                return;
-            }
-            
-            // Check for other errors
-            if (response.d.startsWith("ERROR:")) {
-                alert(response.d);
-                $('#SavePatient_Data').attr('disabled', false);
-                return;
-            }
-            
-            var Reg_Patient_ID = response.d;
-            alert('Your Record Saved and Loaded Successfully');
-            $('#PatientModel').modal('hide');
-            
-            // ApproveRegPatients(Reg_Patient_ID)
-            if (typeof AddPatientDetail === 'function') {
-                AddPatientDetail(Reg_Patient_ID);
-            }
-        },
-        error: function (response) {
-            alert("Error occurred while saving. Please try again.");
-            $('#SavePatient_Data').attr('disabled', false);
-        }
-    });
-}
+                    return;
+                }
 
+                var isCNICRequired = isCNICValidationRequired();
+                if (isCNICRequired) {
+                    var isCNICEmpty = !CNIC || CNIC === "" || CNIC === "_____-_______-_";
+                    var isOtherCNICEmpty = !OtherCNIC || OtherCNIC === "" || OtherCNIC === "_____-_______-_";
+
+                    if (isCNICEmpty && isOtherCNICEmpty) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'CNIC Required!',
+                            text: 'Please enter CNIC or Other CNIC',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#3085d6'
+                        });
+                        $('#SavePatient_Data').attr('disabled', false);
+                        return;
+                    } else {
+                        if (!isCNICEmpty && CNIC !== "_____-_______-_") {
+                            var cnicPattern = /^\d{5}-\d{7}-\d$/;
+                            if (!cnicPattern.test(CNIC)) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Invalid CNIC Format!',
+                                    text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#d33'
+                                });
+                                $('#SavePatient_Data').attr('disabled', false);
+                                return;
+                            }
+                        }
+                        if (!isOtherCNICEmpty && OtherCNIC !== "_____-_______-_") {
+                            var otherCnicPattern = /^\d{5}-\d{7}-\d$/;
+                            if (!otherCnicPattern.test(OtherCNIC)) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Invalid Other CNIC Format!',
+                                    text: 'Please enter valid CNIC format (XXXXX-XXXXXXX-X)',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#d33'
+                                });
+                                $('#SavePatient_Data').attr('disabled', false);
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                var data = JSON.stringify({
+                    "Full_Name": Full_Name,
+                    "RelationType": RelationType,
+                    "Relation": Relation,
+                    "Gender": Gender,
+                    "Mobile": Mobile,
+                    "Date_Of_Birth": Date_Of_Birth,
+                    "CNIC": CNIC,
+                    "Address": Address,
+                    "PatientID": PatientID,
+                    "martail_status": martail_status,
+                    "Age": Age,
+                    "txtfees": txtfees,
+                    "OtherCNIC": OtherCNIC,
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "BillingProcess.aspx/SavePatientDetail",
+                    data: data,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        debugger;
+
+                        // Check if CNIC already exists
+                        if (response.d === "CNIC_EXISTS") {
+                            Swal.fire({
+                                title: 'CNIC Already Exists!',
+                                text: 'A patient with this CNIC is already registered.',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then(function () {
+                                $('#SavePatient_Data').attr('disabled', false);
+                            });
+                            return;
+                        }
+
+                        // Check for other errors
+                        if (response.d.startsWith("ERROR:")) {
+                            alert(response.d);
+                            $('#SavePatient_Data').attr('disabled', false);
+                            return;
+                        }
+
+                        var Reg_Patient_ID = response.d;
+                        alert('Your Record Saved and Loaded Successfully');
+                        $('#PatientModel').modal('hide');
+
+                        // Re-enable the button after successful save
+                        $('#SavePatient_Data').attr('disabled', false);
+
+                        // ApproveRegPatients(Reg_Patient_ID)
+                        if (typeof AddPatientDetail === 'function') {
+                            AddPatientDetail(Reg_Patient_ID);
+                        }
+                    },
+                    error: function (response) {
+                        alert("Error occurred while saving. Please try again.");
+                        // Re-enable the button on error as well
+                        $('#SavePatient_Data').attr('disabled', false);
+                    }
+                });
+            }
             function ApproveRegPatients(pat_id) {
                 PageMethods.ApproveRegpatient(pat_id, function (Tests) {
                     debugger
