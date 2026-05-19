@@ -1221,10 +1221,19 @@ namespace PMS
                         {
                             oIn_Patient_Medicine1.Start_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Start_Date_Time);
                         }
-                        if (oIn_Patient_Medicine.Stop_Date_Time == null || oIn_Patient_Medicine.Stop_Date_Time == "null" || oIn_Patient_Medicine.Stop_Date_Time == "") { }
+                        //if (oIn_Patient_Medicine.Stop_Date_Time == null || oIn_Patient_Medicine.Stop_Date_Time == "null" || oIn_Patient_Medicine.Stop_Date_Time == "") { }
+                        //else
+                        //{
+                        //    oIn_Patient_Medicine1.Stop_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Stop_Date_Time);
+                        //}
+                        DateTime stopDateTime;
+                        if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Stop_Date_Time) && oIn_Patient_Medicine.Stop_Date_Time != "null" && DateTime.TryParse(oIn_Patient_Medicine.Stop_Date_Time, out stopDateTime))
+                        {
+                            oIn_Patient_Medicine1.Stop_Date_Time = stopDateTime;
+                        }
                         else
                         {
-                            oIn_Patient_Medicine1.Stop_Date_Time = Convert.ToDateTime(oIn_Patient_Medicine.Stop_Date_Time);
+                            oIn_Patient_Medicine1.Stop_Date_Time = null; 
                         }
                         oIn_Patient_Medicine1.Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN;
                         oIn_Patient_Medicine1.Username = oIn_Patient_Medicine.User;

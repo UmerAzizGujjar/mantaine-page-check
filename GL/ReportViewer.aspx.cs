@@ -3416,6 +3416,23 @@ namespace PMS
                 rd.SetParameterValue("@endDate", EndDateTime);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
+            else if (reportName == "Patient_Quality_Check_Report")
+            {
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                reportPath += "Patients/sp_Medical_Record_Quality_Check.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", companyAddress);
+            }
             //Total Patient Report
             else if (reportName == "TotalOpdDischargeReport")
             {
@@ -4451,6 +4468,21 @@ namespace PMS
                 rd.SetParameterValue("@Category", Category);
                 rd.SetParameterValue("CompanyLogo", logoPath);
             }
+            else if (reportName == "YearlyPharmacyOverallSummaryReport2")
+            {
+                string year = Request.QueryString["Year"].ToString();
+
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string rptFileName = "Pharmacy/YearlyPharmacyOverallSummaryReport2.rpt";
+                reportPath += rptFileName;
+
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("@Year", year);
+                rd.SetParameterValue("@Year", year , rd.Subreports[0].Name.ToString());
+            }
             else if (reportName == "YearlyPharmacyOverallSummaryReport")
             {
                 string year = Request.QueryString["Year"].ToString();
@@ -4465,6 +4497,9 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("@Year", year);
                 rd.SetParameterValue("@Year", year , rd.Subreports[0].Name.ToString());
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"], rd.Subreports[0].Name.ToString());
+
             }
             else if (reportName == "FastSlow_Non_Moving_Stock")
             {
