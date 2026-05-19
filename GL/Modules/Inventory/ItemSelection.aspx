@@ -119,64 +119,71 @@
             });
         }
 
-        function loadItemsTable(items) {
-            const tbody = $('#tblItemsBody');
+       function loadItemsTable(items) {
+    const tbody = $('#tblItemsBody');
 
-            if (!items || items.length === 0) {
-                tbody.html('<tr><td colspan="9" style="text-align: center; padding: 40px;"><i class="fas fa-box-open" style="font-size: 24px; color: #cbd5e0;"></i><br/>No items found in this GRN</td></tr>');
-                return;
-            }
+    if (!items || items.length === 0) {
+        tbody.html('<tr><td colspan="9" style="text-align: center; padding: 40px;"><i class="fas fa-box-open" style="font-size: 24px; color: #cbd5e0;"></i><br/>No items found in this GRN</td></tr>');
+        return;
+    }
 
-            let html = '';
-            $.each(items, function (i, item) {
-                let statusClass = 'badge-success';
-                let statusText = 'IN STOCK';
-                let maxSelectableQty = item.MaxSelectableQty || 0;
+    let html = '';
+    $.each(items, function (i, item) {
+        // 1. Get values
+        let maxSelectableQty = item.MaxSelectableQty || 0;
+        let preselectedQty = item.Selected_Qty || 0;
+        
+        // ✅ Get Actual Current Stock for Status Logic
+        let currentStockValue = parseFloat(item.CurrentStock || 0);
 
-                let preselectedQty = item.Selected_Qty || 0;
+        let partialWarning = '';
+        if (item.TotalSelectedFromAllSelections > 0 && item.TotalSelectedFromAllSelections < item.GRNQty) {
+            partialWarning = `<br/><small class="text-warning"><i class="fas fa-exclamation-triangle"></i> ${item.TotalSelectedFromAllSelections} of ${item.GRNQty} already selected</small>`;
+        }
 
-                let partialWarning = '';
-                if (item.TotalSelectedFromAllSelections > 0 && item.TotalSelectedFromAllSelections < item.GRNQty) {
-                    partialWarning = `<br/><small class="text-warning"><i class="fas fa-exclamation-triangle"></i> ${item.TotalSelectedFromAllSelections} of ${item.GRNQty} already selected</small>`;
-                }
+        // ✅ UPDATED: Status Badge now depends on CurrentStock, not MaxSelectableQty
+ let statusClass = 'badge-success';
+        let statusText = 'IN STOCK';
 
-                if (maxSelectableQty <= 0) {
-                    statusClass = 'badge-danger';
-                    statusText = 'FULLY UTILIZED';
-                } else if (maxSelectableQty < 10) {
-                    statusClass = 'badge-warning';
-                    statusText = 'LOW STOCK';
-                }
+        if (currentStockValue <= 0) {
+            statusClass = 'badge-danger';
+            statusText = 'OUT OF STOCK';
+        } else if (currentStockValue < 10) {
+            statusClass = 'badge-warning';
+            statusText = 'LOW STOCK';
+        }
 
-                let stockDisplay = `<span class="${maxSelectableQty <= 0 ? 'text-danger' : (maxSelectableQty < 10 ? 'text-warning' : 'text-success')}">
-            <strong>${parseFloat(maxSelectableQty).toFixed(2)}</strong> ${escapeHtml(item.Unit || '')}
-            ${partialWarning}
+        // Display Logic for Current Stock Column (Just the number)
+        let stockColorClass = currentStockValue <= 0 ? 'text-danger' : (currentStockValue < 10 ? 'text-warning' : 'text-success');
+        
+        let stockDisplay = `<span class="${stockColorClass}">
+            <strong>${currentStockValue.toFixed(2)}</strong>
         </span>`;
 
-                html += `<tr data-grndetailid="${item.GRN_Detail_Id}" 
+        html += `<tr data-grndetailid="${item.GRN_Detail_Id}" 
                data-itemid="${item.Item_Id}" 
                data-maxqty="${maxSelectableQty}"
                data-grnqty="${parseFloat(item.GRNQty).toFixed(2)}"
                data-original-remaining="${item.RemainingQty}">
-        <td><strong>${escapeHtml(item.ItemCode || '-')}</strong></td>
-        <td>${escapeHtml(item.ItemName || '-')}${partialWarning}</td>
-        <td>${stockDisplay}</td>
-        <td><strong class="grn-qty-value">${parseFloat(item.GRNQty).toFixed(2)}</strong>
-            <br/><small class="text-muted">Remaining: ${parseFloat(item.RemainingQty).toFixed(2)}</small>
-        </td>
-        <td><span class="badge badge-info">${escapeHtml(item.BatchNum || '-')}</span></td>
-        <td>${escapeHtml(item.Unit || '-')}</td>
-        <td>${parseFloat(item.Rate || 0).toFixed(2)}</td>
-        <td>
-            <input type="number" class="qty-input" value="${preselectedQty}" 
-                   min="0" max="${maxSelectableQty}" step="0.01"
-                   onchange="updateQuantity(this, ${item.GRN_Detail_Id}, ${maxSelectableQty})" />
-         </td>
-        <td><span class="badge ${statusClass}">${statusText}</span></td>
-     </tr>`;
-            });
-            tbody.html(html);
-        }
+            <td><strong>${escapeHtml(item.ItemCode || '-')}</strong></td>
+            <td>${escapeHtml(item.ItemName || '-')}${partialWarning}</td>
+            <td>${stockDisplay}</td>
+            <td><strong class="grn-qty-value">${parseFloat(item.GRNQty).toFixed(2)}</strong>
+                <br/><small class="text-muted">Remaining: ${parseFloat(item.RemainingQty).toFixed(2)}</small>
+            </td>
+            <td><span class="badge badge-info">${escapeHtml(item.BatchNum || '-')}</span></td>
+            <td>${escapeHtml(item.Unit || '-')}</td>
+            <td>${parseFloat(item.Rate || 0).toFixed(2)}</td>
+            <td>
+                <input type="number" class="qty-input" value="${preselectedQty}" 
+                       min="0" max="${maxSelectableQty}" step="0.01"
+                       onchange="updateQuantity(this, ${item.GRN_Detail_Id}, ${maxSelectableQty})" />
+            </td>
+            <td><span class="badge ${statusClass}">${statusText}</span></td>
+        </tr>`;
+    });
+    tbody.html(html);
+}
 
         function escapeHtml(text) {
             if (!text) return '';
@@ -792,6 +799,9 @@ function loadGRNDropdownForEdit(grnId) {
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <input type="button" id="btnGenerateBarcodes" class="btn btn-primry" value="BARCODES" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" id="btnPrintSelected" class="btn btn-success hide-barcode-div" value="PRINT SELECTED" style="display: none;" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <input type="button" id="btnReset" class="btn btn-primry"  value="NEW" onclick="window.location.href='ItemSelection.aspx';" /> 
