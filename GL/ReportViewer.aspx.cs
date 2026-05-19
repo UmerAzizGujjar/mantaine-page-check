@@ -6299,8 +6299,9 @@ namespace PMS
             {
                 reportPath += "Inventory/rptCathLabBarcode.rpt";
                 rd.Load(reportPath);
+                var barcode = Request.QueryString["Barcode_ID"].ToString();
                 rd.SummaryInfo.ReportTitle = reportTitle;
-                rd.SetParameterValue("@Barcode_IDs", int.Parse(Request.QueryString["Barcode_ID"]));
+                rd.SetParameterValue("@Barcode_IDs", barcode);
             }
             else if (reportName == "LabBarcodeSlip")
             {

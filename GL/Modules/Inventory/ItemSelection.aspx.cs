@@ -285,6 +285,7 @@ namespace PMS.Modules.Inventory
                         .OrderBy(b => b.Serial_Number)
                         .Select(b => new BarcodeDto
                         {
+                            Barcode_ID = b.Barcode_ID,
                             Barcode_Number = b.Barcode_Number,
                             Serial_Number = b.Serial_Number,
                             ItemCode = b.ItemCode,
