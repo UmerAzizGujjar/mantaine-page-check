@@ -291,12 +291,32 @@ namespace PMS
             da.Fill(dt);
             return dt;
         }
+        //public static int GetNewVoucherNo(string voucherType, DateTime voucherDate)
+        //{
+        //    int number;
+        //    string strSQL = "Select Isnull(Max(Voucher_No)+1,1) From GL_Vouchers Where Voucher_Type='" + voucherType + "' and Month(voucher_date)=" + voucherDate.Month + " and Year(voucher_date)=" + voucherDate.Year + " and voucher_status<>'Canceled'and Company_ID=" + AppConfig.Company_ID;
+        //    number = Convert.ToInt32(getField(strSQL));
+        //    return number;
+        //}
         public static int GetNewVoucherNo(string voucherType, DateTime voucherDate)
         {
-            int number;
-            string strSQL = "Select Isnull(Max(Voucher_No)+1,1) From GL_Vouchers Where Voucher_Type='" + voucherType + "' and Month(voucher_date)=" + voucherDate.Month + " and Year(voucher_date)=" + voucherDate.Year + " and voucher_status<>'Canceled'and Company_ID=" + AppConfig.Company_ID;
-            number = Convert.ToInt32(getField(strSQL));
-            return number;
+            using (SqlConnection con = new SqlConnection(DBClass.ConnectionString()))
+            {
+                con.Open();
+                string strSQL = "SELECT dbo.GetNewVoucherNo(@voucherType, @voucherDate)";
+                using (SqlCommand cmd = new SqlCommand(strSQL, con))
+                {
+                    cmd.Parameters.AddWithValue("@voucherType", voucherType);
+                    cmd.Parameters.AddWithValue("@voucherDate", voucherDate.Date);
+
+                    object result = cmd.ExecuteScalar();
+
+                    if (result == null || result == DBNull.Value)
+                        return 1;
+
+                    return Convert.ToInt32(result);
+                }
+            }
         }
         public static int GetNewSalesOrPurchaseVoucherNo(string voucherType, DateTime voucherDate)
         {
