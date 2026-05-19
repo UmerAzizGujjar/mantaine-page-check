@@ -78,8 +78,11 @@
                 if (SearchString === '')
                     FillPatientsList();
             });
+            setTimeout(function () {
+                bindControls();
 
-            bindControls();
+            }, 1000)
+           
             var Reg_ID = '<%= Request.QueryString["Reg_ID"]%>';
             
             $('#hdfPatient_ID').val(Reg_ID);
@@ -158,15 +161,22 @@
                 }
             });
         }
-    
+        function httpGet(theUrl) {
+            var xmlHttp = null;
+            xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", theUrl, false);
+            xmlHttp.send(null);
+            return xmlHttp.responseText;
+        }
         debugger;
         function bindControls() {
             debugger;
             var hdFile_ID = $("#hdfPatient_ID").val();
-            if (hdFile_ID != "(New)") {
+            if (hdFile_ID != "") {
                 var Patient_ID = $("#hdfPatient_ID").val();
                 var tokendata = httpGet("../../json.aspx?Table=Patients&Record=Edit&q=" + Patient_ID);
-                loadtokenInputs(JSON.parse(tokendata));
+                //loadtokenInputs(JSON.parse(tokendata));
+                loadAjax();
             }
             else {
                 loadtokenInputsDefault();
@@ -432,6 +442,7 @@
                 AddPatientsResult(data[i].Reg_Patient_ID, data[i].Patient_No, data[i].Full_Name, data[i].NIC, data[i].Mobile1, data[i].Father_Name);
             }
         }
+        var btnVal = '';
         debugger;
         function SavePatient() {
             debugger;
@@ -724,7 +735,14 @@
             $("#ddl_name").focus();
 
         }
+        function NewWindow() {
 
+            window.location = "Birthcertificate.aspx";
+        }
+        function BackToList() {
+
+            window.open("BirthCertificateView.aspx", '_blank');
+        }
         function AddPatientsResult(Reg_Patient_ID, Patient_No, Full_Name, NIC, Mobile1, Father_Name) {
             debugger;
             tblLength = tblPatientsResult.rows.length;
@@ -1064,102 +1082,48 @@
                 BirthUnionCouncil, BirthAddress, BirthCity, BirthProvince, BirthPostalCode,
                 BirthReligion, BirthAttendant, BirthRemarks, isCertificateGenrate,
                 function (response) {
-                    debugger;
-                    var btn = btnVal;
 
-                    if (btn === 'btnSave') {
-                        debugger;
-                        if (response === "0") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Data not Saved !',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            })
-                        }
-                        else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Data Successfully Saved',
-                                showConfirmButton: false,
-                                timer: 2500,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
+                    console.log(response);
 
-                            })
+                    // Handle backend error
+                    if (response && response.toString().startsWith("ERROR:")) {
 
-                            //  callNADRAAPI(response);
-                        }
-                        $('#btnSave').val("Update");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.replace("ERROR:", ""),
+                            confirmButtonText: 'OK'
+                        });
+
+                        return;
                     }
-                    if (btn === 'genrateCerti') {
-                        debugger;
-                        if (response === "0") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Data not Saved !',
-                                showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            })
-                        }
-                        else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Data Successfully Saved',
-                                showConfirmButton: false,
-                                timer: 2500,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
 
-                            })
+                    // Success
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Data Successfully Saved',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
 
-                            window.location = "InPatientsAdmission.aspx?ID=" + response;
-                        }
-                        $('#btnSave').val("Update");
-                    }
-                    else if (btn === 'btnsaveprint') {
-                        debugger;
-                        if (isCertificateGenrate) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Data Successfully Saved',
-                                showConfirmButton: false,
-                                timer: 1500,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
-                            }).then(() => {
-                                window.location = "InPatientsAdmission.aspx?ID=" + response;
-                            });
-                        } else {
-                            window.location = "InPatientsAdmission.aspx?ID=" + response;
-                            window.open('../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + response);
-                        }
-                        $('#btnSave').val("Update");
-                    }
+                    $('#btnsave').val("Update");
+
+                    // Saved ID
+                    console.log("Saved ID:", response);
+
+                },
+
+                function (error) {
+
+                    console.log(error);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error!',
+                        text: 'Unable to save record.'
+                    });
+
                 }
             );
         }
@@ -2090,7 +2054,15 @@
     </div>
 </div>
     <div class="row">
+        <div class="col-lg-2 col-md-4 col-sm-6">
         <input type="button" class="btn-primry" id="btnsave" value="Save" onclick="SaveAllRecords();" />
+            </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-yellow" value="New" name="btnName" onclick="NewWindow()" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-gray" id="btnBackList" value="View " onclick="BackToList()" />
+            </div>
 
     </div>
 </asp:Content>

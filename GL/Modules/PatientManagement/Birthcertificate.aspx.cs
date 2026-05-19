@@ -950,7 +950,7 @@ bool isCertificateGenrate)
 
                     if (isCertificateGenrate)
                     {
-                       // SendBirthCertificateToNadra(db, OPD);
+                       SendBirthCertificateToNadra(db, OPD);
                         db.SubmitChanges();
                     }
 
