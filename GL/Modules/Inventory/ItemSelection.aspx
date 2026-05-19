@@ -99,51 +99,63 @@
         }
 
         function loadItemsTable(items) {
-    const tbody = $('#tblItemsBody');
+            const tbody = $('#tblItemsBody');
 
-    if (!items || items.length === 0) {
-        tbody.html('<tr><td colspan="9" style="text-align: center; padding: 40px;"><i class="fas fa-box-open" style="font-size: 24px; color: #cbd5e0;"></i><br/>No items found in this GRN</td></tr>');
-        return;
-    }
+            if (!items || items.length === 0) {
+                tbody.html('<tr><td colspan="9" style="text-align: center; padding: 40px;"><i class="fas fa-box-open" style="font-size: 24px; color: #cbd5e0;"></i><br/>No items found in this GRN</td></tr>');
+                return;
+            }
 
-    let html = '';
-    $.each(items, function (i, item) {
-        let statusClass = 'badge-success';
-        let statusText = 'IN STOCK';
-        let maxSelectableQty = item.CurrentStock;
-        
-        let preselectedQty = item.Selected_Qty || 0;
-        
-        if (item.CurrentStock <= 0) {
-            statusClass = 'badge-danger';
-            statusText = 'OUT OF STOCK';
-            maxSelectableQty = 0;
-        } else if (item.CurrentStock < 10) {
-            statusClass = 'badge-warning';
-            statusText = 'LOW STOCK';
+            let html = '';
+            $.each(items, function (i, item) {
+                let statusClass = 'badge-success';
+                let statusText = 'IN STOCK';
+                let maxSelectableQty = item.MaxSelectableQty || 0;
+
+                let preselectedQty = item.Selected_Qty || 0;
+
+                let partialWarning = '';
+                if (item.TotalSelectedFromAllSelections > 0 && item.TotalSelectedFromAllSelections < item.GRNQty) {
+                    partialWarning = `<br/><small class="text-warning"><i class="fas fa-exclamation-triangle"></i> ${item.TotalSelectedFromAllSelections} of ${item.GRNQty} already selected</small>`;
+                }
+
+                if (maxSelectableQty <= 0) {
+                    statusClass = 'badge-danger';
+                    statusText = 'FULLY UTILIZED';
+                } else if (maxSelectableQty < 10) {
+                    statusClass = 'badge-warning';
+                    statusText = 'LOW STOCK';
+                }
+
+                let stockDisplay = `<span class="${maxSelectableQty <= 0 ? 'text-danger' : (maxSelectableQty < 10 ? 'text-warning' : 'text-success')}">
+            <strong>${parseFloat(maxSelectableQty).toFixed(2)}</strong> ${escapeHtml(item.Unit || '')}
+            ${partialWarning}
+        </span>`;
+
+                html += `<tr data-grndetailid="${item.GRN_Detail_Id}" 
+               data-itemid="${item.Item_Id}" 
+               data-maxqty="${maxSelectableQty}"
+               data-grnqty="${parseFloat(item.GRNQty).toFixed(2)}"
+               data-original-remaining="${item.RemainingQty}">
+        <td><strong>${escapeHtml(item.ItemCode || '-')}</strong></td>
+        <td>${escapeHtml(item.ItemName || '-')}${partialWarning}</td>
+        <td>${stockDisplay}</td>
+        <td><strong class="grn-qty-value">${parseFloat(item.GRNQty).toFixed(2)}</strong>
+            <br/><small class="text-muted">Remaining: ${parseFloat(item.RemainingQty).toFixed(2)}</small>
+        </td>
+        <td><span class="badge badge-info">${escapeHtml(item.BatchNum || '-')}</span></td>
+        <td>${escapeHtml(item.Unit || '-')}</td>
+        <td>${parseFloat(item.Rate || 0).toFixed(2)}</td>
+        <td>
+            <input type="number" class="qty-input" value="${preselectedQty}" 
+                   min="0" max="${maxSelectableQty}" step="0.01"
+                   onchange="updateQuantity(this, ${item.GRN_Detail_Id}, ${maxSelectableQty})" />
+         </td>
+        <td><span class="badge ${statusClass}">${statusText}</span></td>
+     </tr>`;
+            });
+            tbody.html(html);
         }
-
-        let stockDisplay = `<span class="${item.CurrentStock <= 0 ? 'text-danger' : (item.CurrentStock < 10 ? 'text-warning' : 'text-success')}">
-                        <strong>${parseFloat(item.CurrentStock).toFixed(2)}</strong> ${escapeHtml(item.Unit || '')}
-                    </span>`;
-
-        html += `<tr data-grndetailid="${item.GRN_Detail_Id}" data-itemid="${item.Item_Id}" data-maxqty="${maxSelectableQty}">
-            <td><strong>${escapeHtml(item.ItemCode || '-')}</strong></td>
-            <td>${escapeHtml(item.ItemName || '-')}</td>
-            <td>${stockDisplay}</td>
-            <td>${parseFloat(item.GRNQty).toFixed(2)}</td>
-            <td><span class="badge badge-info">${escapeHtml(item.BatchNum || '-')}</span></td>
-            <td>${escapeHtml(item.Unit || '-')}</td>
-            <td>${parseFloat(item.Rate || 0).toFixed(2)}</td>
-            <td>
-                <input type="number" class="qty-input" value="${preselectedQty}" min="0" max="${maxSelectableQty}" step="any" 
-                       onchange="updateQuantity(this, ${item.GRN_Detail_Id}, ${maxSelectableQty})" />
-             </td>
-            <td><span class="badge ${statusClass}">${statusText}</span></td>
-          </tr>`;
-    });
-    tbody.html(html);
-}
 
         function escapeHtml(text) {
             if (!text) return '';
@@ -152,14 +164,69 @@
             return div.innerHTML;
         }
 
+        function validateSelectedQuantities() {
+            let isValid = true;
+            let errorMessage = '';
+
+            $('#tblItemsBody tr').each(function () {
+                const $row = $(this);
+                const grnQty = parseFloat($row.data('grnqty')) || 0;
+                const qtyInput = $row.find('.qty-input');
+                const selectedQty = parseFloat(qtyInput.val()) || 0;
+
+                if (selectedQty > grnQty) {
+                    isValid = false;
+                    const itemName = $row.find('td:eq(1)').text();
+                    errorMessage += `\n• ${itemName}: Selected (${selectedQty}) > GRN Qty (${grnQty})`;
+                    $row.addClass('validation-error-row');
+                    qtyInput.addClass('input-error');
+                } else {
+                    $row.removeClass('validation-error-row');
+                    qtyInput.removeClass('input-error');
+                }
+            });
+
+            if (!isValid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error!',
+                    html: `<strong>Selected quantity cannot exceed GRN quantity!</strong><br/><br/>The following items have invalid quantities:${errorMessage.replace(/\n/g, '<br/>')}`,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            }
+
+            return isValid;
+        }
+
         window.updateQuantity = function (input, grnDetailId, maxQty) {
             let value = parseFloat($(input).val());
             if (isNaN(value)) value = 0;
             if (value < 0) value = 0;
+
             if (value > maxQty) {
-                $(input).val(maxQty);
-                showToast(`Maximum quantity is ${maxQty}`, 'warning');
+                value = maxQty;
+                $(input).val(value);
+                showToast(`Maximum selectable quantity is ${maxQty}`, 'warning');
             }
+
+            const $row = $(input).closest('tr');
+            const grnQty = parseFloat($row.data('grnqty')) || 0;
+            const originalRemaining = parseFloat($row.data('original-remaining')) || 0;
+
+            if (value > originalRemaining) {
+                showToast(`Warning: Only ${originalRemaining} units remaining from GRN`, 'warning');
+                $(input).addClass('input-error');
+            } else {
+                $(input).removeClass('input-error');
+            }
+
+            $(input).data('original-value', value);
         };
 
         function saveSelection() {
@@ -175,7 +242,11 @@
     if (!grnId) {
         showToast('Please select GRN number', 'error');
         return;
-    }
+            }
+
+            if (!validateSelectedQuantities()) {
+                return;
+            }
 
     const selectedItems = [];
     let hasSelection = false;
@@ -241,7 +312,12 @@
                     title: selectionId ? 'Updated Successfully!' : 'Saved Successfully!',
                     text: selectionId ? 'Selection has been updated successfully.' : 'Data has been saved successfully.',
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
                 });
                 $('#btnGenerateBarcodes').prop('disabled', false);
                 $('#btnGenerateBarcodes').parent().removeClass('hide-barcode-div');

@@ -63,6 +63,11 @@ namespace PMS.Modules.Inventory
 
                         foreach (var gm in eligibleGRNs)
                         {
+                            bool isFullyUtilized = IsGRNFullyUtilized(db, gm.GRN_ID);
+
+                            if (isFullyUtilized)
+                                continue;
+
                             string vendorName = "Unknown";
 
                             if (!string.IsNullOrEmpty(gm.VendorId))
@@ -104,6 +109,33 @@ namespace PMS.Modules.Inventory
             }
         }
 
+        private static bool IsGRNFullyUtilized(DataBaseDataContext db, int grnId)
+        {
+            var grnDetails = db.GRN_Details.Where(gd => gd.GRNId == grnId).ToList();
+
+            var selectionsUsed = db.ItemSelection_Details
+                .Where(d => d.GRN_ID == grnId)
+                .GroupBy(d => d.GRN_Detail_Id)
+                .Select(g => new
+                {
+                    GRN_Detail_Id = g.Key,
+                    TotalSelected = g.Sum(d => d.Selected_Qty)
+                })
+                .ToDictionary(k => k.GRN_Detail_Id, v => v.TotalSelected);
+
+            foreach (var detail in grnDetails)
+            {
+                decimal grnQty = detail.GRNQty ?? 0;
+                decimal selectedQty = selectionsUsed.ContainsKey(detail.GRN_detail_Id) ? selectionsUsed[detail.GRN_detail_Id] : 0;
+
+                if (grnQty - selectedQty > 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         [WebMethod]
         public static string GetGRNDetails(int grnId)
         {
@@ -136,6 +168,16 @@ namespace PMS.Modules.Inventory
                     string editSelectionId = System.Web.HttpContext.Current.Session["EditSelectionID"] as string;
 
                     Dictionary<int, decimal> selectedQuantities = new Dictionary<int, decimal>();
+
+                    // Get total selected quantities from ALL selections (not just current one for edit mode)
+                    var allSelectedQuantities = db.ItemSelection_Details
+                        .Where(d => d.GRN_ID == grnId)
+                        .GroupBy(d => d.GRN_Detail_Id)
+                        .Select(g => new { GRN_Detail_Id = g.Key, TotalSelected = g.Sum(d => d.Selected_Qty) })
+                        .ToDictionary(k => k.GRN_Detail_Id, v => v.TotalSelected);
+
+                    // For edit mode, also get current selection's quantities
+                    Dictionary<int, decimal> currentSelectionQuantities = new Dictionary<int, decimal>();
                     if (!string.IsNullOrEmpty(editSelectionId))
                     {
                         int selectionId = int.Parse(editSelectionId);
@@ -145,7 +187,7 @@ namespace PMS.Modules.Inventory
 
                         foreach (var detail in existingDetails)
                         {
-                            selectedQuantities[detail.GRN_Detail_Id] = detail.Selected_Qty;
+                            currentSelectionQuantities[detail.GRN_Detail_Id] = detail.Selected_Qty;
                         }
                     }
 
@@ -154,6 +196,25 @@ namespace PMS.Modules.Inventory
                         string itemName = "";
                         string unitName = "";
                         decimal currentStock = 0;
+
+                        // Get total selected from all other selections (excluding current if in edit mode)
+                        decimal totalSelectedFromOtherSelections = 0;
+                        if (allSelectedQuantities.ContainsKey(detail.GRN_detail_Id))
+                        {
+                            totalSelectedFromOtherSelections = allSelectedQuantities[detail.GRN_detail_Id];
+
+                            // If in edit mode, subtract current selection's quantity from total
+                            if (!string.IsNullOrEmpty(editSelectionId) && currentSelectionQuantities.ContainsKey(detail.GRN_detail_Id))
+                            {
+                                totalSelectedFromOtherSelections -= currentSelectionQuantities[detail.GRN_detail_Id];
+                            }
+                        }
+
+                        decimal grnQty = detail.GRNQty ?? 0;
+                        decimal remainingQty = grnQty - totalSelectedFromOtherSelections;
+
+                        // Ensure remaining quantity doesn't go negative
+                        if (remainingQty < 0) remainingQty = 0;
 
                         var item = db.INV_Items.FirstOrDefault(i => i.Item_ID == detail.Item_Id);
                         if (item != null)
@@ -165,11 +226,15 @@ namespace PMS.Modules.Inventory
                             currentStock = db.GetInvenrtoryItemUomTotalStock(detail.Item_Id ?? 0, Convert.ToString(inventoryOrg)) ?? 0;
                         }
 
-
-                        if (selectedQuantities.ContainsKey(detail.GRN_detail_Id))
+                        decimal preselectedQty = 0;
+                        if (!string.IsNullOrEmpty(editSelectionId) && currentSelectionQuantities.ContainsKey(detail.GRN_detail_Id))
                         {
-                            currentStock += selectedQuantities[detail.GRN_detail_Id];
+                            preselectedQty = currentSelectionQuantities[detail.GRN_detail_Id];
                         }
+
+                        // Max selectable is the smaller of remaining quantity and current stock
+                        decimal maxSelectableQty = Math.Min(remainingQty, currentStock);
+                        if (maxSelectableQty < 0) maxSelectableQty = 0;
 
                         result.Items.Add(new GRNItemDto
                         {
@@ -177,13 +242,16 @@ namespace PMS.Modules.Inventory
                             GRN_ID = detail.GRNId ?? 0,
                             ItemCode = detail.ItemCode ?? "",
                             Item_Id = detail.Item_Id ?? 0,
-                            GRNQty = detail.GRNQty ?? 0,
+                            GRNQty = grnQty,
                             BatchNum = detail.BatchNum ?? "",
                             Rate = detail.Rate ?? 0,
                             ItemName = itemName,
                             Unit = unitName,
                             CurrentStock = currentStock,
-                            Selected_Qty = selectedQuantities.ContainsKey(detail.GRN_detail_Id) ? selectedQuantities[detail.GRN_detail_Id] : 0
+                            RemainingQty = remainingQty,
+                            MaxSelectableQty = maxSelectableQty,
+                            Selected_Qty = preselectedQty,
+                            TotalSelectedFromAllSelections = totalSelectedFromOtherSelections + preselectedQty 
                         });
                     }
 
@@ -344,8 +412,8 @@ namespace PMS.Modules.Inventory
                     selection.GRN_ID = grnId;
                     selection.Remarks = remarks ?? "";
                     selection.Status = "Updated";
-                   // selection.Modified_Date = DateTime.Now;
-                   // selection.Modified_By = GetCurrentUserId(db);
+                    selection.Updated_Date = DateTime.Now;
+                     selection.Updated_By = GetCurrentUserId(db);
 
                     var existingDetails = db.ItemSelection_Details.Where(d => d.Selection_ID == selId).ToList();
 
@@ -863,8 +931,10 @@ namespace PMS.Modules.Inventory
         public string ItemName { get; set; }
         public string Unit { get; set; }
         public decimal CurrentStock { get; set; }
-
         public decimal Selected_Qty { get; set; }
+        public decimal RemainingQty { get; set; } 
+        public decimal MaxSelectableQty { get; set; }
+        public decimal TotalSelectedFromAllSelections { get; set; }
     }
 
     public class SelectedItemWithQtyDto
