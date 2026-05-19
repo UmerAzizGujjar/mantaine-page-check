@@ -401,9 +401,11 @@
                     <i class="fas fa-calendar-alt" style="color: #667eea;"></i> ${formattedDate}
                 </td>
                 <td style="text-align: center; padding: 10px;">
-                    <button class="btn btn-sm btn-info" onclick="event.stopPropagation(); copyToClipboard('${barcode.Barcode_Number}')">
-                        <i class="fas fa-print"></i> Print
-                    </button>
+ <button class="btn btn-sm btn-info" 
+    onclick="PrintINVBarcode(${currentSelectionID})" 
+    style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;">
+    <i class="fa fa-print"></i>
+</button>
                 </td>
             </tr>
         `;

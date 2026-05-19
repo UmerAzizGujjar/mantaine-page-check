@@ -6290,7 +6290,7 @@ namespace PMS
             #endregion
             else if (reportName == "LabBarcode")
             {
-                reportPath += "LabRadiology/ccc.rpt";
+                reportPath += "LabRadiology/rptLabBarcode.rpt";
                 rd.Load(reportPath);
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@Sample_ID", int.Parse(Request.QueryString["Sample_ID"]));
