@@ -698,9 +698,16 @@ namespace PMS.Modules.Inventory
                                 0,  
                                 DateTime.Now
                             );
+                            // inserting new ID 
+                            int newBarcodeId = db.ItemSelection_Barcodes
+                            .Where(b => b.Barcode_Number == barcodeNumber)
+                            .Select(b => b.Barcode_ID)
+                            .FirstOrDefault();
+                            // inserting new ID 
 
                             generatedBarcodes.Add(new BarcodeDto
                             {
+                                Barcode_ID = newBarcodeId,
                                 Barcode_Number = barcodeNumber,
                                 Serial_Number = serialCounter,
                                 ItemCode = detail.ItemCode,
@@ -954,6 +961,7 @@ namespace PMS.Modules.Inventory
 
     public class BarcodeDto
     {
+        public int Barcode_ID { get; set; }
         public string Barcode_Number { get; set; }
         public int Serial_Number { get; set; }
         public string ItemCode { get; set; }

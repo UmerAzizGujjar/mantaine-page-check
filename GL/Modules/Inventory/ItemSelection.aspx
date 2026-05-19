@@ -60,6 +60,24 @@
                 
             });
         }
+        function PrintINVBarcode(ID) {
+            var locationInfo = window.location;
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+                    if (user_name == 'As-Siraat Serving Humanity') {
+                        reportPath = '../../ReportViewer.aspx';
+                    } else {
+                        reportPath = 'ReportViewer.aspx'; // same folder
+                    }
+            var url = '/ReportViewer.aspx?ReportName=PrintINVBarcodes&ReportTitle=Barcodes&Barcode_ID=' + ID;
+                    if (!locationInfo.origin.includes('localhost')) {
+                        var urlInfo = window.location.href.split('/');
+                        var ip = urlInfo[2];
+                        var foldername = urlInfo[3];
+                        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=PrintINVBarcodes&ReportTitle=Barcodes&Barcode_ID=' + ID;
+                    }
+                    window.open(url, '_blank');
+                }
 
         function loadGRNDetails(grnId) {
             if (!grnId) {
@@ -459,9 +477,11 @@
                     <i class="fas fa-calendar-alt" style="color: #667eea;"></i> ${formattedDate}
                 </td>
                 <td style="text-align: center; padding: 10px;">
-                    <button class="btn btn-sm btn-info" onclick="copyToClipboard('${barcode.Barcode_Number}')">
-                        <i class="fas fa-copy"></i> Copy
-                    </button>
+ <button class="btn btn-sm btn-info" 
+    onclick="PrintINVBarcode(${currentSelectionID})" 
+    style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;">
+    <i class="fa fa-print"></i>
+</button>
                 </td>
             </tr>
         `;
