@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AjaxControlToolkit.HTMLEditor.ToolbarButton;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -12,8 +15,6 @@ using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace PMS.Modules.Lab
 {
@@ -1122,6 +1123,11 @@ namespace PMS.Modules.Lab
                        where ar.Bill_ID == (Bill_ID == 0 ? ar.Bill_ID : Bill_ID)
                        && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
                        && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
+                       && (
+                            bd.Test_Main_Department == "008"
+                            || bd.Test_Main_Department == "002"
+                            || (ltd.IsAcknowledge) == true
+                           )
                        && bd.Is_Group_Category == false
                        && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                        select new
@@ -1269,6 +1275,10 @@ namespace PMS.Modules.Lab
           AND dv.ValueSet_ID = 70
     WHERE ISNULL(bd.Is_Group_Category, 0) = 1 
      
+AND (
+        bd.Test_Main_Department IN ('008', '002')
+        OR ISNULL(ld.IsAcknowledge, 0) = 1
+    )
       AND ar.Bill_ID = " + Bill_ID + @"
     GROUP BY lt.Group_Category, dv.Segment2, dv.Datavalue_ID, ld.Approved_By,lt.Group_Department,CONVERT(varchar(16), ld.Created_Time, 120)
 ");
@@ -1400,6 +1410,11 @@ namespace PMS.Modules.Lab
                         where pa.pat_id == Convert.ToInt32(Convert.ToString(Patient_ID))
                         && (bd.Is_Group_Category == null ? false : bd.Is_Group_Category) == false
                         && (bd.Test_Main_Department == null || bd.Test_Main_Department != "001")
+                        && (
+                            bd.Test_Main_Department == "008"
+                            || bd.Test_Main_Department == "002"
+                            || (ltd.IsAcknowledge) == true
+                           )
                         && bd.Is_Group_Category == false
                         && !db.Refunds.Any(r => r.Bill_ID == ar.Bill_ID)
                         select new
@@ -1851,7 +1866,11 @@ namespace PMS.Modules.Lab
                              (labtest_detail.Refer_Doctor == null || labtest_detail.Refer_Doctor == "" || labtest_detail.Refer_Doctor == "0")
                             )
                         ) &&
-                      bill_details.Test_Main_Department != "001" &&
+                      bill_details.Test_Main_Department != "001" && (
+                            bill_details.Test_Main_Department == "008"
+                            || bill_details.Test_Main_Department == "002"
+                            || (labtest_detail.IsAcknowledge) == true
+                           ) &&
                       (bill.isCancel == false || bill.isCancel == null) &&
                        bill.Bill_Date >= startDate &&
                         bill.Bill_Date <= endDate

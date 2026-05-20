@@ -23,6 +23,8 @@ namespace PMS
             public bool Exists { get; set; }
             public string OrthancStudyId { get; set; }
             public string StudyInstanceUID { get; set; }
+            public string StudyDate { get; set; }
+            public string StudyTime { get; set; }
         }
 
         private static readonly object OrthancUrlCacheLock = new object();
@@ -274,13 +276,18 @@ namespace PMS
                             var first = studiesArray?.FirstOrDefault() as JObject;
 
                             var orthancStudyId = first?["ID"]?.ToString();
-                            var studyInstanceUid = first?["MainDicomTags"]?["StudyInstanceUID"]?.ToString();
+                            var mainDicomTags = first?["MainDicomTags"] as JObject;
+                            var studyInstanceUid = mainDicomTags?["StudyInstanceUID"]?.ToString();
+                            var studyDate = mainDicomTags?["StudyDate"]?.ToString();
+                            var studyTime = mainDicomTags?["StudyTime"]?.ToString();
 
                             if (!string.IsNullOrWhiteSpace(orthancStudyId))
                             {
                                 result.Exists = true;
                                 result.OrthancStudyId = orthancStudyId;
                                 result.StudyInstanceUID = studyInstanceUid;
+                                result.StudyDate = studyDate;
+                                result.StudyTime = studyTime;
                             }
                         }
                     }

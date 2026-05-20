@@ -612,6 +612,9 @@ namespace PMS
                                              pm.Regular,
                                              pm.STAT,
                                              pm.PRN,
+                                             pm.Req_Qty,
+                                             pm.Rcv_Qty,
+                                             pm.Stop_Date_Time,
 
                                          }).ToList();
 

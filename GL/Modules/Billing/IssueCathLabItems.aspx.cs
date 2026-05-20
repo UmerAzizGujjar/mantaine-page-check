@@ -484,6 +484,28 @@ namespace PMS.Modules.Billing
             }
             return result;
         }
+        [WebMethod]
+        public static string loadMedicineByID(string ID)
+        {
+            string result = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var query = (from it in db.INV_Items
+                             where it.Item_ID.ToString() == ID
+                             select new
+                             {
+                                 it.Item_ID,
+                                 it.Item_Code,
+                                 it.Description,
+                                 it.Generic_Name
+                             }).ToList();
+
+                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+            }
+
+            return result;
+        }
 
         [WebMethod]
         public static string MedicineDetail(int itemId, string hdndiscountType, string Batch, string warehouse)

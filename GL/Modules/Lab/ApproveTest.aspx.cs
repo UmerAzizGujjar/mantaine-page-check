@@ -15,6 +15,33 @@ namespace PMS.Modules.Lab
 
         }
 
+        //[WebMethod]
+        //public static object GetDoctors()
+        //{
+        //    try
+        //    {
+        //        DataBaseDataContext db = new DataBaseDataContext();
+        //        var DocUserid = AppConfig.UserID;
+        //        bool testList = (from hr in db.aspnet_Users where hr.UserId == DocUserid select hr.AllowTestlistDoctor).FirstOrDefault()
+
+        //        //using (var db = new DataBaseDataContext())
+        //        if (testList == true)
+        //        {
+        //            var doctors = (from emp in db.HR_Employees
+        //                           where emp.IsDoctor == true
+        //                           select new
+        //                           {
+        //                               id = emp.Emp_ID,
+        //                               text = emp.Emp_Name
+        //                           }).ToList();
+        //            return doctors;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new List<object>();
+        //    }
+        //}
         [WebMethod]
         public static object GetDoctors()
         {
@@ -22,22 +49,44 @@ namespace PMS.Modules.Lab
             {
                 using (var db = new DataBaseDataContext())
                 {
-                    var doctors = (from emp in db.HR_Employees
-                                   where emp.IsDoctor == true
-                                   select new
-                                   {
-                                       id = emp.Emp_ID,
-                                       text = emp.Emp_Name
-                                   }).ToList();
-                    return doctors;
+                    var docUserId = AppConfig.UserID;
+
+                    bool testList = (from hr in db.aspnet_Users
+                                     where hr.UserId == docUserId
+                                     select hr.AllowTestlistDoctor).FirstOrDefault() ?? false;
+
+                    if (testList)
+                    {
+                        var doctors = (from emp in db.HR_Employees
+                                       where emp.IsDoctor == true
+                                       select new
+                                       {
+                                           id = emp.Emp_ID,
+                                           text = emp.Emp_Name
+                                       }).ToList();
+
+                        return doctors;
+                    }
+                    else
+                    {
+                        var doctors = (from emp in db.HR_Employees
+                                       where emp.IsDoctor == true
+                                             && emp.userid == Convert.ToString(docUserId)
+                                       select new
+                                       {
+                                           id = emp.Emp_ID,
+                                           text = emp.Emp_Name
+                                       }).ToList();
+
+                        return doctors;
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new List<object>();
             }
         }
-
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string startdate, string endtdate, string doctorId)
         {
