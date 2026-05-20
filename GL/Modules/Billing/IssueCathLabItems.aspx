@@ -1279,59 +1279,48 @@
                 }, 500);
             });
         }
+         // Declare at top of script
+         var currentBarcodeId = null; // 👈 Add this global variable
 
-        function processBarcode() {
-            var $barcode = $('#searchByBarcode');
-            var barcodeValue = ($barcode.val() || '').trim();
-            if (!barcodeValue) {
-                $barcode.focus();
-                return;
-            }
+         function processBarcode() {
+             var $barcode = $('#searchByBarcode');
+             var barcodeValue = ($barcode.val() || '').trim();
+             if (!barcodeValue) { $barcode.focus(); return; }
+             debugger;
+             PageMethods.loadMedicineByID(barcodeValue, function (data) {
+                 debugger;
+                 var parsed;
+                 try { parsed = JSON.parse(data); } catch (e) { parsed = []; }
+                 if (!parsed || parsed.length === 0) { $barcode.val('').focus(); return; }
 
-            PageMethods.loadMedicineByID(barcodeValue,
-                function (data) {
-                    var parsed;
-                    try {
-                        parsed = JSON.parse(data);
-                    } catch (e) {
-                        parsed = [];
-                    }
+                 var item = parsed[0];
+                 var itemId = item.Item_ID;
 
-                    if (!parsed || parsed.length === 0) {
-                        $barcode.val('').focus();
-                        return;
-                    }
+                 // 👇 CAPTURE AND STORE BARCODE_ID GLOBALLY 👇
+                 currentBarcodeId = item.Barcode_ID ? item.Barcode_ID.toString() : null;
 
-                    var item = parsed[0];
-                    var description = item.Description && item.Description.toString().trim() !== ''
-                        ? item.Description
-                        : (item.Generic_Name || '');
-                    var itemCode = item.Item_Code || '';
-                    var itemId = item.Item_ID;
-                    var displayText = itemCode + ' - ' + description;
+                 var displayText = (item.Item_Code || '') + ' - ' + (item.Description || item.Generic_Name || '');
+                 var $medName = $('#medName');
+                 if ($medName.find('option[value="' + itemId + '"]').length === 0) {
+                     $medName.append(new Option(displayText, itemId, true, true));
+                 }
+                 $medName.trigger('change');
 
-                    if (addedItemIDs.indexOf(itemId) === -1) {
-                        items.push({ id: itemId, text: displayText });
-                        addedItemIDs.push(itemId);
-                    }
-
-                    var $medName = $('#medName');
-                    var existingOption = $medName.find('option[value="' + itemId + '"]');
-                    if (existingOption.length === 0) {
-                        var newOption = new Option(displayText, itemId, true, true);
-                        $medName.append(newOption);
-                    } else {
-                        existingOption.text(displayText).prop('selected', true);
-                    }
-
-                    $medName.trigger('change');
-                    $barcode.val('').focus();
-                },
-                function (error) {
-                    console.error(error);
-                    $barcode.val('').focus();
-                });
-        }
+                 if (item.BatchNum) {
+                     $('#chkbatch').prop('checked', true).trigger('change');
+                     setTimeout(function () {
+                         var $batch = $('#batchno');
+                         if ($batch.find('option[value="' + item.BatchNum + '"]').length > 0) {
+                             $batch.val(item.BatchNum).trigger('change'); // This calls AddMedicineDetail()
+                         }
+                     }, 600);
+                 }
+                 $barcode.val('').focus();
+             }, function (error) {
+                 console.error(error);
+                 $barcode.val('').focus();
+             });
+         }
 
         function loadmed() {
             var ItemName = ItemNames || '';
@@ -2027,6 +2016,10 @@
                     var date = data[0].ExpiryDate
                     date = moment(date).format('D-MMM-YYYY');
 
+                    var barcodeValue = (typeof window.currentBarcodeId !== 'undefined' && window.currentBarcodeId)
+                        ? window.currentBarcodeId.toString()
+                        : '';
+
                     debugger;
                     rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
 
@@ -2046,7 +2039,7 @@
 
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
-                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="3% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="3% !important;text-align: right;margin-left: -4px;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
 
                         '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
 
@@ -2057,6 +2050,8 @@
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
+                        '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+                        '<td style="display:none;"><input type="hidden" name="BarcodeId" value="' + barcodeValue + '" /></td>' + 
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
 
                         '</tr>';
@@ -2139,6 +2134,10 @@
                     var discountBlock = data[0].Discount_Block;
                     var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
                     var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
+
+                    var barcodeValue = (typeof window.currentBarcodeId !== 'undefined' && window.currentBarcodeId)
+                        ? window.currentBarcodeId.toString()
+                        : '';
                    
                     debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
@@ -2170,6 +2169,8 @@
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
                         '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+
+                        '<td style="display:none;"><input type="hidden" value="' + barcodeValue + '" name="BarcodeId" id="BarcodeId" ></td>' +
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                         '</tr>';
                     $('#tblDetails #tblbody').append(rows);
@@ -2183,6 +2184,7 @@
                         }
                     }, 5);
                     CalculateSummarieDiscountPerWise(rowIndex);
+                    currentBarcodeId = null;
                 }
             });
         }
@@ -2301,6 +2303,8 @@
                 var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
                 var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
                 var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
+                var $barcodeInput = $(value).find('input[name="BarcodeId"]');
+                var BarcodeId = $barcodeInput.length > 0 ? ($barcodeInput.val() || '') : '';
                 var CGSAmount = CGSRate * Qty;
                 if (batchno == null) {
                     batchno = '';
@@ -2335,7 +2339,7 @@
                 }
                 var NetAmount = $($(value).find('td')[11]).text();
                 Save_list.push({
-                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount,
+                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, BarcodeId: BarcodeId,
                 });
             });
             debugger;
@@ -2480,6 +2484,7 @@
                         var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
                         var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
                         var Remarks = $(value).find('input[name="Remarks"]').val() || '';
+                        var BarcodeId = $(value).find('input[name="BarcodeId"]').val() || '';
                         var CGSAmount = CGSRate * Qty;
                        
                         if (batchno == null) {
@@ -2515,7 +2520,7 @@
                         }
                         var NetAmount = $($(value).find('td')[11]).text();
                         Save_list.push({
-                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks,
+                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks, BarcodeId: BarcodeId,
                         });
                     });
                     debugger;
@@ -3084,7 +3089,8 @@
                             '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
                             '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
-                            '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+                        '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+                        '<td style="display:none;"><input type="hidden" name="BarcodeId" value="" /></td>' +
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                             '</tr>';                            
                         $('#tblDetails tbody').append(rows);
@@ -3184,45 +3190,58 @@
 
         }
 
-        function LoadWarehouses() {
-            var $dropdown = $('#ddlWarehouse');
-            $dropdown.empty();
+         function LoadWarehouses() {
+             var $dropdown = $('#ddlWarehouse');
+             $dropdown.empty();
 
-            PageMethods.GetUserWarehouses(
-                function (response) {
-                    if (response && Array.isArray(response)) {
-                        if (response.length === 1) {
-                            // Only one warehouse: skip "Please Select" and auto-select it
-                            var item = response[0];
-                            $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
-                            $("#ddlWarehouse").attr("disabled", true);
-                        } else {
-                            // Multiple or zero warehouses: show "Please Select"
-                            $dropdown.append('<option value="0">Please Select</option>');
-                            $.each(response, function (index, item) {
-                                $dropdown.append(
-                                    '<option value="' + item.Value + '">' +
-                                    item.Text +
-                                    '</option>'
-                                );
-                            });
-                        }
-                    } else {
-                        // Handle case where response is not an array or is null
-                        $dropdown.append('<option value="0">Please Select</option>');
-                    }
+             PageMethods.GetUserWarehouses(
+                 function (response) {
+                     if (response && Array.isArray(response)) {
+                         var cathLabWarehouse = null;
 
-                    // Reinitialize Select2 after populating
-                    $dropdown.select2();
-                },
-                function (error) {
-                    console.log('Error loading warehouses:', error);
-                    // On error, default to "Please Select"
-                    $dropdown.append('<option value="0">Please Select</option>');
-                    $dropdown.select2();
-                }
-            );
-        }
+                         // First, check if CathLab warehouse (value "009") exists in the list
+                         $.each(response, function (index, item) {
+                             if (item.Value == "009") {
+                                 cathLabWarehouse = item;
+                             }
+                         });
+
+                         if (cathLabWarehouse) {
+                             // If CathLab warehouse exists, auto-select it and disable dropdown
+                             $dropdown.append('<option value="' + cathLabWarehouse.Value + '" selected="selected">' + cathLabWarehouse.Text + '</option>');
+                             $("#ddlWarehouse").attr("disabled", true);
+                         } else if (response.length === 1) {
+                             // Only one warehouse: skip "Please Select" and auto-select it
+                             var item = response[0];
+                             $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
+                             $("#ddlWarehouse").attr("disabled", true);
+                         } else {
+                             // Multiple or zero warehouses (excluding if CathLab exists but we already handled above)
+                             $dropdown.append('<option value="0">Please Select</option>');
+                             $.each(response, function (index, item) {
+                                 $dropdown.append(
+                                     '<option value="' + item.Value + '">' +
+                                     item.Text +
+                                     '</option>'
+                                 );
+                             });
+                         }
+                     } else {
+                         // Handle case where response is not an array or is null
+                         $dropdown.append('<option value="0">Please Select</option>');
+                     }
+
+                     // Reinitialize Select2 after populating
+                     $dropdown.select2();
+                 },
+                 function (error) {
+                     console.log('Error loading warehouses:', error);
+                     // On error, default to "Please Select"
+                     $dropdown.append('<option value="0">Please Select</option>');
+                     $dropdown.select2();
+                 }
+             );
+         }
 
 
         function LoadWarehousesforSaleReturn() {
@@ -3528,7 +3547,9 @@
                --%>
             </div>
 
-
+            <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%;display:none">
+    <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
+</div>
 
             <!-- Checkboxes and Radio Buttons -->
             <div class="row mb-3 align-items-center" style="margin-top: 1%; margin-bottom: 1%">
