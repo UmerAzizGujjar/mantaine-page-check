@@ -92,13 +92,57 @@
                 "lengthChange": true,
                 "pageLength": 50,
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],  
-                "buttons": [{
-                    text: 'Save',
-                    className: 'dt-button buttons-copy buttons-html5',
-                    action: function () {
-                        SaveData();
+                "buttons": [
+                    {
+                        text: 'Save',
+                        className: 'dt-button buttons-copy buttons-html5',
+                        action: function () {
+                            SaveData();
+                        }
+                    },
+                    'copy',
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            format: {
+                                body: function (data, row, column, node) {
+
+                                    // Doctor dropdown
+                                    if ($(node).find('select.doctor-select').length) {
+                                        return $(node).find('select.doctor-select option:selected').text();
+                                    }
+
+                                    // Priority dropdown
+                                    if ($(node).find('select.priority-select').length) {
+                                        return $(node).find('select.priority-select option:selected').text();
+                                    }
+
+                                    // Remove HTML from other columns
+                                    return $('<div>').html(data).text();
+                                }
+                            }
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            format: {
+                                body: function (data, row, column, node) {
+
+                                    if ($(node).find('select.doctor-select').length) {
+                                        return $(node).find('select.doctor-select option:selected').text();
+                                    }
+
+                                    if ($(node).find('select.priority-select').length) {
+                                        return $(node).find('select.priority-select option:selected').text();
+                                    }
+
+                                    return $('<div>').html(data).text();
+                                }
+                            }
+                        }
                     }
-                }, 'copy', 'excel', 'pdf'],
+                ],
                 "ajax": function (data, callback, settings) {
                     var startDateVal = $('#startDate').val() || '';
                     var endDateVal = $('#endDate').val() || '';

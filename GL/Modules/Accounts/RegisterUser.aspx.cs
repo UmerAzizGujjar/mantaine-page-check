@@ -97,6 +97,7 @@ namespace PMS.Modules.Accounts
                              AllowRateEdit = p.AllowRateEdit,
                              AllowRadiologylist = p.Radiology_result,
                              AllowLineDiscount = p.AllowLineDiscount,
+                             AllowTestlistDoctor = p.AllowTestlistDoctor,
                              AllowReferIPD = p.Refer_IPD,
                              AllowSamplelist = p.Allow_Sample_list,
                              casher = p.cashier,
@@ -223,6 +224,7 @@ namespace PMS.Modules.Accounts
                     user.All_doctor_template = data.AllDoctorTemplate;
                     user.user_till = data.AllowTill;
                     user.AllowLineDiscount = data.AllowLineDiscount;
+                    user.AllowTestlistDoctor = data.AllowTestlistDoctor;
                     membership.mobileno = data.Mobile;
                     membership.Email = data.Email;
                     membership.LoweredEmail = data.Email.ToLower();
@@ -286,6 +288,7 @@ namespace PMS.Modules.Accounts
                 newuser.Allow_Sample_list = data.AllowSamplelist;
                 newuser.IsNotificationViewed = data.PRFsNotifications;
                 newuser.AllowLineDiscount = data.AllowLineDiscount;
+                newuser.AllowTestlistDoctor = data.AllowTestlistDoctor;
                 newuser.AllowUnapproveVoucher = data.AllowUnapproveVouchers;
                 newuser.IsAnonymous = data.IsAnonymous;
                 newuser.EditEmergency = data.EditEmergency;
@@ -420,6 +423,7 @@ namespace PMS.Modules.Accounts
             public bool AlllowPAtientAdd { get; set; }
             public bool AllowSamplelist { get; set; }
             public bool AllowLineDiscount { get; set; }
+            public bool AllowTestlistDoctor { get; set; }
             public bool AllowBirthCertificate { get; set; }
             public bool AllowDeathDetails { get; set; }
             public bool AllowSaleReturn { get; set; }

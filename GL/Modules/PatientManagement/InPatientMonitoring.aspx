@@ -2924,13 +2924,15 @@
             }, function (error) { })
         }
         function LoadMedicationHistory(PatientID) {
+            debugger;
             if (PatientID != '(New)') {
                 PageMethods.LoadMedicinesForHistory(PatientID, function (res) {
                     var Medicines = JSON.parse(res);
                     var rows = '';
+                    var Stop_Date;
                     $.each(Medicines, function (key, value) {
                         var type = '';
-
+                        debugger;
                         if (value.Regular == true) {
                             type = "REGULAR";
                         }
@@ -2942,10 +2944,19 @@
                         if (value.PRN == true) {
                             type = "PRN";
                         }
+                        if (value.Stop_Date_Time == null) {
+                            Stop_Date = '';
+                        }
+                        else {
+                            var s2 = parseInt(value.Stop_Date_Time.substr(6, 10));
+                            Stop_Date = moment.unix(s2).format('MM/DD/YYYY hh:mm:ss A');
+                        }
+                        debugger;
                         var timeStamp = parseInt(value.Medicine_Date.substr(6, 10));
                         var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
-                        rows += '<tr> <td> ' + date + ' </td><td> ' + value.Medicine_Name + ' </td> <td> ' + value.Recomended_Dosage + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td style="display:none"> ' + value.Injections + ' </td> <td>' + value.DoctorName + '</td><td>' + value.Injections + '</td><td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Dosage_From + '</td> <td>' + value.Dosage_Qty + '</td><td>' + value.Other_Instruction + '</td><td>' + type + '</td><td> <a href="#" onclick=select3(this)>Select</a> </td> </tr>';
+                        rows += '<tr> <td> ' + date + ' </td><td> ' + value.Medicine_Name + ' </td><td> ' + value.Frequency + ' </td> <td> ' + value.Oral + ' </td><td style="display:none"> ' + value.Req_Qty + ' </td> <td>' + value.Req_Qty + '</td><td>' + value.Rcv_Qty + '</td><td>' + Stop_Date + '</td><td>' + value.AttendingParamedical_Staff + '</td> <td>' + value.Dosage_From + '</td><td>' + value.Dosage_Qty + '</td><td>' + value.Other_Instruction + '</td><td>' + type + '</td><td> <a href="#" onclick=select3(this)>Select</a> </td> </tr>';
                     });
+                    debugger;
                     $('#tblHistoryMedication tbody tr').remove();
                     $('#tblHistoryMedication tbody').html(rows);
                     $('#tblHistoryMedications tbody tr').remove();
@@ -4762,18 +4773,18 @@
                                             </tr>
                                             <tr style="position: sticky; top: 70px; z-index: 10;">
                                                 <th style="width: 160px;">Date</th>
-                                                <th style="width: 84px;">Status</th>
                                                 <th style="width: 170px;">Medicine Name</th>
                                                 <th>Frequency</th>
                                                 <th>Routes</th>
                                                 <th>Request Qty </th>
                                                 <th>Received Qty </th>
-                                                <th>Duration</th>
+                                                <th>Stop Date & Time</th>
                                                 <th>Special Instructions</th>
                                                 <th>Dosage From</th>
                                                 <th>Dosage Qty</th>
                                                 <th>Other Instruction</th>
                                                 <th>Medication Type</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
