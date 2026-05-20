@@ -60,6 +60,27 @@
                 
             });
         }
+        function PrintINVBarcode(barcodeId) {
+    var locationInfo = window.location;
+    var user_name = '<% =AppConfig.Company_Name %>';
+    var reportPath = '';
+    
+    if (user_name == 'As-Siraat Serving Humanity') {
+        reportPath = '../../ReportViewer.aspx';
+    } else {
+        reportPath = 'ReportViewer.aspx'; 
+    }
+    
+    var url = '/ReportViewer.aspx?ReportName=PrintINVBarcodes&ReportTitle=Barcodes&Barcode_ID=' + barcodeId;
+    
+    if (!locationInfo.origin.includes('localhost')) {
+        var urlInfo = window.location.href.split('/');
+        var ip = urlInfo[2];
+        var foldername = urlInfo[3];
+        url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=PrintINVBarcodes&ReportTitle=Barcodes&Barcode_ID=' + barcodeId;
+    }
+    window.open(url, '_blank');
+}
 
         function loadGRNDetails(grnId) {
             if (!grnId) {
@@ -98,7 +119,7 @@
             });
         }
 
-        function loadItemsTable(items) {
+       function loadItemsTable(items) {
     const tbody = $('#tblItemsBody');
 
     if (!items || items.length === 0) {
@@ -108,39 +129,58 @@
 
     let html = '';
     $.each(items, function (i, item) {
-        let statusClass = 'badge-success';
-        let statusText = 'IN STOCK';
-        let maxSelectableQty = item.CurrentStock;
-        
+        // 1. Get values
+        let maxSelectableQty = item.MaxSelectableQty || 0;
         let preselectedQty = item.Selected_Qty || 0;
         
-        if (item.CurrentStock <= 0) {
+        // ✅ Get Actual Current Stock for Status Logic
+        let currentStockValue = parseFloat(item.CurrentStock || 0);
+
+        let partialWarning = '';
+        if (item.TotalSelectedFromAllSelections > 0 && item.TotalSelectedFromAllSelections < item.GRNQty) {
+            partialWarning = `<br/><small class="text-warning"><i class="fas fa-exclamation-triangle"></i> ${item.TotalSelectedFromAllSelections} of ${item.GRNQty} already selected</small>`;
+        }
+
+        // ✅ UPDATED: Status Badge now depends on CurrentStock, not MaxSelectableQty
+ let statusClass = 'badge-success';
+        let statusText = 'IN STOCK';
+
+        if (currentStockValue <= 0) {
             statusClass = 'badge-danger';
             statusText = 'OUT OF STOCK';
-            maxSelectableQty = 0;
-        } else if (item.CurrentStock < 10) {
+        } else if (currentStockValue < 10) {
             statusClass = 'badge-warning';
             statusText = 'LOW STOCK';
         }
 
-        let stockDisplay = `<span class="${item.CurrentStock <= 0 ? 'text-danger' : (item.CurrentStock < 10 ? 'text-warning' : 'text-success')}">
-                        <strong>${parseFloat(item.CurrentStock).toFixed(2)}</strong> ${escapeHtml(item.Unit || '')}
-                    </span>`;
+        // Display Logic for Current Stock Column (Just the number)
+        let stockColorClass = currentStockValue <= 0 ? 'text-danger' : (currentStockValue < 10 ? 'text-warning' : 'text-success');
+        
+        let stockDisplay = `<span class="${stockColorClass}">
+            <strong>${currentStockValue.toFixed(2)}</strong>
+        </span>`;
 
-        html += `<tr data-grndetailid="${item.GRN_Detail_Id}" data-itemid="${item.Item_Id}" data-maxqty="${maxSelectableQty}">
+        html += `<tr data-grndetailid="${item.GRN_Detail_Id}" 
+               data-itemid="${item.Item_Id}" 
+               data-maxqty="${maxSelectableQty}"
+               data-grnqty="${parseFloat(item.GRNQty).toFixed(2)}"
+               data-original-remaining="${item.RemainingQty}">
             <td><strong>${escapeHtml(item.ItemCode || '-')}</strong></td>
-            <td>${escapeHtml(item.ItemName || '-')}</td>
+            <td>${escapeHtml(item.ItemName || '-')}${partialWarning}</td>
             <td>${stockDisplay}</td>
-            <td>${parseFloat(item.GRNQty).toFixed(2)}</td>
+            <td><strong class="grn-qty-value">${parseFloat(item.GRNQty).toFixed(2)}</strong>
+                <br/><small class="text-muted">Remaining: ${parseFloat(item.RemainingQty).toFixed(2)}</small>
+            </td>
             <td><span class="badge badge-info">${escapeHtml(item.BatchNum || '-')}</span></td>
             <td>${escapeHtml(item.Unit || '-')}</td>
             <td>${parseFloat(item.Rate || 0).toFixed(2)}</td>
             <td>
-                <input type="number" class="qty-input" value="${preselectedQty}" min="0" max="${maxSelectableQty}" step="any" 
+                <input type="number" class="qty-input" value="${preselectedQty}" 
+                       min="0" max="${maxSelectableQty}" step="0.01"
                        onchange="updateQuantity(this, ${item.GRN_Detail_Id}, ${maxSelectableQty})" />
-             </td>
+            </td>
             <td><span class="badge ${statusClass}">${statusText}</span></td>
-          </tr>`;
+        </tr>`;
     });
     tbody.html(html);
 }
@@ -152,14 +192,69 @@
             return div.innerHTML;
         }
 
+        function validateSelectedQuantities() {
+            let isValid = true;
+            let errorMessage = '';
+
+            $('#tblItemsBody tr').each(function () {
+                const $row = $(this);
+                const grnQty = parseFloat($row.data('grnqty')) || 0;
+                const qtyInput = $row.find('.qty-input');
+                const selectedQty = parseFloat(qtyInput.val()) || 0;
+
+                if (selectedQty > grnQty) {
+                    isValid = false;
+                    const itemName = $row.find('td:eq(1)').text();
+                    errorMessage += `\n• ${itemName}: Selected (${selectedQty}) > GRN Qty (${grnQty})`;
+                    $row.addClass('validation-error-row');
+                    qtyInput.addClass('input-error');
+                } else {
+                    $row.removeClass('validation-error-row');
+                    qtyInput.removeClass('input-error');
+                }
+            });
+
+            if (!isValid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error!',
+                    html: `<strong>Selected quantity cannot exceed GRN quantity!</strong><br/><br/>The following items have invalid quantities:${errorMessage.replace(/\n/g, '<br/>')}`,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+            }
+
+            return isValid;
+        }
+
         window.updateQuantity = function (input, grnDetailId, maxQty) {
             let value = parseFloat($(input).val());
             if (isNaN(value)) value = 0;
             if (value < 0) value = 0;
+
             if (value > maxQty) {
-                $(input).val(maxQty);
-                showToast(`Maximum quantity is ${maxQty}`, 'warning');
+                value = maxQty;
+                $(input).val(value);
+                showToast(`Maximum selectable quantity is ${maxQty}`, 'warning');
             }
+
+            const $row = $(input).closest('tr');
+            const grnQty = parseFloat($row.data('grnqty')) || 0;
+            const originalRemaining = parseFloat($row.data('original-remaining')) || 0;
+
+            if (value > originalRemaining) {
+                showToast(`Warning: Only ${originalRemaining} units remaining from GRN`, 'warning');
+                $(input).addClass('input-error');
+            } else {
+                $(input).removeClass('input-error');
+            }
+
+            $(input).data('original-value', value);
         };
 
         function saveSelection() {
@@ -175,7 +270,11 @@
     if (!grnId) {
         showToast('Please select GRN number', 'error');
         return;
-    }
+            }
+
+            if (!validateSelectedQuantities()) {
+                return;
+            }
 
     const selectedItems = [];
     let hasSelection = false;
@@ -241,7 +340,12 @@
                     title: selectionId ? 'Updated Successfully!' : 'Saved Successfully!',
                     text: selectionId ? 'Selection has been updated successfully.' : 'Data has been saved successfully.',
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 2500,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
                 });
                 $('#btnGenerateBarcodes').prop('disabled', false);
                 $('#btnGenerateBarcodes').parent().removeClass('hide-barcode-div');
@@ -383,10 +487,12 @@
                     <i class="fas fa-calendar-alt" style="color: #667eea;"></i> ${formattedDate}
                 </td>
                 <td style="text-align: center; padding: 10px;">
-                    <button class="btn btn-sm btn-info" onclick="copyToClipboard('${barcode.Barcode_Number}')">
-                        <i class="fas fa-copy"></i> Copy
-                    </button>
-                </td>
+    <button class="btn btn-sm btn-info" 
+        onclick="PrintINVBarcode(${barcode.Barcode_ID})" 
+        style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;">
+        <i class="fa fa-print"></i>
+    </button>
+</td>
             </tr>
         `;
     });
@@ -693,6 +799,9 @@ function loadGRNDropdownForEdit(grnId) {
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <input type="button" id="btnGenerateBarcodes" class="btn btn-primry" value="BARCODES" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" id="btnPrintSelected" class="btn btn-success hide-barcode-div" value="PRINT SELECTED" style="display: none;" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <input type="button" id="btnReset" class="btn btn-primry"  value="NEW" onclick="window.location.href='ItemSelection.aspx';" /> 

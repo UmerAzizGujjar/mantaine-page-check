@@ -16,6 +16,17 @@
                 LoadMasterData(id);
                 Loaddetail(id);
             }
+            $(document).on('change', '.chkUnlimited', function () {
+                var index = $(this).data('index');
+                var input = $('#txtMaxApprovalLimit' + index);
+                if ($(this).prop('checked')) {
+                    input.val('-1');
+                    input.prop('disabled', true);
+                } else {
+                    input.val('');
+                    input.prop('disabled', false);
+                }
+            });
             $('#btnNew').on('click', function () {
                 window.location.href = "ApprovalStages.aspx";
             });
@@ -96,9 +107,11 @@
                     return false;
                 }
                 var table = $('#tblItemDescriptionDetail');
+                var isValid = true;
                 table.find('tr').each(function (key, value) {
                     var ddlUser = $("#tblddlUser" + (key + 1) + " option:selected").val();
                     var txtMaxApprovalLimit = $("#txtMaxApprovalLimit" + (key + 1)).val();
+                    var chkUnlimited = $("#chkUnlimited" + (key + 1)).prop('checked');
                     if (ddlUser == "") {
                         Swal.fire({
                             icon: 'error',
@@ -114,11 +127,13 @@
                         });
                         return false;
                     }
-                    if (txtMaxApprovalLimit !== "" && !txtMaxApprovalLimit.match(/^\d+$/)) {
+                    if (chkUnlimited) {
+                        txtMaxApprovalLimit = "-1";
+                    } else if (txtMaxApprovalLimit === "" || !txtMaxApprovalLimit.match(/^\d+$/) || parseInt(txtMaxApprovalLimit, 10) <= 0) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
-                            text: 'Please Enter a valid Max Approval Limit',
+                            text: 'Please Enter a Max Approval Limit greater than 0',
                             showConfirmButton: false,
                             timer: 2000,
                             customClass: {
@@ -127,10 +142,14 @@
                                 htmlContainer: 'swal-big-text'
                             }
                         });
+                        isValid = false;
                         return false;
                     }
                     approvalList[key + 1] = new Array(ddlUser, txtMaxApprovalLimit);
                 });
+                if (!isValid) {
+                    return false;
+                }
                 $.ajax({
                     type: "POST",
                     url: "ApprovalStages.aspx/Save",
@@ -196,7 +215,10 @@
                 $.each(data, function (key, value) {
                     rows += '<tr>' +
                         '<td><select class="form-control ddlUser" id="tblddlUser' + (key + 1) + '" name="tblddlUser" style="width:100% !important"></select></td>' +
-                        '<td><input type="text" class="form-control" id="txtMaxApprovalLimit' + (key + 1) + '" placeholder="Max Approval Limit" /></td>' +
+                        '<td style="text-align:center; vertical-align:middle;">' +
+                        '<input type="checkbox" class="chkUnlimited" id="chkUnlimited' + (key + 1) + '" data-index="' + (key + 1) + '" />' +
+                        '</td>' +
+                        '<td><input type="text" class="form-control" id="txtMaxApprovalLimit' + (key + 1) + '" data-index="' + (key + 1) + '" placeholder="Max Approval Limit" /></td>' +
                         '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
                         '</td>' +
                         '</tr>';
@@ -227,10 +249,29 @@
             });
             Promise.all(ddlPromises).then(function () {
                 $('.ddlUser').each(function (index) {
-                    var selectedValue = selectedOptions[index];
-                    selectedValue = selectedValue.toLowerCase();
+                    var selectedValue = selectedOptions[index].User_Id;
+                    var maxLimit = selectedOptions[index].MaxApprovalLimit;
+                    var rowIndex = index + 1;
                     if (selectedValue) {
-                        $('#tblddlUser' + (index + 1)).val(selectedValue).trigger('change');
+                        $('#tblddlUser' + rowIndex).val(selectedValue.toString().toLowerCase()).trigger('change');
+                    }
+                    var maxLimitInput = $('#txtMaxApprovalLimit' + rowIndex);
+                    var chkUnlimited = $('#chkUnlimited' + rowIndex);
+                    if (maxLimit !== null && maxLimit !== undefined) {
+                        var parsedLimit = parseInt(maxLimit, 10);
+                        if (parsedLimit === -1) {
+                            chkUnlimited.prop('checked', true);
+                            maxLimitInput.val('-1');
+                            maxLimitInput.prop('disabled', true);
+                        } else {
+                            maxLimitInput.val(parsedLimit);
+                            chkUnlimited.prop('checked', false);
+                            maxLimitInput.prop('disabled', false);
+                        }
+                    } else {
+                        maxLimitInput.val('');
+                        chkUnlimited.prop('checked', false);
+                        maxLimitInput.prop('disabled', false);
                     }
                 });
             }).catch(function (error) {
@@ -245,10 +286,13 @@
                 '<select name="tblddlUser" style="width:100% !important" id="tblddlUser' + rowlength + '">' +
                 '</select>' +
                 '</td>' +
-                '<td><input type="text" class="form-control" id="txtMaxApprovalLimit' + rowlength + '" placeholder="Max Approval Limit" /></td>' +
+                '<td style="text-align:center; vertical-align:middle;">' +
+                '<input type="checkbox" class="chkUnlimited" id="chkUnlimited' + rowlength + '" data-index="' + rowlength + '" />' +
+                '</td>' +
+                '<td><input type="text" class="form-control" id="txtMaxApprovalLimit' + rowlength + '" data-index="' + rowlength + '" placeholder="Max Approval Limit" /></td>' +
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
                 '</td>' +
-                '</tr>'
+                '</tr>';
             $('#tblItemDescriptionDetail').append(rows);
             loadItemList(rowlength);
         }
@@ -288,7 +332,7 @@
                     row.remove();
                 }
             });
-            
+
         }
     </script>
 </asp:Content>
@@ -347,7 +391,8 @@
                 <table class="table table-bordered" id="tblItemDescription">
                     <thead>
                         <tr>
-                            <th style="width: 55%;">User Name</th>
+                            <th style="width: 45%;">User Name</th>
+                            <th style="width: 20%;">Unlimited</th>
                             <th style="width: 25%;">Max Approval Limit</th>
                             <th style="width: 10%">Action</th>
                         </tr>

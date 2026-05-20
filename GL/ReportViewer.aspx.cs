@@ -6295,6 +6295,14 @@ namespace PMS
                 rd.SummaryInfo.ReportTitle = reportTitle;
                 rd.SetParameterValue("@Sample_ID", int.Parse(Request.QueryString["Sample_ID"]));
             }
+            else if (reportName == "PrintINVBarcodes")
+            {
+                reportPath += "Inventory/rptCathLabBarcode.rpt";
+                rd.Load(reportPath);
+                var barcode = Request.QueryString["Barcode_ID"].ToString();
+                rd.SummaryInfo.ReportTitle = reportTitle;
+                rd.SetParameterValue("@Barcode_IDs", barcode);
+            }
             else if (reportName == "LabBarcodeSlip")
             {
                 reportPath += "LabRadiology/rptLabSlipBarcode.rpt";

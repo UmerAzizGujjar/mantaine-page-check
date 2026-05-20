@@ -137,7 +137,22 @@
                 <ItemTemplate>
                     <asp:Label ID="lblRemainingAmount" runat="server" Text='<%# Bind("RemainingAmount") %>'></asp:Label>
                 </ItemTemplate>
-            </asp:TemplateField>
+             </asp:TemplateField>
+             <asp:TemplateField Visible="False">
+                <ItemTemplate>
+                    <asp:Label ID="lblPRAmount" runat="server" Text='<%# Bind("PRAmount") %>'></asp:Label>
+                </ItemTemplate>
+             </asp:TemplateField>
+             <asp:TemplateField Visible="False">
+                <ItemTemplate>
+                    <asp:Label ID="lblUserApprovalLimit" runat="server" Text='<%# Bind("UserApprovalLimit") %>'></asp:Label>
+                </ItemTemplate>
+             </asp:TemplateField>
+             <asp:TemplateField Visible="False">
+                <ItemTemplate>
+                    <asp:Label ID="lblCanApprove" runat="server" Text='<%# Bind("CanApprove") %>'></asp:Label>
+                </ItemTemplate>
+             </asp:TemplateField>
         </Columns>
         <HeaderStyle CssClass="gridview-header" />
     </asp:GridView>

@@ -30,17 +30,18 @@ namespace PMS.GL
             foreach (var res in result)
             {
                 ApprovalHierarchyDetail obj = new ApprovalHierarchyDetail();
-                    obj.Stage_ID = res.Stage_ID.ToString();
-                    obj.User_Id = Convert.ToString(res.UserId); 
-                    listObj.Add(obj);
-                    counter++;               
+                obj.Stage_ID = res.Stage_ID.ToString();
+                obj.User_Id = Convert.ToString(res.UserId);
+                obj.MaxApprovalLimit = (int?)res.MaxApprovalLimit;
+                listObj.Add(obj);
+                counter++;
             }
             data = (new JavaScriptSerializer()).Serialize(listObj);
             return data;
         }
-       
+
         [WebMethod]
-        public static string Save(string btnValue, string id,string txtStageName, string txtStageDescription, string txtNoOfApproval,string txtNoOfUnApproval,bool chkFinalApproval, string[][] approvalDetail)
+        public static string Save(string btnValue, string id, string txtStageName, string txtStageDescription, string txtNoOfApproval, string txtNoOfUnApproval, bool chkFinalApproval, string[][] approvalDetail)
         {
             int lstid = 0;
             Sys_Approval_Stage_Master appp;
@@ -53,9 +54,9 @@ namespace PMS.GL
             {
                 appp = (from tbl in db.Sys_Approval_Stage_Masters
                         where tbl.Stage_ID == Convert.ToInt32(id)
-                         select tbl).FirstOrDefault();
-                appp.Stage_Name=txtStageName;
-                appp.Stage_Description=txtStageDescription;
+                        select tbl).FirstOrDefault();
+                appp.Stage_Name = txtStageName;
+                appp.Stage_Description = txtStageDescription;
                 //appp.NoOfApprovalRequire=Convert.ToInt32(txtNoOfApproval);
                 //appp.NoOfUnApprovalRequire=Convert.ToInt32(txtNoOfUnApproval);
                 if (!string.IsNullOrEmpty(txtNoOfApproval) && int.TryParse(txtNoOfApproval, out int approvalCount))
@@ -78,7 +79,7 @@ namespace PMS.GL
                 appp.Updated_By = AppConfig.UserID;
                 appp.Updated_Date = DateTime.Now;
                 db.SubmitChanges();
-            }                 
+            }
             if (btnValue == "Save")
             {
                 appp.Stage_Name = txtStageName;
@@ -98,7 +99,7 @@ namespace PMS.GL
                     appp.NoOfUnApprovalRequire = unApprovalCount;
                 }
                 else
-                {                   
+                {
                     appp.NoOfUnApprovalRequire = 0;
                 }
                 appp.IsFinalApproval = Convert.ToBoolean(chkFinalApproval);
@@ -123,11 +124,11 @@ namespace PMS.GL
                 {
                     apdetail.UserId = userId;
                 }
-                //if (!string.IsNullOrWhiteSpace(approvalDetail[i][1]) &&
-                //    int.TryParse(approvalDetail[i][1], out int maxApprovalLimit))
-                //{
-                //    apdetail.MaxApprovalLimit = maxApprovalLimit;
-                //}
+                if (!string.IsNullOrWhiteSpace(approvalDetail[i][1]) &&
+                    int.TryParse(approvalDetail[i][1], out int maxApprovalLimit))
+                {
+                    apdetail.MaxApprovalLimit = maxApprovalLimit;
+                }
                 db.Sys_Approval_Stage_Details.InsertOnSubmit(apdetail);
             }
             db.SubmitChanges();
@@ -157,12 +158,17 @@ namespace PMS.GL
         [WebMethod]
         public static string LoadDetails(int id)
         {
-            List<string> detail = new List<string>();
+            List<ApprovalHierarchyDetail> detail = new List<ApprovalHierarchyDetail>();
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 detail = (from m in db.Sys_Approval_Stage_Details
                           where m.Stage_ID == id
-                          select m.UserId.ToString()).ToList(); 
+                          select new ApprovalHierarchyDetail
+                          {
+                              Stage_ID = m.Stage_ID.ToString(),
+                              User_Id = m.UserId.ToString(),
+                              MaxApprovalLimit = (int?)m.MaxApprovalLimit
+                          }).ToList();
             }
             return (new JavaScriptSerializer()).Serialize(detail);
         }
@@ -177,6 +183,7 @@ namespace PMS.GL
         {
             public string Stage_ID { get; set; }
             public string User_Id { get; set; }
+            public int? MaxApprovalLimit { get; set; }
         }
     }
 }
