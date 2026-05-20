@@ -595,7 +595,7 @@ namespace PMS
                 var inPatmedicineList = (from pm in db.In_Patient_Medicines
                                          join op in db.In_Patients
                                          on pm.Patient_ID equals op.In_Patient_ID
-                                         where op.Patient_ID == PatientID && pm.Transaction_Type == "InPatientMonitring"
+                                         where op.Patient_ID == PatientID && pm.Transaction_Type == "InPatient"
                                          orderby pm.Medicine_Date descending
                                          select new {
                                              pm.chkDiccharge, pm.AttendingParamedical_Staff, pm.Frequency, pm.In_Patient_Medicine_ID, pm.Injections, 
@@ -631,7 +631,7 @@ namespace PMS
                 var inPatmedicineList = (from pm in db.In_Patient_Medicines
                                          join op in db.In_Patients
                                          on pm.Patient_ID equals op.In_Patient_ID
-                                         where op.Patient_ID == PatientID && pm.Transaction_Type == "InPatientMonitring"
+                                         where op.Patient_ID == PatientID && pm.Transaction_Type == "InPatient"
                                          orderby pm.Medicine_Date descending
                                          select new {
                                              pm.chkDiccharge, pm.AttendingParamedical_Staff, pm.Frequency, pm.In_Patient_Medicine_ID, pm.Injections, 
@@ -1204,7 +1204,7 @@ namespace PMS
                         oIn_Patient_Medicine1.Patient_ID = targetPatientId; 
                         oIn_Patient_Medicine1.Item_Code = Convert.ToString(itemid);
                         oIn_Patient_Medicine1.Medicine_Name = oIn_Patient_Medicine.Medicine_Name;
-                        oIn_Patient_Medicine1.Transaction_Type = "InPatientMonitoring";
+                        oIn_Patient_Medicine1.Transaction_Type = "InPatient";
                         oIn_Patient_Medicine1.Medicine_Date = oIn_Patient_Medicine.Medicine_Date;
                         oIn_Patient_Medicine1.Oral = oIn_Patient_Medicine.Oral;
                         oIn_Patient_Medicine1.Injections = oIn_Patient_Medicine.Injection;
