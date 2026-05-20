@@ -129,11 +129,9 @@
 
     let html = '';
     $.each(items, function (i, item) {
-        // 1. Get values
         let maxSelectableQty = item.MaxSelectableQty || 0;
         let preselectedQty = item.Selected_Qty || 0;
         
-        // ✅ Get Actual Current Stock for Status Logic
         let currentStockValue = parseFloat(item.CurrentStock || 0);
 
         let partialWarning = '';
@@ -141,7 +139,6 @@
             partialWarning = `<br/><small class="text-warning"><i class="fas fa-exclamation-triangle"></i> ${item.TotalSelectedFromAllSelections} of ${item.GRNQty} already selected</small>`;
         }
 
-        // ✅ UPDATED: Status Badge now depends on CurrentStock, not MaxSelectableQty
  let statusClass = 'badge-success';
         let statusText = 'IN STOCK';
 
@@ -153,7 +150,6 @@
             statusText = 'LOW STOCK';
         }
 
-        // Display Logic for Current Stock Column (Just the number)
         let stockColorClass = currentStockValue <= 0 ? 'text-danger' : (currentStockValue < 10 ? 'text-warning' : 'text-success');
         
         let stockDisplay = `<span class="${stockColorClass}">
@@ -410,19 +406,22 @@
 }
 
         function displayBarcodes(barcodes) {
-    const section = $('#barcodesSection');
-    const grid = $('#barcodesGrid');
+            const section = $('#barcodesSection');
+            const grid = $('#barcodesGrid');
 
-    if (!barcodes || barcodes.length === 0) {
-        grid.html('<p style="text-align: center; padding: 40px;"><i class="fas fa-barcode" style="font-size: 48px; color: #cbd5e0;"></i><br/>No barcodes generated</p>');
-        return;
-    }
+            if (!barcodes || barcodes.length === 0) {
+                grid.html('<p style="text-align: center; padding: 40px;"><i class="fas fa-barcode" style="font-size: 48px; color: #cbd5e0;"></i><br/>No barcodes generated</p>');
+                return;
+            }
 
-    let html = `
+            let html = `
         <div class="table">
             <table class="table table-bordered table-hover" id="barcodesTable" style="width: 100%;">
                 <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                     <tr>
+                        <th style="text-align: center; padding: 12px; width: 40px;">
+                            <input type="checkbox" id="chkSelectAllBarcodes" style="transform: scale(1.2); cursor: pointer;" />
+                        </th>
                         <th style="text-align: center; padding: 12px;">#</th>
                         <th style="text-align: center; padding: 12px;">Barcode Number</th>
                         <th style="text-align: center; padding: 12px;">Item Code</th>
@@ -436,41 +435,36 @@
                 <tbody>
     `;
 
-    $.each(barcodes, function (i, barcode) {
-        let formattedDate = 'Invalid Date';
-        let generationDate = barcode.Generation_Date;
+            $.each(barcodes, function (i, barcode) {
+                let formattedDate = 'Invalid Date';
+                let generationDate = barcode.Generation_Date;
 
-        if (generationDate) {
-            let dateObj = null;
-
-            if (typeof generationDate === 'string') {
-                if (generationDate.indexOf('/Date(') === 0) {
-                    let milliseconds = parseInt(generationDate.match(/\d+/)[0]);
-                    dateObj = new Date(milliseconds);
+                if (generationDate) {
+                    let dateObj = null;
+                    if (typeof generationDate === 'string') {
+                        if (generationDate.indexOf('/Date(') === 0) {
+                            let milliseconds = parseInt(generationDate.match(/\d+/)[0]);
+                            dateObj = new Date(milliseconds);
+                        } else {
+                            dateObj = new Date(generationDate);
+                        }
+                    } else if (typeof generationDate === 'number') {
+                        dateObj = new Date(generationDate);
+                    }
+                    if (dateObj && !isNaN(dateObj.getTime())) {
+                        formattedDate = dateObj.toLocaleString('en-PK', {
+                            year: 'numeric', month: '2-digit', day: '2-digit',
+                            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+                        });
+                    }
                 }
-                else {
-                    dateObj = new Date(generationDate);
-                }
-            }
-            else if (typeof generationDate === 'number') {
-                dateObj = new Date(generationDate);
-            }
 
-            if (dateObj && !isNaN(dateObj.getTime())) {
-                formattedDate = dateObj.toLocaleString('en-PK', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false
-                });
-            }
-        }
-
-        html += `
-            <tr>
+                html += `
+            <tr data-barcode-id="${barcode.Barcode_ID}">
+                <td style="text-align: center; padding: 10px;">
+                    <input type="checkbox" class="chkBarcodeRow" value="${barcode.Barcode_ID}" 
+                           style="transform: scale(1.2); cursor: pointer;" />
+                </td>
                 <td style="text-align: center; padding: 10px;">${i + 1}</td>
                 <td style="text-align: center; padding: 10px;">
                     <code style="background: #f4f4f4; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${escapeHtml(barcode.Barcode_Number)}</code>
@@ -487,48 +481,112 @@
                     <i class="fas fa-calendar-alt" style="color: #667eea;"></i> ${formattedDate}
                 </td>
                 <td style="text-align: center; padding: 10px;">
-    <button class="btn btn-sm btn-info" 
-        onclick="PrintINVBarcode(${barcode.Barcode_ID})" 
-        style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;">
-        <i class="fa fa-print"></i>
-    </button>
-</td>
+                    <button class="btn btn-sm btn-info" 
+                        onclick="PrintINVBarcode(${barcode.Barcode_ID})" 
+                        style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;" title="Print Single">
+                        <i class="fa fa-print"></i>
+                    </button>
+                </td>
             </tr>
         `;
-    });
+            });
 
-    html += `
+            html += `
                 </tbody>
             </table>
         </div>
         <div style="margin-top: 15px; text-align: right; padding: 10px;">
             <small class="text-muted">
-                <i class="fas fa-info-circle"></i> Click copy button to copy barcode number
+                <i class="fas fa-info-circle"></i> Check boxes to select barcodes for bulk printing
             </small>
         </div>
     `;
 
-    grid.html(html);
-    $('#barcodeCount').text(`(${barcodes.length} barcodes)`);
-    section.show(); 
+            grid.html(html);
+            $('#barcodeCount').text(`(${barcodes.length} barcodes)`);
+            section.show();
 
-    if ($.fn.DataTable) {
-        if ($.fn.DataTable.isDataTable('#barcodesTable')) {
-            $('#barcodesTable').DataTable().destroy();
-        }
-        
-        $('#barcodesTable').DataTable({
-            "pageLength": 10,
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            "order": [[0, "asc"]],
-            "language": {
-                "search": "Search:",
-                "lengthMenu": "Show _MENU_ entries",
-                "info": "Showing _START_ to _END_ of _TOTAL_ barcodes"
+            if ($.fn.DataTable) {
+                if ($.fn.DataTable.isDataTable('#barcodesTable')) {
+                    $('#barcodesTable').DataTable().destroy();
+                }
+
+                const table = $('#barcodesTable').DataTable({
+                    "pageLength": 10,
+                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    "order": [[2, "asc"]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [0, 8] } 
+                    ],
+                    "language": {
+                        "search": "Search:",
+                        "lengthMenu": "Show _MENU_ entries",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ barcodes"
+                    }
+                });
+
+                bindBarcodeCheckboxEvents(table);
+            } else {
+                bindBarcodeCheckboxEvents();
             }
-        });
-    }
-}
+        }
+
+        function bindBarcodeCheckboxEvents(tableInstance) {
+            $('#chkSelectAllBarcodes').off('change').on('change', function () {
+                const isChecked = $(this).prop('checked');
+                if (tableInstance && $.fn.DataTable.isDataTable('#barcodesTable')) {
+                    tableInstance.rows().nodes().to$().find('.chkBarcodeRow').prop('checked', isChecked);
+                } else {
+                    $('#barcodesTable tbody .chkBarcodeRow').prop('checked', isChecked);
+                }
+            });
+
+            $(document).off('change', '.chkBarcodeRow').on('change', '.chkBarcodeRow', function () {
+                const totalRows = $('#barcodesTable tbody .chkBarcodeRow').length;
+                const checkedRows = $('#barcodesTable tbody .chkBarcodeRow:checked').length;
+                $('#chkSelectAllBarcodes').prop('checked', checkedRows === totalRows && totalRows > 0);
+                $('#chkSelectAllBarcodes').prop('indeterminate', checkedRows > 0 && checkedRows < totalRows);
+            });
+        }
+
+        function printSelectedBarcodes() {
+            const selectedIds = [];
+            $('#barcodesTable tbody .chkBarcodeRow:checked').each(function () {
+                selectedIds.push($(this).val());
+            });
+
+            if (selectedIds.length === 0) {
+                showToast('Please select at least one barcode to print', 'warning');
+                return;
+            }
+
+            showLoading(true, `Preparing ${selectedIds.length} barcode(s) for print...`);
+
+            // Build print URL with selected IDs
+            var locationInfo = window.location;
+            var user_name = '<%= AppConfig.Company_Name %>';
+            var reportPath = (user_name == 'As-Siraat Serving Humanity') ? '../../ReportViewer.aspx' : 'ReportViewer.aspx';
+
+            var baseUrl = '/ReportViewer.aspx';
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                baseUrl = 'http://' + urlInfo[2] + '/' + urlInfo[3] + '/ReportViewer.aspx';
+            }
+
+            // Join IDs with comma for bulk print
+            var barcodeIdsParam = selectedIds.join(',');
+            var printUrl = baseUrl + '?ReportName=PrintINVBarcodes&ReportTitle=SelectedBarcodes&Barcode_IDs=' + barcodeIdsParam;
+
+            showLoading(false);
+
+            // Open print window
+            var printWindow = window.open(printUrl, '_blank');
+            if (!printWindow) {
+                showToast('Popup blocked! Please allow popups for this site', 'error');
+            } else {
+                showToast(`${selectedIds.length} barcode(s) sent to printer`, 'success');
+            }
+        }
 
 // Add this helper function for copying to clipboard
 function copyToClipboard(text) {
@@ -801,10 +859,13 @@ function loadGRNDropdownForEdit(grnId) {
                         <input type="button" id="btnGenerateBarcodes" class="btn btn-primry" value="BARCODES" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" id="btnPrintSelected" class="btn btn-success hide-barcode-div" value="PRINT SELECTED" style="display: none;" />
+                        <input type="button" id="btnReset" class="btn btn-primry"  value="NEW" onclick="window.location.href='ItemSelection.aspx';" /> 
+                    </div>                    
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" id="btnPrintSelected" class="btn btn-primry" value="PRINT SELECTED" onclick="printSelectedBarcodes();"  />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" id="btnReset" class="btn btn-primry"  value="NEW" onclick="window.location.href='ItemSelection.aspx';" /> 
+                        <input type="button" id="btnlist" class="btn btn-primry" value="LIST VIEW" onclick="window.location.href='ItemSelectionList.aspx';" />
                     </div>
                 </div>
             </div>

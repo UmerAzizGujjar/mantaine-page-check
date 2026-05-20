@@ -6299,9 +6299,25 @@ namespace PMS
             {
                 reportPath += "Inventory/rptCathLabBarcode.rpt";
                 rd.Load(reportPath);
-                var barcode = Request.QueryString["Barcode_ID"].ToString();
+
                 rd.SummaryInfo.ReportTitle = reportTitle;
-                rd.SetParameterValue("@Barcode_IDs", barcode);
+
+                string barcodeIdsParam = Request.QueryString["Barcode_IDs"];
+                string singleBarcodeId = Request.QueryString["Barcode_ID"];
+
+                if (!string.IsNullOrEmpty(barcodeIdsParam))
+                {
+                    rd.SetParameterValue("@Barcode_IDs", barcodeIdsParam);
+                }
+                else if (!string.IsNullOrEmpty(singleBarcodeId))
+                {
+                    rd.SetParameterValue("@Barcode_IDs", singleBarcodeId);
+                }
+                else
+                {
+                    Response.Write("<script>alert('No barcode selected for printing');</script>");
+                    return;
+                }
             }
             else if (reportName == "LabBarcodeSlip")
             {
