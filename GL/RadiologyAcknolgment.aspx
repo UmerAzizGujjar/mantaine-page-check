@@ -84,6 +84,28 @@
         }
 
         function loadRadiologyAcknowledgment() {
+            let savedVisibility = null;
+
+            $.ajax({
+                type: "POST",
+                url: "RadiologyAcknolgment.aspx/GetUserColumnPreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if (response.d && response.d !== "") {
+                        try {
+                            savedVisibility = JSON.parse(response.d);
+                        } catch (e) {
+                            console.warn("Invalid column visibility JSON");
+                        }
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load column preferences");
+                }
+            });
+
             var table = $("#tblradilogy").DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -122,7 +144,7 @@
                                 }
                             }
                         }
-                    },
+                    },                    
                     {
                         extend: 'pdf',
                         exportOptions: {
@@ -141,6 +163,13 @@
                                 }
                             }
                         }
+                    },
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fa fa-columns"></i> Columns',
+                        className: 'dt-button buttons-colvis',
+                        collectionLayout: 'fixed two-column',
+                        postfixButtons: ['colvisRestore']
                     }
                 ],
                 "ajax": function (data, callback, settings) {
@@ -206,6 +235,8 @@
                     { "data": "Main_Test_Departments" },
                     { "data": "WardName" },
                     { "data": "BedNo" },
+                    { "data": "Net_Amount" },
+                    { "data": "Main_Department" },
                     {
                         "data": "ParentTrans_Name",
                         "name": "ParentTrans_Name",
@@ -283,6 +314,54 @@
                     },
                     { "data": "Lab_Test_Detail_ID", "name": "Lab_Test_Detail_ID", "visible": false }
                 ],
+                "initComplete": function (settings, json) {
+                    const api = this.api();
+                    if (savedVisibility && Array.isArray(savedVisibility)) {
+                        if (savedVisibility.length === api.columns().count()) {
+                            api.columns().every(function (index) {
+                                this.visible(savedVisibility[index]);
+                            });
+                        }
+                    }
+
+                    api.on('column-visibility.dt', function (e, settings, column, state) {
+                        let currentVis = [];
+                        api.columns().every(function () {
+                            currentVis.push(this.visible());
+                        });
+
+                        $.ajax({
+                            type: "POST",
+                            url: "RadiologyAcknolgment.aspx/SaveUserColumnPreferences",
+                            data: JSON.stringify({ visibilityJson: JSON.stringify(currentVis) }), 
+                            contentType: "application/json; charset=utf-8",
+                            success: function (response) {
+                                console.log("Column preferences saved");
+                            },
+                            error: function (error) {
+                                console.error("Failed to save preferences:", error);
+                            }
+                        });
+                    });
+
+                    var lengthContainer = document.querySelector('#tblradilogy_length');
+                    var lengthDropdown = document.querySelector('#tblradilogy_length select');
+                    var label = document.querySelector('#tblradilogy_length label');
+
+                    if (lengthDropdown && label && lengthContainer) {
+                        var labelText = document.createElement('span');
+                        labelText.textContent = 'Show entries ';
+                        labelText.style.marginTop = '10px';
+                        labelText.style.display = 'inline-block';
+
+                        lengthDropdown.style.width = '60px';
+                        label.innerHTML = '';
+                        label.style.display = 'inline-flex';
+                        label.style.marginTop = '17px';
+                        label.appendChild(labelText);
+                        label.appendChild(lengthDropdown);
+                    }
+                },
                 "drawCallback": function () {
                     $('.doctor-select').each(function () {
                         if (!$(this).hasClass("select2-hidden-accessible")) {
@@ -303,7 +382,7 @@
                             });
                         }
                     });
-                }
+                },
             });
         }
 
@@ -486,6 +565,8 @@
                                     <th>Main Test Department</th>
                                     <th>Ward No</th>
                                     <th>Bed No</th>
+                                    <th>Net Amount</th>
+                                    <th>Mode of Registration</th>
                                     <th>Main Department</th>
                                     <th>Doctor</th>
                                     <th>Status</th>
