@@ -34,7 +34,12 @@
             loadmed();
             LoadWarehouses();
             LoadWarehousesforSaleReturn();
-            
+            setTimeout(function () {
+                if ($('#ddl_Warehouse').val() && $('#ddl_Warehouse').val() != "0") {
+                    $("#ddlInvoiceNumber").prop('disabled', false);
+                    $("#ddlSaleReturnItems").prop('disabled', false);
+                }
+            }, 500);
             LoadPatientNo();
             AllowadjustmentEdit();
             
@@ -3155,7 +3160,6 @@
             );
         }
 
-
         function LoadWarehousesforSaleReturn() {
             var $dropdown = $('#ddl_Warehouse');
             $dropdown.empty();
@@ -3168,6 +3172,8 @@
                             var item = response[0];
                             $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
                             $("#ddl_Warehouse").attr("disabled", true);
+                            // Manually trigger the change to enable invoice number and items dropdowns
+                            $("#ddl_Warehouse").trigger('change');
                         } else {
                             // Multiple or zero warehouses: show "Please Select"
                             $dropdown.append('<option value="0">Please Select</option>');
@@ -3186,6 +3192,11 @@
 
                     // Reinitialize Select2 after populating
                     $dropdown.select2();
+
+                    // Bind change event
+                    $dropdown.off('change').on('change', function () {
+                        DisableSaleReturnWareHouse();
+                    });
                 },
                 function (error) {
                     console.log('Error loading warehouses:', error);
@@ -3210,17 +3221,19 @@
         }
         function DisableSaleReturnWareHouse() {
             debugger;
+            var warehouse = $("#ddl_Warehouse").val();
 
-            var mro = $("#txtMRNo").val();
-
-            if (!mro) {   // handles "", null, undefined
-                getbatchfrom_grn();
+            // Only disable warehouse if it's selected and valid
+            if (warehouse && warehouse != "0") {
+                $("#ddl_Warehouse").prop('disabled', true);
+                // Enable the invoice number and items dropdowns when warehouse is selected
+                $("#ddlInvoiceNumber").prop('disabled', false);
+                $("#ddlSaleReturnItems").prop('disabled', false);
+            } else {
+                $("#ddl_Warehouse").prop('disabled', false);
+                $("#ddlInvoiceNumber").prop('disabled', true);
+                $("#ddlSaleReturnItems").prop('disabled', true);
             }
-
-            $("#ddl_Warehouse").prop('disabled', true);
-            $("#ddlInvoiceNumber").prop('disabled', false);
-            $("#ddlSaleReturnItems").prop('disabled', false);
-
         }
 
 

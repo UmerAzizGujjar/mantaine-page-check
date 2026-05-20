@@ -2,6 +2,14 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/TestDefinition.css" rel="stylesheet" />
+    <style>
+        #TblUltra_Value a, 
+        #TblXRay_Value a, 
+        #TblMRI_Value a, 
+        #TblCTScan_Value a {
+            pointer-events: auto !important;
+        }
+    </style>
     <script type="text/javascript">
         function FillOutSourceLabs() {
 
@@ -233,7 +241,11 @@
                     var i = 0;
                     for (i = 0; i < test.length; i++) {
                         debugger;
-                        row = row + '<tr><td><input type="hidden" name="ultraSoundlevel_ID" id="ultraSoundlevel_ID" value="' + test[i].UltraSoundLevel_ID + '" /><select style="" name="levelvalue" id="ddllevelvalue' + (i + 1) + '">' + levelType + '</select></td><td><textarea id="txtfixedValueType' + (i + 1) + '" name="txtfixedValueType">' + test[i].FixValues + '</textarea></td><td style="width: 127px;"><input type="hidden" name="value_id" value=""><a href="javascript:void(0)" onclick="value_delete(this)" style="pointer-events: none;">Delete</a></td></tr>';
+                        // REMOVED: style="pointer-events: none;"
+                        row = row + '<tr><td><input type="hidden" name="ultraSoundlevel_ID" id="ultraSoundlevel_ID" value="' + test[i].UltraSoundLevel_ID + '" /><select style="" name="levelvalue" id="ddllevelvalue' + (i + 1) + '">' + levelType + '</select></td>' +
+                            '<td><textarea id="txtfixedValueType' + (i + 1) + '" name="txtfixedValueType">' + test[i].FixValues + '</textarea></td>' +
+                            '<td style="width: 127px;"><input type="hidden" name="value_id" value=""><a href="javascript:void(0)" onclick="value_delete(this)">Delete</a></td>' +
+                            '</tr>';
                     }
                     $('#TblUltra_Value').append(row);
 
@@ -569,7 +581,8 @@
         var levelType = "";
         function value_delete(row) {
             debugger;
-            $($(row).parents('tr')[0]).remove();
+            // Directly remove the closest tr element
+            $(row).closest('tr').remove();
         }
         function value_save(save) {
             debugger;
