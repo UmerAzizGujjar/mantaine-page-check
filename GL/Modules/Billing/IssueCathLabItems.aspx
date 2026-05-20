@@ -37,6 +37,7 @@
             
             LoadPatientNo();
             AllowadjustmentEdit();
+            initBarcodeScan();
             
         });
         window.addEventListener('keydown', function (event) {
@@ -1246,6 +1247,91 @@
         var items = [];
         var addedItemIDs = [];
         var items = [];
+
+        var barcodeTimer;
+
+        function initBarcodeScan() {
+            var $barcode = $('#searchByBarcode');
+            if ($barcode.length === 0) {
+                return;
+            }
+
+            $barcode.focus();
+
+            $barcode.on('keydown', function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    if (barcodeTimer) {
+                        clearTimeout(barcodeTimer);
+                        barcodeTimer = null;
+                    }
+                    processBarcode();
+                }
+            });
+
+            $barcode.on('input', function () {
+                if (barcodeTimer) {
+                    clearTimeout(barcodeTimer);
+                }
+                barcodeTimer = setTimeout(function () {
+                    barcodeTimer = null;
+                    processBarcode();
+                }, 500);
+            });
+        }
+
+        function processBarcode() {
+            var $barcode = $('#searchByBarcode');
+            var barcodeValue = ($barcode.val() || '').trim();
+            if (!barcodeValue) {
+                $barcode.focus();
+                return;
+            }
+
+            PageMethods.loadMedicineByID(barcodeValue,
+                function (data) {
+                    var parsed;
+                    try {
+                        parsed = JSON.parse(data);
+                    } catch (e) {
+                        parsed = [];
+                    }
+
+                    if (!parsed || parsed.length === 0) {
+                        $barcode.val('').focus();
+                        return;
+                    }
+
+                    var item = parsed[0];
+                    var description = item.Description && item.Description.toString().trim() !== ''
+                        ? item.Description
+                        : (item.Generic_Name || '');
+                    var itemCode = item.Item_Code || '';
+                    var itemId = item.Item_ID;
+                    var displayText = itemCode + ' - ' + description;
+
+                    if (addedItemIDs.indexOf(itemId) === -1) {
+                        items.push({ id: itemId, text: displayText });
+                        addedItemIDs.push(itemId);
+                    }
+
+                    var $medName = $('#medName');
+                    var existingOption = $medName.find('option[value="' + itemId + '"]');
+                    if (existingOption.length === 0) {
+                        var newOption = new Option(displayText, itemId, true, true);
+                        $medName.append(newOption);
+                    } else {
+                        existingOption.text(displayText).prop('selected', true);
+                    }
+
+                    $medName.trigger('change');
+                    $barcode.val('').focus();
+                },
+                function (error) {
+                    console.error(error);
+                    $barcode.val('').focus();
+                });
+        }
 
         function loadmed() {
             var ItemName = ItemNames || '';
@@ -3398,6 +3484,11 @@
                         <option></option>
                     </select>
                 </div>--%>
+                 <div class="col-lg-3 col-md-7 col-sm-6">
+     <label id="lblbarcode">Search by Barcode:</label>
+     
+     <input id="searchByBarcode" class="form-control" tabindex="6" autocomplete="off" />
+ </div>
                 <div class="col-lg-3 col-md-7 col-sm-6">
                     <label id="lblmedName">Search Item:</label>
                     <label class="small">(Alt+Q)</label>
