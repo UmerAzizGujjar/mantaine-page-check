@@ -2796,50 +2796,51 @@
         }
 
         function fillPendingPatientsLists() {
-            var SearchString = $("#txtSearchmodal").val();
-            PageMethods.PendingPatients(SearchString,function (data) {
+    var SearchString = $("#txtSearchmodal").val();
+    PageMethods.PendingPatients(SearchString, function (data) {
 
-                var parsedData = JSON.parse(data);
-                var rows = '';
-                
-                $.each(parsedData, function (key, value) {
+        var parsedData = JSON.parse(data);
+        var rows = '';
+        
+        $.each(parsedData, function (key, value) {
 
-                    var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
-                    var retdate = moment(TrnsDate).format('LLLL');
+            var TrnsDate = new Date(value.Created_time);
+            var retdate = moment(TrnsDate).format('LLLL');
 
-                    var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined)
-                        ? value.Ward_Name
-                        : '';
+            var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined)
+                ? value.Ward_Name
+                : '';
 
-                    var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0)
-                        ? value.Bed_No
-                        : '';
+            var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0)
+                ? value.Bed_No
+                : '';
 
-                    rows += '<tr>' +
-                        '<td>' + value.mr_no_sequence + '</td>' +
-                        '<td>' + value.Full_Name + '</td>' +
-                        '<td>' + value.Transaction_Type + '</td>' +
-                        '<td>' + value.Referred_By + '</td>' +
-                        '<td>' + (value.Ward_Name || '') + '</td>' +
-                        '<td>' + ((value.Bed_No && value.Bed_No !== 0) ? value.Bed_No : '') + '</td>' +
-                        '<td>' + retdate + '</td>' +
-                        '<td>' +
-                        '<a href="#" class="btnEdit" ' +
-                        'data-patid="' + value.pat_id + '" ' +
-                        'data-mrno="' + value.mr_no_sequence + '">' +
-                        '<i class="fa fa-edit fa-2x"></i>' +
-                        '</a>' +
-                        '</td>' +
-                        '</tr>';
-                });
+            rows += '<tr>' +
+                '<td>' + (value.mr_no_sequence || '') + '</td>' +  
+                '<td>' + (value.Full_Name || '') + '</td>' +
+                '<td>' + (value.Transaction_Type || '') + '</td>' +
+                '<td>' + (value.Referred_By || '') + '</td>' +
+                '<td>' + WardName + '</td>' +
+                '<td>' + BedNo + '</td>' +
+                '<td>' + retdate + '</td>' +
+                '<td>' +
+                '<a href="#" class="btnEdit" ' +
+                'data-patid="' + value.pat_id + '" ' +
+                'data-mrno="' + value.mr_no_sequence + '">' +
+                '<i class="fa fa-edit fa-2x"></i>' +
+                '</a>' +
+                '</td>' +
+                '</tr>';
+        });
 
-                $('#tblPendingPatients tbody').html(rows);
-                $(".se-pre-con").fadeOut("slow");
+        $('#tblPendingPatients tbody').html(rows);
+        $(".se-pre-con").fadeOut("slow");
 
-            }, function (err) {
-                console.log(err);
-            });
-        }
+    }, function (err) {
+        console.log(err);
+        $(".se-pre-con").fadeOut("slow"); 
+    });
+}
 
         debugger;
         //function hideModel(pat_id, mr_no_sequence) {
@@ -3655,7 +3656,7 @@
                     <th style="/*width: 25px;*/ text-align: left;">Qty </th>
                     <th style="width: 75px; text-align: left;">Stock</th>
                     <th style="width: 60px; text-align: right;">Rate </th>
-                    <th style="/*width: 60px;*/ text-align: left;">Dis % </th>
+                    <th style="width: 75px; text-align: right;">Dis %  </th>
                     <th style="width: 70px; text-align: left;">Dis Amount </th>
                     <th style="width: 60px; text-align: left;">Net Amount </th>
                     <th style="/*width: 60px;*/ text-align: left;">BatchNo</th>

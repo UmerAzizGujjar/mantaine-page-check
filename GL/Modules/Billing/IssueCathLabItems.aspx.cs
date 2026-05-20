@@ -451,7 +451,7 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.Sp_GetLast24Hours_Medicines(SearchString).ToList();
+                var query = db.Sp_GetLast24Hours_PatientForCath(SearchString).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
 
             }
