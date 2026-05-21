@@ -78,6 +78,13 @@
                 "lengthChange": true,
                 "buttons": [
                     {
+                        text: '<i class="fa fa-columns"></i> Approve',
+                        className: 'dt-button buttons-colvis',
+                        action: function (e, dt, node, config) {
+                            approveSelectedDiscounts();
+                        }
+                    },
+                    {
                         text: 'Add',
                         className: 'dt-button buttons-copy buttons-html5',
                         action: function () {
@@ -125,6 +132,14 @@
                     });
                 },
                 "columns": [
+                    {
+                        "data": null,
+                        "width": "3%",
+                        "orderable": false,
+                        "render": (data, type, full, meta) => {
+                            return `<input type="checkbox" class="row-checkbox" data-id="${full.Discount_Assign_ID}" data-bill-id="${full.Bill_ID || ''}" />`;
+                        }
+                    },
                     { "data": null, "width": "3%", "orderable": false, "render": (data, type, full, meta) => meta.settings._iDisplayStart + meta.row + 1 },
                     { "data": "Discount_Assign_ID", "visible": false, "width": "0%", "orderable": false },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "7%", "orderable": true },
@@ -161,6 +176,16 @@
                             });
                         }
                     }
+                    $('#header-checkbox').off('change').on('change', function () {
+                        const isChecked = $(this).prop('checked');
+                        api.rows({ page: 'current' }).nodes().each(function (row) {
+                            $(row).find('.row-checkbox').prop('checked', isChecked);
+                        });
+                        updateHeaderCheckboxState(api);
+                    });
+                    $('#tblResult tbody').on('change', '.row-checkbox', function () {
+                        updateHeaderCheckboxState(api);
+                    });
                     api.on('column-visibility.dt', function (e, settings, column, state) {
                         let currentVis = [];
                         api.columns().every(function () {
@@ -222,6 +247,110 @@
                     LoadDiscountDetails(discountId, row);
                 }
             });
+        }
+
+        function approveSelectedDiscounts() {
+            const selectedBillIds = [];
+            const selectedDiscountIds = [];
+
+            $('#tblResult tbody .row-checkbox:checked').each(function () {
+                const discountId = $(this).data('id');
+                const billId = $(this).data('bill-id');
+                if (billId) {
+                    selectedBillIds.push(billId);
+                    selectedDiscountIds.push(discountId);
+                }
+            });
+
+            if (selectedBillIds.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Selection',
+                    text: 'Please select at least one discount to approve.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Confirm Approval',
+                text: `Are you sure you want to approve ${selectedBillIds.length} selected discount(s)?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Approve!',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                reverseButtons: true,
+                focusConfirm: false
+            }).then((result) => {
+                if (!result.isConfirmed) {
+                    return;
+                }
+
+                const originalBtnText = $('.buttons-approve').html();
+                $('.buttons-approve').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+
+                PageMethods.ApproveDiscountsBulk(
+                    JSON.stringify(selectedBillIds),
+                    function (response) {
+                        $('.buttons-approve').prop('disabled', false).html(originalBtnText);
+
+                        if (response === "Success") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Approved!',
+                                text: 'Selected discounts have been approved successfully.',
+                                confirmButtonText: 'Great!',
+                                confirmButtonColor: '#28a745',
+                                timer: 2000,
+                                timerProgressBar: true
+                            }).then(() => {
+                                $('#header-checkbox').prop('checked', false).prop('indeterminate', false);
+                                $('#tblResult tbody .row-checkbox').prop('checked', false);
+                                $('#tblResult').DataTable().ajax.reload(null, false);
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Approval Failed',
+                                text: 'Error: ' + response,
+                                confirmButtonText: 'Try Again',
+                                confirmButtonColor: '#d33'
+                            });
+                        }
+                    },
+                    function (error) {
+                        $('.buttons-approve').prop('disabled', false).html(originalBtnText);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Connection Error',
+                            text: 'Failed to process approval. Please check your connection and try again.',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#d33'
+                        });
+                        console.error(error);
+                    }
+                );
+            });
+        }
+
+        function updateHeaderCheckboxState(api) {
+            const checkboxes = $('#tblResult tbody .row-checkbox');
+            const checkedCount = checkboxes.filter(':checked').length;
+            const totalCount = checkboxes.length;
+            const headerCheckbox = $('#header-checkbox');
+
+            if (totalCount === 0) {
+                headerCheckbox.prop('checked', false).prop('indeterminate', false);
+            } else if (checkedCount === 0) {
+                headerCheckbox.prop('checked', false).prop('indeterminate', false);
+            } else if (checkedCount === totalCount) {
+                headerCheckbox.prop('checked', true).prop('indeterminate', false);
+            } else {
+                headerCheckbox.prop('checked', false).prop('indeterminate', true);
+            }
         }
 
         function LoadDiscountDetails(discountId, row) {
@@ -297,6 +426,7 @@
         <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow: scroll; height: auto;">
       <thead id="ihead">
         <tr>
+             <th><input type="checkbox" id="header-checkbox" title="Select All" /></th>
             <th>Sr#</th>                
             <th style="display: none;">Discount ID</th>    
             <th>MR No.</th>

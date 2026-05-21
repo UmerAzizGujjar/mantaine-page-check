@@ -650,6 +650,56 @@
                 return Data;
         }
 
+
+        function ApproveRecord() {
+            debugger;
+
+            var Bill_ID = $("#hdnBillID").val();
+
+            if (!Bill_ID || Bill_ID == "0") {
+                Swal.fire({ title: "Error!", text: "Bill ID is missing", icon: "error" });
+                return;
+            }
+
+            Swal.fire({
+                title: "Confirm Approval",
+                text: "This will update Billing, Receipts, and Item Details with the saved discounts. Continue?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Approve",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    PageMethods.ApproveDiscount(Bill_ID,
+                        function (res) {
+                            if (res === "Success") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Approved!',
+                                    text: 'Billing, Receipts, and Item Details updated successfully',
+                                    timer: 2000
+                                });
+                                $('#btnApprove').prop('disabled', true); 
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: res
+                                });
+                            }
+                        },
+                        function (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: error.get_message()
+                            });
+                        }
+                    );
+                }
+            });
+        }
+
     </script>
 </asp:Content>
 
@@ -800,22 +850,25 @@
         <br />
         <div class="row mt-3">
             <div class="col-lg-8 col-md-6 col-sm-6">
-                 <div class="col-lg-2">
-     <input type="button" value="Save" id="btnSave" class="btn btn-primry"
-         onclick="SaveRecord()" />
- </div>
- <div class="col-lg-2">
-     <input type="button" value="Print" id="btnPrint" class="btn btn-primry"
-         onclick="PrintRefund()" />
- </div>
- <div class="col-lg-2">
-     <input type="button" value="New" id="btnnew" class="btn btn-primry" onclick="window.location = 'DiscountAssigned.aspx'" />
- </div>
- <div class="col-lg-2">
-     <input type="button" value="List" id="btnlist" class="btn btn-primry" onclick="window.location = 'DiscountAssignedList.aspx'" />
- </div>
+                <div class="col-lg-2">
+                    <input type="button" value="Save" id="btnSave" class="btn btn-primry"
+                        onclick="SaveRecord()" />
+                </div>
+                <div class="col-lg-2">
+                    <input type="button" value="Print" id="btnPrint" class="btn btn-primry"
+                        onclick="PrintRefund()" />
+                </div>
+                <div class="col-lg-2">
+                    <input type="button" value="New" id="btnnew" class="btn btn-primry" onclick="window.location = 'DiscountAssigned.aspx'" />
+                </div>
+                <div class="col-lg-2">
+                    <input type="button" value="List" id="btnlist" class="btn btn-primry" onclick="window.location = 'DiscountAssignedList.aspx'" />
+                </div>
+                <div class="col-lg-2">
+                    <input type="button" value="Approve" id="btnApprove" class="btn btn-primry" onclick="ApproveRecord()" />
+                </div>
             </div>
-           
+
         </div>
 
     </div>
