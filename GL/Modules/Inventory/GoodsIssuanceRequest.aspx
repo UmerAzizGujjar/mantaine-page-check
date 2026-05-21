@@ -207,11 +207,23 @@
                         });
 
 
-                         $("#txtItem").tokenInput("clear");
+                        $("#txtItem").tokenInput("clear");
                     }
                     else {
                         if (parse[0].Active == true) {
-                            $("#tblbodyPackage").append("<tr><td style='padding-top: 7px!important;'>" + length + "</td><td style='padding-top: 7px!important;padding-right: 3px!important; */'>" + parse[0].Item_Code + "</td><td style='padding-left: 8px!important;padding-top: 7px!important;'>" + parse[0].Description + "</td><td style='text-align:center;'>" + parse[0].Unit + "</td><td style='text-align: center;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size: 11px;width: 100%!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeQty(this)'/></td><td style='padding-top: 7px!important;text-align:center;padding-left: 8px!important;' contenteditable>" + parse[0].Last_MIR_Qty + "</td><td style='padding-top: 7px!important;padding-left: 8px!important' contenteditable></td><td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td><td style='display:none'>" + parse[0].Item_ID + "</td><td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px;  margin-left: 16px; color: #f30a0a;'></i></a></td></tr>")
+                            $("#tblbodyPackage").append("<tr>" +
+                                "<td style='padding-top: 7px!important;'>" + length + "</td>" +
+                                "<td style='padding-top: 7px!important;padding-right: 3px!important;'>" + parse[0].Item_Code + "</td>" +
+                                "<td style='padding-left: 8px!important;padding-top: 7px!important;'>" + parse[0].Description + "</td>" +
+                                "<td style='text-align:center;'>" + parse[0].Unit + "</td>" +
+                                "<td style='text-align: center;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size: 11px;width: 100%!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeQty(this)'/></td>" +
+                                "<td style='padding-top: 7px!important;text-align:center;padding-left: 8px!important;' contenteditable>" + parse[0].Last_MIR_Qty + "</td>" +
+                                "<td style='padding-top: 7px!important;padding-left: 8px!important' contenteditable></td>" +
+                                "<td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td>" +
+                                "<td style='display:none'>" + parse[0].Item_ID + "</td>" +
+                                "<td style='text-align:center;'>" + (parse[0].UOM_Qty || '0') + "</td>" +  
+                                "<td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px; margin-left: 16px; color: #f30a0a;'></i></a></td>" +
+                                "</tr>")
                             length++;
                             $("#txtItem").tokenInput("clear");
                         }
@@ -231,7 +243,7 @@
                             });
 
 
-                             $("#txtItem").tokenInput("clear");
+                            $("#txtItem").tokenInput("clear");
                         }
                     }
                 },
@@ -711,6 +723,7 @@
                     <th style="width: 112px; text-align: center; display: none;">Technical Specifications</th>
                     <th style="width: 126px; text-align: center;">Remarks</th>
                     <th style="width: 32px!important; text-align: center;">Attachment</th>
+                    <th style="width: 43px; text-align: center;">UOM Qty</th>
                     <th style="width: 40px; text-align: center;">Delete</th>
                         </tr>
                 </thead>
