@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
+using PMS.Modules.PatientManagement;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -729,13 +730,22 @@ namespace PMS
                 med.InPatient_Mon_ID = InPatientMonID;
                 db.SubmitChanges();
             }
-            List<In_Patient_Medicine> listd = db.In_Patient_Medicines.Where(p => p.Patient_ID == 0 && p.Transaction_Type == "InPatientMonitring").ToList();
-            foreach (In_Patient_Medicine med in listd)
+            /***********Update temporary medicines (Patient_ID == 0) to current In patient id - NO DELETION ****************/
+            // Update temporary inpatient medicines
+            // Update temporary medicines - ONLY change Patient_ID, NOTHING ELSE
+            var tempMedicines = db.In_Patient_Medicines
+                .Where(p => p.Patient_ID == 0 && p.Transaction_Type == "InPatientMonitring")
+                .ToList();
+
+            foreach (In_Patient_Medicine med in tempMedicines)
             {
-                med.Patient_ID = InPatientMonID;
-                db.SubmitChanges();
+                med.Patient_ID = InPatientMonID;  // ONLY THIS - NO DELETE
             }
-           var InPatient = (from tbl in db.In_Patients
+
+         
+
+            db.SubmitChanges();
+            var InPatient = (from tbl in db.In_Patients
                    where tbl.Patient_ID == Convert.ToInt32(PatID) && tbl.Discharge!=true
                    select tbl).FirstOrDefault();
            if (InPatient == null)
@@ -1262,64 +1272,85 @@ namespace PMS
                 var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    /********************Deleting Previous 0 Value Saved Rows.***********************************/
-                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "InPatientMonitring").ToList();
-                    db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
-                    db.SubmitChanges();
+                    /******************** Deleting Previous 0 Value Saved Rows ***********************************/
+                    // Keeping your garbage collection logic for invalid Patient_ID == 0
+                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines
+                        .Where(i => i.Patient_ID == 0 && i.Transaction_Type == "InPatientMonitring")
+                        .ToList();
 
-                    int couterNewRecords = 0;
+                    if (In_Patient_MedicineList.Count > 0)
+                    {
+                        db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
+                        db.SubmitChanges();
+                    }
 
                     if (MedicineDetail.PatientID != 0)
                     {
-                        /*********************Deleting Previous Entry On Every Insert Or Update*************************/
-                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "InPatientMonitring").ToList();
-                        if (inPatmedicineList != null)
+                        // Get ALL existing medicine names for this patient under "InPatientMonitring"
+                        var existingNames = db.In_Patient_Medicines
+                            .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "InPatientMonitring")
+                            .Select(p => p.Medicine_Name.Trim())  // Trim to avoid spaces issues
+                            .ToList();
+
+                        // Debug: Check what's being sent and what exists
+                        System.Diagnostics.Debug.WriteLine("=== SaveMedicines (Monitoring) Debug ===");
+                        System.Diagnostics.Debug.WriteLine("Patient ID: " + MedicineDetail.PatientID);
+                        System.Diagnostics.Debug.WriteLine("Existing monitoring medicines in DB: " + string.Join(", ", existingNames));
+
+                        foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
                         {
-                            db.In_Patient_Medicines.DeleteAllOnSubmit(inPatmedicineList);
-                            couterNewRecords++;
+                            // Ensure we don't hit null references and trim the name
+                            string medicineName = !string.IsNullOrEmpty(oIn_Patient_Medicine.Medicine_Name)
+                                ? oIn_Patient_Medicine.Medicine_Name.Trim()
+                                : string.Empty;
+
+                            System.Diagnostics.Debug.WriteLine("Processing monitoring medicine: " + medicineName);
+
+                            if (string.IsNullOrEmpty(medicineName)) continue; // Skip empty names
+
+                            // Only insert if name NOT in existing list
+                            if (!existingNames.Contains(medicineName))
+                            {
+                                System.Diagnostics.Debug.WriteLine("INSERTING new monitoring medicine: " + medicineName);
+
+                                In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
+                                {
+                                    Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
+                                    Medicine_Name = medicineName, // Use the trimmed name
+                                    Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
+                                    Oral = oIn_Patient_Medicine.Oral,
+                                    Transaction_Type = "InPatientMonitring",
+                                    Injections = oIn_Patient_Medicine.Injection,
+                                    Recomended_Dosage = oIn_Patient_Medicine.Recomended_Dosage,
+                                    Frequency = oIn_Patient_Medicine.Frequency,
+                                    Nurse_Name = oIn_Patient_Medicine.Nurse_Name,
+                                    Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
+                                    Dosage_From = oIn_Patient_Medicine.Dosage_From,
+                                    Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
+                                    AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
+
+                                    // Specific parsing logic from your second function
+                                    Regular = oIn_Patient_Medicine.Regular == "REGULAR" ? true : false,
+                                    STAT = oIn_Patient_Medicine.STAT == "STAT" ? true : false,
+                                    PRN = oIn_Patient_Medicine.PRN == "PRN" ? true : false,
+                                    chkDiccharge = Convert.ToBoolean(oIn_Patient_Medicine.chkDiccharge)
+                                };
+
+                                db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine("SKIPPING existing monitoring medicine: " + medicineName);
+                            }
                         }
+                        db.SubmitChanges();
+                        System.Diagnostics.Debug.WriteLine("=== SaveMedicines (Monitoring) Complete ===");
                     }
-                    couterNewRecords = 0;
-
-                    /*********************Inserting New Entry On Every Insert Or Update*************************/
-
-                    foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
-                    {
-
-
-                        In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
-                        {
-
-
-                            Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
-
-                            Medicine_Name = oIn_Patient_Medicine.Medicine_Name,
-                            Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
-                            Oral = oIn_Patient_Medicine.Oral,
-                            Transaction_Type = "InPatientMonitring",
-                            Injections = oIn_Patient_Medicine.Injection,
-                            Recomended_Dosage = oIn_Patient_Medicine.Recomended_Dosage,
-
-                            Frequency = oIn_Patient_Medicine.Frequency,
-                            Nurse_Name = oIn_Patient_Medicine.Nurse_Name,
-                            Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
-                            Dosage_From = oIn_Patient_Medicine.Dosage_From,
-                            Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
-                            AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
-                            Regular = oIn_Patient_Medicine.Regular == "REGULAR" ? true : false,
-                            STAT = oIn_Patient_Medicine.STAT == "STAT" ? true : false,
-                            PRN = oIn_Patient_Medicine.PRN == "PRN" ? true : false,
-                            chkDiccharge = Convert.ToBoolean(oIn_Patient_Medicine.chkDiccharge),
-                        };
-                        db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
-                        couterNewRecords++;
-                    }
-                    db.SubmitChanges();
                 }
             }
             catch (Exception ex)
             {
-
+                System.Diagnostics.Debug.WriteLine("SaveMedicines (Monitoring) Error: " + ex.Message);
             }
 
             return "";
