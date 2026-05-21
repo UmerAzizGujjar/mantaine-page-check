@@ -199,6 +199,68 @@ namespace PMS
 
         //}
         [WebMethod]
+        public static string RejectLabTestDetail(string LabTestDetail_ID, string RejectionReason = "")
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    int labTestDetailId = Convert.ToInt32(LabTestDetail_ID);
+
+                    // Get the Lab_Test_Detail record
+                    var labTestDetail = db.Lab_Test_Details
+                        .FirstOrDefault(ltd => ltd.Lab_Test_Detail_ID == labTestDetailId);
+
+                    if (labTestDetail == null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            Success = false,
+                            Message = "Lab test detail not found."
+                        });
+                    }
+
+                    // Check if already closed
+                    if (labTestDetail.is_Closed == true)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            Success = false,
+                            Message = "This test has already been rejected/closed."
+                        });
+                    }
+
+                    // Set the rejection/close status using your columns
+                    labTestDetail.is_Closed = true;           // Mark as closed
+                    labTestDetail.Close_Status = "Rejected";   // Set status to Rejected
+                    labTestDetail.Close_by = AppConfig.UserID; // Set who closed it
+
+                    // Optional: Store rejection reason if you have a column
+                    // labTestDetail.Close_Remarks = RejectionReason;
+
+                    // Optional: Add timestamp if you have a column for it
+                    // labTestDetail.Close_Date = DateTime.Now;
+
+                    db.SubmitChanges();
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        Success = true,
+                        Message = "Test has been rejected successfully.",
+                        LabTestDetail_ID = labTestDetailId
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
+        [WebMethod]
         public static string PendingPatients(string SearchString)
         {
             string result;

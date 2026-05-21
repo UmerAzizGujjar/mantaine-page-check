@@ -1003,9 +1003,8 @@ namespace PMS
         partial void UpdateLab_Test_Detail(Lab_Test_Detail instance);
         partial void DeleteLab_Test_Detail(Lab_Test_Detail instance);
         #endregion
-
         public DataBaseDataContext() :
-                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+               base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -5508,13 +5507,6 @@ namespace PMS
             return ((ISingleResult<sp_GetLabApprovalStatusResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.Sp_GetLast24Hours_Test")]
-        public ISingleResult<Sp_GetLast24Hours_TestResult> Sp_GetLast24Hours_Test([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Search", DbType = "NVarChar(200)")] string search)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), search);
-            return ((ISingleResult<Sp_GetLast24Hours_TestResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetMIR")]
         public ISingleResult<sp_GetMIRResult> sp_GetMIR([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "VarChar(500)")] string warehouse)
         {
@@ -5562,6 +5554,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), itemId);
             return ((ISingleResult<spGetitemsDetailsResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.Sp_GetLast24Hours_Test")]
+        public ISingleResult<Sp_GetLast24Hours_TestResult> Sp_GetLast24Hours_Test([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Search", DbType = "NVarChar(200)")] string search)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), search);
+            return ((ISingleResult<Sp_GetLast24Hours_TestResult>)(result.ReturnValue));
         }
     }
 
@@ -229823,266 +229822,6 @@ namespace PMS
         }
     }
 
-    public partial class Sp_GetLast24Hours_TestResult
-    {
-
-        private string _mr_no_sequence;
-
-        private string _Full_Name;
-
-        private string _Father_Name;
-
-        private string _Age_years;
-
-        private System.Nullable<bool> _IsBilled;
-
-        private System.Nullable<System.DateTime> _Created_Time;
-
-        private string _Transaction_Type;
-
-        private string _Item_Name;
-
-        private System.Nullable<int> _Actual_Patient_ID;
-
-        private string _Main_Department;
-
-        private string _Referred_By;
-
-        private string _Ward_Name;
-
-        private System.Nullable<int> _Bed_No;
-
-        private string _Area_Of_Interest;
-
-        public Sp_GetLast24Hours_TestResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_mr_no_sequence", DbType = "NVarChar(50)")]
-        public string mr_no_sequence
-        {
-            get
-            {
-                return this._mr_no_sequence;
-            }
-            set
-            {
-                if ((this._mr_no_sequence != value))
-                {
-                    this._mr_no_sequence = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(100)")]
-        public string Full_Name
-        {
-            get
-            {
-                return this._Full_Name;
-            }
-            set
-            {
-                if ((this._Full_Name != value))
-                {
-                    this._Full_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Father_Name", DbType = "VarChar(100)")]
-        public string Father_Name
-        {
-            get
-            {
-                return this._Father_Name;
-            }
-            set
-            {
-                if ((this._Father_Name != value))
-                {
-                    this._Father_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Age_years", DbType = "VarChar(50)")]
-        public string Age_years
-        {
-            get
-            {
-                return this._Age_years;
-            }
-            set
-            {
-                if ((this._Age_years != value))
-                {
-                    this._Age_years = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsBilled", DbType = "Bit")]
-        public System.Nullable<bool> IsBilled
-        {
-            get
-            {
-                return this._IsBilled;
-            }
-            set
-            {
-                if ((this._IsBilled != value))
-                {
-                    this._IsBilled = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
-        public System.Nullable<System.DateTime> Created_Time
-        {
-            get
-            {
-                return this._Created_Time;
-            }
-            set
-            {
-                if ((this._Created_Time != value))
-                {
-                    this._Created_Time = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Transaction_Type", DbType = "VarChar(4) NOT NULL", CanBeNull = false)]
-        public string Transaction_Type
-        {
-            get
-            {
-                return this._Transaction_Type;
-            }
-            set
-            {
-                if ((this._Transaction_Type != value))
-                {
-                    this._Transaction_Type = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(8000)")]
-        public string Item_Name
-        {
-            get
-            {
-                return this._Item_Name;
-            }
-            set
-            {
-                if ((this._Item_Name != value))
-                {
-                    this._Item_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Actual_Patient_ID", DbType = "Int")]
-        public System.Nullable<int> Actual_Patient_ID
-        {
-            get
-            {
-                return this._Actual_Patient_ID;
-            }
-            set
-            {
-                if ((this._Actual_Patient_ID != value))
-                {
-                    this._Actual_Patient_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Main_Department", DbType = "VarChar(150)")]
-        public string Main_Department
-        {
-            get
-            {
-                return this._Main_Department;
-            }
-            set
-            {
-                if ((this._Main_Department != value))
-                {
-                    this._Main_Department = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referred_By", DbType = "VarChar(50) NOT NULL", CanBeNull = false)]
-        public string Referred_By
-        {
-            get
-            {
-                return this._Referred_By;
-            }
-            set
-            {
-                if ((this._Referred_By != value))
-                {
-                    this._Referred_By = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_Name", DbType = "NVarChar(50)")]
-        public string Ward_Name
-        {
-            get
-            {
-                return this._Ward_Name;
-            }
-            set
-            {
-                if ((this._Ward_Name != value))
-                {
-                    this._Ward_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bed_No", DbType = "Int")]
-        public System.Nullable<int> Bed_No
-        {
-            get
-            {
-                return this._Bed_No;
-            }
-            set
-            {
-                if ((this._Bed_No != value))
-                {
-                    this._Bed_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Area_Of_Interest", DbType = "VarChar(MAX)")]
-        public string Area_Of_Interest
-        {
-            get
-            {
-                return this._Area_Of_Interest;
-            }
-            set
-            {
-                if ((this._Area_Of_Interest != value))
-                {
-                    this._Area_Of_Interest = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_GetMIRResult
     {
 
@@ -231574,6 +231313,302 @@ namespace PMS
                 if ((this._Last_MIR_Qty != value))
                 {
                     this._Last_MIR_Qty = value;
+                }
+            }
+        }
+    }
+
+    public partial class Sp_GetLast24Hours_TestResult
+    {
+
+        private string _mr_no_sequence;
+
+        private string _Full_Name;
+
+        private string _Father_Name;
+
+        private string _Age_years;
+
+        private System.Nullable<bool> _IsBilled;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private string _Transaction_Type;
+
+        private string _Item_Name;
+
+        private System.Nullable<int> _Actual_Patient_ID;
+
+        private string _Main_Department;
+
+        private string _Referred_By;
+
+        private string _Ward_Name;
+
+        private System.Nullable<int> _Bed_No;
+
+        private string _Area_Of_Interest;
+
+        private int _Lab_Test_Detail_ID;
+
+        private System.Nullable<bool> _is_Closed;
+
+        public Sp_GetLast24Hours_TestResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_mr_no_sequence", DbType = "NVarChar(50)")]
+        public string mr_no_sequence
+        {
+            get
+            {
+                return this._mr_no_sequence;
+            }
+            set
+            {
+                if ((this._mr_no_sequence != value))
+                {
+                    this._mr_no_sequence = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Full_Name", DbType = "VarChar(100)")]
+        public string Full_Name
+        {
+            get
+            {
+                return this._Full_Name;
+            }
+            set
+            {
+                if ((this._Full_Name != value))
+                {
+                    this._Full_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Father_Name", DbType = "VarChar(100)")]
+        public string Father_Name
+        {
+            get
+            {
+                return this._Father_Name;
+            }
+            set
+            {
+                if ((this._Father_Name != value))
+                {
+                    this._Father_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Age_years", DbType = "VarChar(50)")]
+        public string Age_years
+        {
+            get
+            {
+                return this._Age_years;
+            }
+            set
+            {
+                if ((this._Age_years != value))
+                {
+                    this._Age_years = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsBilled", DbType = "Bit")]
+        public System.Nullable<bool> IsBilled
+        {
+            get
+            {
+                return this._IsBilled;
+            }
+            set
+            {
+                if ((this._IsBilled != value))
+                {
+                    this._IsBilled = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this._Created_Time = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Transaction_Type", DbType = "VarChar(4) NOT NULL", CanBeNull = false)]
+        public string Transaction_Type
+        {
+            get
+            {
+                return this._Transaction_Type;
+            }
+            set
+            {
+                if ((this._Transaction_Type != value))
+                {
+                    this._Transaction_Type = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(8000)")]
+        public string Item_Name
+        {
+            get
+            {
+                return this._Item_Name;
+            }
+            set
+            {
+                if ((this._Item_Name != value))
+                {
+                    this._Item_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Actual_Patient_ID", DbType = "Int")]
+        public System.Nullable<int> Actual_Patient_ID
+        {
+            get
+            {
+                return this._Actual_Patient_ID;
+            }
+            set
+            {
+                if ((this._Actual_Patient_ID != value))
+                {
+                    this._Actual_Patient_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Main_Department", DbType = "VarChar(150)")]
+        public string Main_Department
+        {
+            get
+            {
+                return this._Main_Department;
+            }
+            set
+            {
+                if ((this._Main_Department != value))
+                {
+                    this._Main_Department = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referred_By", DbType = "VarChar(50) NOT NULL", CanBeNull = false)]
+        public string Referred_By
+        {
+            get
+            {
+                return this._Referred_By;
+            }
+            set
+            {
+                if ((this._Referred_By != value))
+                {
+                    this._Referred_By = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ward_Name", DbType = "NVarChar(50)")]
+        public string Ward_Name
+        {
+            get
+            {
+                return this._Ward_Name;
+            }
+            set
+            {
+                if ((this._Ward_Name != value))
+                {
+                    this._Ward_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bed_No", DbType = "Int")]
+        public System.Nullable<int> Bed_No
+        {
+            get
+            {
+                return this._Bed_No;
+            }
+            set
+            {
+                if ((this._Bed_No != value))
+                {
+                    this._Bed_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Area_Of_Interest", DbType = "VarChar(MAX)")]
+        public string Area_Of_Interest
+        {
+            get
+            {
+                return this._Area_Of_Interest;
+            }
+            set
+            {
+                if ((this._Area_Of_Interest != value))
+                {
+                    this._Area_Of_Interest = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Lab_Test_Detail_ID", DbType = "Int NOT NULL")]
+        public int Lab_Test_Detail_ID
+        {
+            get
+            {
+                return this._Lab_Test_Detail_ID;
+            }
+            set
+            {
+                if ((this._Lab_Test_Detail_ID != value))
+                {
+                    this._Lab_Test_Detail_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_is_Closed", DbType = "Bit")]
+        public System.Nullable<bool> is_Closed
+        {
+            get
+            {
+                return this._is_Closed;
+            }
+            set
+            {
+                if ((this._is_Closed != value))
+                {
+                    this._is_Closed = value;
                 }
             }
         }

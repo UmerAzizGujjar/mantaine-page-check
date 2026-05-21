@@ -2775,48 +2775,7 @@
 
         //    }, function (exec) { })
         //}
-        function fillPendingPatientsLists() {
-            debugger;
-            var SearchString = $("#txtSearchmodal").val();
-            PageMethods.PendingPatients(SearchString, function (data) {
-                var parsedData = JSON.parse(data);
-                var rows = '';
-                debugger;
-                $.each(parsedData, function (key, value) {
-                    debugger;
-                    var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
-                    var retdate = moment(TrnsDate).format('LLLL');
-                    var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined) ? value.Ward_Name : '';
-                    var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0) ? value.Bed_No : '';
-
-                    rows += '<tr>' +
-                        '<td>' + value.mr_no_sequence + '</td>' +
-                        '<td>' + value.Full_Name + '</td>' +
-                        '<td>' + value.Transaction_Type + '</td>' +
-                        '<td>' + (value.Referred_By || '') + '</td>' +
-                        '<td>' + WardName + '</td>' +
-                        '<td>' + BedNo + '</td>' +
-                        '<td>' + retdate + '</td>' +
-                        '<td>' +
-                        '<a href="#" class="btnEdit" ' +
-                        'data-patid="' + value.pat_id + '" ' +
-                        'data-mrno="' + value.mr_no_sequence + '">' +
-                        '<i class="fa fa-edit fa-2x" style="color:green;"></i>' +
-                        '</a>&nbsp;&nbsp;' +
-                        '<a href="#" onclick="RejectMedicineRequest(\'' + value.In_Patient_Medicine_ID + '\', this)" title="Reject">' +
-                        '<i class="fa fa-times-circle fa-2x" style="color:red;"></i>' +
-                        '</a>' +
-                        '</td>' +
-                        '</tr>';
-                });
-                debugger;
-                $('#tblPendingPatients tbody').html(rows);
-                $(".se-pre-con").fadeOut("slow");
-
-            }, function (err) {
-                console.log(err);
-            });
-        }
+       
         function fillPendingPatientsLists() {
             debugger;
             var SearchString = $("#txtSearchmodal").val();
@@ -2880,7 +2839,45 @@
         //    getOPDandIPDNO(pat_id)
 
         //}
-        function hideModel(pat_id, mr_no_sequence) {
+        function RejectMedicineRequest(medicineId, element) {
+                debugger;
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You want to reject this medicine request?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, reject it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        PageMethods.RejectMedicineRequest(medicineId, function(response) {
+                            debugger;
+                            var result = JSON.parse(response);
+                            if (result.Success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Rejected!',
+                                    text: result.Message,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                                // Refresh the queue list
+                                fillPendingPatientsLists();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: result.Message,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+                    function hideModel(pat_id, mr_no_sequence) {
             console.log(pat_id, mr_no_sequence);
             $('#queueModal').modal('hide');
 
