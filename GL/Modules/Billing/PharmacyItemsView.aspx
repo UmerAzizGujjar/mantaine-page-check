@@ -88,11 +88,16 @@
                 },
                 "columns": [
                     { "data": "Item_ID", "visible": false, "width": "0%" },
-                    { "data": "Item_Code", "name": "Item_Code", "width": "12%", "orderable": true },
-                    { "data": "Description", "width": "20%", "orderable": false },
-                    { "data": "Unit", "width": "15%", "orderable": false },
-                    { "data": "Sale_Rate", "width": "15%", "orderable": false },
-                    { "data": "Service", "width": "15%", "orderable": false },
+                    { "data": "Item_Code", "name": "Item_Code", "width": "8%", "orderable": true },
+                    { "data": "Description", "width": "13%", "orderable": false },
+                    { "data": "Unit", "width": "7%", "orderable": false },
+                    { "data": "Sale_Rate", "width": "8%", "orderable": false },
+                    { "data": "Service", "width": "8%", "orderable": false },
+                    { "data": "AccountCategory", "width": "10%", "orderable": false },
+                    { "data": "PurchaseRate", "width": "8%", "orderable": false },
+                    { "data": "SaleRate", "width": "8%", "orderable": false },
+                    { "data": "WareHouse", "width": "10%", "orderable": false },
+                    { "data": "StockTotal", "width": "8%", "orderable": false },
 
                    
                     {
@@ -209,6 +214,11 @@
                     <th>UOM</th>
                     <th>Sales Rate</th>   
                     <th>Item Type</th>                                          
+                    <th>Account Category</th>                                          
+                    <th>Purchase Rate</th>                                          
+                    <th>Sale Rate</th>                                          
+                    <th>Ware House</th>                                          
+                    <th>Stock</th>                                          
                     <th>Actions</th>
                 </tr>
             </thead>

@@ -43,7 +43,7 @@ namespace PMS
                     var Total_Items = _dbContext.INV_Items.Count();
                     var Items = from I in _dbContext.INV_Items
                                 where I.Pharmacy_Item == true &&
-                                     ((I.Item_ID.ToString().Contains(searchValue) || I.Item_Code.Contains(searchValue) || I.Description.Contains(searchValue) || _dbContext.GetDataValueName("UOM", I.Unit).Contains(searchValue)))
+                                     ((I.Item_ID.ToString().Contains(searchValue) || I.Item_Code.Contains(searchValue) || I.Description.Contains(searchValue) || _dbContext.GetDataValueName("UOM", I.Unit).Contains(searchValue) || _dbContext.GetDataValueName("Ware House", I.InventoryOrg).Contains(searchValue)))
                                     select new
                                     {
                                         Item_ID = I.Item_ID,
@@ -52,6 +52,13 @@ namespace PMS
                                         Sale_Rate = I.Sale_Rate,
                                         Service = I.Services.HasValue && !I.Services.Value ? "Item" : I.Services.HasValue && I.Services.Value ? "Service" : "",
                                         Unit = _dbContext.GetDataValueName("UOM", I.Unit),
+                                        AccountCategory = (from a in _dbContext.Account_Categories
+                                                           where a.Account_Category_Id == I.Item_Account_category
+                                                           select new { category = a.CategoryName }).FirstOrDefault().category.ToString(),
+                                        PurchaseRate = I.Purchase_Rate ?? 0,
+                                        SaleRate = I.Sale_Rate ?? 0,
+                                        WareHouse = _dbContext.GetDataValueName("Ware House", I.InventoryOrg) ?? "",
+                                        StockTotal = (_dbContext.GetInvenrtoryItemUomTotalStock(I.Item_ID, I.InventoryOrg))
                                     };
 
                     var FilteredCount = Items.Count();
