@@ -12187,25 +12187,6 @@
       <Column Name="isApproved" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.Sp_GetLast24Hours_Test" Method="Sp_GetLast24Hours_Test">
-    <Parameter Name="Search" Parameter="search" Type="System.String" DbType="NVarChar(200)" />
-    <ElementType Name="Sp_GetLast24Hours_TestResult">
-      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Father_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="IsBilled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Name" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
-      <Column Name="Actual_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Main_Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Referred_By" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Bed_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Area_Of_Interest" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetMIR" Method="sp_GetMIR">
     <Parameter Name="warehouse" Type="System.String" DbType="VarChar(500)" />
     <ElementType Name="sp_GetMIRResult">
@@ -12321,6 +12302,27 @@
       <Column Name="Active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="UOM_Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Last_MIR_Qty" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Sp_GetLast24Hours_Test" Method="Sp_GetLast24Hours_Test">
+    <Parameter Name="Search" Parameter="search" Type="System.String" DbType="NVarChar(200)" />
+    <ElementType Name="Sp_GetLast24Hours_TestResult">
+      <Column Name="mr_no_sequence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Father_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="IsBilled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Transaction_Type" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="Actual_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Main_Department" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Referred_By" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Ward_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Bed_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Area_Of_Interest" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Lab_Test_Detail_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="is_Closed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
