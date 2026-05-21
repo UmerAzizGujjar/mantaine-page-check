@@ -566,7 +566,7 @@
                                     <th>Ward No</th>
                                     <th>Bed No</th>
                                     <th>Net Amount</th>
-                                    <th>Mode of Registration</th>
+                                    <th>Main Category</th>
                                     <th>Main Department</th>
                                     <th>Doctor</th>
                                     <th>Status</th>
