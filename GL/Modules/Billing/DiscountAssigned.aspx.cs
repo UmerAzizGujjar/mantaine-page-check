@@ -282,6 +282,7 @@ namespace PMS.Modules.Billing
 
             if (dt.Discount_Assign_ID > 0)
             {
+                // ==================== UPDATE MODE ====================
                 var discountMaster = db.Discount_Assign_Bills
                     .FirstOrDefault(d => d.Discount_Assign_ID == dt.Discount_Assign_ID);
 
@@ -294,101 +295,124 @@ namespace PMS.Modules.Billing
                     discountMaster.Modified_By = AppConfig.UserID;
                     discountMaster.Modification_Date = DateTime.Now;
 
+                    // Get existing details
                     var existingDetails = db.Discount_Assign_Detail_bills
-                        .Where(d => d.Discount_Assign_ID == dt.Discount_Assign_ID).ToList();
-                    db.Discount_Assign_Detail_bills.DeleteAllOnSubmit(existingDetails);
-
-                    List<Discount_Assign_Detail_bill> ListOfDiscountDetails = new List<Discount_Assign_Detail_bill>();
+                        .Where(d => d.Discount_Assign_ID == dt.Discount_Assign_ID)
+                        .ToList();
 
                     foreach (ServiceDiscount service in dt.ServiceDiscount)
                     {
-                        Discount_Assign_Detail_bill detail = new Discount_Assign_Detail_bill();
-                        detail.Discount_Assign_ID = dt.Discount_Assign_ID;
-                        detail.Bill_Detail_ID = service.Bill_Detail_ID;
-                        detail.Item_ID = service.Item_ID;
-                        detail.Item_Name = service.Item_Name;
-                        detail.Item_Type = service.Item_Type;
-                        detail.Original_Amount = service.Original_Amount;
-                        detail.Discount_Percentage = service.Discount_Percentage;
-                        detail.Discount_Amount = service.Discount_Amount;
-                        detail.Net_Amount = service.Net_Amount;
+                        var existingDetail = existingDetails
+                            .FirstOrDefault(d => d.Bill_Detail_ID == service.Bill_Detail_ID);
 
-                        ListOfDiscountDetails.Add(detail);
+                        if (existingDetail != null)
+                        {
+                            // Update existing
+                            existingDetail.Item_ID = service.Item_ID;
+                            existingDetail.Item_Name = service.Item_Name;
+                            existingDetail.Item_Type = service.Item_Type;
+                            existingDetail.Original_Amount = service.Original_Amount;
+                            existingDetail.Discount_Percentage = service.Discount_Percentage;
+                            existingDetail.Discount_Amount = service.Discount_Amount;
+                            existingDetail.Net_Amount = service.Net_Amount;
+                        }
+                        else
+                        {
+                            // Insert new
+                            var newDetail = new Discount_Assign_Detail_bill
+                            {
+                                Discount_Assign_ID = dt.Discount_Assign_ID,
+                                Bill_Detail_ID = service.Bill_Detail_ID,
+                                Item_ID = service.Item_ID,
+                                Item_Name = service.Item_Name,
+                                Item_Type = service.Item_Type,
+                                Original_Amount = service.Original_Amount,
+                                Discount_Percentage = service.Discount_Percentage,
+                                Discount_Amount = service.Discount_Amount,
+                                Net_Amount = service.Net_Amount
+                            };
+                            db.Discount_Assign_Detail_bills.InsertOnSubmit(newDetail);
+                        }
                     }
 
-                    db.Discount_Assign_Detail_bills.InsertAllOnSubmit(ListOfDiscountDetails);
+                    // Optional: Remove details that were deleted from UI
+                    var incomingIds = dt.ServiceDiscount.Select(s => s.Bill_Detail_ID).ToList();
+                    var toDelete = existingDetails.Where(d => !incomingIds.Contains(d.Bill_Detail_ID)).ToList();
+                    db.Discount_Assign_Detail_bills.DeleteAllOnSubmit(toDelete);
+
                     value = dt.Discount_Assign_ID.ToString();
                 }
             }
             else
             {
+                // ==================== INSERT MODE (NEW) ====================
                 var Discount_Assign_ID = DBClass.GetNewNumber("Discount_Assign_ID", "Discount_Assign_Bill", "").ToString();
 
-                Discount_Assign_Bill discount = new Discount_Assign_Bill();
-                discount.Discount_Assign_ID = Convert.ToInt32(Discount_Assign_ID);
-                discount.Bill_ID = dt.Bill_Id;
-                discount.Patient_ID = dt.Patient_ID;
-                discount.Reg_ID = dt.Reg_ID;
-                discount.Discount_Date = dt.DiscountDate;
-                discount.Total_Discount = dt.Total_Discount;
-                discount.Remarks = dt.remarks;
-                discount.Status = "Created";
-                discount.Created_By = AppConfig.UserID;
-                discount.Creation_Date = DateTime.Now;
-                discount.Total_amount = dt.Total_Amount;
+                var discount = new Discount_Assign_Bill
+                {
+                    Discount_Assign_ID = Convert.ToInt32(Discount_Assign_ID),
+                    Bill_ID = dt.Bill_Id,
+                    Patient_ID = dt.Patient_ID,
+                    Reg_ID = dt.Reg_ID,
+                    Discount_Date = dt.DiscountDate,
+                    Total_Discount = dt.Total_Discount,
+                    Remarks = dt.remarks,
+                    Status = "Created",
+                    Created_By = AppConfig.UserID,
+                    Creation_Date = DateTime.Now,
+                    Total_amount = dt.Total_Amount
+                };
 
-                List<Discount_Assign_Detail_bill> ListOfDiscountDetails = new List<Discount_Assign_Detail_bill>();
-
+                var listOfDetails = new List<Discount_Assign_Detail_bill>();
                 foreach (ServiceDiscount service in dt.ServiceDiscount)
                 {
-                    Discount_Assign_Detail_bill detail = new Discount_Assign_Detail_bill();
-                    detail.Discount_Assign_ID = Convert.ToInt32(Discount_Assign_ID);
-                    detail.Bill_Detail_ID = service.Bill_Detail_ID;
-                    detail.Item_ID = service.Item_ID;
-                    detail.Item_Name = service.Item_Name;
-                    detail.Item_Type = service.Item_Type;
-                    detail.Original_Amount = service.Original_Amount;
-                    detail.Discount_Percentage = service.Discount_Percentage;
-                    detail.Discount_Amount = service.Discount_Amount;
-                    detail.Net_Amount = service.Net_Amount;
-
-                    ListOfDiscountDetails.Add(detail);
+                    listOfDetails.Add(new Discount_Assign_Detail_bill
+                    {
+                        Discount_Assign_ID = Convert.ToInt32(Discount_Assign_ID),
+                        Bill_Detail_ID = service.Bill_Detail_ID,
+                        Item_ID = service.Item_ID,
+                        Item_Name = service.Item_Name,
+                        Item_Type = service.Item_Type,
+                        Original_Amount = service.Original_Amount,
+                        Discount_Percentage = service.Discount_Percentage,
+                        Discount_Amount = service.Discount_Amount,
+                        Net_Amount = service.Net_Amount
+                    });
                 }
 
                 db.Discount_Assign_Bills.InsertOnSubmit(discount);
-                db.Discount_Assign_Detail_bills.InsertAllOnSubmit(ListOfDiscountDetails);
+                db.Discount_Assign_Detail_bills.InsertAllOnSubmit(listOfDetails);
                 value = Discount_Assign_ID;
             }
 
-            var arBill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == dt.Bill_Id);
-            var arreceipt = db.Receipts.FirstOrDefault(x => x.Bill_ID == dt.Bill_Id);
+            //var arBill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == dt.Bill_Id);
+            //var arreceipt = db.Receipts.FirstOrDefault(x => x.Bill_ID == dt.Bill_Id);
 
-            if (arBill != null)
-            {
-                arBill.Discount_Amount = dt.Total_Discount;
-                arBill.Received_Amount = dt.Total_Amount;
-                arBill.Cash_In_Hand = dt.Total_Amount;
-                arBill.Net_Amount = dt.Total_Amount;
-            }
+            //if (arBill != null)
+            //{
+            //    arBill.Discount_Amount = dt.Total_Discount;
+            //    arBill.Received_Amount = dt.Total_Amount;
+            //    arBill.Cash_In_Hand = dt.Total_Amount;
+            //    arBill.Net_Amount = dt.Total_Amount;
+            //}
 
-            if (arreceipt != null)
-            {
-                arreceipt.Receipt_Amount = dt.Total_Amount;
-            }
+            //if (arreceipt != null)
+            //{
+            //    arreceipt.Receipt_Amount = dt.Total_Amount;
+            //}
 
-            foreach (ServiceDiscount service in dt.ServiceDiscount)
-            {
-                var arBillDetail = db.Ar_Billing_Details.FirstOrDefault(d => d.Bill_Details_ID == service.Bill_Detail_ID);
-                if (arBillDetail != null)
-                {
-                    arBillDetail.Discount_Percentage = service.Discount_Percentage;
-                    arBillDetail.Discount_Amount = service.Discount_Amount;
-                    arBillDetail.Net_Amount = service.Net_Amount;
-                }
-            }
+            //foreach (ServiceDiscount service in dt.ServiceDiscount)
+            //{
+            //    var arBillDetail = db.Ar_Billing_Details.FirstOrDefault(d => d.Bill_Details_ID == service.Bill_Detail_ID);
+            //    if (arBillDetail != null)
+            //    {
+            //        arBillDetail.Discount_Percentage = service.Discount_Percentage;
+            //        arBillDetail.Discount_Amount = service.Discount_Amount;
+            //        arBillDetail.Net_Amount = service.Net_Amount;
+            //    }
+            //}
 
             db.SubmitChanges();
-
             return value;
         }
 
@@ -478,6 +502,72 @@ namespace PMS.Modules.Billing
                 catch (Exception ex)
                 {
                     return (new JavaScriptSerializer()).Serialize(new { error = ex.Message });
+                }
+            }
+        }
+
+        [WebMethod]
+        public static string ApproveDiscount(string Bill_ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                try
+                {
+                    int billId = Convert.ToInt32(Bill_ID);
+
+                    var discountMaster = db.Discount_Assign_Bills
+                                           .OrderByDescending(d => d.Creation_Date) 
+                                           .FirstOrDefault(d => d.Bill_ID == billId);
+
+                    if (discountMaster == null)
+                    {
+                        return "Error: No discount record found for this Bill. Please Save first.";
+                    }
+
+                    decimal totalAmount = discountMaster.Total_amount ?? 0;
+                    decimal totalDiscount = discountMaster.Total_Discount;
+
+                    
+                    var arBill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == billId);
+                    if (arBill != null)
+                    {
+                        arBill.Discount_Amount = totalDiscount;
+                        arBill.Received_Amount = totalAmount;
+                        arBill.Cash_In_Hand = totalAmount;
+                        arBill.Net_Amount = totalAmount;
+                    }
+
+                    var arReceipt = db.Receipts.FirstOrDefault(r => r.Bill_ID == billId);
+                    if (arReceipt != null)
+                    {
+                        arReceipt.Receipt_Amount = totalAmount;
+                    }
+
+                    var approvedDetails = db.Discount_Assign_Detail_bills
+                                            .Where(d => d.Discount_Assign_ID == discountMaster.Discount_Assign_ID)
+                                            .ToList();
+
+                    foreach (var service in approvedDetails)
+                    {
+                        var arBillDetail = db.Ar_Billing_Details
+                                             .FirstOrDefault(d => d.Bill_Details_ID == service.Bill_Detail_ID);
+
+                        if (arBillDetail != null)
+                        {
+                            arBillDetail.Discount_Percentage = service.Discount_Percentage;
+                            arBillDetail.Discount_Amount = service.Discount_Amount;
+                            arBillDetail.Net_Amount = service.Net_Amount;
+                        }
+                    }
+
+                    discountMaster.Status = "Approved";
+
+                    db.SubmitChanges();
+                    return "Success";
+                }
+                catch (Exception ex)
+                {
+                    return "Error: " + ex.Message;
                 }
             }
         }
