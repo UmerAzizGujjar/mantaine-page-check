@@ -199,7 +199,7 @@ namespace PMS
 
         //}
         [WebMethod]
-        public static string RejectLabTestDetail(string LabTestDetail_ID, string RejectionReason = "")
+        public static string RejectLabTestDetail(string LabTestDetail_ID)
         {
             try
             {
@@ -232,7 +232,7 @@ namespace PMS
 
                     // Set the rejection/close status using your columns
                     labTestDetail.is_Closed = true;           // Mark as closed
-                    labTestDetail.Close_Status = "Rejected";   // Set status to Rejected
+                    labTestDetail.Close_Status = "Closed";   // Set status to Rejected
                     labTestDetail.Close_by = AppConfig.UserID; // Set who closed it
 
                     // Optional: Store rejection reason if you have a column
