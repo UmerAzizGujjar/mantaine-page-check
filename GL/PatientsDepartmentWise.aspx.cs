@@ -3631,16 +3631,14 @@ namespace PMS
                     lbShift.Visible = false;
                     ddlShift.Visible = false;
 
-
                     lblDoctor.Text = "Final Sign By";
                     object valuset;
-                    DataBaseDataContext db2 = new DataBaseDataContext(DBClass.ConnectionString());
-                    valuset = from d in db2.aspnet_Users
-                              select new { d.UserName, d.UserId };
-                    ddlDoctor.DataSource = valusets;
-                    ddlDoctor.DataTextField = "UserName";
-                    ddlDoctor.DataValueField = "UserId";
-                    ddlDoctor.Items.Add(new ListItem() { Text = "All", Value = "0" });
+
+                    DataTable dy = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dy;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
                     ddlDoctor.DataBind();
 
                     lblCashier.Text = "Performing Doctor";
