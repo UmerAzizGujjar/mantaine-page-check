@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-=======
->>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -14,9 +13,7 @@ namespace PMS.Modules.Billing
         protected void Page_Load(object sender, EventArgs e)
         {
 
-
-
-=======
+        }
 
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
@@ -137,6 +134,6 @@ namespace PMS.Modules.Billing
             {
                 throw;
             }
->>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
+        }
     }
 }

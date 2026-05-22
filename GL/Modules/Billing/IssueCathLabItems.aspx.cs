@@ -873,33 +873,33 @@ namespace PMS.Modules.Billing
             }
             newBill.Total_CGS = Total_CGSS;
             db.SubmitChanges();
-           // ApprovePhramcy(newBill.Bill_ID.ToString());
+            ApprovePhramcy(newBill.Bill_ID.ToString());
 
 
             // Check if FBR_Pharmacy is set to "01" before posting to FBR
-            //var FBR_Pharmacy = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR_Pharmacy")?.Code;
-            //if (FBR_Pharmacy == "01")
-            //{
-            //    var detailIds = db.Ar_Billing_Details
-            //    .Where(b => b.Bill_ID == newBill.Bill_ID)
-            //    .Select(b => b.Bill_Details_ID)
-            //    .ToList();
+            var FBR_Pharmacy = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR_Pharmacy")?.Code;
+            if (FBR_Pharmacy == "01")
+            {
+                var detailIds = db.Ar_Billing_Details
+                .Where(b => b.Bill_ID == newBill.Bill_ID)
+                .Select(b => b.Bill_Details_ID)
+                .ToList();
 
-            //    if (detailIds.Count > 0)
-            //    {
-            //        FBRBillingView.PostToFBR(newBill.Bill_ID, detailIds);
-            //    }
-            //}
+                if (detailIds.Count > 0)
+                {
+                    FBRBillingView.PostToFBR(newBill.Bill_ID, detailIds);
+                }
+            }
 
             return newBill.Bill_ID.ToString();
         }
-        //[WebMethod]
-        //public static string ApprovePhramcy(string billid)
-        //{
-        //    var userid = AppConfig.UserID;
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var details = db.SpApprovePharmacy(Convert.ToInt32(billid), userid);
-        //    return (new JavaScriptSerializer()).Serialize(details);
+        [WebMethod]
+        public static string ApprovePhramcy(string billid)
+        {
+            var userid = AppConfig.UserID;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var details = db.SpApprovePharmacy(Convert.ToInt32(billid), userid);
+            return (new JavaScriptSerializer()).Serialize(details);
         }
         [WebMethod]
         public static string GetDepartment()
@@ -1334,6 +1334,6 @@ namespace PMS.Modules.Billing
             public string Batch_No { get; set; }
             public decimal CGSAmount { get; set; }
             public string LineDiscount { get; set; }
-          }
+        }
     }
-}   
+}
