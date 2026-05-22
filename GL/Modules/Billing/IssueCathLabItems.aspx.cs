@@ -1334,6 +1334,6 @@ namespace PMS.Modules.Billing
             public string Batch_No { get; set; }
             public decimal CGSAmount { get; set; }
             public string LineDiscount { get; set; }
-        }
+          }
     }
-}
+}   

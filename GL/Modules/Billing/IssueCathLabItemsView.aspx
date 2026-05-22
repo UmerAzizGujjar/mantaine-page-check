@@ -10,7 +10,9 @@
         LoadPage();
 
     });
-  
+
+
+
     function PrintBill(Bill_ID) {
         var url = '../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + Bill_ID;
         window.open(url, '_blank');
@@ -21,7 +23,9 @@
         //var BillId = $('#BillId' + key).val();
         window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + key);
 
-    }
+        }
+
+
 
     function LoadPage() {
         let savedVisibility = null;
