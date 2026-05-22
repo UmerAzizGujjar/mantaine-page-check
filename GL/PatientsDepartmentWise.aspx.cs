@@ -3636,7 +3636,7 @@ namespace PMS
                     object valuset;
                     DataBaseDataContext db2 = new DataBaseDataContext(DBClass.ConnectionString());
                     valuset = from d in db2.aspnet_Users
-                               select new { d.UserName, d.UserId };
+                              select new { d.UserName, d.UserId };
                     ddlDoctor.DataSource = valusets;
                     ddlDoctor.DataTextField = "UserName";
                     ddlDoctor.DataValueField = "UserId";
@@ -3712,6 +3712,9 @@ namespace PMS
 
 
                 }
+
+
+
                 if (this.PageTitle == "Student_Fee_Details_Report")
                 {
                     string x = "Student Fee Details Report";

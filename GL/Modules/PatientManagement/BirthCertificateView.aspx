@@ -6,10 +6,7 @@
             $(document).ready(function () {
                 $('#ctl00_lblMessage').hide();
                 LoadPage();
-                $(document).on('change', '#select-all', function () {
-                    var checked = $(this).is(':checked');
-                    $('.select-row').prop('checked', checked);
-                });
+              
             });
 
             function PrintBirthCertificate(In_Patient_ID) {
@@ -98,15 +95,7 @@
                         });
                     },
                     "columns": [
-                        {
-                            "data": null,
-                            "orderable": false,
-                            "className": "dt-checkbox",
-                            "render": function (data, type, full) {
-                                return '<input type="checkbox" class="select-row" value="' + full.In_Patient_ID + '" />';
-                            },
-                            "width": "3%"
-                        },
+                       
                         { "data": "In_Patient_ID", "visible": false, "width": "0%" },
                         {
                             "data": "Admission_Date", "name": "Admission_Date",
@@ -199,9 +188,9 @@
       <table class="table table-hover table-striped table-bordered" id="tblResult" style="overflow:scroll; height:auto;">
            <thead id="ihead">
                <tr>
-                   <th><input type="checkbox" id="select-all" /></th>
+                  
                    <th>Certificate ID</th>
-                   <th>Admission Date</th>
+                   <th>Date</th>
                    <th>MR No.</th>
                    <th>Patient Name</th> 
                    <th>Father/Husband Name</th>                              

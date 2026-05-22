@@ -1659,6 +1659,7 @@ namespace PMS
                 rd.SetParameterValue("@endDate", sqlEndDateTime);
 
             }
+
             else if (reportName == "Lab_Log_Report")
             {
                 reportPath += "LabRadiology/rptlab_log_report.rpt";
@@ -1697,6 +1698,7 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
+
             else if (reportName == "Student_Fee_Details_Report")
             {
                 reportPath += "Student/rpt_Student_Fee_Details.rpt";
