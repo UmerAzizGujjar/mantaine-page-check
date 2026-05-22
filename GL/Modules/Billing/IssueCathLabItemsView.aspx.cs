@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-<<<<<<< HEAD
-=======
 using System.Web.Services;
->>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -17,8 +14,7 @@ namespace PMS.Modules.Billing
         {
 
         }
-<<<<<<< HEAD
-=======
+
 
 
         [WebMethod]
@@ -141,6 +137,5 @@ namespace PMS.Modules.Billing
                 throw;
             }
         }
->>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
     }
 }
