@@ -86,7 +86,8 @@ namespace PMS
 
                     var Total_Refunds = _dbContext.Refunds.Count();
                     var Refunds = from R in _dbContext.Refunds
-                                where 
+                                  join reg in _dbContext.Reg_patients on R.Patient_ID equals reg.pat_id
+                                where (R.isCancelled == false || R.isCancelled == null) &&
                                      ((R.Refund_ID.ToString().Contains(searchValue)  || R.Bill_ID.ToString().Contains(searchValue)|| R.Bill_ID.ToString().Contains(searchValue) || R.Refund_Amount.ToString().Contains(searchValue) || (from bl in _dbContext.Ar_Billings where bl.Bill_ID == R.Bill_ID select bl.Bill_No).FirstOrDefault().Contains(searchValue) || (from bl in _dbContext.Patients where bl.Patient_ID == R.Patient_ID select bl.mr_no_sequence).FirstOrDefault().ToString().Contains(searchValue)))
                                 select new
                                 {
@@ -98,6 +99,8 @@ namespace PMS
                                     Status = R.Status ?? "Created",
                                     MrNo = (from bl in _dbContext.Patients where bl.Patient_ID == R.Patient_ID select bl.mr_no_sequence).FirstOrDefault(),
                                     Remarks = R.Remarks,
+                                    FullName = reg.Full_Name,
+
                                 };
 
                     var FilteredCount = Refunds.Count();
