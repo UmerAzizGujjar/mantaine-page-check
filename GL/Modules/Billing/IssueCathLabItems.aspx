@@ -37,7 +37,10 @@
             
             LoadPatientNo();
             AllowadjustmentEdit();
+<<<<<<< HEAD
+=======
             initBarcodeScan();
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
             
         });
         window.addEventListener('keydown', function (event) {
@@ -1248,6 +1251,8 @@
         var addedItemIDs = [];
         var items = [];
 
+<<<<<<< HEAD
+=======
         var barcodeTimer;
 
         function initBarcodeScan() {
@@ -1322,6 +1327,7 @@
              });
          }
 
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
         function loadmed() {
             var ItemName = ItemNames || '';
 
@@ -2016,10 +2022,13 @@
                     var date = data[0].ExpiryDate
                     date = moment(date).format('D-MMM-YYYY');
 
+<<<<<<< HEAD
+=======
                     var barcodeValue = (typeof window.currentBarcodeId !== 'undefined' && window.currentBarcodeId)
                         ? window.currentBarcodeId.toString()
                         : '';
 
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                     debugger;
                     rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
 
@@ -2039,7 +2048,11 @@
 
                         '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
 
+<<<<<<< HEAD
+                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="3% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+=======
                         '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="3% !important;text-align: right;margin-left: -4px;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
 
                         '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
 
@@ -2050,8 +2063,11 @@
                         '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
+<<<<<<< HEAD
+=======
                         '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
                         '<td style="display:none;"><input type="hidden" name="BarcodeId" value="' + barcodeValue + '" /></td>' + 
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
 
                         '</tr>';
@@ -2134,10 +2150,13 @@
                     var discountBlock = data[0].Discount_Block;
                     var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
                     var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
+<<<<<<< HEAD
+=======
 
                     var barcodeValue = (typeof window.currentBarcodeId !== 'undefined' && window.currentBarcodeId)
                         ? window.currentBarcodeId.toString()
                         : '';
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                    
                     debugger;
                     rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
@@ -2169,8 +2188,11 @@
                         '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
                         ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
                         '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+<<<<<<< HEAD
+=======
 
                         '<td style="display:none;"><input type="hidden" value="' + barcodeValue + '" name="BarcodeId" id="BarcodeId" ></td>' +
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                         '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                         '</tr>';
                     $('#tblDetails #tblbody').append(rows);
@@ -2184,7 +2206,10 @@
                         }
                     }, 5);
                     CalculateSummarieDiscountPerWise(rowIndex);
+<<<<<<< HEAD
+=======
                     currentBarcodeId = null;
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                 }
             });
         }
@@ -2303,8 +2328,11 @@
                 var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
                 var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
                 var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
+<<<<<<< HEAD
+=======
                 var $barcodeInput = $(value).find('input[name="BarcodeId"]');
                 var BarcodeId = $barcodeInput.length > 0 ? ($barcodeInput.val() || '') : '';
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                 var CGSAmount = CGSRate * Qty;
                 if (batchno == null) {
                     batchno = '';
@@ -2339,7 +2367,11 @@
                 }
                 var NetAmount = $($(value).find('td')[11]).text();
                 Save_list.push({
+<<<<<<< HEAD
+                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount,
+=======
                     Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, BarcodeId: BarcodeId,
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                 });
             });
             debugger;
@@ -2484,7 +2516,10 @@
                         var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
                         var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
                         var Remarks = $(value).find('input[name="Remarks"]').val() || '';
+<<<<<<< HEAD
+=======
                         var BarcodeId = $(value).find('input[name="BarcodeId"]').val() || '';
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                         var CGSAmount = CGSRate * Qty;
                        
                         if (batchno == null) {
@@ -2520,7 +2555,11 @@
                         }
                         var NetAmount = $($(value).find('td')[11]).text();
                         Save_list.push({
+<<<<<<< HEAD
+                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks,
+=======
                             Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks, BarcodeId: BarcodeId,
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                         });
                     });
                     debugger;
@@ -2796,6 +2835,52 @@
         }
 
         function fillPendingPatientsLists() {
+<<<<<<< HEAD
+            var SearchString = $("#txtSearchmodal").val();
+            PageMethods.PendingPatients(SearchString,function (data) {
+
+                var parsedData = JSON.parse(data);
+                var rows = '';
+                
+                $.each(parsedData, function (key, value) {
+
+                    var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
+                    var retdate = moment(TrnsDate).format('LLLL');
+
+                    var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined)
+                        ? value.Ward_Name
+                        : '';
+
+                    var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0)
+                        ? value.Bed_No
+                        : '';
+
+                    rows += '<tr>' +
+                        '<td>' + value.mr_no_sequence + '</td>' +
+                        '<td>' + value.Full_Name + '</td>' +
+                        '<td>' + value.Transaction_Type + '</td>' +
+                        '<td>' + value.Referred_By + '</td>' +
+                        '<td>' + (value.Ward_Name || '') + '</td>' +
+                        '<td>' + ((value.Bed_No && value.Bed_No !== 0) ? value.Bed_No : '') + '</td>' +
+                        '<td>' + retdate + '</td>' +
+                        '<td>' +
+                        '<a href="#" class="btnEdit" ' +
+                        'data-patid="' + value.pat_id + '" ' +
+                        'data-mrno="' + value.mr_no_sequence + '">' +
+                        '<i class="fa fa-edit fa-2x"></i>' +
+                        '</a>' +
+                        '</td>' +
+                        '</tr>';
+                });
+
+                $('#tblPendingPatients tbody').html(rows);
+                $(".se-pre-con").fadeOut("slow");
+
+            }, function (err) {
+                console.log(err);
+            });
+        }
+=======
     var SearchString = $("#txtSearchmodal").val();
     PageMethods.PendingPatients(SearchString, function (data) {
 
@@ -2841,6 +2926,7 @@
         $(".se-pre-con").fadeOut("slow"); 
     });
 }
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
 
         debugger;
         //function hideModel(pat_id, mr_no_sequence) {
@@ -3090,8 +3176,12 @@
                             '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
                             '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
                             '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
+<<<<<<< HEAD
+                            '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+=======
                         '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
                         '<td style="display:none;"><input type="hidden" name="BarcodeId" value="" /></td>' +
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                             '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
                             '</tr>';                            
                         $('#tblDetails tbody').append(rows);
@@ -3191,6 +3281,47 @@
 
         }
 
+<<<<<<< HEAD
+        function LoadWarehouses() {
+            var $dropdown = $('#ddlWarehouse');
+            $dropdown.empty();
+
+            PageMethods.GetUserWarehouses(
+                function (response) {
+                    if (response && Array.isArray(response)) {
+                        if (response.length === 1) {
+                            // Only one warehouse: skip "Please Select" and auto-select it
+                            var item = response[0];
+                            $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
+                            $("#ddlWarehouse").attr("disabled", true);
+                        } else {
+                            // Multiple or zero warehouses: show "Please Select"
+                            $dropdown.append('<option value="0">Please Select</option>');
+                            $.each(response, function (index, item) {
+                                $dropdown.append(
+                                    '<option value="' + item.Value + '">' +
+                                    item.Text +
+                                    '</option>'
+                                );
+                            });
+                        }
+                    } else {
+                        // Handle case where response is not an array or is null
+                        $dropdown.append('<option value="0">Please Select</option>');
+                    }
+
+                    // Reinitialize Select2 after populating
+                    $dropdown.select2();
+                },
+                function (error) {
+                    console.log('Error loading warehouses:', error);
+                    // On error, default to "Please Select"
+                    $dropdown.append('<option value="0">Please Select</option>');
+                    $dropdown.select2();
+                }
+            );
+        }
+=======
          function LoadWarehouses() {
              var $dropdown = $('#ddlWarehouse');
              $dropdown.empty();
@@ -3243,6 +3374,7 @@
                  }
              );
          }
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
 
 
         function LoadWarehousesforSaleReturn() {
@@ -3504,11 +3636,14 @@
                         <option></option>
                     </select>
                 </div>--%>
+<<<<<<< HEAD
+=======
                  <div class="col-lg-3 col-md-7 col-sm-6">
      <label id="lblbarcode">Search by Barcode:</label>
      
      <input id="searchByBarcode" class="form-control" tabindex="6" autocomplete="off" />
  </div>
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                 <div class="col-lg-3 col-md-7 col-sm-6">
                     <label id="lblmedName">Search Item:</label>
                     <label class="small">(Alt+Q)</label>
@@ -3548,9 +3683,13 @@
                --%>
             </div>
 
+<<<<<<< HEAD
+
+=======
             <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%;display:none">
     <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
 </div>
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
 
             <!-- Checkboxes and Radio Buttons -->
             <div class="row mb-3 align-items-center" style="margin-top: 1%; margin-bottom: 1%">
@@ -3656,7 +3795,11 @@
                     <th style="/*width: 25px;*/ text-align: left;">Qty </th>
                     <th style="width: 75px; text-align: left;">Stock</th>
                     <th style="width: 60px; text-align: right;">Rate </th>
+<<<<<<< HEAD
+                    <th style="/*width: 60px;*/ text-align: left;">Dis % </th>
+=======
                     <th style="width: 75px; text-align: right;">Dis %  </th>
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                     <th style="width: 70px; text-align: left;">Dis Amount </th>
                     <th style="width: 60px; text-align: left;">Net Amount </th>
                     <th style="/*width: 60px;*/ text-align: left;">BatchNo</th>

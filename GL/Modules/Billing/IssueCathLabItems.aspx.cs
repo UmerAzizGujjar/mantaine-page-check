@@ -451,7 +451,11 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+<<<<<<< HEAD
+                var query = db.Sp_GetLast24Hours_Medicines(SearchString).ToList();
+=======
                 var query = db.Sp_GetLast24Hours_PatientForCath(SearchString).ToList();
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
 
             }
@@ -484,6 +488,8 @@ namespace PMS.Modules.Billing
             }
             return result;
         }
+<<<<<<< HEAD
+=======
         [WebMethod]
         public static string loadMedicineByID(string ID)
         {
@@ -534,6 +540,7 @@ namespace PMS.Modules.Billing
             }
             return result;
         }
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
 
         [WebMethod]
         public static string MedicineDetail(int itemId, string hdndiscountType, string Batch, string warehouse)
@@ -555,7 +562,11 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
+<<<<<<< HEAD
+                var query = db.spMedicinesDetailsfromopd(itemId).ToList();
+=======
                 var query = db.spMedicinesDetailsfromopdCathlab(itemId).ToList();
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -697,7 +708,10 @@ namespace PMS.Modules.Billing
             public decimal CGSAmount { get; set; }
 
             public string Remarks { get; set; }
+<<<<<<< HEAD
+=======
             public string BarcodeId { get; set; }
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
         }
 
         [WebMethod]
@@ -753,7 +767,11 @@ namespace PMS.Modules.Billing
             newBill.Panel_Id = Convert.ToInt32(data.Panel_Id);
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
+<<<<<<< HEAD
+            //                     newBill.IsPharmacy = true;
+=======
             newBill.IsCathLab = true;
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
 
             var checkingcondition = db.sys_Parms
                 .Where(a => a.Name == "Amount Recevied For Pharmcay")
@@ -846,12 +864,15 @@ namespace PMS.Modules.Billing
                 newBillDetails.ParentTrans_Type = "CathItems";
                 newBillDetails.Item_ID = Item_Id;
                 newBillDetails.Item_Name = dtls.ItemName;
+<<<<<<< HEAD
+=======
                 int? barcodeId = null;
                 if (!string.IsNullOrEmpty(dtls.BarcodeId) && int.TryParse(dtls.BarcodeId, out int parsedId))
                 {
                     barcodeId = parsedId;
                 }
                 newBillDetails.Barcode_Id = barcodeId;
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
                 //var Item_Id = (from aac in db.INV_Items where (aac.Description == dtls.ItemName) select aac.Item_ID).FirstOrDefault();
                 //newBillDetails.Item_ID = Item_Id;
                 newBillDetails.Amount = dtls.Amount;

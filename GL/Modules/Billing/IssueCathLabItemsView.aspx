@@ -1,4 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="IssueCathLabItemsView.aspx.cs" Inherits="PMS.Modules.Billing.IssueCathLabItemsView" %>
+<<<<<<< HEAD
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
+=======
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
 
@@ -209,4 +216,5 @@
 </div>
 
 
+>>>>>>> e6cdf7b169e5f8a5dc2198781a8c50626faddc5c
 </asp:Content>

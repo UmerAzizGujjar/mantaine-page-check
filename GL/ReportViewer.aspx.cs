@@ -1672,20 +1672,28 @@ namespace PMS
 
                 string sqlStartDateTime = Convert.ToDateTime(StartDateTime).ToString("yyyy-MM-dd HH:mm:ss");
                 string sqlEndDateTime = Convert.ToDateTime(EndDateTime).ToString("yyyy-MM-dd HH:mm:ss");
-                string Operator = Convert.ToString(Request.QueryString["Operator"]);
-                string Doctor = Convert.ToString(Request.QueryString["Doctor"]);
-                string PerformingDoctor = Convert.ToString(Request.QueryString["PerformingDoctor"]);
                 string Department = Convert.ToString(Request.QueryString["Department"]);
+                string Operator = Convert.ToString(Request.QueryString["Operator"]);
+                string BillingDoctor = Convert.ToString(Request.QueryString["BillingDoctor"]);
+                string Acknowledge_By = Convert.ToString(Request.QueryString["Acknowledged_By"]);
+                string Prelim_By = Convert.ToString(Request.QueryString["Prelim_BY"]);
+                string Final_Sign_By = Convert.ToString(Request.QueryString["Final_Sign_By"]);
+                string Referring_Consultant = Convert.ToString(Request.QueryString["Referring_Consultant"]);
+                string PerformingDoctor = Convert.ToString(Request.QueryString["PerformingDoctor"]);
 
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Address", companyAddress);
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@stDate", sqlStartDateTime);
                 rd.SetParameterValue("@endDate", sqlEndDateTime);
-                rd.SetParameterValue("@Operator", Operator);
-                rd.SetParameterValue("@Doctor", Doctor);
-                rd.SetParameterValue("@PerformingDoctor", PerformingDoctor);
                 rd.SetParameterValue("@Department", Department);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@BillingDoctor", BillingDoctor);
+                rd.SetParameterValue("@Acknowledge_By", Acknowledge_By);
+                rd.SetParameterValue("@Prelim_By", Prelim_By);
+                rd.SetParameterValue("@Final_Sign_By", Final_Sign_By);
+                rd.SetParameterValue("@Referring_Consultant", Referring_Consultant);
+                rd.SetParameterValue("@PerformingDoctor", PerformingDoctor);
                 rd.SetParameterValue("CompanyLogo", logoPath);
 
             }
@@ -2591,6 +2599,24 @@ namespace PMS
                     string endDate = Request.QueryString["endDate"].ToString();
                     string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                     reportPath += "Pharmacy/rptStockConsumptionDetail.rpt";
+                    rd.Load(reportPath);
+                    rd.SetParameterValue("@Stock", stock);
+                    rd.SetParameterValue("@FromDate", stDate);
+                    rd.SetParameterValue("@ToDate", endDate);
+                    rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", companyAddress);
+                }
+            }
+            else if (reportName == "Pharmacy_Stock_Consumption_Details")
+            {
+                if (Request.QueryString["Stock"] != null)
+                {
+                    var stock = Request.QueryString["Stock"];
+                    string stDate = Request.QueryString["startDate"].ToString();
+                    string endDate = Request.QueryString["endDate"].ToString();
+                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                    reportPath += "Pharmacy/rptPharmacyStockConsumptionDetail.rpt";
                     rd.Load(reportPath);
                     rd.SetParameterValue("@Stock", stock);
                     rd.SetParameterValue("@FromDate", stDate);
