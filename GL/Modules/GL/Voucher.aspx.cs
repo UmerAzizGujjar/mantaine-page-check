@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -132,6 +133,26 @@ namespace PMS
                 lblmsg = "Period closed for this month. You cannot add or edit Voucher.";
             }
             return lblmsg;
+        }
+        public static int GetNewVoucherNo(string voucherType, DateTime voucherDate)
+        {
+            using (SqlConnection con = new SqlConnection(DBClass.ConnectionString()))
+            {
+                con.Open();
+                string strSQL = "SELECT dbo.GetNewVoucherNo(@voucherType, @voucherDate)";
+                using (SqlCommand cmd = new SqlCommand(strSQL, con))
+                {
+                    cmd.Parameters.AddWithValue("@voucherType", voucherType);
+                    cmd.Parameters.AddWithValue("@voucherDate", voucherDate.Date);
+
+                    object result = cmd.ExecuteScalar();
+
+                    if (result == null || result == DBNull.Value)
+                        return 1;
+
+                    return Convert.ToInt32(result);
+                }
+            }
         }
         [WebMethod]
         public static string Savealldata(string btnSave, string AllItemDetail)

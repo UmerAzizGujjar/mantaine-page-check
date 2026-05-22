@@ -4,9 +4,53 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Pharmacy.css" rel="stylesheet" />
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
-
+   <style>
+    /* Fix overlapping inputs in medicine table */
+    #tblDetails input,
+    #tblDetails select {
+        width: 100% !important;
+        height: 30px !important;
+        padding: 4px 6px !important;
+        margin: 0 !important;
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        box-sizing: border-box !important;
+        font-size: 13px;
+    }
+    
+    #tblDetails td {
+        padding: 6px 8px !important;
+        vertical-align: middle !important;
+        white-space: nowrap;
+    }
+    
+    #tblDetails th {
+        padding: 10px 8px !important;
+        background-color: #f5f7fa;
+        font-weight: 600;
+    }
+    
+    /* Ensure all cell content stays in one line */
+    #tblDetails tr td:not(:first-child) {
+        white-space: nowrap;
+    }
+    
+    /* Fix for absolute positioned elements in your dynamic rows */
+    .height_height {
+        position: relative !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+    
+    /* Fix for batch/batchdiv */
+    .batchdiv {
+        display: inline-block;
+        width: 100%;
+    }
+</style>
     <script type="text/javascript">
-        $(document).ready(function () {          
+        $(document).ready(function () {
             if (!$('#chkbatch').prop("checked")) {
                 $('#chkbatch').prop("checked", true);
             }
@@ -34,10 +78,15 @@
             loadmed();
             LoadWarehouses();
             LoadWarehousesforSaleReturn();
-            
+            setTimeout(function () {
+                if ($('#ddl_Warehouse').val() && $('#ddl_Warehouse').val() != "0") {
+                    $("#ddlInvoiceNumber").prop('disabled', false);
+                    $("#ddlSaleReturnItems").prop('disabled', false);
+                }
+            }, 500);
             LoadPatientNo();
             AllowadjustmentEdit();
-            
+
         });
         window.addEventListener('keydown', function (event) {
             if (event.altKey && event.code === 'KeyS') {
@@ -47,7 +96,7 @@
                 $('#btnSave').attr('style', 'background: green !important;margin-top: -5px;').focus();
                 //SearchPop();
                 GetPharmacyUser();
-               
+
                 $('#txtuserCode').focus();
             }
             else if (event.altKey && event.code === 'KeyR') {
@@ -223,11 +272,11 @@
         }
         debugger
         function loadDoctors() {
-     
+
             PageMethods.loadDoctors(function (data) {
                 var options = '<option value="0" >Please Select</option>';
                 $.each(JSON.parse(data), function (key, value) {
-                 
+
                     options += '<option value="' + value.Emp_ID + '" >' + value.name + '</option>';
                 });
                 $('#ddlDoctor').html(options);
@@ -239,11 +288,11 @@
         }
         debugger
         function loadDepartment() {
-            
+
             PageMethods.GetDepartment(function (data) {
                 var options = '<option value="0" >Please Select</option>';
                 $.each(JSON.parse(data), function (key, value) {
-                  
+
                     options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
                 });
                 $('#ddlDepartment').html(options);
@@ -320,14 +369,14 @@
                     $('#txtDisPer').attr("disabled", true);
                     $('#txtDisAmt').attr("disabled", true);
                     $('#txtFlatDisc').attr("disabled", true);
-        
+
                     $('#txtAmountReceived').attr("disabled", true);
                     $('#ddlpanel').attr('disabled', false);
                 }
                 else if (chkbtn == 'rbtnbank') {
                     $('#txtDisPer').attr("disabled", false);
-                   $('#txtDisAmt').attr("disabled", true);
-                   $('#txtFlatDisc').attr("disabled", true);
+                    $('#txtDisAmt').attr("disabled", true);
+                    $('#txtFlatDisc').attr("disabled", true);
                     $('#divBalance').show();
                     $('#txtAmountReceived').attr("disabled", false).val(0);
                     blnceCondition = 'true'
@@ -335,13 +384,13 @@
                 }
                 else {
                     $('#txtDisPer').attr("disabled", false);
-                   $('#txtDisAmt').attr("disabled", true);
-                   $('#txtFlatDisc').attr("disabled", true);
+                    $('#txtDisAmt').attr("disabled", true);
+                    $('#txtFlatDisc').attr("disabled", true);
 
-          
+
                     $('#txtAmountReceived').attr("disabled", true);
                     $('#txtAmountReceived').attr("disabled", true).val(0);
-                      $('#divBalance').hide();
+                    $('#divBalance').hide();
                     blnceCondition = 'false'
                 }
             });
@@ -382,7 +431,7 @@
 
         });
 
-       
+
         function loadInvoiceNumbers() {
             // Destroy existing select2 if any
             if ($('#ddlInvoiceNumber').data('select2')) {
@@ -595,7 +644,7 @@
                                 '<td ><input type="text" name="txtRBatch_No" value="' + item.Batch_No + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td style="display: none"><input type="hidden" value="' + item.Item_ID + '" name="txtRItemID" id="txtRItemID"></td>' +
                                 '<td style="display: none"><input type="hidden" value="' + item.CGSRate + '" name="txtRCGSRate" id="txtRCGSRate"></td>' +
-                                '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
+                                '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' +
                                 '<td><input type="text" name="txtLineTotal" value="0" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
                                 '</tr>';
@@ -659,7 +708,7 @@
                                 '<td><select id="txtRBatch_Nos' + (rowIndex + 1) + '" name="txtRBatch_Nos" onchange="updateReturnStock(this)" ></select></td>' +
                                 '<td style="display:none;"><input type="text"  id="txtRBatch_No' + (rowIndex + 1) + '" name="txtRBatch_No"  value=""/> </td>' +
                                 '<td  style="display:none;"><input type="hidden"  name="txtRCGSRate" value="' + data[0].CGSRate + '" id="txtRCGSRate' + (rowIndex + 1) + '"></td>' +
-                                '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
+                                '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' +
                                 '<td><input type="text" name="txtLineTotal" value="0" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
                                 //'<td><input type="text" name="txtRBatch_No" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
                                 '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
@@ -725,7 +774,7 @@
                 url: "IssueMedicine.aspx/GetStockByBatch",
                 data: JSON.stringify({
                     "itemId": itemId,
-                    "hdndiscountType": hdndiscountType,                                  
+                    "hdndiscountType": hdndiscountType,
                     "batchNumber": batchNumber,
                     "warehouse": warehouse
                 }),
@@ -1159,7 +1208,7 @@
                             var Batch_No = $(this).find('input[name="txtRBatch_No"]').val();
                             var CGSRate = $(this).find('input[name="txtRCGSRate"]').val() || 0;
                             var lineDiscount = $(this).find('input[name="txtLineTotal"]').val() || 0;
-                            
+
 
                             debugger;
                             var CGSAmount = CGSRate * qty;
@@ -1217,8 +1266,8 @@
 
                         PageMethods.SaveSaleReturnData(JSON.stringify(AllItemDetail), UserId, function (res) {
                             var btnSave = $('#SSearchReturnPop').val();
-                          /*  if (btnSave == 'Save & Print' || btnSave == "Save & Print") {*/
-                                window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
+                            /*  if (btnSave == 'Save & Print' || btnSave == "Save & Print") {*/
+                            window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
                             //}
                             Swal.fire({
                                 icon: 'success',
@@ -1291,14 +1340,14 @@
                 }
             });
         }
-        
+
         function OnHoldBill() {
             var CheckVisting = $('#chkHold:checked').val();
             if (CheckVisting == "on") {
                 window.open('IssueMedicine.aspx');
             }
         }
-      
+
         var counts = 0;
         var NegQty = false;
         function CulculateAmonutWithQty(anchor) {
@@ -1349,7 +1398,7 @@
             var getrowindex = row.rowIndex;
             var excatrowindex = parseInt(getrowindex) - parseInt(1);
             CalculateSummarieDiscountPerWise(excatrowindex);
-            CountBalance(); 
+            CountBalance();
         }
         function Invoice() {
             debugger;
@@ -1382,7 +1431,7 @@
             row.remove();
             CalculateTotals();
 
-            CountBalance(); 
+            CountBalance();
             debugger;
             $("#tblDetails tbody tr").each(function (key) {
                 debugger;
@@ -1495,9 +1544,9 @@
         function CountBalance() {
             debugger;
             var TtlPayable = parseFloat($('#txtTotalPayable').val()) || 0;
-            var ttlDisc = parseFloat($('#txtDisAmt').val()) || 0;          
-            var tllDisc = parseFloat($('#txtLineDisc').val()) || 0;        
-            var flatdisc = parseFloat($('#txtFlatDisc').val()) || 0;       
+            var ttlDisc = parseFloat($('#txtDisAmt').val()) || 0;
+            var tllDisc = parseFloat($('#txtLineDisc').val()) || 0;
+            var flatdisc = parseFloat($('#txtFlatDisc').val()) || 0;
             var AmtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
 
             var NetPayable = TtlPayable - ttlDisc - tllDisc - flatdisc;
@@ -1514,7 +1563,7 @@
             var txtAmountReceived = parseFloat($('#txtAmountReceived').val()) || 0;
             var totalDisc = $('#txttotalDisc').val() || 0;
             totalDisc = txtLineDisc + txtDisAmt;
-            totalDisc = Math.round(totalDisc); 
+            totalDisc = Math.round(totalDisc);
             $('#txttotalDisc').val(totalDisc);
         }
         function CalculateSummarieDiscountAmountWise(rowIndex) {
@@ -1628,7 +1677,7 @@
                 var txtLineDisc = $('#txtLineDisc').val() || 0;
                 var txtMasterDisc = $('#txtDisAmt').val() || 0;
                 var netamt = parseFloat(parseFloat(totalpayable) - (parseFloat(txtLineDisc) + parseFloat(txtMasterDisc))).toFixed(2);
-               // $('#txtDisAmt').val(parseFloat(disAmt).toFixed(2));
+                // $('#txtDisAmt').val(parseFloat(disAmt).toFixed(2));
                 //var disAmt = 0;
                 //if (disper > 0) {
                 //    if (tableRowCount > 0) {
@@ -1642,7 +1691,7 @@
                 //else {
                 //    disAmt = 0;
                 //}
-               
+
             }
             if (AmtWise) {
                 debugger
@@ -1764,7 +1813,7 @@
                 FlatDisc = 0;
             }
             var ReceivedAmount = $('#txtAmountReceived').val();
-            TotalDiscountAmount = Math.round(TotalDiscountAmount); 
+            TotalDiscountAmount = Math.round(TotalDiscountAmount);
             $('#txtLineDisc').val(TotalDiscountAmount);
             //$('#txtLineDisc').val(TotalDiscountAmount.toFixed(2));
             var discfinalAmnt = $('#txtLineDisc').val() || 0;
@@ -1865,7 +1914,7 @@
                             return;
                         }
                         PageMethods.Getbatch_grn(med_id, warehouse, function (data) {
-                            debugger;                          
+                            debugger;
                             var parsedData = JSON.parse(data);
                             console.log(parsedData)
                             var options = '<option value="0" >Please Select</option>';
@@ -1900,206 +1949,210 @@
 
             }
         }
-        function AddnonBatchItems() {
+      function AddnonBatchItems() {
+    debugger;
+    var itemId = $('#medName').val();
+
+    var rowIndex = parseInt($('#tblDetails tbody tr').length);
+    let rows;
+    var expdate = '';
+
+    // Check if the item with the same batch number already exists
+    var itemExists = false;
+    $('#tblDetails tbody tr').each(function () {
+        var existingItemId = $(this).find('input[name="ItemID"]').val();
+
+    });
+
+
+
+    $.ajax({
+        type: "post",
+        url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
+        data: JSON.stringify({
+            "itemId": itemId
+
+        }),
+        dataType: 'JSON',
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        success: function (msg) {
+            var length = $("#tblDetails tr:gt(0)").length;
+            $('#Table_1 tr:gt(0)').remove();
+            var data = JSON.parse(msg.d);
             debugger;
-            var itemId = $('#medName').val();
-
-            var rowIndex = parseInt($('#tblDetails tbody tr').length);
-            let rows;
-            var expdate = '';
-
-            // Check if the item with the same batch number already exists
-            var itemExists = false;
-            $('#tblDetails tbody tr').each(function () {
-                var existingItemId = $(this).find('input[name="ItemID"]').val();
-
-            });
-
-
-
-            $.ajax({
-                type: "post",
-                url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
-                data: JSON.stringify({
-                    "itemId": itemId
-
-                }),
-                dataType: 'JSON',
-                contentType: "application/json; charset=utf-8",
-                async: false,
-                success: function (msg) {
-                    var length = $("#tblDetails tr:gt(0)").length;
-                    $('#Table_1 tr:gt(0)').remove();
-                    var data = JSON.parse(msg.d);
-                    debugger;
-                    var Uomqty = data[0].UOM_Qty;
-                    if (Uomqty == null) {
-                        Uomqty = 0;
-                    } else {
-                        Uomqty = data[0].UOM_Qty;
-                    }
-                    var date = data[0].ExpiryDate
-                    date = moment(date).format('D-MMM-YYYY');
-
-                    debugger;
-                    rows = '<tr><td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
-
-                        '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +
-
-                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
-
-                        '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
-
-                        '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
-
-                        '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
-
-                        '<td><input type="number" name="txtQty" value="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
-
-                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
-
-                        '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
-
-                        '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="3% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
-
-                        '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
-
-                        '<td style="text-align:Right;"></td>' +
-                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 5% !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
-                        '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
-                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
-                        '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
-
-                        '</tr>';
-
-                    $('#tblDetails #tblbody').append(rows);
-
-                    setTimeout(function () {
-                        $('#medName').select2('close');
-                        $('input[name="txtQty"]').focus().select();
-                    }, 5);
-
-                    CalculateSummarieDiscountPerWise(rowIndex);
-                }
-            });
-        }
-        debugger;
-        function AddMedicineDetail() {
-            debugger;
-            var itemId = $('#medName').find('option:selected').val();
-            var Batch = $('#batchno').find('option:selected').val();
-            var warehouse = $('#ddlWarehouse').find('option:selected').val();
-            var hdndiscountType = $('#hdndiscountType').val();
-            var rowIndex = parseInt($('#tblDetails tbody tr').length);
-            let rows;
-            var expdate = '';
-            var itemExists = false;
-
-            
-
-            $('#tblDetails tbody tr').each(function () {
-                var existingItemId = $(this).find('input[name="ItemID"]').val();
-                var existingBatchNo = $(this).find('input[name="BatchNo"]').val();
-                if (existingItemId == itemId && existingBatchNo == Batch) {
-                    itemExists = true;
-                    return false;
-                }
-            });
-            if (itemExists) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'This item with the same batch number already exists.',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
-                });
-
-                return;
+            var Uomqty = data[0].UOM_Qty;
+            if (Uomqty == null) {
+                Uomqty = 0;
+            } else {
+                Uomqty = data[0].UOM_Qty;
             }
+            var date = data[0].ExpiryDate
+            date = moment(date).format('D-MMM-YYYY');
+            var requestedQty = (data[0].RequestedQty && data[0].RequestedQty > 0) ? data[0].RequestedQty : 0;
 
-            $.ajax({
-                type: "post",
-                url: "IssueMedicine.aspx/MedicineDetail",
-                data: JSON.stringify({
-                    "itemId": itemId,
-                    "hdndiscountType": hdndiscountType,
-                    "Batch": Batch,
-                    "warehouse": warehouse
-                }),
-                dataType: 'JSON',
-                contentType: "application/json; charset=utf-8",
-                async: false,
-                success: function (msg) {
-                    var length = $("#tblDetails tr:gt(0)").length;
-                    $('#Table_1 tr:gt(0)').remove();
-                    var data = JSON.parse(msg.d);
-                    debugger;
-                    var Uomqty = data[0].UOM_Qty;
-                    if (Uomqty == null) {
-                        Uomqty = 0;
-                    } else {
-                        Uomqty = data[0].UOM_Qty;
-                    }
-                    var date = data[0].ExpiryDate
-                    date = moment(date).format('D-MMM-YYYY');
-                    var discountBlock = data[0].Discount_Block;
-                    var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
-                    var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
-                   
-                    debugger;
-                    rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
+            debugger;
+            rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
 
-                        '<td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
+                '<td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
 
-                        '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +
+                '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +
 
-                        '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
+                '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
 
-                        '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
+                '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
 
-                        '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
+                '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="text" name="txtQty" value="1" min="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                 '<td><input type="number" name="txtQty" value="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
-                        '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
+                '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
 
-                        '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
+                '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" disabled >' + data[0].Sale_Rate + '</td>' +
 
-                        '<td><input type="number" name="DisPer" min="0" value="0"' + disDisabledAttr + ' class="height_height orderchange" style="width: 3% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
-                        '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
+                '<td><input type="number" name="DisPer" value="0" class="height_height orderchange" style="3% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
 
-                        '<td style="text-align:Right;"></td>' +
-                        '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="width: 5% !important;text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                        '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
-                        '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
-                        ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
-                        '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
-                        '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
-                        '</tr>';
-                    $('#tblDetails #tblbody').append(rows);
-                    setTimeout(function () {
-                        $('#medName').select2('close');
-                        $('input[name="txtQty"]').focus().select();
+                '<td><input type="text" disabled name="DisAmount" class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
 
-                        if (isDiscountDisabled) {
-                            $('input[name="DisPer"]:last').val(0);
-                            $('input[name="DisAmount"]:last').val(0);
-                        }
-                    }, 5);
-                    CalculateSummarieDiscountPerWise(rowIndex);
-                }
-            });
+                '<td style="text-align:Right;"></td>' +
+                '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
+                '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
+                ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
+                '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+                '<td style="text-align: center;"><input type="text" name="ReqQty" value="' + requestedQty + '" style="width: 60px !important;text-align: center;background-color:#f5f5f5;" readonly /></td>' +
+                '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
+
+                '</tr>';
+
+            $('#tblDetails #tblbody').append(rows);
+
+            setTimeout(function () {
+                $('#medName').select2('close');
+                $('input[name="txtQty"]').focus().select();
+            }, 5);
+
+            CalculateSummarieDiscountPerWise(rowIndex);
         }
+    });
+}
+        debugger;
+       function AddMedicineDetail() {
+    debugger;
+    var itemId = $('#medName').find('option:selected').val();
+    var Batch = $('#batchno').find('option:selected').val();
+    var warehouse = $('#ddlWarehouse').find('option:selected').val();
+    var hdndiscountType = $('#hdndiscountType').val();
+    var rowIndex = parseInt($('#tblDetails tbody tr').length);
+    let rows;
+    var expdate = '';
+    var itemExists = false;
+
+    $('#tblDetails tbody tr').each(function () {
+        var existingItemId = $(this).find('input[name="ItemID"]').val();
+        var existingBatchNo = $(this).find('input[name="BatchNo"]').val();
+        if (existingItemId == itemId && existingBatchNo == Batch) {
+            itemExists = true;
+            return false;
+        }
+    });
+    if (itemExists) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'This item with the same batch number already exists.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+
+        return;
+    }
+
+    $.ajax({
+        type: "post",
+        url: "IssueMedicine.aspx/MedicineDetail",
+        data: JSON.stringify({
+            "itemId": itemId,
+            "hdndiscountType": hdndiscountType,
+            "Batch": Batch,
+            "warehouse": warehouse
+        }),
+        dataType: 'JSON',
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        success: function (msg) {
+            var length = $("#tblDetails tr:gt(0)").length;
+            $('#Table_1 tr:gt(0)').remove();
+            var data = JSON.parse(msg.d);
+            debugger;
+            var Uomqty = data[0].UOM_Qty;
+            if (Uomqty == null) {
+                Uomqty = 0;
+            } else {
+                Uomqty = data[0].UOM_Qty;
+            }
+            var date = data[0].ExpiryDate
+            date = moment(date).format('D-MMM-YYYY');
+            var discountBlock = data[0].Discount_Block;
+            var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
+            var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
+            var requestedQty = (data[0].RequestedQty && data[0].RequestedQty > 0) ? data[0].RequestedQty : 0;
+
+            debugger;
+            rows = '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" ></td>' +
+
+                '<td> ' + parseInt(parseInt(rowIndex) + 1) + '</td>' +
+
+                '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" ></td>' +
+
+                '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
+
+                '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
+
+                '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
+
+                '<td><input type="text" name="txtQty" value="1" min="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+
+
+                '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
+
+                '<td style="text-align: right;" ><input type="hidden" value="' + data[0].Sale_Rate + '" name="txtSalerate" id="txtSalerate" >' + data[0].Sale_Rate + '</td>' +
+
+                '<td><input type="number" name="DisPer" min="0" value="0"' + disDisabledAttr + ' class="height_height orderchange" style="text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+                '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
+
+                '<td style="text-align:Right;"></td>' +
+                '<td><input type="text" disabled name="BatchNo" class="" value="' + data[0].BatchNum + '" style="text-align: center;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                '<td><input type="text" disabled name="exp_date" class="" value="' + date + '" style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" name="txtCGSRate" class="" value="' + data[0].CGSRate + ' "/> </td>' +
+                '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="' + data[0].CGSRate + ' " /> </td>' +
+                ' <td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" ></td>' +
+                '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+                '<td style="text-align: center;"><input type="text" name="ReqQty" value="' + requestedQty + '" style="width: 60px !important;text-align: center;background-color:#f5f5f5;" readonly /></td>' +
+                '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
+                '</tr>';
+            $('#tblDetails #tblbody').append(rows);
+            setTimeout(function () {
+                $('#medName').select2('close');
+                $('input[name="txtQty"]').focus().select();
+
+                if (isDiscountDisabled) {
+                    $('input[name="DisPer"]:last').val(0);
+                    $('input[name="DisAmount"]:last').val(0);
+                }
+            }, 5);
+            CalculateSummarieDiscountPerWise(rowIndex);
+        }
+    });
+}
         function adjustment() {
             debugger;
             var ttlpayable = $('#txtTotalPayable').val();
@@ -2117,7 +2170,7 @@
             }
             var finlblce = parseFloat(ttlpayable) - parseFloat(ttlDisc) - parseFloat(tllDisc) - parseFloat(flatdisc);
 
-            
+
             if (blnceCondition == 'true') {
                 if (finlblce > -1) {
                     finlblce = Math.abs(finlblce);
@@ -2380,7 +2433,7 @@
 
                     $.each($('#tblDetails tbody tr'), function (key, value) {
                         debugger;
-                        
+
                         var ItemName = $($(value).find('td input[name=Itemdesc]')[0]).val();
                         var Qty = $($(value).find('td input[name=txtQty]')[0]).val();
                         var Stock = $($(value).find('td input[name=txtStock]')[0]).val();
@@ -2395,7 +2448,7 @@
                         var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
                         var Remarks = $(value).find('input[name="Remarks"]').val() || '';
                         var CGSAmount = CGSRate * Qty;
-                       
+
                         if (batchno == null) {
                             batchno = '';
                         }
@@ -2597,17 +2650,18 @@
                     if (data == '01') {
                         //blnceCondition = 'true'
                         $('#chkcash').prop('checked', true);
-                        $('#txtAmountReceived').attr('disabled',true);
+                        $('#txtAmountReceived').attr('disabled', true);
                         $('#divBalance').hide();
-                       
-
+
+
+
                     }
                     else {
-                      
+
                         $('#chkBank').prop('checked', true);
-                          $('#txtAmountReceived').attr('disabled',false);
-                       
-                          $('#divBalance').show();
+                        $('#txtAmountReceived').attr('disabled', false);
+
+                        $('#divBalance').show();
 
                     }
 
@@ -2721,52 +2775,61 @@
 
         //    }, function (exec) { })
         //}
+       
         function fillPendingPatientsLists() {
+            debugger;
             var SearchString = $("#txtSearchmodal").val();
-            PageMethods.PendingPatients(SearchString,function (data) {
-
+            PageMethods.PendingPatients(SearchString, function (data) {
                 var parsedData = JSON.parse(data);
                 var rows = '';
-                
+                debugger;
                 $.each(parsedData, function (key, value) {
-
+                    debugger;
                     var TrnsDate = new Date(parseInt(value.Medicine_Date.substr(6)));
                     var retdate = moment(TrnsDate).format('LLLL');
+                    var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined) ? value.Ward_Name : '';
+                    var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0) ? value.Bed_No : '';
 
-                    var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined)
-                        ? value.Ward_Name
-                        : '';
+                    // Check if status is rejected (handles both string 'rejected' and numeric values)
+                    var isRejected = (value.Status === 'rejected' || value.Status === '1' || value.Status === 1);
 
-                    var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0)
-                        ? value.Bed_No
-                        : '';
+                    // Set row color for rejected entries
+                    var rowClass = isRejected ? 'rejected-row' : '';
+                    var rowStyle = isRejected ? 'style="background-color: #ffe6e6;"' : '';
 
-                    rows += '<tr>' +
+                    // Hide edit and reject actions for rejected entries
+                    var actionButtons = '';
+                    if (!isRejected) {
+                        actionButtons = '<a href="#" class="btnEdit" ' +
+                            'data-patid="' + value.pat_id + '" ' +
+                            'data-mrno="' + value.mr_no_sequence + '">' +
+                            '<i class="fa fa-edit fa-2x" style="color:green;"></i>' +
+                            '</a>&nbsp;&nbsp;' +
+                            '<a href="#" onclick="RejectMedicineRequest(\'' + value.In_Patient_Medicine_ID + '\', this)" title="Closed">' +
+                            '<i class="fa fa-times-circle fa-2x" style="color:red;"></i>' +
+                            '</a>';
+                    } else {
+                        actionButtons = '<span class="badge badge-danger" style="background-color: #dc3545; padding: 5px 10px; border-radius: 3px; cursor: default;">Closed</span>';
+                    }
+
+                    rows += '<tr class="' + rowClass + '" ' + rowStyle + '>' +
                         '<td>' + value.mr_no_sequence + '</td>' +
                         '<td>' + value.Full_Name + '</td>' +
                         '<td>' + value.Transaction_Type + '</td>' +
-                        '<td>' + value.Referred_By + '</td>' +
-                        '<td>' + (value.Ward_Name || '') + '</td>' +
-                        '<td>' + ((value.Bed_No && value.Bed_No !== 0) ? value.Bed_No : '') + '</td>' +
+                        '<td>' + (value.Referred_By || '') + '</td>' +
+                        '<td>' + WardName + '</td>' +
+                        '<td>' + BedNo + '</td>' +
                         '<td>' + retdate + '</td>' +
-                        '<td>' +
-                        '<a href="#" class="btnEdit" ' +
-                        'data-patid="' + value.pat_id + '" ' +
-                        'data-mrno="' + value.mr_no_sequence + '">' +
-                        '<i class="fa fa-edit fa-2x"></i>' +
-                        '</a>' +
-                        '</td>' +
+                        '<td>' + actionButtons + '</td>' +
                         '</tr>';
                 });
-
+                debugger;
                 $('#tblPendingPatients tbody').html(rows);
                 $(".se-pre-con").fadeOut("slow");
-
             }, function (err) {
                 console.log(err);
             });
         }
-
         debugger;
         //function hideModel(pat_id, mr_no_sequence) {
         //    debugger;
@@ -2776,7 +2839,45 @@
         //    getOPDandIPDNO(pat_id)
 
         //}
-        function hideModel(pat_id, mr_no_sequence) {
+        function RejectMedicineRequest(medicineId, element) {
+                debugger;
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You want to Close this medicine request?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Close it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        PageMethods.RejectMedicineRequest(medicineId, function(response) {
+                            debugger;
+                            var result = JSON.parse(response);
+                            if (result.Success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Closed!',
+                                    text: result.Message,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                                // Refresh the queue list
+                                fillPendingPatientsLists();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: result.Message,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+                    function hideModel(pat_id, mr_no_sequence) {
             console.log(pat_id, mr_no_sequence);
             $('#queueModal').modal('hide');
 
@@ -2876,7 +2977,7 @@
                             var doctorId = data.DoctorInfo?.Doctor || 0;
                             var department = data.DoctorInfo?.Department || '';
                             $('#ddlDoctor').val(doctorId).trigger('change')
-                            
+
                             $('#ddlDepartment').val(department).trigger('change')
                             $('#ddlDoctor').attr('disabled', true);
                             $('#ddlDepartment').attr('disabled', true);
@@ -2956,94 +3057,105 @@
         }
         debugger;
         function AddMedicineDetailFormOPD(itemIds) {
-            debugger;
-            itemIds.forEach(function (itemCode) {
-                debugger;
-                var itemId = itemCode;
-                var rowIndex = parseInt($('#tblDetails tbody tr').length);
-                var rows;
-                $.ajax({
-                    type: "post",
-                    url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
-                    data: JSON.stringify({
-                        "itemId": itemId,
-                    }),
-                    dataType: 'JSON',
-                    contentType: "application/json; charset=utf-8",
-                    async: false,
-                    success: function (msg) {
-                        var length = $("#tblDetails tr:gt(0)").length;
-                        $('#Table_1 tr:gt(0)').remove();
-                        var data = JSON.parse(msg.d);
-                        
-                        debugger;
-                        var Uomqty = data[0].UOM_Qty;
-                        if (Uomqty == null) {
-                            Uomqty = 0;
-                        } else {
-                            Uomqty = data[0].UOM_Qty;
-                        }
-                        var SaleRate = data[0].Sale_Rate;
-                        if (SaleRate == null) {
-                            SaleRate = 0;
-                        } else {
-                            SaleRate = data[0].Sale_Rate;
-                        }
-                        var date = data[0].ExpiryDate
-                        var discountBlock = data[0].Discount_Block;
-                        var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
-                        var warehouse = $("#ddlWarehouse").val()
-                        var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
-                        date = moment(date).format('D-MMM-YYYY');
-                        rows =
-                            '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" > ' + data[0].Item_ID + '</td>' +
-                            '<td> ' + (rowIndex + 1) + '</td>' +
-                            '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" > ' + data[0].Item_Code + '</td>' +
-                            '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
-                            '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
-                            '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
-                            '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
-                            '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
-                            '<td style="text-align: right;" ><input type="text" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
-                        '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 3% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
-                            '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
-                            '<td style="text-align:Right;"></td>' +
-                            '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
-                            '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' +
-                            '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                            '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
-                            '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
-                            '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
-                            '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' + 
-                            '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
-                            '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
-                            '</tr>';                            
-                        $('#tblDetails tbody').append(rows);
-                        //onkeyup = "CalculateSummarieDiscountAmountWise(' + rowIndex + ')"
-                        PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
-                            debugger;
-                            var parsedData = JSON.parse(data);
-                            var options = '<option value="0" >Please Select</option>';
+    debugger;
+    // Get patient info for requested quantity - moved outside forEach
+    var pat_Id = $('#ddlPatient_No').val();
+    var PatNo = $('#ddlPatient_No option:selected').text();
+    var parts = PatNo.split('-');
+    var prefix = parts.length > 0 ? parts[0] : '';
 
-                            $.each(parsedData, function (key, value) {
-                                options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
-                            });
-                            $('#ddlbatch' + (rowIndex + 1)).html(options);
-                        }, function (error) {
-                            alert(error.get_message());
-                        });
-                        setTimeout(function () {
-                            $('#medName').select2('close');
-                            $('input[name="txtQty"]').focus().select();
-                        }, 5);
-                        CalculateSummarieDiscountPerWise(rowIndex);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("Error fetching medicine details: " + error);
-                    }
+    itemIds.forEach(function (itemCode) {
+        debugger;
+        var itemId = itemCode;
+        var rowIndex = parseInt($('#tblDetails tbody tr').length);
+        var rows;
+        $.ajax({
+            type: "post",
+            url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
+            data: JSON.stringify({
+                "itemId": itemId,
+                "patientId": pat_Id,
+                "visitType": prefix
+            }),
+            dataType: 'JSON',
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (msg) {
+                var length = $("#tblDetails tr:gt(0)").length;
+                $('#Table_1 tr:gt(0)').remove();
+                var data = JSON.parse(msg.d);
+
+                debugger;
+                var Uomqty = data[0].UOM_Qty;
+                if (Uomqty == null) {
+                    Uomqty = 0;
+                } else {
+                    Uomqty = data[0].UOM_Qty;
+                }
+                var SaleRate = data[0].Sale_Rate;
+                if (SaleRate == null) {
+                    SaleRate = 0;
+                } else {
+                    SaleRate = data[0].Sale_Rate;
+                }
+                var date = data[0].ExpiryDate
+                var discountBlock = data[0].Discount_Block;
+                var isDiscountDisabled = (discountBlock == 1 || discountBlock === true);
+                var requestedQty = (data[0].RequestedQty && data[0].RequestedQty > 0) ? data[0].RequestedQty : 0;
+                var warehouse = $("#ddlWarehouse").val()
+                var disDisabledAttr = isDiscountDisabled ? 'disabled' : '';
+                date = moment(date).format('D-MMM-YYYY');
+
+                rows =
+                    '<tr><td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="ItemID" id="ItemID" > ' + data[0].Item_ID + '</td>' +
+                    '<td> ' + (rowIndex + 1) + '</td>' +
+                    '<td style="display:none;"><input type="hidden" value="' + data[0].Item_Code + '" name="ItemIDcode" id="ItemIDcode" > ' + data[0].Item_Code + '</td>' +
+                    '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
+                    '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
+                    '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +                 
+                    '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                    '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
+                      '<td style="text-align: right;" ><input type="text" disabled value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
+                    '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +
+                    '<td><input type="text" readonly name="DisAmount"' + disDisabledAttr + ' class="height_height orderchangeDiscount" value="" style="width: 60px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;"  /></td>' +
+                    '<td style="text-align:Right;"></td>' +
+                    '<td><select id="ddlbatch' + (rowIndex + 1) + '" name="ddlbatch" onchange="updateStock(this)" Tabindex="' + (12 + (rowIndex * 3)) + '"></select></td>' +
+                    '<td style="display:none;"><input type="text"  id="txtCGSRate' + (rowIndex + 1) + '" value="' + data[0].CGSRate + '" name="txtCGSRate" class="" /> </td>' +
+                    '<td><input type="text" disabled name="exp_date" id="exp_date' + (rowIndex + 1) + '" class=""  style="width: 87px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                    '<td><input type="text" disabled name="LineDiscount" class="" value="0" style="width: 76px !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" /></td>' +
+                    '<td style="display:none;"><input type="text" disabled id="BatchNo' + (rowIndex + 1) + '" name="BatchNo" class="" value="' + data[0].BatchNum + ' "/> </td>' +
+                    '<td style="display:none;"><input type="text"  id="txtCGSAmount' + (rowIndex + 1) + '" name="txtCGSAmount" class="" value="0"/> </td>' +
+                    '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' +
+                    '<td><input type="text" name="Remarks" class="" value="" style="width: 100% !important; height: 22px; text-align: left;" /></td>' +
+                    '<td style="text-align: center;"><input type="text" name="ReqQty" value="' + requestedQty + '" style="width: 60px !important;text-align: center;background-color:#f5f5f5;" readonly /></td>' +
+                    '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a> </td>' +
+                    '</tr>';
+                $('#tblDetails tbody').append(rows);
+
+                PageMethods.GetBatchNumbers(itemId, warehouse, function (data) {
+                    debugger;
+                    var parsedData = JSON.parse(data);
+                    var options = '<option value="0" >Please Select</option>';
+
+                    $.each(parsedData, function (key, value) {
+                        options += '<option value="' + value.BatchNum + '" >' + value.BatchNum + '</option>';
+                    });
+                    $('#ddlbatch' + (rowIndex + 1)).html(options);
+                }, function (error) {
+                    alert(error.get_message());
                 });
-            });
-        }
+                setTimeout(function () {
+                    $('#medName').select2('close');
+                    $('input[name="txtQty"]').focus().select();
+                }, 5);
+                CalculateSummarieDiscountPerWise(rowIndex);
+            },
+            error: function (xhr, status, error) {
+                console.log("Error fetching medicine details: " + error);
+            }
+        });
+    });
+}
         function updateStock(anchors) {
             debugger;
             var row = $(anchors).closest('tr');
@@ -3155,7 +3267,6 @@
             );
         }
 
-
         function LoadWarehousesforSaleReturn() {
             var $dropdown = $('#ddl_Warehouse');
             $dropdown.empty();
@@ -3168,6 +3279,8 @@
                             var item = response[0];
                             $dropdown.append('<option value="' + item.Value + '" selected="selected">' + item.Text + '</option>');
                             $("#ddl_Warehouse").attr("disabled", true);
+                            // Manually trigger the change to enable invoice number and items dropdowns
+                            $("#ddl_Warehouse").trigger('change');
                         } else {
                             // Multiple or zero warehouses: show "Please Select"
                             $dropdown.append('<option value="0">Please Select</option>');
@@ -3186,6 +3299,11 @@
 
                     // Reinitialize Select2 after populating
                     $dropdown.select2();
+
+                    // Bind change event
+                    $dropdown.off('change').on('change', function () {
+                        DisableSaleReturnWareHouse();
+                    });
                 },
                 function (error) {
                     console.log('Error loading warehouses:', error);
@@ -3210,35 +3328,35 @@
         }
         function DisableSaleReturnWareHouse() {
             debugger;
+            var warehouse = $("#ddl_Warehouse").val();
 
-            var mro = $("#txtMRNo").val();
-
-            if (!mro) {   // handles "", null, undefined
-                getbatchfrom_grn();
+            // Only disable warehouse if it's selected and valid
+            if (warehouse && warehouse != "0") {
+                $("#ddl_Warehouse").prop('disabled', true);
+                // Enable the invoice number and items dropdowns when warehouse is selected
+                $("#ddlInvoiceNumber").prop('disabled', false);
+                $("#ddlSaleReturnItems").prop('disabled', false);
+            } else {
+                $("#ddl_Warehouse").prop('disabled', false);
+                $("#ddlInvoiceNumber").prop('disabled', true);
+                $("#ddlSaleReturnItems").prop('disabled', true);
             }
-
-            $("#ddl_Warehouse").prop('disabled', true);
-            $("#ddlInvoiceNumber").prop('disabled', false);
-            $("#ddlSaleReturnItems").prop('disabled', false);
-
         }
 
 
-        
-         function LoadPatientNo() 
-        {
-              var optionpat = '';
-              PageMethods.AllPharmaPatients(function (Tests) {
-                  optionpat = '<option value="0">Please Select</option>';
-                  $.each(JSON.parse(Tests), function (key, value) {
-                      optionpat += '<option value="' + value.id + '" >' + value.mr_no_sequence + '</option>';
-                  });
-                  $('#ddlpat_no').html(optionpat);
-                  $('#ddlpat_no').select2();
-              });
-         }
-         function getInvoiceNo_PatWise() 
-         {
+
+        function LoadPatientNo() {
+            var optionpat = '';
+            PageMethods.AllPharmaPatients(function (Tests) {
+                optionpat = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionpat += '<option value="' + value.id + '" >' + value.mr_no_sequence + '</option>';
+                });
+                $('#ddlpat_no').html(optionpat);
+                $('#ddlpat_no').select2();
+            });
+        }
+        function getInvoiceNo_PatWise() {
             $('#ddlInvoiceNumber').val(null).trigger('change');
             loadInvoiceNumbers();
         }
@@ -3546,31 +3664,32 @@
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped" id="tblDetails">
-            <thead>
-                <tr>
-                    <th style="/*width: 32px; */text-align: left;">Sr. </th>
-                    <th style="text-align: left; width: 220px;">Description </th>
-                    <th style="text-align: left; width: 43px;">Pack Qty </th>
-                    <th style="/*width: 25px;*/ text-align: left;">Qty </th>
-                    <th style="width: 75px; text-align: left;">Stock</th>
-                    <th style="width: 60px; text-align: right;">Rate </th>
-                    <th style="/*width: 60px;*/ text-align: left;">Dis % </th>
-                    <th style="width: 70px; text-align: left;">Dis Amount </th>
-                    <th style="width: 60px; text-align: left;">Net Amount </th>
-                    <th style="/*width: 60px;*/ text-align: left;">BatchNo</th>
-                    <th style="width: 95px; text-align: left;">Expiry Date </th>
-                    <th style="/*width: 80px; */text-align: left;">Line Discount</th>
-                    <th style="/*width: 80px; */text-align: left;">Remarks</th>
-                    <th style="/*width: 53px; */text-align: left;">Action </th>
-                </tr>
-            </thead>
-            <tbody id="tblbody">
-            </tbody>
-        </table>
-    </div>
-
+  <div class="table-responsive" style="overflow-x: auto; overflow-y: visible; width: 100%;">
+    <table class="table table-bordered table-striped" id="tblDetails" style="min-width: 1300px; width: 100%; border-collapse: collapse; table-layout: auto;">
+        <thead>
+    <tr>
+        <th style="width: 40px; white-space: nowrap;">Sr.</th>
+        <th style="min-width: 200px; white-space: nowrap;">Description</th>
+        <th style="width: 70px; white-space: nowrap;">Pack Qty</th>
+        <th style="width: 60px; white-space: nowrap;">Qty</th>
+        <th style="width: 60px; white-space: nowrap;">Stock</th>
+        <th style="width: 70px; white-space: nowrap;">Rate</th>
+        <th style="width: 60px; white-space: nowrap;">Dis %</th>
+        <th style="width: 80px; white-space: nowrap;">Dis Amount</th>
+        <th style="width: 90px; white-space: nowrap;">Net Amount</th>
+        <th style="min-width: 40px; white-space: nowrap;">BatchNo</th>
+        <th style="min-width: 95px; white-space: nowrap;">Expiry Date</th>
+        <th style="width: 80px; white-space: nowrap;">Line Discount</th>
+        <th style="min-width: 100px; white-space: nowrap;">Remarks</th>
+        <th style="width: 70px; white-space: nowrap;">Req Qty</th>
+        <th style="width: 50px; white-space: nowrap;">Action</th>
+    </tr>
+</thead>
+        <tbody id="tblbody">
+            <!-- Medicine rows will appear here -->
+        </tbody>
+    </table>
+</div>
 
     <div id="SearchModel" class="modal fade-in" role="dialog">
         <div class="modal-dialog">

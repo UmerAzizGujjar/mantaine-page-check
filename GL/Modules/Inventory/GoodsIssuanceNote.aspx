@@ -657,10 +657,13 @@
                 '<td style="padding-top: 2px;display:none;"><input type="hidden" value="' + IsBatch + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBatch' + length + '" name="txtBatch"/></td>'
                 + '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td></tr>';
 
-            $("#tblStoreIssueBote tbody").append(rows);
-            if ($('#txtBlncQty' + length).val() == 0) {
-                $('#txtIssueQty' + length).prop('disabled', true);
+            if (Qty == 0 || Qty == "0" || Qty == null) {
+                return false; 
             }
+            $("#tblStoreIssueBote tbody").append(rows);
+            //if ($('#txtBlncQty' + length).val() == 0) {
+               // $('#txtIssueQty' + length).prop('disabled', true);
+            //}
         }
         debugger;
         function append(anchor) {
@@ -760,10 +763,16 @@
                     '<td style="display:none;padding-top: 2px;"><input type="hidden"  style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtCGSAmount' + length + '" name="txtCGSAmount"/></td>' +
                     '<td style="padding-top: 2px;display:none;"><input type="hidden" value="' + IsBatch + '" style=" font-size: 10px;height: 22px;  width: 64px!important;margin-top: 2px;margin-bottom: 0px;margin-left: 4px;" id="txtBatch' + length + '" name="txtBatch"/></td>'
                     + '<td style="padding-top: 9px;padding-top: 6px !important;"> <a href="#" onclick="ExcludeFromPayment(this)">Delete</a></td></tr>';
-                $("#tblStoreIssueBote tbody").append(rows);
-                if ($('#txtBlncQty' + length).val() == 0) {
-                    $('#txtIssueQty' + length).prop('disabled', true);
+
+                var balanceQty = parseFloat(balance) || 0;
+                if (balanceQty <= 0) {
+                    return false; 
                 }
+
+                $("#tblStoreIssueBote tbody").append(rows);
+                //if ($('#txtBlncQty' + length).val() == 0) {
+                   // $('#txtIssueQty' + length).prop('disabled', true);
+               // }
                 length++;
             }
         }
@@ -919,6 +928,9 @@
                 var result = JSON.parse(res);
                 selectedOptions = result;
                 $(result).each(function (key, value) {
+
+                    
+
                     if (result[key].BatchNum == null) {
                         result[key].BatchNum = "";
                     }

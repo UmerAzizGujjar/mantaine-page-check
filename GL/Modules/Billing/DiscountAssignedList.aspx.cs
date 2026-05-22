@@ -35,6 +35,7 @@ namespace PMS.Modules.Billing
                               {
                                   Discount_Assign_ID = p.Discount_Assign_ID,
                                   mr_no_sequence = rp.mr_no_sequence,
+                                  Bill_ID = p.Bill_ID,
                                   Full_Name = rp.Full_Name,
                                   Patient_ID = rp.pat_id,
                                   Discount_Date = p.Discount_Date,
@@ -161,6 +162,82 @@ namespace PMS.Modules.Billing
             catch (Exception ex)
             {
                 return Newtonsoft.Json.JsonConvert.SerializeObject(new { error = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string ApproveDiscountsBulk(string billIdsJson)
+        {
+            try
+            {
+                var billIds = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(billIdsJson);
+
+                if (billIds == null || billIds.Count == 0)
+                    return "Error: No bills selected for approval.";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    foreach (string billIdStr in billIds)
+                    {
+                        int billId = Convert.ToInt32(billIdStr);
+
+                        var discountMaster = db.Discount_Assign_Bills
+                                               .OrderByDescending(d => d.Creation_Date)
+                                               .FirstOrDefault(d => d.Bill_ID == billId);
+
+                        if (discountMaster == null) continue; // Skip if not found
+
+                        // Skip if already approved
+                        if (discountMaster.Status == "Approved") continue;
+
+                        decimal totalAmount = discountMaster.Total_amount ?? 0;
+                        decimal totalDiscount = discountMaster.Total_Discount;
+
+                        // Update Ar_Billings
+                        var arBill = db.Ar_Billings.FirstOrDefault(b => b.Bill_ID == billId);
+                        if (arBill != null)
+                        {
+                            arBill.Discount_Amount = totalDiscount;
+                            arBill.Received_Amount = totalAmount;
+                            arBill.Cash_In_Hand = totalAmount;
+                            arBill.Net_Amount = totalAmount;
+                        }
+
+                        // Update Receipts
+                        var arReceipt = db.Receipts.FirstOrDefault(r => r.Bill_ID == billId);
+                        if (arReceipt != null)
+                        {
+                            arReceipt.Receipt_Amount = totalAmount;
+                        }
+
+                        // Update Discount details
+                        var approvedDetails = db.Discount_Assign_Detail_bills
+                                                .Where(d => d.Discount_Assign_ID == discountMaster.Discount_Assign_ID)
+                                                .ToList();
+
+                        foreach (var service in approvedDetails)
+                        {
+                            var arBillDetail = db.Ar_Billing_Details
+                                                 .FirstOrDefault(d => d.Bill_Details_ID == service.Bill_Detail_ID);
+
+                            if (arBillDetail != null)
+                            {
+                                arBillDetail.Discount_Percentage = service.Discount_Percentage;
+                                arBillDetail.Discount_Amount = service.Discount_Amount;
+                                arBillDetail.Net_Amount = service.Net_Amount;
+                            }
+                        }
+
+                        discountMaster.Status = "Approved";
+                    }
+
+                    db.SubmitChanges();
+                    return "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
             }
         }
     }

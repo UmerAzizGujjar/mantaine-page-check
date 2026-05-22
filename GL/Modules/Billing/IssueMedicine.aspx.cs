@@ -124,6 +124,7 @@ namespace PMS
                              where ip.Patient_ID == Pat_Id
                              && ip.Item_Code != null
                              && ip.Item_Code != "0"
+                                && (ip.is_rejected == false || ip.is_rejected == null)
                              select ip.Item_Code).ToList();
 
             var result = new
@@ -142,6 +143,7 @@ namespace PMS
                              where ip.Patient_ID == Pat_Id
                              && ip.Item_Code != null
                              && ip.Item_Code != "0"
+                             && (ip.is_rejected == false || ip.is_rejected == null)
                              select ip.Item_Code).ToList();
             return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 
@@ -180,6 +182,7 @@ namespace PMS
                              join o in db.Out_Patients
                                 on ip.Patient_ID equals o.Out_Patient_ID
                              where o.Out_Patient_ID == Pat_Id
+                                && (ip.is_rejected == false || ip.is_rejected == null)
                              select ip.Item_Code).ToList();
 
             var result = new
@@ -455,7 +458,83 @@ namespace PMS
             }
             return result;
         }
-       
+        [WebMethod]
+        public static string RejectMedicineRequest(string MedicineId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    int medicineID = Convert.ToInt32(MedicineId);
+
+                    // First, get the medicine to find its Patient_ID (which is the Visit ID)
+                    var medicineRecord = db.In_Patient_Medicines
+                        .FirstOrDefault(m => m.In_Patient_Medicine_ID == medicineID);
+
+                    if (medicineRecord == null)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            Success = false,
+                            Message = "Record not found."
+                        });
+                    }
+
+                    // Get ALL medicines for the SAME visit (same Patient_ID)
+                    var allMedicinesForVisit = db.In_Patient_Medicines
+                        .Where(m => m.Patient_ID == medicineRecord.Patient_ID
+                                 && (m.Status == null || m.Status != "rejected"))
+                        .ToList();
+
+                    if (!allMedicinesForVisit.Any())
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            Success = false,
+                            Message = "No pending medicines found for this visit."
+                        });
+                    }
+
+                    // Check if already rejected
+                    bool alreadyRejected = allMedicinesForVisit.All(m => m.Status == "rejected");
+                    if (alreadyRejected)
+                    {
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            Success = false,
+                            Message = "Already rejected."
+                        });
+                    }
+
+                    // Reject ALL medicines for this visit
+                    int rejectedCount = 0;
+                    foreach (var med in allMedicinesForVisit)
+                    {
+                        med.Status = "rejected";
+                        med.is_rejected = true;
+                        med.reject_by = AppConfig.UserID;
+                        //rejectedCount++;
+                    }
+
+                    db.SubmitChanges();
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        Success = true,
+                        Message = $"{rejectedCount} medicine request(s) Closed successfully.",
+                        RejectedCount = rejectedCount
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    Success = false,
+                    Message = "Error: " + ex.Message
+                });
+            }
+        }
         [WebMethod]
         public static string Preview(string search)
         {
@@ -496,19 +575,31 @@ namespace PMS
             return result;
         }
 
+        //[WebMethod]
+        //public static string MedicineDetailgetfromOPD(int itemId)
+        //{
+        //    string result = string.Empty;
+
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var query = db.spMedicinesDetailsfromopd(itemId).ToList();
+        //        result = (new JavaScriptSerializer()).Serialize(query).ToString();
+        //    }
+        //    return result;
+        //}
         [WebMethod]
-        public static string MedicineDetailgetfromOPD(int itemId)
+        public static string MedicineDetailgetfromOPD(int itemId, int patientId = 0, string visitType = "")
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetailsfromopd(itemId).ToList();
-                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+                var query = db.spMedicinesDetailsfromopd(itemId, patientId, visitType).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query);
             }
             return result;
         }
-     
+
         [WebMethod]
         public static string GetOutPatientIDByOPDNo(string opdNo)
         {

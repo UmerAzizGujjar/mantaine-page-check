@@ -249,6 +249,8 @@
     <Content Include="Modules\Billing\DiscountAssignedList.aspx" />
     <Content Include="Modules\Billing\FBRBillingView.aspx" />
     <Content Include="Modules\Billing\DiscountAssigned.aspx" />
+    <Content Include="Modules\Billing\IssueCathLabItems.aspx" />
+    <Content Include="Modules\Billing\IssueCathLabItemsView.aspx" />
     <Content Include="Modules\Billing\ZakatDonationForm.aspx" />
     <Content Include="Modules\Billing\ZakatDonationList.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
@@ -26059,6 +26061,20 @@
     </Compile>
     <Compile Include="Modules\Billing\DiscountAssigned.aspx.designer.cs">
       <DependentUpon>DiscountAssigned.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\IssueCathLabItems.aspx.cs">
+      <DependentUpon>IssueCathLabItems.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\IssueCathLabItems.aspx.designer.cs">
+      <DependentUpon>IssueCathLabItems.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\IssueCathLabItemsView.aspx.cs">
+      <DependentUpon>IssueCathLabItemsView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\IssueCathLabItemsView.aspx.designer.cs">
+      <DependentUpon>IssueCathLabItemsView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\ZakatDonationForm.aspx.cs">
       <DependentUpon>ZakatDonationForm.aspx</DependentUpon>
