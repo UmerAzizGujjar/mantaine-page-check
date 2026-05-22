@@ -2805,7 +2805,7 @@
                             'data-mrno="' + value.mr_no_sequence + '">' +
                             '<i class="fa fa-edit fa-2x" style="color:green;"></i>' +
                             '</a>&nbsp;&nbsp;' +
-                            '<a href="#" onclick="RejectMedicineRequest(\'' + value.In_Patient_Medicine_ID + '\', this)" title="Reject">' +
+                            '<a href="#" onclick="RejectMedicineRequest(\'' + value.In_Patient_Medicine_ID + '\', this)" title="Closed">' +
                             '<i class="fa fa-times-circle fa-2x" style="color:red;"></i>' +
                             '</a>';
                     } else {
@@ -2843,12 +2843,12 @@
                 debugger;
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You want to reject this medicine request?",
+                    text: "You want to Close this medicine request?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, reject it!'
+                    confirmButtonText: 'Yes, Close it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         PageMethods.RejectMedicineRequest(medicineId, function(response) {
@@ -2857,7 +2857,7 @@
                             if (result.Success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Rejected!',
+                                    title: 'Closed!',
                                     text: result.Message,
                                     showConfirmButton: false,
                                     timer: 2000
