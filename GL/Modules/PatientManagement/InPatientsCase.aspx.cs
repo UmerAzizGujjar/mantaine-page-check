@@ -5542,119 +5542,137 @@ namespace PMS
         [WebMethod]
         public static string SaveTest(string tlist)
         {
-            string LabtestID = "";
-            Laboratory_Test lt = new Laboratory_Test();
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             JavaScriptSerializer oJS = new JavaScriptSerializer();
             var record = oJS.Deserialize<LabTest>(tlist);
-            /********************Deleting Previous 0 Value Saved Rows.***********************************/
-            List<Laboratory_Test> Laboratory_TestList = db.Laboratory_Tests.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "InPatient").ToList();
-            db.Laboratory_Tests.DeleteAllOnSubmit(Laboratory_TestList);
-            db.SubmitChanges();
-            if (record.PatientID != null && record.PatientID != "(New)")
+
+            /******************** 1. Deleting Previous 0 Value Saved Rows *******************/
+            List<Laboratory_Test> invalidTests = db.Laboratory_Tests
+                .Where(i => i.Patient_ID == 0 && i.Transaction_Type == "InPatient").ToList();
+            db.Laboratory_Tests.DeleteAllOnSubmit(invalidTests);
+            db.SubmitChanges(); // Clean up orphans first
+
+            /******************** 2. Master Record Management *******************************/
+            // Safely parse the Patient ID to prevent crashes if UI sends "(New)"
+            int patientId = 0;
+            int.TryParse(record.PatientID, out patientId);
+
+            string LabtestID = "";
+            Laboratory_Test masterTest = null;
+
+            if (patientId > 0)
             {
-                var lstTests = (from t in db.Laboratory_Tests
-                                where t.Patient_ID == int.Parse(record.PatientID) && t.Transaction_Type == "InPatient"
-                                select t).FirstOrDefault();
-                if (lstTests != null)
-                {
-                    lstTests.Created_Time = DateTime.Now;
-                    LabtestID = lstTests.Lab_Test_ID.ToString();
-                }
-                else
-                {
-                    lt.Patient_ID = Convert.ToInt32(record.PatientID);
-                    lt.Transaction_Type = "InPatient";
-                    lt.Created_Time = DateTime.Now;
-                    db.Laboratory_Tests.InsertOnSubmit(lt);
-                    db.SubmitChanges();
-                    LabtestID = lt.Lab_Test_ID.ToString();
-                }
+                masterTest = db.Laboratory_Tests.FirstOrDefault(t =>
+                    t.Patient_ID == patientId && t.Transaction_Type == "InPatient");
+            }
+
+            if (masterTest != null)
+            {
+                masterTest.Created_Time = DateTime.Now; // Update existing
             }
             else
             {
-                lt.Patient_ID = Convert.ToInt32(record.PatientID);
-                lt.Transaction_Type = "InPatient";
-                lt.Created_Time = DateTime.Now;
-                db.Laboratory_Tests.InsertOnSubmit(lt);
-                db.SubmitChanges();
-                LabtestID = lt.Lab_Test_ID.ToString();
+                // Create brand new master record
+                masterTest = new Laboratory_Test();
+                masterTest.Patient_ID = patientId;
+                masterTest.Transaction_Type = "InPatient";
+                masterTest.Created_Time = DateTime.Now;
+                db.Laboratory_Tests.InsertOnSubmit(masterTest);
             }
-            /**********Getting Previous details to delete**************/
-            List<Lab_Test_Detail> lstTestDetails = db.Lab_Test_Details.Where(t => t.Lab_Test_ID == int.Parse(LabtestID)).ToList();
-            var labID = int.Parse(LabtestID);
-            Discharge_Detail dischargeLine = null;
 
+            // Save master record so we have a valid Lab_Test_ID for the details
+            db.SubmitChanges();
+            LabtestID = masterTest.Lab_Test_ID.ToString();
+            int labID = masterTest.Lab_Test_ID;
+
+            /******************** 3. Fetch Data Once (Performance Fix) **********************/
+            // Fetch the actual patient registration ID ONCE, outside the loop
+            var reg_id = (from rg in db.Reg_patients
+                          join p in db.In_Patients on rg.pat_id equals p.Patient_ID
+                          where p.In_Patient_ID == patientId
+                          orderby p.Reg_PatId descending
+                          select p.Patient_ID).FirstOrDefault();
+
+            // Load existing detail records into memory
+            List<Lab_Test_Detail> existingDetails = db.Lab_Test_Details.Where(t => t.Lab_Test_ID == labID).ToList();
+
+            // Create a list to track which ones to delete. We start with ALL existing records, 
+            // and remove them from this list as we find matches.
+            List<Lab_Test_Detail> detailsToDelete = existingDetails.ToList();
+
+            /******************** 4. Sync Details (Update or Insert) ************************/
             foreach (var test in record.TestList)
             {
-                Lab_Test_Detail ltd = new Lab_Test_Detail();
-                ltd.Lab_Test_ID = labID;
-                ltd.Patient_ID = Convert.ToInt32(record.PatientID);
-                ltd.Date = Convert.ToDateTime(test.Date);
-                ltd.Doctor = test.Doctor.ToString();
-                var reg_id = (from rg in db.Reg_patients
-                              join p in db.In_Patients on rg.pat_id equals p.Patient_ID
-                              where p.In_Patient_ID == int.Parse(record.PatientID)
-                              orderby p.Reg_PatId descending
-                              select p.Patient_ID).FirstOrDefault();
-                ltd.Special_Tests = test.Special_Tests;
-                ltd.Rotation_ID = test.RotationID;
-                ltd.Catagory_ID = test.Catagory_ID;
-                ltd.L_R_Rotation_ID = test.L_R_Rotation_ID;
-                ltd.Dept_ID = test.Dept_ID;
-                ltd.Actual_Patient_ID = reg_id;
-                ltd.Area_Of_Interest = test.Area_Of_Interest;
-                ltd.Discharge = false;
-                ltd.Test_ID = Convert.ToInt32(test.TestID);
-                if (test.Is_Result != "")
-                    ltd.Is_Result = Convert.ToBoolean(test.Is_Result);
-                if (test.IsBIllied != "")
-                    ltd.IsBilled = Convert.ToBoolean(test.IsBIllied);
-                if (test.RecievedID != "")
-                    ltd.Recieved_ID = test.RecievedID;
-                bool Duplicate = false;
-                db.Lab_Test_Details.InsertOnSubmit(ltd);
-                db.SubmitChanges();
+                int currentTestID = Convert.ToInt32(test.TestID);
 
+                // Find match based on the original code's logic (Match by Test_ID or Category_ID)
+                var matchedExistingRecord = existingDetails.FirstOrDefault(tst =>
+                    (currentTestID != 0 && tst.Test_ID == currentTestID) ||
+                    (currentTestID == 0 && tst.Catagory_ID == test.Catagory_ID)
+                );
 
-                Lab_Test_Detail chkasTest = lstTestDetails.Where(tst => tst.Test_ID == ltd.Test_ID && tst.Test_ID != 0 && tst.Lab_Test_ID == ltd.Lab_Test_ID).FirstOrDefault();
-
-                if (chkasTest != null)
+                if (matchedExistingRecord != null)
                 {
-                  
-                    ltd.Discharge = chkasTest.Discharge;
-                    
-                    db.SubmitChanges();
-                    dischargeLine = db.Discharge_Details.Where(d => d.Parent_Trans_ID == chkasTest.Lab_Test_Detail_ID && d.Transaction_Type == "Test").FirstOrDefault();
-                    Duplicate = true;
-                }
+                    // UPDATE: We found a match, so update its values
+                    matchedExistingRecord.Date = Convert.ToDateTime(test.Date);
+                    matchedExistingRecord.Doctor = test.Doctor.ToString();
+                    matchedExistingRecord.Actual_Patient_ID = reg_id;
+                    matchedExistingRecord.Special_Tests = test.Special_Tests;
+                    matchedExistingRecord.Rotation_ID = test.RotationID;
+                    matchedExistingRecord.Catagory_ID = test.Catagory_ID;
+                    matchedExistingRecord.L_R_Rotation_ID = test.L_R_Rotation_ID;
+                    matchedExistingRecord.Dept_ID = test.Dept_ID;
+                    matchedExistingRecord.Area_Of_Interest = test.Area_Of_Interest;
 
-                if (chkasTest == null)
+                    if (!string.IsNullOrEmpty(test.Is_Result))
+                        matchedExistingRecord.Is_Result = Convert.ToBoolean(test.Is_Result);
+                    if (!string.IsNullOrEmpty(test.IsBIllied))
+                        matchedExistingRecord.IsBilled = Convert.ToBoolean(test.IsBIllied);
+                    if (!string.IsNullOrEmpty(test.RecievedID))
+                        matchedExistingRecord.Recieved_ID = test.RecievedID;
+
+                    // Remove this record from our deletion tracker so it survives
+                    detailsToDelete.Remove(matchedExistingRecord);
+                }
+                else
                 {
-                    var chkasCategory = lstTestDetails.Where(tst => tst.Catagory_ID == ltd.Catagory_ID && tst.Test_ID == 0 && tst.Lab_Test_ID == ltd.Lab_Test_ID).FirstOrDefault();
-                    if (chkasCategory != null)
-                    {
-                     
-                        ltd.Discharge = chkasCategory.Discharge;
-                       
-                        db.SubmitChanges();
-                        dischargeLine = db.Discharge_Details.Where(d => d.Parent_Trans_ID == chkasCategory.Lab_Test_Detail_ID && d.Transaction_Type == "Test").FirstOrDefault();
-                        Duplicate = true;
-                    }
+                    // ADD: This is a brand new test, so insert it
+                    Lab_Test_Detail newDetail = new Lab_Test_Detail();
+                    newDetail.Lab_Test_ID = labID;
+                    newDetail.Patient_ID = patientId;
+                    newDetail.Date = Convert.ToDateTime(test.Date);
+                    newDetail.Doctor = test.Doctor.ToString();
+                    newDetail.Actual_Patient_ID = reg_id;
+                    newDetail.Special_Tests = test.Special_Tests;
+                    newDetail.Rotation_ID = test.RotationID;
+                    newDetail.Catagory_ID = test.Catagory_ID;
+                    newDetail.L_R_Rotation_ID = test.L_R_Rotation_ID;
+                    newDetail.Dept_ID = test.Dept_ID;
+                    newDetail.Area_Of_Interest = test.Area_Of_Interest;
+                    newDetail.Discharge = false;
+                    newDetail.Test_ID = currentTestID;
+
+                    if (!string.IsNullOrEmpty(test.Is_Result))
+                        newDetail.Is_Result = Convert.ToBoolean(test.Is_Result);
+                    if (!string.IsNullOrEmpty(test.IsBIllied))
+                        newDetail.IsBilled = Convert.ToBoolean(test.IsBIllied);
+                    if (!string.IsNullOrEmpty(test.RecievedID))
+                        newDetail.Recieved_ID = test.RecievedID;
+
+                    db.Lab_Test_Details.InsertOnSubmit(newDetail);
                 }
-                if (!Duplicate)
-                {
-
-
-                }
-
-                if (dischargeLine != null)
-                    dischargeLine.Parent_Trans_ID = ltd.Lab_Test_Detail_ID;
             }
 
-            /**********Deleting Previous details**************/
-            db.Lab_Test_Details.DeleteAllOnSubmit(lstTestDetails);
+            /******************** 5. Delete Missing Records *********************************/
+            // Any records left in 'detailsToDelete' were not sent in the UI payload
+            if (detailsToDelete.Any())
+            {
+                db.Lab_Test_Details.DeleteAllOnSubmit(detailsToDelete);
+            }
+
+            // Save everything in one single, efficient database transaction
             db.SubmitChanges();
+
             return "";
         }
 
