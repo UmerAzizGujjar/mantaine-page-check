@@ -2691,7 +2691,8 @@
                         $('#txtAmountReceived').attr('disabled',true);
                         $('#divBalance').hide();
                        
-
+
+
                     }
                     else {
                       

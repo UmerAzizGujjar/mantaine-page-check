@@ -2004,7 +2004,7 @@
 
                 '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                 '<td><input type="number" name="txtQty" value="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                 '<td><input type="number" name="txtQty" value="1" style="margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
                 '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
 
@@ -2118,7 +2118,7 @@
 
                 '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                '<td><input type="text" name="txtQty" value="1" min="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                '<td><input type="text" name="txtQty" value="1" min="1" style="margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
 
                 '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
@@ -2805,7 +2805,7 @@
                             'data-mrno="' + value.mr_no_sequence + '">' +
                             '<i class="fa fa-edit fa-2x" style="color:green;"></i>' +
                             '</a>&nbsp;&nbsp;' +
-                            '<a href="#" onclick="RejectMedicineRequest(\'' + value.In_Patient_Medicine_ID + '\', this)" title="Reject">' +
+                            '<a href="#" onclick="RejectMedicineRequest(\'' + value.In_Patient_Medicine_ID + '\', this)" title="Closed">' +
                             '<i class="fa fa-times-circle fa-2x" style="color:red;"></i>' +
                             '</a>';
                     } else {
@@ -2843,12 +2843,12 @@
                 debugger;
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You want to reject this medicine request?",
+                    text: "You want to Close this medicine request?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, reject it!'
+                    confirmButtonText: 'Yes, Close it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         PageMethods.RejectMedicineRequest(medicineId, function(response) {
@@ -2857,7 +2857,7 @@
                             if (result.Success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Rejected!',
+                                    title: 'Closed!',
                                     text: result.Message,
                                     showConfirmButton: false,
                                     timer: 2000

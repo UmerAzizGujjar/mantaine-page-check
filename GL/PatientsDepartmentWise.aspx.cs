@@ -3604,24 +3604,17 @@ namespace PMS
                     tr_Summary.Visible = false;
                     tr_Export.Visible = true;
                     tr1MedicalSubsidy.Visible = false;
-                    ddlDepartments.Visible = false;
-                    lblPatientType.Visible = false;
                     lblMultiSelect.Visible = false;
-                    ddlPatientType.Visible = false;
                     CashierRow.Visible = true;
-                    test_Cat.Visible = false;
-                    lblTestCategory.Visible = false;
-                    ddlcatagory.Visible = false;
-                    lblCashier.Text = "Performing Doctor";
                     optRw.Visible = true;
                     trDoctor.Visible = true;
-                    lblDoctor.Text = "Final Sign By";
                     AllowPatientRecord = false;
                     lblMedical.Visible = false;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     SetDepartent();
-                    dpROw.Visible = false;
+                    dpROw.Visible = true;
+                    
 
                     object valusets;
                     DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -3639,16 +3632,18 @@ namespace PMS
                     ddlShift.Visible = false;
 
 
+                    lblDoctor.Text = "Final Sign By";
                     object valuset;
                     DataBaseDataContext db2 = new DataBaseDataContext(DBClass.ConnectionString());
                     valuset = from d in db2.aspnet_Users
-                               select new { d.UserName, d.UserId };
+                              select new { d.UserName, d.UserId };
                     ddlDoctor.DataSource = valusets;
                     ddlDoctor.DataTextField = "UserName";
                     ddlDoctor.DataValueField = "UserId";
                     ddlDoctor.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlDoctor.DataBind();
 
+                    lblCashier.Text = "Performing Doctor";
                     DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
                     ddlcashier.DataSource = dt;
                     ddlcashier.DataValueField = "Emp_ID";
@@ -3667,7 +3662,59 @@ namespace PMS
                     ddlMainDepartment.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlMainDepartment.DataBind();
 
+
+                    ddlPatientType.Visible = true;
+                    lblPatientType.Visible = true;
+                    lblPatientType.Text = "Billing Doctor";
+
+                    DataTable du = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlPatientType.DataSource = du;
+                    ddlPatientType.DataValueField = "Emp_ID";
+                    ddlPatientType.DataTextField = "Emp_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlPatientType.DataBind();
+
+                    ddlDepartments.Visible = true;
+                    lblDepartment.Visible = true;
+                    lblDepartment.Text = "Acknowledged By";
+                    DataBaseDataContext dv = new DataBaseDataContext(DBClass.ConnectionString());
+                    valuset = from d in dv.aspnet_Users
+                              select new { d.UserName, d.UserId };
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "UserName";
+                    ddlDepartments.DataValueField = "UserId";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
+
+
+                    test_Cat.Visible = true;
+                    ddlcatagory.Visible = true;
+                    lblTestCategory.Visible = true;
+                    lblTestCategory.Text = "Prelim By";
+
+                    DataTable dw = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlcatagory.DataSource = dw;
+                    ddlcatagory.DataValueField = "Emp_Name";
+                    ddlcatagory.DataTextField = "Emp_Name";
+                    ddlcatagory.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlcatagory.DataBind();
+
+                    ddlReportType.Visible = true;
+                    lbservieType.Visible = true;
+                    lbservieType.Text = "Referring Consultant";
+
+                    DataTable dx = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlReportType.DataSource = dx;
+                    ddlReportType.DataValueField = "Emp_ID";
+                    ddlReportType.DataTextField = "Emp_Name";
+                    ddlReportType.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlReportType.DataBind();
+
+
                 }
+
+
+
                 if (this.PageTitle == "Student_Fee_Details_Report")
                 {
                     string x = "Student Fee Details Report";

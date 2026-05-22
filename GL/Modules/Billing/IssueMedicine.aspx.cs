@@ -521,7 +521,7 @@ namespace PMS
                     return new JavaScriptSerializer().Serialize(new
                     {
                         Success = true,
-                        Message = $"{rejectedCount} medicine request(s) rejected successfully.",
+                        Message = $"{rejectedCount} medicine request(s) Closed successfully.",
                         RejectedCount = rejectedCount
                     });
                 }

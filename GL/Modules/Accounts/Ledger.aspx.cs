@@ -152,6 +152,14 @@ namespace PMS
                         DateDiv.Visible = true;
                         break;
 
+                    case "Pharmacy_Stock_Consumption_Details":
+                        vendorDiv.Visible = false;
+                        stockDiv.Visible = true;
+                        vendorTypeDiv.Visible = false;
+                        accountDiv.Visible = false;
+                        DateDiv.Visible = true;
+                        break;
+
                     case "SIHBW":
                         vendorDiv.Visible = false;
                         vendorTypeDiv.Visible = false;
@@ -245,6 +253,10 @@ namespace PMS
 
                 case "Stock_Consumption_Details":
                     query = "ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + "";
+                    break;
+
+                case "Pharmacy_Stock_Consumption_Details":
+                    query = "ReportName=Pharmacy_Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + "";
                     break;
                 case "SIHBW":
                     query = "ReportName=PharmacyStockBatchWise&ReportTitle=Stock In Hand  From" + "&Stock=" + ddlStock.SelectedValue + "" + "&WareHouse=" + ddlWarehouse.SelectedValue;   //  excluded + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text 

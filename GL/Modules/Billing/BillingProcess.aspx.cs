@@ -199,7 +199,7 @@ namespace PMS
 
         //}
         [WebMethod]
-        public static string RejectLabTestDetail(string LabTestDetail_ID, string RejectionReason = "")
+        public static string RejectLabTestDetail(string LabTestDetail_ID)
         {
             try
             {
@@ -232,7 +232,7 @@ namespace PMS
 
                     // Set the rejection/close status using your columns
                     labTestDetail.is_Closed = true;           // Mark as closed
-                    labTestDetail.Close_Status = "Rejected";   // Set status to Rejected
+                    labTestDetail.Close_Status = "Closed";   // Set status to Rejected
                     labTestDetail.Close_by = AppConfig.UserID; // Set who closed it
 
                     // Optional: Store rejection reason if you have a column
@@ -953,7 +953,7 @@ namespace PMS
                                on lbtD.Test_ID equals lbTDdef.Test_ID
                                join p in db.Patients
                                on opat.Patient_ID equals p.Patient_ID
-                               where opat.Patient_ID == p.Patient_ID && p.Reg_PatId == Convert.ToInt32(PatientID) && (lbtD.IsBilled == null) && lbtM.Transaction_Type == "OutPatient"
+                               where opat.Patient_ID == p.Patient_ID && p.Reg_PatId == Convert.ToInt32(PatientID) && (lbtD.IsBilled == null) && lbtM.Transaction_Type == "OutPatient" && (lbtD.is_Closed == false || lbtD.is_Closed == null)
 
                                select new
                                {
@@ -988,7 +988,7 @@ namespace PMS
                                          join p in db.Patients
                                          on opat.Patient_ID equals p.Patient_ID
                                          where opat.Patient_ID == p.Patient_ID && lbtD.Test_ID == 0 && p.Reg_PatId == Convert.ToInt32(PatientID) && lbtD.IsBilled == null
-                                         && lbtM.Transaction_Type == "OutPatient"
+                                         && lbtM.Transaction_Type == "OutPatient" && (lbtD.is_Closed == false || lbtD.is_Closed == null)
                                          select new
                                          {
                                              lbtD.Lab_Test_ID,
@@ -1114,6 +1114,7 @@ namespace PMS
                                      && (lbtD.IsBilled == null || lbtD.IsBilled == false)
                                      && lbtM.Transaction_Type == "InPatient"
                                      && (opat.Discharge == false || opat.Discharge == null)
+                                     && (lbtD.is_Closed == false || lbtD.is_Closed == null)
                                select new
                                {
                                    lbtM.Lab_Test_ID,
@@ -1142,6 +1143,7 @@ namespace PMS
                                                && (lbtD.IsBilled == null || lbtD.IsBilled == false)
                                                && lbtM.Transaction_Type == "InPatient"
                                                && (opat.Discharge == false || opat.Discharge == null)
+                                               && (lbtD.is_Closed == false || lbtD.is_Closed == null)
                                          select new
                                          {
                                              lbtD.Lab_Test_ID,
@@ -1376,6 +1378,7 @@ namespace PMS
                                on opat.Patient_ID equals p.pat_id
                                where p.Patient_No == Convert.ToInt32(PatNo) && (lbtD.IsBilled == null || lbtD.IsBilled == false)
                                 && lbtM.Transaction_Type == "Emergency Patient"
+                                && (lbtD.is_Closed == false || lbtD.is_Closed == null)
                                select new
                                {
                                    lbtM.Lab_Test_ID,
@@ -1411,6 +1414,7 @@ namespace PMS
                                          join p in db.Reg_patients
                                           on opat.Patient_ID equals p.pat_id
                                          where opat.Patient_ID == p.pat_id && lbtD.Test_ID == 0 && p.Patient_No == Convert.ToInt32(PatNo) && (lbtD.IsBilled == null || lbtD.IsBilled == false) && lbtM.Transaction_Type == "Emergency Patient"
+                                         && (lbtD.is_Closed == false || lbtD.is_Closed == null)
                                          select new
                                          {
                                              lbtD.Lab_Test_ID,
