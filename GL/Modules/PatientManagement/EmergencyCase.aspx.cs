@@ -5046,7 +5046,7 @@ namespace PMS
             public string chkDiccharge { set; get; }
             public string ItemCode { get; set; }
         }
-      
+
 
         [WebMethod]
         public static string SaveMedicines(string MedicineDetails)
@@ -5055,66 +5055,72 @@ namespace PMS
             {
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
-             
 
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "Emergency Patient").ToList();
-                    List<In_Patient_Medicine> In_Patient_MedicineList2 = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "Emergency Patient Nursing Monitoring").ToList();
-                    db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
-                    db.SubmitChanges();
+                    // Get ALL existing medicine names for this patient
+                    var existingNames = db.In_Patient_Medicines
+                        .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "Emergency Patient")
+                        .Select(p => p.Medicine_Name.Trim())  // Trim to avoid spaces issues
+                        .ToList();
 
-                    db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList2);
-                    db.SubmitChanges();
+                    System.Diagnostics.Debug.WriteLine("=== SaveMedicines Debug ===");
+                    System.Diagnostics.Debug.WriteLine("Patient ID: " + MedicineDetail.PatientID);
 
-                    int couterNewRecords = 0;
-                
-
-                    if (MedicineDetail.PatientID != 0)
+                    foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
                     {
-                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "Emergency Patient").ToList();
-                        if (inPatmedicineList != null)
+                        string medicineName = newMed.Medicine_Name.Trim();
+
+                        // Only insert if name NOT in existing list
+                        if (!existingNames.Contains(medicineName))
                         {
-                            db.In_Patient_Medicines.DeleteAllOnSubmit(inPatmedicineList);
-                            couterNewRecords++;
+                            System.Diagnostics.Debug.WriteLine("INSERTING new medicine: " + medicineName);
+
+                            // Get the Item_Code from inventory
+                            string itemCode = newMed.ItemCode;
+                            var inventoryItem = db.INV_Items
+                                .Where(p => p.Description == newMed.Medicine_Name)
+                                .FirstOrDefault();
+
+                            if (inventoryItem != null)
+                            {
+                                itemCode = inventoryItem.Item_ID.ToString();
+                            }
+
+                            In_Patient_Medicine newMedicine = new In_Patient_Medicine()
+                            {
+                                Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
+                                Item_Code = itemCode,
+                                Medicine_Name = medicineName,
+                                Transaction_Type = "Emergency Patient",
+                                Medicine_Date = newMed.Medicine_Date,
+                                Oral = newMed.Oral,
+                                Injections = newMed.Injection,
+                                Dosage_From = newMed.Dosage_From,
+                                AttendingParamedical_Staff = newMed.AttendingParamedical_Staff,
+                                Frequency = newMed.Frequency,
+                                Dosage_Qty = newMed.Dosage_Qty,
+                                Other_Instruction = newMed.Other_Instruction,
+                                Nurse_Name = newMed.Nurse_Name
+                            };
+
+                            db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("SKIPPING existing medicine: " + medicineName);
                         }
                     }
-                   
-                    couterNewRecords = 0;
-                   
-                    foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
-                    {
-                        In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
-                        {
-
-                            Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
-                            Item_Code = oIn_Patient_Medicine.ItemCode,
-                            Medicine_Name = oIn_Patient_Medicine.Medicine_Name,
-                            Transaction_Type = "Emergency Patient",
-                            Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
-                            Oral = oIn_Patient_Medicine.Oral,
-                            Injections = oIn_Patient_Medicine.Injection,
-
-                            Dosage_From = oIn_Patient_Medicine.Dosage_From,
-                            AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
-                            Frequency = oIn_Patient_Medicine.Frequency,
-                            Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
-                            Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
-                             Nurse_Name = oIn_Patient_Medicine.Nurse_Name,
-                        };
-                        db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
-                        couterNewRecords++;
-                    }
-                    
                     db.SubmitChanges();
+                    System.Diagnostics.Debug.WriteLine("=== SaveMedicines Complete ===");
                 }
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine("SaveMedicines Error: " + ex.Message);
             }
             return "";
         }
-
         [WebMethod]
         public static string SaveMedicinesMonitoring(string MedicineDetails)
         {
@@ -5122,64 +5128,73 @@ namespace PMS
             {
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
-             
 
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "Emergency Patient Nursing Monitoring").ToList();
-                  
-                    db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
-                    db.SubmitChanges();
+                    // Get ALL existing medicine monitoring names for this patient
+                    var existingNames = db.In_Patient_Medicines
+                        .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "Emergency Patient Nursing Monitoring")
+                        .Select(p => p.Medicine_Name.Trim())  // Trim to avoid spaces issues
+                        .ToList();
 
+                    System.Diagnostics.Debug.WriteLine("=== SaveMedicinesMonitoring Debug ===");
+                    System.Diagnostics.Debug.WriteLine("Patient ID: " + MedicineDetail.PatientID);
 
-                    int couterNewRecords = 0;
-                  
-
-                    if (MedicineDetail.PatientID != 0)
+                    foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
                     {
-                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "Emergency Patient Nursing Monitoring").ToList();
-                        if (inPatmedicineList != null)
+                        string medicineName = newMed.Medicine_Name.Trim();
+
+                        // Only insert if name NOT in existing list
+                        if (!existingNames.Contains(medicineName))
                         {
-                            db.In_Patient_Medicines.DeleteAllOnSubmit(inPatmedicineList);
-                            couterNewRecords++;
+                            System.Diagnostics.Debug.WriteLine("INSERTING new monitoring record: " + medicineName);
+
+                            // Get the Item_Code from inventory
+                            string itemCode = newMed.ItemCode;
+                            var inventoryItem = db.INV_Items
+                                .Where(p => p.Description == newMed.Medicine_Name)
+                                .FirstOrDefault();
+
+                            if (inventoryItem != null)
+                            {
+                                itemCode = inventoryItem.Item_ID.ToString();
+                            }
+
+                            In_Patient_Medicine newMedicine = new In_Patient_Medicine()
+                            {
+                                Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
+                                Item_Code = itemCode,
+                                Medicine_Name = medicineName,
+                                Transaction_Type = "Emergency Patient Nursing Monitoring",
+                                Medicine_Date = Convert.ToDateTime(newMed.Date), // Note: monitoring uses 'Date' instead of 'Medicine_Date'
+                                Oral = newMed.Oral,
+                                Injections = newMed.Injection,
+                                Dosage_From = newMed.Dosage_From,
+                                AttendingParamedical_Staff = newMed.AttendingParamedical_Staff,
+                                Frequency = newMed.Frequency,
+                                Dosage_Qty = newMed.Dosage_Qty,
+                                Other_Instruction = newMed.Other_Instruction,
+                                Nurse_Name = newMed.Nurse_Name,
+                                Remarks = newMed.Remarks
+                            };
+
+                            db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
                         }
-                    }
-                    
-                    couterNewRecords = 0;
-                 
-                    foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
-                    {
-                        In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
+                        else
                         {
+                            System.Diagnostics.Debug.WriteLine("SKIPPING existing monitoring record: " + medicineName);
+                        }
 
-                            Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
-                            Item_Code = oIn_Patient_Medicine.ItemCode,
-                            Medicine_Name = oIn_Patient_Medicine.Medicine_Name,
-                            Transaction_Type = "Emergency Patient Nursing Monitoring",
-                            Medicine_Date = Convert.ToDateTime(oIn_Patient_Medicine.Date),
-                            Oral = oIn_Patient_Medicine.Oral,
-                            Injections = oIn_Patient_Medicine.Injection,
-                            Dosage_From = oIn_Patient_Medicine.Dosage_From,
-                            AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
-                            Frequency = oIn_Patient_Medicine.Frequency,
-                            Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
-                            Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
-                            Nurse_Name = oIn_Patient_Medicine.Nurse_Name,
-                            Remarks = oIn_Patient_Medicine.Remarks,
-                        };
-                    
-                        DBClass.executeNonQueryWithoutBegin("update In_Patient_Medicines set Assigned=1 where Medicine_Name like '%" + oIn_Patient_Medicine.Medicine_Name + "%' and transaction_type='Emergency Patient' and Patient_ID=" + MedicineDetail.PatientID);
-                        
-
-                        db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
-                        couterNewRecords++;
+                        // Execute your raw SQL regardless of whether it was inserted or skipped
+                        DBClass.executeNonQueryWithoutBegin("update In_Patient_Medicines set Assigned=1 where Medicine_Name like '%" + newMed.Medicine_Name + "%' and transaction_type='Emergency Patient' and Patient_ID=" + MedicineDetail.PatientID);
                     }
-             
                     db.SubmitChanges();
+                    System.Diagnostics.Debug.WriteLine("=== SaveMedicinesMonitoring Complete ===");
                 }
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine("SaveMedicinesMonitoring Error: " + ex.Message);
             }
             return "";
         }
@@ -6196,109 +6211,127 @@ namespace PMS
         [WebMethod]
         public static string SaveTest(string tlist)
         {
-            string LabtestID = "";
-            Laboratory_Test lt = new Laboratory_Test();
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             JavaScriptSerializer oJS = new JavaScriptSerializer();
             var record = oJS.Deserialize<LabTest>(tlist);
-            List<Laboratory_Test> Laboratory_TestList = db.Laboratory_Tests.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "Emergency Patient").ToList();
-            db.Laboratory_Tests.DeleteAllOnSubmit(Laboratory_TestList);
-            db.SubmitChanges();
-            if (record.PatientID != null && record.PatientID != "(New)")
+
+            // Safely parse the Patient ID to prevent crashes if UI sends "(New)"
+            int patientId = 0;
+            int.TryParse(record.PatientID, out patientId);
+
+            /******************** 1. Deleting Previous 0 Value Saved Rows *******************/
+            List<Laboratory_Test> invalidTests = db.Laboratory_Tests
+                .Where(i => i.Patient_ID == 0 && i.Transaction_Type == "Emergency Patient").ToList();
+
+            db.Laboratory_Tests.DeleteAllOnSubmit(invalidTests);
+            db.SubmitChanges(); // Clean up orphans first
+
+            /******************** 2. Master Record Management *******************************/
+            Laboratory_Test masterTest = null;
+            if (patientId > 0)
             {
-                var lstTests = (from t in db.Laboratory_Tests
-                                where t.Patient_ID == int.Parse(record.PatientID) && t.Transaction_Type == "Emergency Patient"
-                                select t).FirstOrDefault();
-                if (lstTests != null)
-                {
-                    lstTests.Created_Time = DateTime.Now;
-                    LabtestID = lstTests.Lab_Test_ID.ToString();
-                }
-                else
-                {
-                    lt.Patient_ID = Convert.ToInt32(record.PatientID);
-                    lt.Transaction_Type = "Emergency Patient";
-                    lt.Created_Time = DateTime.Now;
-                    db.Laboratory_Tests.InsertOnSubmit(lt);
-                    db.SubmitChanges();
-                    LabtestID = lt.Lab_Test_ID.ToString();
-                }
+                masterTest = db.Laboratory_Tests.FirstOrDefault(t =>
+                    t.Patient_ID == patientId && t.Transaction_Type == "Emergency Patient");
+            }
+
+            if (masterTest != null)
+            {
+                masterTest.Created_Time = DateTime.Now; // Update existing
             }
             else
             {
-                lt.Patient_ID = Convert.ToInt32(record.PatientID);
-                lt.Transaction_Type = "Emergency Patient";
-                lt.Created_Time = DateTime.Now;
-                db.Laboratory_Tests.InsertOnSubmit(lt);
-                db.SubmitChanges();
-                LabtestID = lt.Lab_Test_ID.ToString();
+                // Create brand new master record
+                masterTest = new Laboratory_Test();
+                masterTest.Patient_ID = patientId;
+                masterTest.Transaction_Type = "Emergency Patient";
+                masterTest.Created_Time = DateTime.Now;
+                db.Laboratory_Tests.InsertOnSubmit(masterTest);
             }
-            List<Lab_Test_Detail> lstTestDetails = db.Lab_Test_Details.Where(t => t.Lab_Test_ID == int.Parse(LabtestID)).ToList();
-            var labID = int.Parse(LabtestID);
-            Discharge_Detail dischargeLine = null;
+
+            // Save master record so we have a valid Lab_Test_ID for the details
+            db.SubmitChanges();
+            int labID = masterTest.Lab_Test_ID;
+
+            /******************** 3. Fetch Existing Data Once *******************************/
+            // Load existing detail records into memory
+            List<Lab_Test_Detail> existingDetails = db.Lab_Test_Details.Where(t => t.Lab_Test_ID == labID).ToList();
+
+            // Track which records to delete. Any record NOT updated in the loop gets deleted.
+            List<Lab_Test_Detail> detailsToDelete = existingDetails.ToList();
+
+            /******************** 4. Sync Details (Update or Insert) ************************/
             foreach (var test in record.TestList)
             {
-                Lab_Test_Detail ltd = new Lab_Test_Detail();
-                ltd.Lab_Test_ID = labID;
-                ltd.Patient_ID = Convert.ToInt32(record.PatientID);
-                ltd.Date = Convert.ToDateTime(test.Date);
-                ltd.Doctor = test.Doctor != null ? test.Doctor.ToString() : "";
-                //ltd.Doctor = test.Doctor.ToString();
-                ltd.Special_Tests = test.Special_Tests;
-                ltd.Rotation_ID = test.RotationID;
-                ltd.Actual_Patient_ID = Convert.ToInt32(record.PatientID);
-                ltd.Catagory_ID = test.Catagory_ID;
-                ltd.L_R_Rotation_ID = test.L_R_Rotation_ID;
-                ltd.Dept_ID = test.Dept_ID;
-                ltd.Area_Of_Interest = test.Area_Of_Interest;
-                ltd.Discharge = false;
-                ltd.Test_ID = Convert.ToInt32(test.TestID);
-                if (test.Is_Result != "")
-                    ltd.Is_Result = Convert.ToBoolean(test.Is_Result);
-                if (test.IsBIllied != "")
-                    ltd.IsBilled = Convert.ToBoolean(test.IsBIllied);
-                if (test.RecievedID != "")
-                    ltd.Recieved_ID = test.RecievedID;
-                bool Duplicate = false;
-                db.Lab_Test_Details.InsertOnSubmit(ltd);
-                db.SubmitChanges();
+                int currentTestID = Convert.ToInt32(test.TestID);
 
+                // Find match based on the original code's duplicate check
+                var matchedExistingRecord = existingDetails.FirstOrDefault(tst =>
+                    (currentTestID != 0 && tst.Test_ID == currentTestID) ||
+                    (currentTestID == 0 && tst.Catagory_ID == test.Catagory_ID)
+                );
 
-                Lab_Test_Detail chkasTest = lstTestDetails.Where(tst => tst.Test_ID == ltd.Test_ID && tst.Test_ID != 0 && tst.Lab_Test_ID == ltd.Lab_Test_ID).FirstOrDefault();
-
-                if (chkasTest != null)
+                if (matchedExistingRecord != null)
                 {
-                    
-                    ltd.Discharge = chkasTest.Discharge;
-                    db.SubmitChanges();
-                    dischargeLine = db.Discharge_Details.Where(d => d.Parent_Trans_ID == chkasTest.Lab_Test_Detail_ID && d.Transaction_Type == "Test").FirstOrDefault();
-                    Duplicate = true;
-                }
+                    // UPDATE: We found a match, update its values
+                    matchedExistingRecord.Date = Convert.ToDateTime(test.Date);
+                    matchedExistingRecord.Doctor = test.Doctor != null ? test.Doctor.ToString() : "";
+                    matchedExistingRecord.Special_Tests = test.Special_Tests;
+                    matchedExistingRecord.Rotation_ID = test.RotationID;
+                    matchedExistingRecord.Actual_Patient_ID = patientId; // Uses patientId directly per your logic
+                    matchedExistingRecord.Catagory_ID = test.Catagory_ID;
+                    matchedExistingRecord.L_R_Rotation_ID = test.L_R_Rotation_ID;
+                    matchedExistingRecord.Dept_ID = test.Dept_ID;
+                    matchedExistingRecord.Area_Of_Interest = test.Area_Of_Interest;
 
-                if (chkasTest == null)
+                    if (!string.IsNullOrEmpty(test.Is_Result))
+                        matchedExistingRecord.Is_Result = Convert.ToBoolean(test.Is_Result);
+                    if (!string.IsNullOrEmpty(test.IsBIllied))
+                        matchedExistingRecord.IsBilled = Convert.ToBoolean(test.IsBIllied);
+                    if (!string.IsNullOrEmpty(test.RecievedID))
+                        matchedExistingRecord.Recieved_ID = test.RecievedID;
+
+                    // Remove this record from the deletion list so it is saved
+                    detailsToDelete.Remove(matchedExistingRecord);
+                }
+                else
                 {
-                    var chkasCategory = lstTestDetails.Where(tst => tst.Catagory_ID == ltd.Catagory_ID && tst.Test_ID == 0 && tst.Lab_Test_ID == ltd.Lab_Test_ID).FirstOrDefault();
-                    if (chkasCategory != null)
-                    {
-                
-                        ltd.Discharge = chkasCategory.Discharge;
-                        db.SubmitChanges();
-                        dischargeLine = db.Discharge_Details.Where(d => d.Parent_Trans_ID == chkasCategory.Lab_Test_Detail_ID && d.Transaction_Type == "Test").FirstOrDefault();
-                        Duplicate = true;
-                    }
+                    // ADD: This is a brand new test, so insert it
+                    Lab_Test_Detail newDetail = new Lab_Test_Detail();
+                    newDetail.Lab_Test_ID = labID;
+                    newDetail.Patient_ID = patientId;
+                    newDetail.Date = Convert.ToDateTime(test.Date);
+                    newDetail.Doctor = test.Doctor != null ? test.Doctor.ToString() : "";
+                    newDetail.Special_Tests = test.Special_Tests;
+                    newDetail.Rotation_ID = test.RotationID;
+                    newDetail.Actual_Patient_ID = patientId; // Uses patientId directly per your logic
+                    newDetail.Catagory_ID = test.Catagory_ID;
+                    newDetail.L_R_Rotation_ID = test.L_R_Rotation_ID;
+                    newDetail.Dept_ID = test.Dept_ID;
+                    newDetail.Area_Of_Interest = test.Area_Of_Interest;
+                    newDetail.Discharge = false;
+                    newDetail.Test_ID = currentTestID;
+
+                    if (!string.IsNullOrEmpty(test.Is_Result))
+                        newDetail.Is_Result = Convert.ToBoolean(test.Is_Result);
+                    if (!string.IsNullOrEmpty(test.IsBIllied))
+                        newDetail.IsBilled = Convert.ToBoolean(test.IsBIllied);
+                    if (!string.IsNullOrEmpty(test.RecievedID))
+                        newDetail.Recieved_ID = test.RecievedID;
+
+                    db.Lab_Test_Details.InsertOnSubmit(newDetail);
                 }
-                if (!Duplicate)
-                {
-
-
-                }
-
-                if (dischargeLine != null)
-                    dischargeLine.Parent_Trans_ID = ltd.Lab_Test_Detail_ID;
             }
 
-            db.Lab_Test_Details.DeleteAllOnSubmit(lstTestDetails);
+            /******************** 5. Delete Missing Records *********************************/
+            // Any records left in 'detailsToDelete' were not sent in the UI payload, so delete them
+            if (detailsToDelete.Any())
+            {
+                db.Lab_Test_Details.DeleteAllOnSubmit(detailsToDelete);
+            }
+
+            // Save all inserts, updates, and deletes in one single database hit
             db.SubmitChanges();
+
             return "";
         }
         public class TestValue
