@@ -548,18 +548,18 @@ namespace PMS.Modules.Billing
             return result;
         }
 
-        //[WebMethod]
-        //public static string MedicineDetailgetfromOPD(int itemId)
-        //{
-        //    string result = string.Empty;
+        [WebMethod]
+        public static string MedicineDetailgetfromOPD(int itemId)
+        {
+            string result = string.Empty;
 
-        //    using (DataBaseDataContext db = new DataBaseDataContext())
-        //    {
-        //        var query = db.spMedicinesDetailsfromopd(itemId).ToList();
-        //        result = (new JavaScriptSerializer()).Serialize(query).ToString();
-        //    }
-        //    return result;
-        //}
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.spMedicinesDetailsfromopdCathlab(itemId).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+            }
+            return result;
+        }
 
         [WebMethod]
         public static string GetOutPatientIDByOPDNo(string opdNo)
