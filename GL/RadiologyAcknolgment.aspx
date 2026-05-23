@@ -262,7 +262,8 @@
                             var labTestDoctorId = row.LabTest_DoctorID || 0;
                             var billingDoctorId = row.Billing_DoctorID || 0;
 
-                            var selectedDoctorId = labTestDoctorId !== 0 ? labTestDoctorId : billingDoctorId;
+                            var selectedDoctorId = billingDoctorId;
+
                             var isDisabled = (row.IsApproved === true);
                             var disabledAttr = isDisabled ? 'disabled' : '';
 

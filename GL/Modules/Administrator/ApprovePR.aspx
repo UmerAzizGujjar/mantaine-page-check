@@ -15,7 +15,7 @@
 
             for (var i = 1; i < tbl.rows.length; i++) {
                 var row = tbl.rows[i];
-                var prnum = row.cells[2] ? row.cells[2].innerText.toLowerCase() : "";
+                var prnum = row.cells[1] ? row.cells[1].innerText.toLowerCase() : "";
                 var prdate = row.cells[3] ? row.cells[3].innerText.toLowerCase() : "";
                 var remarks = row.cells[5] ? row.cells[5].innerText.toLowerCase() : "";
                 var status = row.cells[6] ? row.cells[6].innerText.toLowerCase() : ""; 
