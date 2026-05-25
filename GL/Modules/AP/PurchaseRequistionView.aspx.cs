@@ -128,30 +128,41 @@ namespace PMS.AP
                       .Select(dept => dept.Department)
                       .ToList();
 
-
                     var Total_Purchase = _dbContext.Purchase_Requisitions.Count();
                     var Purchase = from PR in _dbContext.Purchase_Requisitions
                                    where userDepartments.Contains(PR.Department)
-                                   &&
-                                     ((PR.PR_Id.ToString().Contains(searchValue) || PR.PR_Num.ToString().Contains(searchValue) || _dbContext.GetDataValueName("Priority Type", PR.Priority).Contains(searchValue) 
-                                      || _dbContext.GetDataValueName("Department", PR.Department).Contains(searchValue) || PR.Remarks.ToString().Contains(searchValue) || PR.Status.ToString().Contains(searchValue)
-                                      || _dbContext.aspnet_Users.Where(x => x.UserId == PR.Created_By).Select(x => x.UserName).FirstOrDefault().Contains(searchValue)))
-                                  select new
-                                  {
-                                      PR_Id = PR.PR_Id,
-                                      PR_Num = PR.PR_Num,
-                                      PR_Date = PR.PR_Date,
-                                      Priority = _dbContext.GetDataValueName("Priority Type", PR.Priority),
-                                      Department = _dbContext.GetDataValueName("Department", PR.Department),
-                                      Remarks = PR.Remarks,
-                                      Status = PR.Status,
-                                      Update_Date = PR.Update_Date,
-                                      TotalQty = (from x in _dbContext.Purchase_Requisition_Details where x.PR_ID == (long?)(long)PR.PR_Id select (decimal?)x.Qty).Sum() ?? 0,
-                                      CreatedBY = _dbContext.aspnet_Users.Where(x => x.UserId == PR.Created_By).Select(x => x.UserName).FirstOrDefault(),
-                                      UpdatedBY = _dbContext.aspnet_Users.Where(x => x.UserId == PR.Updated_By).Select(x => x.UserName).FirstOrDefault(),
-                                  };
+                                   select new
+                                   {
+                                       PR_Id = PR.PR_Id,
+                                       PR_Num = PR.PR_Num,
+                                       PR_Date = PR.PR_Date,
+                                       Priority = _dbContext.GetDataValueName("Priority Type", PR.Priority),
+                                       Department = _dbContext.GetDataValueName("Department", PR.Department),
+                                       Remarks = PR.Remarks,
+                                       Status = PR.Status,
+                                       Update_Date = PR.Update_Date,
+                                       TotalQty = (from x in _dbContext.Purchase_Requisition_Details where x.PR_ID == (long?)(long)PR.PR_Id select (decimal?)x.Qty).Sum() ?? 0,
+                                       CreatedBY = _dbContext.aspnet_Users.Where(x => x.UserId == PR.Created_By).Select(x => x.UserName).FirstOrDefault(),
+                                       UpdatedBY = _dbContext.aspnet_Users.Where(x => x.UserId == PR.Updated_By).Select(x => x.UserName).FirstOrDefault(),
+                                   };
+
+                    // Apply search filter if searchValue is not empty
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        Purchase = Purchase.Where(x =>
+                            x.PR_Id.ToString().Contains(searchValue) ||
+                            x.PR_Num.ToString().Contains(searchValue) ||
+                            x.Priority.Contains(searchValue) ||
+                            x.Department.Contains(searchValue) ||
+                            (x.Remarks != null && x.Remarks.ToString().Contains(searchValue)) ||
+                            x.Status.Contains(searchValue) ||
+                            (x.CreatedBY != null && x.CreatedBY.Contains(searchValue))
+                        );
+                    }
 
                     var FilteredCount = Purchase.Count();
+
+                    // Apply sorting
                     switch (sortColumn)
                     {
                         case "PR_Num":
@@ -159,6 +170,12 @@ namespace PMS.AP
                             break;
                         case "PR_Date":
                             Purchase = sortColumnDirection == "asc" ? Purchase.OrderBy(b => b.PR_Date) : Purchase.OrderByDescending(a => a.PR_Date);
+                            break;
+                        case "Department":
+                            Purchase = sortColumnDirection == "asc" ? Purchase.OrderBy(a => a.Department) : Purchase.OrderByDescending(a => a.Department);
+                            break;
+                        case "CreatedBY":
+                            Purchase = sortColumnDirection == "asc" ? Purchase.OrderBy(a => a.CreatedBY) : Purchase.OrderByDescending(a => a.CreatedBY);
                             break;
                         default:
                             Purchase = Purchase.OrderByDescending(a => a.PR_Id);

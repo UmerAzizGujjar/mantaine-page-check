@@ -484,6 +484,74 @@ namespace PMS.Modules.Billing
             }
             return result;
         }
+
+
+        [WebMethod]
+        public static string CheckBarcodeSoldStatus(string barcodeNumber)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    // First, get the Barcode_ID from ItemSelection_Barcodes table using the barcode number
+                    var barcodeRecord = (from b in db.ItemSelection_Barcodes
+                                         where b.Barcode_Number == barcodeNumber
+                                         select b.Barcode_ID).FirstOrDefault();
+
+                    if (barcodeRecord == null || barcodeRecord == 0)
+                    {
+                        // Barcode not found in ItemSelection_Barcodes table
+                        return new JavaScriptSerializer().Serialize(new { IsSold = false, Message = "Barcode not found in system" });
+                    }
+
+                    // Convert to int safely
+                    int barcodeId = Convert.ToInt32(barcodeRecord);
+
+                    // Now check if this Barcode_ID exists in Ar_Billing_Detail for CathLab
+                    var existingSale = (from detail in db.Ar_Billing_Details
+                                        where detail.Barcode_Id == barcodeId
+                                        && (detail.ParentTrans_Name == "IssueCath" || detail.ParentTrans_Name == "CathItems")
+                                        select new
+                                        {
+                                            detail.Bill_Details_ID,
+                                            detail.Bill_ID
+                                        }).FirstOrDefault();
+
+                    if (existingSale != null)
+                    {
+                        // Get bill information
+                        var billInfo = (from bill in db.Ar_Billings
+                                        where bill.Bill_ID == existingSale.Bill_ID
+                                        select new
+                                        {
+                                            bill.Seq_InvoiceNo,
+                                            bill.Invoice_Date
+                                        }).FirstOrDefault();
+
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            IsSold = true,
+                            BarcodeId = barcodeId,
+                            InvoiceNo = billInfo?.Seq_InvoiceNo ?? "Unknown",
+                            InvoiceDate = billInfo?.Invoice_Date?.ToString("yyyy-MM-dd") ?? "Unknown"
+                        });
+                    }
+
+                    // Barcode exists but not sold yet
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        IsSold = false,
+                        BarcodeId = barcodeId,
+                        Message = "Barcode is available"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CheckBarcodeSoldStatus Error: {ex.Message}");
+                return new JavaScriptSerializer().Serialize(new { IsSold = false, Error = ex.Message });
+            }
+        }
         [WebMethod]
         public static string loadMedicineByID(string ID)
         {

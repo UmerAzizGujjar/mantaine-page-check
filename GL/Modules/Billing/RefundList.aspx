@@ -206,8 +206,8 @@
                             }
                         },
                         { "data": "Refund_ID", "visible": false, "width": "0%" },
-                        { "data": "Bill_ID", "name": "Bill_ID", "width": "10%", "orderable": true },
-                        { "data": "Bill_No", "width": "10%", "orderable": false },
+                        { "data": "Bill_ID", "name": "Bill_ID", "width": "8%", "orderable": true },
+                        { "data": "Bill_No", "width": "8%", "orderable": false },
                         {
                             "data": "Refund_Date", "name": "Refund_Date",
                             "render": function (data, type, full) {
@@ -218,9 +218,11 @@
                             "width": "10%",
                             "orderable": true
                         },
-                        { "data": "Refund_Amount", "width": "10%", className: "text-right", "orderable": false },
-                        { "data": "MrNo", "name": "MrNo", "width": "10%", "orderable": false },
-                        { "data": "Remarks", "width": "15%", "orderable": false },
+                        { "data": "Refund_Amount", "width": "8%", className: "text-right", "orderable": false },
+                        { "data": "MrNo", "name": "MrNo", "width": "8%", "orderable": false },
+                        { "data": "FullName", "name": "FullName", "width": "12%", "orderable": false },
+                        { "data": "Test_Main_Department", "name": "Test_Main_Department", "width": "10%", "orderable": false },
+                        { "data": "Remarks", "width": "14%", "orderable": false },
                         {
                             "data": "Status",
                             "width": "8%",
@@ -240,16 +242,20 @@
                                 // Only show Edit button if status is not Approved
                                 var editBtn = '';
                                 var Del = '';
+                                var rejectBtn = '';
                                 if (full.Status !== "Approved") {
                                     editBtn = '<a href="#" onclick="EditAdvance(' + full.Refund_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
                                     var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
+
+                                    rejectBtn = '<a class="rejectListBtn" href="#" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px;background:#dc3545;color:white;" onclick="RejectRefund(' + full.Refund_ID + ')"><i class="fa fa-ban"></i></a>';
+
                                 }
                                 //var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;padding: 5px 8px 5px 8px;" onclick=deleteConfirm(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
                                 var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintRefund(' + full.Refund_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
-                                var result = editBtn + Del + print;
+                                var result = editBtn + Del + print + rejectBtn;
                                 return result;
                             },
-                            "width": "12%",
+                            "width": "15%",
                             "orderable": false
                         }
                     ],
@@ -298,6 +304,55 @@
                     }
                 });
             }
+
+            function RejectRefund(refundId) {
+                Swal.fire({
+                    title: 'Reject Refund?',
+                    text: "Are You Sure to Rejected",
+                    icon: 'warning',
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    },
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, Reject it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        PageMethods.RejectRefund(refundId,
+                            function (response) {
+                                var isSuccess = (typeof response.d !== 'undefined') ? response.d : response;
+                                if (isSuccess) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Rejected!',
+                                        text: 'Refund has been rejected successfully.',
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        $('#tblAdvanceView').DataTable().ajax.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Failed',
+                                        text: 'Rejection failed. Record may be locked or invalid.'
+                                    });
+                                }
+                            },
+                            function (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'An error occurred: ' + (error.get_message ? error.get_message() : error)
+                                });
+                            }
+                        );
+                    }
+                });
+            }
         </script>
 </asp:Content>
 
@@ -315,6 +370,8 @@
             <th>Refund_Date</th>
             <th>Refund_Amount</th>
             <th>Mr No#</th>
+            <th>Name</th>
+            <th>Main Department</th>
             <th>Remarks</th>
             <th>Status</th>
             <th>Action</th>

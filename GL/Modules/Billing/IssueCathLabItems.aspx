@@ -1279,49 +1279,219 @@
                 }, 500);
             });
         }
+      
+
          // Declare at top of script
-         var currentBarcodeId = null; // 👈 Add this global variable
+         var currentBarcodeId = null;
+
+         // Declare at top of script
+         var currentBarcodeId = null;
 
          function processBarcode() {
              var $barcode = $('#searchByBarcode');
-             var barcodeValue = ($barcode.val() || '').trim();
-             if (!barcodeValue) { $barcode.focus(); return; }
+             var barcodeNumber = ($barcode.val() || '').trim();
+
+             if (!barcodeNumber) {
+                 $barcode.focus();
+                 return;
+             }
+
              debugger;
-             PageMethods.loadMedicineByID(barcodeValue, function (data) {
+
+             // First, check if this barcode number is already sold in database
+             PageMethods.CheckBarcodeSoldStatus(barcodeNumber, function (response) {
                  debugger;
-                 var parsed;
-                 try { parsed = JSON.parse(data); } catch (e) { parsed = []; }
-                 if (!parsed || parsed.length === 0) { $barcode.val('').focus(); return; }
-
-                 var item = parsed[0];
-                 var itemId = item.Item_ID;
-
-                 // 👇 CAPTURE AND STORE BARCODE_ID GLOBALLY 👇
-                 currentBarcodeId = item.Barcode_ID ? item.Barcode_ID.toString() : null;
-
-                 var displayText = (item.Item_Code || '') + ' - ' + (item.Description || item.Generic_Name || '');
-                 var $medName = $('#medName');
-                 if ($medName.find('option[value="' + itemId + '"]').length === 0) {
-                     $medName.append(new Option(displayText, itemId, true, true));
+                 var result;
+                 try {
+                     result = JSON.parse(response);
+                 } catch (e) {
+                     result = { IsSold: false };
                  }
-                 $medName.trigger('change');
 
-                 if (item.BatchNum) {
-                     $('#chkbatch').prop('checked', true).trigger('change');
-                     setTimeout(function () {
-                         var $batch = $('#batchno');
-                         if ($batch.find('option[value="' + item.BatchNum + '"]').length > 0) {
-                             $batch.val(item.BatchNum).trigger('change'); // This calls AddMedicineDetail()
+                 // If barcode is already sold in database, show alert and don't proceed
+                 if (result.IsSold) {
+                     Swal.fire({
+                         icon: 'warning',
+                         title: 'Item Already Sold!',
+                         text: 'This barcode item was already sold on Invoice #' + result.InvoiceNo +
+                             ' dated ' + result.InvoiceDate + '. Cannot issue this item again.',
+                         showConfirmButton: true,
+                         confirmButtonText: 'OK',
+                         customClass: {
+                             popup: 'swal-big-popup',
+                             title: 'swal-big-title',
+                             htmlContainer: 'swal-big-text'
                          }
-                     }, 600);
+                     }).then(function () {
+                         $barcode.val('').focus();
+                     });
+                     return;
                  }
-                 $barcode.val('').focus();
+
+                 // Store the BarcodeId for later use when saving
+                 currentBarcodeId = result.BarcodeId ? result.BarcodeId.toString() : null;
+
+                 // Check if this barcode is already added in the current bill/grid
+                 if (currentBarcodeId && isBarcodeAlreadyAddedInGrid(currentBarcodeId)) {
+                     Swal.fire({
+                         icon: 'warning',
+                         title: 'Item Already Added!',
+                         text: 'This barcode item has already been added to the current bill. Cannot add duplicate.',
+                         showConfirmButton: true,
+                         confirmButtonText: 'OK',
+                         customClass: {
+                             popup: 'swal-big-popup',
+                             title: 'swal-big-title',
+                             htmlContainer: 'swal-big-text'
+                         }
+                     }).then(function () {
+                         $barcode.val('').focus();
+                     });
+                     return;
+                 }
+
+                 // If not sold and not in current bill, proceed with loading the medicine
+                 PageMethods.loadMedicineByID(barcodeNumber, function (data) {
+                     debugger;
+                     var parsed;
+                     try {
+                         parsed = JSON.parse(data);
+                     } catch (e) {
+                         parsed = [];
+                     }
+
+                     if (!parsed || parsed.length === 0) {
+                         $barcode.val('').focus();
+                         return;
+                     }
+
+                     var item = parsed[0];
+                     var itemId = item.Item_ID;
+                     var batchNum = item.BatchNum;
+
+                     // Use the BarcodeId from the check result (if available), otherwise from the item
+                     if (!currentBarcodeId && item.Barcode_ID) {
+                         currentBarcodeId = item.Barcode_ID.toString();
+                     }
+
+                     // Double-check if item with same barcode exists in grid (safety check)
+                     if (currentBarcodeId && isBarcodeAlreadyAddedInGrid(currentBarcodeId)) {
+                         Swal.fire({
+                             icon: 'warning',
+                             title: 'Duplicate Item!',
+                             text: 'This item is already in the bill.',
+                             showConfirmButton: true,
+                             confirmButtonText: 'OK'
+                         }).then(function () {
+                             $barcode.val('').focus();
+                         });
+                         return;
+                     }
+
+                     var displayText = (item.Item_Code || '') + ' - ' + (item.Description || item.Generic_Name || '');
+                     var $medName = $('#medName');
+
+                     // Add to medicine dropdown if not exists
+                     if ($medName.find('option[value="' + itemId + '"]').length === 0) {
+                         $medName.append(new Option(displayText, itemId, true, true));
+                     }
+                     $medName.trigger('change');
+
+                     if (batchNum) {
+                         $('#chkbatch').prop('checked', true).trigger('change');
+                         setTimeout(function () {
+                             var $batch = $('#batchno');
+                             if ($batch.find('option[value="' + batchNum + '"]').length > 0) {
+                                 $batch.val(batchNum).trigger('change'); // This calls AddMedicineDetail()
+                             }
+                         }, 600);
+                     }
+
+                     $barcode.val('').focus();
+                     // Reset currentBarcodeId after adding to grid
+                     setTimeout(function () {
+                         currentBarcodeId = null;
+                     }, 100);
+
+                 }, function (error) {
+                     console.error("Error loading medicine by ID:", error);
+                     $barcode.val('').focus();
+                 });
+
              }, function (error) {
-                 console.error(error);
-                 $barcode.val('').focus();
+                 console.error("Error checking barcode status:", error);
+                 // On error, still try to load the medicine as fallback
+                 PageMethods.loadMedicineByID(barcodeNumber, function (data) {
+                     debugger;
+                     var parsed;
+                     try {
+                         parsed = JSON.parse(data);
+                     } catch (e) {
+                         parsed = [];
+                     }
+
+                     if (!parsed || parsed.length === 0) {
+                         $barcode.val('').focus();
+                         return;
+                     }
+
+                     var item = parsed[0];
+                     var itemId = item.Item_ID;
+                     currentBarcodeId = item.Barcode_ID ? item.Barcode_ID.toString() : null;
+
+                     // Check for duplicate in current bill
+                     if (currentBarcodeId && isBarcodeAlreadyAddedInGrid(currentBarcodeId)) {
+                         Swal.fire({
+                             icon: 'warning',
+                             title: 'Duplicate Item!',
+                             text: 'This item is already in the bill.',
+                             showConfirmButton: true,
+                             confirmButtonText: 'OK'
+                         }).then(function () {
+                             $barcode.val('').focus();
+                         });
+                         return;
+                     }
+
+                     var displayText = (item.Item_Code || '') + ' - ' + (item.Description || item.Generic_Name || '');
+                     var $medName = $('#medName');
+
+                     if ($medName.find('option[value="' + itemId + '"]').length === 0) {
+                         $medName.append(new Option(displayText, itemId, true, true));
+                     }
+                     $medName.trigger('change');
+
+                     if (item.BatchNum) {
+                         $('#chkbatch').prop('checked', true).trigger('change');
+                         setTimeout(function () {
+                             var $batch = $('#batchno');
+                             if ($batch.find('option[value="' + item.BatchNum + '"]').length > 0) {
+                                 $batch.val(item.BatchNum).trigger('change');
+                             }
+                         }, 600);
+                     }
+
+                     $barcode.val('').focus();
+                 }, function (error) {
+                     console.error(error);
+                     $barcode.val('').focus();
+                 });
              });
          }
+         // Check if barcode already exists in current bill
+         function isBarcodeAlreadyAddedInGrid(barcodeId) {
+             if (!barcodeId) return false;
 
+             var exists = false;
+             $('#tblDetails tbody tr').each(function () {
+                 var existingBarcodeId = $(this).find('input[name="BarcodeId"]').val();
+                 if (existingBarcodeId && existingBarcodeId.toString() === barcodeId.toString()) {
+                     exists = true;
+                     return false; // break the loop
+                 }
+             });
+             return exists;
+         }
         function loadmed() {
             var ItemName = ItemNames || '';
 
@@ -2033,7 +2203,7 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="number" name="txtQty" value="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="number" name="txtQty" disabled value="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
                         '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" disabled/></td>' +
 
@@ -2152,7 +2322,7 @@
 
                         '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
 
-                        '<td><input type="text" name="txtQty" value="1" min="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                        '<td><input type="text" name="txtQty" disabled value="1" min="1" style="width: 3% !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)"  onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
 
                         '<td><input type="number" name="txtStock" value="' + data[0].Total_Stock + '" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
 
@@ -3078,7 +3248,7 @@
                             '<td><input type="hidden" value="' + data[0].Description + '" name="Itemdesc" id="Itemdesc" >' + data[0].Description + '</td>' +
                             '<td style="display:none"><input type="hidden" value="' + data[0].Unit + '" name="txtUom" id="txtUom" >' + data[0].Unit + '</td>' +
                             '<td><input type="hidden" value="' + Uomqty + '" name="UomQty" id="UomQty"  >' + Uomqty + '</td>' +
-                            '<td><input type="text" name="txtQty" value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
+                            '<td><input type="text" name="txtQty" disabled value="1" min="1" style="width: 62px !important;margin-left: -7px;position: absolute;height:22px;text-align: right;" class="height_height" onkeyup="CulculateAmonutWithQty(this)" onblur="CulculateAmonutWithQty(this)" autocomplete="off" onclick="this.select();" /></td>' +
                             '<td><input type="number" name="txtStock" id="txtStock' + (rowIndex + 1) + '" value="0" style="width: 65px !important;margin-left: -2px;position: absolute;height:22px;text-align: right;" class="height_height" readonly/></td>' +
                             '<td style="text-align: right;" ><input type="text" value="' + SaleRate + '" name="txtSalerate" id="txtSalerate' + (rowIndex + 1) + '" ></td>' +
                         '<td><input type="number" name="DisPer" value="0"' + disDisabledAttr + ' min="0" class="height_height orderchange" style="width: 3% !important;text-align: right;margin-left: -4px;position: absolute;height:22px;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + '),sumdiscount()" autocomplete="off" onclick="this.select();" /> </td>' +

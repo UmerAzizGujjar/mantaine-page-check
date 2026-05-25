@@ -388,7 +388,7 @@ namespace PMS.Inventory
 
                 if (IsFinalApprovals.Any(approval => approval.IsFinalApproval == true && approval.FormId == form_id))
                 {
-                    if (IGP.Status == "Approved" && (IGP.Inspec_Status == null || IGP.Inspec_Status == "" || IGP.Inspec_Status == "Pending"))
+                    if (IGP.Status == "Approved" && (IGP.Inspec_Status == null || IGP.Inspec_Status == "" || IGP.Inspec_Status == "Pending"|| IGP.Inspec_Status == "Created"))
                     {
                         var Det = db.spApproveIgpInspec(Convert.ToInt32(IGP.Igp_Id), Convert.ToString(user_id));
                         Details = "1";
