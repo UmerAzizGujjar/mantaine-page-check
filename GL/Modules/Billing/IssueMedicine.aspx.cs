@@ -736,6 +736,7 @@ namespace PMS
             public decimal CGSAmount { get; set; }
 
             public string Remarks { get; set; }
+            public int? Req_qty { get; set; }
         }
 
         [WebMethod]
@@ -895,7 +896,7 @@ namespace PMS
                 newBillDetails.Qty = dtls.Qty;
                 newBillDetails.Batch_No = dtls.batchno;
                 newBillDetails.Remarks = dtls.Remarks;
-                //newBillDetails.req = dtls.Remarks;
+                newBillDetails.Req_qty = dtls.Req_qty;
                 var TotalRemainStock = dtls.Stock - dtls.Qty;
                 newBillDetails.CGS = dtls.CGSAmount;
                 var getttlStock = DBClass.getField("update INV_Items set Total_Qty= '" + TotalRemainStock + "' where Item_ID =" + dtls.Itemid);

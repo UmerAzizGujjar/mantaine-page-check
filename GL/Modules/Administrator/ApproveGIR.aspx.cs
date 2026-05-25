@@ -19,6 +19,7 @@ namespace PMS
                 CheckUserRights();
             }
         }
+
         private void BindGridView()
         {
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
@@ -27,8 +28,10 @@ namespace PMS
                     .Where(dept => dept.User_Id == AppConfig.UserID)
                     .Select(dept => dept.Department)
                     .ToList();
+
                 var qry = from a in db.MaterialIssueRequests
-                          where (a.Status == "Created" || a.Status == "Pending") && userDepartments.Contains(a.Department)
+                          where (a.Status == "Created" || a.Status == "Pending")
+                                && userDepartments.Contains(a.Department)
                           orderby a.MaterialRequest_Id ascending
                           select new
                           {
@@ -36,8 +39,10 @@ namespace PMS
                               a.Request_No,
                               a.Remarks,
                               a.Status,
+                              warehouse = db.GetDataValueName("Ware House", a.InventoryOrganization),
                               a.MIRDate,
-                              Creator = db.aspnet_Users.Where(x => x.UserId == (a.Created_By ?? Guid.Empty)).Select(x => x.UserName).FirstOrDefault(),
+                              Creator = db.aspnet_Users.Where(x => x.UserId == (a.Created_By ?? Guid.Empty))
+                                        .Select(x => x.UserName).FirstOrDefault(),
                               Approve_By = string.Join(", ", (from SAL in db.Sys_Approval_Logs
                                                               join user in db.aspnet_Users on SAL.Approve_By equals user.UserId into userGroup
                                                               from usr in userGroup.DefaultIfEmpty()
@@ -45,6 +50,7 @@ namespace PMS
                                                               select usr.UserName ?? "").Distinct()),
                               Department = db.GetDataValueName("Department", a.Department),
                           };
+
                 GridView1.DataSource = qry;
                 GridView1.DataBind();
             }
@@ -68,11 +74,13 @@ namespace PMS
             }
             btnApprove.Visible = hasEntryRights;
         }
+
         protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             GridView1.PageIndex = e.NewPageIndex;
             BindGridView();
         }
+
         protected void btnApprove_Click(object sender, EventArgs e)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
@@ -139,7 +147,6 @@ namespace PMS
                             MIR.Approved_Time = DateTime.Now;
                             MIR.Approved_By = user_id;
                             db.SubmitChanges();
-
 
                             Sys_Approval_Stage_Detail SASD = (from tbl in db.Sys_Approval_Stage_Details
                                                               join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID

@@ -269,28 +269,23 @@ namespace PMS
                 {
                     var Total_Data = db.Store_Issues.Count();
 
-
                     var userDepartmentIds = db.Department_Wise_User_Details
-                 .Where(dept => dept.User_Id == AppConfig.UserID)
-                .Select(dept => dept.Department) // assuming 'Department' here is the Department_Id (int or Guid)
-                 .ToList();
+                        .Where(dept => dept.User_Id == AppConfig.UserID)
+                        .Select(dept => dept.Department) // assuming 'Department' here is the Department_Id (int or Guid)
+                        .ToList();
 
                     // Apply filtering including user's departments
                     var formattedQuery = from a in db.Store_Issues
                                          where (a.Status == "Created" || a.Status == "Pending")
                                                && a.IsDeleted == false
-                                              && userDepartmentIds.Contains(a.Department_Id)
-                                               && (a.Store_Issue_No.ToString().Contains(searchValue)
-                                                   || a.Status.ToString().Contains(searchValue)
-                                                   || db.GetDataValueName("Department", a.Department_Id).Contains(searchValue)
-                                                   || db.aspnet_Users.Where(x => x.UserId == (a.Created_by ?? Guid.Empty)).Select(x => x.UserName)
-                                                       .FirstOrDefault().Contains(searchValue))
+                                               && userDepartmentIds.Contains(a.Department_Id)
                                          orderby a.Store_Issue_Id ascending
                                          select new
                                          {
                                              SIID = a.Store_Issue_Id,
                                              SINO = a.Store_Issue_No,
                                              STATUS = a.Status,
+                                             warehouse = db.GetDataValueName("Ware House", a.Organization_Id),
                                              CREATOR = db.aspnet_Users
                                                        .Where(x => x.UserId == (a.Created_by ?? Guid.Empty))
                                                        .Select(x => x.UserName)
@@ -303,31 +298,60 @@ namespace PMS
                                              Department = db.GetDataValueName("Department", a.Department_Id),
                                          };
 
+                    // Apply search filter
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        formattedQuery = formattedQuery.Where(x =>
+                            x.SINO.ToString().Contains(searchValue) ||
+                            x.STATUS.ToString().Contains(searchValue) ||
+                            x.Department.Contains(searchValue) ||
+                            x.warehouse.Contains(searchValue) ||
+                            (x.CREATOR != null && x.CREATOR.Contains(searchValue))
+                        );
+                    }
+
                     var FilteredCount = formattedQuery.Count();
+
                     // Sorting
                     if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
                     {
                         switch (sortColumn)
                         {
-
                             case "SINO":
                                 formattedQuery = sortColumnDirection == "asc"
                                     ? formattedQuery.OrderBy(x => x.SINO)
                                     : formattedQuery.OrderByDescending(x => x.SINO);
                                 break;
 
+                            case "Department":
+                                formattedQuery = sortColumnDirection == "asc"
+                                    ? formattedQuery.OrderBy(x => x.Department)
+                                    : formattedQuery.OrderByDescending(x => x.Department);
+                                break;
+
+                            case "warehouse":
+                                formattedQuery = sortColumnDirection == "asc"
+                                    ? formattedQuery.OrderBy(x => x.warehouse)
+                                    : formattedQuery.OrderByDescending(x => x.warehouse);
+                                break;
+
+                            case "CREATOR":
+                                formattedQuery = sortColumnDirection == "asc"
+                                    ? formattedQuery.OrderBy(x => x.CREATOR)
+                                    : formattedQuery.OrderByDescending(x => x.CREATOR);
+                                break;
 
                             default:
                                 formattedQuery = formattedQuery.OrderByDescending(x => x.SINO);
                                 break;
                         }
                     }
-
-
-
+                    else
+                    {
+                        formattedQuery = formattedQuery.OrderByDescending(x => x.SINO);
+                    }
 
                     var DataList = formattedQuery.Skip(start).Take(length).ToList();
-
 
                     var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Data, data = DataList };
                     return jsonData;
