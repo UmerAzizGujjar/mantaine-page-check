@@ -799,7 +799,7 @@ namespace PMS.AP
         }
 
         [WebMethod]
-        public static string GetAllitem(string searchText)
+        public static string GetAllitem(string searchText, string warehouseId)
         {
             try
             {
@@ -812,6 +812,7 @@ namespace PMS.AP
                              
                              && x.Active == true
                              && x.Services != true
+                             && (string.IsNullOrEmpty(warehouseId) || x.InventoryOrg == warehouseId)
                          )
                     .OrderBy(x => x.Item_Code) 
                     .Take(200)

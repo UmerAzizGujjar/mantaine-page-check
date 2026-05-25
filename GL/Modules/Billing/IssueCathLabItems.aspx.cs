@@ -451,7 +451,7 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.Sp_GetLast24Hours_Medicines(SearchString).ToList();
+                var query = db.Sp_GetLast24Hours_PatientForCath(SearchString).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
 
             }
@@ -485,6 +485,124 @@ namespace PMS.Modules.Billing
             return result;
         }
 
+
+        [WebMethod]
+        public static string CheckBarcodeSoldStatus(string barcodeNumber)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    // First, get the Barcode_ID from ItemSelection_Barcodes table using the barcode number
+                    var barcodeRecord = (from b in db.ItemSelection_Barcodes
+                                         where b.Barcode_Number == barcodeNumber
+                                         select b.Barcode_ID).FirstOrDefault();
+
+                    if (barcodeRecord == null || barcodeRecord == 0)
+                    {
+                        // Barcode not found in ItemSelection_Barcodes table
+                        return new JavaScriptSerializer().Serialize(new { IsSold = false, Message = "Barcode not found in system" });
+                    }
+
+                    // Convert to int safely
+                    int barcodeId = Convert.ToInt32(barcodeRecord);
+
+                    // Now check if this Barcode_ID exists in Ar_Billing_Detail for CathLab
+                    var existingSale = (from detail in db.Ar_Billing_Details
+                                        where detail.Barcode_Id == barcodeId
+                                        && (detail.ParentTrans_Name == "IssueCath" || detail.ParentTrans_Name == "CathItems")
+                                        select new
+                                        {
+                                            detail.Bill_Details_ID,
+                                            detail.Bill_ID
+                                        }).FirstOrDefault();
+
+                    if (existingSale != null)
+                    {
+                        // Get bill information
+                        var billInfo = (from bill in db.Ar_Billings
+                                        where bill.Bill_ID == existingSale.Bill_ID
+                                        select new
+                                        {
+                                            bill.Seq_InvoiceNo,
+                                            bill.Invoice_Date
+                                        }).FirstOrDefault();
+
+                        return new JavaScriptSerializer().Serialize(new
+                        {
+                            IsSold = true,
+                            BarcodeId = barcodeId,
+                            InvoiceNo = billInfo?.Seq_InvoiceNo ?? "Unknown",
+                            InvoiceDate = billInfo?.Invoice_Date?.ToString("yyyy-MM-dd") ?? "Unknown"
+                        });
+                    }
+
+                    // Barcode exists but not sold yet
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        IsSold = false,
+                        BarcodeId = barcodeId,
+                        Message = "Barcode is available"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CheckBarcodeSoldStatus Error: {ex.Message}");
+                return new JavaScriptSerializer().Serialize(new { IsSold = false, Error = ex.Message });
+            }
+        }
+        [WebMethod]
+        public static string loadMedicineByID(string ID)
+        {
+            string result = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                // 1. Try to fetch item + batch directly from Barcode mapping
+                var barcodeResult = (from b in db.ItemSelection_Barcodes
+                                     join item in db.INV_Items on b.Item_Id equals item.Item_ID
+                                     join grn in db.GRN_Details on b.GRN_Detail_Id equals grn.GRN_detail_Id // Adjust column name if different
+                                     where b.Barcode_Number == ID && (item.isCancel == null || item.isCancel == false)
+                                     select new
+                                     {
+                                         item.Item_ID,
+                                         item.Item_Code,
+                                         item.Description,
+                                         item.Generic_Name,
+                                         BatchNum = grn.BatchNum,
+                                         Barcode_ID = b.Barcode_ID
+                                     }).FirstOrDefault();
+
+                if (barcodeResult != null)
+                {
+                    return new JavaScriptSerializer().Serialize(new List<object> { barcodeResult });
+                }
+
+                // 2. Fallback: Search by Item_ID (no batch)
+                int itemId;
+                if (int.TryParse(ID, out itemId))
+                {
+                    var query = (from it in db.INV_Items
+                                 where it.Item_ID == itemId && (it.isCancel == null || it.isCancel == false)
+                                 select new
+                                 {
+                                     it.Item_ID,
+                                     it.Item_Code,
+                                     it.Description,
+                                     it.Generic_Name,
+                                     BatchNum = (string)null,
+                                     Barcode_ID = (int?)null
+                                 }).ToList();
+                    result = new JavaScriptSerializer().Serialize(query);
+                }
+                else
+                {
+                    result = new JavaScriptSerializer().Serialize(new List<object>());
+                }
+            }
+            return result;
+        }
+
         [WebMethod]
         public static string MedicineDetail(int itemId, string hdndiscountType, string Batch, string warehouse)
         {
@@ -505,7 +623,7 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetailsfromopd(itemId).ToList();
+                var query = db.spMedicinesDetailsfromopdCathlab(itemId).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -647,6 +765,7 @@ namespace PMS.Modules.Billing
             public decimal CGSAmount { get; set; }
 
             public string Remarks { get; set; }
+            public string BarcodeId { get; set; }
         }
 
         [WebMethod]
@@ -702,7 +821,7 @@ namespace PMS.Modules.Billing
             newBill.Panel_Id = Convert.ToInt32(data.Panel_Id);
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
-            //                     newBill.IsPharmacy = true;
+            newBill.IsCathLab = true;
 
             var checkingcondition = db.sys_Parms
                 .Where(a => a.Name == "Amount Recevied For Pharmcay")
@@ -795,6 +914,12 @@ namespace PMS.Modules.Billing
                 newBillDetails.ParentTrans_Type = "CathItems";
                 newBillDetails.Item_ID = Item_Id;
                 newBillDetails.Item_Name = dtls.ItemName;
+                int? barcodeId = null;
+                if (!string.IsNullOrEmpty(dtls.BarcodeId) && int.TryParse(dtls.BarcodeId, out int parsedId))
+                {
+                    barcodeId = parsedId;
+                }
+                newBillDetails.Barcode_Id = barcodeId;
                 //var Item_Id = (from aac in db.INV_Items where (aac.Description == dtls.ItemName) select aac.Item_ID).FirstOrDefault();
                 //newBillDetails.Item_ID = Item_Id;
                 newBillDetails.Amount = dtls.Amount;

@@ -281,7 +281,10 @@ namespace PMS
                                                && a.IsDeleted == false
                                               && userDepartmentIds.Contains(a.Department_Id)
                                                && (a.Store_Issue_No.ToString().Contains(searchValue)
-                                                   || a.Status.ToString().Contains(searchValue))
+                                                   || a.Status.ToString().Contains(searchValue)
+                                                   || db.GetDataValueName("Department", a.Department_Id).Contains(searchValue)
+                                                   || db.aspnet_Users.Where(x => x.UserId == (a.Created_by ?? Guid.Empty)).Select(x => x.UserName)
+                                                       .FirstOrDefault().Contains(searchValue))
                                          orderby a.Store_Issue_Id ascending
                                          select new
                                          {

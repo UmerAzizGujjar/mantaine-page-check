@@ -9893,7 +9893,7 @@
                         </div>
                          <div class="row">
                              <div class="col-lg-12 col-md-6 col-sm-12">
-                              <h2>Clinical Notes : </h2>
+                              <h2>Pharmacist Notes : </h2>
                              <asp:TextBox ID="txtAreaClinicalNotes" runat="server" TextMode="MultiLine" Style="height:200px !important;width:100%" ></asp:TextBox>
                              </div>
                       </div>

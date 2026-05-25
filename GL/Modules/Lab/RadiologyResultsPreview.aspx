@@ -159,6 +159,16 @@
                     },
                     {
                         "data": null,
+                        "width": "12%",
+                        "name": "ScanDateTime",
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            var accession = row.Lab_Test_Detail_ID || '';
+                            return '<div class="scan-date-time" data-accession="' + accession + '"><span class="orthanc-spinner"></span></div>';
+                        }
+                    },
+                    {
+                        "data": null,
                         "width": "10%",
                         "name": "OrthancActions",
                         "orderable": false,
@@ -221,20 +231,30 @@
         function updateActionsCells() {
             if (!radiologyTable) return;
 
-            radiologyTable.rows({ page: 'current' }).every(function () {
-                var row = this.data();
-                var accession = row && row.Lab_Test_Detail_ID ? row.Lab_Test_Detail_ID.toString() : '';
-                var info = accession ? orthancStudyCache[accession] : null;
-                var cell = $(this.node()).find('.orthanc-actions');
+                radiologyTable.rows({ page: 'current' }).every(function () {
+                    var row = this.data();
+                    var accession = row && row.Lab_Test_Detail_ID ? row.Lab_Test_Detail_ID.toString() : '';
+                    var info = accession ? orthancStudyCache[accession] : null;
+                    var actionCell = $(this.node()).find('.orthanc-actions');
+                    var scanCell = $(this.node()).find('.scan-date-time');
 
-                if (!cell.length) return;
+                    if (scanCell.length) {
+                        if (info && info.Exists && info.OrthancStudyId) {
+                            var scanDateTime = formatDicomDateTime(info.StudyDate, info.StudyTime);
+                            scanCell.html(scanDateTime || '<span class="text-muted">No Scan</span>');
+                        } else {
+                            scanCell.html('<span class="text-muted">No Scan</span>');
+                        }
+                    }
 
-                if (info && info.Exists && info.OrthancStudyId) {
-                    cell.html(buildOrthancButtons(info.StudyInstanceUID, info.OrthancStudyId));
-                } else {
-                    cell.html('<span class="text-muted">No Scan</span>');
-                }
-            });
+                    if (!actionCell.length) return;
+
+                    if (info && info.Exists && info.OrthancStudyId) {
+                        actionCell.html(buildOrthancButtons(info.StudyInstanceUID, info.OrthancStudyId));
+                    } else {
+                        actionCell.html('<span class="text-muted">No Scan</span>');
+                    }
+                });
         }
 
         function loadDoctorsforFilter() {
@@ -387,6 +407,17 @@
             return value.substring(0, 2) + ':' + value.substring(2, 4) + ':' + value.substring(4, 6);
         }
 
+        function formatDicomDateTime(dateValue, timeValue) {
+            if (!dateValue && !timeValue) return '';
+
+            var formattedDate = formatDicomDate(dateValue) || '';
+            var normalizedTime = timeValue ? timeValue.split('.')[0] : '';
+            var formattedTime = formatDicomTime(normalizedTime) || '';
+
+            if (formattedDate && formattedTime) return formattedDate + ' ' + formattedTime;
+            return formattedDate || formattedTime;
+        }
+
         function FillMainTestDepartment() {
             var options = '<option value="All" >All</option>';
             PageMethods.FillTestMainDepartment(
@@ -446,7 +477,8 @@
                                             <th>Test Name</th>
                                             <th>Accession Number</th>
                                             <th>Main Test Department</th>
-                                             <th>Doctor</th>
+                                            <th>Doctor</th>
+                                             <th>Scan Date Time</th>
                                              <th>Actions</th>
 
                                         </tr>

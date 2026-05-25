@@ -8,7 +8,16 @@
             max-height: 150px;
         }
         /*k*/
-
+        .pending-badge {
+    display: inline-block;
+    background-color: #ffc107;
+    color: #212529;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
         .cnic-input {
     width: 250px !important;
     margin: 0 auto;   /* center it */
@@ -892,7 +901,10 @@
                         else {
                             ParentTransType = 'Test Group Category';
                             var rows = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> </td><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + ParentTransID + '" /> <input type="hidden" name="hdnParentTrans_Name"  value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" /> <input type="hidden" name="hdnParentTrans_Type" value="' + ParentTransType + '" /> <input type="hidden" name="hdnItemID" value="' + value.Test_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Test_Name + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + value.Group_Category + '" /> <input type="hidden" name="hdnDisPer" value="' + DisAmt + '" /><input type="hidden" name="hdnDisAmount" value="0.00"/><input type="hidden" name="hdnNet_Amount" value=' + globalTestRate + '/><input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + value.Test_Name + '</td><td contenteditable="true" style="min-width:150px;"> ' + remarks + '</td><td><input type="text" name="txtQty" disabled=disabled value="1" disabled style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /></td><td id="amnt' + rowIndex + '" name="amnt" style="text-align:Right;" onkeypress="CalculateSummarieDiscountPerWise(' + rowIndex + ')"> ' + globalTestRate + ' </td><td> <input type="text" name="DisPer" value="' + DisAmt + '"  style="width: 37px !important;" onkeyup="CalculateSummarieDiscountPerWise(' + rowIndex + ')"/> </td><td> <input type="text" name="DisAmount" value="" style="width: 75px !important;" onkeyup="CalculateSummarieDiscountAmountWise(' + rowIndex + ')"/> </td> <td style="text-align:Right;">  </td><td><input type="text" id="ds' + rowIndex + '" name="DocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td><td><input type="number" id="HocShare' + rowIndex + '" name="HocShare" value="' + 0 + '"  style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>><td><select id="ddldoctor' + parseInt(parseInt(rowIndex) + 1) + '"  onchange="GetDocAgreementValuess(this)" name="ddlDoctor" class="ddlDoctor" >' + doctors + '</select></td><td><input type="hidden" name="hdnTestCreatedDate" id="hdnTestCreatedDate" value="' + date + '"/>' + date + ' </td> </tr>'
-                            var rowstbl = '<tr><td style="text-align:left;">' + parseInt(parseInt(rowIndex) + 1) + '</td><td> <a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a> <tr><td style="text-align:left;"> <input type="hidden" name="hdnParentTrans_ID" value="' + ParentTransID + '" /> <input type="hidden" name="hdnParentTrans_Name"  value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '"  /> <input type="hidden" name="hdnParentTrans_Type" value="' + ParentTransType + '" /> <input type="hidden" name="hdnItemID" value="' + value.Test_ID + '" /> <input type="hidden" name="hdnItemName" value="' + value.Test_Name + '" /> <input type="hidden" name="hdnItemType" value="Test" /> <input type="hidden" name="hdnCategory_ID" value="' + value.Group_Category + '" /> <input type="hidden" name="hdnRecommendedByDoctor" value="' + false + '" />' + value.Test_Name + '</td><td contenteditable="true" class="editable-remark" style="min-width:150px; background-color:#fff; cursor:text;">' + (remarks || '') + '</td><td>' + '<input type="text" name="txtQty" disabled=disabled value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/><input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" /><input type="hidden" name="Main_Department" value="' + maindpt + '" /></td></td>:' + globalTestRate + '</td></tr>'
+
+                            var rowstbl = '<tr>' +
+                               '<td style="text-align:left;">' + (parseInt(rowIndex) + 1) + '</td>' + '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)">Delete</a></td>' + '<td style="text-align:left;">' + '<input type="hidden" name="hdnParentTrans_ID" value="' + ParentTransID + '" />' + '<input type="hidden" name="hdnParentTrans_Name" value="' + (CheckInPatientObject == true ? 'InPatient' : '') + '" />' + '<input type="hidden" name="hdnParentTrans_Type" value="' + ParentTransType + '" />' + '<input type="hidden" name="hdnItemID" value="' + value.Test_ID + '" />' + '<input type="hidden" name="hdnItemName" value="' + value.Test_Name + '" />' + '<input type="hidden" name="hdnItemType" value="Test" />' + '<input type="hidden" name="hdnCategory_ID" value="' + value.Group_Category + '" />' + '<input type="hidden" name="hdnRecommendedByDoctor" value="false" />' + value.Test_Name + '</td>' + '<td contenteditable="true" class="editable-remark" style="min-width:150px; background-color:#fff; cursor:text;">' + (remarks || '') + '</td>' + '<td>' + '<input type="text" name="txtQty" disabled value="1" style="width: 45px !important;" onkeyup="CulculateAmonutWithQty(this)"/>' + '<input type="hidden" name="txtActualAmount" value="' + globalTestRate + '" />' +  '<input type="hidden" name="Main_Department" value="' + maindpt + '" />' + '</td>' + '<td>' + globalTestRate + '</td>' +
+                                '</tr>';
                         }
                         var test_array = $('#tblDetails').find('input[name=hdnItemID][value="' + value.TestID + '"]');
                         if (test_array.length > 0) {
@@ -6698,76 +6710,167 @@
                 fillPendingPatientsLists();
                 $('#queueModal').modal('show');
             }
-          // function fillPendingPatientsLists() {
-          //     var SearchString = '';
-          //     PageMethods.PendingPatients(SearchString,function (data) {
-          //         debugger;
-          //         var parsedData = JSON.parse(data);
-          //         let query = parsedData.query;
-          //         let ipd = parsedData.ipd;
-          //         let allPendings = query.concat(ipd);
-          //
-          //         var rows = '';
-          //         $.each(allPendings, function (key, value) {
-          //             debugger;
-          //             var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
-          //             var retdate = moment(TrnsDate).format('LLLL');
-          //             var status = '';
-          //             rows += '<tr> <td>' + value.mr_no_sequence + '</td> ' + '<td>' + value.Full_Name + '</td> ' + '<td>' + value.Age_years + '</td> ' + '<td>' + retdate + '</td> ' + ' <td> <a href="javascript:void(0)" onclick=AddPatientDetail(' + value.Actual_Patient_ID + ')><i class="fa fa-plus-circle fa-2x" ></i></a> </td> </tr>';
-          //         });
-          //         debugger;
-          //         $('#tblPendingPatients tbody').html(rows);
-          //
-          //
-          //         $(".se-pre-con").fadeOut("slow");
-          //
-          //     }, function (exec) { })
-          // }
+      
 
 
+          function fillPendingPatientsLists() {
+    debugger;
+    var SearchString = $("#txtSearchmodal").val();
+    PageMethods.PendingPatients(SearchString, function (data) {
+        debugger;
+        var parsedData = JSON.parse(data);
+        var rows = '';
 
-           function fillPendingPatientsLists() {
-                
-                var SearchString = $("#txtSearchmodal").val();
-                PageMethods.PendingPatients(SearchString,function (data) {
-                    debugger;
-                var parsedData = JSON.parse(data);
-                var rows = '';
+        $.each(parsedData, function (key, value) {
+            var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
+            var retdate = moment(TrnsDate).format('LLLL');
 
-                $.each(parsedData, function (key, value) {
-
-                    var TrnsDate = new Date(parseInt(value.Created_Time.substr(6)));
-                    var retdate = moment(TrnsDate).format('LLLL');
-
-                    rows += '<tr>' +
-                        '<td>' + value.mr_no_sequence + '</td>' +
-                        '<td>' + value.Full_Name + '</td>' +
-                        '<td>' + value.Age_years + '</td>' +
-                        '<td>' + value.Item_Name + '</td>' +
-                        '<td>' + value.Transaction_Type + '</td>' +
-                        '<td>' + value.Referred_By + '</td>' +
-                        '<td>' + value.Main_Department + '</td>' +
-                        '<td>' + value.Ward_Name + '</td>' +
-                        '<td>' + value.Bed_No + '</td>' +
-                        '<td>' + value.Area_Of_Interest + '</td>' +
-                        '<td>' + retdate + '</td>' +
-                        '<td>' +
-                        '<a href="#" onclick="AddPatientDetail(\'' + value.Actual_Patient_ID + '\')">' +
-                        '<i class="fa fa-edit fa-2x"></i>' +
-                        '</a>' +
-                        '</td>' +
-                        '</tr>';
-                });
-                    debugger;
-                    $('#tblPendingPatients tbody').html(rows);
-
-
-                    $(".se-pre-con").fadeOut("slow");
-
-                }, function (exec) { 
-                })
+            var actionsHtml = '';
+            var rowClass = '';
+            debugger;
+            
+            // Check if test is closed
+            if (value.is_Closed == true || value.is_Closed == 1) {
+                // Add light red background class for the entire row
+                rowClass = 'closed-row';
+                // Show prominent "CLOSED" badge
+                actionsHtml = '<span class="closed-badge">CLOSED</span>';
+            } else {
+                // Show icons for pending tests
+                actionsHtml =
+                    '<a href="#" onclick="AddPatientDetail(\'' + value.Actual_Patient_ID + '\')" style="margin-right: 8px; color: #28a745; font-size: 16px;" title="Edit">' +
+                    '<i class="fa fa-pencil-square-o"></i></a>' +
+                    '<a href="#" onclick="RejectTest(\'' + value.Lab_Test_Detail_ID + '\', \'' + (value.Full_Name || '').replace(/'/g, "\\'") + '\', \'' + (value.Item_Name || '').replace(/'/g, "\\'") + '\')" style="color: #dc3545; font-size: 16px;" title="Reject">' +
+                    '<i class="fa fa-ban"></i></a>';
             }
 
+            rows += '<tr class="' + rowClass + '">' +
+                '<td style="padding: 8px;">' + (value.mr_no_sequence || '') + '</td>' +
+                '<td style="padding: 8px;">' + (value.Full_Name || '') + '</td>' +
+                '<td style="padding: 8px;">' + (value.Age_years || '') + '</td>' +
+                '<td style="padding: 8px;">' + (value.Item_Name || '') + '</td>' +
+                '<td style="padding: 8px;">' + (value.Transaction_Type || '') + '</td>' +
+                '<td style="padding: 8px;">' + (value.Referred_By || '') + '</td>' +
+                '<td style="padding: 8px;">' + (value.Main_Department || '') + '</td>' +
+                '<td style="padding: 8px;">' + (value.Ward_Name || '') + '</td>' +
+                '<td style="padding: 8px;">' + (value.Bed_No || '') + '</td>' +
+                '<td style="padding: 8px;">' + (value.Area_Of_Interest || '') + '</td>' +
+                '<td style="padding: 8px;">' + retdate + '</td>' +
+                '<td style="text-align: center; width: 100px; padding: 8px;">' + actionsHtml + '</td>' +
+                '</tr>';
+        });
+
+        debugger;
+        $('#tblPendingPatients tbody').html(rows);
+        
+        // Show message if no data
+        if (parsedData.length === 0) {
+            $('#tblPendingPatients tbody').html('<tr><td colspan="12" style="text-align: center; padding: 20px;">No pending tests found</td></tr>');
+        }
+        
+        $(".se-pre-con").fadeOut("slow");
+    }, function (exec) { 
+        debugger;
+        $('#tblPendingPatients tbody').html('<tr><td colspan="12" style="text-align: center; padding: 20px; color: red;">Error loading data</td></tr>');
+        $(".se-pre-con").fadeOut("slow");
+    });
+}
+            function RejectTest(labTestDetailId, patientName, testName) {
+    debugger;
+
+    if (!labTestDetailId || labTestDetailId == '0') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Invalid test record. Cannot reject.',
+            showConfirmButton: true,
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Reject Test?',
+        html: `Are you sure you want to Close <strong>${testName}</strong> for patient <strong>${patientName}</strong>?<br><br>This action cannot be undone.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, Close it!',
+        cancelButtonText: 'Cancel',
+        customClass: {
+            popup: 'swal-big-popup',
+            title: 'swal-big-title',
+            htmlContainer: 'swal-big-text'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Rejecting the test request',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            debugger;
+            
+            // Use direct jQuery AJAX instead of PageMethods
+            $.ajax({
+                type: "POST",
+                url: "BillingProcess.aspx/RejectLabTestDetail",
+                data: JSON.stringify({ LabTestDetail_ID: labTestDetailId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    var result = JSON.parse(response.d);
+                    
+                    if (result.Success === true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Rejected!',
+                            text: result.Message || 'Test has been Closed successfully.',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        // Refresh the queue list
+                        setTimeout(function () {
+                            fillPendingPatientsLists();
+                        }, 2000);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: result.Message || 'Failed to Closed the test.',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    debugger;
+                    console.error("AJAX Error:", error);
+                    let errorMsg = "An error occurred while processing your request.";
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.Message) errorMsg = response.Message;
+                    } catch(e) {}
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: errorMsg,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
+            });
+        }
+    });
+}
             function RefreshQueue(){
                 $("#txtSearchmodal").val('')
                 fillPendingPatientsLists()
@@ -8249,7 +8352,7 @@
 
 
                         <div class="table-responsive previewTable" style="overflow:scroll;overflow-x: scroll;height: 433px;" >
-                            <table class="table table-hover table-striped table-bordered" id="tblPendingPatients" style="overflow: scroll; height: auto;">
+                            <table class="table" id="tblPendingPatients" style="overflow: scroll; height: auto;">
                                 <thead id="ihead">
                                     <tr>
                                         <th>MR No</th>

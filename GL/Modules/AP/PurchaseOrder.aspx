@@ -2307,11 +2307,12 @@ function scheduleCalcTotal(delay) {
 
         // Load items from INV_Items table into search modal
         function LoadAllitem(searchText) {
+            var warehouseId = $("#ddlWarehouse").val();
             debugger;
             $.ajax({
                 type: "POST",
                 url: "PurchaseOrder.aspx/GetAllitem",
-                data: JSON.stringify({ searchText: searchText }),
+                data: JSON.stringify({ searchText: searchText, warehouseId: warehouseId }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {

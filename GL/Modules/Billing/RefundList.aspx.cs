@@ -86,7 +86,8 @@ namespace PMS
 
                     var Total_Refunds = _dbContext.Refunds.Count();
                     var Refunds = from R in _dbContext.Refunds
-                                where 
+                                  join reg in _dbContext.Reg_patients on R.Patient_ID equals reg.pat_id
+                                where (R.isCancelled == false || R.isCancelled == null) &&
                                      ((R.Refund_ID.ToString().Contains(searchValue)  || R.Bill_ID.ToString().Contains(searchValue)|| R.Bill_ID.ToString().Contains(searchValue) || R.Refund_Amount.ToString().Contains(searchValue) || (from bl in _dbContext.Ar_Billings where bl.Bill_ID == R.Bill_ID select bl.Bill_No).FirstOrDefault().Contains(searchValue) || (from bl in _dbContext.Patients where bl.Patient_ID == R.Patient_ID select bl.mr_no_sequence).FirstOrDefault().ToString().Contains(searchValue)))
                                 select new
                                 {
@@ -96,8 +97,15 @@ namespace PMS
                                     Refund_Date = R.Refund_Date,
                                     Refund_Amount = R.Refund_Amount,
                                     Status = R.Status ?? "Created",
-                                    MrNo = (from bl in _dbContext.Patients where bl.Patient_ID == R.Patient_ID select bl.mr_no_sequence).FirstOrDefault(),
+                                    //MrNo = (from bl in _dbContext.Patients where bl.Patient_ID == R.Patient_ID select bl.mr_no_sequence).FirstOrDefault(),
+                                    MrNo = reg.mr_no_sequence,
                                     Remarks = R.Remarks,
+                                    FullName = reg.Full_Name,
+                                    Test_Main_Department = _dbContext.GetDataValueName("Main Test Departments",(from d in _dbContext.Ar_Billing_Details
+                                           where d.Bill_ID == R.Bill_ID
+                                           select d.Test_Main_Department).FirstOrDefault()),
+
+
                                 };
 
                     var FilteredCount = Refunds.Count();
@@ -212,6 +220,38 @@ namespace PMS
                     db.SubmitChanges();
                 }
                 return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        [WebMethod]
+        public static bool RejectRefund(string refundId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    if (int.TryParse(refundId, out int id))
+                    {
+                        var refund = db.Refunds.FirstOrDefault(r => r.Refund_ID == id);
+                        if (refund != null && refund.Status != "Approved")
+                        {
+                            var userId = AppConfig.UserID; 
+
+                            refund.Is_Rejected = true;
+                            refund.Rejectedby = userId;
+                            refund.RejectedDate = DateTime.Now;
+                            refund.Status = "Rejected";
+
+                            db.SubmitChanges();
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
             catch (Exception)
             {

@@ -80,7 +80,9 @@ namespace PMS
                                 Main_Test_Departments = db.GetDataValueName("Main Test Departments", bill_details.Test_Main_Department),
                                 labtest_detail.Lab_Test_Detail_ID,
                                 Department = db.GetDataValueName("Patient Main Category", dept),
+                                Main_Department = db.GetDataValueName("Mode Of Registration", bill.Main_Department),
                                 bill_details.ParentTrans_Name,
+                                bill_details.Net_Amount,
                                 DoctorID = labtest_detail.DoctorID ?? (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
                                 LabTest_DoctorID = labtest_detail.DoctorID ?? 0,
                                 Billing_DoctorID = (bill_details.Doctor_id != null && bill_details.Doctor_id != "" ? Convert.ToInt32(bill_details.Doctor_id) : 0),
@@ -306,6 +308,67 @@ namespace PMS
                        }).ToList();
 
             return (new JavaScriptSerializer().Serialize(dpt));
+        }
+
+        [WebMethod]
+        public static string GetUserColumnPreferences()
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "RadiologyAcknowledgementlist";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var pref = db.UserDataTablePreferences
+                                  .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (pref != null)
+                        return pref.ColumnVisibility;
+                    else
+                        return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        [WebMethod]
+        public static void SaveUserColumnPreferences(string visibilityJson)
+        {
+            try
+            {
+                string userId = AppConfig.UserID.ToString();
+                string pageName = "RadiologyAcknowledgementlist";
+
+                using (var db = new DataBaseDataContext())
+                {
+                    var existing = db.UserDataTablePreferences
+                                     .FirstOrDefault(p => p.UserID == userId && p.PageName == pageName);
+
+                    if (existing != null)
+                    {
+                        existing.ColumnVisibility = visibilityJson;
+                    }
+                    else
+                    {
+                        db.UserDataTablePreferences.InsertOnSubmit(new UserDataTablePreference
+                        {
+                            UserID = userId,
+                            PageName = pageName,
+                            ColumnVisibility = visibilityJson
+                        });
+                    }
+
+                    db.SubmitChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }
