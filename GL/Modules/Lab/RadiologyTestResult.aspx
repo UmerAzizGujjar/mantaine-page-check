@@ -3,6 +3,9 @@
 <%@ Register Assembly="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style>
+
+    </style>
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
         var isSingleTestMode = false;
@@ -2565,7 +2568,26 @@ function cleanPrint() {
 
 
             if (CKEDITOR) {
-                CKEDITOR.replace('txtfixedType');
+                // Configure CKEditor with 14px default font
+                CKEDITOR.replace('txtfixedType', {
+                    fontSize_defaultLabel: '14px',
+                    fontSize_sizes: '8/8px;9/9px;10/10px;11/11px;12/12px;14/14px;16/16px;18/18px;20/20px;22/22px;24/24px;26/26px;28/28px;36/36px;48/48px;72/72px',
+                    on: {
+                        instanceReady: function (ev) {
+                            // Set body font size to 14px
+                            ev.editor.document.getBody().setStyle('font-size', '14px');
+                            // Set default font for new content
+                            ev.editor.execCommand('fontSize', { value: '14px' });
+                        },
+                        contentDom: function (ev) {
+                            // Ensure existing content also gets 14px
+                            var body = ev.editor.document.getBody();
+                            if (body.getStyle('font-size') !== '14px') {
+                                body.setStyle('font-size', '14px');
+                            }
+                        }
+                    }
+                });
             }
 
             $('#txtMRNOSearch').keyup(function (e) {

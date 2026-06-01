@@ -19,7 +19,7 @@
                 // Add this event handler inside document ready
                 $(document).on('click', '#confirmCloseBtn', function () {
                     var remarks = $('#remarks').val().trim();
-
+                    debugger;
                     if (remarks === "") {
                         Swal.fire({
                             icon: 'warning',
@@ -30,8 +30,8 @@
                         });
                         return false;
                     }
-
-                    var GIR = $('#mir_id').val();
+                    debugger;
+                    var GIR = $('#ddlMIR').val();
 
                     if (!GIR || GIR === "0") {
                         Swal.fire({
