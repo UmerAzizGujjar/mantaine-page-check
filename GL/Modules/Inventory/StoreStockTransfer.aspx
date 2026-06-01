@@ -668,10 +668,14 @@
                             else {
                                 html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td>" + "<td class=combat>" + quantity + "</td><td><a class='deleteStkItem'>Delete</a></td>";
                             }
-                            $("#stocktable tbody").append("<tr id='" + itmCode + "^" + batcNo + "^" + quantity + "^" + expDate + "'><td class='dn'><label class='srNo'>" + itmCode + batcNo + "</label></td><td class=combat>" +
+
+                            var nextSrNo = $("#stocktable tbody tr").length + 1;
+
+                            $("#stocktable tbody").append("<tr id='" + itmCode + "^" + batcNo + "^" + quantity + "^" + expDate + "'><td class='dn'><label class='srNo'>" + nextSrNo + "</label></td><td class=combat>" +
                                 itmCode + "</td> <td class=combat>" +
                                 batcNo + "</td>" + html + "</tr>"
                             );
+
                             $('#ctl00_MainContent_Select_wareHouseFrom').attr('disabled', true);
                             $('#ctl00_MainContent_Select_wareHouseTo').attr('disabled', true);
                             $("#StockTransferDate").attr('disabled', true);
