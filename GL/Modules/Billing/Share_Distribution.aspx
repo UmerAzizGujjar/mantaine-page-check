@@ -21,14 +21,53 @@
 
 
             $(document).on('keyup', '.disc-perc', function () {
-
                 var perc = parseFloat($(this).val()) || 0;
                 var shareableIncome = parseFloat($('#txtShareableIncome').val()) || 0;
                 var row = $(this).closest('tr');
                 var discAmount = (shareableIncome * perc) / 100;
                 row.find('.net-amount').val(discAmount.toFixed(2));
+                CalculateRemainingIPDShare();
             });
         });
+
+        // Calculate remaining share and assign it to IPD SHARE row
+        function CalculateRemainingIPDShare() {
+
+            var shareableIncome = parseFloat($('#txtShareableIncome').val()) || 0;
+            var distributedAmount = 0;
+            var ipdRow = null;
+
+            $('#tblDoctorShareDetails tbody tr').each(function () {
+
+                var row = $(this);
+                var accountName = row.find('#Account_Name').val()?.trim().toUpperCase();
+
+                var netAmount = parseFloat(
+                    row.find('.net-amount').val()
+                ) || 0;
+
+                // Save IPD SHARE row separately
+                if (accountName === 'IPD SHARE') {
+                    ipdRow = row;
+                }
+                else {
+                    // Sum all doctor shares except IPD SHARE
+                    distributedAmount += netAmount;
+                }
+            });
+
+            // Remaining amount
+            var remainingAmount = shareableIncome - distributedAmount;
+
+            if (remainingAmount < 0) {
+                remainingAmount = 0;
+            }
+
+            // Assign remaining amount to IPD SHARE row
+            if (ipdRow) {
+                ipdRow.find('.net-amount').val(remainingAmount.toFixed(2));
+            }
+        }
         function LoadDistributionHead(Dist_ID) {
             var id = Dist_ID
             $.ajax({
@@ -111,7 +150,7 @@
                     .append(rows);
             });
         }
-
+        var shareableIncomes = 0;
         function LoadDistributionDetail(Dist_ID) {
 
             PageMethods.LoadDistributionDetail(Dist_ID, function (resp) {
@@ -126,8 +165,8 @@
                         `value="${value.Account_Id}" selected`
                     );
                     if (value.Share_Calculation === 'IPD REVENUE') {
-                        shareableIncome = value.Net_Amount;
-                        $('#txtShareableIncome').val(shareableIncome)
+                        shareableIncomes = value.Net_Amount;
+                        $('#txtShareableIncome').val(shareableIncomes)
                     }
 
                     rows += `
@@ -160,6 +199,144 @@
             });
         }
 
+        function CalculateRemainingIPDRevenue() {
+
+            debugger;
+
+            var totalDistributed = 0;
+            var ipdamt = 0;
+
+            // Sum all appended custom row amounts
+            $('#tblDetails tbody tr.custom-share-row').each(function () {
+
+                var amount = parseFloat(
+                    $(this).find('.distribution-amount').val()
+                ) || 0;
+
+                totalDistributed = amount;
+            });
+
+            // Get original IPD REVENUE amount
+            $('#tblDetails tbody tr').each(function () {
+
+                var description = $(this)
+                    .find('input[name="txtDescription"]')
+                    .val();
+
+                if (description &&
+                    description.toUpperCase() === 'IPD REVENUE') {
+
+                    ipdamt = parseFloat(
+                        $(this)
+                            .find('input[name="txtNetAmount"]')
+                            .val()
+                    ) || 0;
+                }
+            });
+
+            // Remaining amount
+            var remaining = ipdamt - totalDistributed;
+
+            if (remaining < 0) {
+                remaining = 0;
+            }
+
+            // Update IPD REVENUE row
+            $('#tblDetails tbody tr').each(function () {
+
+                var description = $(this)
+                    .find('input[name="txtDescription"]')
+                    .val();
+
+                if (description &&
+                    description.toUpperCase() === 'IPD REVENUE') {
+
+                    $(this)
+                        .find('input[name="txtTotalAmount"]')
+                        .val(remaining.toFixed(2));
+
+                    $(this)
+                        .find('input[name="txtNetAmount"]')
+                        .val(remaining.toFixed(2));
+                }
+            });
+            $("#txtShareableIncome").val(remaining.toFixed(2))
+        }
+        function AddDistributionRow() {
+            debugger;
+            var description = $('#IPD_Discription').val();
+            var amount = parseFloat($('#Dist_Amount').val()) || 0;
+
+            if (description == '') {
+                alert('Please Enter Description');
+                return;
+            }
+
+            var rowCount = $('#tblDetails tbody tr').length;
+
+            var row = `
+        <tr class="custom-share-row">
+
+            <td>
+                <select id="ddlGlAccounts${rowCount}" name="ddlGlAccounts">
+                    ${Account}
+                </select>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="text"
+                       class="form-control"
+                       name="txtDescription"
+                       value="${description}"
+                       readonly>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="number"
+                       class="form-control distribution-amount"
+                       name="txtNetAmount"
+                       value="${amount}"
+                       readonly>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="number"
+                       class="form-control distribution-amount"
+                       name="txtNetAmount"
+                       value="0"
+                       readonly>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="number"
+                       class="form-control distribution-amount"
+                       name="txtNetAmount"
+                       value="0"
+                       readonly>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="number"
+                       class="form-control distribution-amount"
+                       name="txtNetAmount"
+                       value="${amount}"
+                       readonly>
+            </td>
+
+ 
+
+        </tr>
+    `;
+
+            $('#tblDetails tbody').append(row);
+
+            // clear controls
+            $('#IPD_Discription').val('');
+            $('#Dist_Amount').val(0);
+
+            // recalculate remaining IPD revenue
+            CalculateRemainingIPDRevenue();
+        }
         function GetPatientDetailByBillID(BillId) {
             debugger;
             $.ajax({
@@ -801,6 +978,19 @@
 
 
     <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-lg-2 col-md-6 col-sm-6">
+              <input type="text" id ="IPD_Discription"/>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+              <input type="text" id ="Dist_Amount"/>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <input type="button" onclick="AddDistributionRow();" class="btn-primry" value="+" id="generateRowsss" />
+            </div>
+
+        </div>
         <div class="row">
             <div class="col-lg-12 col-md-6 col-sm-6" style="margin-top: 2%">
                 <div class="table-responsive" style="height: 250px;">

@@ -100,6 +100,9 @@ namespace PMS
                                                                                        select gmm.Created_By).FirstOrDefault()).Select(x => x.UserName).FirstOrDefault(),
                                    Issuer = _dbContext.aspnet_Users.Where(x => x.UserId == SI.Created_by).Select(x => x.UserName).FirstOrDefault(),
                                    Status = SI.Status,
+                                   Blnc_Qty =  (from gm in _dbContext.Store_Issue_Details
+                                                                                     where gm.Store_Issue_Id == SI.Store_Issue_Id
+                                                                                     select  gm.MIR_Qty - gm.Issue_Qty ).Sum(),
                                    Approved_Time = SI.Approved_Time,
                                };
 
