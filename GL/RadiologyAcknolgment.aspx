@@ -238,6 +238,17 @@
                     { "data": "Net_Amount" },
                     { "data": "Main_Department" },
                     {
+                        "data": "Panel",
+                        "name": "Panel",
+                        "render": function (data) {
+                            if (data && data > 0) {
+                                return 'Panel';
+                            } else {
+                                return 'Private';
+                            }
+                        }
+                    },
+                    {
                         "data": "ParentTrans_Name",
                         "name": "ParentTrans_Name",
                         "render": function (data) {
@@ -575,6 +586,7 @@
                                     <th>Bed No</th>
                                     <th>Net Amount</th>
                                     <th>Main Category</th>
+                                    <th>Patient Category</th>
                                     <th>Main Department</th>
                                     <th>Doctor</th>
                                     <th>Status</th>

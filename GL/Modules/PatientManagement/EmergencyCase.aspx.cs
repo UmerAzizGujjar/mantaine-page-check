@@ -5058,41 +5058,80 @@ namespace PMS
 
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    // Get ALL existing medicine names for this patient
-                    var existingNames = db.In_Patient_Medicines
-                        .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "Emergency Patient")
-                        .Select(p => p.Medicine_Name.Trim())  // Trim to avoid spaces issues
+                    // Set your transaction type here so it's easy to change for the other functions
+                    string transactionType = "Emergency Patient";
+
+                    // 1. Get ALL existing records for this patient from the Database
+                    var existingDbRecords = db.In_Patient_Medicines
+                        .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == transactionType)
                         .ToList();
 
-                    System.Diagnostics.Debug.WriteLine("=== SaveMedicines Debug ===");
-                    System.Diagnostics.Debug.WriteLine("Patient ID: " + MedicineDetail.PatientID);
+                    // 2. Get a simple list of the incoming medicine names from the UI (lowercased for safe matching)
+                    var incomingNames = MedicineDetail.MedicineList
+                        .Select(m => m.Medicine_Name.Trim().ToLower())
+                        .ToList();
 
+                    // ==========================================
+                    // STEP A: DELETE MISSING
+                    // ==========================================
+                    var recordsToDelete = existingDbRecords
+                        .Where(dbRecord => !incomingNames.Contains(dbRecord.Medicine_Name.Trim().ToLower()))
+                        .ToList();
+
+                    if (recordsToDelete.Any())
+                    {
+                        db.In_Patient_Medicines.DeleteAllOnSubmit(recordsToDelete);
+                        System.Diagnostics.Debug.WriteLine($"DELETED {recordsToDelete.Count} removed medicines.");
+                    }
+
+                    // We use this list to prevent inserting duplicates if the UI sends the same drug twice in one request
+                    List<string> processedNames = new List<string>();
+
+                    // ==========================================
+                    // STEP B & C: UPDATE EXISTING OR INSERT NEW
+                    // ==========================================
                     foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
                     {
                         string medicineName = newMed.Medicine_Name.Trim();
 
-                        // Only insert if name NOT in existing list
-                        if (!existingNames.Contains(medicineName))
+                        // Skip if we already processed this exact name in this loop
+                        if (processedNames.Contains(medicineName, StringComparer.OrdinalIgnoreCase)) continue;
+                        processedNames.Add(medicineName);
+
+                        // Check if this medicine already exists in our fetched database records
+                        var existingRecord = existingDbRecords.FirstOrDefault(dbRecord =>
+                            dbRecord.Medicine_Name.Trim().Equals(medicineName, StringComparison.OrdinalIgnoreCase));
+
+                        if (existingRecord != null)
                         {
+                            // UPDATE: It exists in DB and UI. Overwrite with new UI values.
+                            System.Diagnostics.Debug.WriteLine("UPDATING existing medicine: " + medicineName);
+
+                            existingRecord.Medicine_Date = newMed.Medicine_Date;
+                            existingRecord.Oral = newMed.Oral;
+                            existingRecord.Injections = newMed.Injection;
+                            existingRecord.Dosage_From = newMed.Dosage_From;
+                            existingRecord.AttendingParamedical_Staff = newMed.AttendingParamedical_Staff;
+                            existingRecord.Frequency = newMed.Frequency;
+                            existingRecord.Dosage_Qty = newMed.Dosage_Qty;
+                            existingRecord.Other_Instruction = newMed.Other_Instruction;
+                            existingRecord.Nurse_Name = newMed.Nurse_Name;
+                        }
+                        else
+                        {
+                            // INSERT: It's in the UI but not in the DB.
                             System.Diagnostics.Debug.WriteLine("INSERTING new medicine: " + medicineName);
 
-                            // Get the Item_Code from inventory
                             string itemCode = newMed.ItemCode;
-                            var inventoryItem = db.INV_Items
-                                .Where(p => p.Description == newMed.Medicine_Name)
-                                .FirstOrDefault();
-
-                            if (inventoryItem != null)
-                            {
-                                itemCode = inventoryItem.Item_ID.ToString();
-                            }
+                            var inventoryItem = db.INV_Items.FirstOrDefault(p => p.Description == newMed.Medicine_Name);
+                            if (inventoryItem != null) itemCode = inventoryItem.Item_ID.ToString();
 
                             In_Patient_Medicine newMedicine = new In_Patient_Medicine()
                             {
                                 Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
                                 Item_Code = itemCode,
                                 Medicine_Name = medicineName,
-                                Transaction_Type = "Emergency Patient",
+                                Transaction_Type = transactionType,
                                 Medicine_Date = newMed.Medicine_Date,
                                 Oral = newMed.Oral,
                                 Injections = newMed.Injection,
@@ -5103,21 +5142,17 @@ namespace PMS
                                 Other_Instruction = newMed.Other_Instruction,
                                 Nurse_Name = newMed.Nurse_Name
                             };
-
                             db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
                         }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("SKIPPING existing medicine: " + medicineName);
-                        }
                     }
+
                     db.SubmitChanges();
-                    System.Diagnostics.Debug.WriteLine("=== SaveMedicines Complete ===");
+                    System.Diagnostics.Debug.WriteLine("=== SaveMedicines Sync Complete ===");
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("SaveMedicines Error: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("Save Error: " + ex.Message);
             }
             return "";
         }
@@ -5131,42 +5166,83 @@ namespace PMS
 
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    // Get ALL existing medicine monitoring names for this patient
-                    var existingNames = db.In_Patient_Medicines
-                        .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "Emergency Patient Nursing Monitoring")
-                        .Select(p => p.Medicine_Name.Trim())  // Trim to avoid spaces issues
+                    string transactionType = "Emergency Patient Nursing Monitoring";
+
+                    // 1. Get ALL existing monitoring records for this patient from the Database
+                    var existingDbRecords = db.In_Patient_Medicines
+                        .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == transactionType)
                         .ToList();
 
-                    System.Diagnostics.Debug.WriteLine("=== SaveMedicinesMonitoring Debug ===");
-                    System.Diagnostics.Debug.WriteLine("Patient ID: " + MedicineDetail.PatientID);
+                    // 2. Get a simple list of the incoming medicine names from the UI (lowercased for safe matching)
+                    var incomingNames = MedicineDetail.MedicineList
+                        .Select(m => m.Medicine_Name.Trim().ToLower())
+                        .ToList();
 
+                    // ==========================================
+                    // STEP A: DELETE MISSING
+                    // ==========================================
+                    var recordsToDelete = existingDbRecords
+                        .Where(dbRecord => !incomingNames.Contains(dbRecord.Medicine_Name.Trim().ToLower()))
+                        .ToList();
+
+                    if (recordsToDelete.Any())
+                    {
+                        db.In_Patient_Medicines.DeleteAllOnSubmit(recordsToDelete);
+                        System.Diagnostics.Debug.WriteLine($"DELETED {recordsToDelete.Count} removed monitoring records.");
+                    }
+
+                    // Prevent inserting duplicates if the UI sends the same drug twice in one JSON request
+                    List<string> processedNames = new List<string>();
+
+                    // ==========================================
+                    // STEP B & C: UPDATE EXISTING OR INSERT NEW
+                    // ==========================================
                     foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
                     {
                         string medicineName = newMed.Medicine_Name.Trim();
 
-                        // Only insert if name NOT in existing list
-                        if (!existingNames.Contains(medicineName))
+                        // Skip if we already processed this exact name in this loop
+                        if (processedNames.Contains(medicineName, StringComparer.OrdinalIgnoreCase)) continue;
+                        processedNames.Add(medicineName);
+
+                        // Check if this medicine already exists in our fetched database records
+                        var existingRecord = existingDbRecords.FirstOrDefault(dbRecord =>
+                            dbRecord.Medicine_Name.Trim().Equals(medicineName, StringComparison.OrdinalIgnoreCase));
+
+                        if (existingRecord != null)
                         {
+                            // UPDATE: It exists in DB and UI. Overwrite with new UI values.
+                            System.Diagnostics.Debug.WriteLine("UPDATING existing monitoring record: " + medicineName);
+
+                            // Note: Monitoring uses 'Date' instead of 'Medicine_Date'
+                            existingRecord.Medicine_Date = Convert.ToDateTime(newMed.Date);
+                            existingRecord.Oral = newMed.Oral;
+                            existingRecord.Injections = newMed.Injection;
+                            existingRecord.Dosage_From = newMed.Dosage_From;
+                            existingRecord.AttendingParamedical_Staff = newMed.AttendingParamedical_Staff;
+                            existingRecord.Frequency = newMed.Frequency;
+                            existingRecord.Dosage_Qty = newMed.Dosage_Qty;
+                            existingRecord.Other_Instruction = newMed.Other_Instruction;
+                            existingRecord.Nurse_Name = newMed.Nurse_Name;
+                            existingRecord.Remarks = newMed.Remarks;
+                        }
+                        else
+                        {
+                            // INSERT: It's in the UI but not in the DB.
                             System.Diagnostics.Debug.WriteLine("INSERTING new monitoring record: " + medicineName);
 
-                            // Get the Item_Code from inventory
                             string itemCode = newMed.ItemCode;
-                            var inventoryItem = db.INV_Items
-                                .Where(p => p.Description == newMed.Medicine_Name)
-                                .FirstOrDefault();
-
-                            if (inventoryItem != null)
-                            {
-                                itemCode = inventoryItem.Item_ID.ToString();
-                            }
+                            var inventoryItem = db.INV_Items.FirstOrDefault(p => p.Description == newMed.Medicine_Name);
+                            if (inventoryItem != null) itemCode = inventoryItem.Item_ID.ToString();
 
                             In_Patient_Medicine newMedicine = new In_Patient_Medicine()
                             {
                                 Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
                                 Item_Code = itemCode,
                                 Medicine_Name = medicineName,
-                                Transaction_Type = "Emergency Patient Nursing Monitoring",
-                                Medicine_Date = Convert.ToDateTime(newMed.Date), // Note: monitoring uses 'Date' instead of 'Medicine_Date'
+                                Transaction_Type = transactionType,
+                                // Note: Monitoring uses 'Date' instead of 'Medicine_Date'
+                                Medicine_Date = Convert.ToDateTime(newMed.Date),
                                 Oral = newMed.Oral,
                                 Injections = newMed.Injection,
                                 Dosage_From = newMed.Dosage_From,
@@ -5177,19 +5253,16 @@ namespace PMS
                                 Nurse_Name = newMed.Nurse_Name,
                                 Remarks = newMed.Remarks
                             };
-
                             db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
                         }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("SKIPPING existing monitoring record: " + medicineName);
-                        }
 
-                        // Execute your raw SQL regardless of whether it was inserted or skipped
-                        DBClass.executeNonQueryWithoutBegin("update In_Patient_Medicines set Assigned=1 where Medicine_Name like '%" + newMed.Medicine_Name + "%' and transaction_type='Emergency Patient' and Patient_ID=" + MedicineDetail.PatientID);
+                        // Execute the raw SQL assignment flag. 
+                        // (.Replace is added to prevent SQL crashes if the medicine name has an apostrophe)
+                        DBClass.executeNonQueryWithoutBegin("update In_Patient_Medicines set Assigned=1 where Medicine_Name like '%" + medicineName.Replace("'", "''") + "%' and transaction_type='Emergency Patient' and Patient_ID=" + MedicineDetail.PatientID);
                     }
+
                     db.SubmitChanges();
-                    System.Diagnostics.Debug.WriteLine("=== SaveMedicinesMonitoring Complete ===");
+                    System.Diagnostics.Debug.WriteLine("=== SaveMedicinesMonitoring Sync Complete ===");
                 }
             }
             catch (Exception ex)
@@ -5209,7 +5282,7 @@ namespace PMS
             return "";
         }
         [WebMethod]
-        public static string SaveDischargeMedicines    (string MedicineDetails)
+        public static string SaveDischargeMedicines(string MedicineDetails)
         {
             try
             {
@@ -5218,53 +5291,108 @@ namespace PMS
 
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    List<In_Patient_Medicine> In_Patient_MedicineList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == "Emergency Patient Discharge").ToList();
-                    db.In_Patient_Medicines.DeleteAllOnSubmit(In_Patient_MedicineList);
-                    db.SubmitChanges();
+                    string transactionType = "Emergency Patient Discharge";
 
-                    int couterNewRecords = 0;
-
-                    if (MedicineDetail.PatientID != 0)
+                    // --- Keep original cleanup for dummy records (Patient_ID == 0) ---
+                    var dummyList = db.In_Patient_Medicines.Where(i => i.Patient_ID == 0 && i.Transaction_Type == transactionType).ToList();
+                    if (dummyList.Any())
                     {
-                        List<In_Patient_Medicine> inPatmedicineList = db.In_Patient_Medicines.Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "Emergency Patient Discharge").ToList();
-                        if (inPatmedicineList != null)
+                        db.In_Patient_Medicines.DeleteAllOnSubmit(dummyList);
+                    }
+
+                    // 1. Get ALL existing records for this patient from the Database
+                    var existingDbRecords = db.In_Patient_Medicines
+                        .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == transactionType)
+                        .ToList();
+
+                    // 2. Get a simple list of the incoming medicine names from the UI (lowercased for safe matching)
+                    var incomingNames = MedicineDetail.MedicineList
+                        .Select(m => m.Medicine_Name.Trim().ToLower())
+                        .ToList();
+
+                    // ==========================================
+                    // STEP A: DELETE MISSING
+                    // ==========================================
+                    var recordsToDelete = existingDbRecords
+                        .Where(dbRecord => !incomingNames.Contains(dbRecord.Medicine_Name.Trim().ToLower()))
+                        .ToList();
+
+                    if (recordsToDelete.Any())
+                    {
+                        db.In_Patient_Medicines.DeleteAllOnSubmit(recordsToDelete);
+                        System.Diagnostics.Debug.WriteLine($"DELETED {recordsToDelete.Count} removed discharge medicines.");
+                    }
+
+                    // We use this list to prevent inserting duplicates if the UI sends the same drug twice in one request
+                    List<string> processedNames = new List<string>();
+
+                    // ==========================================
+                    // STEP B & C: UPDATE EXISTING OR INSERT NEW
+                    // ==========================================
+                    foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
+                    {
+                        string medicineName = newMed.Medicine_Name.Trim();
+
+                        // Skip if we already processed this exact name in this loop
+                        if (processedNames.Contains(medicineName, StringComparer.OrdinalIgnoreCase)) continue;
+                        processedNames.Add(medicineName);
+
+                        // Check if this medicine already exists in our fetched database records
+                        var existingRecord = existingDbRecords.FirstOrDefault(dbRecord =>
+                            dbRecord.Medicine_Name.Trim().Equals(medicineName, StringComparison.OrdinalIgnoreCase));
+
+                        if (existingRecord != null)
                         {
-                            db.In_Patient_Medicines.DeleteAllOnSubmit(inPatmedicineList);
-                            couterNewRecords++;
+                            // UPDATE: It exists in DB and UI. Overwrite with new UI values.
+                            System.Diagnostics.Debug.WriteLine("UPDATING existing discharge medicine: " + medicineName);
+
+                            existingRecord.Medicine_Date = newMed.Medicine_Date;
+                            existingRecord.Oral = newMed.Oral;
+                            existingRecord.Injections = newMed.Injection;
+                            existingRecord.Dosage_From = newMed.Dosage_From;
+                            existingRecord.AttendingParamedical_Staff = newMed.AttendingParamedical_Staff;
+                            existingRecord.Frequency = newMed.Frequency;
+                            existingRecord.Dosage_Qty = newMed.Dosage_Qty;
+                            existingRecord.Other_Instruction = newMed.Other_Instruction;
+                        }
+                        else
+                        {
+                            // INSERT: It's in the UI but not in the DB.
+                            System.Diagnostics.Debug.WriteLine("INSERTING new discharge medicine: " + medicineName);
+
+                            string itemCode = newMed.ItemCode;
+                            var inventoryItem = db.INV_Items.FirstOrDefault(p => p.Description == newMed.Medicine_Name);
+                            if (inventoryItem != null) itemCode = inventoryItem.Item_ID.ToString();
+
+                            In_Patient_Medicine newMedicine = new In_Patient_Medicine()
+                            {
+                                Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
+                                Item_Code = itemCode,
+                                Medicine_Name = medicineName,
+                                Transaction_Type = transactionType,
+                                Medicine_Date = newMed.Medicine_Date,
+                                Oral = newMed.Oral,
+                                Injections = newMed.Injection,
+                                Dosage_From = newMed.Dosage_From,
+                                AttendingParamedical_Staff = newMed.AttendingParamedical_Staff,
+                                Frequency = newMed.Frequency,
+                                Dosage_Qty = newMed.Dosage_Qty,
+                                Other_Instruction = newMed.Other_Instruction
+                            };
+                            db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
                         }
                     }
-                    couterNewRecords = 0;
-                    foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
-                    {
-                        In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine()
-                        {
 
-                            Patient_ID = Convert.ToInt32(MedicineDetail.PatientID),
-                            Item_Code = oIn_Patient_Medicine.ItemCode,
-                            Medicine_Name = oIn_Patient_Medicine.Medicine_Name,
-                            Transaction_Type = "Emergency Patient Discharge",
-                            Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
-                            Oral = oIn_Patient_Medicine.Oral,
-                            Injections = oIn_Patient_Medicine.Injection,
-                            Dosage_From = oIn_Patient_Medicine.Dosage_From,
-                            AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
-                            Frequency = oIn_Patient_Medicine.Frequency,
-                            Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
-                            Other_Instruction = oIn_Patient_Medicine.Other_Instruction
-
-                        };
-                        db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
-                        couterNewRecords++;
-                    }
                     db.SubmitChanges();
+                    System.Diagnostics.Debug.WriteLine("=== SaveDischargeMedicines Sync Complete ===");
                 }
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine("SaveDischargeMedicines Error: " + ex.Message);
             }
             return "";
         }
-        
 
         [WebMethod]
         public static string FillOtherInstruction()

@@ -4391,29 +4391,46 @@ namespace PMS
             {
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
+
+                // Safety check in case the list comes back completely empty/null
+                MedicineDetail.MedicineList = MedicineDetail.MedicineList ?? new List<MedicineDetails>();
+
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    // Get ALL existing medicine names (including rejected ones) for this patient
-                    var existingNames = db.In_Patient_Medicines
+                    // 1. Fetch the actual entity objects from DB (not just names) so we can delete them if needed
+                    var existingMedicines = db.In_Patient_Medicines
                         .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "InPatient Discharge Medicine")
-                        .Select(p => p.Medicine_Name.Trim())  // Trim to avoid spaces issues
                         .ToList();
 
-                    // Debug: Check what's being sent and what exists
-                    System.Diagnostics.Debug.WriteLine("=== SaveDischargeMedicines Debug ===");
-                    System.Diagnostics.Debug.WriteLine("Patient ID: " + MedicineDetail.PatientID);
-                    System.Diagnostics.Debug.WriteLine("Existing discharge medicines in DB: " + string.Join(", ", existingNames));
+                    var existingNames = existingMedicines.Select(p => p.Medicine_Name.Trim()).ToList();
+                    var incomingNames = MedicineDetail.MedicineList.Select(m => m.Medicine_Name.Trim()).ToList();
 
+                    System.Diagnostics.Debug.WriteLine("=== SaveDischargeMedicines Debug ===");
+
+                    // 2. DELETE LOGIC: Find medicines in DB that are missing from the incoming list
+                    var medicinesToDelete = existingMedicines
+                        .Where(p => !incomingNames.Contains(p.Medicine_Name.Trim()))
+                        .ToList();
+
+                    if (medicinesToDelete.Any())
+                    {
+                        System.Diagnostics.Debug.WriteLine($"DELETING {medicinesToDelete.Count} removed discharge medicines.");
+                        db.In_Patient_Medicines.DeleteAllOnSubmit(medicinesToDelete);
+                    }
+
+                    // 3. INSERT LOGIC
                     foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
                     {
-                        string medicineName = newMed.Medicine_Name.Trim();  // Trim the name
-                        System.Diagnostics.Debug.WriteLine("Processing medicine: " + medicineName);
-                        System.Diagnostics.Debug.WriteLine("Exists in DB? " + existingNames.Contains(medicineName));
+                        string medicineName = newMed.Medicine_Name.Trim();
 
-                        // Only insert if name NOT in existing list
                         if (!existingNames.Contains(medicineName))
                         {
                             System.Diagnostics.Debug.WriteLine("INSERTING new discharge medicine: " + medicineName);
+
+                            // Safely parse booleans to avoid System.FormatException
+                            bool.TryParse(newMed.Regular, out bool isRegular);
+                            bool.TryParse(newMed.STAT, out bool isStat);
+                            bool.TryParse(newMed.PRN, out bool isPrn);
 
                             In_Patient_Medicine newMedicine = new In_Patient_Medicine()
                             {
@@ -4429,9 +4446,9 @@ namespace PMS
                                 Frequency = newMed.Frequency,
                                 Dosage_Qty = newMed.Dosage_Qty,
                                 Other_Instruction = newMed.Other_Instruction,
-                                Regular = Convert.ToBoolean(newMed.Regular),
-                                STAT = Convert.ToBoolean(newMed.STAT),
-                                PRN = Convert.ToBoolean(newMed.PRN),
+                                Regular = isRegular,
+                                STAT = isStat,
+                                PRN = isPrn,
                                 chkDiccharge = true,
                                 is_rejected = false,
                                 Status = null
@@ -4439,11 +4456,9 @@ namespace PMS
 
                             db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
                         }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("SKIPPING existing discharge medicine: " + medicineName);
-                        }
                     }
+
+                    // 4. Save both deletes and inserts
                     db.SubmitChanges();
                     System.Diagnostics.Debug.WriteLine("=== SaveDischargeMedicines Complete ===");
                 }
@@ -4451,8 +4466,9 @@ namespace PMS
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("SaveDischargeMedicines Error: " + ex.Message);
+                return ex.Message;
             }
-            return "";
+            return "Success";
         }
         [WebMethod]
         public static string SaveMedicines(string MedicineDetails)
@@ -4461,31 +4477,42 @@ namespace PMS
             {
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 var MedicineDetail = js.Deserialize<Medicine>(MedicineDetails);
+
+                // Safety check
+                MedicineDetail.MedicineList = MedicineDetail.MedicineList ?? new List<MedicineDetails>();
+
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    // Get ALL existing medicine names (including rejected ones) for this patient
-                    var existingNames = db.In_Patient_Medicines
+                    // 1. Fetch existing entity objects
+                    var existingMedicines = db.In_Patient_Medicines
                         .Where(p => p.Patient_ID == MedicineDetail.PatientID && p.Transaction_Type == "InPatient")
-                        .Select(p => p.Medicine_Name.Trim())  // Trim to avoid spaces issues
                         .ToList();
 
-                    // Debug: Check what's being sent and what exists
-                    System.Diagnostics.Debug.WriteLine("=== SaveMedicines Debug ===");
-                    System.Diagnostics.Debug.WriteLine("Patient ID: " + MedicineDetail.PatientID);
-                    System.Diagnostics.Debug.WriteLine("Existing medicines in DB: " + string.Join(", ", existingNames));
+                    var existingNames = existingMedicines.Select(p => p.Medicine_Name.Trim()).ToList();
+                    var incomingNames = MedicineDetail.MedicineList.Select(m => m.Medicine_Name.Trim()).ToList();
 
+                    System.Diagnostics.Debug.WriteLine("=== SaveMedicines Debug ===");
+
+                    // 2. DELETE LOGIC: Find medicines in DB that are missing from the incoming list
+                    var medicinesToDelete = existingMedicines
+                        .Where(p => !incomingNames.Contains(p.Medicine_Name.Trim()))
+                        .ToList();
+
+                    if (medicinesToDelete.Any())
+                    {
+                        System.Diagnostics.Debug.WriteLine($"DELETING {medicinesToDelete.Count} removed medicines.");
+                        db.In_Patient_Medicines.DeleteAllOnSubmit(medicinesToDelete);
+                    }
+
+                    // 3. INSERT LOGIC
                     foreach (MedicineDetails newMed in MedicineDetail.MedicineList)
                     {
-                        string medicineName = newMed.Medicine_Name.Trim();  // Trim the name
-                        System.Diagnostics.Debug.WriteLine("Processing medicine: " + medicineName);
-                        System.Diagnostics.Debug.WriteLine("Exists in DB? " + existingNames.Contains(medicineName));
+                        string medicineName = newMed.Medicine_Name.Trim();
 
-                        // Only insert if name NOT in existing list
                         if (!existingNames.Contains(medicineName))
                         {
                             System.Diagnostics.Debug.WriteLine("INSERTING new medicine: " + medicineName);
 
-                            // Get the Item_Code from inventory
                             string itemCode = newMed.ItemCode;
                             var inventoryItem = db.INV_Items
                                 .Where(p => p.Description == newMed.Medicine_Name)
@@ -4495,6 +4522,11 @@ namespace PMS
                             {
                                 itemCode = inventoryItem.Item_ID.ToString();
                             }
+
+                            // Safely parse booleans
+                            bool.TryParse(newMed.Regular, out bool isRegular);
+                            bool.TryParse(newMed.STAT, out bool isStat);
+                            bool.TryParse(newMed.PRN, out bool isPrn);
 
                             In_Patient_Medicine newMedicine = new In_Patient_Medicine()
                             {
@@ -4510,9 +4542,9 @@ namespace PMS
                                 Frequency = newMed.Frequency,
                                 Dosage_Qty = newMed.Dosage_Qty,
                                 Other_Instruction = newMed.Other_Instruction,
-                                Regular = Convert.ToBoolean(newMed.Regular),
-                                STAT = Convert.ToBoolean(newMed.STAT),
-                                PRN = Convert.ToBoolean(newMed.PRN),
+                                Regular = isRegular,
+                                STAT = isStat,
+                                PRN = isPrn,
                                 Max_PRN_Dose = newMed.Max_PRN,
                                 Username = newMed.User,
                                 High_Risk_Drug = newMed.High_Risk,
@@ -4522,33 +4554,23 @@ namespace PMS
                                 Stop_Date_Time = null
                             };
 
-                            // Handle Start_Date_Time - only set if valid
                             if (!string.IsNullOrEmpty(newMed.Start_Date_Time) && newMed.Start_Date_Time != "null" && newMed.Start_Date_Time != "1/1/0001")
                             {
-                                DateTime startDate;
-                                if (DateTime.TryParse(newMed.Start_Date_Time, out startDate) && startDate > DateTime.MinValue)
-                                {
+                                if (DateTime.TryParse(newMed.Start_Date_Time, out DateTime startDate) && startDate > DateTime.MinValue)
                                     newMedicine.Start_Date_Time = startDate;
-                                }
                             }
 
-                            // Handle Stop_Date_Time - only set if valid
                             if (!string.IsNullOrEmpty(newMed.Stop_Date_Time) && newMed.Stop_Date_Time != "null" && newMed.Stop_Date_Time != "1/1/0001")
                             {
-                                DateTime stopDate;
-                                if (DateTime.TryParse(newMed.Stop_Date_Time, out stopDate) && stopDate > DateTime.MinValue)
-                                {
+                                if (DateTime.TryParse(newMed.Stop_Date_Time, out DateTime stopDate) && stopDate > DateTime.MinValue)
                                     newMedicine.Stop_Date_Time = stopDate;
-                                }
                             }
 
                             db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
                         }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("SKIPPING existing medicine: " + medicineName);
-                        }
                     }
+
+                    // 4. Save both deletes and inserts
                     db.SubmitChanges();
                     System.Diagnostics.Debug.WriteLine("=== SaveMedicines Complete ===");
                 }
@@ -4556,8 +4578,9 @@ namespace PMS
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("SaveMedicines Error: " + ex.Message);
+                return ex.Message;
             }
-            return "";
+            return "Success";
         }
         [WebMethod]
         public static string FillOtherInstruction()
@@ -4699,7 +4722,9 @@ namespace PMS
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
                 var inPatmedicine = (from inPatmedicineList in db.In_Patient_Medicines
-                                     where inPatmedicineList.Patient_ID == PatientID && inPatmedicineList.Transaction_Type == "InPatient" && inPatmedicineList.chkDiccharge == true
+                                     where inPatmedicineList.Patient_ID == PatientID
+                                     && inPatmedicineList.Transaction_Type == "InPatient Discharge Medicine"
+                                     && inPatmedicineList.chkDiccharge == true
                                      select new
                                      {
                                          inPatmedicineList.Doctor_ID,
@@ -4713,8 +4738,12 @@ namespace PMS
                                          inPatmedicineList.Oral,
                                          inPatmedicineList.AttendingParamedical_Staff,
                                          inPatmedicineList.chkDiccharge,
+                                         // --- ADD THESE MISSING FIELDS ---
+                                         inPatmedicineList.Dosage_From,
+                                         inPatmedicineList.Dosage_Qty,
+                                         inPatmedicineList.Other_Instruction,
+                                         inPatmedicineList.Item_Code,
                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
-
                                      }
                     ).ToList();
 

@@ -4,54 +4,59 @@
     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Approvepr.css" rel="stylesheet" />
     <script type="text/javascript">        
         $(document).ready(function () {
-
-
             highlightPendingRows();
+
             $('#txt_search').keyup(function (e) {
                 var searchText = $('#txt_search').val().toLowerCase();
                 var tbl = document.getElementById('<%= GridView1.ClientID %>');
+        
+        if (!tbl) return;
+
+        for (var i = 1; i < tbl.rows.length; i++) {
+            var row = tbl.rows[i];
             
-            if (!tbl) return;
+            // Fix column indices (0-based)
+            var prnum = row.cells[1] ? row.cells[1].innerText.toLowerCase() : "";      // PR No.
+            var prdate = row.cells[2] ? row.cells[2].innerText.toLowerCase() : "";      // PR Date
+            var creator = row.cells[3] ? row.cells[3].innerText.toLowerCase() : "";     // Creator
+            var remarks = row.cells[4] ? row.cells[4].innerText.toLowerCase() : "";     // Remarks (index 4)
+            var status = row.cells[5] ? row.cells[5].innerText.toLowerCase() : "";      // Status (index 5)
+            var approveBy = row.cells[6] ? row.cells[6].innerText.toLowerCase() : "";   // Approve By (index 6)
+            // Department is at index 8 but it's visible false, so it won't be in the DOM
+            // Decision remarks is at index 7 but it's a TextBox
 
-            for (var i = 1; i < tbl.rows.length; i++) {
-                var row = tbl.rows[i];
-                var prnum = row.cells[1] ? row.cells[1].innerText.toLowerCase() : "";
-                var prdate = row.cells[3] ? row.cells[3].innerText.toLowerCase() : "";
-                var remarks = row.cells[5] ? row.cells[5].innerText.toLowerCase() : "";
-                var status = row.cells[6] ? row.cells[6].innerText.toLowerCase() : ""; 
-                var department = row.cells[8] ? row.cells[8].innerText.toLowerCase() : "";
-
-                if (searchText.trim() === '' ||
-                    prnum.includes(searchText) ||
-                    prdate.includes(searchText) ||
-                    remarks.includes(searchText) ||
-                    status.includes(searchText) ||
-                    department.includes(searchText)
-                ) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            }
-        });
-    });
-
-    function highlightPendingRows() {
-        var tbl = document.getElementById('<%= GridView1.ClientID %>');
-            if (!tbl) return;
-
-            for (var i = 1; i < tbl.rows.length; i++) {
-                var row = tbl.rows[i];
-                var statusCell = row.cells[5];
-
-                if (statusCell) {
-                    var statusText = statusCell.innerText.trim().toLowerCase();
-                    if (statusText === "pending") {
-                        row.style.backgroundColor = "#ffe066"; 
-                    }
-                }
+            if (searchText.trim() === '' ||
+                prnum.includes(searchText) ||
+                prdate.includes(searchText) ||
+                creator.includes(searchText) ||
+                remarks.includes(searchText) ||
+                status.includes(searchText) ||
+                approveBy.includes(searchText)
+            ) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
             }
         }
+    });
+});
+
+function highlightPendingRows() {
+    var tbl = document.getElementById('<%= GridView1.ClientID %>');
+    if (!tbl) return;
+
+    for (var i = 1; i < tbl.rows.length; i++) {
+        var row = tbl.rows[i];
+        var statusCell = row.cells[5];
+
+        if (statusCell) {
+            var statusText = statusCell.innerText.trim().toLowerCase();
+            if (statusText === "pending") {
+                row.style.backgroundColor = "#ffe066";
+            }
+        }
+    }
+}
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

@@ -86,9 +86,6 @@ namespace PMS.Inventory
                     var Total_IGP = _dbContext.Igp_masters.Count();
                     var IGP = from Igp in _dbContext.Igp_masters
                               join V in _dbContext.AP_Vendors on Convert.ToInt32(Igp.Vendor) equals V.Vendor_ID
-                              where (Igp.Igp_num.ToString().Contains(searchValue) ||
-                                     V.Vendor_Name.ToString().Contains(searchValue) ||
-                                     Igp.Status.ToString().Contains(searchValue))
                               select new
                               {
                                   Igp_Id = Igp.Igp_Id,
@@ -99,9 +96,10 @@ namespace PMS.Inventory
                                   Remarks = Igp.Remarks,
                                   VehicleNum = Igp.VehicleNum,
                                   Creation_Date = Igp.Creation_Date,
+                                  Ware_House = _dbContext.GetDataValueName("Ware House", Igp.InvOrgId),
                                   Update_Date = Igp.Update_Date,
-                                  CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == Igp.Created_By).Select(x => x.UserName).FirstOrDefault(),
-                                  Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == Igp.Updated_By).Select(x => x.UserName).FirstOrDefault(),
+                                  CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == Igp.Created_By).Select(x => x.UserName).FirstOrDefault() ?? "",
+                                  Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == Igp.Updated_By).Select(x => x.UserName).FirstOrDefault() ?? "",
                                   Status = Igp.Status,
                                   Inspec_Status = Igp.Inspec_Status,
                                   InvType = Igp.InvType,
@@ -110,12 +108,40 @@ namespace PMS.Inventory
                                   Grn_ID = DBClass.getField("select GRN_ID from GRN_Master where IGP_Id=" + Igp.Igp_Id)
                               };
 
+                    // Apply search filter if searchValue is not empty
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        IGP = IGP.Where(x =>
+                            x.Igp_num.ToString().Contains(searchValue) ||
+                            (x.VendorName != null && x.VendorName.Contains(searchValue)) ||
+                            (x.BilityNum != null && x.BilityNum.ToString().Contains(searchValue)) ||
+                            (x.Remarks != null && x.Remarks.Contains(searchValue)) ||
+                            (x.VehicleNum != null && x.VehicleNum.ToString().Contains(searchValue)) ||
+                            x.Status.Contains(searchValue) ||
+                            (x.Inspec_Status != null && x.Inspec_Status.Contains(searchValue)) ||
+                            (x.InvType != null && x.InvType.Contains(searchValue)) ||
+                            (x.CreatedBy != null && x.CreatedBy.Contains(searchValue))
+                        );
+                    }
+
                     var FilteredCount = IGP.Count();
+
+                    // Apply sorting
                     switch (sortColumn)
                     {
                         case "Igp_num":
                             IGP = sortColumnDirection == "asc" ? IGP.OrderBy(a => a.Igp_num) : IGP.OrderByDescending(a => a.Igp_num);
                             break;
+                        case "VendorName":
+                            IGP = sortColumnDirection == "asc" ? IGP.OrderBy(a => a.VendorName) : IGP.OrderByDescending(a => a.VendorName);
+                            break;
+                        case "CreatedBy":
+                            IGP = sortColumnDirection == "asc" ? IGP.OrderBy(a => a.CreatedBy) : IGP.OrderByDescending(a => a.CreatedBy);
+                            break;
+                        case "Igp_date":
+                            IGP = sortColumnDirection == "asc" ? IGP.OrderBy(a => a.Igp_date) : IGP.OrderByDescending(a => a.Igp_date);
+                            break;
+                       
                         default:
                             IGP = IGP.OrderByDescending(a => a.Igp_Id);
                             break;
