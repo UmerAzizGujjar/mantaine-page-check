@@ -117,7 +117,9 @@
                     var poamount = getCellText(row, 3);
                     var remarks = getCellText(row, 5) || getCellText(row, 4);
                     var status = getCellText(row, 6) || getCellText(row, 5);
+                    var approveBy = getCellText(row, 7);
                     var department = getCellText(row, 9) || getCellText(row, 8);
+                    
 
                     if (searchText.trim() === '' ||
                         ponum.includes(searchText) ||
@@ -125,6 +127,7 @@
                         poamount.includes(searchText) ||
                         remarks.includes(searchText) ||
                         status.includes(searchText) ||
+                        approveBy.includes(searchText) ||
                         department.includes(searchText)
                     ) {
                         row.style.display = '';

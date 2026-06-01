@@ -109,7 +109,8 @@ namespace PMS
                             x.PO_Amount.ToString().Contains(searchValue) ||
                             (x.Ware_House != null && x.Ware_House.Contains(searchValue)) ||
                             x.Status.Contains(searchValue) ||
-                            (x.CreatedBy != null && x.CreatedBy.Contains(searchValue))
+                            (x.CreatedBy != null && x.CreatedBy.Contains(searchValue)) ||
+                            (x.Approvedby != null && x.Approvedby.Contains(searchValue))
                         );
                     }
 

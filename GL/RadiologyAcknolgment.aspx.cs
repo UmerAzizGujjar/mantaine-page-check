@@ -92,7 +92,8 @@ namespace PMS
                                 Priorities = labtest_detail.Priorities,
                                 WardName = wardName ?? "",
                                 BedNo = (activeBedNo != null ? activeBedNo.Value.ToString() : ""),
-                                RawTestDeptCode = bill_details.Test_Main_Department
+                                RawTestDeptCode = bill_details.Test_Main_Department,
+                                Panel = bill.Panel_Id,
                             };
 
                 var queryList = query.ToList();

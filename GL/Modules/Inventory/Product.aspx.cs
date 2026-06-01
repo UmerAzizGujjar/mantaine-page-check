@@ -354,7 +354,7 @@ string Remarks, string FinshProduct, string Consumable, string Saleable, string 
 string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string Procedure_Time,
 string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes,
 string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
-string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure,string ShortItem, string btnValue,
+string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure,string ShortItem,string CathLabItems, string btnValue,
 string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate, string Discount_Block,
 List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
         {
@@ -421,6 +421,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                     obj.Billing_Required = Convert.ToBoolean(Billing);
                     obj.OTProcedure = Convert.ToBoolean(OTProcedure);
                     obj.Short_Item = Convert.ToBoolean(ShortItem);
+                    obj.Is_CathLab = Convert.ToBoolean(CathLabItems);
                     obj.Book_ID = AppConfig.Book_ID;
                     obj.Company_ID = AppConfig.Company_ID;
                     obj.DepartmentId = DepartmentId;
@@ -545,6 +546,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                     obj.Billing_Required = Convert.ToBoolean(Billing);
                     obj.OTProcedure = Convert.ToBoolean(OTProcedure);
                     obj.Short_Item = Convert.ToBoolean(ShortItem);
+                    obj.Is_CathLab = Convert.ToBoolean(CathLabItems);
                     obj.DepartmentId = DepartmentId;
                     obj.InventoryOrg = Warehouse;
                     obj.Hospital_Services = Convert.ToBoolean(IsHospital);
@@ -760,6 +762,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                                      obj.Hospital_Services,
                                      obj.OTProcedure,
                                      obj.Short_Item,
+                                     obj.Is_CathLab,
                                      obj.issehatCard_item,
                                      obj.sehatCard_Rate,
                                      obj.Discount_Block,
