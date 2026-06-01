@@ -284,6 +284,19 @@ namespace PMS
                         DEPARTMENT = x.Department
                     });
 
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        string searchLower = searchValue.ToLower();
+                        formattedQuery = formattedQuery.Where(x =>
+                            (x.IGPNO != null && x.IGPNO.ToString().ToLower().Contains(searchLower)) ||
+                            (x.DEPARTMENT != null && x.DEPARTMENT.ToLower().Contains(searchLower)) ||
+                            (x.CREATOR != null && x.CREATOR.ToLower().Contains(searchLower)) ||
+                            (x.REMARKS != null && x.REMARKS.ToLower().Contains(searchLower)) ||
+                            (x.STATUS != null && x.STATUS.ToLower().Contains(searchLower)) ||
+                            (x.INSPECTSTATUS != null && x.INSPECTSTATUS.ToLower().Contains(searchLower)) ||
+                            (x.APPROVEBY != null && x.APPROVEBY.ToLower().Contains(searchLower))
+                        );
+                    }
 
 
                     var FilteredCount = qry.Count();

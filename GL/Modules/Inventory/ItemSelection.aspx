@@ -6,6 +6,7 @@
     <script type="text/javascript">
         let currentSelectionID = 0;
         let currentGRNData = null;
+        let existingBarcodeCount = 0;
 
         $('<style>.hide-barcode-div { display: none !important; }</style>').appendTo('head');
 
@@ -13,7 +14,7 @@
             const toast = $('#toast');
             toast.removeClass('toast-success toast-error toast-info toast-warning')
                 .addClass(`toast-${type}`)
-                .html(`<i class="fas fa-${type === 'success' ? 'check-circle' : (type === 'error' ? 'exclamation-circle' : 'info-circle')}"></i> ${message}`)
+                .html(`<i class="fa fa-${type === 'success' ? 'check-circle' : (type === 'error' ? 'exclamation-circle' : 'info-circle')}"></i> ${message}`)
                 .fadeIn(300);
 
             setTimeout(() => {
@@ -84,7 +85,7 @@
 
         function loadGRNDetails(grnId) {
             if (!grnId) {
-                $('#tblItemsBody').html('<tr><td colspan="8" style="text-align: center; padding: 40px;"><i class="fas fa-info-circle" style="font-size: 24px; color: #cbd5e0;"></i><br/>Please select a GRN number to load items</td></tr>');
+                $('#tblItemsBody').html('<tr><td colspan="8" style="text-align: center; padding: 40px;"><i class="fa fa-info-circle" style="font-size: 24px; color: #cbd5e0;"></i><br/>Please select a GRN number to load items</td></tr>');
                 $('#txtWarehouse, #txtVendor').val('');
                 $('#btnSaveSelection').prop('disabled', true);
                 return;
@@ -106,6 +107,7 @@
                         $('#txtVendor').val(result.Data.VendorName || 'N/A');
 
                         loadItemsTable(result.Data.Items);
+                        updateBarcodeButtonVisibility();
                         $('#btnSaveSelection').prop('disabled', false);
                     } else {
                         showToast(result.Message || 'Error loading GRN details', 'error');
@@ -123,7 +125,7 @@
     const tbody = $('#tblItemsBody');
 
     if (!items || items.length === 0) {
-        tbody.html('<tr><td colspan="9" style="text-align: center; padding: 40px;"><i class="fas fa-box-open" style="font-size: 24px; color: #cbd5e0;"></i><br/>No items found in this GRN</td></tr>');
+        tbody.html('<tr><td colspan="9" style="text-align: center; padding: 40px;"><i class="fa fa-box-open" style="font-size: 24px; color: #cbd5e0;"></i><br/>No items found in this GRN</td></tr>');
         return;
     }
 
@@ -136,7 +138,7 @@
 
         let partialWarning = '';
         if (item.TotalSelectedFromAllSelections > 0 && item.TotalSelectedFromAllSelections < item.GRNQty) {
-            partialWarning = `<br/><small class="text-warning"><i class="fas fa-exclamation-triangle"></i> ${item.TotalSelectedFromAllSelections} of ${item.GRNQty} already selected</small>`;
+            partialWarning = `<br/><small class="text-warning"><i class="fa fa-exclamation-triangle"></i> ${item.TotalSelectedFromAllSelections} of ${item.GRNQty} already selected</small>`;
         }
 
  let statusClass = 'badge-success';
@@ -171,9 +173,10 @@
             <td>${escapeHtml(item.Unit || '-')}</td>
             <td>${parseFloat(item.Rate || 0).toFixed(2)}</td>
             <td>
-                <input type="number" class="qty-input" value="${preselectedQty}" 
+                <input type="number" class="qty-input" value="${preselectedQty}" data-initial-selected="${preselectedQty}"
                        min="0" max="${maxSelectableQty}" step="0.01"
                        onchange="updateQuantity(this, ${item.GRN_Detail_Id}, ${maxSelectableQty})" />
+                <div class="qty-error text-danger" style="display: none;">Cannot decrease below ${preselectedQty}</div>
             </td>
             <td><span class="badge ${statusClass}">${statusText}</span></td>
         </tr>`;
@@ -197,11 +200,18 @@
                 const grnQty = parseFloat($row.data('grnqty')) || 0;
                 const qtyInput = $row.find('.qty-input');
                 const selectedQty = parseFloat(qtyInput.val()) || 0;
+                const initialSelected = parseFloat(qtyInput.data('initial-selected')) || 0;
 
                 if (selectedQty > grnQty) {
                     isValid = false;
                     const itemName = $row.find('td:eq(1)').text();
                     errorMessage += `\n• ${itemName}: Selected (${selectedQty}) > GRN Qty (${grnQty})`;
+                    $row.addClass('validation-error-row');
+                    qtyInput.addClass('input-error');
+                } else if (selectedQty < initialSelected) {
+                    isValid = false;
+                    const itemName = $row.find('td:eq(1)').text();
+                    errorMessage += `\n• ${itemName}: Selected (${selectedQty}) < Initially Selected (${initialSelected})`;
                     $row.addClass('validation-error-row');
                     qtyInput.addClass('input-error');
                 } else {
@@ -242,12 +252,23 @@
             const $row = $(input).closest('tr');
             const grnQty = parseFloat($row.data('grnqty')) || 0;
             const originalRemaining = parseFloat($row.data('original-remaining')) || 0;
+            const initialSelected = parseFloat($(input).data('initial-selected')) || 0;
+            const $errorDiv = $(input).closest('td').find('.qty-error');
+
+            if (value < initialSelected) {
+                $(input).addClass('input-error');
+                $errorDiv.text(`Cannot decrease below ${initialSelected}`).show();
+            } else {
+                $errorDiv.hide();
+            }
 
             if (value > originalRemaining) {
                 showToast(`Warning: Only ${originalRemaining} units remaining from GRN`, 'warning');
                 $(input).addClass('input-error');
             } else {
-                $(input).removeClass('input-error');
+                if (value >= initialSelected) {
+                    $(input).removeClass('input-error');
+                }
             }
 
             $(input).data('original-value', value);
@@ -329,6 +350,17 @@
             if (result.Success) {
                 currentSelectionID = result.Data.SelectionID;
                 $('#txtSelectionNum').val(result.Data.SelectionNum);
+                $('#tblItemsBody .qty-input').each(function () {
+                    const value = parseFloat($(this).val()) || 0;
+                    $(this).data('initial-selected', value);
+                    $(this).closest('td').find('.qty-error').text(`Cannot decrease below ${value}`).hide();
+                });
+
+                const existingBarcodeCount = $('#barcodesTable tbody tr').length;
+                if ((result.Data.TotalSelectedQty || 0) > existingBarcodeCount) {
+                    $('#btnGenerateBarcodes').prop('disabled', false);
+                    $('#btnGenerateBarcodes').parent().removeClass('hide-barcode-div');
+                }
                 
                 $('#summarySection').hide();
                 Swal.fire({
@@ -346,9 +378,7 @@
                 $('#btnGenerateBarcodes').prop('disabled', false);
                 $('#btnGenerateBarcodes').parent().removeClass('hide-barcode-div');
                 if (selectionId) {
-                    setTimeout(function() {
-                        window.location.href = 'ItemSelectionList.aspx';
-                    }, 2500);
+                    showToast('Selection updated. You can generate barcodes if needed.', 'info');
                 }
                 
             } else {
@@ -390,7 +420,7 @@
         success: function (response) {
             const result = JSON.parse(response.d);
             if (result.Success) {
-                displayBarcodes(result.Data.Barcodes);
+                loadExistingBarcodes(currentSelectionID);
                 $('#btnPrintBarcodes').prop('disabled', false);
                 showToast(`${result.Data.TotalBarcodes} barcodes generated successfully!`, 'success');
             } else {
@@ -410,7 +440,7 @@
             const grid = $('#barcodesGrid');
 
             if (!barcodes || barcodes.length === 0) {
-                grid.html('<p style="text-align: center; padding: 40px;"><i class="fas fa-barcode" style="font-size: 48px; color: #cbd5e0;"></i><br/>No barcodes generated</p>');
+                grid.html('<p style="text-align: center; padding: 40px;"><i class="fa fa-barcode" style="font-size: 48px; color: #cbd5e0;"></i><br/>No barcodes generated</p>');
                 return;
             }
 
@@ -478,7 +508,7 @@
                     <span class="badge badge-success">${barcode.Quantity || 0}</span>
                 </td>
                 <td style="text-align: center; padding: 10px; font-size: 12px;">
-                    <i class="fas fa-calendar-alt" style="color: #667eea;"></i> ${formattedDate}
+                    <i class="fa fa-calendar-alt" style="color: #667eea;"></i> ${formattedDate}
                 </td>
                 <td style="text-align: center; padding: 10px;">
                     <button class="btn btn-sm btn-info" 
@@ -497,7 +527,7 @@
         </div>
         <div style="margin-top: 15px; text-align: right; padding: 10px;">
             <small class="text-muted">
-                <i class="fas fa-info-circle"></i> Check boxes to select barcodes for bulk printing
+                <i class="fa fa-info-circle"></i> Check boxes to select barcodes for bulk printing
             </small>
         </div>
     `;
@@ -677,17 +707,41 @@ function copyToClipboard(text) {
         dataType: 'json',
         success: function (response) {
             const result = JSON.parse(response.d);
-            if (result.Success && result.Data.Barcodes.length > 0) {
+        if (result.Success) {
+                existingBarcodeCount = result.Data.Barcodes.length;
+            const totalSelectedQty = $('#tblItemsBody .qty-input').toArray().reduce(function (sum, input) {
+                return sum + (parseFloat($(input).val()) || 0);
+            }, 0);
+            if (existingBarcodeCount > 0) {
                 displayBarcodes(result.Data.Barcodes);
-                $('#btnGenerateBarcodes').prop('disabled', false);
                 $('#btnPrintBarcodes').prop('disabled', false);
+            } else {
+                $('#btnPrintBarcodes').prop('disabled', true);
             }
+            updateBarcodeButtonVisibility(totalSelectedQty);
+        }
         },
         error: function (xhr, status, error) {
             console.log('Error loading existing barcodes: ' + error);
         }
     });
 }
+
+        function updateBarcodeButtonVisibility(totalSelectedQty) {
+            const totalQty = typeof totalSelectedQty === 'number'
+                ? totalSelectedQty
+                : $('#tblItemsBody .qty-input').toArray().reduce(function (sum, input) {
+                    return sum + (parseFloat($(input).val()) || 0);
+                }, 0);
+
+            if (totalQty > existingBarcodeCount) {
+                $('#btnGenerateBarcodes').prop('disabled', false);
+                $('#btnGenerateBarcodes').parent().removeClass('hide-barcode-div');
+            } else {
+                $('#btnGenerateBarcodes').prop('disabled', true);
+                $('#btnGenerateBarcodes').parent().addClass('hide-barcode-div');
+            }
+        }
 
         function checkEditMode() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -841,7 +895,7 @@ function loadGRNDropdownForEdit(grnId) {
                 <tbody id="tblItemsBody">
                     <tr>
                         <td colspan="8" style="text-align: center; padding: 40px;">
-                            <i class="fas fa-info-circle" style="font-size: 24px; color: #cbd5e0;"></i>
+                            <i class="fa fa-info-circle" style="font-size: 24px; color: #cbd5e0;"></i>
                             <br />
                             Please select a GRN number to load items
                         </td>
@@ -873,7 +927,7 @@ function loadGRNDropdownForEdit(grnId) {
     </div>
     <div id="barcodesSection" class="form-card" style="display: none;">
         <div class="card-title">
-            <i class="fas fa-qrcode"></i>Generated Barcodes 
+            <i class="fa fa-qrcode"></i>Generated Barcodes 
                 <span id="barcodeCount" style="font-size: 12px; color: #667eea;"></span>
         </div>
         <div id="barcodesContainer" class="barcode-container">

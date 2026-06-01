@@ -479,42 +479,7 @@
             });
         }
 
-        // Function to load Sale Return Inovice Items Data
-        //function loadInvoiceNumbers() {
-        //    $('#ddlInvoiceNumber').select2({
-        //        placeholder: "Please Select",
-        //        minimumInputLength: 0, // allow dropdown open without typing
-        //        ajax: {
-        //            url: 'IssueMedicine.aspx/AllInvoiceNumbers',
-        //            type: 'POST',
-        //            contentType: "application/json; charset=utf-8",
-        //            dataType: "json",
-        //            delay: 250,
-        //            data: function (params) {
-        //                return JSON.stringify({
-        //                    searchTerm: params.term || ""
-        //                });
-        //            },
-        //            processResults: function (data) {
-        //                return {
-        //                    results: JSON.parse(data.d)
-        //                };
-        //            }
-        //        }
-        //    });
-        //}
-        // Function to load Sale Return Inovice Items Data
-        //function loadInvoiceNumbers() {
-        //    var optionInv = '';
-        //    PageMethods.AllInvoiceNumbers(function (Tests) {
-        //        optionInv = '<option value="0">Please Select</option>';
-        //        $.each(JSON.parse(Tests), function (key, value) {
-        //            optionInv += '<option value="' + value.Bill_ID + '" >' + value.Seq_InvoiceNo + '</option>';
-        //        });
-        //        $('#ddlInvoiceNumber').html(optionInv);
-        //    });
-        //}
-        // Function to load Sale Return Items into the dropdown
+        
         function loadSaleReturnItems() {
             if ($('#ddlSaleReturnItems').data('select2')) {
                 $('#ddlSaleReturnItems').select2('destroy');
@@ -2268,6 +2233,8 @@
                 var CGSRate = $($(value).find('td input[name=txtCGSRate]')[0]).val();
                 var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
                 var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
+                var Remarks = $(value).find('input[name="Remarks"]').val() || '';
+                var Req_qty = $(value).find('input[name="ReqQty"]').val() || '';
                 var CGSAmount = CGSRate * Qty;
                 if (batchno == null) {
                     batchno = '';
@@ -2302,7 +2269,7 @@
                 }
                 var NetAmount = $($(value).find('td')[11]).text();
                 Save_list.push({
-                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount,
+                    Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks, Req_qty: Req_qty,
                 });
             });
             debugger;
@@ -2447,6 +2414,7 @@
                         var hdnItemid = $($(value).find('td input[name=hdnItemID]')[0]).val();
                         var LineDiscount = $(value).find('input[name="LineDiscount"]').val() || 0;
                         var Remarks = $(value).find('input[name="Remarks"]').val() || '';
+                        var Req_qty = $(value).find('input[name="ReqQty"]').val() || '';
                         var CGSAmount = CGSRate * Qty;
 
                         if (batchno == null) {
@@ -2482,7 +2450,7 @@
                         }
                         var NetAmount = $($(value).find('td')[11]).text();
                         Save_list.push({
-                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks,
+                            Itemid: Itemid, ItemName: ItemName, Qty: Qty, Stock: Stock, Amount: Amount, DiscPer: DiscPer, DiscAmount: DiscAmount, NetAmount: NetAmount, batchno: batchno, CGSAmount: CGSAmount, hdnItemid: hdnItemid, LineDiscount: LineDiscount, Remarks: Remarks, Req_qty: Req_qty,
                         });
                     });
                     debugger;

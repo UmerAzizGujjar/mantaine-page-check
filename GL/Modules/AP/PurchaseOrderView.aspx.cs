@@ -83,24 +83,39 @@ namespace PMS
 
                     var Total_Order = _dbContext.AP_Purchase_Orders.Count();
                     var PurchaseOreder = from PO in _dbContext.AP_Purchase_Orders
-                                         where
-                                             ((PO.PO_ID.ToString().Contains(searchValue) || PO.PO_No.ToString().Contains(searchValue) || PO.Ref_No.ToString().Contains(searchValue) || (from v in _dbContext.AP_Vendors where PO.Vendor_ID == v.Vendor_ID select new { vendor = v.Vendor_Name }).FirstOrDefault().vendor.ToString().Contains(searchValue) || PO.PO_Amount.ToString().Contains(searchValue) || PO.Status.ToString().Contains(searchValue)))
                                          select new
                                          {
                                              POID = PO.PO_ID,
                                              PONo = PO.PO_No,
                                              Date = PO.PO_Date,
                                              RefNo = PO.Ref_No,
-                                             Ware_House  = _dbContext.GetDataValueName("Ware House", PO.Ware_House),
-                                             VendorName = (from v in _dbContext.AP_Vendors where PO.Vendor_ID == v.Vendor_ID select new { vendor = v.Vendor_Name }).FirstOrDefault().vendor.ToString(),
+                                             Ware_House = _dbContext.GetDataValueName("Ware House", PO.Ware_House),
+                                             VendorName = (from v in _dbContext.AP_Vendors where PO.Vendor_ID == v.Vendor_ID select v.Vendor_Name).FirstOrDefault() ?? "",
                                              PO_Amount = PO.PO_Amount,
                                              Status = PO.Status,
-                                             CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == PO.Created_By).Select(x => x.UserName).FirstOrDefault(),
-                                             Approvedby = _dbContext.aspnet_Users.Where(x => x.UserId == PO.Approved_By).Select(x => x.UserName).FirstOrDefault(),
-
+                                             CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == PO.Created_By).Select(x => x.UserName).FirstOrDefault() ?? "",
+                                             Approvedby = _dbContext.aspnet_Users.Where(x => x.UserId == PO.Approved_By).Select(x => x.UserName).FirstOrDefault() ?? "",
                                          };
 
+                    // Apply search filter if searchValue is not empty
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        PurchaseOreder = PurchaseOreder.Where(x =>
+                            x.POID.ToString().Contains(searchValue) ||
+                            x.PONo.ToString().Contains(searchValue) ||
+                            (x.RefNo != null && x.RefNo.ToString().Contains(searchValue)) ||
+                            (x.VendorName != null && x.VendorName.Contains(searchValue)) ||
+                            x.Date.ToString().Contains(searchValue) ||
+                            x.PO_Amount.ToString().Contains(searchValue) ||
+                            (x.Ware_House != null && x.Ware_House.Contains(searchValue)) ||
+                            x.Status.Contains(searchValue) ||
+                            (x.CreatedBy != null && x.CreatedBy.Contains(searchValue))
+                        );
+                    }
+
                     var FilteredCount = PurchaseOreder.Count();
+
+                    // Apply sorting
                     switch (sortColumn)
                     {
                         case "PONo":
@@ -108,6 +123,19 @@ namespace PMS
                             break;
                         case "RefNo":
                             PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(b => b.RefNo) : PurchaseOreder.OrderByDescending(a => a.RefNo);
+                            break;
+              
+                        case "Date":
+                            PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(b => b.Date) : PurchaseOreder.OrderByDescending(a => a.Date);
+                            break;
+                        case "VendorName":
+                            PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(a => a.VendorName) : PurchaseOreder.OrderByDescending(a => a.VendorName);
+                            break;
+                        case "Ware_House":
+                            PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(a => a.Ware_House) : PurchaseOreder.OrderByDescending(a => a.Ware_House);
+                            break;
+                        case "CreatedBy":
+                            PurchaseOreder = sortColumnDirection == "asc" ? PurchaseOreder.OrderBy(a => a.CreatedBy) : PurchaseOreder.OrderByDescending(a => a.CreatedBy);
                             break;
                         default:
                             PurchaseOreder = PurchaseOreder.OrderByDescending(a => a.PONo);

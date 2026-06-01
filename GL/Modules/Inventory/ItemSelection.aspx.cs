@@ -668,7 +668,9 @@ namespace PMS.Modules.Inventory
 
                     foreach (var detail in details)
                     {
-                        int quantityToGenerate = (int)detail.Selected_Qty;
+                        int existingBarcodeCount = db.ItemSelection_Barcodes
+                            .Count(b => b.Selection_Detail_Id == detail.Selection_Detail_Id);
+                        int quantityToGenerate = (int)detail.Selected_Qty - existingBarcodeCount;
 
                         if (quantityToGenerate <= 0)
                             continue;

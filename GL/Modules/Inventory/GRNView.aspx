@@ -454,7 +454,7 @@
                 <tr>              
                     <th>GRN ID</th>
                     
-                    <th>IGP Num</th>
+                    <th>Grn Num</th>
                     <th>Approval Date</th>
                     <th>Vendor Name</th>
                      <th>Created By</th>

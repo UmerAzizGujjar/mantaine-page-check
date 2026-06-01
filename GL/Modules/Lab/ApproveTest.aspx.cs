@@ -148,6 +148,7 @@ namespace PMS.Modules.Lab
                                     Test_Main_Department = db.GetDataValueName("Main Test Departments", bd.Test_Main_Department),
                                     bd.Service_Date,
                                     ar.Bill_Date,
+                                    ar.Net_Amount,
                                     Refer_Doctor = ltd.Refer_Doctor,
                                     Doctor_Name = (from hr in db.HR_Employees
                                                    where hr.Emp_ID.ToString() == ltd.Refer_Doctor
