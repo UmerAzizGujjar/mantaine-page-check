@@ -222,6 +222,9 @@
                                 "<td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td>" +
                                 "<td style='display:none'>" + parse[0].Item_ID + "</td>" +
                                 "<td style='text-align:center;'>" + (parse[0].UOM_Qty || '0') + "</td>" +  
+                                "<td style='text-align:center;'>" +
+                                (parse[0].Last_MIR_Date ? moment(parse[0].Last_MIR_Date).format('D-MMM-YYYY') : '') +
+                                "</td>" +
                                 "<td><a href='#' onclick='Delete(this)'><i class='glyphicon glyphicon-trash' style='font-size: 13px; margin-top: 5px; margin-left: 16px; color: #f30a0a;'></i></a></td>" +
                                 "</tr>")
                             length++;
@@ -724,6 +727,7 @@
                     <th style="width: 126px; text-align: center;">Remarks</th>
                     <th style="width: 32px!important; text-align: center;">Attachment</th>
                     <th style="width: 43px; text-align: center;">UOM Qty</th>
+                    <th style="width: 43px; text-align: center;">Last GIR Date</th>
                     <th style="width: 40px; text-align: center;">Delete</th>
                         </tr>
                 </thead>

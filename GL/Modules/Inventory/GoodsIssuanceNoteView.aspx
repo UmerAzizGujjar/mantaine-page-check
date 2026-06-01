@@ -193,6 +193,14 @@
                     },
 
                     {
+                        "data": null,
+                        "render": function (data, type, full) {
+                            return parseFloat(full.Blnc_Qty) > 0 ? "Partial" : "Complete";
+                        },
+                        "orderable": false
+                    },
+
+                    {
                         "data": "Approved_Time",
                         "render": function (data, type, full) {
 
@@ -442,6 +450,7 @@
                     <th>Updated By</th>
                     <th>Updated Time</th>
                     <th>Status</th>
+                    <th>GIR Status</th>
                     <th>Approved Date</th>
                     <th>Action</th>
                 </tr>
