@@ -322,7 +322,19 @@ namespace PMS
                     });
 
 
-
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        searchValue = searchValue.ToLower();
+                        formattedQuery = formattedQuery.Where(x =>
+                            (x.CSNO != null && x.CSNO.ToString().ToLower().Contains(searchValue)) ||
+                            (x.CSDATE != null && x.CSDATE.ToString().ToLower().Contains(searchValue)) ||
+                            (x.CREATOR != null && x.CREATOR.ToLower().Contains(searchValue)) ||
+                            (x.REMARKS != null && x.REMARKS.ToLower().Contains(searchValue)) ||
+                            (x.STATUS != null && x.STATUS.ToLower().Contains(searchValue)) ||
+                            (x.APPROVEBY != null && x.APPROVEBY.ToLower().Contains(searchValue)) ||
+                            (x.DEPARTMENT != null && x.DEPARTMENT.ToLower().Contains(searchValue))
+                        );
+                    }
 
 
 

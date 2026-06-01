@@ -64,7 +64,7 @@ namespace PMS.Inventory
                     var Total_Purchase = _dbContext.Purchase_Return_Masters.Count();
                     var Puchase_Return = from PR in _dbContext.Purchase_Return_Masters
                                            where
-                                        ((PR.Purchase_Return_No.ToString().Contains(searchValue) || PR.Remarks.ToString().Contains(searchValue)))
+                                        ((PR.Purchase_Return_No.ToString().Contains(searchValue) || PR.Remarks.ToString().Contains(searchValue) || PR.Status.ToString().Contains(searchValue)))
                                            select new
                                            {
                                                Purchase_Return_ID = PR.Purchase_Return_ID,

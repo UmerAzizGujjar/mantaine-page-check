@@ -156,7 +156,8 @@ namespace PMS.AP
                             x.Department.Contains(searchValue) ||
                             (x.Remarks != null && x.Remarks.ToString().Contains(searchValue)) ||
                             x.Status.Contains(searchValue) ||
-                            (x.CreatedBY != null && x.CreatedBY.Contains(searchValue))
+                            (x.CreatedBY != null && x.CreatedBY.Contains(searchValue) ||
+                            x.UpdatedBY != null && x.UpdatedBY.Contains(searchValue))
                         );
                     }
 

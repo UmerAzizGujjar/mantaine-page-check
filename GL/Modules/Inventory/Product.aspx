@@ -561,7 +561,7 @@
                 }
                 var notes = $('#Note').val();
                 var radioCharges = $('#radio_charges').prop('checked');
-                var dentalItem = $('#Dental_Item').prop('checked');
+                var dentalItem = $('#Dental_Item').prop('checked');               
                 var procedure = $('#Procedure').prop('checked');
                 var lensRequired = $('#chkLensRequired').prop('checked');
                 var BedServices = $('#ckhBedServices').prop('checked');
@@ -572,6 +572,7 @@
                 var billing = $('#chkBillingRequired').prop('checked');
                 var OTProcedure = $("#chkOTProcedure").prop("checked");
                 var ShortItem = $("#chkShortItem").prop("checked");
+                var CathLabItems = $('#chkCathLab').prop('checked');
                 var IsService = $("#chkIsService").prop("checked");
                 var SehatSahulat = $("#chkSehatSahulat").prop("checked");
                 var btnValue = $('#btnValue').val();
@@ -681,6 +682,7 @@
                         "Billing": billing,
                         "OTProcedure": OTProcedure,
                         "ShortItem": ShortItem,
+                        "CathLabItems": CathLabItems,
                         "IsService": IsService,
                         "SehatSahulat": SehatSahulat,
                         "btnValue": btnValue,
@@ -988,6 +990,9 @@
                     if (parse.Short_Item == 1) {
                         $("#chkShortItem").prop("checked", true);
                     }
+                    if (parse.Is_CathLab == 1) {
+                        $("#chkCathLab").prop("checked", true);
+                    }
                     if (parse.Controller_Drug == 1) {
                         $("#controller_drug").prop('checked', true);
                     }
@@ -1210,14 +1215,13 @@
                 </select>
                 </div>       
              </div> 
-         <div class="col-lg-3 col-md-6 col-sm-12 p-5" style="margin-top: 25px;">
-                 
+         <div class="col-lg-3 col-md-6 col-sm-12 p-5" style="margin-top: 25px;">                
              <div class="form-group form-check">
                   <input type="checkbox" class="form-check-input" style="width:auto !important" id="Active" name="Active" />
                <label class="form-check-label" id="LblActive" for="Active">Active</label>
            
             </div>
-            </div>
+            </div>          
             </div>
            
           <div class="row">
@@ -1511,6 +1515,12 @@
                     <td style="width: 20px;">
                         <input type="checkbox" id="Dental_Item" name="Dental_Item" /></td>
                     <td style="width: 84px;">Dental Item</td>
+                    <td>
+                        <input type="checkbox" id="chkCathLab" name="chkCathLab" />
+                    </td>
+                     <td>
+                        <label for="chkCathLab">Cath Lab</label>
+                    </td>
                 </tr>
                 <tr>
                     <td>

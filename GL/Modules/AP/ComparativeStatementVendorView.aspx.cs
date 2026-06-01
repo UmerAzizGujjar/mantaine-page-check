@@ -73,7 +73,7 @@ namespace PMS.AP
 
                     var Total_Vendors = _dbContext.CS_Vendor_Masters.Count();
                     var Vendor_Master = from vendor in _dbContext.CS_Vendor_Masters
-                                        where vendor.CS_Ven_No.ToString().Contains(searchValue) ||
+                                        where vendor.CS_Ven_No.ToString().Contains(searchValue) || vendor.Status.ToString().Contains(searchValue) ||
                                               vendor.Remarks.ToString().Contains(searchValue)
                                         select new
                                         {
