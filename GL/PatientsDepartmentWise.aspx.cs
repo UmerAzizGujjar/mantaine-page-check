@@ -2952,6 +2952,29 @@ namespace PMS
                     Time_Row.Visible = true;
                     AllowPatientRecord = false;
                 }
+                else if (this.PageTitle == "Lab_Test_Result_Culture")
+                {
+                    string x = "Lab Test Result Culture Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
+
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    ddlPatientType.Visible = false;
+
+                    object valusets;
+                    DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
+                }
                 else if (this.PageTitle == "Purchase_Order_Report")
                 {
                     string x = "Purchase Order Report";
@@ -6480,6 +6503,7 @@ namespace PMS
                     trDoctor.Visible = false;
 
                     tr_Summary.Visible = false;
+
 
                     lblMainDepartment.Visible = false;
                     tr1MedicalSubsidy.Visible = true;
