@@ -139,6 +139,7 @@ namespace PMS.Inventory
                                    Creation_Date = GRN.Creation_Date,
                                    Update_Date = GRN.Update_Date,
                                    CreatedBy = _dbContext.aspnet_Users.Where(x => x.UserId == GRN.Created_By).Select(x => x.UserName).FirstOrDefault(),
+                                   Ware_House = _dbContext.GetDataValueName("Ware House", GRN.InvOrgId),
                                    Updated_By = _dbContext.aspnet_Users.Where(x => x.UserId == GRN.Updated_By).Select(x => x.UserName).FirstOrDefault(),
                                    // These fields are kept for compatibility but not displayed
                                    po_Number = "",
