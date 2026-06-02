@@ -96,65 +96,93 @@
 
     </style>
     <script type="text/javascript">        
-        $(document).ready(function () {
-            debugger
-            highlightPendingRows();
+ 
+            $(document).ready(function () {
+        debugger;
+            // Call highlight function when page loads
+            setTimeout(function () {
+                highlightPendingRows();
+        }, 100);
 
             $('#txt_search').keyup(function (e) {
-                debugger
-                var searchText = $('#txt_search').val().toLowerCase();
-                var tbl = document.getElementById('ctl00_MainContent_GridView1');
-                debugger
-                var getCellText = function (row, index) {
-                    var cell = row.cells[index];
-                    return cell ? cell.innerText.toLowerCase() : '';
-                };
-
-                for (var i = 1; i < tbl.rows.length; i++) {
-                    var row = tbl.rows[i];
-                    var ponum = getCellText(row, 1);
-                    var podate = getCellText(row, 2);
-                    var poamount = getCellText(row, 3);
-                    var remarks = getCellText(row, 5) || getCellText(row, 4);
-                    var status = getCellText(row, 6) || getCellText(row, 5);
-                    var approveBy = getCellText(row, 7);
-                    var department = getCellText(row, 9) || getCellText(row, 8);
-                    
-
-                    if (searchText.trim() === '' ||
-                        ponum.includes(searchText) ||
-                        podate.includes(searchText) ||
-                        poamount.includes(searchText) ||
-                        remarks.includes(searchText) ||
-                        status.includes(searchText) ||
-                        approveBy.includes(searchText) ||
-                        department.includes(searchText)
-                    ) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                }
-            });
-        });
-
-        function highlightPendingRows() {
+                debugger;
+            var searchText = $('#txt_search').val().toLowerCase();
             var tbl = document.getElementById('<%= GridView1.ClientID %>');
-            if (!tbl) return;
+            debugger
+            var getCellText = function (row, index) {
+                var cell = row.cells[index];
+                return cell ? cell.innerText.toLowerCase() : '';
+            };
 
             for (var i = 1; i < tbl.rows.length; i++) {
                 var row = tbl.rows[i];
-                var statusCell = row.cells[5];
+                var ponum = getCellText(row, 1);
+                var podate = getCellText(row, 2);
+                var poamount = getCellText(row, 3);
+                var creator = getCellText(row, 4);
+                var remarks = getCellText(row, 5);
+                var status = getCellText(row, 6);
+                var approveBy = getCellText(row, 7);
+                var actions = getCellText(row, 8);
 
-                if (statusCell) {
-                    var statusText = statusCell.innerText.trim().toLowerCase();
-                    if (statusText === "pending") {
+                if (searchText.trim() === '' ||
+                    ponum.includes(searchText) ||
+                    podate.includes(searchText) ||
+                    poamount.includes(searchText) ||
+                    creator.includes(searchText) ||
+                    remarks.includes(searchText) ||
+                    status.includes(searchText) ||
+                    approveBy.includes(searchText) ||
+                    actions.includes(searchText)
+                ) {
+                    row.style.display = '';
+                    // Re-apply highlighting after search
+                    if (status === 'pending') {
                         row.style.backgroundColor = "#ffe066";
+                    } else {
+                        // Reset background for non-pending rows
+                        if (row.style.backgroundColor === "rgb(255, 224, 102)" || row.style.backgroundColor === "#ffe066") {
+                            row.style.backgroundColor = "";
+                        }
+                    }
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+
+        function highlightPendingRows() {
+            debugger;
+            var tbl = document.getElementById('<%= GridView1.ClientID %>');
+            if (!tbl) return;
+
+            console.log("GridView found, rows count: " + tbl.rows.length);
+
+            for (var i = 1; i < tbl.rows.length; i++) {
+                var row = tbl.rows[i];
+            var statusCell = row.cells[6];
+
+            console.log("Row " + i + " - Status cell text: " + (statusCell ? statusCell.innerText : "null"));
+
+            if (statusCell) {
+                    var statusText = statusCell.innerText.trim().toLowerCase();
+            // Check for "pending" (case-insensitive)
+            if (statusText === "pending") {
+                row.style.backgroundColor = "#ffe066";
+            console.log("Row " + i + " highlighted as pending");
+                    } else {
+                // Reset background for rows that are not pending
+                row.style.backgroundColor = "";
                     }
                 }
             }
         }
+
+            // Make the function available globally for postbacks
+            window.highlightPendingRows = highlightPendingRows;
+    });
     </script>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
      <div class="row">

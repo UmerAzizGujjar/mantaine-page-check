@@ -154,6 +154,17 @@
         function GetPatientDetailByBill() {
             debugger;
             var Bill_No = $('#txtBillNo').val();
+
+            if (Bill_No == '' || Bill_No == null) {
+                Swal.fire({
+                    title: "Warning!",
+                    text: "Please enter Bill No",
+                    icon: "warning",
+                    confirmButtonText: "OK"
+                });
+                return;
+            }
+
             $.ajax({
                 type: "post",
                 url: "Refund.aspx/LoadPatientDetailsByBillNO",
@@ -167,40 +178,84 @@
                     var parse = JSON.parse(response.d);
 
                     if (parse && parse.length > 0) {
-                        if (parse[0].Is_Refund == true || parse[0].Is_Refund == 1) {
+                        var length = parse.length;
+                        var rows = '';
+                        var hasRefundableItems = false;
+                        var totalAmount = 0;
+                        var receivedAmount = 0;
+
+                        $('#hdPatientID').text(parse[0].Patient_ID);
+                        $('#hdnBillID').val(parse[0].bill_ID);
+                        $('#lblMRNo').text(parse[0].Patient_No);
+                        $('#lblPatienName').text(parse[0].Full_Name);
+                        $('#lblAgeYears').text(parse[0].Age_years);
+                        $('#lblGender').text(parse[0].Gender);
+                        $('#lblRegDate').text(parse[0].Creation_Date);
+                        $('#lblAddress').text(parse[0].Permanent_Address);
+                        $('#lblContactNo').text(parse[0].Mobile1);
+                        $('#lblDepartment').text(parse[0].Department);
+                        $('#lblPatientCategory').text(parse[0].Patient_Type);
+                        totalAmount = parse[0].Total_Amount;
+                        receivedAmount = parse[0].Received_Amount;
+
+                        $('#txtToT_amount').val(totalAmount);
+                        $('#txt_RcvdAmount').val(receivedAmount);
+
+                        var rowIndex = 0;
+                        for (var i = 0; i < length; i++) {
+                            if (parse[i].Is_Refunded == true || parse[i].Is_Refunded == 1) {
+                                continue;
+                            }
+
+                            hasRefundableItems = true;
+
+                            rows += '<tr>' +
+                                '<td style="display:none">' + parse[i].Patient_ID + '</td>' +
+                                '<td style="display:none">' + parse[i].Bill_Details_ID + '</td>' +
+                                '<td style="display:none">' + parse[i].Item_Id + '</td>' +
+                                '<td style="text-align: center;">' + parse[i].Item_Name + '</td>' +
+                                '<td style="text-align: center;">' + parse[i].Doctor_Share + '</td>' +
+                                '<td style="text-align: center;">' + parse[i].Hospital_Share + '</td>' +
+                                '<td><input type="text" id="DocRefund' + rowIndex + '" name="DocRefund" value="0" style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                                '<td><input type="text" name="HosRefund" value="0" style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                                '</tr>';
+                            rowIndex++;
+                        }
+
+                        if (!hasRefundableItems) {
                             Swal.fire({
-                                title: "Already Refunded",
-                                text: "This bill is already refund",
+                                title: "No Items Available",
+                                text: "All items in this bill have already been refunded.",
                                 icon: "warning",
                                 confirmButtonText: "OK"
                             });
+                            $('#tblDetails tbody tr').remove();
+                            $('#btnSave').attr('disabled', 'disabled');
                             return;
                         }
-                    }
 
-                    var length = parse.length;
-                    var rows;
-                    debugger;
-                    $('#hdPatientID').text(parse[0].Patient_ID);
-                    $('#hdnBillID').val(parse[0].bill_ID);
-                    $('#lblMRNo').text(parse[0].Patient_No);
-                    $('#lblPatienName').text(parse[0].Full_Name);
-                    $('#lblAgeYears').text(parse[0].Age_years);
-                    $('#lblGender').text(parse[0].Gender);
-                    $('#lblRegDate').text(parse[0].Creation_Date);
-                    $('#lblAddress').text(parse[0].Permanent_Address);
-                    $('#lblContactNo').text(parse[0].Mobile1);
-                    $('#lblDepartment').text(parse[0].Department);
-                    $('#lblPatientCategory').text(parse[0].Patient_Type);
-                    for (var i = 0; i < length; i++) {
-                        debugger;
-                        rows += '<tr><td style="display:none">' + parse[i].Patient_ID + '</td><td style="display:none">' + parse[i].Bill_Details_ID + '  </td><td style="display:none">' + parse[i].Item_Id + '</td><td style="text-align: center;">' + parse[i].Item_Name + '</td><td style="text-align: center;">' + parse[i].Doctor_Share + '</td><td style="text-align: center;">' + parse[i].Hospital_Share + '</td><td><input type="text"  id="DocRefund' + i + '"  name="DocRefund" value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td><td><input type="text" name="HosRefund" value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td></tr>';
+                        $('#tblDetails tbody tr').remove();
+                        $('#tblDetails tbody').append(rows);
+                        $('#btnSave').removeAttr('disabled');
+                    } else {
+                        Swal.fire({
+                            title: "Not Found",
+                            text: "No bill found with this Bill No",
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        });
                     }
-                    $('#tblDetails tbody tr').remove();
-                    $('#tblDetails tbody').append(rows);
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error loading bill details: " + error,
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
                 }
-
             });
+
             $.ajax({
                 type: "post",
                 url: "Refund.aspx/LoadDoctorShare",
@@ -213,18 +268,22 @@
                     debugger;
                     var parse = JSON.parse(response.d);
                     var length = parse.length;
-                    var rows;
-                    debugger;
+                    var rows = '';
                     for (var i = 0; i < length; i++) {
-                        debugger;
-                        rows += '<tr><td style="display:none">' + parse[i].Patient_ID + '</td><td style="display:none">' + parse[i].Emp_ID + '</td><td style="display:none">' + parse[i].Record_ID + '</td><td style="text-align: center;">' + parse[i].Emp_Name + '</td><td style="text-align: center;">' + parse[i].Share_Type_Name + '</td><td style="text-align: center;">' + parse[i].Amount + '</td><td><input type="text" id="RefundDis' + i + '" name="RefundDis" value="' + 0 + '"  style="width: 75px !important;"onkeyup="calculateDoctorShare()"/></td></tr>';
+                        rows += '<tr>' +
+                            '<td style="display:none">' + parse[i].Patient_ID + '</td>' +
+                            '<td style="display:none">' + parse[i].Emp_ID + '</td>' +
+                            '<td style="display:none">' + parse[i].Record_ID + '</td>' +
+                            '<td style="text-align: center;">' + parse[i].Emp_Name + '</td>' +
+                            '<td style="text-align: center;">' + parse[i].Share_Type_Name + '</td>' +
+                            '<td style="text-align: center;">' + parse[i].Amount + '</td>' +
+                            '<td><input type="text" id="RefundDis' + i + '" name="RefundDis" value="0" style="width: 75px !important;" onkeyup="calculateDoctorShare()"/></td>' +
+                            '</tr>';
                     }
                     $('#Doctor_Share_Table tbody tr').remove();
                     $('#Doctor_Share_Table tbody').append(rows);
-
                 }
             });
-
         }
         function calculateDoctorShare() {
             debugger;
@@ -470,30 +529,27 @@
         function validateSave() {
             debugger;
             var proceed = true;
+            var hasAnyRefund = false;
 
             $('#tblDetails tbody tr').each(function (index, row) {
-
-                var doctorShare = parseFloat($(row).find('td:eq(4)').text()) || 0;  
-                var hospitalShare = parseFloat($(row).find('td:eq(5)').text()) || 0;  
-
+                var doctorShare = parseFloat($(row).find('td:eq(4)').text()) || 0;
+                var hospitalShare = parseFloat($(row).find('td:eq(5)').text()) || 0;
                 var doctorRefund = parseFloat($(row).find('input[name="DocRefund"]').val()) || 0;
                 var hospitalRefund = parseFloat($(row).find('input[name="HosRefund"]').val()) || 0;
+
+                if (doctorRefund > 0 || hospitalRefund > 0) {
+                    hasAnyRefund = true;
+                }
 
                 if (doctorRefund > doctorShare) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Invalid Doctor Refund!',
                         text: 'Doctor Refund cannot be greater than Doctor Share.',
-                        confirmButtonColor: '#d33',
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
+                        confirmButtonColor: '#d33'
                     });
-
                     proceed = false;
-                    return false; 
+                    return false;
                 }
 
                 if (hospitalRefund > hospitalShare) {
@@ -501,18 +557,22 @@
                         icon: 'error',
                         title: 'Invalid Hospital Refund!',
                         text: 'Hospital Refund cannot be greater than Hospital Share.',
-                        confirmButtonColor: '#d33',
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
+                        confirmButtonColor: '#d33'
                     });
-
                     proceed = false;
-                    return false; 
+                    return false;
                 }
             });
+
+            if (!hasAnyRefund && proceed) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Refund Amount!',
+                    text: 'Please enter at least one refund amount before saving.',
+                    confirmButtonColor: '#d33'
+                });
+                proceed = false;
+            }
 
             return proceed;
         }
