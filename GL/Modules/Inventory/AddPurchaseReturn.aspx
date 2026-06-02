@@ -111,6 +111,7 @@
                 $('#tblPOItemstModelTable tbody tr').remove();
                 var rows = "";
                 for (var i = 0; i < Test.length; i++) {
+                    var GRN_Date = $.datepicker.formatDate('dd M yy', new Date(parseInt(Test[i].GRN_Date.substring(6, 19))));
                     debugger;
                     rows = '<tr>' +
                         '<td><input name="chkselect" class="chktd" type="checkbox" style=" margin-top: -2px; margin-left: 0px;height: 36px;" onclick="append(this)"/></td>' +
@@ -126,8 +127,8 @@
                         '<td style="display:none">' + Test[i].GRN_ID + '</td> ' +
                         '<td style="display:none">' + Test[i].GRN_detail_Id + '</td> ' +
                         '<td style="display:none">' + Test[i].Item_ID + '</td> ' +
-                        '<td style="display:none">' + Test[i].Rate + '</td> ' +
-                        '<td style="display:none">' + Test[i].GRN_Date + '</td> ' +
+                        '<td style="display:none">' + Test[i].CGSRate + '</td> ' +
+                        '<td style="display:none">' + GRN_Date + '</td> ' +
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                     $('input').attr('autocomplete', 'off');
@@ -208,7 +209,7 @@
                         '<td class="headcol_2"><input type="hidden" id="txtBatchNum' + rowIndex + '" name="txtBatchNum" value="' + value.Batch_No + '"/>' + value.Batch_No + '</td> ' +
                         '<td><input type="hidden" id="txtBatchBalnce' + rowlength + '" name="txtBatchBalnce" value="' + value.Batch_Balance + '"/>' + value.Batch_Balance + '</td>' +
                         '<td><input type="hidden" id="txtQty' + rowlength + '" name="txtQty" value="' + value.GRNQty + '"/>' + value.GRNQty + '</td>' +
-                        '<td><input type="text" id="txtTransQty' + rowlength + '" name="txtTransQty" value="' + value.Qty + '"/></td>' +
+                        '<td><input type="text" id="txtTransQty' + rowlength + '" name="txtTransQty" onkeyup="CulculateAmonutWithQty(this)" value="' + value.Qty + '"/></td>' +
                         '<td><input type="hidden" id="txtTransNum' + rowlength + '" name="txtTransNum" value="' + value.GRN_Num + '"/>' + value.GRN_Num + '</td>' +
                         '<td><input type="hidden" id="txtTransType' + rowlength + '" name="txtTransType" value="' + value.Trans_Type + '"/>' + value.Trans_Type + '</td>' +
                         '<td><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + value.PUR_Rate + '"/>' + value.PUR_Rate + '</td>' +
@@ -320,7 +321,7 @@
                 '<td class="headcol_2"><input type="hidden" id="txtBatchNum' + length + '" name="txtBatchNum" value="' + BatchNum + '"/>' + BatchNum + '</td> ' +
                 '<td><input type="hidden" id="txtBatchBalnce' + length + '" name="txtBatchBalnce" value="' + BatchBalance + '"/>' + BatchBalance + '</td>' +
                 '<td><input type="hidden" id="txtQty' + length + '" name="txtQty"  value="' + Qty + '"/>' + Qty + '</td>' +
-                '<td><input type="text" id="txtTransQty' + length + '" onkeyup="CulculateAmonutWithQty(this)" name="txtTransQty"/></td>' +
+                '<td><input type="text" id="txtTransQty' + length + '" onkeyup="CulculateAmonutWithQty(this)" name="txtTransQty" value="0"/></td>' +
                 '<td><input type="hidden" id="txtTransNum' + length + '" name="txtTransNum" value="' + GRNNum + '"/>' + GRNNum + '</td>' +
                 '<td><input type="hidden" id="txtTransType' + length + '" name="txtTransType" value="' + TransType + '"/>' + TransType + '</td>' +
                 '<td><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + Rate + '"/>' + Rate + '</td>' +
