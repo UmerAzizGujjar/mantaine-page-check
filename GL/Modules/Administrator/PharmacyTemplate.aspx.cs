@@ -16,174 +16,212 @@ namespace PMS.GL
         {
 
         }
+        
         [WebMethod]
-        public static string loadData(int StageID)
+        public static string Save(string btnValue, string id, string templateName, List<TemplateDetail> details)
         {
-            string data = string.Empty;
-            DataBaseDataContext db = new DataBaseDataContext();
-            List<ApprovalHierarchyDetail> listObj = new List<ApprovalHierarchyDetail>();
-
-            var result = (from pds in db.Sys_Approval_Stage_Details
-                          where pds.Stage_ID == StageID
-                          select pds).ToList();
-            int counter = 1;
-            foreach (var res in result)
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
             {
-                ApprovalHierarchyDetail obj = new ApprovalHierarchyDetail();
-                obj.Stage_ID = res.Stage_ID.ToString();
-                obj.User_Id = Convert.ToString(res.UserId);
-                obj.MaxApprovalLimit = (int?)res.MaxApprovalLimit;
-                listObj.Add(obj);
-                counter++;
-            }
-            data = (new JavaScriptSerializer()).Serialize(listObj);
-            return data;
-        }
-
-        [WebMethod]
-        public static string Save(string btnValue, string id, string txtStageName, string txtStageDescription, string txtNoOfApproval, string txtNoOfUnApproval, bool chkFinalApproval, string[][] approvalDetail)
-        {
-            int lstid = 0;
-            Sys_Approval_Stage_Master appp;
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            if (btnValue == "Save")
-            {
-                appp = new Sys_Approval_Stage_Master();
-            }
-            else
-            {
-                appp = (from tbl in db.Sys_Approval_Stage_Masters
-                        where tbl.Stage_ID == Convert.ToInt32(id)
-                        select tbl).FirstOrDefault();
-                appp.Stage_Name = txtStageName;
-                appp.Stage_Description = txtStageDescription;
-                //appp.NoOfApprovalRequire=Convert.ToInt32(txtNoOfApproval);
-                //appp.NoOfUnApprovalRequire=Convert.ToInt32(txtNoOfUnApproval);
-                if (!string.IsNullOrEmpty(txtNoOfApproval) && int.TryParse(txtNoOfApproval, out int approvalCount))
+                int templateId;
+                int? parsedId = null;
+                if (!string.IsNullOrWhiteSpace(id) && int.TryParse(id, out templateId))
                 {
-                    appp.NoOfApprovalRequire = approvalCount;
+                    parsedId = templateId;
+                }
+
+                var existsQuery = db.Pharmacy_Template_Masters.Where(x => x.TemplateName == templateName && !x.IsCancel);
+                if (parsedId.HasValue)
+                {
+                    existsQuery = existsQuery.Where(x => x.ID != parsedId.Value);
+                }
+                bool exists = existsQuery.Any();
+                if (exists)
+                {
+                    return "EXISTS";
+                }
+
+                Pharmacy_Template_Master master;
+                if (btnValue == "Save")
+                {
+                    master = new Pharmacy_Template_Master
+                    {
+                        TemplateName = templateName,
+                        CreatedBy = AppConfig.UserID,
+                        CreatedTime = DateTime.Now,
+                        IsCancel = false
+                    };
+                    db.Pharmacy_Template_Masters.InsertOnSubmit(master);
+                    db.SubmitChanges();
                 }
                 else
                 {
-                    appp.NoOfApprovalRequire = 0;
+                    if (!parsedId.HasValue)
+                    {
+                        return "0";
+                    }
+                    master = db.Pharmacy_Template_Masters.FirstOrDefault(x => x.ID == parsedId.Value);
+                    if (master == null)
+                    {
+                        return "0";
+                    }
+                    master.TemplateName = templateName;
+                    master.UpdatedBy = AppConfig.UserID;
+                    master.UpdatedTime = DateTime.Now;
+                    db.SubmitChanges();
                 }
-                if (!string.IsNullOrEmpty(txtNoOfUnApproval) && int.TryParse(txtNoOfUnApproval, out int unApprovalCount))
+
+                foreach (var detail in details ?? new List<TemplateDetail>())
                 {
-                    appp.NoOfUnApprovalRequire = unApprovalCount;
+                    if (detail.IsDeleted && detail.DetailId > 0)
+                    {
+                        var existingDetail = db.Pharmacy_Template_Details.FirstOrDefault(x => x.ID == detail.DetailId);
+                        if (existingDetail != null && !existingDetail.IsDeleted)
+                        {
+                            existingDetail.IsDeleted = true;
+                            existingDetail.DeletedBy = AppConfig.UserID;
+                            existingDetail.DeletedTime = DateTime.Now;
+                        }
+                        continue;
+                    }
+
+                    if (detail.DetailId > 0)
+                    {
+                        var existingDetail = db.Pharmacy_Template_Details.FirstOrDefault(x => x.ID == detail.DetailId);
+                        if (existingDetail != null)
+                        {
+                            existingDetail.ItemID = detail.ItemId;
+                            existingDetail.ItemName = detail.ItemName;
+                            existingDetail.IsDeleted = false;
+                            existingDetail.UpdatedBy = AppConfig.UserID;
+                            existingDetail.UpdatedTime = DateTime.Now;
+                        }
+                    }
+                    else
+                    {
+                        var newDetail = new Pharmacy_Template_Detail
+                        {
+                            Pharmacy_Template_Master_ID = master.ID,
+                            ItemID = detail.ItemId,
+                            ItemName = detail.ItemName,
+                            CreatedBy = AppConfig.UserID,
+                            CreatedTime = DateTime.Now,
+                            IsDeleted = false
+                        };
+                        db.Pharmacy_Template_Details.InsertOnSubmit(newDetail);
+                    }
                 }
-                else
-                {
-                    appp.NoOfUnApprovalRequire = 0;
-                }
-                appp.IsFinalApproval = Convert.ToBoolean(chkFinalApproval);
-                appp.Updated_By = AppConfig.UserID;
-                appp.Updated_Date = DateTime.Now;
+
                 db.SubmitChanges();
+                return master.ID.ToString();
             }
-            if (btnValue == "Save")
-            {
-                appp.Stage_Name = txtStageName;
-                appp.Stage_Description = txtStageDescription;
-                //appp.NoOfApprovalRequire = Convert.ToInt32(txtNoOfApproval);
-                //appp.NoOfUnApprovalRequire = Convert.ToInt32(txtNoOfUnApproval);
-                if (!string.IsNullOrEmpty(txtNoOfApproval) && int.TryParse(txtNoOfApproval, out int approvalCount))
-                {
-                    appp.NoOfApprovalRequire = approvalCount;
-                }
-                else
-                {
-                    appp.NoOfApprovalRequire = 0;
-                }
-                if (!string.IsNullOrEmpty(txtNoOfUnApproval) && int.TryParse(txtNoOfUnApproval, out int unApprovalCount))
-                {
-                    appp.NoOfUnApprovalRequire = unApprovalCount;
-                }
-                else
-                {
-                    appp.NoOfUnApprovalRequire = 0;
-                }
-                appp.IsFinalApproval = Convert.ToBoolean(chkFinalApproval);
-                appp.Creation_Date = DateTime.Now;
-                appp.Created_By = AppConfig.UserID;
-                appp.Company_ID = AppConfig.Company_ID;
-                appp.IsDeleted = false;
-                db.Sys_Approval_Stage_Masters.InsertOnSubmit(appp);
-                db.SubmitChanges();
-            }
-            else
-            {
-                string sql = "Delete from Sys_Approval_Stage_Detail where Stage_ID = " + appp.Stage_ID + "";
-                DBClass.executeNonQueryWithoutBegin(sql);
-            }
-            for (int i = 1; i < approvalDetail.Length; i++)
-            {
-                Sys_Approval_Stage_Detail apdetail = new Sys_Approval_Stage_Detail();
-                apdetail.Stage_ID = appp.Stage_ID;
-                var a = approvalDetail[i][0].ToString();
-                if (Guid.TryParse(approvalDetail[i][0], out Guid userId))
-                {
-                    apdetail.UserId = userId;
-                }
-                if (!string.IsNullOrWhiteSpace(approvalDetail[i][1]) &&
-                    int.TryParse(approvalDetail[i][1], out int maxApprovalLimit))
-                {
-                    apdetail.MaxApprovalLimit = maxApprovalLimit;
-                }
-                db.Sys_Approval_Stage_Details.InsertOnSubmit(apdetail);
-            }
-            db.SubmitChanges();
-            if (btnValue == "Save")
-            {
-                lstid = appp.Stage_ID;
-            }
-            else
-            {
-                lstid = Convert.ToInt32(id);
-            }
-            return lstid.ToString();
         }
-        [WebMethod]
-        public static string loadUser()
-        {
-            DataBaseDataContext db = new DataBaseDataContext();
-            var listItems = (from a in db.aspnet_Users
-                             select new
-                             {
-                                 a.UserId,
-                                 a.UserName
-                             }).ToList();
 
-            return (new JavaScriptSerializer()).Serialize(listItems);
+        [WebMethod]
+        public static string CheckTemplateNameExists(string templateName, string id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                int templateId;
+                int? parsedId = null;
+                if (!string.IsNullOrWhiteSpace(id) && int.TryParse(id, out templateId))
+                {
+                    parsedId = templateId;
+                }
+
+                var existsQuery = db.Pharmacy_Template_Masters.Where(x => x.TemplateName == templateName && !x.IsCancel);
+                if (parsedId.HasValue)
+                {
+                    existsQuery = existsQuery.Where(x => x.ID != parsedId.Value);
+                }
+                bool exists = existsQuery.Any();
+                return (new JavaScriptSerializer()).Serialize(exists);
+            }
         }
+
         [WebMethod]
         public static string LoadDetails(int id)
         {
-            List<ApprovalHierarchyDetail> detail = new List<ApprovalHierarchyDetail>();
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                detail = (from m in db.Sys_Approval_Stage_Details
-                          where m.Stage_ID == id
-                          select new ApprovalHierarchyDetail
-                          {
-                              Stage_ID = m.Stage_ID.ToString(),
-                              User_Id = m.UserId.ToString(),
-                              MaxApprovalLimit = (int?)m.MaxApprovalLimit
-                          }).ToList();
+                var detail = (from d in db.Pharmacy_Template_Details
+                              where d.Pharmacy_Template_Master_ID == id && !d.IsDeleted
+                              select new TemplateDetail
+                              {
+                                  DetailId = d.ID,
+                                  ItemId = d.ItemID ?? 0,
+                                  ItemName = d.ItemName
+                              }).ToList();
+                return (new JavaScriptSerializer()).Serialize(detail);
             }
-            return (new JavaScriptSerializer()).Serialize(detail);
         }
+
         [WebMethod]
         public static string LoadMasterData(string id)
         {
-            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            var query = (from data in db.Sys_Approval_Stage_Masters.Where(x => x.Stage_ID == Convert.ToInt32(id)) select data).FirstOrDefault();
-            return (new JavaScriptSerializer()).Serialize(query);
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                int templateId;
+                if (!int.TryParse(id, out templateId))
+                {
+                    return (new JavaScriptSerializer()).Serialize(null);
+                }
+                var query = db.Pharmacy_Template_Masters.FirstOrDefault(x => x.ID == templateId && !x.IsCancel);
+                return (new JavaScriptSerializer()).Serialize(query);
+            }
         }
-        public class ApprovalHierarchyDetail
+
+        [WebMethod]
+        public static string FillPharmacyItemDropDown()
         {
-            public string Stage_ID { get; set; }
-            public string User_Id { get; set; }
-            public int? MaxApprovalLimit { get; set; }
+            DataBaseDataContext db = new DataBaseDataContext();
+            var Routes = (from d in db.INV_Items
+
+                          where d.Pharmacy_Item == true
+                          orderby d.Item_ID descending
+                          select new
+                          {
+                              d.Item_ID,
+                              Description = d.Description,
+                          }).ToList().Take(20);
+
+            return (new JavaScriptSerializer().Serialize(Routes));
+        }
+
+        [WebMethod]
+        public static object getpharmacyitems(string searchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var pharmacyItems = (from d in db.INV_Items
+                                     where d.IsPharmacyItem == true && d.Description.Contains(searchString)
+                                     orderby d.Item_ID descending
+                                     select new
+                                     {
+                                         d.Item_ID,
+                                         Description = d.Description.Replace("\r", "").Replace("\n", "").Replace("\t", "").Trim()
+                                     }).Take(20).ToList();
+
+                return pharmacyItems;
+            }
+        }
+
+        private static string SanitizeControlChars(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            var filtered = value.Where(ch => !char.IsControl(ch) || ch == '\r' || ch == '\n' || ch == '\t').ToArray();
+            return new string(filtered);
+        }
+
+        public class TemplateDetail
+        {
+            public int DetailId { get; set; }
+            public int ItemId { get; set; }
+            public string ItemName { get; set; }
+            public bool IsDeleted { get; set; }
         }
     }
 }
