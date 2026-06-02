@@ -573,6 +573,7 @@
                 var OTProcedure = $("#chkOTProcedure").prop("checked");
                 var ShortItem = $("#chkShortItem").prop("checked");
                 var CathLabItems = $('#chkCathLab').prop('checked');
+                var HighRisk = $('#chkHighRisk').prop('checked');
                 var IsService = $("#chkIsService").prop("checked");
                 var SehatSahulat = $("#chkSehatSahulat").prop("checked");
                 var btnValue = $('#btnValue').val();
@@ -683,6 +684,7 @@
                         "OTProcedure": OTProcedure,
                         "ShortItem": ShortItem,
                         "CathLabItems": CathLabItems,
+                        "HighRisk": HighRisk,
                         "IsService": IsService,
                         "SehatSahulat": SehatSahulat,
                         "btnValue": btnValue,
@@ -992,6 +994,9 @@
                     }
                     if (parse.Is_CathLab == 1) {
                         $("#chkCathLab").prop("checked", true);
+                    }
+                    if (parse.High_risk == 1) {
+                        $("#chkHighRisk").prop("checked", true);
                     }
                     if (parse.Controller_Drug == 1) {
                         $("#controller_drug").prop('checked', true);
@@ -1529,9 +1534,16 @@
                     <td style="width: 84px;">Procedure</td>
                     <td style="width: 5px;">
                         <input type="checkbox" id="ckhBedServices" name="ckhBedServices" /></td>
-                    <td style="width: 84px;">Bed Services</td>
+                    <td style="width: 84px;">Bed Services</td>            
+                    <td>
+                        <input type="checkbox" id="chkHighRisk" name="chkHighRisk" />
+                    </td>
+                    <td>
+                        <label for="chkHighRisk">High Risk</label>
+                    </td>
                     <td><label id="lblProcedure_Time" >Procedure Time</label></td>
                     <td><input type="text" id="Procedure_Time"  /></td>
+                    
                 </tr>
                 <tr>
                     <td>
