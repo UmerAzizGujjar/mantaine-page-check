@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/studentReceipt.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/studentReceipt.css" rel="stylesheet" />
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -682,7 +682,7 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                                 <div class="image-container">
-                                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Addrecepit.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
+                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Addrecepit.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-6">

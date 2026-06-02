@@ -2,7 +2,7 @@
 
  
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+     <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script type="text/javascript">
         var currentDialysisId = '';
@@ -1773,7 +1773,7 @@
                          <div class="dialysis-form-row">
                              <div class="dialysis-field dialysis-field-25 text-center">
                                  <div class="image-container">
-                                     <img src="../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient" class="patient-image" />
+                                     <img src="../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Patient.png" alt="Patient" class="patient-image" />
                                  </div>
                              </div>
                              <div class="dialysis-field dialysis-field-75">

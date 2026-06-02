@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PharmacyTemplateList.aspx.cs" Inherits="PMS.PharmacyTemplateList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
 
         $(document).ready(function () {

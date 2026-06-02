@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FinancialLogs.aspx.cs" Inherits="PMS.FinancialLogs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/tablestyle.css" rel="stylesheet" />
     <script src='<%= ResolveUrl("~/Scripts/jquery-ui.min.js") %>'></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
  <style type="text/css">

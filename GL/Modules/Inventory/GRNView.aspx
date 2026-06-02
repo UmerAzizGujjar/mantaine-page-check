@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GRNView.aspx.cs" Inherits="PMS.Inventory.GRNView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/tablestyle.css" rel="stylesheet" />
     <style>
         table.dataTable tbody tr.child td > .child-container {
             display: flex;

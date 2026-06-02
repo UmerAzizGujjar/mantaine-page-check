@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DiscountAssigned.aspx.cs" Inherits="PMS.Modules.Billing.DiscountAssigned" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Refund.css" rel="stylesheet" />
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/Refund.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/swalalert.css" rel="stylesheet" />
 
     <script type="text/javascript">
 
@@ -721,7 +721,7 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                                 <div class="image-container">
-                                    <img src="../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/billing2.png"
+                                    <img src="../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/billing2.png"
                                         alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                                 </div>
                             </div>

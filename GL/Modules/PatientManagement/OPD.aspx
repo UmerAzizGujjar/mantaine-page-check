@@ -2,9 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <script src="../../wwwroot/Tibbit_theme/CustomJs/OPD.js" type="text/javascript"></script>
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/OPD.css" rel="stylesheet" />
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/OPD.js" type="text/javascript"></script>
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/OPD.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -1212,7 +1212,7 @@
                         onkeypress="if(event.key==='Enter'){ addfunc(); }"
                         class="d-flex flex-column justify-content-center align-items-start">
                         <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Register Icon" width="48" height="48" style="margin-right: 10px;">
+                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/adduser.png" alt="Register Icon" width="48" height="48" style="margin-right: 10px;">
                             <div>
                                 <div style="font-weight: 700; font-size: 1.5rem;">Register a new patient</div>
                                 <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Create a new patient record</div>
@@ -1226,7 +1226,7 @@
                     <div id="card-search-appointment" role="button" tabindex="0" onclick="SearchPop_App()" onkeypress="if(event.key==='Enter'){ SearchPop_App(); }"
                         class="d-flex flex-column justify-content-center align-items-start quick-actions">
                         <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/appointmenticon.png" alt="Search Appointment Icon" width="48" height="48" style="margin-right: 10px;">
+                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/appointmenticon.png" alt="Search Appointment Icon" width="48" height="48" style="margin-right: 10px;">
                             <div>
                                 <div style="font-weight: 700; font-size: 1.5rem;">Search in appointment</div>
                                 <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Find patient appointments</div>
@@ -1240,7 +1240,7 @@
                     <div id="btnsearchpatlist" role="button" tabindex="0" onclick="/* add search patient function here, e.g. openPatientSearch() */" onkeypress="if(event.key==='Enter'){ /* openPatientSearch(); */ }"
                         class="d-flex flex-column justify-content-center align-items-start quick-actions">
                         <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Search Patient Icon" width="48" height="48" style="margin-right: 10px;">
+                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/adduser.png" alt="Search Patient Icon" width="48" height="48" style="margin-right: 10px;">
                             <div>
                                 <div style="font-weight: 700; font-size: 1.5rem;">Search an existing patient</div>
                                 <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Lookup patient details</div>
@@ -1254,7 +1254,7 @@
                     <div id="btnsearchEmergencylist" role="button" tabindex="0" onclick="/* add emergency refer function here, e.g. referToEmergency() */" onkeypress="if(event.key==='Enter'){ /* referToEmergency(); */ }"
                         class="d-flex flex-column justify-content-center align-items-start quick-actions">
                         <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png" alt="Emergency Refer Icon" width="48" height="48" style="margin-right: 10px;">
+                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/adduser.png" alt="Emergency Refer Icon" width="48" height="48" style="margin-right: 10px;">
                             <div>
                                 <div style="font-weight: 700; font-size: 1.5rem;">Emergency Refer Patient</div>
                                 <div style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Refer patient to emergency</div>
@@ -1266,7 +1266,7 @@
                     <div id="btnsearchReferlist" role="button" tabindex="0" onclick="openReferPatientModal()" onkeypress="if(event.key==='Enter'){ openReferPatientModal(); }"
                         class="d-flex flex-column justify-content-center align-items-start quick-actions" style="cursor: pointer;">
                         <div class="d-flex align-items-center">
-                            <img src="~~../../../../wwwroot/Tibbit_theme/images/HMIS_Icons/adduser.png"
+                            <img src="~~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/adduser.png"
                                 alt="Refer Patient Icon" width="48" height="48" style="margin-right: 10px;">
                             <div>
                                 <div style="font-weight: 700; font-size: 1.5rem;">Refer Patient</div>

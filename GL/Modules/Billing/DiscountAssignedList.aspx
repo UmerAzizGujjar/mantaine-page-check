@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DiscountAssignedList.aspx.cs" Inherits="PMS.Modules.Billing.DiscountAssignedList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-   <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+   <link href="../../wwwroot/THEME_TIBBIT/css/tablestyle.css" rel="stylesheet" />
     <style type="text/css">
         .detail-container {
             padding: 15px;

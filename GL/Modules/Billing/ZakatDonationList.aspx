@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="Zakat Donation Records" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ZakatDonationList.aspx.cs" Inherits="PMS.Modules.Billing.ZakatDonationList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/tablestyle.css" rel="stylesheet" />
     <style>
         .table-container {
             margin-top: 20px;

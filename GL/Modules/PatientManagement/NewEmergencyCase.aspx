@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="NewEmergencyCase.aspx.cs" Inherits="PMS.Modules.PatientManagement.NewEmergencyCase" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/NewEmergencyCase.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/NewEmergencyCase.css" rel="stylesheet" />
     <script id="ScriptmanageSymptomsModal">
         $(document).ready(function () {
             $("#12").hide();
@@ -4533,89 +4533,89 @@
             <div class="sidebarr">
                 <div class="menu-item no-submenu" id="06" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/complaints.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/complaints.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Admission</span>
                     </div>
                 </div>
                 <div class="menu-item no-submenu" id="01" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/symptoms.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/symptoms.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Symptoms</span>
                     </div>
                 </div>
                 <div class="menu-item no-submenu" id="02" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/vitals.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/vitals.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Vitals</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="03" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/history.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/history.png" alt="Profile Picture" class="sidebarIcon">
                         <span>History</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="04" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/examination.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/examination.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Examination</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="05" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/refer.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/refer.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Refer To</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="07" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/primarydiagnosis.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/primarydiagnosis.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Vitals Discharge</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="08" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/finaldiagnosis.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/finaldiagnosis.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Discharge Details</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="09" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/investigation.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/investigation.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Investigation</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="10" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/diagnostics.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/diagnostics.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Diagnostics</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="11" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medication.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/medication.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Medication</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="12" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/followup.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/followup.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Death</span>
                     </div>
                 </div>
 
                 <div class="menu-item no-submenu" id="13" onclick="navigateAction(this)">
                     <div class="menu-title">
-                        <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/medication.png" alt="Profile Picture" class="sidebarIcon">
+                        <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/medication.png" alt="Profile Picture" class="sidebarIcon">
                         <span>Discharge Medication</span>
                     </div>
                 </div>
@@ -4627,7 +4627,7 @@
             <div class="row">
                 <div class="col-lg-2">
                     <div style="width: fit-content !important;" class="retractIcon">
-                        <img onclick="toggleRetract()" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/sidebar.png"
+                        <img onclick="toggleRetract()" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/sidebar.png"
                             alt="Sidebar Toggle" class="sidebarToggleIcon" />
                     </div>
                 </div>
@@ -4680,7 +4680,7 @@
                                         <div class="col-lg-3 col-md-3 col-sm-4 text-center">
                                             <div class="row">
                                                 <div class="image-container">
-                                                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
+                                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
                                                 </div>
                                             </div>
                                             <div class="row">

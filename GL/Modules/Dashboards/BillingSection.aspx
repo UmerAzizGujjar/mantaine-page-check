@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingSection.aspx.cs" Inherits="PMS.Modules.Dashboards.BilligSection" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/Shortcuts.css" rel="stylesheet" />
         <style>
         .modern-loading-overlay {
     position: fixed;
@@ -227,25 +227,25 @@
         <div class="row text-center">
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Patient-Billing">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/BillingProcess.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/cash-machine.png" alt="Billing" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/cash-machine.png" alt="Billing" style="object-fit: contain;" />
                     <h5 class="cocotxt">Patient Billing</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Add-Receipt">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/Receipts.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/order.png" alt="Receipt" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/order.png" alt="Receipt" style="object-fit: contain;" />
                     <h5 class="cocotxt">Add Receipt</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Add-Advance">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Billing/AddNewAdvance.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/money.png" alt="Add Advance" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/money.png" alt="Add Advance" style="object-fit: contain;" />
                     <h5 class="cocotxt">Add Advance</h5>
                 </a>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Add-Refund">
                 <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Dashboards/PharmacySection.aspx" style="width: 60%;">
-                    <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/cashback.png" alt="Refund" style="object-fit: contain;" />
+                    <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/cashback.png" alt="Refund" style="object-fit: contain;" />
                     <h5 class="cocotxt">Add Refund</h5>
                 </a>
             </div>

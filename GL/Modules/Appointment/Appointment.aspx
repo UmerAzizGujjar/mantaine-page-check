@@ -1,9 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Appointment.aspx.cs" Inherits="PMS.Appointment" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Appointment.css" rel="stylesheet" />
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
-    <script src="../../wwwroot/Tibbit_theme/CustomJs/Appointment.js"></script>
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/Appointment.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/Appointment.js"></script>
      <script type="text/javascript">
         $(document).ready(function () {
             debugger;

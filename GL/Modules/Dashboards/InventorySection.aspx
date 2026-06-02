@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InventorySection.aspx.cs" Inherits="PMS.Modules.Dashboards.InventorySection" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/Shortcuts.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/Shortcuts.css" rel="stylesheet" />
         <style>
         .modern-loading-overlay {
     position: fixed;
@@ -211,42 +211,42 @@
     <div class="row text-center" id="inventory-shortcuts-container">
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-GIR">
             <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/GoodsIssuanceRequest.aspx" style="width: 60%;">
-                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/GIR2.png" alt="GIR" style="object-fit: contain;" />
+                <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/GIR2.png" alt="GIR" style="object-fit: contain;" />
                 <h5 class="cocotxt">GIR</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-GIN">
             <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/GoodsIssuanceNote.aspx" style="width: 60%;">
-                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Sin.png" alt="GIN" style="object-fit: contain;" />
+                <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Sin.png" alt="GIN" style="object-fit: contain;" />
                 <h5 class="cocotxt">GIN</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-IGP">
             <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/InversionGatePass.aspx" style="width: 60%;">
-                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/border.png" alt="IGP" style="object-fit: contain;" />
+                <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/border.png" alt="IGP" style="object-fit: contain;" />
                 <h5 class="cocotxt">IGP</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-GRN">
             <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/GRN.aspx" style="width: 60%;">
-                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/receiver.png" alt="GRN" style="object-fit: contain;" />
+                <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/receiver.png" alt="GRN" style="object-fit: contain;" />
                 <h5 class="cocotxt">GRN</h5>
             </a>
         </div>
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Stock-Adjustment">
             <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/StockAdjustment.aspx" style="width: 60%;">
-                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/inventory-management.png" alt="Adjustment" style="object-fit: contain;" />
+                <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/inventory-management.png" alt="Adjustment" style="object-fit: contain;" />
                 <h5 class="cocotxt">Stock Adjustment</h5>
             </a>
         </div> 
 
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4" id="shortcut-Stock-Transfer">
             <a class="btn btn-coco radius-4 shortcut" href="~../../../../Modules/Inventory/StoreStockTransfer.aspx" style="width: 60%;">
-                <img class="img-fluid" src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/stocktrans.png" alt="Transfer" style="object-fit: contain;" />
+                <img class="img-fluid" src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/stocktrans.png" alt="Transfer" style="object-fit: contain;" />
                 <h5 class="cocotxt">Stock Transfer</h5>
             </a>
         </div>

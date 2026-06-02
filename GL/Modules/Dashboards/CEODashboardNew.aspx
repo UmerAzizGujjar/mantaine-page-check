@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CEODashboardNew.aspx.cs" Inherits="PMS.Modules.Dashboards.CEODashboardNew" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/CEODashboardNew.css" rel="stylesheet" />
+    <script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js"></script>
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/CEODashboardNew.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             $("#loader").show();

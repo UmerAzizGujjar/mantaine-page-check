@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNewAdvance.aspx.cs" Inherits="PMS.AddNewAdvance" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Advance.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/Advance.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 <script type="text/javascript">
@@ -438,7 +438,7 @@
                         <div class="row">
                             <div class="col-lg-5 col-md-5 col-sm-6 text-center">
                                 <div class="image-container">
-                                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/AddAdvance.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/AddAdvance.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                                 </div>
                             </div>
                             <div class="col-lg-7 col-md-5 col-sm-6">

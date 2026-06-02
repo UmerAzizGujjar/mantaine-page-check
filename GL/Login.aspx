@@ -5,9 +5,9 @@
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/login.css" rel="stylesheet" />
-    <script src="wwwroot/Tibbit_theme/js/swalalert.js"></script>
-    <link href="wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/login.css" rel="stylesheet" />
+    <script src="wwwroot/THEME_TIBBIT/js/swalalert.js"></script>
+    <link href="wwwroot/THEME_TIBBIT/css/CustomCss/swalalert.css" rel="stylesheet" />
     
     <style type="text/css">
         /* Hide upper elements to reduce space */
@@ -52,7 +52,7 @@
                             <fieldset class="login">
                                 <div style="text-align: center; margin-bottom: 10px;">
                                     <asp:Image ID="imgCompanyLogo" runat="server" 
-                                        ImageUrl="~/wwwroot/Tibbit_theme/images/TibbIT_icons/logo.png" 
+                                        ImageUrl="~/wwwroot/THEME_TIBBIT/images/LOGOS/logo.png" 
                                         AlternateText="Company Logo" 
                                         Visible="true"
                                         Style="max-width: 250px; height: auto;" />

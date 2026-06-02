@@ -1,10 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Inventory_Dashboard.aspx.cs" Inherits="PMS.Modules.Dashboards.Inventory_Dashboard" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
    
-         <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"  type="text/javascript"></script>
+         <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"  type="text/javascript"></script>
 
     <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
-    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js" type="text/javascript"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js" type="text/javascript"></script>
     <style type="text/css">
         .apexcharts-data-labels text {
             font-weight: bold !important;
