@@ -78,6 +78,7 @@
             loadmed();
             LoadWarehouses();
             LoadInvoiceNo();
+            LoadTemplate();
             LoadWarehousesforSaleReturn();
             setTimeout(function () {
                 if ($('#ddl_Warehouse').val() && $('#ddl_Warehouse').val() != "0") {
@@ -3514,7 +3515,63 @@
         //        }
         //    });
         //}
+     function LoadTemplate() {
+            var optionpat = '';
+            PageMethods.GetTemplate(function (Tests) {
+                optionpat = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(Tests), function (key, value) {
+                    optionpat += '<option value="' + value.id + '" >' + value.Name + '</option>';
+                });
+                $('#ddlTemplate').html(optionpat);
+                $('#ddlTemplate').select2();
+            });
+        }
 
+
+        function GetTemplateItems() {
+    var warehouse = $("#ddlWarehouse").val()
+    if (warehouse == "0") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Please Select Warehouse First.',
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+                popup: 'swal-big-popup',
+                title: 'swal-big-title',
+                htmlContainer: 'swal-big-text'
+            }
+        });
+        $('#ddlTemplate').val(0).trigger('Change');
+        return;
+    }
+    else {
+        itemIds = [];
+        var Temp_Id = $('#ddlTemplate').val();
+        $.ajax({
+            type: "post",
+            url: "IssueMedicine.aspx/GetItemCodesfromTemplate",
+            data: JSON.stringify({
+                Temp_Id: Temp_Id
+            }),
+            dataType: 'JSON',
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (msg) {
+                debugger;
+
+                var data = JSON.parse(msg.d);
+
+                $.each(data.ItemCodes, function (index, value) {
+                    debugger;
+                    itemIds.push(value);
+                });
+            }
+        });
+        AddMedicineDetailFormOPD(itemIds)
+    }
+}
     </script>
 </asp:Content>
 
@@ -3635,6 +3692,10 @@
                 <div class="col-lg-2 col-md-4 col-sm-6">
                     <label class="InvoiceNum">Invoice No:</label>
                     <select  id="ddlInv_No" style="width: 180px !important;" onchange="GetBillingItems()" class="form-control select2"></select>
+                </div>
+                                  <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label class="InvoiceNum">Template:</label>
+                    <select  id="ddlTemplate" style="width: 180px !important;" onchange="GetTemplateItems()" class="form-control select2"></select>
                 </div>
                   </div>
 

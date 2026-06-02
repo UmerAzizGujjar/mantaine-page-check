@@ -214,10 +214,11 @@
                         '<td><input type="hidden" id="txtTransType' + rowlength + '" name="txtTransType" value="' + value.Trans_Type + '"/>' + value.Trans_Type + '</td>' +
                         '<td><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + value.PUR_Rate + '"/>' + value.PUR_Rate + '</td>' +
                         '<td><input type="hidden" id="txtAmount' + length + '" name="txtAmount" value="' + value.Amount + '"/>' + value.Amount + '</td>' +
+                        '<td><input type="hidden" id="txtGRNDate' + rowlength + '" name="txtGRNDate" value="' + GRNDate + '"/>' + GRNDate + '</td>' +
                         '<td style="display:none"><input type="hidden" id="GRNId' + rowlength + '" name="GRNId" value="' + value.GRN_ID + '"/></td>' +
                         '<td style="display:none"><input id="txtGRNDetailId' + rowlength + '" name="txtGRNDetailId" value="' + value.GRN_Detail_ID + '" type="text" style="width: 31px!important;border: none;"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtItemId' + rowlength + '" name="txtItemId" value="' + value.Item_ID + '"/></td>' +
-                        '<td><input type="hidden" id="txtGRNDate' + rowlength + '" name="txtGRNDate" value="' + GRNDate + '"/>' + GRNDate + '</td>' +
+                       
 
                         '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: 1px;" i=""></i></a></td>' +
                         '</tr>'
@@ -325,11 +326,12 @@
                 '<td><input type="hidden" id="txtTransNum' + length + '" name="txtTransNum" value="' + GRNNum + '"/>' + GRNNum + '</td>' +
                 '<td><input type="hidden" id="txtTransType' + length + '" name="txtTransType" value="' + TransType + '"/>' + TransType + '</td>' +
                 '<td><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + Rate + '"/>' + Rate + '</td>' +
-                '<td><input type="hidden" id="txtAmount' + length + '" name="txtAmount" value="0"/>' +  + '</td>' +
+                '<td><input type="hidden" id="txtAmount' + length + '" name="txtAmount" value="0"/>' + + '</td>' +
+                '<td style=""><input type="text" id="txtGrnDate' + length + '" name="txtGrnDate" value="' + GRNDate + '" />' + GRNDate +'</td>' +
                 '<td style="display:none"><input type="hidden" id="GRNId' + length + '" name="GRNId" value="' + GRNId + '"/></td>' +
                 '<td style="display:none"><input id="txtGRNDetailId' + length + '" name="txtGRNDetailId" value="' + GRNDetailId + '" type="text" style="width: 31px!important;border: none;"/></td>' +
                 '<td style="display:none"><input type="hidden" id="txtItemId' + length + '" name="txtItemId" value="' + ItemId + '"/></td>' +
-                '<td style=""><input type="text" id="txtGrnDate' + length + '" name="txtGrnDate" value="' + datetime + '" /></td>' +
+               
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: 1px;" i=""></i></a></td>' +
                 '</tr>'
             debugger;
@@ -370,7 +372,7 @@
                 debugger;
                 table.find('tr').each(function (key, value) {
                     debugger;
-                    Item_list.push({ 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'BatchNum': $(value).find('td input[name=txtBatchNum]').val(), 'Qty': $(value).find('td input[name=txtTransQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'Amount': $(value).find('td input[name=txtAmount]').val(), 'TransType': $(value).find('td input[name=txtTransType]').val(), 'GRNId': $(value).find('td input[name=GRNId]').val(), 'GRNDetailId': $(value).find('td input[name=txtGRNDetailId]').val(), 'GRNNum': $(value).find('td input[name=txtTransNum]').val(), 'GRNDate': $(value).find('td input[name=txtGrnDate]').val() });
+                    Item_list.push({ 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'BatchNum': $(value).find('td input[name=txtBatchNum]').val(), 'Qty': $(value).find('td input[name=txtTransQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'Amount': $(value).find('td:eq(10)').text() , 'TransType': $(value).find('td input[name=txtTransType]').val(), 'GRNId': $(value).find('td input[name=GRNId]').val(), 'GRNDetailId': $(value).find('td input[name=txtGRNDetailId]').val(), 'GRNNum': $(value).find('td input[name=txtTransNum]').val(), 'GRNDate':  $(value).find('td:eq(11)').text().trim() });
                 });
                 $('#btn_Save').attr('disabled', true);
                 var AllItemDetail = { 'VendorId': VendorId, 'PurchaseReturnNum': PurchaseReturnNum, 'PurchaseReturndate': PurchaseReturndate, 'ReturnFormInventoryOrg': ReturnFormInventoryOrg, 'InvoiceType': InvoiceType, 'Remarks': Remarks, 'ItemList': Item_list };

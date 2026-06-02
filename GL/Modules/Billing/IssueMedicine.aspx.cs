@@ -186,6 +186,21 @@ namespace PMS
         }
 
         [WebMethod]
+        public static string GetItemCodesfromTemplate(int Temp_Id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var itemCodes = (from ip in db.Pharmacy_Template_Details
+                             where ip.Pharmacy_Template_Master_ID == Temp_Id     
+                             select ip.ItemID).ToList();
+            var result = new
+            {
+                ItemCodes = itemCodes
+            };
+
+            return new JavaScriptSerializer().Serialize(result);
+        }
+
+        [WebMethod]
         public static string GetItemCodesOPD(int Pat_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -1208,6 +1223,20 @@ namespace PMS
         //                 }).ToList().Take(200);
         //    return (new JavaScriptSerializer()).Serialize(panel);
         //}
+        [WebMethod]
+        public static string GetTemplate()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var panel = (from data in db.Pharmacy_Template_Masters
+                         where  (data.IsCancel == false || data.IsCancel == null)
+                         orderby data.ID descending
+                         select new
+                         {
+                             id = data.ID,
+                             Name = data.TemplateName,
+                         }).ToList().Take(200);
+            return (new JavaScriptSerializer()).Serialize(panel);
+        }
         [WebMethod]
         public static string AllPharmaPatients()
         {
