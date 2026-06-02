@@ -2568,12 +2568,13 @@ namespace PMS
                     string stDate = Request.QueryString["startDate"].ToString();
                     string endDate = Request.QueryString["endDate"].ToString();
                     string vendorType = Request.QueryString["VendorType"];
+                    string VendorID = Request.QueryString["VendorId"];
 
                     rd.SetParameterValue("@VendorType", vendorType);
 
                     rd.SetParameterValue("@StartDate", stDate);
                     rd.SetParameterValue("@EndDate", endDate);
-                    rd.SetParameterValue("@VendorId", Convert.ToInt32(Request.QueryString["VendorId"]));
+                    rd.SetParameterValue("@VendorId", VendorID);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("CompanyLogo", logoPath);
                     // rd.SetParameterValue("Address", companyAddress);
@@ -3458,6 +3459,25 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@stDate", StartDateTime);
                 rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", companyAddress);
+            }
+            else if (reportName == "Lab_Test_Result_Culture")
+            {
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string Department = Request.QueryString["Department"].ToString();
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                reportPath += "LabRadiology/rptLabTestResultCulture.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("@Group_Department", Department);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", companyAddress);
             }

@@ -409,7 +409,7 @@
                 $.each(data.d, function (i) {
                     if (i > 0)
                         $("#stocktable tbody").append("<tr id='" + data.d[i].itemCode + "^" + data.d[i].batchNo + "^" + data.d[i].quantity + "^" + data.d[i].expiryDate + "'>" +
-                            "<td class='dn'><label class='srNo'>" + data.d[i].itemCode + data.d[i].batchNo + "</label></td>" +
+                            "<td class='dn'><label class='srNo'>" + i + "</label></td>" +
                             "<td class=combat>" + data.d[i].itemCode + "</td><td class=combat>" + data.d[i].batchNo + "</td>" +
                             "<td class=combat>" + data.d[i].description + "</td><td class='stkAvbl combat'>" + data.d[i].stockAvailable + "</td><td class=combat><span class='val'>" + data.d[i].quantity + "</span><input class ='editQnty dn' type='text' value='" + data.d[i].quantity + "' /></td>" +
                             "<td><span class='editDelete'><a class='editQuantity' >Edit</a>  |  <a class='deleteStkItem' rel='" + data.d[0].stockTransferNo + "'>Delete</a></span><span class='dn' id='" + data.d[i].batchNo + "'><img src='/images/loading.gif' /></span></td></tr>"
@@ -668,7 +668,8 @@
                             else {
                                 html = "<td class=combat>" + itemCodeDescription + "</td><td class='stkAvbl combat'>" + stock + "</td>" + "<td class=combat>" + quantity + "</td><td><a class='deleteStkItem'>Delete</a></td>";
                             }
-                            $("#stocktable tbody").append("<tr id='" + itmCode + "^" + batcNo + "^" + quantity + "^" + expDate + "'><td class='dn'><label class='srNo'>" + itmCode + batcNo + "</label></td><td class=combat>" +
+                            var rowCount = $("#stocktable tbody tr").length + 1;
+                            $("#stocktable tbody").append("<tr id='" + itmCode + "^" + batcNo + "^" + quantity + "^" + expDate + "'><td class='dn'><label class='srNo'>" + rowCount + "</label></td><td class=combat>" +
                                 itmCode + "</td> <td class=combat>" +
                                 batcNo + "</td>" + html + "</tr>"
                             );
