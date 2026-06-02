@@ -9,105 +9,126 @@
        
     </style>
     <script type="text/javascript">
+        var deletedDetailIds = [];
 
-        $(document).on('keyup', '.select2-search__field', function () {
-            var searchString = $(this).val();
-
-            if (searchString.length < 2) {
-                return;
-            }
-
-            $.ajax({
-                url: 'MedicineTemplate.aspx/getpharmacyitems',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ searchString: searchString }),
-                success: function (response) {
-                    try {
-                        var pharmacyItems = JSON.parse(response.d);
-                        var $select = $('#txtPharmacyItem');
-
-                        $.each(pharmacyItems, function (key, value) {
-                            var optionExists = $select.find('option[value="' + value.Item_ID + '"]').length > 0;
-                            if (!optionExists) {
-                                $select.append('<option value="' + value.Item_ID + '">' + value.Description + '</option>');
-                            }
+        function FillPharmacyItem() {
+            $('#txtPharmacyItem').select2({
+                width: '100%',
+                dropdownAutoWidth: false,
+                placeholder: 'Select Medicine',
+                allowClear: true,
+                minimumInputLength: 2, // Replaces your custom length check
+                ajax: {
+                    type: "POST",
+                    url: "PharmacyTemplate.aspx/getpharmacyitems",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    delay: 250, // Built-in debounce to prevent spamming your database
+                    data: function (params) {
+                        // Send the typed text to the server
+                        return JSON.stringify({ searchString: params.term });
+                    },
+                    processResults: function (response) {
+                        // Map the C# properties to Select2's expected 'id' and 'text'
+                        var mappedData = $.map(response.d, function (item) {
+                            return {
+                                id: item.Item_ID,
+                                text: item.Description
+                            };
                         });
 
-                        $select.trigger('change');
-
-                    } catch (error) {
-                        console.error('Error parsing response:', error);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching data:', error);
+                        return {
+                            results: mappedData
+                        };
+                    },
+                    cache: true
                 }
-            });
-        });
-
-
-        $(document).on('keydown', '.select2-search__field', function (event) {
-
-            if (event.keyCode === 13) {
-
-                $('#txtPharmacyItem').select2('close');
-            }
-        });
-
-        });
-        function FillPharmacyItem() {
-            PageMethods.FillPharmacyItemDropDown(function (Medicine) {
-                var options = '<option value=""> Select Medicine  </option>'
-                $.each(JSON.parse(Medicine), function (key, value) {
-                    options += '<option value="' + value.Item_ID + '"> ' + value.Description + ' </option>';
-                });
-
-                $('#txtPharmacyItem').html(options);
-                $('#txtPharmacyItem').select2();
-
-                $('#txtPharmacyItem').select2({
-                    width: '100%',
-                    dropdownAutoWidth: false,
-                    minimumResultsForSearch: 0,
-                    dropdownParent: $('#MedicationModel'),
-                    placeholder: 'Select Medicine',
-                    allowClear: true
-                });
-
-
             });
         }
 
-        function uuid() {
-            var uuid = "", i, random;
-            for (i = 0; i < 32; i++) {
-                random = Math.random() * 16 | 0;
-
-                if (i == 8 || i == 12 || i == 16 || i == 20) {
-                    uuid += "-"
-                }
-                uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
-            }
-            return uuid;
+        function AddMedicineRow(itemId, itemName, detailId) {
+            var safeId = detailId || 0;
+            var row = '<tr data-detail-id="' + safeId + '" data-item-id="' + itemId + '">' +
+                '<td>' + itemName + '</td>' +
+                '<td><a href="javascript:void(0)" class="btn-remove-item"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
+                '</td>' +
+                '</tr>';
+            $('#tblItemDescriptionDetail').append(row);
         }
+
+        function CheckTemplateName() {
+            var templateName = $('#txtTemplateName').val().trim();
+            var id = $('#txtTemplateID').val();
+            if (templateName === '') {
+                $('#lblTemplateExists').hide();
+                return;
+            }
+            PageMethods.CheckTemplateNameExists(templateName, id, function (resp) {
+                var exists = JSON.parse(resp);
+                if (exists) {
+                    $('#lblTemplateExists').text('Template Name already exists').show();
+                } else {
+                    $('#lblTemplateExists').hide();
+                }
+            });
+        }
+
         $(document).ready(function () {
+            FillPharmacyItem();
             var id = '<% =Request.QueryString["ID"] %>';
             if (id != "") {
                 $('#btnSave').val('Update');
+                $('#txtTemplateID').val(id);
                 LoadMasterData(id);
                 Loaddetail(id);
             }
-            $(document).on('change', '.chkUnlimited', function () {
-                var index = $(this).data('index');
-                var input = $('#txtMaxApprovalLimit' + index);
-                if ($(this).prop('checked')) {
-                    input.val('-1');
-                    input.prop('disabled', true);
-                } else {
-                    input.val('');
-                    input.prop('disabled', false);
+            $('#txtTemplateName').on('blur', function () {
+                CheckTemplateName();
+            });
+            $('#btnAddItem').on('click', function () {
+                var itemId = $('#txtPharmacyItem').val();
+                var itemName = $('#txtPharmacyItem option:selected').text();
+                if (!itemId) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please Select Medicine',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return;
                 }
+                var exists = $('#tblItemDescriptionDetail tr[data-item-id="' + itemId + '"]').length > 0;
+                if (exists) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Medicine already added',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
+                    return;
+                }
+                AddMedicineRow(itemId, itemName, 0);
+                $('#txtPharmacyItem').val('').trigger('change');
+            });
+            $('#tblItemDescriptionDetail').on('click', '.btn-remove-item', function () {
+                var row = $(this).closest('tr');
+                var detailId = parseInt(row.data('detail-id'), 10);
+                if (detailId > 0) {
+                    deletedDetailIds.push(detailId);
+                }
+                row.remove();
             });
             $('#btnNew').on('click', function () {
                 window.location.href = "PharmacyTemplate.aspx";
@@ -116,21 +137,17 @@
                 window.location.href = "PharmacyTemplateView.aspx";
             });
             $('#btnSave').on('click', function () {
-                var id = $('#txtStageID').val();
+                var id = $('#txtTemplateID').val();
                 if (id == "") {
                     id = "";
                 }
                 var btnValue = $("#btnSave").val();
-                var txtStageName = $("#txtStageName").val();
-                var txtStageDescription = $("#txtStageDescription").val();
-                var txtNoOfApproval = $("#txtNoOfApproval").val();
-                var txtNoOfUnApproval = $("#txtNoOfUnApproval").val();
-                var chkFinalApproval = $("#chkFinalApproval").prop('checked');
-                if (txtStageName == "") {
+                var templateName = $("#txtTemplateName").val().trim();
+                if (templateName == "") {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: 'Please Enter Stage Name',
+                        text: 'Please Enter Template Name',
                         showConfirmButton: false,
                         timer: 2000,
                         customClass: {
@@ -141,11 +158,11 @@
                     });
                     return false;
                 }
-                if (txtNoOfApproval !== "" && (!txtNoOfApproval.match(/^\d+$/) || txtNoOfApproval < 0 || txtNoOfApproval > 10)) {
+                if ($('#lblTemplateExists').is(':visible')) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: 'Please Enter a valid number between 0 and 9 for No Of Approvals Required',
+                        text: 'Template Name already exists',
                         showConfirmButton: false,
                         timer: 2000,
                         customClass: {
@@ -156,99 +173,59 @@
                     });
                     return false;
                 }
-                if (txtNoOfUnApproval !== "" && (!txtNoOfUnApproval.match(/^\d+$/) || txtNoOfUnApproval < 0 || txtNoOfUnApproval > 10)) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please Enter a valid number between 0 and 9 for No Of UnApprovals Required',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
+                var details = [];
+                $('#tblItemDescriptionDetail tr').each(function () {
+                    var row = $(this);
+                    var detailId = parseInt(row.data('detail-id'), 10) || 0;
+                    var itemId = parseInt(row.data('item-id'), 10) || 0;
+                    var itemName = row.find('td').eq(0).text().trim();
+                    details.push({
+                        DetailId: detailId,
+                        ItemId: itemId,
+                        ItemName: itemName,
+                        IsDeleted: false
                     });
-                    return false;
-                }
-                var approvalList = new Array();
-                var list = document.getElementById('tblItemDescription');
-                if (list.rows.length <= 1) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Please add User',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        customClass: {
-                            popup: 'swal-big-popup',
-                            title: 'swal-big-title',
-                            htmlContainer: 'swal-big-text'
-                        }
-                    });
-                    return false;
-                }
-                var table = $('#tblItemDescriptionDetail');
-                var isValid = true;
-                table.find('tr').each(function (key, value) {
-                    var ddlUser = $("#tblddlUser" + (key + 1) + " option:selected").val();
-                    var txtMaxApprovalLimit = $("#txtMaxApprovalLimit" + (key + 1)).val();
-                    var chkUnlimited = $("#chkUnlimited" + (key + 1)).prop('checked');
-                    if (ddlUser == "") {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'Please Select User',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-                        return false;
-                    }
-                    if (chkUnlimited) {
-                        txtMaxApprovalLimit = "-1";
-                    } else if (txtMaxApprovalLimit === "" || !txtMaxApprovalLimit.match(/^\d+$/) || parseInt(txtMaxApprovalLimit, 10) <= 0) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'Please Enter a Max Approval Limit greater than 0',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            customClass: {
-                                popup: 'swal-big-popup',
-                                title: 'swal-big-title',
-                                htmlContainer: 'swal-big-text'
-                            }
-                        });
-                        isValid = false;
-                        return false;
-                    }
-                    approvalList[key + 1] = new Array(ddlUser, txtMaxApprovalLimit);
                 });
-                if (!isValid) {
+                if (details.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Please add Medicine',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            popup: 'swal-big-popup',
+                            title: 'swal-big-title',
+                            htmlContainer: 'swal-big-text'
+                        }
+                    });
                     return false;
                 }
+                $.each(deletedDetailIds, function (index, detailId) {
+                    details.push({
+                        DetailId: detailId,
+                        ItemId: 0,
+                        ItemName: '',
+                        IsDeleted: true
+                    });
+                });
                 $.ajax({
                     type: "POST",
                     url: "PharmacyTemplate.aspx/Save",
                     data: JSON.stringify({
                         "btnValue": btnValue,
                         "id": id,
-                        "txtStageName": txtStageName,
-                        "txtStageDescription": txtStageDescription,
-                        "txtNoOfApproval": txtNoOfApproval,
-                        "txtNoOfUnApproval": txtNoOfUnApproval,
-                        "chkFinalApproval": chkFinalApproval,
-                        "approvalDetail": approvalList
+                        "templateName": templateName,
+                        "details": details
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
                         var data = response.d;
+                        if (data === 'EXISTS') {
+                            $('#lblTemplateExists').text('Template Name already exists').show();
+                            return;
+                        }
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
@@ -277,191 +254,45 @@
                 dataType: "json",
                 success: function (response) {
                     var parsed_Data = JSON.parse(response.d);
-                    $("#txtStageID").val(parsed_Data.Stage_ID);
-                    $("#txtStageName").val(parsed_Data.Stage_Name);
-                    $("#txtStageDescription").val(parsed_Data.Stage_Description);
-                    $("#txtNoOfApproval").val(parsed_Data.NoOfApprovalRequire);
-                    $("#txtNoOfUnApproval").val(parsed_Data.NoOfUnApprovalRequire);
-                    if (parsed_Data.IsFinalApproval == true) {
-                        $("#chkFinalApproval").prop('checked', true);
+                    if (!parsed_Data) {
+                        return;
                     }
+                    $("#txtTemplateID").val(parsed_Data.ID);
+                    $("#txtTemplateName").val(parsed_Data.TemplateName);
                 }, error: function () { }
             });
         }
         function Loaddetail(id) {
-            var rows = '';
             PageMethods.LoadDetails(id, function (resp) {
-                debugger;
                 var data = JSON.parse(resp);
-                var rowIndex = $('#tblItemDescriptionDetail tbody tr').length;
                 $.each(data, function (key, value) {
-                    rows += '<tr>' +
-                        '<td><select class="form-control ddlUser" id="tblddlUser' + (key + 1) + '" name="tblddlUser" style="width:100% !important"></select></td>' +
-                        '<td style="text-align:center; vertical-align:middle;">' +
-                        '<input type="checkbox" class="chkUnlimited" id="chkUnlimited' + (key + 1) + '" data-index="' + (key + 1) + '" />' +
-                        '</td>' +
-                        '<td><input type="text" class="form-control" id="txtMaxApprovalLimit' + (key + 1) + '" data-index="' + (key + 1) + '" placeholder="Max Approval Limit" /></td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
-                        '</td>' +
-                        '</tr>';
+                    AddMedicineRow(value.ItemId, value.ItemName, value.DetailId);
                 });
-                $('#tblItemDescriptionDetail').append(rows);
-                loaddetailItemList(data);
             });
-        }
-        function loaddetailItemList(selectedOptions) {
-            var optionsUser = '';
-            var ddlPromises = [];
-            $('.ddlUser').each(function (index) {
-                var ddl = $(this);
-                ddl.select2();
-                var ddlPromise = new Promise(function (resolve, reject) {
-                    PageMethods.loadUser(function (resp) {
-                        optionsUser = '<option value="0">Please Select</option>';
-                        $.each(JSON.parse(resp), function (key, value) {
-                            optionsUser += '<option value="' + value.UserId + '" >' + value.UserName + '</option>';
-                        });
-                        ddl.html(optionsUser);
-                        resolve();
-                    }, function (error) {
-                        reject(error);
-                    });
-                });
-                ddlPromises.push(ddlPromise);
-            });
-            Promise.all(ddlPromises).then(function () {
-                $('.ddlUser').each(function (index) {
-                    var selectedValue = selectedOptions[index].User_Id;
-                    var maxLimit = selectedOptions[index].MaxApprovalLimit;
-                    var rowIndex = index + 1;
-                    if (selectedValue) {
-                        $('#tblddlUser' + rowIndex).val(selectedValue.toString().toLowerCase()).trigger('change');
-                    }
-                    var maxLimitInput = $('#txtMaxApprovalLimit' + rowIndex);
-                    var chkUnlimited = $('#chkUnlimited' + rowIndex);
-                    if (maxLimit !== null && maxLimit !== undefined) {
-                        var parsedLimit = parseInt(maxLimit, 10);
-                        if (parsedLimit === -1) {
-                            chkUnlimited.prop('checked', true);
-                            maxLimitInput.val('-1');
-                            maxLimitInput.prop('disabled', true);
-                        } else {
-                            maxLimitInput.val(parsedLimit);
-                            chkUnlimited.prop('checked', false);
-                            maxLimitInput.prop('disabled', false);
-                        }
-                    } else {
-                        maxLimitInput.val('');
-                        chkUnlimited.prop('checked', false);
-                        maxLimitInput.prop('disabled', false);
-                    }
-                });
-            }).catch(function (error) {
-                console.error('Error loading dropdowns:', error);
-            });
-        }
-        function AddRow() {
-            var rows = '';
-            var rowlength = tblItemDescription.rows.length;
-            rows = '<tr>' +
-                '<td>' +
-                '<select name="tblddlUser" style="width:100% !important" id="tblddlUser' + rowlength + '">' +
-                '</select>' +
-                '</td>' +
-                '<td style="text-align:center; vertical-align:middle;">' +
-                '<input type="checkbox" class="chkUnlimited" id="chkUnlimited' + rowlength + '" data-index="' + rowlength + '" />' +
-                '</td>' +
-                '<td><input type="text" class="form-control" id="txtMaxApprovalLimit' + rowlength + '" data-index="' + rowlength + '" placeholder="Max Approval Limit" /></td>' +
-                '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" i=""></i></a>' +
-                '</td>' +
-                '</tr>';
-            $('#tblItemDescriptionDetail').append(rows);
-            loadItemList(rowlength);
-        }
-        function loadItemList(rowlength) {
-            var optionsUser = '';
-            var length = rowlength;
-            $('#tblddlUser' + length + '').select2();
-            PageMethods.loadUser(function (resp) {
-                optionsUser = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(resp), function (key, value) {
-                    optionsUser += '<option value="' + value.UserId + '" >' + value.UserName + '</option>';
-                });
-                $('#tblddlUser' + length + '').html(optionsUser);
-            },
-                function (error) {
-                    alert(error.get_message());
-                });
-        }
-        function ExcludeFromPayment(anchor) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Are you sure?',
-                text: 'Are you sure You want to delete?',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
-                customClass: {
-                    popup: 'swal-big-popup',
-                    title: 'swal-big-title',
-                    htmlContainer: 'swal-big-text'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var row = $(anchor).parents('tr')[0];
-                    row.remove();
-                }
-            });
-
         }
     </script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <input type="hidden" id="txtStageID" name="txtStageID" />
+    <input type="hidden" id="txtTemplateID" name="txtTemplateID" />
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-12">
 
-            <label for="txtStageName">Stage Name</label>
-            <input type="text" name="txtStageName" class="form-control" id="txtStageName" placeholder="Enter Stage Name" />
+            <label for="txtTemplateName">Template Name</label>
+            <input type="text" name="txtTemplateName" class="form-control" id="txtTemplateName" placeholder="Enter Template Name" />
+            <span id="lblTemplateExists" style="display: none; color: red;"></span>
 
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="col-lg-5 col-md-6 col-sm-12">
 
-            <label for="txtStageDescription">Stage Description</label>
-            <input type="text" name="txtStageDescription" class="form-control" id="txtStageDescription" placeholder="Enter Stage Description" />
+            <label for="txtPharmacyItem">Medicine</label>
+            <select id="txtPharmacyItem" name="txtPharmacyItem" class="form-control"></select>
 
         </div>
-        
-                <div class="col-lg-1 col-md-3 col-sm-4" style="margin-top: 30px;width: 40px !important;">
-    <input type="checkbox" id="chkFinalApproval" name="chkFinalApproval" />
-
-</div>
-        <div class="col-lg-1 col-md-3 col-sm-4" style="margin-top: 30px;">
-
-    <label id="lblchkFinalApproval" for="chkFinalApproval">Final Approval</label>
-</div>
-        
         <div class="col-lg-2 col-md-3 col-sm-4">
             <label></label>
-            <input type="button" class="btn-primry" onclick="AddRow()" value="Add" />
+            <input type="button" id="btnAddItem" class="btn-primry" value="Add" />
 
-        </div>
-    </div>
-    <div class="row" style="display: none">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="txtNoOfApproval">No Of Approvals Required</label>
-                <input type="text" name="txtNoOfApproval" class="form-control" id="txtNoOfApproval" placeholder="Enter No Of Approvals Required" />
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="txtNoOfUnApproval">No Of UnApprovals Required</label>
-                <input type="text" name="txtNoOfUnApproval" class="form-control" id="txtNoOfUnApproval" placeholder="Enter No Of UnApprovals Required" />
-            </div>
         </div>
     </div>
 
@@ -473,10 +304,8 @@
                 <table class="table table-bordered" id="tblItemDescription">
                     <thead>
                         <tr>
-                            <th style="width: 45%;">User Name</th>
-                            <th style="width: 20%;">Unlimited</th>
-                            <th style="width: 25%;">Max Approval Limit</th>
-                            <th style="width: 10%">Action</th>
+                            <th style="width: 80%;">Medicine</th>
+                            <th style="width: 20%">Action</th>
                         </tr>
                     </thead>
                     <tbody id="tblItemDescriptionDetail">

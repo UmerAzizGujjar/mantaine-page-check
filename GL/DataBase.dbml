@@ -7782,34 +7782,6 @@
       <Column Name="RejectedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Pharmacy_Template_Detail" Member="Pharmacy_Template_Details">
-    <Type Name="Pharmacy_Template_Detail">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Pharmacy_Template_Master_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ItemName" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Column Name="ItemID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="CreatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="UpdatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="DeletedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="DeletedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Pharmacy_Template_Master" Member="Pharmacy_Template_Masters">
-    <Type Name="Pharmacy_Template_Master">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="TemplateName" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="CreatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="UpdatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CancelledBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="CancelTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="IsCancel" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-    </Type>
-  </Table>
   <Table Name="dbo.INV_Items" Member="INV_Items">
     <Type Name="INV_Item">
       <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7959,6 +7931,34 @@
       <Column Name="Req_qty" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Is_Refunded" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="Ar_Billing_Ar_Billing_Detail" Member="Ar_Billing" ThisKey="Bill_ID" OtherKey="Bill_ID" Type="Ar_Billing" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Pharmacy_Template_Detail" Member="Pharmacy_Template_Details">
+    <Type Name="Pharmacy_Template_Detail">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Pharmacy_Template_Master_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ItemName" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="ItemID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="CreatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="UpdatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DeletedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="DeletedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Pharmacy_Template_Master" Member="Pharmacy_Template_Masters">
+    <Type Name="Pharmacy_Template_Master">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TemplateName" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="CreatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="UpdatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CancelledBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="CancelTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsCancel" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
@@ -9497,28 +9497,6 @@
     <Parameter Name="user_id" Type="System.String" DbType="VarChar(450)" />
     <ElementType Name="spUnApprovePaymentResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_LoadDetailforPurchaseReturn" Method="sp_LoadDetailforPurchaseReturn">
-    <Parameter Name="Purchase_Return_ID" Parameter="purchase_Return_ID" Type="System.Int64" DbType="BigInt" />
-    <ElementType Name="sp_LoadDetailforPurchaseReturnResult">
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="UOM" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="Batch_No" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Trans_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="WareHouse" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="GRNQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="GRN_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="GRN_Detail_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="GRN_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="IGPDetailId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CGS" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Batch_Balance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.sp_GetGRNDetailforPurchaseReturn" Method="sp_GetGRNDetailforPurchaseReturn">
@@ -12377,6 +12355,30 @@
       <Column Name="Hospital_Share" Type="System.Decimal" DbType="Decimal(19,4) NOT NULL" CanBeNull="false" />
       <Column Name="Is_Refund" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Is_Refunded" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LoadDetailforPurchaseReturn" Method="sp_LoadDetailforPurchaseReturn">
+    <Parameter Name="Purchase_Return_ID" Parameter="purchase_Return_ID" Type="System.Int64" DbType="BigInt" />
+    <ElementType Name="sp_LoadDetailforPurchaseReturnResult">
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="UOM" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Batch_No" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Qty" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Trans_Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="WareHouse" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="GRNQty" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="GRN_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="GRN_Detail_ID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="GRN_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IGPDetailId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CGS" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="PUR_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Batch_Balance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

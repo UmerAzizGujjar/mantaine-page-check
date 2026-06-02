@@ -231,6 +231,7 @@
                         }, "orderable": false
                     },
                     { "data": "Vendor_Name", "orderable": false },
+                    { "data": "Ware_House", "orderable": false },
                     { "data": "CreatedBy", "orderable": false },   // ← NEW
                     {
                         "data": "Creation_Date",
@@ -457,6 +458,7 @@
                     <th>Grn Num</th>
                     <th>Approval Date</th>
                     <th>Vendor Name</th>
+                    <th>Ware House</th>
                      <th>Created By</th>
                      <th>Created Date</th>
                      <th>Updated By</th>
