@@ -23,6 +23,11 @@
             $("#ctl00_MainContent_txtAccount_IDlvl3").tokenInput("../../json.aspx", {
                 tokenLimit: 1
             });
+
+
+            $('#ctl00_MainContent_ddlVendor').select2();
+            $('#ctl00_MainContent_ddlVendorType').select2();
+
         }
     </script>
     <style>

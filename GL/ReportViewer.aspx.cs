@@ -2568,12 +2568,13 @@ namespace PMS
                     string stDate = Request.QueryString["startDate"].ToString();
                     string endDate = Request.QueryString["endDate"].ToString();
                     string vendorType = Request.QueryString["VendorType"];
+                    string VendorID = Request.QueryString["VendorId"];
 
                     rd.SetParameterValue("@VendorType", vendorType);
 
                     rd.SetParameterValue("@StartDate", stDate);
                     rd.SetParameterValue("@EndDate", endDate);
-                    rd.SetParameterValue("@VendorId", Convert.ToInt32(Request.QueryString["VendorId"]));
+                    rd.SetParameterValue("@VendorId", VendorID);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("CompanyLogo", logoPath);
                     // rd.SetParameterValue("Address", companyAddress);

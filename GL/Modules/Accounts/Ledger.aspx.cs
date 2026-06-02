@@ -33,7 +33,7 @@ namespace PMS
                         break;
                     case "VWPS":
 
-                        vendorDiv.Visible = false;
+                        vendorDiv.Visible = true;
                         vendorTypeDiv.Visible = true;
                         accountDiv.Visible = false;
                         stockDiv.Visible = false;
@@ -55,6 +55,14 @@ namespace PMS
                         ddlVendorType.Items.Add(new ListItem("All", "0"));
                         warehouseDiv.Visible = false;
                         ddlVendorType.DataBind();
+
+                        string sqlUn = "Select 0 as Vendor_ID, 'All' as Vendor_Name union all ";
+                        System.Data.DataTable dtVent = DBClass.getDataTable(sqlUn + " Select Vendor_ID, (convert(Varchar,Vendor_ID) + ' - ' + Vendor_Name) as Vendor_Name from AP_Vendors");
+                        ddlVendor.DataSource = dtVent;
+                        ddlVendor.DataTextField = "Vendor_Name";
+                        ddlVendor.DataValueField = "Vendor_ID";
+                        ddlVendor.DataBind();
+
                         break;
                     case "VWP":
                         vendorDiv.Visible = true;
@@ -233,7 +241,7 @@ namespace PMS
                     query = "ReportName=VendorWisePOSummary&ReportTitle=Vendor Wise PO Summary&Vendor_ID=" + ddlVendor.SelectedValue + "";
                     break;
                 case "VWPS":
-                    query = "ReportName=VendorWisePurchaseSummary&ReportTitle=Vendor Wise Purchase Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=0";
+                    query = "ReportName=VendorWisePurchaseSummary&ReportTitle=Vendor Wise Purchase Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue;
                     break;
                 case "IGPS":
                     query = "ReportName=VendorWiseIGPS&ReportTitle=Vendor Wise Inward Gate Pass Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "";
