@@ -298,36 +298,49 @@ namespace PMS
             decimal totalRefund = 0;
 
             List<Refund_Detail_Service> ListOfshare = new List<Refund_Detail_Service>();
+            List<int> refundedBillDetailIds = new List<int>();
 
             foreach (DoctorRefund dtls in dt.ServiceRefund)
             {
-                Refund_Detail_Service Service = new Refund_Detail_Service();
+                if (dtls.Doctor_Refund > 0 || dtls.Hos_Refund > 0)
+                {
+                    Refund_Detail_Service Service = new Refund_Detail_Service();
+                    Service.Refund_ID = Convert.ToInt32(Refund_ID);
+                    Service.Bill_Detail_ID = dtls.Bill_Detial_ID;
+                    Service.Item_ID = dtls.Item_ID;
+                    Service.Doctor_Refund = dtls.Doctor_Refund;
+                    Service.Hospital_Refund = dtls.Hos_Refund;
+                    totalRefund += Convert.ToDecimal(dtls.Doctor_Refund);
+                    totalRefund += Convert.ToDecimal(dtls.Hos_Refund);
 
-                Service.Refund_ID = Convert.ToInt32(Refund_ID);
-                Service.Bill_Detail_ID = dtls.Bill_Detial_ID;
-                Service.Item_ID = dtls.Item_ID;
-                Service.Doctor_Refund = dtls.Doctor_Refund;
-                Service.Hospital_Refund = dtls.Hos_Refund;
-                totalRefund += Convert.ToDecimal(dtls.Doctor_Refund);
-                totalRefund += Convert.ToDecimal(dtls.Hos_Refund);
+                    refundedBillDetailIds.Add(dtls.Bill_Detial_ID);
 
-                BillID = DBClass.getField("select Bill_ID from Ar_Billing_Details where bill_Details_ID=" + dtls.Bill_Detial_ID);
+                    var billDetail = db.Ar_Billing_Details.FirstOrDefault(bd => bd.Bill_Details_ID == dtls.Bill_Detial_ID);
+                    if (billDetail != null)
+                    {
+                        billDetail.Is_Refunded = true;
+                    }
 
-                ListOfshare.Add(Service);
+                    if (string.IsNullOrEmpty(BillID))
+                    {
+                        BillID = DBClass.getField("select Bill_ID from Ar_Billing_Details where bill_Details_ID=" + dtls.Bill_Detial_ID);
+                    }
+                    ListOfshare.Add(Service);
+                }
             }
-
 
             List<Refund_Detail_Doctor_Share> ListOfRefund = new List<Refund_Detail_Doctor_Share>();
             foreach (RefundDistribution dts in dt.ShareRefund)
             {
-                Refund_Detail_Doctor_Share Doctor = new Refund_Detail_Doctor_Share();
-
-                Doctor.Refund_ID = Convert.ToInt32(Refund_ID);
-                Doctor.Emp_ID = dts.Emp_ID;
-                Doctor.Refund_Amount = dts.Refund_Amount;
-                totalRefund += Convert.ToDecimal(dts.Refund_Amount);
-
-                ListOfRefund.Add(Doctor);
+                if (dts.Refund_Amount > 0)
+                {
+                    Refund_Detail_Doctor_Share Doctor = new Refund_Detail_Doctor_Share();
+                    Doctor.Refund_ID = Convert.ToInt32(Refund_ID);
+                    Doctor.Emp_ID = dts.Emp_ID;
+                    Doctor.Refund_Amount = dts.Refund_Amount;
+                    totalRefund += Convert.ToDecimal(dts.Refund_Amount);
+                    ListOfRefund.Add(Doctor);
+                }
             }
 
             Ref.Bill_ID = Convert.ToInt32(BillID);
@@ -336,15 +349,21 @@ namespace PMS
             db.Refunds.InsertOnSubmit(Ref);
             db.Refund_Detail_Services.InsertAllOnSubmit(ListOfshare);
             db.Refund_Detail_Doctor_Shares.InsertAllOnSubmit(ListOfRefund);
-
             db.SubmitChanges();
 
             if (!string.IsNullOrEmpty(BillID))
             {
-                DBClass.executeNonQueryWithoutBegin("UPDATE Ar_Billings SET Is_Refund = 1 WHERE Bill_ID = " + BillID);
+                int totalItemsInBill = db.Ar_Billing_Details.Count(bd => bd.Bill_ID == Convert.ToInt32(BillID));
+                int refundedItemsCount = db.Ar_Billing_Details.Count(bd => bd.Bill_ID == Convert.ToInt32(BillID) && bd.Is_Refunded == true);
+
+                if (totalItemsInBill == refundedItemsCount && totalItemsInBill > 0)
+                {
+                    DBClass.executeNonQueryWithoutBegin("UPDATE Ar_Billings SET Is_Refund = 1 WHERE Bill_ID = " + BillID);
+                }
             }
 
             return value;
         }
     }
 }
+
