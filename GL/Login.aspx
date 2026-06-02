@@ -9,6 +9,9 @@
     <script src="wwwroot/Tibbit_theme/js/swalalert.js"></script>
     <link href="wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
     
+    <!-- Font Awesome for eye icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style type="text/css">
         /* Hide upper elements to reduce space */
         .failureNotification {
@@ -27,6 +30,33 @@
         .login hr {
             margin-top: 5px !important;
             margin-bottom: 10px !important;
+        }
+        
+        /* Password container with eye icon */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .password-container .passwordEntry {
+            width: 100%;
+            padding-right: 35px !important;
+        }
+        
+   .toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 59%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+    z-index: 10;
+   color:black;
+    padding: 0 5px;
+}
+        
+        .toggle-password:hover {
+            color: #333;
         }
     </style>
    
@@ -81,7 +111,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <asp:TextBox ID="Password" autocomplete="off" runat="server" CssClass="passwordEntry" TextMode="Password"></asp:TextBox><br />
+                                        <div class="password-container">
+                                            <asp:TextBox ID="Password" autocomplete="off" runat="server" CssClass="passwordEntry" TextMode="Password"></asp:TextBox>
+                                            <i class="fas fa-eye toggle-password" id="togglePasswordIcon"></i>
+                                        </div>
+                                        <br />
                                         <p id="ErrorPassword"></p>
                                         <asp:RequiredFieldValidator ID="PasswordRequired" runat="server" ControlToValidate="Password"
                                             CssClass="" ErrorMessage="Password is required." ToolTip="Password is required."
@@ -107,7 +141,7 @@
                                   <a>
                                     <asp:LinkButton ID="forgetPassword" runat="server" OnClick="forgetPassword_Click" Style="color: black !important; font-size: 12px;" CssClass="forgot-password-link">
                                      
-                                        <i class="ace-icon fa fa-arrow-left"></i>
+                                        <i class=""></i>
                                         <span style="font-weight:bold;margin-left:70%">Forgot Password ?</span>
                                         
                                     </asp:LinkButton>
@@ -227,9 +261,22 @@
             }
         }
     }
-</script>
- 
 
+    // Password toggle functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        var togglePassword = document.getElementById('togglePasswordIcon');
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function () {
+                var passwordField = document.getElementById('<%= ((Login)UserLogin).FindControl("Password").ClientID %>');
+                if (passwordField) {
+                    var type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordField.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                }
+            });
+        }
+    });
+</script>
 
 </asp:Content>
-

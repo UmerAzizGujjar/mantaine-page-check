@@ -549,6 +549,27 @@
             }
             window.open(url, '_blank');
         }
+        function Print() {
+            debugger;
+            var id = '<% =Request.QueryString["ID"] %>';
+            var locationInfo = window.location;
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
+            var url = '/ReportViewer.aspx?ReportName=PurchaseReturnBasePrint&ReportTitle=Purchase Return Print&PurchaseReturnID=' + id;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=PurchaseReturnBasePrint&ReportTitle=Purchase Return Print&PurchaseReturnID=' + id;
+            }
+            window.open(url, '_blank');
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -636,6 +657,9 @@
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input class="btn btn-yellow" type="button" name="btn_New" value="New" id="btn_New" onclick="window.location = 'AddPurchaseReturn.aspx'" />
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" value="Print" class="btn btn-primry" id="btnPrint" onclick="Print()" />
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="button" value="Approve" class="btn btn-primry" id="btnApprove" onclick="Approve()" />
