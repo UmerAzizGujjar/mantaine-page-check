@@ -226,6 +226,7 @@
     <Content Include="Dependencies\Microsoft.ReportViewer.WebForms.dll" />
     <Content Include="Dependencies\Microsoft.Web.Infrastructure.dll" />
     <Content Include="Dependencies\Newtonsoft.Json.dll" />
+    <Content Include="Dependencies\QRCoder.dll" />
     <Content Include="Dependencies\Telerik.Web.UI.dll" />
     <Content Include="Modules\Accounts\ClinicalFinancial.aspx" />
     <Content Include="Modules\Accounts\PasswordChange.aspx" />
