@@ -266,7 +266,7 @@
             PageMethods.LoadDetails(id, function (resp) {
                 var data = JSON.parse(resp);
                 $.each(data, function (key, value) {
-                    AddMedicineRow(value.ItemID, value.ItemName, value.DetailId);
+                    AddMedicineRow(value.ItemId, value.ItemName, value.DetailId);
                 });
             });
         }
