@@ -9499,29 +9499,6 @@
       <Column Name="" Member="Column1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetGRNDetailforPurchaseReturn" Method="sp_GetGRNDetailforPurchaseReturn">
-    <Parameter Name="vendorId" Type="System.Int64" DbType="BigInt" />
-    <Parameter Name="type" Type="System.Int32" DbType="Int" />
-    <Parameter Name="InvOrgId" Parameter="invOrgId" Type="System.String" DbType="VarChar(50)" />
-    <ElementType Name="sp_GetGRNDetailforPurchaseReturnResult">
-      <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="GRN_Date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="GRNQty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
-      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="IGPDetailId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="UOM" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="TransType" Type="System.String" DbType="VarChar(3) NOT NULL" CanBeNull="false" />
-      <Column Name="Batch_No" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
-      <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="InvOrgId" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Batch_Balance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.spSaleReturnMedicinesDetails" Method="spSaleReturnMedicinesDetails">
     <Parameter Name="ItemId" Parameter="itemId" Type="System.Int32" DbType="Int" />
     <ElementType Name="spSaleReturnMedicinesDetailsResult">
@@ -12377,6 +12354,29 @@
       <Column Name="CGS" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="PUR_Rate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Batch_Balance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetGRNDetailforPurchaseReturn" Method="sp_GetGRNDetailforPurchaseReturn">
+    <Parameter Name="vendorId" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="type" Type="System.Int32" DbType="Int" />
+    <Parameter Name="InvOrgId" Parameter="invOrgId" Type="System.String" DbType="VarChar(50)" />
+    <ElementType Name="sp_GetGRNDetailforPurchaseReturnResult">
+      <Column Name="GRN_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="GRN_Date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="GRNQty" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+      <Column Name="GRN_detail_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IGPDetailId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GRN_Num" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Item_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Code" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="UOM" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="TransType" Type="System.String" DbType="VarChar(3) NOT NULL" CanBeNull="false" />
+      <Column Name="Batch_No" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="InvOrgId" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="Batch_Balance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="Rate" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
     </ElementType>

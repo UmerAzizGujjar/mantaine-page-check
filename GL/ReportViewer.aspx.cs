@@ -392,6 +392,19 @@ namespace PMS
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
             }
+            else if (reportName == "PurchaseReturnBasePrint")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                reportPath += "Purchase/rptPurchase_return.rpt";
+                rd.Load(reportPath);
+                string PurchaseReturnID = Request.QueryString["PurchaseReturnID"].ToString();
+                rd.SetParameterValue("@purchaseReturnId", PurchaseReturnID);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
+            }
             else if (reportName == "StoreIssueBasePrint_Thermal")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");

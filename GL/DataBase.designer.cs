@@ -1010,7 +1010,7 @@ namespace PMS
         partial void DeletePharmacy_Template_Master(Pharmacy_Template_Master instance);
         #endregion
         public DataBaseDataContext() :
-               base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+            base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -4759,13 +4759,6 @@ namespace PMS
             return ((ISingleResult<spUnApprovePaymentResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetGRNDetailforPurchaseReturn")]
-        public ISingleResult<sp_GetGRNDetailforPurchaseReturnResult> sp_GetGRNDetailforPurchaseReturn([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> vendorId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> type, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "InvOrgId", DbType = "VarChar(50)")] string invOrgId)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), vendorId, type, invOrgId);
-            return ((ISingleResult<sp_GetGRNDetailforPurchaseReturnResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spSaleReturnMedicinesDetails")]
         public ISingleResult<spSaleReturnMedicinesDetailsResult> spSaleReturnMedicinesDetails([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "ItemId", DbType = "Int")] System.Nullable<int> itemId)
         {
@@ -5590,6 +5583,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), purchase_Return_ID);
             return ((ISingleResult<sp_LoadDetailforPurchaseReturnResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetGRNDetailforPurchaseReturn")]
+        public ISingleResult<sp_GetGRNDetailforPurchaseReturnResult> sp_GetGRNDetailforPurchaseReturn([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "BigInt")] System.Nullable<long> vendorId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> type, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "InvOrgId", DbType = "VarChar(50)")] string invOrgId)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), vendorId, type, invOrgId);
+            return ((ISingleResult<sp_GetGRNDetailforPurchaseReturnResult>)(result.ReturnValue));
         }
     }
 
@@ -192005,302 +192005,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_GetGRNDetailforPurchaseReturnResult
-    {
-
-        private int _GRN_ID;
-
-        private System.DateTime _GRN_Date;
-
-        private System.Nullable<decimal> _GRNQty;
-
-        private int _GRN_detail_Id;
-
-        private System.Nullable<int> _IGPDetailId;
-
-        private System.Nullable<int> _GRN_Num;
-
-        private int _Item_ID;
-
-        private string _Item_Code;
-
-        private string _Description;
-
-        private string _UOM;
-
-        private string _TransType;
-
-        private string _Batch_No;
-
-        private System.Nullable<decimal> _CGSRate;
-
-        private string _InvOrgId;
-
-        private System.Nullable<decimal> _Batch_Balance;
-
-        private System.Nullable<decimal> _Rate;
-
-        public sp_GetGRNDetailforPurchaseReturnResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_ID", DbType = "Int NOT NULL")]
-        public int GRN_ID
-        {
-            get
-            {
-                return this._GRN_ID;
-            }
-            set
-            {
-                if ((this._GRN_ID != value))
-                {
-                    this._GRN_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_Date", DbType = "DateTime NOT NULL")]
-        public System.DateTime GRN_Date
-        {
-            get
-            {
-                return this._GRN_Date;
-            }
-            set
-            {
-                if ((this._GRN_Date != value))
-                {
-                    this._GRN_Date = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRNQty", DbType = "Decimal(38,2)")]
-        public System.Nullable<decimal> GRNQty
-        {
-            get
-            {
-                return this._GRNQty;
-            }
-            set
-            {
-                if ((this._GRNQty != value))
-                {
-                    this._GRNQty = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_detail_Id", DbType = "Int NOT NULL")]
-        public int GRN_detail_Id
-        {
-            get
-            {
-                return this._GRN_detail_Id;
-            }
-            set
-            {
-                if ((this._GRN_detail_Id != value))
-                {
-                    this._GRN_detail_Id = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IGPDetailId", DbType = "Int")]
-        public System.Nullable<int> IGPDetailId
-        {
-            get
-            {
-                return this._IGPDetailId;
-            }
-            set
-            {
-                if ((this._IGPDetailId != value))
-                {
-                    this._IGPDetailId = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_Num", DbType = "Int")]
-        public System.Nullable<int> GRN_Num
-        {
-            get
-            {
-                return this._GRN_Num;
-            }
-            set
-            {
-                if ((this._GRN_Num != value))
-                {
-                    this._GRN_Num = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
-        public int Item_ID
-        {
-            get
-            {
-                return this._Item_ID;
-            }
-            set
-            {
-                if ((this._Item_ID != value))
-                {
-                    this._Item_ID = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
-        public string Item_Code
-        {
-            get
-            {
-                return this._Item_Code;
-            }
-            set
-            {
-                if ((this._Item_Code != value))
-                {
-                    this._Item_Code = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
-        public string Description
-        {
-            get
-            {
-                return this._Description;
-            }
-            set
-            {
-                if ((this._Description != value))
-                {
-                    this._Description = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UOM", DbType = "VarChar(150)")]
-        public string UOM
-        {
-            get
-            {
-                return this._UOM;
-            }
-            set
-            {
-                if ((this._UOM != value))
-                {
-                    this._UOM = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TransType", DbType = "VarChar(3) NOT NULL", CanBeNull = false)]
-        public string TransType
-        {
-            get
-            {
-                return this._TransType;
-            }
-            set
-            {
-                if ((this._TransType != value))
-                {
-                    this._TransType = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch_No", DbType = "VarChar(150)")]
-        public string Batch_No
-        {
-            get
-            {
-                return this._Batch_No;
-            }
-            set
-            {
-                if ((this._Batch_No != value))
-                {
-                    this._Batch_No = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CGSRate", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> CGSRate
-        {
-            get
-            {
-                return this._CGSRate;
-            }
-            set
-            {
-                if ((this._CGSRate != value))
-                {
-                    this._CGSRate = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_InvOrgId", DbType = "VarChar(10)")]
-        public string InvOrgId
-        {
-            get
-            {
-                return this._InvOrgId;
-            }
-            set
-            {
-                if ((this._InvOrgId != value))
-                {
-                    this._InvOrgId = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch_Balance", DbType = "Decimal(18,2)")]
-        public System.Nullable<decimal> Batch_Balance
-        {
-            get
-            {
-                return this._Batch_Balance;
-            }
-            set
-            {
-                if ((this._Batch_Balance != value))
-                {
-                    this._Batch_Balance = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Rate", DbType = "Decimal(18,4)")]
-        public System.Nullable<decimal> Rate
-        {
-            get
-            {
-                return this._Rate;
-            }
-            set
-            {
-                if ((this._Rate != value))
-                {
-                    this._Rate = value;
-                }
-            }
-        }
-    }
-
     public partial class spSaleReturnMedicinesDetailsResult
     {
 
@@ -232626,6 +232330,302 @@ namespace PMS
                 if ((this._PUR_Rate != value))
                 {
                     this._PUR_Rate = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch_Balance", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> Batch_Balance
+        {
+            get
+            {
+                return this._Batch_Balance;
+            }
+            set
+            {
+                if ((this._Batch_Balance != value))
+                {
+                    this._Batch_Balance = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Rate", DbType = "Decimal(18,4)")]
+        public System.Nullable<decimal> Rate
+        {
+            get
+            {
+                return this._Rate;
+            }
+            set
+            {
+                if ((this._Rate != value))
+                {
+                    this._Rate = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetGRNDetailforPurchaseReturnResult
+    {
+
+        private int _GRN_ID;
+
+        private System.DateTime _GRN_Date;
+
+        private System.Nullable<decimal> _GRNQty;
+
+        private int _GRN_detail_Id;
+
+        private System.Nullable<int> _IGPDetailId;
+
+        private System.Nullable<int> _GRN_Num;
+
+        private int _Item_ID;
+
+        private string _Item_Code;
+
+        private string _Description;
+
+        private string _UOM;
+
+        private string _TransType;
+
+        private string _Batch_No;
+
+        private System.Nullable<decimal> _CGSRate;
+
+        private string _InvOrgId;
+
+        private System.Nullable<decimal> _Batch_Balance;
+
+        private System.Nullable<decimal> _Rate;
+
+        public sp_GetGRNDetailforPurchaseReturnResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_ID", DbType = "Int NOT NULL")]
+        public int GRN_ID
+        {
+            get
+            {
+                return this._GRN_ID;
+            }
+            set
+            {
+                if ((this._GRN_ID != value))
+                {
+                    this._GRN_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_Date", DbType = "DateTime NOT NULL")]
+        public System.DateTime GRN_Date
+        {
+            get
+            {
+                return this._GRN_Date;
+            }
+            set
+            {
+                if ((this._GRN_Date != value))
+                {
+                    this._GRN_Date = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRNQty", DbType = "Decimal(38,2)")]
+        public System.Nullable<decimal> GRNQty
+        {
+            get
+            {
+                return this._GRNQty;
+            }
+            set
+            {
+                if ((this._GRNQty != value))
+                {
+                    this._GRNQty = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_detail_Id", DbType = "Int NOT NULL")]
+        public int GRN_detail_Id
+        {
+            get
+            {
+                return this._GRN_detail_Id;
+            }
+            set
+            {
+                if ((this._GRN_detail_Id != value))
+                {
+                    this._GRN_detail_Id = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IGPDetailId", DbType = "Int")]
+        public System.Nullable<int> IGPDetailId
+        {
+            get
+            {
+                return this._IGPDetailId;
+            }
+            set
+            {
+                if ((this._IGPDetailId != value))
+                {
+                    this._IGPDetailId = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_GRN_Num", DbType = "Int")]
+        public System.Nullable<int> GRN_Num
+        {
+            get
+            {
+                return this._GRN_Num;
+            }
+            set
+            {
+                if ((this._GRN_Num != value))
+                {
+                    this._GRN_Num = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_ID", DbType = "Int NOT NULL")]
+        public int Item_ID
+        {
+            get
+            {
+                return this._Item_ID;
+            }
+            set
+            {
+                if ((this._Item_ID != value))
+                {
+                    this._Item_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Code", DbType = "VarChar(15)")]
+        public string Item_Code
+        {
+            get
+            {
+                return this._Item_Code;
+            }
+            set
+            {
+                if ((this._Item_Code != value))
+                {
+                    this._Item_Code = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Description", DbType = "VarChar(200)")]
+        public string Description
+        {
+            get
+            {
+                return this._Description;
+            }
+            set
+            {
+                if ((this._Description != value))
+                {
+                    this._Description = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_UOM", DbType = "VarChar(150)")]
+        public string UOM
+        {
+            get
+            {
+                return this._UOM;
+            }
+            set
+            {
+                if ((this._UOM != value))
+                {
+                    this._UOM = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TransType", DbType = "VarChar(3) NOT NULL", CanBeNull = false)]
+        public string TransType
+        {
+            get
+            {
+                return this._TransType;
+            }
+            set
+            {
+                if ((this._TransType != value))
+                {
+                    this._TransType = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Batch_No", DbType = "VarChar(150)")]
+        public string Batch_No
+        {
+            get
+            {
+                return this._Batch_No;
+            }
+            set
+            {
+                if ((this._Batch_No != value))
+                {
+                    this._Batch_No = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CGSRate", DbType = "Decimal(18,2)")]
+        public System.Nullable<decimal> CGSRate
+        {
+            get
+            {
+                return this._CGSRate;
+            }
+            set
+            {
+                if ((this._CGSRate != value))
+                {
+                    this._CGSRate = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_InvOrgId", DbType = "VarChar(10)")]
+        public string InvOrgId
+        {
+            get
+            {
+                return this._InvOrgId;
+            }
+            set
+            {
+                if ((this._InvOrgId != value))
+                {
+                    this._InvOrgId = value;
                 }
             }
         }
