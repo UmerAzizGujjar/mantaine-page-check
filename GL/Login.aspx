@@ -5,7 +5,7 @@
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 
-    <link href="../wwwroot/THEME_TIBBIT/css/CustomCss/login.css" rel="stylesheet" />
+    <link href="wwwroot/THEME_TIBBIT/css/CustomCss/login.css" rel="stylesheet" />
     <script src="wwwroot/THEME_TIBBIT/js/swalalert.js"></script>
     <link href="wwwroot/THEME_TIBBIT/css/CustomCss/swalalert.css" rel="stylesheet" />
     
