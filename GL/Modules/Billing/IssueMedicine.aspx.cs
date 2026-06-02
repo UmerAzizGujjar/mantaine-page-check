@@ -164,6 +164,27 @@ namespace PMS
         //    return (new JavaScriptSerializer()).Serialize(itemCodes); ;
 
         //}
+
+        [WebMethod]
+        public static string GetItemCodesfrombilling(int Bill_Id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+
+            var itemCodes = (from ip in db.Ar_Billing_Details
+                            
+                             where ip.Bill_ID == Bill_Id && ip.Item_Type == "Medicine"
+                                
+                             select ip.Item_ID).ToList();
+
+            var result = new
+            {
+                ItemCodes = itemCodes
+            };
+
+            return new JavaScriptSerializer().Serialize(result);
+        }
+
         [WebMethod]
         public static string GetItemCodesOPD(int Pat_Id)
         {
@@ -1145,6 +1166,34 @@ namespace PMS
                 .ToList();
 
             return new JavaScriptSerializer().Serialize(result);
+        }
+        [WebMethod]
+        public static string GetInvoiceNo(string searchTerm)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var query = db.Ar_Billings
+                    .Where(x => x.IsPharmacy == true
+                             && x.Invoice_No != null
+                             && (x.isCancel == false || x.isCancel == null));
+
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    query = query.Where(x => x.Seq_InvoiceNo.Contains(searchTerm));
+                }
+
+                var result = query
+                    .OrderByDescending(x => x.Bill_ID)
+                    .Select(x => new
+                    {
+                        id = x.Bill_ID,
+                        text = x.Seq_InvoiceNo
+                    })
+                    .Take(string.IsNullOrWhiteSpace(searchTerm) ? 50 : 200)
+                    .ToList();
+
+                return new JavaScriptSerializer().Serialize(result);
+            }
         }
         //[WebMethod]
         //public static string AllInvoiceNumbers()

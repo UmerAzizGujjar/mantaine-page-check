@@ -77,6 +77,7 @@
             });
             loadmed();
             LoadWarehouses();
+            LoadInvoiceNo();
             LoadWarehousesforSaleReturn();
             setTimeout(function () {
                 if ($('#ddl_Warehouse').val() && $('#ddl_Warehouse').val() != "0") {
@@ -2870,6 +2871,52 @@
             else
                 return Data;
         }
+
+        function GetBillingItems() {
+            var warehouse = $("#ddlWarehouse").val()
+            if (warehouse == "0") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Warehouse First.',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                //$('#ddlInv_No').val('');
+                return;
+            }
+            else {
+                itemIds = [];
+                var Bill_Id = $('#ddlInv_No').val();
+                $.ajax({
+                    type: "post",
+                    url: "IssueMedicine.aspx/GetItemCodesfrombilling",
+                    data: JSON.stringify({
+                        Bill_Id: Bill_Id
+                    }),
+                    dataType: 'JSON',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (msg) {
+                        debugger;
+
+                        var data = JSON.parse(msg.d);
+
+                        $.each(data.ItemCodes, function (index, value) {
+                            debugger;
+                            itemIds.push(value);
+                        });
+                    }
+                });
+                AddMedicineDetailFormOPD(itemIds)
+            }
+        }
+
         debugger;
         var itemIds;
         function getitem_code() {
@@ -3027,7 +3074,7 @@
         function AddMedicineDetailFormOPD(itemIds) {
     debugger;
     // Get patient info for requested quantity - moved outside forEach
-    var pat_Id = $('#ddlPatient_No').val();
+    var pat_Id = $('#ddlPatient_No').val() || 0;
     var PatNo = $('#ddlPatient_No option:selected').text();
     var parts = PatNo.split('-');
     var prefix = parts.length > 0 ? parts[0] : '';
@@ -3324,6 +3371,53 @@
                 $('#ddlpat_no').select2();
             });
         }
+
+
+        function LoadInvoiceNo() {
+
+            // Load top 50 initially
+            PageMethods.GetInvoiceNo('', function (result) {
+
+                var data = JSON.parse(result);
+
+                $('#ddlInv_No').empty();
+
+                $('#ddlInv_No').append('<option value="">Please Select</option>');
+
+                $.each(data, function (i, item) {
+                    $('#ddlInv_No').append(
+                        $('<option>', {
+                            value: item.id,
+                            text: item.text
+                        })
+                    );
+                });
+
+                $('#ddlInv_No').select2({
+                    placeholder: 'Please Select',
+                    allowClear: true,
+                    minimumInputLength: 1,
+                    ajax: {
+                        transport: function (params, success, failure) {
+
+                            PageMethods.GetInvoiceNo(
+                                params.data.term || '',
+                                function (result) {
+                                    success({
+                                        results: JSON.parse(result)
+                                    });
+                                },
+                                failure
+                            );
+                        }
+                    }
+                });
+
+                $('#ddlInv_No').val('').trigger('change');
+            });
+        }
+      
+
         function getInvoiceNo_PatWise() {
             $('#ddlInvoiceNumber').val(null).trigger('change');
             loadInvoiceNumbers();
@@ -3536,7 +3630,13 @@
                
             </div>
 
+              <div class="row mb-3 align-items-center" style="margin-top: 1%; margin-bottom: 1%">
 
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <label class="InvoiceNum">Invoice No:</label>
+                    <select  id="ddlInv_No" style="width: 180px !important;" onchange="GetBillingItems()" class="form-control select2"></select>
+                </div>
+                  </div>
 
             <!-- Checkboxes and Radio Buttons -->
             <div class="row mb-3 align-items-center" style="margin-top: 1%; margin-bottom: 1%">
