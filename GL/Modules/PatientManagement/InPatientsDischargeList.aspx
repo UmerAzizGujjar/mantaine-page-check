@@ -174,6 +174,7 @@
                         }, "width": "8%", "orderable": false
                     },
                     { "data": "mr_no_sequence", "name": "mr_no_sequence", "width": "8%", "orderable": true },
+                    { "data": "Bill_No", "name": "Bill_No", "width": "8%", "orderable": true },
                     { "data": "Full_Name", "width": "12%", "orderable": false },
                     { "data": "Father_Name", "width": "12%", "orderable": false },
                     { "data": "Patient_Type", "name": "Patient_Type", "width": "10%", "orderable": true },
@@ -329,6 +330,7 @@
                         <th>In_Patient_ID</th>
                         <th>Admission Date</th>
                         <th>MR No #</th>
+                        <th>Bill No</th>
                         <th>Patient Name</th>
                         <th>Father / Husband Name</th>
                         <th>Patient Category</th>
