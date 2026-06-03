@@ -2,7 +2,7 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/Student.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Student.css" rel="stylesheet" />
 
     <script src="../../wwwroot/THEME_TIBBIT/CustomJs/Student.js"></script>
 

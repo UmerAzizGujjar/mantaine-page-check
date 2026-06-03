@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegisterPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.RegisterPatient" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/Toaster.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Toaster.css" rel="stylesheet" />
     <script src="../../wwwroot/THEME_TIBBIT/CustomJs/RegPatient.js" type="text/javascript"></script>
     <link href="../../wwwroot/THEME_TIBBIT/css/RegPat.css" rel="stylesheet" />
    

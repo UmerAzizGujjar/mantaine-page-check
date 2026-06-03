@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingProcess.aspx.cs" Inherits="PMS.BillingProcess" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-        <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/Billing.css" rel="stylesheet" />
+        <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Billing.css" rel="stylesheet" />
     
     <style>
         div.token-input-dropdown {

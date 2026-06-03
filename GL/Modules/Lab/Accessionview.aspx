@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Accession View" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AccessionView.aspx.cs" Inherits="PMS.AccessionView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
 
     <style>
         .status-badge {

@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsDischarge.aspx.cs" Inherits="PMS.InPatientsDischarge" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/ipddischarge.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ipddischarge.css" rel="stylesheet" />
     <style type="text/css">
         .edit-mode .token-input-delete-token {
             display: none !important;

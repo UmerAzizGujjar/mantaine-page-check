@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/NewOutPatient.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/NewOutPatient.css" rel="stylesheet" />
 
     <script id="ScriptmanageSymptomsModal">
 

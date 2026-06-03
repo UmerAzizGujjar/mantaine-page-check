@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OldOutPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.OldOutPatient" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-<link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/OldOutPatients.css" rel="stylesheet" />
+<link href="../../wwwroot/THEME_TIBBIT/CustomCSS/OldOutPatients.css" rel="stylesheet" />
     <script type="text/javascript">
         window.addEventListener('load', function () {
             $(".se-pre-con").fadeOut("slow");

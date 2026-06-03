@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
          <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"  type="text/javascript"></script>
 
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/CustomCSS/swalalert.css" rel="stylesheet" />
     <script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js" type="text/javascript"></script>
 
 <style type="text/css">

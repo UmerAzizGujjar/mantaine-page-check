@@ -5,7 +5,7 @@
 
     <link href="../../wwwroot/THEME_TIBBIT/css/MainDashboard.min.css" rel="stylesheet" />
 
-    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/Maindashboard.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Maindashboard.css" rel="stylesheet" />
 
     <script type="text/javascript">
 

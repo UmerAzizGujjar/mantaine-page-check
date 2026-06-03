@@ -3,7 +3,7 @@
 <%@ Register Assembly="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-       <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/LabReportPreview.css" rel="stylesheet" />
+       <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
         var GrowthTypeGlobal = '';
         var OrganismTypeGlobal = '';

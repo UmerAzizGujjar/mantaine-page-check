@@ -4,7 +4,7 @@
    <%-- <script type="../../text/javascript" src="Scripts/upload.js"></script>--%>
     <script src="../../wwwroot/THEME_TIBBIT/Scripts/timepicki/timepicki.js"></script>
       <link href="../../wwwroot/THEME_TIBBIT/css/timepicki.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/css/CustomCss/OT.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/OT.css" rel="stylesheet" />
     <script type="text/javascript">
 
 
