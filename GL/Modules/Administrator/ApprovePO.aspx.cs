@@ -157,10 +157,10 @@ namespace PMS
                 ? (decimal?)ViewState["MaxApprovalLimit"]
                 : null;
 
-            if (maxApprovalLimit.HasValue && poAmount >= maxApprovalLimit.Value)
-            {
-                chkSelect.Visible = false;
-            }
+            //if (maxApprovalLimit.HasValue && poAmount >= maxApprovalLimit.Value)
+            //{
+            //    chkSelect.Visible = false;
+            //}
         }
 
 

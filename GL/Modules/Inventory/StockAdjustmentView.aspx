@@ -38,6 +38,29 @@
                 window.open(url, '_blank');
             }
 
+            function PrintStockAdjustment(Adjustment_Id) {
+                debugger;
+                var id =  Adjustment_Id;
+     var locationInfo = window.location;
+
+                 var user_name = '<% =AppConfig.Company_Name %>';
+                 if (user_name == 'As-Siraat Serving Humanity') {
+                     reportPath = '../../ReportViewer.aspx';
+                 } else {
+                     reportPath = 'ReportViewer.aspx'; // same folder
+                 }
+
+                 var url = '/ReportViewer.aspx?ReportName=StockAdjustmentPrint&ReportTitle=Stock Adjutment&StockAdjustmentID=' + id;
+                 if (!locationInfo.origin.includes('localhost')) {
+                     var urlInfo = window.location.href.split('/');
+                     var ip = urlInfo[2];
+                     var foldername = urlInfo[3];
+                     url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=StockAdjustmentPrint&ReportTitle=Stock Adjutment&StockAdjustmentID=' + id;
+                 }
+                 window.open(url, '_blank');
+             }
+
+
             var isDele = '';
             function LoadPage() {
                 let savedVisibility = null;
@@ -150,8 +173,9 @@
                                 var res = '<a href="#" class="editListBtn" onclick="Edit(' + full.Adjustment_Id + ')" style="border-radius: 4px;margin-right: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil"></i></a>';
 
                                 var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.Adjustment_Id + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+                                var print1 = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintStockAdjustment(' + full.Adjustment_Id + ')" id="btnprint1"><i class="fa fa-print"></i></a>';
                                 var result;
-                                result = res  + print;
+                                result = res  + print+ print1;
                                 return result;
                             }, "orderable": false
                         }
