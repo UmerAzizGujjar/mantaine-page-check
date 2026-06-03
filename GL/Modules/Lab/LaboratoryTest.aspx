@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LaboratoryTest.aspx.cs" Inherits="PMS.LaboratoryTest" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/AddNewLabTest.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/AddNewLabTest.css" rel="stylesheet" />
     <style>
         
 .MyTable {
@@ -1472,7 +1472,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                         <div class="image-container">
-                            <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
+                            <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image">
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-6">

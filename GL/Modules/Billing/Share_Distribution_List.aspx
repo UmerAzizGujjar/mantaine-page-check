@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Share_Distribution_List.aspx.cs" Inherits="PMS.Modules.Billing.Share_Distribution_List" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-        <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+        <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(document).ready(function () {

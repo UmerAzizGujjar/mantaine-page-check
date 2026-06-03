@@ -1,0 +1,48 @@
+﻿#token-input-txtBillNo {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+
+#token-input-txtMR_No {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+
+.card {
+    border: 1px solid #C4C4C4;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    height: 230px !important;
+    width: 100%;
+    overflow: hidden;
+}
+
+.card-body p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.image-container {
+    background-color: #D9D9D9;
+    padding: 20px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.mtt {
+    margin-top: 2px !important
+}
+
+.top {
+    margin-top: 4px;
+}
+
+.formrgn {
+    margin-top: 10px;
+}
+
+.detail {
+    margin-top: 3%;
+}

@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DashPatientsCount.aspx.cs" Inherits="PMS.Modules.Dashboards.DashPatientsCount" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-        <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
-    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
+        <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js"></script>
 
     <style type="text/css">
         /* ===== CARD METRICS ===== */

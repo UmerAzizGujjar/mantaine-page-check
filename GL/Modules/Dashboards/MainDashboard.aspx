@@ -3,9 +3,9 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
 
-    <link href="../../wwwroot/Tibbit_theme/css/MainDashboard.min.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/MainDashboard.min.css" rel="stylesheet" />
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Maindashboard.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Maindashboard.css" rel="stylesheet" />
 
     <script type="text/javascript">
 
@@ -347,7 +347,7 @@
 
         <div  class="d-flex align-items-center justify-content-between px-3 py-2  headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">General Patients</h3>
-            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/doctor.png" alt="doctor" />
+            <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/doctor.png" alt="doctor" />
         </div>
         
         <div class="card-statistic-3 px-3 pt-3">
@@ -387,7 +387,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">Doctor Wise</h3>
-            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/doctor.png" alt="doctor" />
+            <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/doctor.png" alt="doctor" />
 
         </div>
         
@@ -429,7 +429,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">IPD</h3>
-            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/patient_bed.png" alt="ipd" />
+            <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/patient_bed.png" alt="ipd" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -465,7 +465,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">Emergency</h3>
-            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/hospital.png" alt="hospital" />
+            <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/hospital.png" alt="hospital" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -495,7 +495,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">Lab</h3>
-            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/lab3.png" alt="lab" />
+            <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/lab3.png" alt="lab" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -533,7 +533,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">Blood Bank</h3>
-            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/blooddonation.png" alt="blood" />
+            <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/blooddonation.png" alt="blood" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -553,7 +553,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">UltraSound</h3>
-            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/ultrasound.png" alt="ultrasound" />
+            <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/ultrasound.png" alt="ultrasound" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">
@@ -591,7 +591,7 @@
     <div class="card card-outline-yellow completecard" >
         <div  class="d-flex align-items-center justify-content-between px-3 py-2 headercolor">
             <h3 class="card-title mb-0 font-weight-bold black-text">X-Ray</h3>
-            <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/xrays.png" alt="xrays" />
+            <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/xrays.png" alt="xrays" />
         </div>
 
         <div class="card-statistic-3 px-3 pt-3">

@@ -1,7 +1,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ComparativeStatementVendor.aspx.cs" Inherits="PMS.AP.ComparativeStatementVendor" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/CRV.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/CRV.css" rel="stylesheet" />
     <script type="text/javascript">
         var amount1 = 0;
         var amount2 = 0;

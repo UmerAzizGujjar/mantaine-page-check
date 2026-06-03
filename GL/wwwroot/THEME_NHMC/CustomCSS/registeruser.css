@@ -1,0 +1,60 @@
+.card {
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 460px;
+}
+
+.card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+hr {
+    width: 400px;
+}
+
+.card-body {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.mybutton:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+input[type="checkbox"] {
+    margin-bottom: 9px !important;
+}
+
+input[type="text"],
+input[type="Password"] {
+    margin-bottom: 8px !important;
+}
+
+
+
+input.textEntry,
+input.passwordEntry,
+select {
+    position: relative;
+    width: 90% !important;
+    height: 35px;
+}
+
+.label-field {
+    margin-left: 0; /* or remove this line completely */
+    margin-bottom: 8px !important;
+    position: relative;
+    font-family: "Open Sans", sans-serif;
+    text-align: left; /* optional: ensures text aligns left */
+    margin-left: 5%;
+}
+
+.register {
+    padding: 0 !important;
+    margin: 0 !important;
+}

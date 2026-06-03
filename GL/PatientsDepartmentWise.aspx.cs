@@ -7062,29 +7062,28 @@ namespace PMS
                     string x = "Lab Department Wise Summary";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
-                    dpROw.Visible = false;
-                    ddlPatientType.Visible = false;
-                    tr_Summary.Visible = false;
-
-                    AllowPatientRecord = false;
+                    dpROw.Visible = true;
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
-                    trTestResult1.Visible = false;
-                    //lblMainDepartment.Visible = true;
-                    //ddlDepartments.Visible = true;
+                    lblMultiSelect.Visible = false;
+
                     object valusets;
+                    DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
 
-                    //object valusets;
-                    valusets = DBClass.GetValueSet("Patient Type");
-                    lblMultiSelect.DataSource = valusets;
-                    lblMultiSelect.DataTextField = "DataValue_Description";
-                    lblMultiSelect.DataValueField = "DataValue_Name";
-                    lblMultiSelect.Items.Add(new ListItem() { Text = "All", Value = "All" });
-                    lblMultiSelect.DataBind();
+                    object valuesets;
+                    valuesets = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valuesets;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Please Select", Value = "0" });
+                    ddlPatientType.DataBind();
 
-                    //lblPatientType.Visible = true;
-                    //lblMultiSelect.Visible = true;
-                    /*SetDepartent();*/
                 }
                 else if (this.PageTitle == "Test_Result_Status")
                 {
