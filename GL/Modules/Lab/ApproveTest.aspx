@@ -67,11 +67,22 @@
                 success: function (response) {
                     var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
                     var options = '<option value="0">All Doctors</option>';
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.id + '">' + value.text + '</option>';
-                    });
+                    
+                    if (data && data.length > 0) {
+                        $.each(data, function (key, value) {
+                            options += '<option value="' + value.id + '">' + value.text + '</option>';
+                        });
+                    }                  
                     $("#ddlDoctor").html(options);
+                    if ($("#ddlDoctor").data('select2')) {
+                        $("#ddlDoctor").select2('destroy');
+                    }
                     $("#ddlDoctor").select2();
+                    if (data && data.length === 1) {
+                        $("#ddlDoctor").val(data[0].id).trigger('change');
+                    } else {
+                        $("#ddlDoctor").val("0").trigger('change');
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error("Error loading doctors", error);
