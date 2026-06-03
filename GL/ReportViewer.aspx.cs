@@ -405,6 +405,32 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
             }
+            else if (reportName == "StockAdjustmentPrint")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                reportPath += "Inventory/rptStockAdjustment.rpt";
+                rd.Load(reportPath);
+                string stockadjustment = Request.QueryString["StockAdjustmentID"].ToString();
+                rd.SetParameterValue("@Stock_Adjustment_Id", stockadjustment);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
+            }
+            //else if (reportName == "StockTransferPrint")
+            //{
+            //    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+            //    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+            //    reportPath += "Purchase/rptPurchase_return.rpt";
+            //    rd.Load(reportPath);
+            //    string PurchaseReturnID = Request.QueryString["PurchaseReturnID"].ToString();
+            //    rd.SetParameterValue("@purchaseReturnId", PurchaseReturnID);
+            //    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //    rd.SetParameterValue("Address", companyAddress);
+            //    rd.SetParameterValue("CompanyLogo", logoPath);
+            //    rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
+            //}
             else if (reportName == "StoreIssueBasePrint_Thermal")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
@@ -7301,13 +7327,15 @@ namespace PMS
             }
             else if (reportName == "LabDepartmentWiseSummary")
             {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 string rptFileName = "";
-                rptFileName = "rptLabDepartmentWiseCash_Summary.rpt";
+                rptFileName = "LabRadiology/rptLabDepartmentWiseCash_Summary.rpt";
 
                 reportPath += rptFileName;
                 rd.Load(reportPath);
 
-                string TestName = Request.QueryString["testName"].ToString();
+                string Department = Request.QueryString["DepartmentID"].ToString();
+                string PatType = Request.QueryString["Patient_Type"].ToString();
 
                 string stDate = Request.QueryString["sDate"].ToString();
                 string stTime = Request.QueryString["STime"].ToString();
@@ -7321,25 +7349,15 @@ namespace PMS
                 this.getDateTimeDBFormate(stDate, stTime, out parameterStDate);
                 this.getDateTimeDBFormate(endDate, endTime, out parameterEndDate);
 
-                //bool AllPatientRecords = Convert.ToBoolean(Request.QueryString["AllPatientsRecords"].ToString());
-                //string userID = "0";
-
-                //if (!AllPatientRecords)
-                //    userID = AppConfig.UserID.ToString();
-                string PatType = Request.QueryString["Patient_Type"].ToString();
-                if (PatType.Trim() == string.Empty)
-                {
-                    PatType = "All";
-                }
-                rd.SetParameterValue("@Patient_Type", PatType);
-                rd.SetParameterValue("@TestName", TestName);
-                rd.SetParameterValue("@Department", Request.QueryString["Department"]);
 
                 rd.SetParameterValue("@stDate", parameterStDate);
                 rd.SetParameterValue("@endDate", parameterEndDate);
                 rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", "Lab Department Wise Summary");
+                rd.SetParameterValue("@Patient_Type", PatType);
+                rd.SetParameterValue("@Department", Department);
             }
             else if (reportName == "Procedure_Detail")
             {

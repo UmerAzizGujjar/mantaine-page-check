@@ -26,7 +26,7 @@
             if (user_name == 'As-Siraat Serving Humanity') {
                 reportPath = '../../ReportViewer.aspx';
             }
-            var baseUrl = reportPath + '?ReportName=StoreTransferPrint&Title=Store Transfer Print&Store_Transfer_ID=' + Stock_Transfer_ID;
+            var baseUrl = reportPath + '?ReportName=StoreTransferPrint&Title=Store Transfer Print&Store_TransferID=' + Stock_Transfer_ID;
 
             var finalUrl = baseUrl;
             if (!locationInfo.origin.includes('localhost')) {
@@ -34,7 +34,7 @@
                 if (urlInfo.length > 3) {
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
-                    finalUrl = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=StoreTransferPrint&Title=Store Transfer Print&Store_Transfer_ID=' + Stock_Transfer_ID;
+                    finalUrl = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=StoreTransferPrint&Title=Store Transfer Print&Store_TransferID=' + Stock_Transfer_ID;
                 }
             }
 
