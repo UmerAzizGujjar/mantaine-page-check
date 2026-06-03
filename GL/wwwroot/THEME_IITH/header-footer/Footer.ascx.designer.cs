@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS.wwwroot.IITH_Theme.header_footer
+namespace PMS.wwwroot.THEME_IITH.header_footer
 {
 
 

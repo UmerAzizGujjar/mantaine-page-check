@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS.wwwroot.khurshid.header_footer
+namespace PMS.wwwroot.THEME_KHURSHID.header_footer
 {
 
 

@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS.wwwroot.Pakred.header_footer
+namespace PMS.wwwroot.THEME_PAKRED.header_footer
 {
 
 

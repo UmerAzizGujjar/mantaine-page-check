@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Footer.ascx.cs" Inherits="PMS.wwwroot.StandardTheme.header_footer.Footer" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Footer.ascx.cs" Inherits="PMS.wwwroot.THEME_STANDARD.header_footer.Footer" %>
 <div class="center" id="StandardFooter" runat="server">
     <div>
         <a href="#" style="padding-right: 225px; color: black !important; font-weight: bold">Our 24/7 support:</a>

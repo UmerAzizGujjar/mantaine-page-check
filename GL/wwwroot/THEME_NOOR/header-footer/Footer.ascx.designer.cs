@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS.wwwroot.NoorHospitalTheme.header_footer
+namespace PMS.wwwroot.THEME_NOOR.header_footer
 {
 
 
