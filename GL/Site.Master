@@ -858,7 +858,7 @@
     <!-- Middle Company Name -->
     <div class="col-lg-6 col-md-4 col-sm-6" style="display: flex; align-items: center; justify-content: center; height: 60px;">
         <asp:Label ID="lblCompanyNameCenter" runat="server" Text="" 
-Style="color: white !important; font-weight: bold; font-size: 20px; text-align: center; margin: 0;"></asp:Label>
+Style="color: white !important; font-weight: bold; font-size: 31px; text-align: center; margin: 0;"></asp:Label>
     </div>
     
     <div class="col-lg-1 col-md-2 col-sm-1">
@@ -867,7 +867,7 @@ Style="color: white !important; font-weight: bold; font-size: 20px; text-align: 
                                 <div class="navbar-buttons navbar-header" role="navigation">
                                     <ul class="nav ace-nav">
                                         <li class="" style="width: 90px !important; height: 60px;">
-                                            <a data-toggle="dropdown" class="dropdown-toggle" href="#" style="background-color: transparent!important">
+                                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                                 <i class="ace-icon fa fa-bell icon-animated-bell" id="bell" style="font-size: 30px"></i>
                                                 <span id="blink_notify" style="margin-left: 6px;" runat="server">
                                                     <span id="blink-notif" class="badge badge-important blink">
