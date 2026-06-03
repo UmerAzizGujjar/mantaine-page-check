@@ -209,8 +209,10 @@
                     var PatientDep = "";
 
                     for (var i = 0; i < parse.length; i++) {
+                        var sampleRemarks = parse[i].Sample_Remarks || '';
+
                         rows += '<tr>'
-                            + '<td style="width:32px;"></td>'
+                            + '<td style="width:32px;">'
                             + '<td style="display:none;">' + parse[i].Item_ID + '</td>'
                             + '<td style="display:none;" class="bill-detail-id">' + parse[i].Bill_Details_ID + '</td>'
                             + '<td>' + parse[i].Item_Name + '</td>'
@@ -218,7 +220,7 @@
                             + '<td>' + parse[i].Gener + '</td>'
                             + '<td>' + parse[i].Qty + '</td>'
                             + '<td class="remarks-cell">'
-                            + '<input type="text" class="remarks-input-modal" placeholder="Enter remarks..." id="remarks_' + i + '" />'
+                            + '<input type="text" class="remarks-input-modal" placeholder="Enter remarks..." id="remarks_' + i + '" value="' + sampleRemarks.replace(/"/g, '&quot;') + '" />'
                             + '</td>'
                             + '<td>'
                             + '<button type="button" class="btn btn-sm btn-success save-remarks-btn" onclick="saveRemarks(this)">Save</button>'
@@ -656,8 +658,10 @@
                             var rows = "";
                             for (var i = 0; i < parse.length; i++) {
                                 debugger;
+                                var sampleRemarks = (parse[i].Sample_Remarks || '').replace(/"/g, '&quot;');
+
                                 rows += '<tr>'
-                                    + '<td style="width:32px;"></td>'
+                                    + '<td style="width:32px;">'
                                     + '<td style="display:none;">' + parse[i].Item_ID + '</td>'
                                     + '<td style="display:none;" class="bill-detail-id">' + parse[i].Bill_Details_ID + '</td>'
                                     + '<td>' + parse[i].Item_Name + '</td>'
@@ -665,7 +669,7 @@
                                     + '<td>' + parse[i].Gener + '</td>'
                                     + '<td>' + parse[i].Qty + '</td>'
                                     + '<td class="remarks-cell">'
-                                    + '<input type="text" class="remarks-input-modal" placeholder="Enter remarks..." id="remarks_modal_' + i + '" />'
+                                    + '<input type="text" class="remarks-input-modal" placeholder="Enter remarks..." id="remarks_modal_' + i + '" value="' + sampleRemarks + '" />'
                                     + '</td>'
                                     + '<td>'
                                     + '<button type="button" class="btn btn-sm btn-success save-remarks-btn" onclick="saveRemarks(this)">Save</button>'
