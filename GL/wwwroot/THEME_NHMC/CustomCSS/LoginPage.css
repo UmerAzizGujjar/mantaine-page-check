@@ -1,0 +1,198 @@
+﻿h2 {
+    font-size: 26px;
+    font-weight: bold;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #308665; /* optional: use theme color for headings */
+}
+
+/* Standard form inputs */
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"] {
+    border-radius: 0 !important;
+    color: #060606 !important;
+    font-weight: bold !important;
+    background-color: #fff;
+    border: 1px solid #d5d5d5 !important;
+    padding: 5px 4px 6px;
+    font-size: 14px;
+    font-family: inherit;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-transition-duration: .1s;
+    transition-duration: .1s;
+}
+
+textarea:hover,
+input[type="text"]:hover,
+input[type="password"]:hover,
+input[type="datetime"]:hover,
+input[type="datetime-local"]:hover,
+input[type="date"]:hover,
+input[type="month"]:hover,
+input[type="time"]:hover,
+input[type="week"]:hover,
+input[type="number"]:hover,
+input[type="email"]:hover,
+input[type="url"]:hover,
+input[type="search"]:hover,
+input[type="tel"]:hover,
+input[type="color"]:hover {
+    border-color: #b5b5b5;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #696969;
+    border-color: #308665; /* ← theme color */
+    background-color: #fff;
+    outline: none;
+}
+
+/* .form-control and select */
+.form-control,
+select {
+    border-radius: 0;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    background-color: #fff;
+    border: 1px solid #d5d5d5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    display: block;
+    font-size: 14px;
+    line-height: 1.42857;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width: 100%;
+    color: #060606 !important;
+    font-weight: bold !important;
+}
+
+.form-control:focus,
+select:focus {
+    color: #696969;
+    border-color: #308665; /* ← theme color */
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(48, 134, 101, 0.25); /* optional subtle glow */
+}
+
+/* Wrapper */
+.wrapper {
+    max-width: 400px;
+    padding: 30px;
+    text-align: center;
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.1); /* optional: subtle background */
+    border: 1px solid rgba(48, 134, 101, 0.3);
+    border-radius: 4px;
+}
+
+/* Form */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Links */
+.wrapper a {
+    color: #308665; /* theme color for links */
+    text-decoration: none;
+}
+
+.wrapper a:hover {
+    text-decoration: underline;
+}
+
+/* Input field with floating label */
+.input-field {
+    position: relative;
+    text-align: left;
+}
+
+.input-field label {
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 16px;
+    pointer-events: none;
+    transition: 0.15s ease;
+    background: #fff;
+    padding: 0 4px;
+}
+
+.input-field input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #d5d5d5;
+    outline: none;
+    font-size: 16px;
+    color: #060606;
+    padding-left: 8px;
+    background: #fff;
+}
+
+.input-field input:focus {
+    border-color: #308665;
+}
+
+.input-field input:focus ~ label,
+.input-field input:valid ~ label {
+    font-size: 0.8rem;
+    top: -10px;
+    transform: translateY(0);
+    color: #308665; /* theme color when active */
+}
+
+/* Button */
+button {
+    background: #308665; /* theme color as background */
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 16px;
+    transition: 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background: #256b4f; /* slightly darker shade for hover */
+    color: #fff;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(48, 134, 101, 0.4);
+}

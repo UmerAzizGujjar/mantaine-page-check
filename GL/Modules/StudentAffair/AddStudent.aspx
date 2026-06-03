@@ -2,9 +2,9 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/Student.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Student.css" rel="stylesheet" />
 
-    <script src="../../wwwroot/Tibbit_theme/CustomJs/Student.js"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/CustomJs/Student.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -459,7 +459,7 @@
                              </div>
                             <div class="profile-images-card">
                                 <div class="profile-images">
-                                    <img src="~../../../../wwwroot/Tibbit_theme/images/\HMIS_Icons/dummy.jpg" id="upload-img">
+                                    <img src="~../../../../wwwroot/THEME_TIBBIT/images/\HMIS_Icons/dummy.jpg" id="upload-img">
                                 </div>
                                 <div class="custom-file">                             
                                     <input type="file" id="fileupload" />

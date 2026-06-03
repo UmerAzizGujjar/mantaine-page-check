@@ -1,10 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CONSULTANT_WISE_STATISTICS.aspx.cs" Inherits="PMS.CONSULTANT_WISE_STATISTICS" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-      <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"  type="text/javascript"></script>
+      <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"  type="text/javascript"></script>
 
-<link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
-<script src="../../wwwroot/Tibbit_theme/js/apexchart.js" type="text/javascript"></script>
+<link href="../../wwwroot/StandardTheme/CustomCSS/swalalert.css" rel="stylesheet" />
+<script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js" type="text/javascript"></script>
     <style>
     select{
         width:200px !important;

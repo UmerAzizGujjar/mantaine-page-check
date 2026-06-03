@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Emergency_Admission_View.aspx.cs" Inherits="PMS.Modules.PatientManagement.Emergency_Admission_View" %>
  
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
-     <script src="../../wwwroot/Tibbit_theme/CustomJs/OPDView.js" type="text/javascript"></script>
- <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+     <script src="../../wwwroot/THEME_TIBBIT/CustomJs/OPDView.js" type="text/javascript"></script>
+ <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
  <script type="text/javascript">
      $(document).ready(function () {
          $('#ctl00_lblMessage').hide();
