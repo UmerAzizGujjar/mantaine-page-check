@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
 
-    <link href="../../wwwroot/THEME_TIBBIT/css/MainDashboard.min.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/MainDashboard.min.css" rel="stylesheet" />
 
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Maindashboard.css" rel="stylesheet" />
 
