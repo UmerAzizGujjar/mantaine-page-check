@@ -405,6 +405,32 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
             }
+            else if (reportName == "StockAdjustmentPrint")
+            {
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                reportPath += "Inventory/rptStockAdjustment.rpt";
+                rd.Load(reportPath);
+                string stockadjustment = Request.QueryString["StockAdjustmentID"].ToString();
+                rd.SetParameterValue("@Stock_Adjustment_Id", stockadjustment);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Address", companyAddress);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
+            }
+            //else if (reportName == "StockTransferPrint")
+            //{
+            //    var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+            //    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+            //    reportPath += "Purchase/rptPurchase_return.rpt";
+            //    rd.Load(reportPath);
+            //    string PurchaseReturnID = Request.QueryString["PurchaseReturnID"].ToString();
+            //    rd.SetParameterValue("@purchaseReturnId", PurchaseReturnID);
+            //    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+            //    rd.SetParameterValue("Address", companyAddress);
+            //    rd.SetParameterValue("CompanyLogo", logoPath);
+            //    rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
+            //}
             else if (reportName == "StoreIssueBasePrint_Thermal")
             {
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");

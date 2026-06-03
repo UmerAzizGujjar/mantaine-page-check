@@ -400,6 +400,28 @@
             }
             window.open(url, '_blank');
         }
+        debugger;
+        function PrintStockAdjustment() {
+            debugger;
+            var id = '<%= Request.QueryString["ID"]%>';
+            var locationInfo = window.location;
+
+            var user_name = '<% =AppConfig.Company_Name %>';
+            if (user_name == 'As-Siraat Serving Humanity') {
+                reportPath = '../../ReportViewer.aspx';
+            } else {
+                reportPath = 'ReportViewer.aspx'; // same folder
+            }
+
+            var url = '/ReportViewer.aspx?ReportName=StockAdjustmentPrint&ReportTitle=Stock Adjutment&StockAdjustmentID=' + id ;
+            if (!locationInfo.origin.includes('localhost')) {
+                var urlInfo = window.location.href.split('/');
+                var ip = urlInfo[2];
+                var foldername = urlInfo[3];
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=StockAdjustmentPrint&ReportTitle=Stock Adjutment&StockAdjustmentID=' + id;
+            }
+            window.open(url, '_blank');
+        }
         var amountonedit = 0;
         function calculatecurrentstock(item_id) {
             debugger;
@@ -665,6 +687,10 @@
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="button" class="btn btn-yellow" value="New" id="btnNew" onclick="New()" />
             </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <input type="button" class="btn btn-yellow" value="Print" id="btnStockAdjustmentPrint" onclick="PrintStockAdjustment();" />
+            </div>
+
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <input type="button" class="btn btn-primry"  value="Voucher" id="btnVoucher" onclick="PrintVoucher()" />
             </div>
