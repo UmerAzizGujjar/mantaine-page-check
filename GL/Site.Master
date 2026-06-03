@@ -71,7 +71,6 @@
         <script type="text/javascript" src="<%=Page.ResolveUrl("~/wwwroot/THEME_TIBBIT/javascripts/jquery.mask.js") %>"></script>
         <script type="text/javascript" src="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/Latest_Datatable/vfs_fonts.js") %>"></script>
         <script type="text/javascript" src="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/js/jquery-ui.min.js") %>"></script>
-        <script type="text/javascript" src="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/javascripts/jquery.mask.js") %>"></script>
 
     </asp:PlaceHolder>
     <style type="text/css">
