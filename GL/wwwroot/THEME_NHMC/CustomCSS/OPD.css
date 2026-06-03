@@ -20,6 +20,12 @@
     /*height: 330px !important,*/
 }
 
+.cnic-input {
+    width: 250px !important;
+    margin: 0 auto; /* center it */
+    display: block;
+}
+
 .quick-actions {
     background: #308665db;
     color: #000;
@@ -205,32 +211,5 @@ select {
     #right-section {
         position: sticky;
         top: 80px;
-    }
-}
-
-
-
-.blink {
-    animation: blinkAnimation 1.2s ease-in-out infinite;
-    font-weight: bold;
-}
-
-@keyframes blinkAnimation {
-    0% {
-        opacity: 1;
-        color: #c11718;
-        text-shadow: 0 0 5px rgba(193, 23, 24, 0.6);
-    }
-
-    50% {
-        opacity: 0.5;
-        color: #EFA63E;
-        text-shadow: 0 0 12px rgba(239, 166, 62, 0.9);
-    }
-
-    100% {
-        opacity: 1;
-        color: #c11718;
-        text-shadow: 0 0 5px rgba(193, 23, 24, 0.6);
     }
 }

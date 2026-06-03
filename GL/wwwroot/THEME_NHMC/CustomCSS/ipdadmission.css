@@ -2,7 +2,22 @@
     color: white !important;
     text-align: center !important;
 }
+#PatientModel input[type="text"]:not(#txtAge_yearss),
+#PatientModel input[type="tel"],
+#PatientModel input[type="email"],
+#PatientModel textarea {
+    text-transform: uppercase;
+}
 
+/* Keep the Age/DOB placeholder input as normal case */
+#PatientModel #txtAge_yearss {
+    text-transform: none;
+}
+
+/* Optional: Keep select dropdowns normal (if you don't want them uppercase) */
+#PatientModel select {
+    text-transform: none;
+}
 
 #token-input-ctl00_MainContent_txtPatient_ID {
     box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;

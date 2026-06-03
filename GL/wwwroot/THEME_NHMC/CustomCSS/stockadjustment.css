@@ -143,8 +143,3 @@ legend {
     white-space: nowrap;
     z-index: 1000;
 }
-
-
-.textarea, input[type="text"] {
-    box-shadow: none !important;
-}

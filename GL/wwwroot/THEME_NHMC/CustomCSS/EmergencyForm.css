@@ -11,10 +11,21 @@
 .mleft {
     margin-left: 15px !important;
 }
-.cnic-input {
-    width: 250px !important;
-    margin: 0 auto; /* center it */
-    display: block;
+#PatientModel input[type="text"]:not(#txtAge_yearss),
+#PatientModel input[type="tel"],
+#PatientModel input[type="email"],
+#PatientModel textarea {
+    text-transform: uppercase;
+}
+
+/* Keep the Age/DOB placeholder input as normal case */
+#PatientModel #txtAge_yearss {
+    text-transform: none;
+}
+
+/* Optional: Keep select dropdowns normal (if you don't want them uppercase) */
+#PatientModel select {
+    text-transform: none;
 }
 .card {
     border: 1px solid #C4C4C4;
@@ -24,7 +35,11 @@
     margin-top: 50px !important;
     /*height: 330px !important,*/
 }
-
+.cnic-input {
+    width: 250px !important;
+    margin: 0 auto; /* center it */
+    display: block;
+}
 .quick-actions {
     background: #308665db;
     color: #000;
