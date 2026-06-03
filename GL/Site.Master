@@ -1143,6 +1143,8 @@ Style="color: white !important; font-weight: bold; font-size: 31px; text-align: 
     position: fixed;
     right: 20px;
     bottom: 10vh; /* Increased to move the button up */
+left: auto;
+top: auto;
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -1209,15 +1211,16 @@ Style="color: white !important; font-weight: bold; font-size: 31px; text-align: 
             }
         </style>
 
-        <div id="quickTimePanel" class="quick-time-panel">
+   
+    </form>
+     <div id="quickTimePanel" class="quick-time-panel">
             <div class="title">Current Date &amp; Time</div>
             <div id="quickDateTime" class="dt-value"></div>
             <button type="button" id="quickStartBtn" class="start-btn">Start</button>
             <div id="quickStartInfo" class="start-info"></div>
             <div id="quickEndInfo" class="start-info"></div>
         </div>
-        <button type="button" id="quickTimeToggle" class="quick-time-toggle" title="Show Date/Time">⏱</button>
-    </form>
+        <button type="button" id="quickTimeToggle" class="quick-time-toggle" title="Show Date/Time">Till</button>
 
     <script type="text/javascript">
         jQuery(function ($) {
