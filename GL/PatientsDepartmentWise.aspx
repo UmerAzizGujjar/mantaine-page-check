@@ -1790,6 +1790,17 @@
                         var url = 'ReportViewer.aspx?ReportName=Patient_Quality_Check_Report&ReportTitle=Patient Quality Check Detail Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime);
                         window.open(url, '_blank');
                     }
+                    if (rptTitle == "High_Risk_Medicine_Report") {
+                        debugger;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+                        var url = 'ReportViewer.aspx?ReportName=High_Risk_Medicine_Report&ReportTitle=High Risk Medicine Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime);
+                        window.open(url, '_blank');
+                    }
                     if (rptTitle == "Lab_Test_Result_Culture") {
                         debugger;
                         var startDate = $('#ctl00_MainContent_txtStart_Date').val();

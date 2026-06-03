@@ -3501,6 +3501,23 @@ namespace PMS
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", companyAddress);
             }
+            else if (reportName == "High_Risk_Medicine_Report")
+            {
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+
+                reportPath += "Pharmacy/rptHighRiskMedicine.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@startDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", companyAddress);
+            }
             else if (reportName == "Lab_Test_Result_Culture")
             {
 
