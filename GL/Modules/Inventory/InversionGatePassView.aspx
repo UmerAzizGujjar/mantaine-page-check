@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InversionGatePassView.aspx.cs" Inherits="PMS.Inventory.InversionGatePassView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
  
-    <link href="../../wwwroot/Tibbit_theme/css/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <style>
         table.dataTable tbody tr.child td > .child-container {
             display: flex;

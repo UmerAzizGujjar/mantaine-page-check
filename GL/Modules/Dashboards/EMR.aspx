@@ -2,10 +2,10 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <script src="../../wwwroot/Tibbit_theme/Scripts/jquery.canvasjs.min.js"></script>
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/EMR.css" rel="stylesheet" />
-    <link href="../../wwwroot/StandardTheme/css/CustomCss/swalalert.css" rel="stylesheet" />
-    <script src="../../wwwroot/Tibbit_theme/js/apexchart.js"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"></script>
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/EMR.css" rel="stylesheet" />
+    <link href="../../wwwroot/StandardTheme/CustomCSS/swalalert.css" rel="stylesheet" />
+    <script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -945,7 +945,7 @@
         <div class="col-lg-5 col-md-5 col-sm-5">
             <div class="card3">
                 <div class="profile-info">
-                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/cake.png" alt="Profile Picture" class="profile-img">
+                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/cake.png" alt="Profile Picture" class="profile-img">
                     <div class="profile-details">
                         <span class="profile-name" id="patname"></span>
                         <p><strong class="">MR No:</strong> &nbsp; &nbsp; <span style="font-weight: 500 !important" id="mrno"></span>&nbsp; &nbsp; &nbsp; <strong class="">Age:</strong> &nbsp; &nbsp; <span style="font-weight: 500 !important" id="txtage"></span>&nbsp;&nbsp;&nbsp; <strong class="">Gender:</strong> &nbsp; &nbsp; <span style="font-weight: 500 !important" id="gender"></span></p>
@@ -992,7 +992,7 @@
             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
                 <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
                 </h4>
-                <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/infobutton.png" alt="blood" />
+                <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/infobutton.png" alt="blood" />
 
             </div>
             <table class="MyTable " id="tblVitalParametersHistory">
@@ -1023,7 +1023,7 @@
             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
                 <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
                 </h4>
-                <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/infobutton.png" alt="blood" />
+                <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/infobutton.png" alt="blood" />
 
             </div>
             <table class="MyTable" id="tblVitalParametersHistoryIPD">
@@ -1046,7 +1046,7 @@
             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
                 <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
                 </h4>
-                <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/infobutton.png" alt="blood" />
+                <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/infobutton.png" alt="blood" />
 
             </div>
             <table class="MyTable" id="tblVitalParametersHistoryEmergency">
@@ -1070,7 +1070,7 @@
         <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="card statusCards">
                 <div style="display: flex; align-items: center; margin-top: -10px;">
-                    <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/appointmentStats.png" alt="lab" />
+                    <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/appointmentStats.png" alt="lab" />
                     <h4>Visits by Day</h4>
                 </div>
 
@@ -1104,7 +1104,7 @@
         <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="card statusCards">
                 <div style="display: flex; align-items: center; margin-top: -10px;">
-                    <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab" />
+                    <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/statistics.png" alt="lab" />
                     <h4>OPD Patient Stats</h4>
                 </div>
                 <hr />
@@ -1115,7 +1115,7 @@
         <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="card statusCards">
                 <div style="display: flex; align-items: center; margin-top: -10px;">
-                    <img class="img-fluid icons" src="../../../wwwroot/Tibbit_theme/images/dashboard_Icons/statistics.png" alt="lab" />
+                    <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/statistics.png" alt="lab" />
                     <h4>IPD Patient Stats</h4>
                 </div>
                 <hr />

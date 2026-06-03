@@ -8,7 +8,7 @@
     <title></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../../wwwroot/Select2/select2.min.css" rel="stylesheet" />
-    <link href="../../wwwroot/css/CustomCss/toggle.css" rel="stylesheet" />
+    <link href="../../wwwroot/CustomCSS/toggle.css" rel="stylesheet" />
 </head>
 <body>
 

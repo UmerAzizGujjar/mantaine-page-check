@@ -175,7 +175,7 @@ namespace PMS
             //{
             //    StandardFooter.Visible = true;
             //}  
-            //else if(companyName == "Tibbit_theme")
+            //else if(companyName == "THEME_TIBBIT")
             //{
             //    StandardFooter.Visible = true;
             //}
