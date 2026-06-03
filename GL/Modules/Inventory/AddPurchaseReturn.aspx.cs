@@ -119,6 +119,8 @@ namespace PMS.Inventory
                 ltd.Batch_No = Purchaseitem.BatchNum;
                 ltd.Inventory_Org = record.ReturnFormInventoryOrg;
                 ltd.Qty = Convert.ToDecimal(Purchaseitem.Qty);
+                ltd.Rate = Convert.ToDecimal(Purchaseitem.Rate);
+                ltd.Amount = Convert.ToDecimal(Purchaseitem.Amount);
                 ltd.Trans_Type = Purchaseitem.TransType;
                 ltd.GRN_ID = Convert.ToInt64(Purchaseitem.GRNId);
                 ltd.GRN_Detail_ID = Convert.ToInt64(Purchaseitem.GRNDetailId);
@@ -197,6 +199,7 @@ namespace PMS.Inventory
             public string PurchaseReturnNum { get; set; }
             public DateTime PurchaseReturndate { get; set; }
             public string ReturnFormInventoryOrg { get; set; }
+
             public string Remarks { get; set; }
             public int InvoiceType { get; set; }
             public List<PurchaseReturnDetailList> ItemList { get; set; }
@@ -207,6 +210,8 @@ namespace PMS.Inventory
             public string ItemId { get; set; }
             public string BatchNum { get; set; }
             public string Qty { get; set; }
+            public decimal Amount { get; set; }
+            public decimal Rate { get; set; }
             public string TransType { get; set; }
             public string GRNId { get; set; }
             public string GRNDetailId { get; set; }

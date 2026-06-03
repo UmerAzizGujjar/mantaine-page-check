@@ -2547,7 +2547,7 @@
                 debugger;
                 var btnSave = $('#btnSave').val();
                 if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                    window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                    window.open('../../ReportViewer.aspx?ReportName=CathLabBillingBasePrint&ReportTitle=CathLab Print&Bill_ID=' + JSON.parse(res));
                 }
                 Swal.fire({
                     icon: 'success',
@@ -2726,7 +2726,7 @@
                         debugger;
                         var btnSave = $('#btnSave').val();
                         if (btnSave == 'Save & Print(Alt+S)' || btnSave == "Save & Print(Alt+S)") {
-                            window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + JSON.parse(res));
+                            window.open('../../ReportViewer.aspx?ReportName=CathLabBillingBasePrint&ReportTitle=CathLab Billing&Bill_ID=' + JSON.parse(res));
                         }
                         Swal.fire({
                             icon: 'success',
