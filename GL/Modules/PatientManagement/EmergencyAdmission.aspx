@@ -703,7 +703,7 @@
                         <div class="col-lg-3 col-md-3 col-sm-4 text-center">
                             <div class="row">
                                 <div class="image-container">
-                                    <img src="~../../../../wwwroot/Tibbit_theme/images/dashboard_Icons/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
+                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Patient.png" alt="Patient Image" class="img-fluid patient-image" />
                                 </div>
                             </div>
                             <div class="row">

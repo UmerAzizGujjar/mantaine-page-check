@@ -5,9 +5,9 @@
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/login.css" rel="stylesheet" />
-    <script src="wwwroot/Tibbit_theme/js/swalalert.js"></script>
-    <link href="wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
+    <link href="wwwroot/THEME_TIBBIT/CustomCSS/login.css" rel="stylesheet" />
+    <script src="wwwroot/THEME_TIBBIT/js/swalalert.js"></script>
+    <link href="wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
     
     <!-- Font Awesome for eye icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -82,7 +82,7 @@
                             <fieldset class="login">
                                 <div style="text-align: center; margin-bottom: 10px;">
                                     <asp:Image ID="imgCompanyLogo" runat="server" 
-                                        ImageUrl="~/wwwroot/Tibbit_theme/images/TibbIT_icons/logo.png" 
+                                        ImageUrl="~/wwwroot/THEME_TIBBIT/images/LOGOS/logo.png" 
                                         AlternateText="Company Logo" 
                                         Visible="true"
                                         Style="max-width: 250px; height: auto;" />

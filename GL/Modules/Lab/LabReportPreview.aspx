@@ -4,7 +4,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">    
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/LabReportPreview.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/LabReportPreview.css" rel="stylesheet" />
     <script type="text/javascript">
         var GrowthTypeGlobal = '';
         var OrganismTypeGlobal = '';

@@ -2,9 +2,9 @@
 
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/registeruser.css" rel="stylesheet" />
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/swalalert.css" rel="stylesheet" />
-    <script type="text/javascript" src="../../wwwroot/Tibbit_theme/js/swalalert.js"></script>
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/registeruser.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
+    <script type="text/javascript" src="../../wwwroot/THEME_TIBBIT/js/swalalert.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

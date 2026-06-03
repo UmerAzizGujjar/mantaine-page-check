@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
-    <link href="../../wwwroot/Tibbit_theme/css/CustomCss/AddpurchaseInvoice.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/AddpurchaseInvoice.css" rel="stylesheet" />
     <script type="text/javascript">
 
         var vendor_Id_Global = 0;
