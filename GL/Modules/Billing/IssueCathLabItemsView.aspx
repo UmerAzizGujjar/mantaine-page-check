@@ -12,14 +12,14 @@
         });
 
         function PrintBill(Bill_ID) {
-            var url = '../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + Bill_ID;
+            var url = '../../ReportViewer.aspx?ReportName=CathLabBillingBasePrint&ReportTitle=Cath Lab Billing&Bill_ID=' + Bill_ID;
             window.open(url, '_blank');
 
         }
         function PrintInvoice(key) {
             debugger;
             //var BillId = $('#BillId' + key).val();
-            window.open('../../ReportViewer.aspx?ReportName=PharmacySlip&ReportTitle=PharmacySlip&Bill_ID=' + key);
+            window.open('../../ReportViewer.aspx?ReportName=CathLabBillingBasePrint&ReportTitle=Cath Lab Billing&Bill_ID=' + key);
 
         }
 

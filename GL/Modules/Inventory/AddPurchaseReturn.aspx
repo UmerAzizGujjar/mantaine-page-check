@@ -111,6 +111,7 @@
                 $('#tblPOItemstModelTable tbody tr').remove();
                 var rows = "";
                 for (var i = 0; i < Test.length; i++) {
+                    var GRN_Date = $.datepicker.formatDate('dd M yy', new Date(parseInt(Test[i].GRN_Date.substring(6, 19))));
                     debugger;
                     rows = '<tr>' +
                         '<td><input name="chkselect" class="chktd" type="checkbox" style=" margin-top: -2px; margin-left: 0px;height: 36px;" onclick="append(this)"/></td>' +
@@ -126,8 +127,8 @@
                         '<td style="display:none">' + Test[i].GRN_ID + '</td> ' +
                         '<td style="display:none">' + Test[i].GRN_detail_Id + '</td> ' +
                         '<td style="display:none">' + Test[i].Item_ID + '</td> ' +
-                        '<td style="display:none">' + Test[i].Rate + '</td> ' +
-                        '<td style="display:none">' + Test[i].GRN_Date + '</td> ' +
+                        '<td style="display:none">' + Test[i].CGSRate + '</td> ' +
+                        '<td style="display:none">' + GRN_Date + '</td> ' +
                         '</tr>';
                     $('#tblPOItemstModelTable tbody').append(rows);
                     $('input').attr('autocomplete', 'off');
@@ -208,13 +209,16 @@
                         '<td class="headcol_2"><input type="hidden" id="txtBatchNum' + rowIndex + '" name="txtBatchNum" value="' + value.Batch_No + '"/>' + value.Batch_No + '</td> ' +
                         '<td><input type="hidden" id="txtBatchBalnce' + rowlength + '" name="txtBatchBalnce" value="' + value.Batch_Balance + '"/>' + value.Batch_Balance + '</td>' +
                         '<td><input type="hidden" id="txtQty' + rowlength + '" name="txtQty" value="' + value.GRNQty + '"/>' + value.GRNQty + '</td>' +
-                        '<td><input type="text" id="txtTransQty' + rowlength + '" name="txtTransQty" value="' + value.Qty + '"/></td>' +
+                        '<td><input type="text" id="txtTransQty' + rowlength + '" name="txtTransQty" onkeyup="CulculateAmonutWithQty(this)" value="' + value.Qty + '"/></td>' +
                         '<td><input type="hidden" id="txtTransNum' + rowlength + '" name="txtTransNum" value="' + value.GRN_Num + '"/>' + value.GRN_Num + '</td>' +
                         '<td><input type="hidden" id="txtTransType' + rowlength + '" name="txtTransType" value="' + value.Trans_Type + '"/>' + value.Trans_Type + '</td>' +
+                        '<td><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + value.PUR_Rate + '"/>' + value.PUR_Rate + '</td>' +
+                        '<td><input type="hidden" id="txtAmount' + length + '" name="txtAmount" value="' + value.Amount + '"/>' + value.Amount + '</td>' +
+                        '<td><input type="hidden" id="txtGRNDate' + rowlength + '" name="txtGRNDate" value="' + GRNDate + '"/>' + GRNDate + '</td>' +
                         '<td style="display:none"><input type="hidden" id="GRNId' + rowlength + '" name="GRNId" value="' + value.GRN_ID + '"/></td>' +
                         '<td style="display:none"><input id="txtGRNDetailId' + rowlength + '" name="txtGRNDetailId" value="' + value.GRN_Detail_ID + '" type="text" style="width: 31px!important;border: none;"/></td>' +
                         '<td style="display:none"><input type="hidden" id="txtItemId' + rowlength + '" name="txtItemId" value="' + value.Item_ID + '"/></td>' +
-                        '<td><input type="hidden" id="txtGRNDate' + rowlength + '" name="txtGRNDate" value="' + GRNDate + '"/>' + GRNDate + '</td>' +
+                       
 
                         '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: 1px;" i=""></i></a></td>' +
                         '</tr>'
@@ -317,15 +321,17 @@
                 '<td><input type="hidden" id="txtUOM' + length + '" name="txtUOM" value="' + UOM + '"/>' + UOM + '</td> ' +
                 '<td class="headcol_2"><input type="hidden" id="txtBatchNum' + length + '" name="txtBatchNum" value="' + BatchNum + '"/>' + BatchNum + '</td> ' +
                 '<td><input type="hidden" id="txtBatchBalnce' + length + '" name="txtBatchBalnce" value="' + BatchBalance + '"/>' + BatchBalance + '</td>' +
-                '<td><input type="hidden" id="txtQty' + length + '" name="txtQty" value="' + Qty + '"/>' + Qty + '</td>' +
-                '<td><input type="text" id="txtTransQty' + length + '" name="txtTransQty"/></td>' +
+                '<td><input type="hidden" id="txtQty' + length + '" name="txtQty"  value="' + Qty + '"/>' + Qty + '</td>' +
+                '<td><input type="text" id="txtTransQty' + length + '" onkeyup="CulculateAmonutWithQty(this)" name="txtTransQty" value="0"/></td>' +
                 '<td><input type="hidden" id="txtTransNum' + length + '" name="txtTransNum" value="' + GRNNum + '"/>' + GRNNum + '</td>' +
                 '<td><input type="hidden" id="txtTransType' + length + '" name="txtTransType" value="' + TransType + '"/>' + TransType + '</td>' +
                 '<td><input type="hidden" id="txtRate' + length + '" name="txtRate" value="' + Rate + '"/>' + Rate + '</td>' +
+                '<td><input type="hidden" id="txtAmount' + length + '" name="txtAmount" value="0"/>' + + '</td>' +
+                '<td style=""><input type="text" id="txtGrnDate' + length + '" name="txtGrnDate" value="' + GRNDate + '" />' + GRNDate +'</td>' +
                 '<td style="display:none"><input type="hidden" id="GRNId' + length + '" name="GRNId" value="' + GRNId + '"/></td>' +
                 '<td style="display:none"><input id="txtGRNDetailId' + length + '" name="txtGRNDetailId" value="' + GRNDetailId + '" type="text" style="width: 31px!important;border: none;"/></td>' +
                 '<td style="display:none"><input type="hidden" id="txtItemId' + length + '" name="txtItemId" value="' + ItemId + '"/></td>' +
-                '<td style="display:none"><input type="hidden" id="txtGrnDate' + length + '" name="txtGrnDate" value="' + datetime + '" /></td>' +
+               
                 '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: 1px;" i=""></i></a></td>' +
                 '</tr>'
             debugger;
@@ -340,6 +346,15 @@
                 var row = $(anchor).parents('tr')[0];
                 row.remove();
             }
+        }
+        function CulculateAmonutWithQty(anchor) {
+
+            debugger;
+            var Amount = $(anchor).closest('tr').find('td:eq(9)').text();
+            var qty = $($(anchor).closest('tr').find('td input[name=txtTransQty]')[0]).val();          
+            var net_amt = (parseInt(Amount) * qty);
+            $($(anchor).closest('tr').find('td:eq(10)').text(net_amt.toFixed(0)));
+            row.find('input[name=txtAmount]').val(net_amt.toFixed(2));
         }
         function SaveAllRecord() {
             elementIsClicked = true;
@@ -357,7 +372,7 @@
                 debugger;
                 table.find('tr').each(function (key, value) {
                     debugger;
-                    Item_list.push({ 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'BatchNum': $(value).find('td input[name=txtBatchNum]').val(), 'Qty': $(value).find('td input[name=txtTransQty]').val(), 'TransType': $(value).find('td input[name=txtTransType]').val(), 'GRNId': $(value).find('td input[name=GRNId]').val(), 'GRNDetailId': $(value).find('td input[name=txtGRNDetailId]').val(), 'GRNNum': $(value).find('td input[name=txtTransNum]').val(), 'GRNDate': $(value).find('td input[name=txtGrnDate]').val() });
+                    Item_list.push({ 'ItemId': $(value).find('td input[name=txtItemId]').val(), 'BatchNum': $(value).find('td input[name=txtBatchNum]').val(), 'Qty': $(value).find('td input[name=txtTransQty]').val(), 'Rate': $(value).find('td input[name=txtRate]').val(), 'Amount': $(value).find('td:eq(10)').text() , 'TransType': $(value).find('td input[name=txtTransType]').val(), 'GRNId': $(value).find('td input[name=GRNId]').val(), 'GRNDetailId': $(value).find('td input[name=txtGRNDetailId]').val(), 'GRNNum': $(value).find('td input[name=txtTransNum]').val(), 'GRNDate':  $(value).find('td:eq(11)').text().trim() });
                 });
                 $('#btn_Save').attr('disabled', true);
                 var AllItemDetail = { 'VendorId': VendorId, 'PurchaseReturnNum': PurchaseReturnNum, 'PurchaseReturndate': PurchaseReturndate, 'ReturnFormInventoryOrg': ReturnFormInventoryOrg, 'InvoiceType': InvoiceType, 'Remarks': Remarks, 'ItemList': Item_list };
@@ -617,10 +632,11 @@
                             <th>GRN #</th>
                             <th>Trans Type</th>
                             <th>Rate</th>
+                            <th>Amount</th>
                             <th style="display: none">GRNID</th>
                             <th style="display: none">GRNdetail</th>
                             <th style="display: none">GRNNum</th>
-                            <th style="display: none">GRNDate</th>
+                            <th style="">GRNDate</th>
                             <th>Action</th>
                         </tr>
                     </thead>

@@ -162,10 +162,9 @@
         }
         function PopUPDetailBill() {
             debugger;
-
             var BillId = $("#hdBillID").val();
             var ids = [];
-            debugger;
+
             if ($('#CollectedSample tbody tr').length == 0) {
                 ids[0] = -1;
             }
@@ -185,60 +184,57 @@
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-       
-                   success: function (response) {
-                       var Branch = $('#ddlUserBranch').val();
-                       var parse = JSON.parse(response.d);
-                       debugger;
-                   
-                       if (parse.length === 0) {
-                           $("#listModel").show();
-                           return;
-                       }
-                   
-                       // Check branch from first record
-                       if (parse[0].Branch_Id != Branch) {
-                             Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    text: 'This Test Not Belongs to this Branch.',
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    customClass: {
-                                        popup: 'swal-big-popup',
-                                        title: 'swal-big-title',
-                                        htmlContainer: 'swal-big-text'
-                                    }
-                                });
-                           return;
-                       }
-                   
-                       var rows = "";
-                       var PatientDep = "";
-                   
-                       for (var i = 0; i < parse.length; i++) {
-                           rows += '<tr>'
-                               + '<td style="width:32px;"></td>'
-                               + '<td style="display:none;">' + parse[i].Item_ID + '</td>'
-                               + '<td style="display:none;">' + parse[i].Bill_Details_ID + '</td>'
-                               + '<td>' + parse[i].Item_Name + '</td>'
-                               + '<td>' + PatientDep + '</td>'
-                               + '<td>' + parse[i].Gener + '</td>'
-                               + '<td>' + parse[i].Qty + '</td>'
-                               + '<td>'
-                               + '<input type="checkbox" class="' + parse[i].Item_Name + '" '
-                               + 'value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PatientDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '" '
-                               + 'style="margin-top:-20px;" onclick="checkBoxClicked(this)" />'
-                               + '</td>'
-                               + '</tr>';
-                       }
-                   
-                       $('#tblDetailModelTable tbody').empty();
-                       $('#tblDetailModelTable tbody').append(rows);
-                   },
-
-                failure: function (response) {
+                success: function (response) {
+                    var Branch = $('#ddlUserBranch').val();
+                    var parse = JSON.parse(response.d);
                     debugger;
+
+                    if (parse.length === 0) {
+                        $("#listModel").show();
+                        return;
+                    }
+
+                    if (parse[0].Branch_Id != Branch) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'This Test Not Belongs to this Branch.',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        return;
+                    }
+
+                    var rows = "";
+                    var PatientDep = "";
+
+                    for (var i = 0; i < parse.length; i++) {
+                        rows += '<tr>'
+                            + '<td style="width:32px;"></td>'
+                            + '<td style="display:none;">' + parse[i].Item_ID + '</td>'
+                            + '<td style="display:none;" class="bill-detail-id">' + parse[i].Bill_Details_ID + '</td>'
+                            + '<td>' + parse[i].Item_Name + '</td>'
+                            + '<td>' + PatientDep + '</td>'
+                            + '<td>' + parse[i].Gener + '</td>'
+                            + '<td>' + parse[i].Qty + '</td>'
+                            + '<td class="remarks-cell">'
+                            + '<input type="text" class="remarks-input-modal" placeholder="Enter remarks..." id="remarks_' + i + '" />'
+                            + '</td>'
+                            + '<td>'
+                            + '<button type="button" class="btn btn-sm btn-success save-remarks-btn" onclick="saveRemarks(this)">Save</button>'
+                            + '</td>'
+                            + '<td>'
+                            + '<input type="checkbox" class="' + parse[i].Item_Name + '" '
+                            + 'value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PatientDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '" '
+                            + 'style="margin-top:-20px;" onclick="checkBoxClicked(this)" />'
+                            + '</td>'
+                            + '</tr>';
+                    }
+
+                    $('#tblDetailModelTable tbody').empty();
+                    $('#tblDetailModelTable tbody').append(rows);
+                },
+                failure: function (response) {
                     alert("error!");
                 }
             });
@@ -537,12 +533,21 @@
         function checkBoxClicked(value) {
             debugger;
             var TempArray = [];
+
+            var remarksValue = "";
+            var $row = $(value).closest('tr');
+            var $remarksInput = $row.find('.remarks-input-modal');
+            if ($remarksInput.length > 0) {
+                remarksValue = $remarksInput.val();
+            }
+
             TempArray[0] = value.className;
             TempArray[1] = value.value.split(',')[0];
             TempArray[2] = value.value.split(',')[1];
             TempArray[3] = value.value.split(',')[2];
             TempArray[4] = value.value.split(',')[3];
             TempArray[5] = value.value.split(',')[4];
+            TempArray[6] = remarksValue;  
 
             if (value.checked == true) {
                 CheckedTest.push(TempArray);
@@ -556,9 +561,9 @@
                     '<td style="text-align: center;">' + TempArray[4] + '</td>' +
                     '<td style="text-align: center;">' + TempArray[5] + '</td>' +
                     '<td style="text-align: center;"><input type="checkbox" name="Check" checked="checked" disabled="disabled"/></td>' +
-                    '<td style="text-align: center;"><input type="text" name="Remarks"/></td>' +
+                    '<td style="text-align: center;"><input type="text" name="Remarks" value="' + remarksValue.replace(/"/g, '&quot;') + '"/></td>' +
                     '<td style="text-align: center;">' +
-                    '<select id="ddlOutsource" name="ddlOutSource">' + option_OutSource +'</select>' +
+                    '<select id="ddlOutsource" name="ddlOutSource">' + option_OutSource + '</select>' +
                     '</td>' +
                     '<td style="text-align: center;">' +
                     '<a style="border-radius: 4px;background-color: #e98383;color: white;padding: 4px 11px 4px 11px;" href="#" onclick="DeleteTest(this)">Delete</a>' +
@@ -584,10 +589,9 @@
 
         function PopUPDetail() {
             debugger;
-
             var mrNo = $("#hdPatientID").val();
             var ids = [];
-            debugger;
+
             if ($('#CollectedSample tbody tr').length == 0) {
                 ids[0] = -1;
             }
@@ -611,6 +615,7 @@
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
+                    async: false,
                     success: function (data) {
                         var parse1 = JSON.parse(data.d)
                         debugger;
@@ -643,20 +648,34 @@
                                 title: 'Error!',
                                 text: 'This Test Not Belongs to this Branch.',
                                 showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
+                                timer: 2000
                             });
-                           return;
-                       }
+                            return;
+                        }
                         if (parse.length != 0) {
                             var rows = "";
                             for (var i = 0; i < parse.length; i++) {
                                 debugger;
-                                rows += '<tr><td style="width:32px;"></td><td style="display:none;">' + parse[i].Item_ID + '</td><td style="display:none;">' + parse[i].Bill_Details_ID + '</td><td>' + parse[i].Item_Name + '</td><td>' + PateintDep + '</td><td>' + parse[i].Gener + '</td><td>' + parse[i].Qty + '</td><td><input type="checkbox" class="' + parse[i].Item_Name + '" value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PateintDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '"style="margin-top:-20px;" onclick="checkBoxClicked(this)"/></td></tr>';
+                                rows += '<tr>'
+                                    + '<td style="width:32px;"></td>'
+                                    + '<td style="display:none;">' + parse[i].Item_ID + '</td>'
+                                    + '<td style="display:none;" class="bill-detail-id">' + parse[i].Bill_Details_ID + '</td>'
+                                    + '<td>' + parse[i].Item_Name + '</td>'
+                                    + '<td>' + PateintDep + '</td>'
+                                    + '<td>' + parse[i].Gener + '</td>'
+                                    + '<td>' + parse[i].Qty + '</td>'
+                                    + '<td class="remarks-cell">'
+                                    + '<input type="text" class="remarks-input-modal" placeholder="Enter remarks..." id="remarks_modal_' + i + '" />'
+                                    + '</td>'
+                                    + '<td>'
+                                    + '<button type="button" class="btn btn-sm btn-success save-remarks-btn" onclick="saveRemarks(this)">Save</button>'
+                                    + '</td>'
+                                    + '<td>'
+                                    + '<input type="checkbox" class="' + parse[i].Item_Name + '" '
+                                    + 'value="' + parse[i].Item_ID + ',' + parse[i].Bill_Details_ID + ',' + PateintDep + ',' + parse[i].Gener + ',' + parse[i].Qty + '" '
+                                    + 'style="margin-top:-20px;" onclick="checkBoxClicked(this)" />'
+                                    + '</td>'
+                                    + '</tr>';
                             }
                             $('#tblDetailModelTable tbody tr').remove();
                             $('#tblDetailModelTable tbody').append(rows);
@@ -671,14 +690,8 @@
                                 title: 'Error!',
                                 text: 'No record exist',
                                 showConfirmButton: false,
-                                timer: 2000,
-                                customClass: {
-                                    popup: 'swal-big-popup',
-                                    title: 'swal-big-title',
-                                    htmlContainer: 'swal-big-text'
-                                }
+                                timer: 2000
                             });
-
                         }
                     },
                     failure: function (response) {
@@ -693,14 +706,8 @@
                     title: 'Error!',
                     text: 'Please enter Patient ID',
                     showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'swal-big-popup',
-                        title: 'swal-big-title',
-                        htmlContainer: 'swal-big-text'
-                    }
+                    timer: 2000
                 });
-
             }
         }
 
@@ -1259,6 +1266,69 @@
                 checkBoxClicked(this); 
             });
         }
+
+        function saveRemarks(button) {
+            debugger;
+            var $row = $(button).closest('tr');
+            var remarksInput = $row.find('.remarks-input-modal');
+            var remarks = remarksInput.val();
+            var billDetailId = $row.find('.bill-detail-id').text();
+
+            if (!remarks || remarks.trim() === "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please enter remarks before saving.',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "SampleCollectionFrom.aspx/SaveModalRemarks",
+                data: JSON.stringify({
+                    "BillDetailsID": billDetailId,
+                    "Remarks": remarks
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d === "Success") {
+                        $(button).removeClass('btn-success').addClass('btn-secondary');
+                        $(button).text('Saved');
+                        $(button).prop('disabled', true);
+                        remarksInput.prop('disabled', true);
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Remarks saved successfully.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.d,
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    }
+                },
+                failure: function (response) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to save remarks.',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
+            });
+        }
     </script>
 </asp:Content>
 
@@ -1488,6 +1558,8 @@
                                     <th>Department</th>
                                     <th>Gener</th>
                                     <th>Quantity</th>
+                                    <th>Remarks</th>
+                                     <th>Save</th>
                                     <th><input type="checkbox" id="chkAll"  onclick="toggleAll(this)" /></th>
                                     
                                 </tr>

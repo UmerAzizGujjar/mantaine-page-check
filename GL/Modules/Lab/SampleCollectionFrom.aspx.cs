@@ -912,5 +912,34 @@ namespace PMS
                 }
             }
         }
+
+        [WebMethod]
+        public static string SaveModalRemarks(int BillDetailsID, string Remarks)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var billingDetail = (from bd in db.Ar_Billing_Details
+                                         where bd.Bill_Details_ID == BillDetailsID
+                                         select bd).FirstOrDefault();
+
+                    if (billingDetail != null)
+                    {
+                        billingDetail.Sample_Remarks = Remarks;
+                        db.SubmitChanges();
+                        return "Success";
+                    }
+                    else
+                    {
+                        return "Billing detail not found";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
     }
 }
