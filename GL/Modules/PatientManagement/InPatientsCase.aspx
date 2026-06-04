@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsCase.aspx.cs" Inherits="PMS.InPatientsCase" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ipdcase.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/ipdcase.css" rel="stylesheet" />
 
     <script type="text/javascript">
         (function ($) {
@@ -3602,6 +3602,7 @@
 
 
         function SaveDischargeMedicines() {
+            debugger;
             var Dtable = $('#tblDischargeMedication');
             var MedicinesList = [];
 
@@ -3615,7 +3616,8 @@
                     'Injection': $($(value).find('td')[5]).text().trim(),
                     'Oral': $($(value).find('td')[6]).text().trim(), // Routes
                     'Other_Instruction': $($(value).find('td')[7]).text().trim(),
-                    'AttendingParamedical_Staff': $($(value).find('td')[8]).text().trim(), // Special Instructions
+                    'AttendingParamedical_Staff': $($(value).find('td')[8]).text().trim(),
+                    'User': $($(value).find('td')[9]).text(),
 
                     // ItemCode is now exactly at index 11
                     'ItemCode': $($(value).find('td')[11]).text().trim(),

@@ -2,8 +2,8 @@
     CodeBehind="Register.aspx.cs" Inherits="PMS.Account.Register" %>
         
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/registeruser.css" rel="stylesheet" />
-     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/registeruser.css" rel="stylesheet" />
+     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
          <script type="text/javascript" src="../../wwwroot/THEME_TIBBIT/js/swalalert.js"></script>
 
 

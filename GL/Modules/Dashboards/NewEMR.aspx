@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="NewEMR.aspx.cs" Inherits="PMS.Modules.Dashboards.NewEMR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/NewEMR.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/NewEMR.css" rel="stylesheet" />
    
     <script type="text/javascript" id="ScriptSidebar">
         function toggleRetract() {

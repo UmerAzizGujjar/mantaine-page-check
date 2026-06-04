@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <!-- Optional: If you have a shared CSS file like Approvepr.css, link it -->
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Approvepr.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/Approvepr.css" rel="stylesheet" />
 
     
 

@@ -1,0 +1,12 @@
+.header-red {
+    background-color: #308665db !important;
+    color: white; /* Optional: set text color to white for contrast */
+}
+
+.mobileInput {
+    width: 200px !important;
+}
+
+td {
+    padding-left: 5px !important;
+}

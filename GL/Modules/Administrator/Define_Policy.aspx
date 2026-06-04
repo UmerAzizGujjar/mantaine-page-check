@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Define_Policy.aspx.cs" Inherits="PMS.Modules.Administrator.Define_Policy" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Policy.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/Policy.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
 

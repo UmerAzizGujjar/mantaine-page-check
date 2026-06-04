@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PasswordChange.aspx.cs" Inherits="PMS.Modules.Accounts.PasswordChange" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/changePassword.css" rel="stylesheet" />
-  <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Toaster.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/changePassword.css" rel="stylesheet" />
+  <link href="../../wwwroot/lib/sweetalert/Toaster.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(document).ready(function () {

@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LocationAssetView.aspx.cs" Inherits="PMS.LocationAssetView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/tablestyle.css" rel="stylesheet" />
     <style type="text/css">
         .btn-white-text{
             color:white !important;

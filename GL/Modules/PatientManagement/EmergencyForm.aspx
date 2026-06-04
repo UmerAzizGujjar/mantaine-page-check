@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmergencyForm.aspx.cs" Inherits="PMS.Modules.PatientManagement.EmergencyForm" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/EmergencyForm.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/EmergencyForm.css" rel="stylesheet" />
     <script type="text/javascript">
         
         $(document).ready(function () {

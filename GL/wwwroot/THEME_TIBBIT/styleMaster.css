@@ -5,6 +5,16 @@
     font-weight: 300;
     src: local('Open Sans Light'), local('OpenSans-Light'), url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2) format('woff2'), url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
 }
+/* Select2 Hover/Selected Highlight */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #EFA63E !important;
+    color: white !important;
+}
+
+/* Select2 Classic Theme Main Box Background */
+.select2-container--classic .select2-selection--single {
+    background-color: #EFA63E !important;
+}
 /* For Chrome, Safari, and Edge */
 ::-webkit-scrollbar {
     width: 10px;

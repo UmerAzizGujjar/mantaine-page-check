@@ -1,0 +1,16 @@
+﻿.swal-big-popup {
+    width: 400px !important;
+    padding: 20px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box;
+}
+
+.swal-big-title {
+    font-size: 22px !important;
+    font-weight: bold;
+}
+
+.swal-big-text {
+    font-size: 16px !important;
+}

@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RegisterUser.aspx.cs" Inherits="PMS.Modules.Accounts.RegisterUser" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/registeruser.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/registeruser.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(document).ready(function () {

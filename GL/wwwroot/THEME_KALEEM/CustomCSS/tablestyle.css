@@ -1,0 +1,278 @@
+﻿table.dataTable thead > tr > th.sorting_desc::after {
+    content: "▼";
+    color: #000;
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+}
+
+.dataTable > thead > tr > th.sorting_desc, .dataTable > thead > tr > th.sorting_asc {
+    background-repeat: repeat-x;
+    background-image: linear-gradient(to bottom, #308665db  0, #308665db  100%) !important;
+}
+
+table.dataTable thead > tr > th.sorting_asc:before, table.dataTable thead > tr > th.sorting_desc:after, table.dataTable thead > tr > td.sorting_asc:before, table.dataTable thead > tr > td.sorting_desc:after {
+    opacity: 1 !important;
+    color: white;
+}
+
+#tblResult {
+    width:100% !important;
+}
+
+
+.dataTables_filter label {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 0px 10px;
+    width: 300px;
+}
+
+.dataTables_filter input {
+    border: none;
+    outline: none;
+    padding: 8px 12px;
+    flex-grow: 1;
+    border-radius: 3px !important; 
+}
+
+.dataTables_filter label::before {
+    content: "\1F50D";
+    font-size: 16px;
+    margin-right: 8px;
+    color: #888;
+}
+
+.dataTables_filter input::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+
+
+.dataTables_wrapper .dataTables_length select {
+    /* border: 1px solid #aaa; */
+    border-radius: 3px;
+    padding: 5px;
+    background-color: transparent !important;
+    padding: 0px !important;
+    height: 40px !important;
+}
+
+
+
+
+.dataTables_filter {
+    margin-top: 16px;
+}
+
+
+.table > tbody > tr > td {
+    line-height: 0.75;
+}
+
+.table > thead > tr > th {
+    line-height: 1.0;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    font-size: small;
+    width: 50%;
+}
+.mrg{
+    margin-left:11px !important;
+}
+.table th:hover {
+    background-color: #308665db !important;
+    color: white !important;
+}
+
+
+.main input {
+    margin-bottom: -5px !important;
+}
+input{
+    width:auto !important;
+}
+.buttons-copy {
+    background-color: #308665db  !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease-in-out !important;
+    width:13% !important;
+}
+
+.buttons-excel {
+    background-color: #399439 !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease-in-out !important;
+    width: 13% !important;
+}
+
+.buttons-pdf {
+    background-color: #C11718 !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease-in-out !important;
+    width: 13% !important;
+}
+
+
+
+.buttons-colvis {
+    background-color: #4052a1 !important;
+    border: none !important;
+    color: white !important;
+    font-weight: bold;
+    padding: 10px 20px !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease-in-out !important;
+    width: 13% !important;
+}
+.sorting :hover{
+    color:yellow !important;
+}
+
+div.dt-buttons {
+    position: relative;
+    float: left;
+    width:50% !important;
+    margin-left:2%;
+}
+
+.ui-button-text-only .ui-button-text {
+    font-weight: 900;
+}
+
+.dataTables_info {
+    font-size: 14px;
+    font-weight: 700 !important;
+}
+
+.dataTables_wrapper .ui-toolbar {
+    padding: 3px;
+}
+
+table.dataTable thead th div.DataTables_sort_wrapper span {
+    display: none;
+}
+
+#txt_date {
+    height: 32px;
+}
+
+#check {
+    width: 5% !important;
+}
+
+.info_btn {
+    border-radius: 12px;
+    width: 7%;
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.dataTables_filter input {
+    border-radius: 15px !important;
+}
+
+body {
+    font-weight: 700;
+}
+
+#ui-datepicker-div {
+    width: 20% !important;
+}
+
+.btn-addnew {
+    top: -5px !important;
+}
+
+.fa-pencil {
+    color: white !important;
+}
+
+
+.fa-print {
+    color: darkblue !important;
+}
+
+td {
+    line-height: 15px !important;
+}
+
+#th-descptn {
+    width: 200px !important;
+}
+
+.table-container {
+    overflow-x: auto;
+    max-height: 600px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+
+
+.dt-button-collection {
+    background: linear-gradient(238deg, #308665db 0%, #308665db 100%) !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+    border: none !important;
+    max-height: 400px !important;
+    overflow-y: auto !important;
+}
+
+    .dt-button-collection .dt-button {
+        background: white !important;
+        color: #333 !important;
+        border-radius: 8px !important;
+        margin: 5px 0 !important;
+        padding: 10px 15px !important;
+        border: 2px solid transparent !important;
+        transition: all 0.3s ease !important;
+        font-weight: 500 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        text-align: left !important;
+    }
+
+        .dt-button-collection .dt-button.active {
+            background: #308665db !important;
+            color: black !important;
+            border-color: #667eea !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5) !important;
+        }
+
+        .dt-button-collection .dt-button::before {
+            content: '✓' !important;
+            margin-right: 10px !important;
+            font-weight: bold !important;
+            color: #667eea !important;
+            font-size: 14px !important;
+        }
+
+        .dt-button-collection .dt-button.active::before {
+            color: white !important;
+        }

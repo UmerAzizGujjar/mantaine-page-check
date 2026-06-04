@@ -636,6 +636,167 @@ namespace PMS
             return result;
         }
 
+        public static bool IsValidQuantity(int itemId, int sellingQty, int inPatientId, string transType)
+        {
+            // ONLY validate for IPD Patient
+            if (transType != "IPD Patient")
+            {
+                return true;
+            }
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var medicineRecord = db.In_Patient_Medicines
+                    .FirstOrDefault(m => m.Patient_ID == inPatientId
+                        && m.Item_Code == itemId.ToString()
+                        && (m.is_rejected == null || m.is_rejected == false));
+
+                if (medicineRecord == null) return true;
+
+                int requestedQty = Convert.ToInt32(medicineRecord.Req_Qty ?? 0);
+
+                // If no quantity requested, skip validation
+                if (requestedQty == 0) return true;
+
+                int receivedQty = Convert.ToInt32(medicineRecord.Rcv_Qty ?? 0);
+                int availableQty = requestedQty - receivedQty;
+
+                // Check if already fully received
+                if (availableQty <= 0)
+                {
+                    return false; // All requested quantity has already been issued
+                }
+
+                // Check if selling quantity exceeds available quantity
+                return sellingQty <= availableQty;
+            }
+        }
+        [WebMethod]
+        public static string ValidateIPDQuantities(string Parameters)
+        {
+            try
+            {
+                JavaScriptSerializer JSS = new JavaScriptSerializer();
+                var data = JSS.Deserialize<Medicines>(Parameters);
+
+                // ONLY validate for IPD Patients
+                if (data.TransType != "IPD Patient")
+                {
+                    return (new JavaScriptSerializer()).Serialize(new { Success = true, Message = "" });
+                }
+
+                // Check if there are any items with Req_Qty > 0
+                bool hasReqQty = false;
+                foreach (var dtls in data.Save_list)
+                {
+                    if (dtls.Req_qty > 0)
+                    {
+                        hasReqQty = true;
+                        break;
+                    }
+                }
+
+                // If no items have Req_Qty > 0, skip validation
+                if (!hasReqQty)
+                {
+                    return (new JavaScriptSerializer()).Serialize(new { Success = true, Message = "" });
+                }
+
+                // Validate each item using the database
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    foreach (var dtls in data.Save_list)
+                    {
+                        int Item_Id = dtls.Itemid == 0 ? dtls.hdnItemid : dtls.Itemid;
+                        int qty = dtls.Qty;
+                        int reqQty = dtls.Req_qty ?? 0;
+
+                        // Only validate items that have requested quantity > 0
+                        if (reqQty > 0 && Item_Id > 0 && qty > 0)
+                        {
+                            // Get the actual record from database to check received quantity
+                            var medicineRecord = db.In_Patient_Medicines
+                                .FirstOrDefault(m => m.Patient_ID == data.In_Patient_ID
+                                    && m.Item_Code == Item_Id.ToString()
+                                    && (m.is_rejected == null || m.is_rejected == false));
+
+                            if (medicineRecord != null)
+                            {
+                                int dbRequestedQty = Convert.ToInt32(medicineRecord.Req_Qty ?? 0);
+                                int receivedQty = Convert.ToInt32(medicineRecord.Rcv_Qty ?? 0);
+                                int availableQty = dbRequestedQty - receivedQty;
+
+                                // Check if already fully issued
+                                if (availableQty <= 0)
+                                {
+                                    return (new JavaScriptSerializer()).Serialize(new
+                                    {
+                                        Success = false,
+                                        Message = $"Cannot issue {dtls.ItemName}. All requested quantity ({dbRequestedQty} units) has already been issued."
+                                    });
+                                }
+
+                                // Check if selling quantity exceeds available quantity
+                                if (qty > availableQty)
+                                {
+                                    return (new JavaScriptSerializer()).Serialize(new
+                                    {
+                                        Success = false,
+                                        Message = $"Cannot sell {qty} units of {dtls.ItemName}. Only {availableQty} units remaining (Requested: {dbRequestedQty}, Already Issued: {receivedQty})."
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                // If no record found in database but Req_qty > 0 from frontend
+                                return (new JavaScriptSerializer()).Serialize(new
+                                {
+                                    Success = false,
+                                    Message = $"Cannot issue {dtls.ItemName}. Request not found or already processed."
+                                });
+                            }
+                        }
+                    }
+                }
+
+                return (new JavaScriptSerializer()).Serialize(new { Success = true, Message = "" });
+            }
+            catch (Exception ex)
+            {
+                return (new JavaScriptSerializer()).Serialize(new { Success = false, Message = ex.Message });
+            }
+        }
+        // Method 2: Update received quantity (only for IPD with Req_Qty > 0)
+        public static void UpdateReceivedQuantity(int itemId, int receivedQty, int inPatientId)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var medicineRecord = db.In_Patient_Medicines
+                        .FirstOrDefault(m => m.Patient_ID == inPatientId
+                            && m.Item_Code == itemId.ToString()
+                            && (m.is_rejected == null || m.is_rejected == false));
+
+                    if (medicineRecord != null)
+                    {
+                        int requestedQty = Convert.ToInt32(medicineRecord.Req_Qty ?? 0);
+
+                        // Only update if requested quantity > 0
+                        if (requestedQty > 0)
+                        {
+                            decimal currentRcv = medicineRecord.Rcv_Qty ?? 0;
+                            medicineRecord.Rcv_Qty = currentRcv + receivedQty;
+                            db.SubmitChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+            }
+        }
         [WebMethod]
         public static string GetOutPatientIDByOPDNo(string opdNo)
         {
@@ -790,8 +951,9 @@ namespace PMS
                                   && p.IsPharmacy == true
                                   && p.Creation_Date.Value.Month == DateTime.Now.Month
                                   && p.Creation_Date.Value.Day == DateTime.Now.Day).Count() + 1;
-           decimal Total_CGSS = 0;
+            decimal Total_CGSS = 0;
             Ar_Billing newBill;
+
             if (data.Bill_ID == 0)
             {
                 newBill = new Ar_Billing();
@@ -802,12 +964,12 @@ namespace PMS
             }
             else
             {
-                
                 newBill = db.Ar_Billings.Where(b => b.Bill_ID == data.Bill_ID).FirstOrDefault();
                 newBill.Company_ID = AppConfig.Company_ID;
                 newBill.Updated_By = AppConfig.UserID;
                 newBill.Updation_Date = DateTime.Now;
             }
+
             newBill.Invoice_No = getmaxno;
             newBill.Invoice_Date = DateTime.Now;
             newBill.Seq_InvoiceNo = db.GetSale_InoviceNo();
@@ -822,7 +984,6 @@ namespace PMS
             newBill.line_disc = data.linediscount;
             newBill.pharmacy_Department = data.Dept;
             newBill.Patient_ID = patId;
-            //var PharmacyCodes = db.sys_Parms.Where(x => x.Name == "Pharmacy WareHouse").Select(x => x.Code).FirstOrDefault().ToString();
             newBill.Ware_House = data.warehouse;
             newBill.In_Patient_ID = data.In_Patient_ID;
             newBill.Panel_Id = Convert.ToInt32(data.Panel_Id);
@@ -842,12 +1003,14 @@ namespace PMS
             }
             newBill.Received_Amount = data.AmntReceived;
             newBill.Pharma_trans_Type = data.TransType;
+
             var Inpat = "";
             if (data.Patient_ID != "")
             {
                 var inpatientid = db.In_Patients.Where(x => x.Patient_ID == Convert.ToInt32(data.Patient_ID)).Select(x => x.In_Patient_ID).FirstOrDefault().ToString();
                 Inpat = inpatientid;
             }
+
             if ((data.Patient_ID != "") && (Rbtn == "rbtncash" || Rbtn == "rbtnbank"))
             {
                 newBill.Customer_Type = "Hospital-Patient";
@@ -861,48 +1024,57 @@ namespace PMS
                 newBill.In_Patient_ID = Convert.ToInt32(Inpat);
                 newBill.BillType = "PanelMedicine";
             }
+
             if (patId == 0)
             {
-
                 newBill.Customer_Type = "Walk-in";
             }
             else
             {
                 newBill.Customer_Type = "Hospital-Patient";
             }
+
             newBill.Customer_Name = data.CustomerName;
+
             var AccIdCash = (from aac in db.GL_Accounts where (aac.Account_Name == "Cash In Hand-Store") select aac.Account_ID).FirstOrDefault();
             if (Rbtn == "rbtncash")
             {
                 newBill.IsCash = true;
                 newBill.AccountId = AccIdCash;
             }
+
             var AccIdBank = (from aac in db.GL_Accounts where (aac.Account_Name == "Bank Alfalah Current Account") && (aac.Bank == true) select aac.Account_ID).FirstOrDefault();
             if (Rbtn == "rbtnbank")
             {
                 newBill.IsBank = true;
                 newBill.AccountId = AccIdBank;
             }
+
             if (Rbtn == "rbtnHospital")
             {
                 newBill.IsHospital_Pharmacy = true;
             }
-            
+
             newBill.Company_ID = AppConfig.Company_ID;
-            // Insert or Upate Bill Header
+
+            // ============ IMPORTANT: Save Bill Header FIRST ============
             if (data.Bill_ID == 0)
                 db.Ar_Billings.InsertOnSubmit(newBill);
-            db.SubmitChanges();
 
-            List<Ar_Billing_Detail> ListOfDetails = new List<Ar_Billing_Detail>();
-            List<Ar_Billing_Detail> ListOfDetails_Previous = db.Ar_Billing_Details.Where(b => b.Bill_ID == data.Bill_ID).ToList();
+            db.SubmitChanges(); // THIS GIVES YOU THE Bill_ID
+
+            // ============ NOW DELETE OLD DETAILS ============
+            List<Ar_Billing_Detail> ListOfDetails_Previous = db.Ar_Billing_Details.Where(b => b.Bill_ID == newBill.Bill_ID).ToList();
             db.Ar_Billing_Details.DeleteAllOnSubmit(ListOfDetails_Previous);
             db.SubmitChanges();
-            // Inserting or Updating Bill Details
+
+            // ============ INSERT NEW DETAILS ============
+            List<Ar_Billing_Detail> ListOfDetails = new List<Ar_Billing_Detail>();
+
             foreach (Medicindetails dtls in data.Save_list)
             {
                 int Item_Id;
-                if(dtls.Itemid==0)
+                if (dtls.Itemid == 0)
                 {
                     Item_Id = dtls.hdnItemid;
                 }
@@ -910,19 +1082,17 @@ namespace PMS
                 {
                     Item_Id = dtls.Itemid;
                 }
-                if(dtls.Itemid==0 && dtls.hdnItemid==0)
+                if (dtls.Itemid == 0 && dtls.hdnItemid == 0)
                 {
                     Item_Id = (from inv in db.INV_Items where inv.Description == dtls.ItemName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
                 }
 
                 Ar_Billing_Detail newBillDetails = new Ar_Billing_Detail();
-                newBillDetails.Bill_ID = newBill.Bill_ID;
+                newBillDetails.Bill_ID = newBill.Bill_ID; // Now this has correct value
                 newBillDetails.ParentTrans_Name = "IssueMedicine";
                 newBillDetails.ParentTrans_Type = "Medicine";
-                newBillDetails.Item_ID = Item_Id;                
+                newBillDetails.Item_ID = Item_Id;
                 newBillDetails.Item_Name = dtls.ItemName;
-                //var Item_Id = (from aac in db.INV_Items where (aac.Description == dtls.ItemName) select aac.Item_ID).FirstOrDefault();
-                //newBillDetails.Item_ID = Item_Id;
                 newBillDetails.Amount = dtls.Amount;
                 newBillDetails.Item_Type = "Medicine";
                 newBillDetails.Discount_Percentage = dtls.DiscPer;
@@ -938,29 +1108,46 @@ namespace PMS
                 var getttlStock = DBClass.getField("update INV_Items set Total_Qty= '" + TotalRemainStock + "' where Item_ID =" + dtls.Itemid);
                 Total_CGSS += dtls.CGSAmount;
                 ListOfDetails.Add(newBillDetails);
-
-                db.Ar_Billing_Details.InsertAllOnSubmit(ListOfDetails);
             }
-            newBill.Total_CGS = Total_CGSS;
-            db.SubmitChanges();
-            ApprovePhramcy(newBill.Bill_ID.ToString());
 
+            db.Ar_Billing_Details.InsertAllOnSubmit(ListOfDetails);
+            newBill.Total_CGS = Total_CGSS;
+            db.SubmitChanges(); // Save details
+
+            // ============ UPDATE IPD RECEIVED QUANTITIES ============
+            // Update Rcv_Qty for IPD Patients only (NO VALIDATION HERE, JUST UPDATE)
+            if (data.In_Patient_ID > 0 && data.Save_list != null && data.Save_list.Any() && data.TransType == "IPD Patient")
+            {
+                // Only update quantities, no validation
+                foreach (var dtls in data.Save_list)
+                {
+                    int Item_Id = dtls.Itemid == 0 ? dtls.hdnItemid : dtls.Itemid;
+                    int qty = dtls.Qty;
+
+                    if (Item_Id > 0 && qty > 0)
+                    {
+                        UpdateReceivedQuantity(Item_Id, qty, data.In_Patient_ID);
+                    }
+                }
+            }
+
+            ApprovePhramcy(newBill.Bill_ID.ToString());
 
             // Check if FBR_Pharmacy is set to "01" before posting to FBR
             var FBR_Pharmacy = db.sys_Parms.FirstOrDefault(p => p.Name == "FBR_Pharmacy")?.Code;
             if (FBR_Pharmacy == "01")
             {
                 var detailIds = db.Ar_Billing_Details
-                .Where(b => b.Bill_ID == newBill.Bill_ID)
-                .Select(b => b.Bill_Details_ID)
-                .ToList();
+                    .Where(b => b.Bill_ID == newBill.Bill_ID)
+                    .Select(b => b.Bill_Details_ID)
+                    .ToList();
 
                 if (detailIds.Count > 0)
                 {
                     FBRBillingView.PostToFBR(newBill.Bill_ID, detailIds);
                 }
             }
-            
+
             return newBill.Bill_ID.ToString();
         }
         [WebMethod]
@@ -1084,6 +1271,7 @@ namespace PMS
 
             return new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(result);
         }
+     
         [WebMethod]
         public static string CheckOPDPatient(string patid)
         {
@@ -1104,7 +1292,26 @@ namespace PMS
                 return opdId > 0 ? opdId.ToString() : string.Empty;
             }
         }
+        [WebMethod]
+        public static string CheckEmergencyPatient(string patid)
+        {
+            // Validate input
+            if (!int.TryParse(patid, out int regPatId))
+                return string.Empty;
 
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var emergencyId = (
+                    from op in db.Emergency_Patients
+                    where op.Patient_ID == regPatId
+                          && (op.Discharge == false || op.Discharge == null)
+                    orderby op.Created_Time descending
+                    select op.Emergency_ID
+                ).FirstOrDefault();
+
+                return emergencyId > 0 ? emergencyId.ToString() : string.Empty;
+            }
+        }
         [WebMethod]
         public static string GetInvoiceNumber()
         {
@@ -1373,7 +1580,16 @@ namespace PMS
             }
             return result;
         }
+        [WebMethod]
+        public static string GetShowTemplateOnSale()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var showTemplate = (from prms in db.sys_Parms
+                                where prms.Name == "ShowTemplateOnSale"
+                                select prms.Code).FirstOrDefault();
 
+            return (new JavaScriptSerializer()).Serialize(showTemplate ?? "0");
+        }
         [WebMethod]
         public static int SaveSaleReturnData(string AllItemDetail,string UserId)
         {
