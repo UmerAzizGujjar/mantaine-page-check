@@ -132,11 +132,18 @@ input{
     width: 13% !important;
 }
 
+
 .buttons-colvis {
-    width: 38%;
-    border-radius: 12px;
     background-color: #4052a1 !important;
+    border: none !important;
     color: white !important;
+    font-weight: bold;
+    padding: 10px 20px !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease-in-out !important;
+    width: 13% !important;
 }
 .sorting :hover{
     color:yellow !important;

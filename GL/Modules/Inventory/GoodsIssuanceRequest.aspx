@@ -163,11 +163,14 @@
         function GetItemDetail() {
             debugger
             var itemID = $("#hditemID").val();
+
+            var deptID = $('#ddldept').val(); 
             $.ajax({
                 type: "POST",
                 url: "GoodsIssuanceRequest.aspx/Getitem",
                 data: JSON.stringify({
                     "ItemID": itemID,
+                    "DeptID": deptID
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -217,7 +220,7 @@
                                 "<td style='padding-left: 8px!important;padding-top: 7px!important;'>" + parse[0].Description + "</td>" +
                                 "<td style='text-align:center;'>" + parse[0].Unit + "</td>" +
                                 "<td style='text-align: center;'><input type='text' name='Qty' id='txtQty" + length + "' style='font-size: 11px;width: 100%!important;text-align: right;margin-top: 2px;' autocomplete='off' onkeyup='calcutaeQty(this)'/></td>" +
-                                "<td style='padding-top: 7px!important;text-align:center;padding-left: 8px!important;' contenteditable>" + parse[0].Last_MIR_Qty + "</td>" +
+                                "<td style='padding-top: 7px!important;text-align:center;padding-left: 8px!important;' >" + parse[0].Last_MIR_Qty + "</td>" +
                                 "<td style='padding-top: 7px!important;padding-left: 8px!important' contenteditable></td>" +
                                 "<td><label class='fileContainer' style='font-size: 13px;margin-top: -3px;'><i class='glyphicon glyphicon-paperclip'></i><input type='file' name='fileuploadlist' id='fileuploadlist" + length + "'></label></td>" +
                                 "<td style='display:none'>" + parse[0].Item_ID + "</td>" +

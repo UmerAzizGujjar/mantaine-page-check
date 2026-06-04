@@ -1,0 +1,144 @@
+﻿.header_login {
+    text-align: left;
+}
+
+.login {
+    font-family: "Open Sans";
+}
+
+.header h1 {
+    padding-left: 10px;
+    color: #fff;
+}
+
+.main table {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+fieldset p {
+    margin: 0;
+}
+
+select, input.textEntry,
+input.passwordEntry {
+    border: 1px solid #98ffa2 !important;
+    margin-top: 10px;
+    width: 100% !important;
+    border-radius: 12px !important;
+    height: 40px
+}
+
+
+
+p.submitButton {
+    padding-top: 15px;
+}
+
+.main .submitButton input {
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 5px 10px;
+    background-color: #308665db;
+    border-color: #357ebd;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    margin-bottom: 0;
+    font-weight: normal;
+    box-shadow: none;
+    text-shadow: none;
+    border: 0;
+    width: 75px;
+    height: 29px;
+    cursor: pointer;
+    display: inline-block;
+    background-image: none;
+    margin-right: 14%;
+}
+
+    .main .submitButton input:focus {
+        background-color: #484B4D;
+    }
+
+.toolbar {
+    padding-left: 20px;
+    left: -36px;
+    margin: 0 !important;
+    position: relative;
+    top: 16px;
+    width: 340px;
+}
+
+.popupContainer {
+    color: #fff;
+}
+
+/*input.textEntry,
+        input.passwordEntry {
+            position: relative;
+            left: 50px;
+            top: -1px;
+        }*/
+
+input:hover {
+    border: 2px solid #93bd7e !important;
+}
+
+select:hover {
+    border: 2px solid #93bd7e !important;
+}
+
+select {
+    margin-left: 0 !important;
+    position: relative;
+    top: 7px;
+}
+
+.input-field label {
+    color: black !important;
+}
+
+#ctl00_MainContent_ErrorUserName, #ErrorUserName {
+    margin-top: 11px !important;
+}
+
+ctl00_MainContent_ErrorPassword, #ErrorPassword {
+    margin-top: 10px !important;
+}
+
+#ctl00_MainContent_UserLogin_LoginButton {
+}
+
+#ctl00_MainContent_UserLogin_LoginButton {
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    box-shadow: 0 0 20px #fff;
+    border-radius: 14px !important;
+    display: block;
+    width: 100% !important;
+    height: 50px;
+    margin-top:3% !important;
+}
+
+    #ctl00_MainContent_UserLogin_LoginButton:hover {
+        background-position: right center; /* change the direction of the change here */
+        color: #fff;
+        text-decoration: none;
+        border: 1px solid aliceblue !important;
+    }
+
+.h2 {
+    color: #308665db;
+    margin-left: -80%;
+}
+
+.labels {
+    color: #308665db !important;
+    font-size: large;
+}
