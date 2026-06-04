@@ -326,41 +326,67 @@ namespace PMS.Inventory
             }
             if (btnSave == "Update")
             {
-                foreach (var a in record.ItemList2)
-                {
-                    var asd = (from t in db.Advance_Payments
-                               where t.Advance_ID == int.Parse(a.advpaymentid)
-                               select t.Advance_Amount).FirstOrDefault();
+                var xyzs = (from t in db.Advance_Payment_Purchase_Invoices
+                           where t.PurchaseInvoiceId == int.Parse(InvoiceId) 
+                           select t).FirstOrDefault();
 
-                    var asd2 = (from t in db.Advance_Payments
-                                where t.Advance_ID == int.Parse(a.advpaymentid)
-                                select t).FirstOrDefault();
-
-                    var ppp = (from t in db.Advance_Payment_Purchase_Invoices
-                               where t.PurchaseInvoiceId == int.Parse(InvoiceId) && t.AdvancePayment_ID == Convert.ToInt32(a.advpaymentid)
-
-                               select t.Advance_Adjusted).FirstOrDefault();
-
-                    var yyy = ppp + asd;
-                    asd2.Advance_Amount = yyy;
-                    db.SubmitChanges();
-                    var xyz = (from t in db.Advance_Payment_Purchase_Invoices
-                               where t.PurchaseInvoiceId == int.Parse(InvoiceId) && t.AdvancePayment_ID == Convert.ToInt32(a.advpaymentid)
-                               select t).FirstOrDefault();
-
-                    xyz.AdvancePayment_ID = Convert.ToInt32(a.advpaymentid);
-                    xyz.AdvancePayment_No = Convert.ToInt32(a.advpaymentno);
-                    xyz.Advance_Adjusted = Convert.ToDecimal(a.advadjusted);
-                    xyz.PurchaseInvoiceId = Convert.ToInt32(InvoiceId);
-                    db.SubmitChanges();
-                    var rrr = (from t in db.Advance_Payments
-                               where t.Advance_ID == int.Parse(a.advpaymentid)
-                               select t).FirstOrDefault();
-                    var adddd = rrr.Advance_Amount;
-                    var lesssss = adddd - Convert.ToDecimal(a.advadjusted);
-                    rrr.Advance_Amount = lesssss;
-                    db.SubmitChanges();
+                if (xyzs == null) {
+                    foreach (var a in record.ItemList2)
+                    {
+                        Advance_Payment_Purchase_Invoice abc = new Advance_Payment_Purchase_Invoice();
+                        abc.AdvancePayment_ID = Convert.ToInt32(a.advpaymentid);
+                        abc.AdvancePayment_No = Convert.ToInt32(a.advpaymentno);
+                        abc.Advance_Adjusted = Convert.ToDecimal(a.advadjusted);
+                        abc.PurchaseInvoiceId = Convert.ToInt32(InvoiceId);
+                        db.Advance_Payment_Purchase_Invoices.InsertOnSubmit(abc);
+                        db.SubmitChanges();
+                        var asd = (from t in db.Advance_Payments
+                                   where t.Advance_ID == int.Parse(a.advpaymentid)
+                                   select t).FirstOrDefault();
+                        var adddd = asd.Advance_Amount;
+                        var lesssss = adddd - Convert.ToDecimal(a.advadjusted);
+                        asd.Advance_Amount = lesssss;
+                        db.SubmitChanges();
+                    }
                 }
+                else {
+                    foreach (var a in record.ItemList2)
+                    {
+                        var asd = (from t in db.Advance_Payments
+                                   where t.Advance_ID == int.Parse(a.advpaymentid)
+                                   select t.Advance_Amount).FirstOrDefault();
+
+                        var asd2 = (from t in db.Advance_Payments
+                                    where t.Advance_ID == int.Parse(a.advpaymentid)
+                                    select t).FirstOrDefault();
+
+                        var ppp = (from t in db.Advance_Payment_Purchase_Invoices
+                                   where t.PurchaseInvoiceId == int.Parse(InvoiceId) && t.AdvancePayment_ID == Convert.ToInt32(a.advpaymentid)
+
+                                   select t.Advance_Adjusted).FirstOrDefault();
+
+                        var yyy = ppp + asd;
+                        asd2.Advance_Amount = yyy;
+                        db.SubmitChanges();
+                        var xyz = (from t in db.Advance_Payment_Purchase_Invoices
+                                   where t.PurchaseInvoiceId == int.Parse(InvoiceId) && t.AdvancePayment_ID == Convert.ToInt32(a.advpaymentid)
+                                   select t).FirstOrDefault();
+
+                        xyz.AdvancePayment_ID = Convert.ToInt32(a.advpaymentid);
+                        xyz.AdvancePayment_No = Convert.ToInt32(a.advpaymentno);
+                        xyz.Advance_Adjusted = Convert.ToDecimal(a.advadjusted);
+                        xyz.PurchaseInvoiceId = Convert.ToInt32(InvoiceId);
+                        db.SubmitChanges();
+                        var rrr = (from t in db.Advance_Payments
+                                   where t.Advance_ID == int.Parse(a.advpaymentid)
+                                   select t).FirstOrDefault();
+                        var adddd = rrr.Advance_Amount;
+                        var lesssss = adddd - Convert.ToDecimal(a.advadjusted);
+                        rrr.Advance_Amount = lesssss;
+                        db.SubmitChanges();
+                    }
+                }
+                
             }
             else
             {

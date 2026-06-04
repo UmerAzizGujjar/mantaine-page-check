@@ -27,11 +27,11 @@ namespace PMS
             {
                 var id = Request.Url.PathAndQuery;
                 var s = Request.QueryString;
-             
+
                 txtExpected_Discharge_Date.Text = DateTime.Now.Date.ToString(AppConfig.DateFormat);
                 txtAdmission_Date.Text = DateTime.Now.ToString();
                 txtReceiving_Date.Text = DateTime.Now.ToString();
-               
+
                 txtDischarge_On.Text = DateTime.Now.ToString();
                 txtMo_Date.Text = DateTime.Now.ToString();
                 txtExpected_Discharge_Date.Text = DateTime.Now.Date.ToString(AppConfig.DateFormat);
@@ -113,7 +113,7 @@ namespace PMS
             ddlMO_Doctor_Status.DataValueField = "DataValue_Name";
             ddlMO_Doctor_Status.Items.Add(new ListItem("Select", "0"));
             ddlMO_Doctor_Status.DataBind();
-            
+
             valueset = DBClass.GetValueSet("Doctor Status");
             DocStatus.DataSource = valueset;
             DocStatus.DataTextField = "DataValue_Description";
@@ -172,7 +172,7 @@ namespace PMS
             ddlDoctorClinicalSummary.DataValueField = "Emp_ID";
             ddlDoctorClinicalSummary.Items.Add(new ListItem("Please Select", "0"));
             ddlDoctorClinicalSummary.DataBind();
-            
+
 
             ddlDeathCertifiedbyDr1.Items.Clear();
             ddlDeathCertifiedbyDr1.DataSource = EmpList;
@@ -301,7 +301,7 @@ namespace PMS
             txtHealth_Complaints.Text = "";
             txttxtReceiving_DateDesc.Text = DateTime.Now.ToString();
             txtExpected_Discharge_Date.Text = DateTime.Now.Date.ToString(AppConfig.DateFormat);
-            txtReceiving_Date.Text= DateTime.Now.Date.ToString(AppConfig.DateFormat);
+            txtReceiving_Date.Text = DateTime.Now.Date.ToString(AppConfig.DateFormat);
             txtAdmission_Date.Text = DateTime.Now.ToString();
             //txtReceiving_Date.Text = DateTime.Now.ToString();
             //txtRN_Patient_General_Condition.Text = "";
@@ -341,7 +341,7 @@ namespace PMS
             ddlDeathCertifiedbyDr2.SelectedIndex = 0;
         }
 
- 
+
 
 
         private void PopulateInPatientData(int InPatient_ID)
@@ -351,7 +351,7 @@ namespace PMS
                 db = new DataBaseDataContext(DBClass.ConnectionString());
                 var qry = db.sp_GetInPatientDetail(InPatient_ID).FirstOrDefault();
                 #region Old code
-               
+
                 #endregion
 
                 if (qry != null)
@@ -371,7 +371,7 @@ namespace PMS
                         vLbl_RegDate.Text = qry.Entry_Date.Value.ToString(AppConfig.DateFormat);
                     txtAdmission_Date.Text = qry.Admission_Date.Value.ToString();
                     txtReceiving_Date.Text = qry.Receiving_date == null ? qry.Admission_Date.Value.ToString() : qry.Receiving_date.Value.ToString();
-                   
+
                     ddlIssuance_Of.SelectedValue = qry.Issuance_Of;
                     ddlPatientType.SelectedValue = qry.Patient_Discount_Type;
                     vLbl_Patient_Type.Text = db.GetDataValueName("Patient Type", qry.Patient_Type);
@@ -413,7 +413,7 @@ namespace PMS
                     txtHealth_Complaints.Text = qry.Health_Complaints;
                     if (qry.Expected_Discharge_Date != null)
                         txtExpected_Discharge_Date.Text = qry.Expected_Discharge_Date.Value.ToString(AppConfig.DateFormat);
-                  
+
                     if (qry.HMFIntact != null)
                     {
                         if (qry.HMFIntact == true)
@@ -813,7 +813,7 @@ namespace PMS
                     }
                     if (!string.IsNullOrEmpty(qry.TimeOfDeath.ToString()))
                     {
-                       
+
                         DateTime dateTime = DateTime.ParseExact(qry.TimeOfDeath.ToString(), "HH:mm:ss", CultureInfo.InvariantCulture);
                         txtTimeOfDeath.Text = dateTime.ToString("hh:mm tt", CultureInfo.CurrentCulture);
                     }
@@ -830,18 +830,19 @@ namespace PMS
                     txtCMO_Police.Text = qry.CMO_Police;
                     txtIdentificationMarks.Text = qry.IdentificationMarks;
 
-                  
+
 
                     //**********************History Tab**********************//
-                    if(qry.TruckTorso != null)
+                    if (qry.TruckTorso != null)
                     {
                         txtTorsoTruck.Text = qry.TruckTorso.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
                     }
                     if (qry.Clinical_Summary != null)
                     {
-                    
+
                     }
-                    if (qry.Doctors_Note != null) {
+                    if (qry.Doctors_Note != null)
+                    {
                         txtDoctoNotes.Text = qry.Doctors_Note.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
                     }
                     if (qry.HistoryOfPeresentIllness != null)
@@ -856,13 +857,13 @@ namespace PMS
                     {
                         txtHistoryOfPastIllness.Text = qry.HistoryOfPastIllness.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
                     }
-                  
+
                     if (qry.SocioEconomicHistory != null)
                     {
                         txtSocioEconomicHistory.Text = qry.SocioEconomicHistory.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
                     }
-                 
-               
+
+
                     if (qry.ObstetricHistory != null)
                     {
                         txtObstetricHistory.Text = qry.ObstetricHistory.Replace("<li>", "•").Trim().Replace("</li>", "").Trim(); ;
@@ -873,17 +874,17 @@ namespace PMS
                     }
                     if (qry.TreatmentHistory != null)
                     {
-                      
+
                         txtTreatmentHistory.Text = qry.TreatmentHistory.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
                     }
                     if (qry.ProvisionalDiagnosis != null)
                     {
-                      
+
                         txtProvisionalDiagnosis.Text = qry.ProvisionalDiagnosis.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
                     }
                     if (qry.Provisional_Diagnosis_Examination != null)
                     {
-                       
+
                         txtProDiagExami.Text = qry.Provisional_Diagnosis_Examination.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
                     }
                     if (qry.Vaccination_History != null)
@@ -946,7 +947,7 @@ namespace PMS
                         }
                     }
 
-             
+
                     TextBoxCns.Text = qry.CNS_Value;
                     TextBoxCvs.Text = qry.CVS_Value;
                     TextBoxResp.Text = qry.RESP_Value;
@@ -957,12 +958,12 @@ namespace PMS
                     txtVR.Text = qry.Verbal_Response;
                     txtAcc.Text = qry.Accumulated_Response;
                     txtFurtherExplanation.Text = qry.FurtherExplanation;
-                   
+
                     if (qry.Birth_History != null)
                     {
                         txtBirthHistory.Text = qry.Birth_History.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
                     }
-                    
+
                     if (qry.Drug_History != null)
                     {
                         txtDrugHistory.Text = qry.Drug_History.Replace("<li>", "•").Trim().Replace("</li>", "").Trim();
@@ -1233,7 +1234,7 @@ namespace PMS
                     ddlDischarge_By.SelectedValue = qry.Discharge_By;
                     ddlDischarge_Type.SelectedValue = qry.Discharge_Type;
                     txtProcedure_Operation.Text = qry.Procedure_Operation;
-                     //qry.Discharge_Request;
+                    //qry.Discharge_Request;
                     if (qry.Discharge_Request == true)
                     {
                         DischargeRequest.Value = "true";
@@ -1246,7 +1247,7 @@ namespace PMS
                     if (qry.Discharge_On != null)
                         txtDischarge_On.Text = qry.Discharge_On.Value.ToString(AppConfig.DateFormat);
                     cbDicharg_Slip.Checked = qry.Discharge.Value;
-                    
+
                 }
             }
             catch (Exception ex)
@@ -1256,7 +1257,7 @@ namespace PMS
             }
         }
         [WebMethod]
-        public static string LoadClinicalSummaryHistory(int PatientID)  
+        public static string LoadClinicalSummaryHistory(int PatientID)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             int Patient_No = DBClass.GetMRNOBy_RegID(Convert.ToInt32(PatientID));
@@ -1265,8 +1266,8 @@ namespace PMS
                                    on op.Patient_Id equals p.pat_id
                                    join inpat in db.In_Patients
                                    on p.pat_id equals inpat.Patient_ID
-                                   where p.pat_id== PatientID
-                                 
+                                   where p.pat_id == PatientID
+
                                    orderby op.Date_Time descending
                                    select new
                                    {
@@ -1278,14 +1279,14 @@ namespace PMS
                                        DoctorName = (from d in db.HR_Employees
                                                      where d.Emp_ID == Convert.ToInt32(op.Doctor_Id)
                                                      select d.Emp_Name).FirstOrDefault(),
-                                                     inpat.Updated_Time,
+                                       inpat.Updated_Time,
 
                                    }).ToList();
 
             return new JavaScriptSerializer().Serialize(IPD_PatientList);
         }
         [WebMethod]
-        public static string LoadExaminationHistory(int PatientID)  
+        public static string LoadExaminationHistory(int PatientID)
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             int Patient_No = DBClass.GetMRNOBy_RegID(Convert.ToInt32(PatientID));
@@ -1326,11 +1327,11 @@ namespace PMS
                                            NVB_Left = in_Pat.NVB_Left == null ? "-" : (in_Pat.NVB_Left == true ? "Yes" : "No"),
                                            Crepitation_Right = in_Pat.Crepitation_Right == null ? "-" : (in_Pat.Crepitation_Right == true ? "Yes" : "No"),
                                            Crepitation_Left = in_Pat.Crepitation_Left == null ? "-" : (in_Pat.Crepitation_Left == true ? "Yes" : "No"),
-                                           
-                                           
+
+
                                            FurtherExplanation = in_Pat.FurtherExplanation == null ? "-" : in_Pat.FurtherExplanation,
 
-                                                     GPE_Value = in_Pat.GPE_Value == null ? "-" : in_Pat.GPE_Value,
+                                           GPE_Value = in_Pat.GPE_Value == null ? "-" : in_Pat.GPE_Value,
 
                                            CNS_Value = in_Pat.CNS_Value == null ? "-" : in_Pat.CNS_Value,
                                            CVS_Value = in_Pat.CVS_Value == null ? "-" : in_Pat.CVS_Value,
@@ -1348,7 +1349,7 @@ namespace PMS
 
             #region Old Code
 
-        
+
 
             #endregion
 
@@ -1381,7 +1382,7 @@ namespace PMS
                                where emp.IsDoctor == true && emp.userid == Convert.ToString(AppConfig.UserID)
                                select new
                                {
-                                   Emp_ID = (int)emp.Emp_ID, 
+                                   Emp_ID = (int)emp.Emp_ID,
                                    emp.Emp_Name
                                }).ToList();
 
@@ -1624,8 +1625,8 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string SaveRecord(int Patient_ID, string btnsave, string txtAdmission_Date, string ddlWard_No, string txtHealth_Complaints,/* DateTime txtExpected_Discharge_Date */ string BP_mm_Hg, string Temp_C,string BMI, string Weight, string Height, string BSR, string Respiration_Min, string txtRN_Special_Instruction, string Provisional_Diagnosis, string Reffer_To, string HistoryOfPeresentIllness, string HistoryOfFamily, string HistoryOfPastIllness, string SocioEconomicHistory, string Birth_History, string Reffer_No, string Drug_History, string Personal_History, string ObstetricHistory, string AllergiesHistory, string TreatmentHistory, string VaccinationHistory, string AnyOtherHistory, string ENT_Throat_IDL, string ENT_Throat_Nose, string ENT_Ear_Right, string Ent_Ear_Left, bool ENT_Rinnes_Right_PosNeg, bool ENT_Rinnes_Lft_PosNeg, bool ENT_Rinnes_Right_FalseNeg, bool ENT_Rinnes_Lft_FalseNeg, bool ENT_Webber_Central, bool ENT_Webber_Lateralized, bool ENT_Investigation_PTA, bool ENT_Investigation_Tympanometry, bool ENT_Rinnes_Right_Neg, bool ENT_Rinnes_Lft_Neg, bool ENT_Rinnes_Right_FNeg, bool ENT_Rinnes_Lft_FNeg, string txtInformant, string txtSourceOfReferral, bool chkNeckHolding, bool chkWalking, bool chkTalking, bool chkOthers, string txtMenarche, string txtMenstrual, string txtAttachmentSeparationfromParents, string txtHealth, bool chkNailBiting, bool chkTemperTantrums, bool chkBedWetting, string txtAcademics, string txtPeerRelationship, string txtBehaviour, string txtOccupationalHistory, string txtMaritalRelationshipSexualHistory, string txtSubstanceUse, string txtForensicUse, string txtRelationship, string txtLeisureActivities, string txtAttitudetoSelfandStandards, string txtPrevallingMood, string txtReactionPattrentoStress, string txtReligiousPracticesAttitute, string txtFather, string txtMother, string txtSiblings, string txtHomeAtmosphererelationshipsocialclass, string txtFamilialIllness, string txtActualandapparentage, string txtRace, string txtTattoosbodypiercingandscars, string txtBodyHabitus, string txttxtDress, string txtHygiene, string txtPsychomotorActivity, string txtInvoluntarymovements, string txtDystoniaEPS, string txtTardivedyskinesia, string txtTics, string txtTremors, string txtAttentivenesstointerview, string txtEyeContact, string txtLevelofConsciousness, string txtRate, string txtRhythm, string txtVolume, string txtTone, string txtModulationvar, string txtDepressed, string txtElated, string txtIrritable, string txtLabile, string txtIncongruent, string txtbluntingflatteningapathy, string txtThinkingPremeditation, string txtPlans,
-             string txtActions, string txtPreservative, string txtLoosAssociation, string txtTangentiaility, string txtCircumstantiality, string txtFlightofIdeas, string txtThoughtInsertion, string txtThoughtWithdrawal, string txtThoughBroadcasting, string txtThoughControl, string txtDellusion, string txtovervaluedideas, string txtDepresonalization, string txtDerealization, string txtthrougObsession, string txtthrougPhobies, string txtthrougHomocidialIdeas, string txtillusion, string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, string txtorientationtime, string txtplace, string txtperson, string txtAttentionConcentrationSerial7Test, string txtOrDaysOfWeekReverseOrder, string txtImmediatememory, string txtshorttermrecentevents, string txtadressrecallafter2minutes, string txtlongtermremoteevents, string txtadressrecallafter5minues, string txtgeneralknowledgequestion, string txtsimplearthemeticcalculation, string txtabstrationconcertethinking, string txtinsight, string DermaFace, string DermaNeck, string DermaTrunk, string DermaUpperLimb, string DermaLowerLimb, string DermaFlexures, string DermaGenitalias, string DermaHair, string DermaNail, string DermaMucousMembrane, string DermaEyes, string DermaEars, string DermaNose, string DermaLips, string HBM_Problem, string HBM_Caused, string HBM_Started, string HBM_Course, string HBM_Treatment, string HBM_Effects, string PE_Pluse, string PE_BP, string PE_Temperature, string PE_Weight, string PE_RespiratoryRate, string PE_Jaundice, string PE_Anemia, string PE_Cyanosis, string PE_Clubbing, string PE_JVP, string PE_LymphNodes, string PE_Edema, string PE_Respiratory, string PE_Cardiovascular, string PE_Gastro_Intestinal, string PE_Observation, string PE_Cranial_Nerves, string PE_Limb_Strength, string PE_Spasticity, string PE_Position, string PE_Vibration, string PE_Stereognosis, string PE_Pain, string PE_Biceps, string PE_Triceps, string PE_Brachioradialis, string PE_Quadriceps, string PE_Patellar, string PE_Achilles, string PE_Extensor, string PE_Frontal, string PE_Finger, string PE_Heel, string PE_Movements, string PE_Gait, bool PE_Neck_Rigidity, bool PE_Kerning_Sign, bool PE_Brudzinki_Sign, string For_Summary, string For_Diagnosis, string For_AxisI, string For_AxisII, string For_AxisIII, string For_AxisIV, string For_AxisV, string For_PredisposingFactors, string For_PrecipitatingFactors, string For_PrepetuatingFactors, string For_Investigation, string For_Medical, string For_Psychological, string For_Major_Issues, string For_Strengths, string For_Goals, string For_Strategies, string txtPeads_weight, string txtPeads_Length, string txtPeads_HC, string txtPeads_General_Appearance, bool chkPeads_Cyanosis, bool chkPeads_Jaundice, bool chkPeads_Lethargy, bool chkPeads_Rash, string txtPeads_Others, bool chkPeads_Caput, bool chkPeads_Cephalhematoma, bool rdbPeads_Anterioropen, bool rdbPeads_AnteriorClose, bool chkPeads_Dextrocardia, bool chkPeads_Bulging, bool chkPeads_Murmur, string txtPeads_HeartSound, bool chkPeads_Nasal, bool chkPeads_Recessions, string txtPeads_AddedSounds, bool rdbPeads_Flat, bool rdbPeads_Distended, bool rdbPeads_Scaphoid, bool chkPeads_Liver, bool chkPeads_Spleen, string txtPeads_GITOthers, bool chkPeads_Sucking, bool chkPeads_Rooting, bool chkPeads_Moro, string txtPeads_CNSOthers, bool chkPeads_FullTerm, bool chkPeads_PreTerm, DateTime txtPeads_DateOfDelivery, string txtPeads_TimeOfDelivery, bool rdbPeads_Booked, bool rdbPeads_UnBooked, bool chkPeads_DAIHandling, bool chkPeads_ANTURash, bool chkPeads_PIH, bool chkPeads_GDM, bool chkPeads_Vacinated, string txtPeads_ANTOthers, bool rdbPeads_SVD, bool rdbPeads_LSCS, bool rdbPeads_Emergency, bool rdbPeads_Elective, string txtPeads_PlaceOfDelivery, string txtPeads_IndicationForLSCS, string Peads_apgerScore1min, string Peads_apgerScore5min, bool chkPeads_Resuscitation, string txtPeads_NatalOthers, bool chkPeads_Moaning, bool chkPeads_RespDistress, bool chkPeads_PostNATALCyanosis, bool chkPeads_Fits, bool chkPeads_ReluctanceToFeed, string txtPeads_PostNatalOthers, string txtProcedure_Operation, string txtProcedure_Detail, string txtDignosis, string txtDischarge_On, string ddlDischarge_By, string txtNext_Visit, string txtAdvice, bool chkdischarge, string patienttype, string referto, string referward, string referbed_no, string referroomno, string referroomtype, string RateBeats, string ddlEmrgRhythm, string ddlEmrgVolume, string OthersRN, string O2_Saturation_Oxygen1, string O2_Saturation_Oxygen2, string Saturation, bool? HMFIntact, bool? CranialNerves, bool? SignsOfMeningism, bool? HeartSound, bool? Arrhythmias, bool? AnyOtherAddedSound, bool? AnyOtherFindings, bool? NVB_Right, bool? NVB_Left, bool? Crepitation_Right, bool? Crepitation_Left, bool? Wheeze, bool? Ranchi, bool? AnyOtherSound, bool? AbdomenSoft, bool? Tenderness, bool? Guarding, bool? BowelSound, bool? Distention, bool? FluidThrill, bool? ShiftingDullness, bool? EpigastriaDiscomfort, bool? RetrosternalBurning, bool? Jondus, bool? Pallor, bool? Dehydration, bool? GCSOrientation, bool? ConsciousOrientely, bool? Murmur, string TextBoxCns, string TextBoxCvs, string TextBoxResp, string TextBoxGit, string TextBoxGpe, string eye_response, string motor_response, string verbal_Response, string accumulated_response, string FurtherExplanation, string PulseRate, string BPDischarge, string WeightDischarge, string HeightDischarge, string BMIDischarge, string BSRDischarge, string Tempdisch, string volumedisc, string RespRateDesc, string Rhythmdischarge, string Oxygen2_desc, string saturationDis, string Oxygen1, string otherecdesc, string Special_Instruction_Desc,string FollowUpInstruction, string OperationalDetails, string Receiving_Date_Discharge, string IdentificationMarks, string DateOfDeath, string TimeOfDeath, string PlaceOfDeath, string CauseOfDeath, string IssuingOfficerName, string DeathCertifiedby1, string DeathCertifiedby2, string BodyHandedOverTo, string FamilyPersonName, string CNIC, string RelationWithDeceased, string CMO_Police, string ID,bool? SULR, bool? SULL, bool? SLLR, bool? SLLL, string PULR, string PULL, string PLLR, string PLLL, string Torso, string clinical_Notes, string Doctor_Notes,string Provisional_Diagnosis_Examination,string doc,bool? JVP, bool? Edema, bool? Cyanosis,bool Discharge_Request,string ddlDischarge_Type, string ProcedureTemplateContent, string ProcedureLevel_ID,string Medication_Doctor,string hdfReceivingNoteID, string hdfVitalDischargeID)
+        public static string SaveRecord(int Patient_ID, string btnsave, string txtAdmission_Date, string ddlWard_No, string txtHealth_Complaints,/* DateTime txtExpected_Discharge_Date */ string BP_mm_Hg, string Temp_C, string BMI, string Weight, string Height, string BSR, string Respiration_Min, string txtRN_Special_Instruction, string Provisional_Diagnosis, string Reffer_To, string HistoryOfPeresentIllness, string HistoryOfFamily, string HistoryOfPastIllness, string SocioEconomicHistory, string Birth_History, string Reffer_No, string Drug_History, string Personal_History, string ObstetricHistory, string AllergiesHistory, string TreatmentHistory, string VaccinationHistory, string AnyOtherHistory, string ENT_Throat_IDL, string ENT_Throat_Nose, string ENT_Ear_Right, string Ent_Ear_Left, bool ENT_Rinnes_Right_PosNeg, bool ENT_Rinnes_Lft_PosNeg, bool ENT_Rinnes_Right_FalseNeg, bool ENT_Rinnes_Lft_FalseNeg, bool ENT_Webber_Central, bool ENT_Webber_Lateralized, bool ENT_Investigation_PTA, bool ENT_Investigation_Tympanometry, bool ENT_Rinnes_Right_Neg, bool ENT_Rinnes_Lft_Neg, bool ENT_Rinnes_Right_FNeg, bool ENT_Rinnes_Lft_FNeg, string txtInformant, string txtSourceOfReferral, bool chkNeckHolding, bool chkWalking, bool chkTalking, bool chkOthers, string txtMenarche, string txtMenstrual, string txtAttachmentSeparationfromParents, string txtHealth, bool chkNailBiting, bool chkTemperTantrums, bool chkBedWetting, string txtAcademics, string txtPeerRelationship, string txtBehaviour, string txtOccupationalHistory, string txtMaritalRelationshipSexualHistory, string txtSubstanceUse, string txtForensicUse, string txtRelationship, string txtLeisureActivities, string txtAttitudetoSelfandStandards, string txtPrevallingMood, string txtReactionPattrentoStress, string txtReligiousPracticesAttitute, string txtFather, string txtMother, string txtSiblings, string txtHomeAtmosphererelationshipsocialclass, string txtFamilialIllness, string txtActualandapparentage, string txtRace, string txtTattoosbodypiercingandscars, string txtBodyHabitus, string txttxtDress, string txtHygiene, string txtPsychomotorActivity, string txtInvoluntarymovements, string txtDystoniaEPS, string txtTardivedyskinesia, string txtTics, string txtTremors, string txtAttentivenesstointerview, string txtEyeContact, string txtLevelofConsciousness, string txtRate, string txtRhythm, string txtVolume, string txtTone, string txtModulationvar, string txtDepressed, string txtElated, string txtIrritable, string txtLabile, string txtIncongruent, string txtbluntingflatteningapathy, string txtThinkingPremeditation, string txtPlans,
+             string txtActions, string txtPreservative, string txtLoosAssociation, string txtTangentiaility, string txtCircumstantiality, string txtFlightofIdeas, string txtThoughtInsertion, string txtThoughtWithdrawal, string txtThoughBroadcasting, string txtThoughControl, string txtDellusion, string txtovervaluedideas, string txtDepresonalization, string txtDerealization, string txtthrougObsession, string txtthrougPhobies, string txtthrougHomocidialIdeas, string txtillusion, string txtHallucinationAuditoryVisualOlfactoryGustatoryTactile, string txtorientationtime, string txtplace, string txtperson, string txtAttentionConcentrationSerial7Test, string txtOrDaysOfWeekReverseOrder, string txtImmediatememory, string txtshorttermrecentevents, string txtadressrecallafter2minutes, string txtlongtermremoteevents, string txtadressrecallafter5minues, string txtgeneralknowledgequestion, string txtsimplearthemeticcalculation, string txtabstrationconcertethinking, string txtinsight, string DermaFace, string DermaNeck, string DermaTrunk, string DermaUpperLimb, string DermaLowerLimb, string DermaFlexures, string DermaGenitalias, string DermaHair, string DermaNail, string DermaMucousMembrane, string DermaEyes, string DermaEars, string DermaNose, string DermaLips, string HBM_Problem, string HBM_Caused, string HBM_Started, string HBM_Course, string HBM_Treatment, string HBM_Effects, string PE_Pluse, string PE_BP, string PE_Temperature, string PE_Weight, string PE_RespiratoryRate, string PE_Jaundice, string PE_Anemia, string PE_Cyanosis, string PE_Clubbing, string PE_JVP, string PE_LymphNodes, string PE_Edema, string PE_Respiratory, string PE_Cardiovascular, string PE_Gastro_Intestinal, string PE_Observation, string PE_Cranial_Nerves, string PE_Limb_Strength, string PE_Spasticity, string PE_Position, string PE_Vibration, string PE_Stereognosis, string PE_Pain, string PE_Biceps, string PE_Triceps, string PE_Brachioradialis, string PE_Quadriceps, string PE_Patellar, string PE_Achilles, string PE_Extensor, string PE_Frontal, string PE_Finger, string PE_Heel, string PE_Movements, string PE_Gait, bool PE_Neck_Rigidity, bool PE_Kerning_Sign, bool PE_Brudzinki_Sign, string For_Summary, string For_Diagnosis, string For_AxisI, string For_AxisII, string For_AxisIII, string For_AxisIV, string For_AxisV, string For_PredisposingFactors, string For_PrecipitatingFactors, string For_PrepetuatingFactors, string For_Investigation, string For_Medical, string For_Psychological, string For_Major_Issues, string For_Strengths, string For_Goals, string For_Strategies, string txtPeads_weight, string txtPeads_Length, string txtPeads_HC, string txtPeads_General_Appearance, bool chkPeads_Cyanosis, bool chkPeads_Jaundice, bool chkPeads_Lethargy, bool chkPeads_Rash, string txtPeads_Others, bool chkPeads_Caput, bool chkPeads_Cephalhematoma, bool rdbPeads_Anterioropen, bool rdbPeads_AnteriorClose, bool chkPeads_Dextrocardia, bool chkPeads_Bulging, bool chkPeads_Murmur, string txtPeads_HeartSound, bool chkPeads_Nasal, bool chkPeads_Recessions, string txtPeads_AddedSounds, bool rdbPeads_Flat, bool rdbPeads_Distended, bool rdbPeads_Scaphoid, bool chkPeads_Liver, bool chkPeads_Spleen, string txtPeads_GITOthers, bool chkPeads_Sucking, bool chkPeads_Rooting, bool chkPeads_Moro, string txtPeads_CNSOthers, bool chkPeads_FullTerm, bool chkPeads_PreTerm, DateTime txtPeads_DateOfDelivery, string txtPeads_TimeOfDelivery, bool rdbPeads_Booked, bool rdbPeads_UnBooked, bool chkPeads_DAIHandling, bool chkPeads_ANTURash, bool chkPeads_PIH, bool chkPeads_GDM, bool chkPeads_Vacinated, string txtPeads_ANTOthers, bool rdbPeads_SVD, bool rdbPeads_LSCS, bool rdbPeads_Emergency, bool rdbPeads_Elective, string txtPeads_PlaceOfDelivery, string txtPeads_IndicationForLSCS, string Peads_apgerScore1min, string Peads_apgerScore5min, bool chkPeads_Resuscitation, string txtPeads_NatalOthers, bool chkPeads_Moaning, bool chkPeads_RespDistress, bool chkPeads_PostNATALCyanosis, bool chkPeads_Fits, bool chkPeads_ReluctanceToFeed, string txtPeads_PostNatalOthers, string txtProcedure_Operation, string txtProcedure_Detail, string txtDignosis, string txtDischarge_On, string ddlDischarge_By, string txtNext_Visit, string txtAdvice, bool chkdischarge, string patienttype, string referto, string referward, string referbed_no, string referroomno, string referroomtype, string RateBeats, string ddlEmrgRhythm, string ddlEmrgVolume, string OthersRN, string O2_Saturation_Oxygen1, string O2_Saturation_Oxygen2, string Saturation, bool? HMFIntact, bool? CranialNerves, bool? SignsOfMeningism, bool? HeartSound, bool? Arrhythmias, bool? AnyOtherAddedSound, bool? AnyOtherFindings, bool? NVB_Right, bool? NVB_Left, bool? Crepitation_Right, bool? Crepitation_Left, bool? Wheeze, bool? Ranchi, bool? AnyOtherSound, bool? AbdomenSoft, bool? Tenderness, bool? Guarding, bool? BowelSound, bool? Distention, bool? FluidThrill, bool? ShiftingDullness, bool? EpigastriaDiscomfort, bool? RetrosternalBurning, bool? Jondus, bool? Pallor, bool? Dehydration, bool? GCSOrientation, bool? ConsciousOrientely, bool? Murmur, string TextBoxCns, string TextBoxCvs, string TextBoxResp, string TextBoxGit, string TextBoxGpe, string eye_response, string motor_response, string verbal_Response, string accumulated_response, string FurtherExplanation, string PulseRate, string BPDischarge, string WeightDischarge, string HeightDischarge, string BMIDischarge, string BSRDischarge, string Tempdisch, string volumedisc, string RespRateDesc, string Rhythmdischarge, string Oxygen2_desc, string saturationDis, string Oxygen1, string otherecdesc, string Special_Instruction_Desc, string FollowUpInstruction, string OperationalDetails, string Receiving_Date_Discharge, string IdentificationMarks, string DateOfDeath, string TimeOfDeath, string PlaceOfDeath, string CauseOfDeath, string IssuingOfficerName, string DeathCertifiedby1, string DeathCertifiedby2, string BodyHandedOverTo, string FamilyPersonName, string CNIC, string RelationWithDeceased, string CMO_Police, string ID, bool? SULR, bool? SULL, bool? SLLR, bool? SLLL, string PULR, string PULL, string PLLR, string PLLL, string Torso, string clinical_Notes, string Doctor_Notes, string Provisional_Diagnosis_Examination, string doc, bool? JVP, bool? Edema, bool? Cyanosis, bool Discharge_Request, string ddlDischarge_Type, string ProcedureTemplateContent, string ProcedureLevel_ID, string Medication_Doctor, string hdfReceivingNoteID, string hdfVitalDischargeID)
         {
 
             using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
@@ -1652,7 +1653,7 @@ namespace PMS
                     fee = "0";
                 if (referto != "0")
                 {
-                    OPD.isReferred = true;              
+                    OPD.isReferred = true;
                     OPD = (from tbl in db.In_Patients
                            where tbl.In_Patient_ID == Convert.ToInt32(ID)
                            select tbl).FirstOrDefault();
@@ -1730,7 +1731,7 @@ namespace PMS
                             {
                                 room.IsDischarge = true;
                                 room.To_Date = Convert.ToDateTime(DateTime.Now);
-                               
+
                             }
                         }
 
@@ -1743,7 +1744,7 @@ namespace PMS
                         OPD.Room_ID = Convert.ToInt32(referroomno);
                         OPD.Room_Type = referroomtype.ToString();
                         OPD.Issuance_Of = referto;
-                      
+
                         OPD.Ward_ID = null;
                         OPD.Bed_No = null;
 
@@ -1809,7 +1810,7 @@ namespace PMS
                             {
                                 ward.IsDischarge = true;
                                 ward.To_TimeDate = Convert.ToDateTime(DateTime.Now);
-                              
+
                             }
                         }
                         db.SubmitChanges();
@@ -1820,19 +1821,19 @@ namespace PMS
                 else
                 {
                     OPD.isReferred = false;
-                  
+
                 }
                 OPD.Health_Complaints = txtHealth_Complaints;
-        
+
                 if (referto != "0")
                 {
                     OPD.Issuance_Of = referto;
                 }
-            
+
                 OPD.IdentificationMarks = IdentificationMarks;
                 if (!string.IsNullOrEmpty(DateOfDeath))
                 {
-                 
+
                     OPD.DateOfDeath = Convert.ToDateTime(DateOfDeath);
                 }
                 if (!string.IsNullOrEmpty(TimeOfDeath))
@@ -1850,11 +1851,11 @@ namespace PMS
                 OPD.RelationWithDeceased = RelationWithDeceased;
                 OPD.CMO_Police = CMO_Police;
                 OPD.Clinical_Summary = clinical_Notes;
-                OPD.Doctors_Note = Doctor_Notes;           
+                OPD.Doctors_Note = Doctor_Notes;
                 OPD.BP_mm_Hg = BP_mm_Hg;
                 OPD.Temp_C = Temp_C;
                 OPD.Respiration_Min = Respiration_Min;
-                OPD.RN_Special_Instruction = txtRN_Special_Instruction;          
+                OPD.RN_Special_Instruction = txtRN_Special_Instruction;
                 OPD.ProvisionalDiagnosis = Provisional_Diagnosis;
                 OPD.Provisional_Diagnosis_Examination = Provisional_Diagnosis_Examination;
                 OPD.HistoryOfPeresentIllness = HistoryOfPeresentIllness;
@@ -1913,7 +1914,7 @@ namespace PMS
                 OPD.Vaccination_History = VaccinationHistory;
                 OPD.Other_History = AnyOtherHistory;
                 OPD.SocioEconomicHistory = SocioEconomicHistory;
-                OPD.ObstetricHistory = ObstetricHistory;            
+                OPD.ObstetricHistory = ObstetricHistory;
                 OPD.Birth_History = Birth_History;
                 OPD.Reffer_No = Reffer_No;
                 OPD.Drug_History = Drug_History;
@@ -2217,11 +2218,11 @@ namespace PMS
                     db.In_Patients.InsertOnSubmit(OPD);
                     // SMS Configration
                     string ward = Convert.ToString((from tbl in db.Ward_Definitions
-                                   where tbl.Ward_ID == Convert.ToInt32(ddlWard_No)
-                                   select tbl.Ward_No).FirstOrDefault());
+                                                    where tbl.Ward_ID == Convert.ToInt32(ddlWard_No)
+                                                    select tbl.Ward_No).FirstOrDefault());
                     string SMS_Contant = "عارف میموریل ہسپتال پراعتماد کرنےکا شکریہ۔ آپکاداخلہ '" + ward + "' میں تجویز ہوا ہے-شکایات کیصورت میں اس نمبر پر رابطہ کریں۔ 03060682558";
                     string msg = "";
-                  
+
                     string CellNumber = (from tbl in db.Reg_patients
                                          where tbl.pat_id == Patient_ID
                                          select tbl.Mobile1).FirstOrDefault();
@@ -2236,45 +2237,45 @@ namespace PMS
                 if (txtRN_Special_Instruction == "<li></li>") txtRN_Special_Instruction = "";
 
 
-                if (RateBeats == "" && (ddlEmrgRhythm==null || ddlEmrgRhythm == "0") && (ddlEmrgVolume==null || ddlEmrgVolume == "0") && (OthersRN == "" || OthersRN == "<li></li>") && (BP_mm_Hg == "" || BP_mm_Hg == "___/___") && Temp_C == "" && Respiration_Min == "" && Saturation == "" && txtRN_Special_Instruction == "")
+                if (RateBeats == "" && (ddlEmrgRhythm == null || ddlEmrgRhythm == "0") && (ddlEmrgVolume == null || ddlEmrgVolume == "0") && (OthersRN == "" || OthersRN == "<li></li>") && (BP_mm_Hg == "" || BP_mm_Hg == "___/___") && Temp_C == "" && Respiration_Min == "" && Saturation == "" && txtRN_Special_Instruction == "")
                 {
 
 
                 }
                 else
                 {
-                   
-                        ReceivingNote rcvNote = new ReceivingNote();
-                        rcvNote.Patient_ID = Convert.ToInt32(Patient_ID);
-                        rcvNote.Emergency_ID = null;
-                        rcvNote.In_Patient_ID = OPD.In_Patient_ID;
-                        rcvNote.RateBeats = RateBeats;
-                        rcvNote.Emergency_Rhythm = ddlEmrgRhythm;
-                        rcvNote.Emergency_Volume = ddlEmrgVolume;
-                        rcvNote.OthersRecieveNote = OthersRN;
-                        rcvNote.BloodPressure = BP_mm_Hg;
-                        rcvNote.Blood_Suger = BSR;
-                        rcvNote.Weight_Kg = Weight;
-                        rcvNote.Height_cm = Height;
-                        rcvNote.BMI = BMI;
-                        rcvNote.Temperature = Temp_C;
-                        rcvNote.RespirationRate = Respiration_Min;
-                        rcvNote.O2_Saturation = Saturation;
-                        rcvNote.RN_Special_Instruction = txtRN_Special_Instruction;              
-                        rcvNote.Receiving_Date = DateTime.Now;
-                        rcvNote.O2_Saturation_Oxygen1 = O2_Saturation_Oxygen1;
-                        rcvNote.O2_Saturation_Oxygen2 = O2_Saturation_Oxygen2;
-                        rcvNote.user_id = AppConfig.UserID;
-                        rcvNote.Type_Nursing = "IPD Receiving Note";
-                        db.ReceivingNotes.InsertOnSubmit(rcvNote);
-                        db.SubmitChanges();
-                  
+
+                    ReceivingNote rcvNote = new ReceivingNote();
+                    rcvNote.Patient_ID = Convert.ToInt32(Patient_ID);
+                    rcvNote.Emergency_ID = null;
+                    rcvNote.In_Patient_ID = OPD.In_Patient_ID;
+                    rcvNote.RateBeats = RateBeats;
+                    rcvNote.Emergency_Rhythm = ddlEmrgRhythm;
+                    rcvNote.Emergency_Volume = ddlEmrgVolume;
+                    rcvNote.OthersRecieveNote = OthersRN;
+                    rcvNote.BloodPressure = BP_mm_Hg;
+                    rcvNote.Blood_Suger = BSR;
+                    rcvNote.Weight_Kg = Weight;
+                    rcvNote.Height_cm = Height;
+                    rcvNote.BMI = BMI;
+                    rcvNote.Temperature = Temp_C;
+                    rcvNote.RespirationRate = Respiration_Min;
+                    rcvNote.O2_Saturation = Saturation;
+                    rcvNote.RN_Special_Instruction = txtRN_Special_Instruction;
+                    rcvNote.Receiving_Date = DateTime.Now;
+                    rcvNote.O2_Saturation_Oxygen1 = O2_Saturation_Oxygen1;
+                    rcvNote.O2_Saturation_Oxygen2 = O2_Saturation_Oxygen2;
+                    rcvNote.user_id = AppConfig.UserID;
+                    rcvNote.Type_Nursing = "IPD Receiving Note";
+                    db.ReceivingNotes.InsertOnSubmit(rcvNote);
+                    db.SubmitChanges();
+
 
                 }
 
-                if (PulseRate == "" && (Rhythmdischarge==null || Rhythmdischarge == "0") && (volumedisc==null || volumedisc == "0") && (otherecdesc == "" || otherecdesc == "<li></li>") && (BPDischarge == "" || BPDischarge == "___/___") && Tempdisch == "" && RespRateDesc == "" && (Oxygen2_desc == "" || Oxygen2_desc == "<li></li>") && (Special_Instruction_Desc == "" || Special_Instruction_Desc == "<li></li>" || Special_Instruction_Desc== "• "))
+                if (PulseRate == "" && (Rhythmdischarge == null || Rhythmdischarge == "0") && (volumedisc == null || volumedisc == "0") && (otherecdesc == "" || otherecdesc == "<li></li>") && (BPDischarge == "" || BPDischarge == "___/___") && Tempdisch == "" && RespRateDesc == "" && (Oxygen2_desc == "" || Oxygen2_desc == "<li></li>") && (Special_Instruction_Desc == "" || Special_Instruction_Desc == "<li></li>" || Special_Instruction_Desc == "• "))
                 {
-                   
+
                 }
                 else
                 {
@@ -2443,15 +2444,15 @@ namespace PMS
         {
             DataBaseDataContext db = new DataBaseDataContext();
             var Sides = from d in db.DataValues
-                         join v in db.ValueSets
-                         on d.ValueSet_ID equals v.ValueSet_ID
-                         where v.ValueSet_Name == "Sides"
-                         select new
-                         {
-                             d.DataValue_Name,
-                             d.DataValue_Description,
+                        join v in db.ValueSets
+                        on d.ValueSet_ID equals v.ValueSet_ID
+                        where v.ValueSet_Name == "Sides"
+                        select new
+                        {
+                            d.DataValue_Name,
+                            d.DataValue_Description,
 
-                         };
+                        };
             return (new JavaScriptSerializer().Serialize(Sides));
         }
         [WebMethod]
@@ -2578,10 +2579,10 @@ namespace PMS
                         orderby tbl.Created_Time descending
                         select tbl.Patient_Discount_Type).FirstOrDefault();
             var ipd_id = (from tbl in db.In_Patients
-                        where tbl.Patient_ID == int.Parse(PatientID)
-                        && tbl.Discharge != true
-                        orderby tbl.Created_Time descending
-                        select tbl.In_Patient_ID).FirstOrDefault();
+                          where tbl.Patient_ID == int.Parse(PatientID)
+                          && tbl.Discharge != true
+                          orderby tbl.Created_Time descending
+                          select tbl.In_Patient_ID).FirstOrDefault();
             if (pat != null)
             {
                 pt.Name = pat.Full_Name;
@@ -3214,7 +3215,7 @@ namespace PMS
                         ipser.CreatedDate = item.ServiceDate;
                         ipser.UserName = item.UserName;
                         ipser.isbilled = false;
-                        db.InPatientServices.InsertOnSubmit(ipser);                        
+                        db.InPatientServices.InsertOnSubmit(ipser);
                     }
                     db.SubmitChanges();
 
@@ -3353,7 +3354,7 @@ namespace PMS
                     OrthoDetailClass obj = new OrthoDetailClass();
 
                     obj.Organ_Name = item.Organ_Name;
-                    obj.Organ_Side = item.Organ_Side;        
+                    obj.Organ_Side = item.Organ_Side;
                     obj.Ortho_History = item.Ortho_History;
                     obj.DM = item.DM;
                     obj.HTN = item.HTN.ToString();
@@ -4135,7 +4136,7 @@ namespace PMS
                     oInPatient_Doctor_Note.Doctor_Instruction = test.Instruction;
                     oInPatient_Doctor_Note.Doctor_Note_Date = test.Doctor_Note_Date;
                     oInPatient_Doctor_Note.status = "Create";
-                    
+
 
                     db.InPatient_Doctor_Notes.InsertOnSubmit(oInPatient_Doctor_Note);
                     db.SubmitChanges();
@@ -4311,18 +4312,18 @@ namespace PMS
                                on o.Patient_ID equals p.pat_id
                                 where p.Patient_No == Patien_No && e.TransactionType == "InPatient"
                                 select new
-                                 {
-                                     EyeMainTypeName = (from em in db.EyeMainTypes_Definitions
-                                                        where em.MainTypeID == Convert.ToInt32(e.EyeMainTypeID)
-                                                        select em.MainTypeName).FirstOrDefault(),
-                                     EyeSubTypeName = (from es in db.EyeSubTypes_Definitions
-                                                       where es.SubTypeID == Convert.ToInt32(e.EyeSubTypeID)
-                                                       select es.SubTypeName).FirstOrDefault(),
-                                     e.EyeMainTypeID,
-                                     e.EyeSubTypeID,
-                                     e.RightEye,
-                                     e.LeftEye
-                                 }
+                                {
+                                    EyeMainTypeName = (from em in db.EyeMainTypes_Definitions
+                                                       where em.MainTypeID == Convert.ToInt32(e.EyeMainTypeID)
+                                                       select em.MainTypeName).FirstOrDefault(),
+                                    EyeSubTypeName = (from es in db.EyeSubTypes_Definitions
+                                                      where es.SubTypeID == Convert.ToInt32(e.EyeSubTypeID)
+                                                      select es.SubTypeName).FirstOrDefault(),
+                                    e.EyeMainTypeID,
+                                    e.EyeSubTypeID,
+                                    e.RightEye,
+                                    e.LeftEye
+                                }
                 ).ToList();
             var OutPatEyeList = (from e in db.EyeDetails
                                  join o in db.Out_Patients
@@ -4446,6 +4447,7 @@ namespace PMS
                                 Frequency = newMed.Frequency,
                                 Dosage_Qty = newMed.Dosage_Qty,
                                 Other_Instruction = newMed.Other_Instruction,
+                                Username = newMed.User,
                                 Regular = isRegular,
                                 STAT = isStat,
                                 PRN = isPrn,
@@ -4607,7 +4609,8 @@ namespace PMS
                 var infusion = (from data in db.Infusion_Orders
                                 where data.In_Patient_Id == inPatientID
                                 orderby data.Create_Time descending
-                                select new {
+                                select new
+                                {
                                     data.Infusion_Type,
                                     data.Infusion_Fluid,
                                     data.Infusion_Volume,
@@ -4621,8 +4624,8 @@ namespace PMS
                                     data.Start_Date_time,
                                     data.Infusion_Stop_DateTime,
                                     data.Infusion_Stop_time,
-                                   
-                                   Username =DBClass.getField("select UserName from aspnet_users where UserId='"+ data .Create_By+ "'")
+
+                                    Username = DBClass.getField("select UserName from aspnet_users where UserId='" + data.Create_By + "'")
 
 
 
@@ -4669,17 +4672,18 @@ namespace PMS
                                          DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
 
                                          userrole = (from u in db.aspnet_Users
-                                                              join ur in db.aspnet_UsersInRoles
-                                                              on u.UserId equals ur.UserId
-                                                              join r in db.aspnet_Roles
-                                                              on ur.RoleId equals r.RoleId
-                                                              where u.UserId == AppConfig.UserID select r.RoleName).FirstOrDefault()
+                                                     join ur in db.aspnet_UsersInRoles
+                                                     on u.UserId equals ur.UserId
+                                                     join r in db.aspnet_Roles
+                                                     on ur.RoleId equals r.RoleId
+                                                     where u.UserId == AppConfig.UserID
+                                                     select r.RoleName).FirstOrDefault()
 
 
 
 
 
-            }
+                                     }
                     ).ToList();
                 return (new JavaScriptSerializer()).Serialize(inPatmedicine);
             }
@@ -4742,8 +4746,10 @@ namespace PMS
                                          inPatmedicineList.Dosage_From,
                                          inPatmedicineList.Dosage_Qty,
                                          inPatmedicineList.Other_Instruction,
+
                                          inPatmedicineList.Item_Code,
-                                         DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
+                                         DoctorName = inPatmedicineList.Username,
+                                         //DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(inPatmedicineList.Doctor_ID) select d.Emp_Name).FirstOrDefault(),
                                      }
                     ).ToList();
 
@@ -5280,7 +5286,7 @@ namespace PMS
             SampleTest.Clear();
             AckTest.Clear();
             ResTest.Clear();
-            
+
 
             List<PendingLabTestClass> list = new List<PendingLabTestClass>();
 
@@ -5392,7 +5398,7 @@ namespace PMS
         }
 
         public static IDictionary<string, int> AckTest = new Dictionary<string, int>();
-        public static string Aknowledgment(string a,string b,string c)
+        public static string Aknowledgment(string a, string b, string c)
         {
             int count = 0;
 
@@ -5407,7 +5413,7 @@ namespace PMS
             {
                 AckTest.Add(a, count);
             }
-            var bill_detail_Id_Sample = a == "0" ? DBClass.newgetField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where abd.Category_ID=" + b + " and sm.Patient_ID = " + c + "",count) : DBClass.newgetField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where  abd.item_id=" + a + " and sm.Patient_ID = " + c,count);
+            var bill_detail_Id_Sample = a == "0" ? DBClass.newgetField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where abd.Category_ID=" + b + " and sm.Patient_ID = " + c + "", count) : DBClass.newgetField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where  abd.item_id=" + a + " and sm.Patient_ID = " + c, count);
             if (bill_detail_Id_Sample.Contains("row")) bill_detail_Id_Sample = "0";
             var std = DBClass.getField("select top 1  ltd.Lab_Test_Detail_ID from Lab_Test_Detail ltd where ltd.Bill_Details_ID= " + bill_detail_Id_Sample + " and  ltd.Patient_ID =" + c);
             if (std.Contains("row")) std = "0";
@@ -5430,7 +5436,7 @@ namespace PMS
             {
                 ResTest.Add(a, count);
             }
-            var bill_detail_Id_Sample = a == "0" ? DBClass.newgetField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where abd.Category_ID=" + b + " and sm.Patient_ID = " + c + "",count) : DBClass.newgetField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where  abd.item_id=" + a + " and sm.Patient_ID = " + c, count);
+            var bill_detail_Id_Sample = a == "0" ? DBClass.newgetField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where abd.Category_ID=" + b + " and sm.Patient_ID = " + c + "", count) : DBClass.newgetField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where  abd.item_id=" + a + " and sm.Patient_ID = " + c, count);
             if (bill_detail_Id_Sample.Contains("row")) bill_detail_Id_Sample = "0";
             var std = DBClass.getField("select top 1  isnull(ltd.Is_Result,'0')  from Lab_Test_Detail ltd where ltd.Bill_Details_ID= " + bill_detail_Id_Sample + " and  ltd.Patient_ID =" + c);
             if (std.Contains("row")) std = "0";
@@ -5442,9 +5448,9 @@ namespace PMS
         public static IDictionary<string, int> ApprTest = new Dictionary<string, int>();
 
         public static string IsApproved(string a, string b, string c)
-        {  
-             int count = 0;
-            
+        {
+            int count = 0;
+
             if (ApprTest.ContainsKey(a))
             {
                 ApprTest.TryGetValue(a, out count);
@@ -5479,8 +5485,8 @@ namespace PMS
             {
                 SampleTest.Add(a, count);
             }
-           
-            var isSample = a == "0" ? DBClass.newgetField("select  sm.sample_id from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where abd.Category_ID=" + b + " and sm.Patient_ID = " + c + "",count) : DBClass.newgetField("select  sm.sample_id from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where  abd.item_id=" + a + " and sm.Patient_ID = " + c, count);
+
+            var isSample = a == "0" ? DBClass.newgetField("select  sm.sample_id from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where abd.Category_ID=" + b + " and sm.Patient_ID = " + c + "", count) : DBClass.newgetField("select  sm.sample_id from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where  abd.item_id=" + a + " and sm.Patient_ID = " + c, count);
             if (isSample.Contains("row")) isSample = "0";
             return isSample;
         }
@@ -5488,13 +5494,13 @@ namespace PMS
         public static string GetTestList(int id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var InPatId = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID ="+id);
+            var InPatId = DBClass.getField("select In_Patient_ID from In_Patient where Patient_ID =" + id);
             var testDetailst = (from lbtM in db.Laboratory_Tests
                                 join lbtD in db.Lab_Test_Details
                                 on lbtM.Lab_Test_ID equals lbtD.Lab_Test_ID
                                 join inpat in db.In_Patients
                                 on lbtM.Patient_ID equals inpat.In_Patient_ID
-                               
+
                                 where inpat.Patient_ID == id && lbtM.Transaction_Type == "InPatient"
                                 orderby lbtD.Date descending
                                 select new
@@ -5535,8 +5541,8 @@ namespace PMS
                                     DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(lbtD.Doctor) select d.Emp_Name).FirstOrDefault(),
                                     SampleID = (from s in db.Sample_Masters where s.Patient_ID == lbtD.Patient_ID select s).FirstOrDefault(),
 
-                                    IsSample =IsSample(lbtD.Test_ID.ToString(), lbtD.Catagory_ID.ToString(), id.ToString()),
-                                 
+                                    IsSample = IsSample(lbtD.Test_ID.ToString(), lbtD.Catagory_ID.ToString(), id.ToString()),
+
 
                                     bill_detail_Id_Sample = lbtD.Test_ID == 0 ? DBClass.getField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where abd.Category_ID=" + lbtD.Catagory_ID + " and sm.Patient_ID = " + id + "") : DBClass.getField("select  sd.Bill_Detail_ID from Sample_Master sm join Sample_Detail sd on sm.Sample_ID=sd.Sample_ID join Ar_Billing_Details abd on sd.Bill_Detail_ID = abd.Bill_Details_ID  where  abd.item_id=" + lbtD.Test_ID + " and sm.Patient_ID = " + id),
 
@@ -5547,8 +5553,8 @@ namespace PMS
 
 
                                     isResult = IsResult(lbtD.Test_ID.ToString(), lbtD.Catagory_ID.ToString(), id.ToString()),
-                                 
-                                    Is_Approved= IsApproved(lbtD.Test_ID.ToString(), lbtD.Catagory_ID.ToString(), id.ToString()),
+
+                                    Is_Approved = IsApproved(lbtD.Test_ID.ToString(), lbtD.Catagory_ID.ToString(), id.ToString()),
 
 
                                 }
@@ -5559,10 +5565,10 @@ namespace PMS
             ResTest.Clear();
             return (new JavaScriptSerializer()).Serialize(testDetailst);
         }
-        public static bool isBilled(string InPatId , int LabTestDetail)
+        public static bool isBilled(string InPatId, int LabTestDetail)
         {
-            var isBilled = DBClass.getField("select Lab_Test_Detail_ID from Lab_Test_Detail  where Patient_ID =" + InPatId + "and Lab_Test_Detail_ID =" + LabTestDetail + "  and IsBilled = 1").Contains("row") ? false:true ;
-              
+            var isBilled = DBClass.getField("select Lab_Test_Detail_ID from Lab_Test_Detail  where Patient_ID =" + InPatId + "and Lab_Test_Detail_ID =" + LabTestDetail + "  and IsBilled = 1").Contains("row") ? false : true;
+
             return isBilled;
         }
 
@@ -5727,7 +5733,7 @@ namespace PMS
             public string PatientID { get; set; }
             public List<TestValue> TestList { get; set; }
 
-         
+
         }
 
 
@@ -6139,7 +6145,7 @@ namespace PMS
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             int Patien_No = DBClass.GetMRNOBy_RegID(Convert.ToInt32(PatientID));
 
-           
+
             var Inpatientlist = (from op in db.In_Patients
                                  join p in db.Reg_patients
                                  on op.Patient_ID equals p.pat_id
@@ -6186,11 +6192,11 @@ namespace PMS
                                       op.Temp_C,
                                       op.L_M_P,
                                       op.BMI,
-                                     
+
                                       op.Created_Time
                                   }).ToList();
             List<VitalParameterClass> list = new List<VitalParameterClass>();
-          
+
             foreach (var item in Inpatientlist)
             {
                 VitalParameterClass obj = new VitalParameterClass();
@@ -6204,7 +6210,7 @@ namespace PMS
                 obj.BP_mm_Hg = item.BloodPressure;
                 obj.Receiving_date = Convert.ToDateTime(item.Receiving_Date);
                 obj.RN_Special_Instruction = item.RN_Special_Instruction;
-               
+
                 obj.O2_Saturation = item.O2_Saturation;
                 obj.O2_Saturation_Oxygen1 = item.O2_Saturation_Oxygen1;
                 obj.O2_Saturation_Oxygen2 = item.O2_Saturation_Oxygen2;
@@ -6317,23 +6323,28 @@ namespace PMS
                                          on op.Patient_ID equals p.pat_id
                                          where p.Patient_No == Patien_No && pm.Transaction_Type == "InPatient"
                                          orderby pm.Medicine_Date descending
-                                         select new { pm.chkDiccharge, 
-                                             pm.AttendingParamedical_Staff, 
-                                             pm.Frequency, 
-                                             pm.In_Patient_Medicine_ID, 
-                                             pm.Injections, pm.Medicine_Date, 
-                                             pm.Medicine_Name, 
-                                             pm.Oral, 
-                                             pm.Patient_ID, 
-                                             pm.Recomended_Dosage, 
-                                             op.Created_Time, 
-                                             pm.Doctor_ID, 
-                                             pm.Dosage_From, pm.Dosage_Qty, 
-                                             pm.Other_Instruction, 
+                                         select new
+                                         {
+                                             pm.chkDiccharge,
+                                             pm.AttendingParamedical_Staff,
+                                             pm.Frequency,
+                                             pm.In_Patient_Medicine_ID,
+                                             pm.Injections,
+                                             pm.Medicine_Date,
+                                             pm.Medicine_Name,
+                                             pm.Oral,
+                                             pm.Patient_ID,
+                                             pm.Recomended_Dosage,
+                                             op.Created_Time,
+                                             pm.Doctor_ID,
+                                             pm.Dosage_From,
+                                             pm.Dosage_Qty,
+                                             pm.Other_Instruction,
                                              pm.Regular,
                                              pm.STAT,
                                              pm.PRN,
-                                             DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(pm.Doctor_ID) select d.Emp_Name).FirstOrDefault() }).ToList();
+                                             DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(pm.Doctor_ID) select d.Emp_Name).FirstOrDefault()
+                                         }).ToList();
 
 
                 //var OutPatmedicineList = (from pm in db.In_Patient_Medicines
@@ -6395,7 +6406,7 @@ namespace PMS
             return "";
         }
 
-     
+
 
         [WebMethod]
         public static string LoadDoctorNoteDetail(int PatientID)
@@ -6405,9 +6416,9 @@ namespace PMS
                 var inPatmedicineList = (from pm in db.InPatient_Doctor_Notes
                                          join op in db.In_Patients
                                          on pm.In_Patient_ID equals op.In_Patient_ID
-                                         where op.In_Patient_ID == PatientID &&pm.status == "Create"
+                                         where op.In_Patient_ID == PatientID && pm.status == "Create"
                                          orderby pm.Doctor_Note_Date descending
-                                         select new { pm.Progress_Note, pm.Doctor_Note_Date, pm.Doctor_Instruction, pm.Doctor_Status, pm.Doctor_ID, DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(pm.Doctor_ID) select d.Emp_Name).FirstOrDefault(), DoctorStatus = db.GetDataValueName("Doctor Status", pm.Doctor_Status) }).ToList(); 
+                                         select new { pm.Progress_Note, pm.Doctor_Note_Date, pm.Doctor_Instruction, pm.Doctor_Status, pm.Doctor_ID, DoctorName = (from d in db.HR_Employees where d.Emp_ID == Convert.ToInt32(pm.Doctor_ID) select d.Emp_Name).FirstOrDefault(), DoctorStatus = db.GetDataValueName("Doctor Status", pm.Doctor_Status) }).ToList();
                 return (new JavaScriptSerializer()).Serialize(inPatmedicineList);
             }
             return "";
@@ -6500,7 +6511,7 @@ namespace PMS
                                    orderby staff.DataValue_Name ascending
                                    select staff.DataValue_Name).Distinct().ToList();
                     var snumber = Convert.ToInt32(DBClass.getField("select (isnull(max(convert(int,DataValue_Name)),0)+1) from DataValues where  ValueSet_ID=1083").ToString());
-                   
+
                     data.DataValue_Name = Convert.ToInt32(snumber).ToString();
                     data.DataValue_Description = syptum;
                     db.DataValues.InsertOnSubmit(data);
@@ -6660,7 +6671,7 @@ namespace PMS
                                 Referring_Doctor = (from i in db.HR_Employees where i.Emp_ID == Convert.ToInt32(outP.Doctor) select i.Emp_Name).FirstOrDefault(),
                                 ptientNO = (from i in db.Reg_patients where i.pat_id == tbl.pat_id select i.Patient_No).FirstOrDefault(),
                                 outP.Created_Time,
-                              
+
                                 Printed_By = (from us in db.aspnet_Users where us.UserId == outP.Created_By select us.UserName).FirstOrDefault(),
                                 outP.CNS,
                                 outP.CVS,
@@ -6779,7 +6790,7 @@ namespace PMS
                     db.Infusion_Orders.DeleteAllOnSubmit(InfusionList);
                     db.SubmitChanges();
                     int couterNewRecords = 0;
-                 
+
                     couterNewRecords = 0;
 
                     /*********************Inserting New Entry On Every Insert Or Update*************************/
@@ -7034,7 +7045,7 @@ namespace PMS
             }
             catch (Exception ex)
             {
-                return "[]"; 
+                return "[]";
             }
         }
 
@@ -7059,7 +7070,7 @@ namespace PMS
             }
             catch (Exception ex)
             {
-                return "{}"; 
+                return "{}";
             }
         }
 
@@ -7071,8 +7082,8 @@ namespace PMS
                 using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
                     var Procedure = (from tbl in db.sys_Parms
-                                    where tbl.Name == "Procedure Template Tab"
-                                    select tbl.Code)
+                                     where tbl.Name == "Procedure Template Tab"
+                                     select tbl.Code)
                               .FirstOrDefault();
 
                     return Procedure ?? "01";

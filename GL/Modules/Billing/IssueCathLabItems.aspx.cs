@@ -479,7 +479,7 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spPharmacyitem(ItemName).ToList();
+                var query = db.sp_cathLabitem(ItemName).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
