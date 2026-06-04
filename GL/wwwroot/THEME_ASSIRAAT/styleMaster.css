@@ -8,6 +8,9 @@
 .select2-container--classic .select2-selection--single {
     background-color: #308665db !important;
 }
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 2px solid #c5c5c5 !important;
+}
 .ui-widget-header {
     background: #4d977b !important;
 }

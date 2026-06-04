@@ -1545,6 +1545,7 @@
     <Content Include="wwwroot\THEME_KALEEM\images\StudentImages\3.jpg" />
     <Content Include="wwwroot\THEME_KALEEM\images\StudentImages\3631.png" />
     <Content Include="wwwroot\THEME_KALEEM\styleMaster.css" />
+    <Content Include="wwwroot\THEME_NOOR\styleMaster.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\AddNewLabTest.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Advance.css" />

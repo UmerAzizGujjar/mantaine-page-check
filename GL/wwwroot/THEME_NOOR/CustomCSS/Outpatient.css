@@ -1,7 +1,15 @@
 .headingcolr {
-    color: white !important;
+    color:white !important;
 }
 
+
+#token-input-ctl00_MainContent_txtPatNO {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+#token-input-ctl00_MainContent_txtPatient_ID {
+    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
+}
 
 
 
@@ -113,7 +121,7 @@ gf .table {
 .table th {
     display: none;
     border: 1px solid #FFF;
-    background-color: #c11718;
+    background-color: #438eb9;
     color: #FFF;
     padding: 1em;
 }
@@ -229,12 +237,12 @@ select {
 }
 
 .btn-item {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     font-size: 13px;
     line-height: 1.39;
     padding: 5px 9px;
     background-image: none !important;
-    border: 5px solid #c11718  !important;
+    border: 5px solid #438eb9  !important;
     border-radius: 5px !important;
     box-shadow: none !important;
     color: #fff !important;
@@ -251,12 +259,12 @@ select {
 }
 
 .btn-tests {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     font-size: 13px;
     line-height: 1.39;
     padding: 6px 7px !important;
     background-image: none !important;
-    border: 5px solid #c11718  !important;
+    border: 5px solid #438eb9  !important;
     border-radius: 5px !important;
     box-shadow: none !important;
     color: #fff !important;
@@ -274,7 +282,7 @@ select {
 }
 
 .modal-header {
-    background-color: #c11718 ;
+    background-color: #438eb9 ;
     color: white;
 }
 
@@ -296,9 +304,7 @@ select {
     width: 800px !important;
 }
 
-.forcolor li a:hover {
-    color: #FFC000 !important;
-}
+
 
 #tabs ul {
     display: flex;
@@ -307,7 +313,7 @@ select {
 }
 
 #tabs ul li a {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     color: white;
     background: none;
     border: none;
@@ -320,12 +326,12 @@ select {
 }
 .fa-upload {
     font-size: 40px !important;
-    color: #c11718  !important;
+    color: #438eb9  !important;
     margin-top: 21px;
 }
 .fa-download {
     font-size: 40px !important;
-    color: #c11718  !important;
+    color: #438eb9  !important;
     margin-top: 21px;
 }
 
@@ -367,22 +373,12 @@ ul.token-input-list {
     background-color: #fff;
     list-style-type: none;
     clear: left;
-    /* width: 225px !important;*/
-    width: 100% !important;
-   
+   /* width: 225px !important;*/
+   width:100% !important;
 }
 /*#token-input-ctl00_MainContent_txtPatNO {
     width: 200px !important;
 }*/
-
-#token-input-ctl00_MainContent_txtPatNO {
-    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
-}
-
-#token-input-ctl00_MainContent_txtPatient_ID {
-    box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
-}
-
 .patient-image {
     width: 100px;
     height: 100px;

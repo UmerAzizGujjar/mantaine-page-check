@@ -2,6 +2,7 @@
     box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
 }
 
+
 .image-container {
     background-color: #D9D9D9;
     padding: 20px;
@@ -15,7 +16,7 @@
 
 
 #tabs ul li a {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     color: white;
     background: none;
     border: none;
