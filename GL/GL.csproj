@@ -1162,6 +1162,7 @@
     <Content Include="wwwroot\lib\moment\moment.min.js" />
     <Content Include="wwwroot\lib\select2\select2.min.css" />
     <Content Include="wwwroot\lib\select2\select2.min.js" />
+    <Content Include="wwwroot\lib\sweetalert\swalalert.css" />
     <Content Include="wwwroot\lib\sweetalert\swalalert.js" />
     <Content Include="wwwroot\lib\timepicker\timepicki.css" />
     <Content Include="wwwroot\lib\timepicker\timepicki.js" />
@@ -1537,7 +1538,7 @@
     <Content Include="wwwroot\THEME_KALEEM\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_KALEEM\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_KALEEM\images\LOGOS\LoginBackground.jpg" />
-    <Content Include="wwwroot\THEME_KALEEM\images\LOGOS\logo.jpeg" />
+    <Content Include="wwwroot\THEME_KALEEM\images\LOGOS\logo.png" />
     <Content Include="wwwroot\THEME_KALEEM\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_KALEEM\images\StudentImages\1.jpg" />
     <Content Include="wwwroot\THEME_KALEEM\images\StudentImages\1.png" />
@@ -2127,8 +2128,8 @@
     <Content Include="wwwroot\THEME_NOOR\images\bootstrap-colorpicker\hue-horizontal.png" />
     <Content Include="wwwroot\THEME_NOOR\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_NOOR\images\bootstrap-colorpicker\saturation.png" />
-    <Content Include="wwwroot\THEME_NOOR\images\LOGOS\LoginBackground.png" />
-    <Content Include="wwwroot\THEME_NOOR\images\LOGOS\Logo.jpg" />
+    <Content Include="wwwroot\THEME_NOOR\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_NOOR\images\LOGOS\Logo.png" />
     <Content Include="wwwroot\THEME_NOOR\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_NOOR\images\StudentImages\1.jpg" />
     <Content Include="wwwroot\THEME_NOOR\images\StudentImages\1.png" />
@@ -2222,8 +2223,8 @@
     <Content Include="wwwroot\THEME_PAKRED\images\bootstrap-colorpicker\hue-horizontal.png" />
     <Content Include="wwwroot\THEME_PAKRED\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_PAKRED\images\bootstrap-colorpicker\saturation.png" />
-    <Content Include="wwwroot\THEME_PAKRED\images\LOGOS\LoginBackground.png" />
-    <Content Include="wwwroot\THEME_PAKRED\images\LOGOS\logo.jpg" />
+    <Content Include="wwwroot\THEME_PAKRED\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_PAKRED\images\LOGOS\logo.png" />
     <Content Include="wwwroot\THEME_PAKRED\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_PAKRED\images\StudentImages\1.jpg" />
     <Content Include="wwwroot\THEME_PAKRED\images\StudentImages\1.png" />
@@ -2449,7 +2450,7 @@
     <Content Include="wwwroot\THEME_STANDARD\styleMaster.css" />
     <Content Include="wwwroot\THEME_PAKRED\styleMaster.css" />
     <Content Include="wwwroot\THEME_KHURSHID\styleMaster.css" />
-    <Content Include="wwwroot\THEME_NOOR\styleMaster.css" />
+    <Content Include="wwwroot\THEME_IITH\styleMaster.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\styleMaster.css" />
     <None Include="DataBase.dbml.layout">
       <DependentUpon>DataBase.dbml</DependentUpon>

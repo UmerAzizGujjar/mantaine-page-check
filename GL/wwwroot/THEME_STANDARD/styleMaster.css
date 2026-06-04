@@ -33,8 +33,11 @@
     border: 1px solid #438eb9 !important;
     background: #438eb9 !important;
 }
-
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 2px solid #c5c5c5 !important;
+}
 .ui-state-default {
+ 
     background: #438eb9 !important;
 }
 .ui-state-hover, .ui-state-hover a:hover {
