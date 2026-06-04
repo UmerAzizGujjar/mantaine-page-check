@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js"></script>
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/CEODashboard.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/CEODashboard.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             var date = '<%= DateTime.Now%>';

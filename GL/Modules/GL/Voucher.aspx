@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Voucher.aspx.cs" Inherits="PMS.Voucher" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/voucher.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/voucher.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(function () {

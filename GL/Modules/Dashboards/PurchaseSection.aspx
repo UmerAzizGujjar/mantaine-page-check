@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseSection.aspx.cs" Inherits="PMS.Modules.Dashboards.PurchaseSection" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Shortcuts.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/Shortcuts.css" rel="stylesheet" />
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">

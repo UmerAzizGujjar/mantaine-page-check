@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PanelView.aspx.cs" Inherits="PMS.PanelView" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
             LoadPage();

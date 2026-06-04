@@ -5,9 +5,9 @@
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 
-    <link href="wwwroot/THEME_TIBBIT/CustomCSS/login.css" rel="stylesheet" />
+    <link href="wwwroot/lib/sweetalert/login.css" rel="stylesheet" />
     <script src="wwwroot/THEME_TIBBIT/js/swalalert.js"></script>
-    <link href="wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
+    <link href="wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     
     <!-- Font Awesome for eye icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

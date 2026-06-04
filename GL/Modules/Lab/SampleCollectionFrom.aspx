@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SampleCollectionFrom.aspx.cs" Inherits="PMS.SampleCollectionFrom" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/LabSample.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/LabSample.css" rel="stylesheet" />
     <script type="text/javascript">   
 
 

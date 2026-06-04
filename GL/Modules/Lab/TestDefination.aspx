@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TestDefination.aspx.cs" Inherits="PMS.TestDefination" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/TestDefinition.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/TestDefinition.css" rel="stylesheet" />
     <style>
         #TblUltra_Value a, 
         #TblXRay_Value a, 

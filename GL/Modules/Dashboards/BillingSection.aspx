@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingSection.aspx.cs" Inherits="PMS.Modules.Dashboards.BilligSection" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Shortcuts.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/Shortcuts.css" rel="stylesheet" />
         <style>
         .modern-loading-overlay {
     position: fixed;

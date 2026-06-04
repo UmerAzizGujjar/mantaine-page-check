@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LaboratoryTest.aspx.cs" Inherits="PMS.LaboratoryTest" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/AddNewLabTest.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/AddNewLabTest.css" rel="stylesheet" />
     <style>
         
 .MyTable {

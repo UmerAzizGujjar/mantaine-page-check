@@ -1443,6 +1443,7 @@
     <Content Include="wwwroot\SOURCE_IMAGES\GENERAL_ICONS\vplogopage.png" />
     <Content Include="wwwroot\SOURCE_IMAGES\GENERAL_ICONS\Ward_Allotment.jpg" />
     <Content Include="wwwroot\SOURCE_IMAGES\GENERAL_ICONS\Ward_Definition.jpg" />
+    <Content Include="wwwroot\THEME_ASSIRAAT\images\LOGOS\Icon.png" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\AddNewLabTest.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\THEME_KALEEM\CustomCSS\Advance.css" />
@@ -2415,6 +2416,7 @@
     <Content Include="wwwroot\THEME_TIBBIT\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\CompanyImages\companyImage20.png" />
+    <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\Icon.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\LoginBackground.jpg" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\logo.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\Projectimages\Project\11414.png" />
@@ -2447,7 +2449,7 @@
     <Content Include="wwwroot\THEME_STANDARD\styleMaster.css" />
     <Content Include="wwwroot\THEME_PAKRED\styleMaster.css" />
     <Content Include="wwwroot\THEME_KHURSHID\styleMaster.css" />
-    <Content Include="wwwroot\THEME_IITH\styleMaster.css" />
+    <Content Include="wwwroot\THEME_NOOR\styleMaster.css" />
     <Content Include="wwwroot\THEME_ASSIRAAT\styleMaster.css" />
     <None Include="DataBase.dbml.layout">
       <DependentUpon>DataBase.dbml</DependentUpon>
