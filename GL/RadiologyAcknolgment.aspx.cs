@@ -98,10 +98,20 @@ namespace PMS
 
                 var queryList = query.ToList();
 
+                //if (!string.IsNullOrEmpty(ddlDoctorFilter) && ddlDoctorFilter != "0")
+                //{
+                //    int doctorId = Convert.ToInt32(ddlDoctorFilter);
+                //    queryList = queryList.Where(x => x.Billing_DoctorID == doctorId || x.LabTest_DoctorID == doctorId).ToList();
+                //}
+
                 if (!string.IsNullOrEmpty(ddlDoctorFilter) && ddlDoctorFilter != "0")
                 {
                     int doctorId = Convert.ToInt32(ddlDoctorFilter);
-                    queryList = queryList.Where(x => x.Billing_DoctorID == doctorId || x.LabTest_DoctorID == doctorId).ToList();
+                    queryList = queryList.Where(x =>
+                    {
+                        int displayDoctorId = (x.LabTest_DoctorID > 0) ? x.LabTest_DoctorID : x.Billing_DoctorID;
+                        return displayDoctorId == doctorId;
+                    }).ToList();
                 }
 
                 if (!string.IsNullOrEmpty(mainDepartmentFilter) && mainDepartmentFilter != "All")
