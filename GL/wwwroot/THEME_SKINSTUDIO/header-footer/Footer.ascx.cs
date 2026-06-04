@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace PMS.wwwroot.THEME_ASSIRAAT.header_footer
+namespace PMS.wwwroot.THEME_SKINSTUDIO.header_footer
 {
     public partial class Footer : System.Web.UI.UserControl
     {

@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Footer.ascx.cs" Inherits="PMS.wwwroot.THEME_ASSIRAAT.header_footer.Footer" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Footer.ascx.cs" Inherits="PMS.wwwroot.THEME_SKINSTUDIO.header_footer.Footer" %>
 <div class="center" id="StandardFooter" runat="server">
     <div>
         <span style="font-weight: bold; color: black !important;">Website:</span>
