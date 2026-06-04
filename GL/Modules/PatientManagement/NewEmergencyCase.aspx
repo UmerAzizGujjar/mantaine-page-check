@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="NewEmergencyCase.aspx.cs" Inherits="PMS.Modules.PatientManagement.NewEmergencyCase" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/lib/sweetalert/NewEmergencyCase.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/NewEmergencyCase.css" rel="stylesheet" />
     <script id="ScriptmanageSymptomsModal">
         $(document).ready(function () {
             $("#12").hide();

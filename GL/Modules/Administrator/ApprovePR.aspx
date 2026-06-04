@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApprovePR.aspx.cs" Inherits="PMS.ApprovePR" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/lib/sweetalert/Approvepr.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Approvepr.css" rel="stylesheet" />
     <script type="text/javascript">        
         $(document).ready(function () {
             highlightPendingRows();

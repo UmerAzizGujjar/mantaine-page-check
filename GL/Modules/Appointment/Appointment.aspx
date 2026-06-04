@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Appointment.aspx.cs" Inherits="PMS.Appointment" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/lib/sweetalert/Appointment.css" rel="stylesheet" />
-    <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Appointment.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
     <script src="../../wwwroot/THEME_TIBBIT/CustomJs/Appointment.js"></script>
      <script type="text/javascript">
         $(document).ready(function () {

@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
      <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
 
-    <link href="../../wwwroot/lib/sweetalert/inv_org.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/inv_org.css" rel="stylesheet" />
     <script type="text/javascript">   
         $(document).ready(function () {
             $('select').select2();

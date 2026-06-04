@@ -1,8 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ZakatDonationForm.aspx.cs" Inherits="PMS.Modules.Billing.ZakatDonationForm" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/lib/sweetalert/Toaster.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Toaster.css" rel="stylesheet" />
     <script src="../../wwwroot/THEME_TIBBIT/CustomJs/RegPatient.js" type="text/javascript"></script>
-    <link href="../../wwwroot/lib/sweetalert/RegPat.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/RegPat.css" rel="stylesheet" />
     <style>
         .required-field::after {
             content: " *";

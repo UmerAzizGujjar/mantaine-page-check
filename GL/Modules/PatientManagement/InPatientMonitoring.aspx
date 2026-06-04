@@ -4,7 +4,7 @@
 <%@ Register Src="~/LookupControl.ascx" TagName="LookupControl" TagPrefix="uc1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/lib/sweetalert/ipdmonitoring.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ipdmonitoring.css" rel="stylesheet" />
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 

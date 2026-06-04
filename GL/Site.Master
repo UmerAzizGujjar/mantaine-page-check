@@ -1419,7 +1419,7 @@ top: auto;
             <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/bootstrap/bootstrap.min.js") %>" type="text/javascript"></script>
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace-elements.min.js") %>" type="text/javascript"></script>
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/ace/ace.min.js") %>" type="text/javascript"></script>
-    <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/sweetalert/swalalert.js") %>" type="text/javascript"></script>
+    <script src="<%= Page.ResolveClientUrl("~/wwwroot/THEME_TIBBIT/CustomCSS/swalalert.js") %>" type="text/javascript"></script>
 
 
     <script type="text/javascript">
