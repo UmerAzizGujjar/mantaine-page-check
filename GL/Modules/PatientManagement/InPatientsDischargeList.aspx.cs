@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static PMS.Modules.Administrator.Doctor_Payable;
 
 namespace PMS
 {
@@ -173,6 +174,7 @@ namespace PMS
                                         Patient_Type = _dbContext.GetDataValueName("Patient Type", opd.Patient_Discount_Type),
                                         opd.Discharge_By,   // ← Keep as raw string
                                         opd.Discharge_On,
+                                        Bill_No = (from ab in _dbContext.Ar_Billings where ab.In_Patient_ID == opd.In_Patient_ID && ab.final_bill_ipd == true select ab.IPD_BillNo).FirstOrDefault(),
                                         AdmitDays = SqlMethods.DateDiffDay(opd.Admission_Date, DateTime.Now)
                                     };
 
@@ -199,6 +201,11 @@ namespace PMS
                             baseQuery = sortColumnDirection == "asc"
                                 ? baseQuery.OrderBy(x => x.Discharge_On)
                                 : baseQuery.OrderByDescending(x => x.Discharge_On);
+                            break;
+                        case "Bill_No":
+                            baseQuery = sortColumnDirection == "asc"
+                                ? baseQuery.OrderBy(x => x.Bill_No)
+                                : baseQuery.OrderByDescending(x => x.Bill_No);
                             break;
                         default:
                             baseQuery = baseQuery.OrderByDescending(x => x.In_Patient_ID);
@@ -254,6 +261,7 @@ namespace PMS
                             x.Admission_Date,
                             x.mr_no_sequence,
                             x.Full_Name,
+                            x.Bill_No,
                             x.Father_Name,
                             x.Department,
                             x.Patient_Type,
