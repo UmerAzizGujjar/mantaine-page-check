@@ -131,12 +131,22 @@ namespace PMS.Inventory
         }
 
 
+        //[WebMethod]
+        //public static String Getitem(int ItemID)
+        //{
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var itemDetail = db.spGetitemsDetails(ItemID).ToList();
+        //        return (new JavaScriptSerializer()).Serialize(itemDetail);
+        //    }
+        //}
+
         [WebMethod]
-        public static String Getitem(int ItemID)
+        public static String Getitem(int ItemID, string DeptID) 
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var itemDetail = db.spGetitemsDetails(ItemID).ToList();
+                var itemDetail = db.spGetitemsDetails(ItemID, DeptID).ToList();
                 return (new JavaScriptSerializer()).Serialize(itemDetail);
             }
         }
@@ -326,6 +336,8 @@ namespace PMS.Inventory
                                      MIRQty = Convert.ToString(data.MIRQty),
                                      Last_MIR_Qty = Convert.ToString(data.Last_MIR_Qty),
                                      remarks = data.Remarks,
+                                     UOM_Qty = Convert.ToString(inv.UOM_Qty ?? 0),
+                                     
                                  }).ToList();
                     result = (new JavaScriptSerializer()).Serialize(listItems).ToString();
                 }
@@ -357,6 +369,8 @@ namespace PMS.Inventory
             public string itemCode { get; set; }
             public string Description { get; set; }
             public string Unit { get; set; }
+            public string UOM_Qty { get; set; }
+            public string Last_MIR_Date { get; set; }
         }
     }
 }
