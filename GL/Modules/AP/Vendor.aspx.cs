@@ -23,7 +23,7 @@ namespace PMS
         {
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var itemDetail = db.spGetitemsDetails(ItemID).ToList();
+                var itemDetail = db.spGetitemsDetailsVendors(ItemID).ToList();
                 return (new JavaScriptSerializer()).Serialize(itemDetail);
             }
 
