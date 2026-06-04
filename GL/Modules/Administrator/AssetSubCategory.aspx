@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AssetSubCategory.aspx.cs" Inherits="PMS.AssetSubCategory" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/css/CustomCss/AssetCategoryCss.css" rel="stylesheet" />
+    <link href="../../wwwroot/CustomCSS/AssetCategoryCss.css" rel="stylesheet" />
 
 
     <script type="text/javascript">  

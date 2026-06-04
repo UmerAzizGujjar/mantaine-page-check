@@ -1059,13 +1059,13 @@ namespace PMS
         }
 
         [WebMethod]
-        public static string fetchServices(int itemId)
+        public static string fetchServices(int itemId,int Pat_id)
         {
             string result = string.Empty;
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.sp_fetch_Services(itemId).ToList();
+                var query = db.sp_fetch_Services(itemId,Pat_id).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -1810,6 +1810,10 @@ namespace PMS
             newBill.Sales_Tax_Percentage = data.Sales_Tax_Percentage;
             newBill.Panel_Id = Convert.ToInt32(data.Panel_Id);
 
+            if (data.finalbill == true)
+            {
+                newBill.IPD_BillNo = DBClass.GetNewNumber("IPD_BillNo", "Ar_Billings", "").ToString();
+            }
             int? userBranchId = null;
             var branchValue = (from bwd in db.Branch_Wise_User_Details
                                where bwd.User_Id == AppConfig.UserID

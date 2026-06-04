@@ -94,6 +94,8 @@ namespace PMS
     //    }
         void Application_Error(object sender, EventArgs e)
         {
+            // TEMPORARILY BYPASS TO SEE REAL ERRORS
+            return;
             // 🔒 UNIVERSAL ERROR HANDLER — CATCHES EVERYTHING
 
             Exception ex = Server.GetLastError();
