@@ -5,14 +5,37 @@
     font-weight: 300;
     src: local('Open Sans Light'), local('OpenSans-Light'), url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2) format('woff2'), url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
 }
-
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 2px solid #c5c5c5 !important;
+}
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Open Sans", sans-serif;
 }
+/* Select2 Hover/Selected Highlight */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #438eb9 !important;
+    color: white !important;
+}
 
+/* Select2 Classic Theme Main Box Background */
+.select2-container--classic .select2-selection--single {
+    background-color: #438eb9 !important;
+}
+.ui-widget-header {
+    background: #438eb9 !important;
+}
+
+.ui-state-active {
+    border: 1px solid #438eb9 !important;
+    background: #438eb9 !important;
+}
+
+.ui-state-default {
+    background: #438eb9 !important;
+}
 .tooltips {
     color: #438eb9 !important;
     font-size: 16px !important;
@@ -1102,7 +1125,7 @@ page-header h1 {
         }
 
         .ace-nav > li > a {
-            background-color: #b7006f;
+            background-color: White;
             color: #FFF;
             display: block;
             line-height: inherit;

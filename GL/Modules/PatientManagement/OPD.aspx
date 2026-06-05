@@ -4,7 +4,7 @@
 
     <script src="../../wwwroot/THEME_TIBBIT/CustomJs/OPD.js" type="text/javascript"></script>
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/OPD.css" rel="stylesheet" />
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     <script type="text/javascript">
 
         $(document).ready(function () {

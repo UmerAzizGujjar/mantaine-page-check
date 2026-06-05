@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Inv_OriginatorTempelates.aspx.cs" Inherits="PMS.GL.Inv_OriginatorTempelates" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
+     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
 
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/inv_org.css" rel="stylesheet" />
     <script type="text/javascript">   

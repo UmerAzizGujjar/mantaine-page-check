@@ -1,0 +1,22 @@
+.card {
+    border: 1px solid #C4C4C4;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    height: 200px !important;
+    width: 100%;
+    overflow: hidden;
+    margin-top:24px;
+}
+
+.card-body p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+#token-input-txtAccountName {
+    box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+

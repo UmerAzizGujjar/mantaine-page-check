@@ -1,5 +1,5 @@
 .forcolor {
-    background-color: #438eb9 !important;
+    background-color: #438eb9  !important;
 }
 
 .card {
@@ -8,26 +8,22 @@
     border-radius: 10px;
     padding: 15px;
     margin-top: 50px !important;
-   /* height: 330px !important,*/
+    /*height: 330px !important,*/
+}
+/*.col-lg-3, .col-md-6, .col-sm-12 {
+    height: 70px !important
+}*/
+/*.fields {
+    height: 70px !important
+}*/
+.mleft {
+    margin-left: 15px !important;
 }
 .cnic-input {
     width: 250px !important;
     margin: 0 auto; /* center it */
     display: block;
 }
-
-/*.col-lg-3, .col-md-6, .col-sm-12 {
-    height: 70px !important
-}*/
-
-/*.fields {
-    height: 70px !important
-}*/
-
-.mleft {
-    margin-left: 15px !important;
-}
-
 .quick-actions {
     background: #438eb9;
     color: white;
@@ -36,7 +32,6 @@
     /*height: 70px;*/
     cursor: pointer;
 }
-
 .tooltips {
     position: relative;
     display: inline-block;
@@ -95,19 +90,15 @@
     padding: 15px;
     margin-left: 15px;
 }
-
-#PatientModel {
-    margin-top: 15px !important;
+#PatientModel{
+    margin-top:15px !important; 
 }
-
 #PatientsSearchModel {
     margin-top: 15px !important;
 }
-
 #SearchModel_App {
     margin-top: 15px !important;
 }
-
 .mtop {
     margin-top: 20px;
 }
@@ -125,6 +116,7 @@
     margin-right: 10px;
     width: 20px;
     height: 20px;
+
 }
 
 /*.ml-2 {
@@ -133,10 +125,9 @@
 .wdth {
     width: 100%;
 }
-
-#follow_up {
-    font-size: 20px;
-    margin-left: 15px;
+#follow_up{
+    font-size:20px;
+    margin-left:15px;
 }
 
 
@@ -160,11 +151,6 @@
     #scrollable-table-container .table {
         margin-bottom: 0;
     }
-
-
-
-
-
 
 
 

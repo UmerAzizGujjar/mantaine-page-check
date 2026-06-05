@@ -120,7 +120,7 @@ body {
 }
 
 #ctl00_MainContent_hyperlink1 {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     color: whitesmoke !important;
     font-size: 20px !important;
     padding: 3px !important;
@@ -141,7 +141,7 @@ body {
 }
 
 .modal-header, .modal-footer {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     color: white !important;
     border-bottom: 1px solid #e9ecef;
     padding: 15px;

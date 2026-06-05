@@ -232,6 +232,20 @@
                 }
             });
         }
+        function ResultedTestDetail() {
+
+            PageMethods.ResultedTest(function (data) {
+                var parsedData = JSON.parse(data);
+                var rows = '';
+                $.each(parsedData, function (key, value) {
+                    var retdate = moment(value.Bill_Date).format('DD-MMM-YYYY hh:mm A');
+                    rows += '<tr id="row' + key + '"><input type="hidden" name="Bill_ID" value="' + value.Bill_ID + '"/><input type="hidden" name="pat_id" value="' + value.pat_id + '"/><input type="hidden" name="Bill_Details_ID" value="' + value.Bill_Details_ID + '"/><td><input type="hidden"  name="Bill_Date" value="' + retdate + '"/>' + retdate + '</td> <td> <input type="hidden"  name="Bill_No" value="' + value.Bill_No + '"/>' + value.Bill_No + ' </td> <td><input type="hidden"  name="Full_Name" value="' + value.Full_Name + '"/>' + value.Full_Name + '</td><td><input type="hidden" name="Item_Name" value="' + value.Item_Name + '"/>' + value.Item_Name + '</td><td><input type="hidden"  name="Priorities" value="' + value.Priorities + '"/>' + (value.Priorities || '') + '</td><td> <a href="#" onclick=fillTokenInput(' + value.Bill_No + ')>Select</a> </td> </tr>';
+                });
+                $('#tbl_Result tbody').html(rows);
+            },
+                function (exec) { alert(exec.getmessage()); })
+        }
+
         function UltraSoundTestDetail() {
 
             PageMethods.AllUltraSoundTest(function (data) {
@@ -308,6 +322,7 @@
             AllowLabRights();  
             LoadSharingPolicy();
             LoadPendingSamples();
+            ResultedTestDetail();
             //UltraSoundTestDetail();
             PageMethods.CheckRadiologylistRights(function (response) {
                 var hasRights = JSON.parse(response); 
@@ -2869,6 +2884,27 @@
                 </table>
             </div>
                 </div>
+        </div>
+        <div class="row">
+             <div class="col-lg-6 col-md-3 sm-6" id="Resultlist">
+     <h1>Radiology Patients List </h1>
+     <div class="row" style="overflow: scroll; height: 500px;">
+         <table class="table test-table" id="tbl_Result" style="overflow: scroll; height: 500px;">
+             <thead>
+                 <tr>
+                     <th>Bill Date</th>
+                     <th>Bill No</th>
+                     <th>Name</th>
+                     <th>Test Name</th>
+                     <th>Priority</th>
+                     <th>Action</th>
+                 </tr>
+             </thead>
+             <tbody id="tbl_tbodyresult">
+             </tbody>
+         </table>
+     </div>
+ </div>
         </div>
 </div>
 

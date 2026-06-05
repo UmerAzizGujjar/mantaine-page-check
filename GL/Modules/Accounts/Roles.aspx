@@ -2,11 +2,44 @@
 
 <%@ Register Src="~/LookupControl.ascx" TagName="LookupControl" TagPrefix="uc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
+     <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     <style type="text/css">
-        input[type="checkbox"] {
-            width: 20% !important;
-        }
+       /* 1. Force perfect vertical alignment inside the TreeView tables */
+#ctl00_MainContent_tvMenus td {
+    vertical-align: middle !important;
+    line-height: normal !important;
+}
+
+#ctl00_MainContent_tvMenus img {
+    vertical-align: middle !important;
+    display: inline-block !important;
+}
+
+/* 2. Override your global 20% checkbox width specifically for the TreeView */
+#ctl00_MainContent_tvMenus input[type="checkbox"] {
+    width: auto !important;           /* Kills the 20% width rule */
+    vertical-align: middle !important;
+    margin: 0 4px 0 0 !important;     /* Small gap between checkbox and text */
+    display: inline-block !important;
+}
+
+/* 3. Align the text labels */
+#ctl00_MainContent_tvMenus a, 
+#ctl00_MainContent_tvMenus span {
+    vertical-align: middle !important;
+    display: inline-block !important;
+    margin-top: 1px !important;       /* Minor optical adjustment */
+}
+/* 4. Fix Child Node Indentation (Horizontal Alignment) - CORRECTED */
+#ctl00_MainContent_tvMenus table {
+    width: auto !important; /* Stops modern CSS from stretching nested tables */
+}
+
+/* We target ONLY the empty spacer divs used for indentation, 
+   allowing the wrapper divs to expand/collapse normally */
+#ctl00_MainContent_tvMenus td > div {
+    box-sizing: content-box !important; 
+}
         input[type="text"] {
         width: 300px !important;
     margin-left: 10px;

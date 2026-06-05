@@ -1,4 +1,4 @@
-html, body {
+﻿html, body {
     height: 100%;
     min-height: 100%;
     box-sizing: border-box;
@@ -25,19 +25,14 @@ body {
 *, *::before, *::after {
     box-sizing: inherit;
 }
-.header_login {
-    color: #c11718 !important;
-    text-align: left;
-    font-size: 32px !important;
-}
-
-.header {
-    color: #c11718 !important;
-    text-align: left;
-}
-
 .login {
     font-family: "Open Sans";
+}
+
+.header_login {
+    color: #438eb9 !important;
+    text-align: left;
+    font-size: 32px !important;
 }
 
 .header h1 {
@@ -56,12 +51,13 @@ fieldset p {
 
 select, input.textEntry,
 input.passwordEntry {
-    border: 1px solid #ff8686 !important;
+    border: 1px solid #6baee9 !important;
     margin-top: 10px;
     width: 95% !important;
     border-radius: 12px !important;
-    height: 40px;
+    height: 40px
 }
+
 
 
 
@@ -71,7 +67,7 @@ input.passwordEntry {
     font-size: 12px;
     line-height: 1.5;
     padding: 5px 10px;
-    background-color: #c11718;
+    background-color: #438eb9;
     border-color: #357ebd;
     color: white;
     text-align: center;
@@ -115,11 +111,11 @@ input.passwordEntry {
         }*/
 
 input:hover {
-    border: 2px solid #ff1818 !important;
+    border: 2px solid #FFC000 !important;
 }
 
 select:hover {
-    border: 2px solid #ff1818 !important;
+    border: 2px solid #FFC000 !important;
 }
 
 
@@ -150,7 +146,7 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
     display: block;
     width: 95% !important;
     height: 40px;
-    margin-top:3% !important;
+    margin-top: 3% !important;
 }
 
     #ctl00_MainContent_UserLogin_LoginButton:hover {
@@ -161,18 +157,11 @@ ctl00_MainContent_ErrorPassword, #ErrorPassword {
     }
 
 .h2 {
-    color: #c11718;
+    color: #438eb9;
     margin-left: -80%;
 }
 
 .labels {
-    color: #c11718 !important;
+    color: #438eb9 !important;
     font-size: medium;
-}
-
-.selectlogin {
-    border: 1px solid #ff8686 !important;
-    width: 100% !important;
-    border-radius: 12px !important;
-    height: 40px
 }
