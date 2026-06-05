@@ -2650,6 +2650,25 @@ namespace PMS
                     rd.SetParameterValue("Address", companyAddress);
                 }
             }
+            else if (reportName == "Overall_Stock_Consumption_Details")
+            {   
+                if (Request.QueryString["Stock"] != null)
+                {
+                    var stock = Request.QueryString["Stock"];
+                    string stDate = Request.QueryString["startDate"].ToString();
+                    string endDate = Request.QueryString["endDate"].ToString();
+                    string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                    reportPath += "Inventory/rptOverallStockConsumptionDetail.rpt";
+                    rd.Load(reportPath);
+                    rd.SetParameterValue("@Stock", stock);
+                    rd.SetParameterValue("@Warehouse", Request.QueryString["WareHouse"]);
+                    rd.SetParameterValue("@FromDate", stDate);
+                    rd.SetParameterValue("@ToDate", endDate);
+                    rd.SetParameterValue("Title", reportTitle);
+                    rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                    rd.SetParameterValue("Address", companyAddress);
+                }
+            }
             else if (reportName == "Pharmacy_Stock_Consumption_Details")
             {
                 if (Request.QueryString["Stock"] != null)
@@ -3517,6 +3536,32 @@ namespace PMS
                 rd.SetParameterValue("@stDate", StartDateTime);
                 rd.SetParameterValue("@endDate", EndDateTime);
                 rd.SetParameterValue("@Group_Department", Department);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("Address", companyAddress);
+            }
+            else if (reportName == "Cath_Lab_Billing_Detail_Report")
+            {
+
+                string StartDateTime = Request.QueryString["StartDateTime"].ToString();
+                string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string MrNo = Request.QueryString["MRNo"].ToString();
+                string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                string doctorID = Request.QueryString["DoctorID"].ToString();
+                string Operator = Request.QueryString["Operator"].ToString();
+                string ItemID = Request.QueryString["ItemID"].ToString();
+
+
+                reportPath += "TransactionalDetails/rptCathLabBillingDetailReport.rpt";
+                rd.Load(reportPath);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("Title", reportTitle);
+                rd.SetParameterValue("@Operator", Operator);
+                rd.SetParameterValue("@Doctor", doctorID);
+                rd.SetParameterValue("@MrNo", MrNo);
+                rd.SetParameterValue("@itemId", ItemID);
+                rd.SetParameterValue("@stDate", StartDateTime);
+                rd.SetParameterValue("@endDate", EndDateTime);
                 rd.SetParameterValue("CompanyLogo", logoPath);
                 rd.SetParameterValue("Address", companyAddress);
             }

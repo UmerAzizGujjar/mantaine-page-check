@@ -1557,12 +1557,11 @@ namespace PMS
                     tr_Summary.Visible = false;
                     Time_Row.Visible = true;  // could be problematic
                     DateDiv.Visible = true;
-                    trSearch1.Visible = true;
-
+                    
                     op_FilterClinic.Visible = false;
                     lblMultiSelect.Visible = false;
-
                     trSearch1.Visible = true;
+
 
 
                     lblDepartment.Text = "Vendor";
@@ -2951,6 +2950,60 @@ namespace PMS
                     DateDiv.Visible = true;
                     Time_Row.Visible = true;
                     AllowPatientRecord = false;
+                    MRDiv.Visible = true;
+
+                }
+                else if (this.PageTitle == "Cath_Lab_Billing_Detail_Report")
+                {
+                    string x = "Cath Lab Billing Detail Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    trDoctor.Visible = true;
+                    optRw.Visible = true;
+                    AllowPatientRecord = false;
+
+                    MRDiv.Visible = true;
+                    lblMRNo.Visible = true;
+                    txtMRNo.Visible = true;
+
+
+                    DataTable dt = DBClass.getDataTable("select * from HR_Employees where IsDoctor=1");
+                    ddlDoctor.DataSource = dt;
+                    ddlDoctor.DataValueField = "Emp_ID";
+                    ddlDoctor.DataTextField = "Emp_Name";
+                    ddlDoctor.Items.Add(new ListItem() { Value = "0", Text = "All Doctors" });
+                    ddlDoctor.DataBind();
+                    ddlReportType.Visible = false;
+                    lbservieType.Visible = false;
+
+
+                    object valusets;
+                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+                    valusets = from d in db.aspnet_Users
+                               select new { d.UserName, d.UserId };
+                    ddloprators.DataSource = valusets;
+                    ddloprators.DataTextField = "UserName";
+                    ddloprators.DataValueField = "UserId";
+                    ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddloprators.DataBind();
+                    ddlShift.Visible = false;
+                    lbShift.Visible = false;
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+                    trSearch1.Visible = true;
+
                 }
                 else if (this.PageTitle == "Lab_Test_Result_Culture")
                 {
@@ -3467,32 +3520,34 @@ namespace PMS
                     txtStart_Date.Visible = false;
                     txtEnd_Date.Visible = false;
                 }
-                else if (PageTitle == "Stock_Consumption_Details")
+                else if (PageTitle == "Overall_Stock_Consumption_Details")
                 {
 
                     string x = "Stock Consumption Report";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
-                    object valusets;
 
-                    dpROw.Visible = false;
-                    Time_Row.Visible = false;
-                    txtStart_Date.Visible = true;
-                    txtEnd_Date.Visible = true;
-                    lblMainDepartment.Visible = false;
-                    sttDate.Visible = true;
-                    endDate.Visible = true;
-                    ddlDepartments.Visible = false;
-                    lblPatientType.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    ddlPatientType.Visible = false;
-                    optRw.Visible = false;
-                    trDoctor.Visible = false;
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
                     rowStock.Visible = true;
-                    tr_Summary.Visible = false;
-                    lblMainDepartment.Visible = false;
-                    tr1MedicalSubsidy.Visible = false;
+                    //ADDING NEW WAREHOUSE
 
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
                 }
                 else if (PageTitle == "SAR")
                 {
@@ -6528,46 +6583,23 @@ namespace PMS
                     string x = "Lab Test Investigation Delay";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    AllowPatientRecord = false;
                     dpROw.Visible = true;
-                    optRw.Visible = false;
-                    tr_Summary.Visible = false;
-                    tr1MedicalSubsidy.Visible = false;
-                    lblMedical.Visible = false;
-                    ddlMedicalSubsidy.Visible = false;
+
+                    lblPatientType.Visible = false;
+                    lblMultiSelect.Visible = false;
                     ddlPatientType.Visible = false;
+
                     object valusets;
-                    valusets = DBClass.GetValueSet("Patient Type");
-                    ddlPatientType.DataSource = valusets;
-                    ddlPatientType.DataTextField = "DataValue_Description";
-                    ddlPatientType.DataValueField = "DataValue_Name";
-                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
-                    ddlPatientType.DataBind();
-
-                    lblDepartment.Text = "Department";
-
                     DataBaseDataContext dbase = new DataBaseDataContext(DBClass.ConnectionString());
-
-
                     valusets = (from p in dbase.DataValues where p.ValueSet_ID == 67 select new { p.DataValue_Name, p.DataValue_Description }).ToList();
                     ddlDepartments.DataSource = valusets;
                     ddlDepartments.DataTextField = "DataValue_Description";
                     ddlDepartments.DataValueField = "DataValue_Name";
                     ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlDepartments.DataBind();
-
-                    DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-                    valusets = from d in db.aspnet_Users
-                               select new { d.UserName, d.UserId };
-                    ddlShift.Visible = false;
-                    lbShift.Visible = false;
-                    DateDiv.Visible = true;
-                    Time_Row.Visible = true;
-                    tr_Summary.Visible = false;
-                    tr_Export.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    lblPatientType.Visible = false;
-                    tr_Summary.Visible = false;
-                    GetLabTests();
                 }
                 else if (this.PageTitle == "Radiology_Investigation_Delay")
                 {
