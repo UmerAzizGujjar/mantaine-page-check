@@ -44,7 +44,7 @@
     width: 100%;
     height: 100%;
     border: 3px solid rgba(239, 166, 62, 0.1); /* Very subtle orange */
-    border-top: 3px solid #c11718; /* Bright orange */
+    border-top: 3px solid #438eb9; /* Bright orange */
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -72,7 +72,7 @@
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 10px;
-    background: linear-gradient(45deg, #c11718, #d18d2f, #c11718);
+    background: linear-gradient(45deg, #438eb9, #d18d2f, #438eb9);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -97,7 +97,7 @@
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, transparent, #c11718, transparent);
+    background: linear-gradient(90deg, transparent, #438eb9, transparent);
     border-radius: 2px;
     animation: progressMove 2s ease-in-out infinite;
 }
@@ -234,7 +234,7 @@
 .mybutton2-wrapper {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #c11718;
+    background-color: #438eb9;
     color: black;
     border-radius: 4px;
     cursor: pointer;
@@ -296,7 +296,7 @@
 
         .card-header h4 i {
             margin-right: 10px;
-            color: #c11718;
+            color: #438eb9;
         }
 
 .fa {
@@ -569,12 +569,11 @@ label, span, .table > tbody > tr > td, select {
 }
 
     .menu-item:hover {
-        background-color: #c11718;
+        background-color: #438eb9;
         color: white !important;
     }
 
     .menu-item img {
-        filter: sepia(100%) saturate(1000%) hue-rotate(-40deg) brightness(0.7);
         transition: all 0.3s ease;
     }
 
@@ -695,7 +694,7 @@ input[type="checkbox"] {
     .symptom-row:hover, .vital-row:hover, .history-row:hover, .exam-row:hover,
     .exam-text-row:hover, .Systematic-Exam-Row:hover, .refer-row:hover,
     .complaint-row:hover, .Primary-Diagnosis-row:hover, .Final-Diagnosis-row:hover, .labtest-row:hover, .diagnosticTest-row:hover, .Medicene-row:hover, .FollowUp-Row:hover, .Disposal-row:hover {
-        background-color: #c11718;
+        background-color: #438eb9;
         color: white !important;
         transform: scale(1.02);
         transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
@@ -730,7 +729,7 @@ input[type="checkbox"] {
     padding: 3px 12px;
     border-radius: 8px;
     margin: 0;
-    color: #c11718 !important;
+    color: #438eb9 !important;
     font-weight: bold !important;
     font-size: 16px;
     transition: all 0.3s ease;

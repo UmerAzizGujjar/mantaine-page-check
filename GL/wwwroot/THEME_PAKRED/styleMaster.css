@@ -6,6 +6,19 @@
     src: local('Open Sans Light'), local('OpenSans-Light'), url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2) format('woff2'), url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff) format('woff');
 }
 
+
+.ui-widget-header {
+    background: #c11718 !important;
+}
+
+.ui-state-active {
+    border: 1px solid #4d977b !important;
+    background: #c11718 !important;
+}
+
+.ui-state-default {
+    background: #c11718 !important;
+}
 * {
     margin: 0;
     padding: 0;
@@ -1088,7 +1101,7 @@ page-header h1 {
         }
 
         .ace-nav > li > a {
-            background-color: #b7006f;
+            background-color: white;
             color: #FFF;
             display: block;
             line-height: inherit;

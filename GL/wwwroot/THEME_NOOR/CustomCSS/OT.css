@@ -1,5 +1,4 @@
-﻿
-#token-input-ctl00_MainContent_txtPatient_ID {
+﻿#token-input-ctl00_MainContent_txtPatient_ID {
     box-shadow: 2px -2px 5px rgba(0, 0, 0, 0.2) !important;
 }
 
@@ -27,7 +26,7 @@
 }
 
 #tabs ul li a {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     color: white;
     background: none;
     border: none;

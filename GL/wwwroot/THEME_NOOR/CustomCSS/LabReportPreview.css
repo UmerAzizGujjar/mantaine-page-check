@@ -1,4 +1,5 @@
-﻿.select2-container {
+﻿
+.select2-container {
     width: 100% !important;
     max-width: 297px !important;
 }
@@ -24,18 +25,10 @@
 
 
 
-
-
-
-
-
-
-
 .select2-selection__rendered {
     text-align: left !important;
     direction: ltr !important;
 }
-
 
 
 
@@ -115,7 +108,6 @@
     .detail {
         margin-top: 3%;
     }
-
 
 
 

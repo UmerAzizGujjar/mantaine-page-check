@@ -1,5 +1,5 @@
 ﻿#tabs ul li a {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     color: white;
     background: none;
     border: none;
@@ -10,10 +10,11 @@
     border-bottom: 1px solid aliceblue !important;
     color: white !important;
 }
-.fa-plus-circle {
-    font-size: 35px !important;
-    margin-top: 24px !important;
-    color: #c11718 !important;
+
+.fa fa-plus-circle {
+    font-size: 35px;
+    margin-top: 24px;
+    color: #438eb9 !important;
 }
 
 
@@ -23,7 +24,7 @@
 }
 
 .modal-header {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     color: white;
 }
 

@@ -6,14 +6,13 @@
     margin-left: -27% !important;
 }
 
-
 #token-input-ctl00_MainContent_txtPatient_ID {
     box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
 }
 
 
 .forcolor {
-    background: #c11718  !important;
+    background: #438eb9  !important;
     height: 50px;
 }
 
@@ -56,7 +55,7 @@ gf .table {
 .table th {
     display: none;
     border: 1px solid #FFF;
-    background-color: #c11718;
+    background-color: #438eb9;
     color: #FFF;
     padding: 1em;
 }
@@ -142,7 +141,7 @@ select {
 }
 
 #tabs ul li a {
-    background-color: #c11718  !important;
+    background-color: #438eb9  !important;
     color: white;
     background: none;
     border: none;

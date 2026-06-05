@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApprovalStages.aspx.cs" Inherits="PMS.GL.ApprovalStages" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/swalalert.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
     <link href="../css/stock.css" rel="stylesheet" />
     <script src="../CssJs/select2.min.js"></script>
     <link href="../CssJs/select2.min.css" rel="stylesheet" />

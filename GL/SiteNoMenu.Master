@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1" runat="server">
     <title>TIBBIT</title>
-    <link rel="icon" type="image/x-icon" href="wwwroot/SOURCE_IMAGES/GENERAL_ICONS/Icon.png" />
+    <link rel="icon" type="image/x-icon" href="wwwroot/THEME_TIBBIT/images/LOGOS/Icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="wwwroot/lib/ace/ace-rtl.min.css" rel="stylesheet" />
     <link href="wwwroot/lib/bootstrap/bootstrap.min.css" rel="stylesheet" />

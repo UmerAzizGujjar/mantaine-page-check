@@ -22,10 +22,7 @@
     width: 100%;
     border-collapse: collapse;
 }
-.forcolor {
-    background: #438eb9  !important;
-    height: 50px;
-}
+
 #tblSymptomHistory {
     width: 100%;
     border-collapse: collapse;
@@ -307,9 +304,7 @@ select {
     width: 800px !important;
 }
 
-.forcolor li a:hover {
-    color: #FFC000 !important;
-}
+
 
 #tabs ul {
     display: flex;

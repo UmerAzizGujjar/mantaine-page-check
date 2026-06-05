@@ -255,7 +255,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 
 /* Interaction states
 ----------------------------------*/
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 2px solid #EFA63E  ;background-color:#EFA63E   !important; color:white !important;/*{borderColorDefault}*/}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 2px solid #EFA63E  ;background-color:#EFA63E   ; color:white !important;/*{borderColorDefault}*/}
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #555555/*{fcDefault}*/; text-decoration: none; }
 	.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
 		border: 1px solid #999999 /*{borderColorHover}*/;

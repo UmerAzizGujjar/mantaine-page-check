@@ -157,6 +157,9 @@
     background-color: #b2f598;
 }
 
+.toast-not-urgent {
+    background-color: #015e11;
+}
 
 #token-input-ctl00_MainContent_txtPatient_ID {
     box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
@@ -170,9 +173,6 @@
     box-shadow: 2px -3px 5px rgba(0, 0, 0, 0.2) !important;
 }
 
-.toast-not-urgent {
-    background-color: #015e11;
-}
 
 .moveleft {
     float: left;
@@ -320,7 +320,7 @@ div.token-input-dropdown {
  }
 
  #tabs ul li a {
-            background-color: #c11718  !important;
+            background-color: #438eb9  !important;
             color: white;
             text-decoration: none;
             padding: 10px;
@@ -344,7 +344,7 @@ div.token-input-dropdown {
 .Heading {
     color: white !important;
     text-align: center;
-    background-color:#c11718 ;
+    background-color:#438eb9 ;
     height:50px;
     padding:10px;
 }
@@ -400,7 +400,6 @@ div.token-input-dropdown {
 .detail {
     margin-top:2%;
 }
-
 
 
 

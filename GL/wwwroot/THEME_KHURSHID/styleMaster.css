@@ -1,3 +1,13 @@
+/* Select2 Hover/Selected Highlight */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #308665db !important;
+    color: white !important;
+}
+
+/* Select2 Classic Theme Main Box Background */
+.select2-container--classic .select2-selection--single {
+    background-color: #308665db !important;
+}
 /*......Custom CSS....*/
 @font-face {
     font-family: 'Open Sans';
@@ -1108,7 +1118,7 @@ page-header h1 {
         }
 
         .ace-nav > li > a {
-            background-color: #b7006f;
+            background-color: White;
             color: #FFF;
             display: block;
             line-height: inherit;

@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
  
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <link href="../../wwwroot/lib/sweetalert/tablestyle.css" rel="stylesheet" />
     <script type="text/javascript">
 
 

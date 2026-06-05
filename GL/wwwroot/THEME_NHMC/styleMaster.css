@@ -1,6 +1,35 @@
+/* Select2 Hover/Selected Highlight */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #308665db !important;
+    color: white !important;
+}
+
+/* Select2 Classic Theme Main Box Background */
+.select2-container--classic .select2-selection--single {
+    background-color: #308665db !important;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 2px solid #c5c5c5 !important;
+}
+.ui-widget-header {
+    background: #4d977b !important;
+}
+
+.ui-state-active {
+    border: 1px solid #4d977b !important;
+    background: #4d977b !important;
+}
+
+.ui-state-default {
+    background: #4d977b !important;
+}
 .delListBtn {
     background-color: #ad170c !important;
     color: black !important;
+}
+
+.printListBtn {
+    background-color: #308665db !important;
 }
 
 /*......Custom CSS....*/
