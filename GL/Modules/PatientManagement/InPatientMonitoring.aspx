@@ -4485,7 +4485,7 @@
                                     <asp:TextBox id="txtService" name="txtService" runat="server"></asp:TextBox>
                                 </td>
                                 <td>
-                                    <input type="button" id="btnAddService" class="btn btn-primry" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" style="top: 3px; left: 20px;" />
+                                    <input type="button" id="btnAddService" class="btn btn-primry" name="btnAddService" onclick="AddServiceOrItem()" value="Add Service" style="top: 3px; left: 20px;width:26% !important" />
                                 </td>
                             </tr>
                         </tbody>

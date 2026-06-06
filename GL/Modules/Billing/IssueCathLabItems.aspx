@@ -3752,7 +3752,7 @@
                  <div class="col-sm-2 col-md-2 col-lg-2">
                      <input type="button" class="btn btn-primry" id="btnSave" tabindex="10" value="Save & Print(Alt+S)" onclick="GetPharmacyUser()" />
                  </div>
-                <div class="col-lg-2 col-md-4 col-sm-6" style="display: none;">
+                <div class="col-lg-2 col-md-4 col-sm-6" >
                     <input type="button" tabindex="15" title="Sale Return" class="btn btn-primry" value="Sale Return" id="btnSaleReturn" />
                 </div>
                 <div class="col-lg-1 col-md-4 col-sm-6">

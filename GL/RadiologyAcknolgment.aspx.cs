@@ -94,6 +94,7 @@ namespace PMS
                                 BedNo = (activeBedNo != null ? activeBedNo.Value.ToString() : ""),
                                 RawTestDeptCode = bill_details.Test_Main_Department,
                                 Panel = bill.Panel_Id,
+                                Panel_Name = db.Panels.Where(p => p.Panel_ID == bill.Panel_Id).Select(p => p.Company_Name).FirstOrDefault(),
                             };
 
                 var queryList = query.ToList();

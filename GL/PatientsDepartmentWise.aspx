@@ -649,17 +649,6 @@
                         var url = 'ReportViewer.aspx?ReportName=DepartmentWiseProcedureTimeLine&ReportTitle=Department Wise Procedure Time Line from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&Report_Type=' + timeLine + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
-                 <%--   else if (rptTitle == "Patient_Trans_Detail") {
-                        debugger;
-                        //  var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
-                        var startTime = $('#ctl00_MainContent_txtSTime').val();
-                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
-                        var endTime = $('#ctl00_MainContent_txtETime').val();
-
-                        var url = 'ReportViewer.aspx?ReportName=Patient_Transaction_Detail&ReportTitle=Patient Transaction Detail&MRNo=' + patid + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime);// + '&ExportPDF=' + exporttopdf;
-                        window.open(url, '_blank');
-                    }--%>
                     else if (rptTitle == "Patient_Trans_Detail") {
                         debugger;
                         var url = 'ReportViewer.aspx?ReportName=Patient_Transaction_Detail&ReportTitle=Patient Transaction Detail From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MRNo=' + patid;
@@ -673,7 +662,7 @@
                     }
                     else if (rptTitle == "Lab_Test_Investigation_Delay") {
                         //<%-- var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;--%>
-                        var url = 'ReportViewer.aspx?ReportName=Lab_Test_Investigation_Delay&ReportTitle=Lab Test Investigation Delay from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + ((typeof ($("#ctl00_MainContent_ddlDepartments option:selected").text()) != 'undefined') ? $("#ctl00_MainContent_ddlDepartments option:selected").text() : "0"); //+ '&Summary=' + summary ;
+                        var url = 'ReportViewer.aspx?ReportName=Lab_Test_Investigation_Delay&ReportTitle=Lab Test Investigation Delay from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + ($("#ctl00_MainContent_ddlDepartments").val() || "0"); //+ '&Summary=' + summary ;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Radiology_Investigation_Delay") {
@@ -1789,6 +1778,17 @@
                         var url = 'ReportViewer.aspx?ReportName=Patient_Quality_Check_Report&ReportTitle=Patient Quality Check Detail Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime);
                         window.open(url, '_blank');
                     }
+                    if (rptTitle == "Cath_Lab_Billing_Detail_Report") {
+                        debugger;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+                        var url = 'ReportViewer.aspx?ReportName=Cath_Lab_Billing_Detail_Report&ReportTitle=Cath Lab Billing Detail Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime) + '&MRNo=' + patid + '&DoctorID=' + $("#ctl00_MainContent_ddlDoctor").val() + '&Operator=' + ((typeof ($("#ctl00_MainContent_ddloprators").val()) != 'undefined') ? $("#ctl00_MainContent_ddloprators").val() : "0") + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val();
+                        window.open(url, '_blank');
+                    }
                     if (rptTitle == "High_Risk_Medicine_Report") {
                         debugger;
                         var startDate = $('#ctl00_MainContent_txtStart_Date').val();
@@ -1834,10 +1834,10 @@
                         var url = 'ReportViewer.aspx?ReportName=SIH&ReportTitle=Stock In Hand ' + '&stock=' + stock ;
                         window.open(url, '_blank');
                     }
-                    else if (rptTitle == "Stock_Consumption_Details") {
+                    else if (rptTitle == "Overall_Stock_Consumption_Details") {
                         debugger;
                         var stock = $("#ctl00_MainContent_ddlStock").val();    
-                        var url = 'ReportViewer.aspx?ReportName=Stock_Consumption_Details&ReportTitle=Stock Consumption Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&stock=' + stock;
+                        var url = 'ReportViewer.aspx?ReportName=Overall_Stock_Consumption_Details&ReportTitle=Stock Consumption Detail from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&startDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&endDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&stock=' + stock + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == 'TotalPatientRegsreport') {

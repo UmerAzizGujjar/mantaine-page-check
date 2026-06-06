@@ -4710,6 +4710,7 @@ namespace PMS
             public string Remarks;
 
             public string Nurse_Name;
+            public string username;
 
             public string Date;
         }
@@ -4731,6 +4732,7 @@ namespace PMS
             public string Remarks;
 
             public string Nurse_Name;
+            public string username;
         }
         public class DoctotNote
         {
@@ -5116,6 +5118,7 @@ namespace PMS
                             existingRecord.Dosage_Qty = newMed.Dosage_Qty;
                             existingRecord.Other_Instruction = newMed.Other_Instruction;
                             existingRecord.Nurse_Name = newMed.Nurse_Name;
+                            existingRecord.Username = AppConfig.UserName;
                         }
                         else
                         {
@@ -5140,7 +5143,9 @@ namespace PMS
                                 Frequency = newMed.Frequency,
                                 Dosage_Qty = newMed.Dosage_Qty,
                                 Other_Instruction = newMed.Other_Instruction,
-                                Nurse_Name = newMed.Nurse_Name
+                                Nurse_Name = newMed.Nurse_Name,
+                                Username = AppConfig.UserName
+                                
                             };
                             db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
                         }
@@ -5225,6 +5230,7 @@ namespace PMS
                             existingRecord.Other_Instruction = newMed.Other_Instruction;
                             existingRecord.Nurse_Name = newMed.Nurse_Name;
                             existingRecord.Remarks = newMed.Remarks;
+                            existingRecord.Username = AppConfig.UserName;
                         }
                         else
                         {
@@ -5251,7 +5257,8 @@ namespace PMS
                                 Dosage_Qty = newMed.Dosage_Qty,
                                 Other_Instruction = newMed.Other_Instruction,
                                 Nurse_Name = newMed.Nurse_Name,
-                                Remarks = newMed.Remarks
+                                Remarks = newMed.Remarks,
+                                Username = AppConfig.UserName
                             };
                             db.In_Patient_Medicines.InsertOnSubmit(newMedicine);
                         }

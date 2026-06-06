@@ -384,5 +384,25 @@ namespace PMS
                 return hasEntryRights;
             }
         }
+        [WebMethod]
+        public static string ReamrksValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var Adjustment = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Adjustment Remarks"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return Adjustment ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
     }
 }

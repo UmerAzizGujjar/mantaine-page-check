@@ -103,7 +103,7 @@
                             var actionButtons = `
                         <a href="#" class="editListBtn" onclick="Edit(${full.Budget_ID})" style="border-radius: 4px;padding: 5px 8px 5px 8px;"><i class="fa fa-pencil" ></i></a>
                         <a class="printListBtn" style="border-radius: 4px;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReport(${full.Budget_ID})"><i class="fa fa-print"></i></a>`;
-                            if (full.Voucher_Status == 'Created') {
+                            if (full.Budget_Status == 'Created') {
                                 actionButtons += `
                             <a href="#" class=""  onclick="ApproveBudget(${full.Budget_ID})" name="btnApprove" style="border-radius: 4px;background-color: #519e7e;color: white;padding: 4px 11px;"></i>Approve</a>`;
                             }
@@ -367,9 +367,9 @@
                     <th>Voucher No</th>
                     <th>Voucher Date</th>
                     <th>Creation Date</th>
-                    <th id="th-descptn">Description</th>
-                    <th>Amount</th>
+                    <th id="th-descptn">Description</th>                   
                     <th>Status</th>
+                    <th>Amount</th>
                     <th>Action</th>
                 </tr>
             </thead>
