@@ -1153,7 +1153,7 @@ namespace PMS.Modules.Billing
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
             var query = db.Ar_Billings
-                .Where(data => data.IsPharmacy == true
+                .Where(data => data.IsCathLab == true
                             && data.Invoice_No != null
                             && (data.isCancel == false || data.isCancel == null));
 
@@ -1230,7 +1230,7 @@ namespace PMS.Modules.Billing
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
-            var query = db.INV_Items.Where(data => data.IsPharmacyItem == true);
+            var query = db.INV_Items.Where(data => data.Is_CathLab == true);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -1337,6 +1337,8 @@ namespace PMS.Modules.Billing
             saleReturn.TotalDisc_Amount = record.TotalDisAmt;
             saleReturn.Disc_Adjustment = record.AdjustmentAmt;
             saleReturn.Net_Amount = record.Total;
+            saleReturn.Is_CathLab = true;
+            saleReturn.Is_Pharmacy = false;
 
             saleReturn.Ware_House = record.warehouse;
             saleReturn.Total_Amount = record.TotalPayable;
