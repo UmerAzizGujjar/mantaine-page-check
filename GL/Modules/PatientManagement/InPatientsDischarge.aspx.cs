@@ -5895,6 +5895,17 @@ namespace PMS
             {
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
+                    // First check the patient_discount_type from in_patient table
+                    var inPatient = (from ip in db.In_Patients
+                                     where ip.In_Patient_ID == InPatientID
+                                     select ip).FirstOrDefault();
+
+                    // If discount type is '03', return special value to skip the check
+                    if (inPatient != null && inPatient.Patient_Discount_Type == "03")
+                    {
+                        return "SKIP_CHECK"; // Special flag to indicate skip
+                    }
+
                     // Get billing records based on final bill existence
                     var billingRecords = (from b in db.Ar_Billings
                                           where b.In_Patient_ID == InPatientID
