@@ -1010,11 +1010,10 @@ namespace PMS
         partial void DeleteIn_Patient_Medicine(In_Patient_Medicine instance);
         #endregion
         public DataBaseDataContext() :
-base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
-        public
         public DataBaseDataContext(string connection) :
                 base(connection, mappingSource)
         {

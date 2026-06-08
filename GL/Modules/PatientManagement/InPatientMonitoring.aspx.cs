@@ -1024,6 +1024,7 @@ namespace PMS
             public string Dosage_Qty;
             public string Other_Instruction;
             public string Rec_Qty;
+            public string Rtn_Qty;
             public string Issue_Qty;
 
             public string Regular;
@@ -1073,6 +1074,7 @@ namespace PMS
                                          inPatmedicineList.STAT,
                                          inPatmedicineList.Rcv_Qty,
                                          inPatmedicineList.Req_Qty,
+                                         inPatmedicineList.Rtn_Qty,
                                          inPatmedicineList.Username,
                                          inPatmedicineList.Max_PRN_Dose,
                                          inPatmedicineList.Start_Date_Time,
@@ -1132,6 +1134,7 @@ namespace PMS
                                          inPatmedicineList.STAT,
                                          inPatmedicineList.Rcv_Qty,
                                          inPatmedicineList.Req_Qty,
+                                         inPatmedicineList.Rtn_Qty,
                                          inPatmedicineList.Username,
                                          inPatmedicineList.Max_PRN_Dose,
                                          inPatmedicineList.Start_Date_Time,
@@ -1219,6 +1222,7 @@ namespace PMS
                                 else if (existingMedicine.AttendingParamedical_Staff != oIn_Patient_Medicine.AttendingParamedical_Staff) hasChanges = true;
                                 else if (existingMedicine.Req_Qty != Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty)) hasChanges = true;
                                 else if (existingMedicine.Rcv_Qty != Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty)) hasChanges = true;
+                                else if (existingMedicine.Rtn_Qty != Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty)) hasChanges = true;
                                 else if (existingMedicine.Regular != Convert.ToBoolean(oIn_Patient_Medicine.Regular)) hasChanges = true;
                                 else if (existingMedicine.STAT != Convert.ToBoolean(oIn_Patient_Medicine.STAT)) hasChanges = true;
                                 else if (existingMedicine.PRN != Convert.ToBoolean(oIn_Patient_Medicine.PRN)) hasChanges = true;
@@ -1236,6 +1240,7 @@ namespace PMS
                                     existingMedicine.AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff;
                                     existingMedicine.Req_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty);
                                     existingMedicine.Rcv_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty);
+                                    existingMedicine.Rtn_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty);
                                     existingMedicine.Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular);
                                     existingMedicine.STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT);
                                     existingMedicine.PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN);
@@ -1294,6 +1299,7 @@ namespace PMS
                                     AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
                                     Frequency = oIn_Patient_Medicine.Frequency,
                                     Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
+                                    Rtn_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty),
                                     Rcv_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty),
                                     Req_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty),
                                     Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
