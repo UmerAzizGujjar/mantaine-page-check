@@ -2228,41 +2228,41 @@ namespace PMS
                     SetDepartent();
 
                 }
-                else if (this.PageTitle == "PharmacySaleReport")
-                {
-                    string x = "Pharmacy Sale Report";
-                    Master.Label2.Text = x;
-                    Master.GetMenuName();
-                    lblMainDepartment.Visible = false;
-                    ddlDepartments.Visible = false;
-                    lblPatientType.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    ddlPatientType.Visible = false;
-                    optRw.Visible = false;
-                    trDoctor.Visible = false;
-                    tr_Summary.Visible = true;
-                    trSearch1.Visible = true;
-                    lblMainDepartment.Visible = false;
-                    dpROw.Visible = false;
-                    ddlReportType.Visible = false;
-                    txtMRNo.Visible = false;
-                    lblMRNo.Visible = false;
-                    tr_Export.Visible = false;
-                    ddlShift.Visible = false;
-                    lbShift.Visible = false;
-                    DateDiv.Visible = true;
-                    Time_Row.Visible = true;
-                    if (AllowPatientRecord)
-                    {
-                        optRw.Visible = true;
-                        DataTable dt1 = DBClass.getDataTable("select * from Pharmacy_Users where isActive=1");
-                        ddloprators.DataSource = dt1;
-                        ddloprators.DataTextField = "UserName";
-                        ddloprators.DataValueField = "UserID";
-                        ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                        ddloprators.DataBind();
-                    }
-                }
+                //else if (this.PageTitle == "PharmacySaleReport")
+                //{
+                //    string x = "Pharmacy Sale Report";
+                //    Master.Label2.Text = x;
+                //    Master.GetMenuName();
+                //    lblMainDepartment.Visible = false;
+                //    ddlDepartments.Visible = false;
+                //    lblPatientType.Visible = false;
+                //    lblMultiSelect.Visible = false;
+                //    ddlPatientType.Visible = false;
+                //    optRw.Visible = false;
+                //    trDoctor.Visible = false;
+                //    tr_Summary.Visible = true;
+                //    trSearch1.Visible = true;
+                //    lblMainDepartment.Visible = false;
+                //    dpROw.Visible = false;
+                //    ddlReportType.Visible = false;
+                //    txtMRNo.Visible = false;
+                //    lblMRNo.Visible = false;
+                //    tr_Export.Visible = false;
+                //    ddlShift.Visible = false;
+                //    lbShift.Visible = false;
+                //    DateDiv.Visible = true;
+                //    Time_Row.Visible = true;
+                //    if (AllowPatientRecord)
+                //    {
+                //        optRw.Visible = true;
+                //        DataTable dt1 = DBClass.getDataTable("select * from Pharmacy_Users where isActive=1");
+                //        ddloprators.DataSource = dt1;
+                //        ddloprators.DataTextField = "UserName";
+                //        ddloprators.DataValueField = "UserID";
+                //        ddloprators.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                //        ddloprators.DataBind();
+                //    }
+                //}
                 else if (this.PageTitle == "Dischare_Revd")
                 {
                     string x = "Discharge Received Report";
@@ -7552,6 +7552,20 @@ namespace PMS
 
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
+
+
+
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
 
                 }
                 //else if (PageTitle == "Pharmacy_Profit_and_Loss_Report")
