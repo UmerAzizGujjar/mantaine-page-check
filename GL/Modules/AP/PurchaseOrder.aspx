@@ -100,7 +100,197 @@
     </style>
 
     <script type="text/javascript">
+        var poid = '<% =Request.QueryString["PO_ID"] %>';
 
+        function loadVendorItems(vendorId) {
+            debugger;
+            var isEditMode = '<% =Request.QueryString["PO_ID"] %>' !== '';
+
+           // Skip projection check in edit mode
+           if (!isEditMode) {
+               var projectiontype = $("#ctl00_MainContent_ddlprojection").val();
+
+               // Check if projection is required (ProjCond == '01') and not selected
+               if (ProjCond == '01' && (projectiontype === "0" || projectiontype === "" || projectiontype === null)) {
+                   Swal.fire({
+                       icon: 'warning',
+                       title: 'Projection Required',
+                       text: 'Please select Projection first before selecting vendor.',
+                       timer: 3000,
+                       showConfirmButton: true,
+                       confirmButtonText: 'OK'
+                   }).then((result) => {
+                       if (result.isConfirmed) {
+                           $('#ctl00_MainContent_ddlprojection').select2('open');
+                       }
+                   });
+                   // Reset vendor dropdown back to default "Select" option
+                   $('#ctl00_MainContent_ddlVendor').val('0').trigger('change.select2');
+                   return; // Exit function - DO NOT load items
+               }
+           }
+
+           if (!vendorId || vendorId === '0') {
+               return;
+           }
+
+           showLoader('Loading vendor items...', false);
+
+           PageMethods.GetVendorItems(vendorId, function (response) {
+               try {
+                   var items = JSON.parse(response);
+
+                   if (!items || items.length === 0) {
+                       Swal.fire({
+                           icon: 'info',
+                           title: 'No Items Found',
+                           text: 'No items found for this vendor.',
+                           timer: 2000,
+                           showConfirmButton: false
+                       });
+                       hideLoader();
+                       return;
+                   }
+
+                   // Process each item and add to grid
+                   var itemsAdded = 0;
+                   var totalItems = items.length;
+
+                   $.each(items, function (index, item) {
+                       // Check if item already exists
+                       var exists = false;
+                       $('#tblItemDescription tbody tr').each(function () {
+                           if ($(this).find('input[name=txtItemCode]').val() == item.Item_Code) {
+                               exists = true;
+                               return false;
+                           }
+                       });
+
+                       if (!exists) {
+                           appendVendorItem(item);
+                           itemsAdded++;
+                       }
+                   });
+
+                   updateLoaderProgress(100, 'Completed');
+
+                   setTimeout(function () {
+                       hideLoader();
+                       if (itemsAdded > 0) {
+                           Swal.fire({
+                               icon: 'success',
+                               title: 'Success',
+                               text: itemsAdded + ' item(s) added successfully.',
+                               timer: 1500,
+                               showConfirmButton: false
+                           });
+                       } else {
+                           Swal.fire({
+                               icon: 'info',
+                               title: 'No New Items',
+                               text: 'All vendor items are already added.',
+                               timer: 1500,
+                               showConfirmButton: false
+                           });
+                       }
+                   }, 500);
+
+               } catch (e) {
+                   console.error('Error parsing vendor items:', e);
+                   hideLoader();
+                   Swal.fire({
+                       icon: 'error',
+                       title: 'Error',
+                       text: 'Failed to load vendor items.',
+                       timer: 2000,
+                       showConfirmButton: false
+                   });
+               }
+           }, function (error) {
+               hideLoader();
+               console.error('Error loading vendor items:', error);
+               Swal.fire({
+                   icon: 'error',
+                   title: 'Error',
+                   text: 'Failed to load vendor items.',
+                   timer: 2000,
+                   showConfirmButton: false
+               });
+           });
+       }
+
+        // Function to append a single vendor item
+        function appendVendorItem(item) {
+            var length = $("#tblItemDescription tr:gt(0)").length + 1;
+
+            var newRow = buildNewRow(
+                length,
+                "", // PR_Num (empty for direct vendor items)
+                item.Item_Code,
+                item.Description,
+                item.Unit,
+                item.Qty || 1,
+                item.UOM_Qty || 1,
+                item.Purchase_Rate || 0,
+                0, // pr_detail_id (0 for direct items)
+                item.TotalStock || 0
+            );
+
+            $("#tblItemDescription tbody").append(newRow);
+
+            // Populate dropdowns for the new row
+            var staxLoaded = false;
+            var advTaxLoaded = false;
+
+            function checkBothLoaded() {
+                if (staxLoaded && advTaxLoaded) {
+                    CulculateAmonutWithQty(length);
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $('#txtddate' + length).datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+                    calcTotal();
+                }
+            }
+
+            // Populate Sales Tax dropdown
+            PageMethods.getwtaxtype(function (response) {
+                var options = '<option value="0">0</option>';
+                try {
+                    var taxData = JSON.parse(response);
+                    $.each(taxData, function (key, value) {
+                        options += '<option value="' + value.Sales_Tax_ID + '">' + value.Sales_Tax_Perc + '</option>';
+                    });
+                } catch (e) {
+                    console.error('Error parsing tax data:', e);
+                }
+                $('#ddlSTAX' + length).html(options);
+                staxLoaded = true;
+                checkBothLoaded();
+            }, function (error) {
+                console.error('Error loading Sales Tax:', error);
+                staxLoaded = true;
+                checkBothLoaded();
+            });
+
+            // Populate Advance Tax dropdown
+            PageMethods.getAdvanceTaxType(function (response) {
+                var options = '<option value="0">0</option>';
+                try {
+                    var taxData = JSON.parse(response);
+                    $.each(taxData, function (key, value) {
+                        options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
+                    });
+                } catch (e) {
+                    console.error('Error parsing advance tax data:', e);
+                }
+                $('#ddlAdvanceTax' + length).html(options);
+                advTaxLoaded = true;
+                checkBothLoaded();
+            }, function (error) {
+                console.error('Error loading Advance Tax:', error);
+                advTaxLoaded = true;
+                checkBothLoaded();
+            });
+        }
         function FillStaxtype() {
             debugger;
             var options = '<option value="0">0</option>';
@@ -529,7 +719,13 @@
             // Initialize page
             UserRights();
             GetWareHouseCondition();
-
+            Getprojection();
+            $('#ctl00_MainContent_ddlVendor').change(function () {
+                var vendorId = $(this).val();
+                if (vendorId && vendorId !== '0') {
+                    loadVendorItems(vendorId);
+                }
+            });
             $('#ddlWarehouse').change(function () {
                 $("#ddlWarehouse").attr('disabled', true);
             });
@@ -580,6 +776,7 @@
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#ctl00_MainContent_txtPurchase_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
+            $("#ctl00_MainContent_txtProjection_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
             $("#ctl00_MainContent_txtdueDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
 
         // Load PO data ONLY if PO_ID exists in query string
@@ -1474,6 +1671,33 @@ function scheduleCalcTotal(delay) {
                     else {
                         $('#warehouse').hide();
                         getprNoBy();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
+        var ProjCond;
+        function GetprojectionCondition() {
+
+            $.ajax({
+                type: "POST",
+                url: "PurchaseOrder.aspx/Getprojection",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    ProjCond = JSON.parse(response.d);
+                    if (ProjCond == '01') {
+                        $('#projectiontype').show();
+                        $('#projectiondate').show();
+                    }
+                    else {
+                        $('#projectiontype').hide();
+                        $('#projectiondate').hide();
+                    
                     }
                 },
                 error: function (error) {
@@ -2516,7 +2740,7 @@ function scheduleCalcTotal(delay) {
 
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="lblSupplier_ID" runat="server" Text="Vendor">Vendor <span style="color: red;">*</span></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlVendor" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+                <asp:DropDownList runat="server" ID="ddlVendor"  class="form-control"  AppendDataBoundItems="true"></asp:DropDownList>
             </div>
 
 
@@ -2588,10 +2812,19 @@ function scheduleCalcTotal(delay) {
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-9 col-md-12 col-sm-12">
+            <div class="col-lg-6 col-md-8 col-sm-12">
                 <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
                 <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
             </div>
+              <div class="col-lg-3 col-md-6 col-sm-12" id="projectiondate">
+              <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
+             
+              <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
+          </div>
+              <div class="col-lg-3 col-md-6 col-sm-12" id="projectiontype">
+                  <asp:Label ID="lblddlprojection" runat="server" Text="Projection" Style="">Projection<span style="color: red">*</span></asp:Label>
+                  <asp:DropDownList runat="server" ID="ddlprojection" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+              </div>
         </div>
     </form>
     <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />   

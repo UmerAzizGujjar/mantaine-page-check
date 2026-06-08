@@ -321,6 +321,42 @@ namespace PMS.AP
         protected global::System.Web.UI.WebControls.TextBox txtRemarks;
 
         /// <summary>
+        /// lblprojectiondate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblprojectiondate;
+
+        /// <summary>
+        /// txtProjection_Date control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtProjection_Date;
+
+        /// <summary>
+        /// lblddlprojection control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblddlprojection;
+
+        /// <summary>
+        /// ddlprojection control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlprojection;
+
+        /// <summary>
         /// hdfItem_ID control.
         /// </summary>
         /// <remarks>
