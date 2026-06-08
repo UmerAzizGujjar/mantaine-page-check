@@ -1,0 +1,150 @@
+﻿.sidebar.h-sidebar .nav-list > li > a {
+    text-align: center !important;
+    line-height: 22px !important;
+    height: auto !important;
+    font-family: Arial, sans-serif !important;
+    padding: 10px 14px !important;
+    font-weight: bold !important;
+}
+
+select {
+    border-radius: 5px !important;
+}
+
+input[type="text"] {
+    font-size: 13px;
+    border-radius: 5px !important;
+}
+
+.nav-list > li .submenu > li.hover > a {
+    font-size: 13px !important;
+    font-family: Arial, sans-serif !important;
+    font-weight: bold !important;
+}
+
+div.token-input-dropdown {
+    overflow: auto;
+    max-height: 150px;
+}
+
+textarea {
+    border-radius: 5px !important;
+}
+
+.test_rate {
+    display: none;
+}
+
+fieldset {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+}
+
+legend {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+    margin-bottom: 0px;
+}
+
+.table {
+    margin: 1em 0;
+    width: 100%;
+    overflow: hidden;
+    background: #FFF;
+    color: #024457;
+    border: 1px solid #167F92;
+}
+
+    .table tr {
+        border: 1px solid #D9E4E6;
+    }
+
+        .table tr:nth-child(even) {
+            background-color: #EAF3F3;
+        }
+
+    .table th {
+        display: none;
+        border: 1px solid #FFF;
+        background-color: #c11718;
+        color: #FFF;
+        padding: 1em;
+    }
+
+    .table thead th {
+        display: table-cell;
+        text-align: center;
+    }
+
+@media (min-width: 480px) {
+    .table th:nth-child(2) span {
+        display: block;
+    }
+
+    .table th:nth-child(2):after {
+        display: none;
+    }
+}
+
+.table td {
+    display: block;
+    word-wrap: break-word;
+    max-width: 7em;
+}
+
+    .table td:first-child {
+        display: table-cell;
+        text-align: center;
+        border-right: 1px solid #D9E4E6;
+    }
+
+.table td {
+    border: 1px solid #D9E4E6;
+}
+
+.table th, .table td {
+    text-align: center;
+    margin: .5em 1em;
+}
+
+@media (min-width: 480px) {
+    .table th, .table td {
+        display: table-cell;
+        padding: 1em;
+    }
+}
+
+#test_id {
+    width: 60px !important;
+    text-align: center;
+    font-weight: bold;
+}
+
+.ErrorAlert {
+    border: 1px solid red !important;
+}
+
+.tooltip-style {
+    background-color: #ffc107;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    position: fixed;
+    left: 0;
+    top: 100%;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+
+.textarea, input[type="text"] {
+    box-shadow: none !important;
+}

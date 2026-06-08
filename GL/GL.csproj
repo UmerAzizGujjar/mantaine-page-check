@@ -1546,6 +1546,102 @@
     <Content Include="wwwroot\THEME_KALEEM\images\StudentImages\3631.png" />
     <Content Include="wwwroot\THEME_KALEEM\styleMaster.css" />
     <Content Include="wwwroot\THEME_NOOR\styleMaster.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\AddNewLabTest.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\AddpurchaseInvoice.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Advance.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Appointment.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\approveinvtemp.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Approvepr.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\AssetCategoryCss.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Billing.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\BloodBank.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\CEODashboard.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\CEODashboardNew.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\changePassword.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\ComparativeStatement.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\CRV.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Datavalue.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\DoctorAgrement.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Donor.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\DonorReceiving.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Emergency.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\EmergencyForm.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Employee.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\EMR.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\GIR.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\IGP.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\inv_org.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\ipdadmission.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\ipdcase.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\ipddischarge.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\ipdmonitoring.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\LabReportPreview.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\LabSample.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\login.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\LoginPage.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Maindashboard.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\MainDashboard.min.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\MEdTemplate.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\NewEmergencyCase.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\NewEMR.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\NewOutPatient.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\OldOutPatients.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\OPD.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\OT.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Outpatient.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Pharmacy.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\pharmacyuser.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Policy.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\PR.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Product.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Receipts.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Refund.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\registeruser.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\RegPat.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Report.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\SalesDashboard.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Shortcuts.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\stock.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\stockadjustment.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Student.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\studentReceipt.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\SubjDefinintion.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\swalalert.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\tablestyle.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\TestApproval.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\TestDefinition.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Toaster.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\toggle.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\Userview.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\vendor.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\voucher.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomJs\Appointment.js" />
+    <Content Include="wwwroot\THEME_CPTH\CustomJs\EMR.js" />
+    <Content Include="wwwroot\THEME_CPTH\CustomJs\OPD.js" />
+    <Content Include="wwwroot\THEME_CPTH\CustomJs\OPDView.js" />
+    <Content Include="wwwroot\THEME_CPTH\CustomJs\RegPatient.js" />
+    <Content Include="wwwroot\THEME_CPTH\CustomJs\Student.js" />
+    <Content Include="wwwroot\THEME_CPTH\header-footer\Footer.ascx" />
+    <Content Include="wwwroot\THEME_CPTH\images\avatars\avatar1.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\avatars\avatar2.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\avatars\avatar3.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\avatars\avatar4.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\avatars\avatar5.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\avatars\profile-pic.jpg" />
+    <Content Include="wwwroot\THEME_CPTH\images\avatars\user.jpg" />
+    <Content Include="wwwroot\THEME_CPTH\images\bootstrap-colorpicker\alpha-horizontal.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\bootstrap-colorpicker\alpha.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\bootstrap-colorpicker\hue-horizontal.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\bootstrap-colorpicker\hue.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\bootstrap-colorpicker\saturation.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\LOGOS\LoginBackground.jpg" />
+    <Content Include="wwwroot\THEME_CPTH\images\LOGOS\logo.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\Projectimages\Project\11414.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\StudentImages\1.jpg" />
+    <Content Include="wwwroot\THEME_CPTH\images\StudentImages\1.png" />
+    <Content Include="wwwroot\THEME_CPTH\images\StudentImages\3.jpg" />
+    <Content Include="wwwroot\THEME_CPTH\images\StudentImages\3631.png" />
+    <Content Include="wwwroot\THEME_CPTH\styleMaster.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\AddNewLabTest.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\AddpurchaseInvoice.css" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\Advance.css" />
@@ -5802,6 +5898,13 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wwwroot\THEME_KALEEM\header-footer\Footer.ascx.designer.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="wwwroot\THEME_CPTH\header-footer\Footer.ascx.cs">
+      <DependentUpon>Footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wwwroot\THEME_CPTH\header-footer\Footer.ascx.designer.cs">
       <DependentUpon>Footer.ascx</DependentUpon>
     </Compile>
     <Compile Include="wwwroot\THEME_SKINSTUDIO\header-footer\Footer.ascx.cs">

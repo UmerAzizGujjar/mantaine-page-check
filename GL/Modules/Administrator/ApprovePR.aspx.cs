@@ -106,17 +106,21 @@ namespace PMS
                     Label lblCanApprove = row.FindControl("lblCanApprove") as Label;
                     Label lblPRAmount = row.FindControl("lblPRAmount") as Label;
                     Label lblUserApprovalLimit = row.FindControl("lblUserApprovalLimit") as Label;
-                    
+                    Button btnBypass = row.FindControl("btnBypass") as Button;
+
                     if (chk != null && lblCanApprove != null && bool.TryParse(lblCanApprove.Text, out bool canApprove))
                     {
                         if (!canApprove)
                         {
-                            chk.Enabled = false;
+                            chk.Visible = false;
+                            if (btnBypass != null) btnBypass.Visible = true;
                             decimal prAmount = 0;
                             decimal.TryParse(lblPRAmount?.Text ?? "0", out prAmount);
                             decimal approvalLimit = 0;
                             decimal.TryParse(lblUserApprovalLimit?.Text ?? "0", out approvalLimit);
-                            chk.ToolTip = $"PR Amount ({prAmount}) exceeds your approval limit ({(approvalLimit == -1m ? "Unlimited" : approvalLimit.ToString())})";
+                            string msg = $"PR Amount ({prAmount}) exceeds your approval limit ({(approvalLimit == -1m ? "Unlimited" : approvalLimit.ToString())})";
+                            chk.ToolTip = msg;
+                            if (btnBypass != null) btnBypass.ToolTip = msg;
                         }
                     }
                 }
@@ -377,6 +381,68 @@ namespace PMS
         {
             GridView1.PageIndex = e.NewPageIndex;
             BindGridView();
+        }
+
+        protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Bypass")
+            {
+                int pr_id = Convert.ToInt32(e.CommandArgument);
+                GridViewRow row = (GridViewRow)(((Control)e.CommandSource).NamingContainer);
+                TextBox txtApprovalRemarks = row.FindControl("txtApproval_RejectionRemarks") as TextBox;
+                string bypassRemarks = txtApprovalRemarks?.Text;
+
+                using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var user_id = AppConfig.UserID;
+                    var form_id = 1;
+
+                    Purchase_Requisition PR = (from tbl in db.Purchase_Requisitions
+                                               where tbl.PR_Id == pr_id
+                                               select tbl).SingleOrDefault();
+                    if (PR != null)
+                    {
+                        PR.Status = "Bypassed";
+                        PR.Approved_Time = DateTime.Now;
+                        PR.Approved_By = user_id;
+                        db.SubmitChanges();
+
+                        Sys_Approval_Log SAL = new Sys_Approval_Log();
+                        Sys_Approval_Stage_Detail SASD = (from tbl in db.Sys_Approval_Stage_Details
+                                                          join SASM in db.Sys_Approval_Stage_Masters on tbl.Stage_ID equals SASM.Stage_ID
+                                                          join SATDS in db.Sys_Approval_Tempelate_Detail_Stages on SASM.Stage_ID equals SATDS.StageId
+                                                          join SATF in db.Sys_Approval_Tempelate_Detail_Forms on SATDS.Tempelate_ID equals SATF.Tempelate_ID
+                                                          where tbl.UserId == user_id && SATF.FormId == form_id && SASM.IsDeleted == false
+                                                          select tbl).FirstOrDefault();
+                        if (SASD != null)
+                        {
+                            Sys_Approval_Tempelate_Detail_Stage SATDS = (from tbl in db.Sys_Approval_Tempelate_Detail_Stages
+                                                                         join SATF in db.Sys_Approval_Tempelate_Detail_Forms on tbl.Tempelate_ID equals SATF.Tempelate_ID
+                                                                         where tbl.StageId == SASD.Stage_ID && SATF.FormId == form_id
+                                                                         select tbl).FirstOrDefault();
+                            if (SATDS != null)
+                            {
+                                SAL.Approval_Template_ID = SATDS.Tempelate_ID;
+                                SAL.Approval_Stage_ID = SASD.Stage_ID;
+                            }
+                        }
+
+                        SAL.Entry_ID = PR.PR_Id;
+                        SAL.Form_ID = form_id;
+                        SAL.From_Name = "Purcahse Requisition";
+                        SAL.Remarks = Convert.ToString(PR.Remarks);
+                        SAL.Company_ID = AppConfig.Company_ID;
+                        SAL.Entry_Status = "Bypassed";
+                        SAL.Approve_By = user_id;
+                        SAL.Approve_Date = DateTime.Now;
+                        SAL.IsRejected = false;
+                        SAL.Approval_Remarks = bypassRemarks;
+                        db.Sys_Approval_Logs.InsertOnSubmit(SAL);
+                        db.SubmitChanges();
+                    }
+                }
+                BindGridView();
+            }
         }
     }
 }
