@@ -89,6 +89,17 @@ namespace PMS.AP
                         ).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(dept);
         }
+        [WebMethod]
+        public static string Getprojection()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Projection"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
 
         [WebMethod]
         public static string getwtaxtype()
@@ -295,6 +306,12 @@ namespace PMS.AP
             ddlpayment.DataValueField = "DataValue_Name";
             ddlpayment.Items.Add(new ListItem("Please Select", "0"));
             ddlpayment.DataBind();
+            valueset = DBClass.GetValueSet("Projection Type");
+            ddlprojection.DataSource = valueset;
+            ddlprojection.DataTextField = "DataValue_Description";
+            ddlprojection.DataValueField = "DataValue_Name";
+            ddlprojection.Items.Add(new ListItem("Please Select", "0"));
+            ddlprojection.DataBind();
             #endregion
         }
 
@@ -797,7 +814,43 @@ namespace PMS.AP
                 return "{ 'error': '" + ex.Message + "' }";
             }
         }
+        [WebMethod]
+        public static string GetVendorItems(string vendorId)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
+                // Get items from AP_Vendor_Pharmacy_Items table for this vendor
+                var query = (from vi in db.AP_Vendor_Pharmacy_Items
+                             join i in db.INV_Items on vi.ItemId equals i.Item_ID
+                             where vi.Vendor_Id == Convert.ToInt32(vendorId)
+                                   && i.Active == true
+                                   && (i.Services == null || i.Services != true)
+                             select new
+                             {
+                                 i.Item_ID,
+                                 i.Item_Code,
+                                 Description = i.Description,
+                                 Unit = db.GetDataValueName("UOM", i.Unit) ?? "",
+                                 Purchase_Rate = i.Purchase_Rate != null ? i.Purchase_Rate : 0,
+                                 UOM_Qty = i.UOM_Qty != null ? i.UOM_Qty : 1,
+                                 Qty = 1, // Default quantity
+                                 TotalStock = db.GetInvenrtoryItemUomTotalStock(i.Item_ID, i.InventoryOrg) ?? 0,
+                                 vi.Vendor_Id
+                             })
+                             .Distinct()
+                             .OrderBy(x => x.Item_Code)
+                             .ToList();
+
+                return (new JavaScriptSerializer()).Serialize(query);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return (new JavaScriptSerializer()).Serialize(new List<object>());
+            }
+        }
         [WebMethod]
         public static string GetAllitem(string searchText, string warehouseId)
         {
