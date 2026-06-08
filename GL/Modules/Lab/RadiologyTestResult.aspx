@@ -1732,6 +1732,7 @@
         }
 
         // Open loading window immediately
+
         var reportWindow = window.open('', '_blank');
         reportWindow.document.write(`
         <!DOCTYPE html><html><head><title>Loading...</title>
@@ -2128,28 +2129,32 @@ function cleanPrint() {
         ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
     </div>
 
-    <!-- SIGNATURES -->
-    <div class="signatures">
-        <div class="sig-block">
-            <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
-            <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
-            <div class="sig-date">Date &amp; Time: ${data.Test_Ready_On || ''}</div>
-            <div class="sig-note">No Signature(s) required, Electronically Verified</div>
-        </div>
-        <div class="sig-block right">
-            <div class="sig-line">
-                <div class="sig-name">${data.Test_Approved_By_Doctor_name || ''}</div>
-                <div class="sig-qual">${data.Test_Approved_By_Doctor_qualification || ''}</div>
-            </div>
+<!-- SIGNATURES -->
+<div class="signatures">
+    <div class="sig-block">
+        <div class="sig-name">${data.Test_Performed_By_Doctor_name || ''}</div>
+        <div class="sig-qual">${data.Test_Performed_By_Doctor_qualification || ''}</div>
+        <div class="sig-date">Date &amp; Time: ${data.Test_Ready_On || ''}</div>
+        <div class="sig-note">No Signature(s) required, Electronically Verified</div>
+    </div>
+    <div class="sig-block right">
+        <div class="sig-line">
+            <div class="sig-name">Approved By: ${data.Test_Approved_By_Doctor_name || ''}</div>
+            <div class="sig-qual">${data.Test_Approved_By_Doctor_qualification || ''}</div>
         </div>
     </div>
+</div>
 
-    <!-- PAGE FOOTER -->
-    <div class="page-footer">
-        <div class="footer-col">${data.Report_Footer1 || ''}</div>
-        <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
-    </div>
+<!-- REPORT FOOTER (from DB — shown between signatures and page footer) -->
+<div class="page-footer" style="margin-top:10px; border-top: 1px solid #ccc; padding-top:6px;">
+    <div class="footer-col">${data.Report_Footer1 || ''}</div>
+    <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
+</div>
 
+<!-- PAGE FOOTER -->
+<div class="page-footer">
+    <div class="footer-col">${data.Report_Footer1 || ''}</div>
+    <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
 </div>
 
 <button class="print-btn" onclick="cleanPrint()">🖨 Print Report</button>

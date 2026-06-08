@@ -610,7 +610,7 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId, hdndiscountType, Batch, warehouse).ToList();
+                var query = db.spCathLabDetails(itemId, hdndiscountType, Batch, warehouse).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -719,7 +719,7 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId, hdndiscountType, batchNumber, warehouse).ToList();
+                var query = db.spCathLabDetails(itemId, hdndiscountType, batchNumber, warehouse).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -1153,7 +1153,7 @@ namespace PMS.Modules.Billing
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
             var query = db.Ar_Billings
-                .Where(data => data.IsPharmacy == true
+                .Where(data => data.IsCathLab == true
                             && data.Invoice_No != null
                             && (data.isCancel == false || data.isCancel == null));
 
@@ -1191,7 +1191,7 @@ namespace PMS.Modules.Billing
                          on patient.pat_id equals billing.Patient_ID into billingJoin
                          from bill in billingJoin.DefaultIfEmpty()  // LEFT JOIN
                          where bill != null  // Only patients who have billing records
-                            && bill.IsPharmacy == true
+                            && bill.IsCathLab == true
                             && bill.Invoice_No != null
                             && (bill.isCancel == false || bill.isCancel == null)
                          orderby bill.Bill_ID descending
@@ -1230,7 +1230,7 @@ namespace PMS.Modules.Billing
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
 
-            var query = db.INV_Items.Where(data => data.IsPharmacyItem == true);
+            var query = db.INV_Items.Where(data => data.Is_CathLab == true);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -1257,7 +1257,7 @@ namespace PMS.Modules.Billing
             string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spSaleReturnMedicinesDetails(itemId).ToList();
+                var query = db.spSaleReturncathDetails(itemId).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -1337,6 +1337,8 @@ namespace PMS.Modules.Billing
             saleReturn.TotalDisc_Amount = record.TotalDisAmt;
             saleReturn.Disc_Adjustment = record.AdjustmentAmt;
             saleReturn.Net_Amount = record.Total;
+            saleReturn.Is_CathLab = true;
+            saleReturn.Is_Pharmacy = false;
 
             saleReturn.Ware_House = record.warehouse;
             saleReturn.Total_Amount = record.TotalPayable;

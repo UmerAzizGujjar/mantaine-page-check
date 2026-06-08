@@ -321,6 +321,10 @@
         function Validate() {
             var val = document.getElementById("hdnDuplicateCheck").value;
             var returnVal = false;
+
+            if (!checkRemarksBeforeSave()) {
+                return false;
+            }
             if (val == "0")//no duplicate
             {
                 document.getElementById("hdnDuplicateCheck").value = "1";
@@ -413,12 +417,12 @@
                 reportPath = 'ReportViewer.aspx'; // same folder
             }
 
-            var url = '/ReportViewer.aspx?ReportName=StockAdjustmentPrint&ReportTitle=Stock Adjutment&StockAdjustmentID=' + id ;
+            var url = '/ReportViewer.aspx?ReportName=StockAdjustmentPrint&ReportTitle=Stock Adjustment&StockAdjustmentID=' + id ;
             if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=StockAdjustmentPrint&ReportTitle=Stock Adjutment&StockAdjustmentID=' + id;
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=StockAdjustmentPrint&ReportTitle=Stock Adjustment&StockAdjustmentID=' + id;
             }
             window.open(url, '_blank');
         }
@@ -496,7 +500,6 @@
 
             console.log("Loading batches for item_id: " + item_id);
 
-            // Enable both fields before loading new batches
             EnableBothFields();
 
             $.ajax({
@@ -509,24 +512,28 @@
                     debugger;
                     var result = JSON.parse(response.d);
 
-                    // Clear existing options
                     $('#ctl00_MainContent_ddlBatchNo').empty();
                     $('#ctl00_MainContent_ddlBatchNo').append('<option value="0">-- Select Batch --</option>');
 
-                    // Add batches from GRN
                     if (result.GRN_Details && result.GRN_Details.length > 0) {
                         $.each(result.GRN_Details, function (i, batch) {
-                            $('#ctl00_MainContent_ddlBatchNo').append('<option value="' + batch.BatchNum + '">' + batch.BatchNum + ' (GRN)</option>');
+                            var displayText = batch.BatchNum;
+                            if (batch.ReferenceNumber && batch.ReferenceNumber != "") {
+                                displayText = batch.BatchNum + ' - ' + batch.ReferenceNumber;
+                            }
+                            $('#ctl00_MainContent_ddlBatchNo').append('<option value="' + batch.BatchNum + '">' + displayText + ' (GRN)</option>');
                         });
                     }
 
-                    // Add batches from Stock Adjustment
                     if (result.Stock_Adjustment_Details && result.Stock_Adjustment_Details.length > 0) {
                         $.each(result.Stock_Adjustment_Details, function (i, batch) {
-                            $('#ctl00_MainContent_ddlBatchNo').append('<option value="' + batch.BatchNum + '">' + batch.BatchNum + ' (Adjustment)</option>');
+                            var displayText = batch.BatchNum;
+                            if (batch.ReferenceNumber && batch.ReferenceNumber != "") {
+                                displayText = batch.BatchNum + ' - ' + batch.ReferenceNumber;
+                            }
+                            $('#ctl00_MainContent_ddlBatchNo').append('<option value="' + batch.BatchNum + '">' + displayText + ' (Adjustment)</option>');
                         });
                     }
-                    //$('#ctl00_MainContent_ddlBatchNo').select2();
                 },
                 error: function (error) {
                     console.log("Error loading batches: " + error);
@@ -575,6 +582,21 @@
         function EnableBothFields() {
             $('#ctl00_MainContent_txtBatchNo').prop('disabled', false);
             $('#ctl00_MainContent_ddlBatchNo').prop('disabled', false).val('0');
+        }
+        function checkRemarksBeforeSave() {
+            var remarksCode = '<%= ReamrksValidation() %>';
+            var remarks = $('#ctl00_MainContent_txtRemarks').val();
+
+            if (remarksCode === "01" && (!remarks || remarks.trim() === "")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter remarks.',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+            return true;
         }
     </script>
 </asp:Content>
@@ -625,7 +647,7 @@
             <span id="tooltipQuantity" class="tooltip-style" style="display:none;">Enter quantity in loose.</span>
             </div>
             <div class="col-lg-2 col-md-3 col-sm-4">
-                <asp:Label Text="Rate" runat="server" ID="lblRate" />
+                <asp:Label Text="Purchase Rate" runat="server" ID="lblRate" />
                 <asp:TextBox runat="server" ID="txtRate" onchange="return onchange();"  />
                 <asp:RequiredFieldValidator ID="rfvRate" ErrorMessage="Rate is required."
                     ControlToValidate="txtRate" runat="server" SetFocusOnError="true" Display="Dynamic" />

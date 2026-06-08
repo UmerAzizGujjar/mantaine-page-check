@@ -65,24 +65,7 @@ namespace PMS.Modules.Inventory
                         ).FirstOrDefault();
             return (new JavaScriptSerializer()).Serialize(dept);
         }
-        //[WebMethod]
-        //public static string GetGIN()
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var query = (from SIN_NO in db.Store_Issues join SID in db.Store_Issue_Details
-        //                 on SIN_NO.Store_Issue_Id equals SID.Store_Issue_Id
-        //                 where SIN_NO.Status == "Approved"
-        //                 orderby SIN_NO.Store_Issue_Id descending
-        //                 select new
-        //                 {
-        //                     S_No = SIN_NO.Store_Issue_No,
-        //                     S_Id = SIN_NO.Store_Issue_Id,
-        //                     Issue_Qty =SID.Issue_Qty - (db.Goods_Return_Details
-        //                            .Where(gr => gr.SIN_Details == SID.Store_Issue_Detail_Id)
-        //                            .Sum(gr => (decimal?)gr.Stock_Return_Qty) ?? 0)
-        //                 }).ToList();
-        //    return (new JavaScriptSerializer()).Serialize(query);
-        //}
+
         [WebMethod]
         public static string GetGIN()
         {
@@ -183,37 +166,7 @@ namespace PMS.Modules.Inventory
                          }).ToList();
             return (new JavaScriptSerializer()).Serialize(query);
         }
-        //[WebMethod]
-        //public static string LoadSINDetail(string GIN_id)
-        //{
-        //    DataBaseDataContext db = new DataBaseDataContext();
-        //    var query = (from data in db.Store_Issue_Details.Where(x => x.Store_Issue_Id.Equals(GIN_id))
-        //                 select new
-        //                 {   
-        //                     SIN_No = (from si in db.Store_Issues where si.Store_Issue_Id == Convert.ToInt32(GIN_id) select si.Store_Issue_No).FirstOrDefault(),
-        //                     Approvedate = DBClass.getField("select Replace(convert(varchar, Approved_Time, 106), ' ','-') from Store_Issue where Store_Issue_Id=" + Convert.ToInt32(GIN_id)),
-        //                     //Approvedate = (from si in db.Store_Issues where si.Store_Issue_Id == Convert.ToInt32(GIN_id) select si.Approved_Time).FirstOrDefault(),
-        //                     data.Department,
-        //                     data.Issue_Qty,
-        //                     data.Item_Id,
-        //                     data.Store_Issue_Detail_Id,
-        //                     data.BatchNum,
-        //                     Item_code = DBClass.getField("select Item_Code from inv_items where Item_Id=" + data.Item_Id),
-        //                     Unit = (from st in db.Store_Issue_Details
-        //                             join item in db.INV_Items on st.Item_Id equals item.Item_ID
-        //                             select db.GetDataValueName("UOM", item.Unit)).FirstOrDefault(),
-        //                     Description = DBClass.getField("select Description from inv_items where Item_Id=" + data.Item_Id),
-        //                     IsBatch = DBClass.getField("select IsBatch from inv_items where Item_Id=" + data.Item_Id),
-        //                     Store_Stock = DBClass.getField("Select dbo.GetItemBatchStock(" + data.Item_Id + ", '','')"),
-        //                     data.Rate,
-        //                     data.Amount,
-        //                     SaveTimeStock = data.Store_Stock,
-        //                     Balance_Stock = db.Goods_Return_Details
-        //                            .Where(gr => gr.SIN_Details == data.Store_Issue_Detail_Id)
-        //                            .Sum(gr => (decimal?)gr.Stock_Return_Qty) ?? 0
-        //                 }).ToList();
-        //    return (new JavaScriptSerializer()).Serialize(query);
-        //}
+       
         [WebMethod]
         public static string LoadSINDetail(string GIN_id)
         {

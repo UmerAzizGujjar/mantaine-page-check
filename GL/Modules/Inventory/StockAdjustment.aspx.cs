@@ -72,11 +72,13 @@ namespace PMS
                     var grnResult = (from dv in db.INV_Items
                                      join ds in db.GRN_Details
                                      on dv.Item_ID equals ds.Item_Id
+                                     join gm in db.GRN_Masters on ds.GRNId equals gm.GRN_ID
                                      where ds.Item_Id == item_id
                                      select new
                                      {
                                          BatchNum = ds.BatchNum,
                                          uomqty = ds.UOM_Qty,
+                                         GRNNumber = gm.GRN_Num
                                      }).ToList();
                     foreach (var batchNum in grnResult)
                     {
@@ -84,6 +86,7 @@ namespace PMS
                         {
                             BatchNum = batchNum.BatchNum,
                             uomqty = batchNum.uomqty,
+                            ReferenceNumber = batchNum.GRNNumber != null ? batchNum.GRNNumber.ToString() : ""
                         });
                     }
                 }
@@ -94,13 +97,15 @@ namespace PMS
                                              orderby inv.Creation_Time descending
                                              select new
                                              {
-                                                 BatchNum = inv.Batch_No
+                                                 BatchNum = inv.Batch_No,
+                                                 AdjustmentNo = inv.Adjustment_No
                                              }).ToList();
                 foreach (var batchNum in stockAdjustmentResult)
                 {
                     batchStockListst.Add(new BatchStock
                     {
                         BatchNum = batchNum.BatchNum,
+                        ReferenceNumber = batchNum.AdjustmentNo != null ? batchNum.AdjustmentNo.ToString() : ""
                     });
                 }
 
@@ -383,6 +388,33 @@ namespace PMS
 
                 return hasEntryRights;
             }
+        }
+        [WebMethod]
+        public static string ReamrksValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var Adjustment = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Adjustment Remarks"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return Adjustment ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        public class BatchStock
+        {
+            public string BatchNum { get; set; }
+            public int? uomqty { get; set; }
+            public string ReferenceNumber { get; set; }
         }
     }
 }

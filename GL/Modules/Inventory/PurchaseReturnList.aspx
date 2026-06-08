@@ -6,6 +6,7 @@
 
         function PrintReport(Purchase_Return_ID) {
             debugger;
+            var id = Purchase_Return_ID;
             var locationInfo = window.location;
             var user_name = '<% =AppConfig.Company_Name %>';
             if (user_name == 'As-Siraat Serving Humanity') {
@@ -13,12 +14,14 @@
             } else {
                 reportPath = 'ReportViewer.aspx'; // same folder
             }
-            var url = '/ReportViewer.aspx?ReportName=PurchaseReturnList&ReportTitle=Purchase Return List&POid=' + Purchase_Return_ID;
-            if (!locationInfo.origin.includes('localhost') || locationInfo.origin.includes('localhost')) {
+
+            var url = '/ReportViewer.aspx?ReportName=PurchaseReturnBasePrint&ReportTitle=Purchase Return Print&PurchaseReturnID=' + id;
+            if (!locationInfo.origin.includes('localhost')) {
                 var urlInfo = window.location.href.split('/');
                 var ip = urlInfo[2];
                 var foldername = urlInfo[3];
-                url = 'https://' + ip + '/' + foldername + '/' + reportPath +  '?ReportName=PurchaseReturnList&ReportTitle=Purchase Return List&PRid=' + Purchase_Return_ID;
+
+                url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=PurchaseReturnBasePrint&ReportTitle=Purchase Return Print&PurchaseReturnID=' + id;
             }
             window.open(url, '_blank');
         }
@@ -130,7 +133,7 @@
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintReport(' + full.Purchase_Return_ID + ')" id="btnprint"><i class="fa fa-print" ></i></a>';
                             var result;
-                            result = res;//  + print;
+                            result = res + print;
                             return result;
                         }, width: "8%"
                     }

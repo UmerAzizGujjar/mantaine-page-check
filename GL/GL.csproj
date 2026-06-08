@@ -1735,7 +1735,6 @@
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\LOGOS\LoginBackground.jpg" />
-    <Content Include="wwwroot\THEME_SKINSTUDIO\images\LOGOS\logo.jpeg" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\StudentImages\1.jpg" />
     <Content Include="wwwroot\THEME_SKINSTUDIO\images\StudentImages\1.png" />
