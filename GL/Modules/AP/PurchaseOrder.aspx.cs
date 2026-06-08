@@ -1,4 +1,5 @@
 ﻿using AjaxControlToolkit.HTMLEditor.ToolbarButton;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -814,6 +815,71 @@ namespace PMS.AP
                 return "{ 'error': '" + ex.Message + "' }";
             }
         }
+        [WebMethod]
+        public static string GetBatchProjectedQuantities(string itemIdsJson, string projectionDate, string warehouseId)
+        {
+            try
+            {
+                List<int> itemIds = new List<int>();
+                if (!string.IsNullOrEmpty(itemIdsJson))
+                {
+                    itemIds = new JavaScriptSerializer().Deserialize<List<int>>(itemIdsJson);
+                }
+
+                Dictionary<int, decimal> projectedQtys = new Dictionary<int, decimal>();
+
+                if (itemIds.Count > 0 && !string.IsNullOrEmpty(projectionDate) && !string.IsNullOrEmpty(warehouseId) && warehouseId != "0")
+                {
+                    using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                    {
+                        // Convert front-end date (DD MMM YYYY) to SQL format (YYYY-MM-DD)
+                        DateTime parsedDate = DateTime.ParseExact(projectionDate, "dd MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                        string sqlDate = parsedDate.ToString("yyyy-MM-dd");
+                        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+                        // Create a comma-separated list of IDs for the IN clause
+                        string idList = string.Join(",", itemIds);
+
+                        // Query for bills between projection date and current date
+                        string query = $@"
+                               SELECT bd.Item_ID, ISNULL(SUM(bd.Qty), 0) as TotalQty
+                    FROM AR_Billing_Details bd
+                    INNER JOIN Ar_Billings b ON bd.Bill_ID = b.Bill_ID
+                    WHERE bd.Item_ID IN (5952)
+                    AND b.Ware_House = '008'
+                  AND CONVERT(DATE, b.Invoice_Date) BETWEEN CONVERT(DATE, '2026-05-01') AND CONVERT(DATE, '2026-06-08')
+                    AND (b.isCancel = 0 OR b.isCancel IS NULL)
+                    and b.IsPharmacy =1
+                    GROUP BY bd.Item_ID";
+
+                        DataTable dt = DBClass.getDataTable(query);
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            int itemId = Convert.ToInt32(row["Item_ID"]);
+                            decimal qty = Convert.ToDecimal(row["TotalQty"]);
+                            projectedQtys[itemId] = qty;
+                        }
+                    }
+
+                    // Set default 0 for items without projected quantity
+                    foreach (int itemId in itemIds)
+                    {
+                        if (!projectedQtys.ContainsKey(itemId))
+                        {
+                            projectedQtys[itemId] = 0;
+                        }
+                    }
+                }
+
+                return new JavaScriptSerializer().Serialize(projectedQtys);
+            }
+            catch (Exception ex)
+            {
+                return "{}";
+            }
+        }
+
         [WebMethod]
         public static string GetVendorItems(string vendorId)
         {
