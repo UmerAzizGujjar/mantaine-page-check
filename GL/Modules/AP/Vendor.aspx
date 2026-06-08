@@ -377,6 +377,7 @@
             debugger;
             var optionsitem = '';
             var length = rowlength;
+
             PageMethods.loadPharmacyItemList(function (resp) {
                 debugger;
                 optionsitem = '<option value="0">Select</option>';
@@ -385,7 +386,10 @@
                     optionsitem += '<option value="' + value.Item_ID + '" >' + value.name + '</option>';
                 });
                 $('#txtItemCode' + length + '').html(optionsitem);
-                $('#txtItemCode' + length + '').select2();
+                $('#txtItemCode' + length + '').select2({
+                    placeholder: "Search items...",
+                    allowClear: true
+                });
             },
                 function (error) {
                     alert(error.get_message());
