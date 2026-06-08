@@ -6112,43 +6112,37 @@ namespace PMS
                     string x = "Group Test Rate List";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
-                    object valusets;
-                    lblMainDepartment.Visible = false;
                     tr_Export.Visible = true;
-                    ddlDepartments.Visible = false;
-                    lblPatientType.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    ddlPatientType.Visible = false;
-                    optRw.Visible = false;
-                    trDoctor.Visible = false;
-                    trProcedure1.Visible = true;
 
-                    tr_Summary.Visible = false;
-                    dpROw.Visible = false;
+                    dpROw.Visible = true;
                     DateDiv.Visible = false;
                     Time_Row.Visible = false;
-                    lbProcedure.Visible = true;
-                    lbProcedure.Text = "OPD / IPD";
-                    lblMedical.Text = "Test Main Departments";
+                    lblDepartment.Text = "Test Main Departments";
                     ddlMainDepartment.Visible = false;
 
-                    lblMainDepartment.Visible = false;
-                    tr1MedicalSubsidy.Visible = true;
-                    ddlProcedure.Visible = true;
+                    object valusets;
                     valusets = DBClass.GetValueSet("Main Test Departments");
-                    ddlMedicalSubsidy.DataSource = valusets;
-                    ddlMedicalSubsidy.Items.Clear();
-                    ddlMedicalSubsidy.DataTextField = "DataValue_Description";
-                    ddlMedicalSubsidy.DataValueField = "DataValue_Name";
-                    ddlMedicalSubsidy.Items.Add(new ListItem() { Text = "All", Value = "0" });
-                    ddlMedicalSubsidy.DataBind();
-                    ddlProcedure.Visible = true;
-                    ddlProcedure.Items.Clear();
-                    ddlProcedure.Items.Add(new ListItem() { Text = "All ", Value = "0" });
-                    ddlProcedure.Items.Add(new ListItem() { Text = "OPD", Value = "OPD" });
-                    ddlProcedure.Items.Add(new ListItem() { Text = "IPD", Value = "IPD" });
+                    ddlDepartments.DataSource = valusets;
+                    ddlDepartments.Items.Clear();
+                    ddlDepartments.DataTextField = "DataValue_Description";
+                    ddlDepartments.DataValueField = "DataValue_Name";
+                    ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlDepartments.DataBind();
 
-                    ddlProcedure.DataBind();
+                    object valusetss;
+                    valusetss = DBClass.GetValueSet("Patient Type");
+                    ddlPatientType.DataSource = valusetss;
+                    ddlPatientType.DataTextField = "DataValue_Description";
+                    ddlPatientType.DataValueField = "DataValue_Name";
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
+                    ddlPatientType.DataBind();
+
+                    //ddlProcedure.Visible = true;
+                    //ddlProcedure.Items.Clear();
+                    //ddlProcedure.Items.Add(new ListItem() { Text = "All ", Value = "0" });
+                    //ddlProcedure.Items.Add(new ListItem() { Text = "OPD", Value = "OPD" });
+                    //ddlProcedure.Items.Add(new ListItem() { Text = "IPD", Value = "IPD" });
+
 
                 }
                 else if (PageTitle == "TestsRateList")

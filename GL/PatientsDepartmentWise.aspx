@@ -381,8 +381,9 @@
                     else if (rptTitle == "GroupTestsRateList") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
-                        var NewLine = $('#ctl00_MainContent_ddlProcedure').val();
-                        var url = 'ReportViewer.aspx?ReportName=GroupMainTestDepartments&ReportTitle=Group Main Test Departments from ' + '&Main_Department=' + timeLine + '&Patient_Type=' + NewLine + '&ExportPDF=' + exporttopdf;
+                        //var pat_type = $('#ctl00_MainContent_ddlPatientType').val();
+                        var pat_type = ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != 'undefined') ? $("#ctl00_MainContent_ddlPatientType").val() : "0");
+                        var url = 'ReportViewer.aspx?ReportName=GroupMainTestDepartments&ReportTitle=Group Main Test Departments from ' + '&Main_Department=' + timeLine + '&Patient_Type=' + pat_type + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
 
