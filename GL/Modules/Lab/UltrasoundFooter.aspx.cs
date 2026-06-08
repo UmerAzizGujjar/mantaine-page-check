@@ -38,6 +38,23 @@ namespace PMS
 
             return new JavaScriptSerializer().Serialize(doctors);
         }
+
+        [WebMethod]
+        public static string LoadLabFooterTEmandid(string id)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from i in db.DataValues
+                              where (i.ValueSet_ID == 2126 || i.ValueSet_ID == 2127)  && i.DataValue_Name == id
+                              select new
+                              {
+                                  
+                                  DoctorId = i.DataValue_Name,
+                                  TemplateName = i.Segment2
+                              }).FirstOrDefault();
+                return (new JavaScriptSerializer()).Serialize(result);
+            }
+        }
         [WebMethod]
         public static string LoadLabFooter(string id)
         {
@@ -48,8 +65,7 @@ namespace PMS
                               select new
                               {
                                   i.DataValue_Description,
-                                  DoctorId =i.DataValue_Name,
-                                  TemplateName = i.Segment2
+                        
                               }).FirstOrDefault();
                 return (new JavaScriptSerializer()).Serialize(result);
             }

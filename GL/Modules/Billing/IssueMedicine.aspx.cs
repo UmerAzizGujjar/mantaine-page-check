@@ -1609,6 +1609,8 @@ namespace PMS
             saleReturn.TotalDisc_Amount = record.TotalDisAmt;
             saleReturn.Disc_Adjustment = record.AdjustmentAmt;
             saleReturn.Net_Amount = record.Total;
+            saleReturn.Is_Pharmacy = true;
+            saleReturn.Is_CathLab = false;
         
             saleReturn.Ware_House = record.warehouse;
             saleReturn.Total_Amount = record.TotalPayable;

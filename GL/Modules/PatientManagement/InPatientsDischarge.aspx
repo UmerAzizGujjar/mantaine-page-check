@@ -4659,52 +4659,60 @@
         function CheckPendingBalanceBeforeSave(callback) {
             debugger;
             var patientID = $('#<%= hdfPatient_ID.ClientID%>').val();
-            var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+         var inPatientID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
 
-            if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
-                $('#loadingimage').show();
-                $.ajax({
-                    type: "POST",
-                    url: "InPatientsDischarge.aspx/GetPendingBalance",
-                    data: JSON.stringify({
-                        'PatientID': patientID,
-                        'InPatientID': inPatientID
-                    }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        $('#loadingimage').hide();
-                        var pendingBalance = parseFloat(response.d);
-                        if (pendingBalance > 0) {
-                            Swal.fire({
-                                title: 'Pending Balance Alert!',
-                                text: `Cannot discharge patient!\n\nPending Balance: Rs. ${pendingBalance.toFixed(2)}\n\nPlease receive the pending amount first.`,
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#dc3545'
-                            }).then(() => {
-                                if (callback) callback(false);
-                            });
-                        } else {
-                            if (callback) callback(true);
-                        }
-                    },
-                    error: function (x, e) {
-                        $('#loadingimage').hide();
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Unable to check pending balance. Please try again.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            if (callback) callback(false);
-                        });
-                    }
-                });
-            } else {
-                if (callback) callback(true);
-            }
-        }
+         if (inPatientID && inPatientID !== "(New)" && inPatientID !== "") {
+             $('#loadingimage').show();
+             $.ajax({
+                 type: "POST",
+                 url: "InPatientsDischarge.aspx/GetPendingBalance",
+                 data: JSON.stringify({
+                     'PatientID': patientID,
+                     'InPatientID': inPatientID
+                 }),
+                 contentType: "application/json; charset=utf-8",
+                 dataType: "json",
+                 success: function (response) {
+                     $('#loadingimage').hide();
+
+                     // Check if we should skip the pending balance check
+                     if (response.d === "SKIP_CHECK") {
+                         // Patient has discount type '03' - proceed without any alert
+                         if (callback) callback(true);
+                         return;
+                     }
+
+                     var pendingBalance = parseFloat(response.d);
+                     if (pendingBalance > 0) {
+                         Swal.fire({
+                             title: 'Pending Balance Alert!',
+                             text: `Cannot discharge patient!\n\nPending Balance: Rs. ${pendingBalance.toFixed(2)}\n\nPlease receive the pending amount first.`,
+                             icon: 'error',
+                             confirmButtonText: 'OK',
+                             confirmButtonColor: '#dc3545'
+                         }).then(() => {
+                             if (callback) callback(false);
+                         });
+                     } else {
+                         if (callback) callback(true);
+                     }
+                 },
+                 error: function (x, e) {
+                     $('#loadingimage').hide();
+                     Swal.fire({
+                         title: 'Error!',
+                         text: 'Unable to check pending balance. Please try again.',
+                         icon: 'error',
+                         confirmButtonText: 'OK'
+                     }).then(() => {
+                         if (callback) callback(false);
+                     });
+                 }
+             });
+         } else {
+             if (callback) callback(true);
+         }
+     }
 
         // Modified DischargeRequest function to use the new method
         function DischargeRequest() {

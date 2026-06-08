@@ -38,7 +38,7 @@ namespace PMS
 
                 // Detail rows
                 var detail = (from d in db.Store_Issue_Details join
-                              mid in db.MaterialIssueRequest_Details on d.MIR_Detail_Id equals Convert.ToInt32( mid.MaterialRequestDetail_Id)
+                              mid in db.MaterialIssueRequest_Details on d.MIR_Detail_Id equals Convert.ToInt32(mid.MaterialRequestDetail_Id)
                               join mir in db.MaterialIssueRequests on mid.MaterialRequest_Id equals mir.MaterialRequest_Id
                               join inv in db.INV_Items on d.Item_Id equals inv.Item_ID
                               where d.Store_Issue_Id == invoiceId
@@ -48,7 +48,7 @@ namespace PMS
                                   inv.Description,
                                   d.Issue_Qty,
                                   mid.MIRQty,
-                                  blnc_Qty = mid.MIRQty - d.Issue_Qty,
+                                  blnc_Qty = mid.MIRQty - (from ab in db.Store_Issue_Details where ab.MIR_Detail_Id == d.MIR_Detail_Id select ab.Issue_Qty).Sum(),
                                   d.MIR_Detail_Id
                               }).ToList();
 
@@ -100,9 +100,17 @@ namespace PMS
                                                                                        select gmm.Created_By).FirstOrDefault()).Select(x => x.UserName).FirstOrDefault(),
                                    Issuer = _dbContext.aspnet_Users.Where(x => x.UserId == SI.Created_by).Select(x => x.UserName).FirstOrDefault(),
                                    Status = SI.Status,
-                                   Blnc_Qty =  (from gm in _dbContext.Store_Issue_Details
-                                                                                     where gm.Store_Issue_Id == SI.Store_Issue_Id
-                                                                                     select  gm.MIR_Qty - gm.Issue_Qty ).Sum(),
+                                   Blnc_Qty =
+(
+    from gm in _dbContext.Store_Issue_Details
+    where gm.Store_Issue_Id == SI.Store_Issue_Id
+    group gm by gm.MIR_Detail_Id into g
+    let mirQty = g.FirstOrDefault().MIR_Qty
+    let totalIssued = _dbContext.Store_Issue_Details
+                        .Where(x => x.MIR_Detail_Id == g.Key)
+                        .Sum(x => (decimal?)x.Issue_Qty) ?? 0
+    select mirQty - totalIssued
+).Sum(),
                                    Approved_Time = SI.Approved_Time,
                                };
 

@@ -248,6 +248,7 @@
                             }
                         }
                     },
+                    { "data": "Panel_Name" },
                     {
                         "data": "ParentTrans_Name",
                         "name": "ParentTrans_Name",
@@ -587,6 +588,7 @@
                                     <th>Net Amount</th>
                                     <th>Main Category</th>
                                     <th>Patient Category</th>
+                                    <th>Panel Name</th>
                                     <th>Main Department</th>
                                     <th>Doctor</th>
                                     <th>Status</th>

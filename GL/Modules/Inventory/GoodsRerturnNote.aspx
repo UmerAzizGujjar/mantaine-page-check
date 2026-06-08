@@ -52,8 +52,6 @@
                     $('#ddlDepartment').val(result[0].Department_Id).trigger('change');
                     $('#ddlDepartment').attr('disabled', 'disabled');
                 }, 2000);
-               //initializeMRNoDropdown(result.query.MR_No);
-                //$('#ddlMRNo').val(result.query.MR_No).trigger('change');
             });
         }
         function LoadGRNDetail(GIN_id) {

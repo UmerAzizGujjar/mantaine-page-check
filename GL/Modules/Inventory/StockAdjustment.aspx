@@ -321,6 +321,10 @@
         function Validate() {
             var val = document.getElementById("hdnDuplicateCheck").value;
             var returnVal = false;
+
+            if (!checkRemarksBeforeSave()) {
+                return false;
+            }
             if (val == "0")//no duplicate
             {
                 document.getElementById("hdnDuplicateCheck").value = "1";
@@ -575,6 +579,21 @@
         function EnableBothFields() {
             $('#ctl00_MainContent_txtBatchNo').prop('disabled', false);
             $('#ctl00_MainContent_ddlBatchNo').prop('disabled', false).val('0');
+        }
+        function checkRemarksBeforeSave() {
+            var remarksCode = '<%= ReamrksValidation() %>';
+            var remarks = $('#ctl00_MainContent_txtRemarks').val();
+
+            if (remarksCode === "01" && (!remarks || remarks.trim() === "")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please enter remarks.',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+            return true;
         }
     </script>
 </asp:Content>
