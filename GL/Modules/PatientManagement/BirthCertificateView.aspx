@@ -107,13 +107,7 @@
                         { "data": "Full_Name", "name": "Full_Name", "width": "10%", "orderable": false },
                         { "data": "Father_Name", "width": "10%", "orderable": false },
 
-                        //{
-                        //    "data": "Discharge_ON",
-                        //    "render": function (data, type, full) {
-                        //        return data ? moment(data).format('DD-MMM-YYYY') : '';
-                        //    },
-                        //    "width": "10%", "orderable": false
-                        //},
+                      
                         { "data": "Created_by", "name": "Created_by", "width": "10%", "orderable": true },
                         
                         {
