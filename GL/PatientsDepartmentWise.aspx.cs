@@ -1222,6 +1222,10 @@ namespace PMS
                     op_FilterClinic.Visible = false;
                     ddlReportType.Visible = false;
                     lbservieType.Visible = false;
+
+                    MRDiv.Visible = true;
+                    lblMRNo.Visible = true;
+                    txtMRNo.Visible = true;
                 }
 
                 //Pharmacy Cash Report Summary
@@ -6118,7 +6122,7 @@ namespace PMS
                     DateDiv.Visible = false;
                     Time_Row.Visible = false;
                     lblDepartment.Text = "Test Main Departments";
-                    ddlMainDepartment.Visible = false;
+                    lblMultiSelect.Visible = false;
 
                     object valusets;
                     valusets = DBClass.GetValueSet("Main Test Departments");
@@ -6134,7 +6138,7 @@ namespace PMS
                     ddlPatientType.DataSource = valusetss;
                     ddlPatientType.DataTextField = "DataValue_Description";
                     ddlPatientType.DataValueField = "DataValue_Name";
-                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "All" });
+                    ddlPatientType.Items.Add(new ListItem() { Text = "Select Type", Value = "0" });
                     ddlPatientType.DataBind();
 
                     //ddlProcedure.Visible = true;
