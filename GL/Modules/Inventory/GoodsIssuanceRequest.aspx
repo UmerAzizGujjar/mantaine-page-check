@@ -185,12 +185,16 @@
                     else {
                         length = 1;
                     }
+                    var selectedItemID = String(itemID).trim();
+
                     $('#tblbodyPackage tr').each(function () {
                         debugger;
-                        var $projectName = $(this).find('td:eq(9)').text();
-                        if ($projectName == itemID) {
+                        var existingItemID = String($(this).find('td:eq(8)').text()).trim();
+
+                        if (existingItemID == selectedItemID) {
                             debugger;
                             find = true;
+                            return false; 
                         }
                     });
                     if (find == true) {
