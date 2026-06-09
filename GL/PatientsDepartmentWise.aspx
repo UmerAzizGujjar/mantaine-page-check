@@ -380,9 +380,10 @@
 
                     else if (rptTitle == "GroupTestsRateList") {
                         var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
-                        var timeLine = $('#ctl00_MainContent_ddlMedicalSubsidy').val();
-                        var NewLine = $('#ctl00_MainContent_ddlProcedure').val();
-                        var url = 'ReportViewer.aspx?ReportName=GroupMainTestDepartments&ReportTitle=Group Main Test Departments from ' + '&Main_Department=' + timeLine + '&Patient_Type=' + NewLine + '&ExportPDF=' + exporttopdf;
+                        var timeLine = $('#ctl00_MainContent_ddlDepartments').val();
+                        //var pat_type = $('#ctl00_MainContent_ddlPatientType').val();
+                        var pat_type = ((typeof ($("#ctl00_MainContent_ddlPatientType").val()) != '0') ? $("#ctl00_MainContent_ddlPatientType").val() : "0");
+                        var url = 'ReportViewer.aspx?ReportName=GroupMainTestDepartments&ReportTitle=Group Main Test Departments from ' + '&Main_Department=' + timeLine + '&Patient_Type=' + pat_type + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
 
@@ -661,8 +662,9 @@
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Lab_Test_Investigation_Delay") {
+                        var deptValue = $("#ctl00_MainContent_ddlDepartments").val();
                         //<%-- var summary = document.getElementById('<%= chkSummary.ClientID %>').checked;--%>
-                        var url = 'ReportViewer.aspx?ReportName=Lab_Test_Investigation_Delay&ReportTitle=Lab Test Investigation Delay from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + ($("#ctl00_MainContent_ddlDepartments").val() || "0"); //+ '&Summary=' + summary ;
+                        var url = 'ReportViewer.aspx?ReportName=Lab_Test_Investigation_Delay&ReportTitle=Lab Test Investigation Delay from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + '&sDate=' + $('#ctl00_MainContent_txtStart_Date').val() + '&eDate=' + $('#ctl00_MainContent_txtEnd_Date').val() + '&STime=' + $('#ctl00_MainContent_txtSTime').val() + '&ETime=' + $('#ctl00_MainContent_txtETime').val() + '&Department=' + deptValue; //+ '&Summary=' + summary ;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Radiology_Investigation_Delay") {
@@ -1398,7 +1400,7 @@
                     }
                     else if (rptTitle == "PCR") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=PCR&ReportTitle=Pharmacy Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val();
+                        var url = 'ReportViewer.aspx?ReportName=PCR&ReportTitle=Pharmacy Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MRNo=' + patid;
                         window.open(url, '_blank');
                     }
                     //else if (rptTitle == "PCRS") {

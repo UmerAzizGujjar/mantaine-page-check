@@ -84,3 +84,7 @@ h5.section-title {
         margin-bottom: 1rem;
     }
 }
+
+input, select, textarea {
+    text-transform: uppercase !important;
+}
