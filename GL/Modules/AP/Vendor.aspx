@@ -167,7 +167,7 @@
                             alert("Error: " + err.get_message());
                         });
                 }
-
+                debugger;
 
                 LoadVendorPerson(VenId);
                 LoadVendorGeneralItem(VenId);
