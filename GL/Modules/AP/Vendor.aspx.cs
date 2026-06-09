@@ -45,7 +45,32 @@ namespace PMS
         {
             string result = string.Empty;
             DataBaseDataContext db = new DataBaseDataContext();
-            var itemsList = (from i in db.INV_Items where i.Pharmacy_Item == true && i.IsPharmacyItem == true && i.Services!=true && i.Hospital_Services == false && i.Book_ID == 1 select new { i.Item_ID, name = i.Item_Code.ToString() + '-' + i.Description }).ToList();
+
+            var itemsList = (from i in db.INV_Items
+                             where i.Pharmacy_Item == true && i.IsPharmacyItem == true && i.Services != true && i.Hospital_Services == false && i.Book_ID == 1
+                             select new { i.Item_ID, name = i.Item_Code.ToString() + '-' + i.Description })
+                            .Take(30)
+                            .ToList();
+
+            if (itemsList != null)
+            {
+                result = (new JavaScriptSerializer()).Serialize(itemsList);
+            }
+            return result;
+        }
+
+        [WebMethod]
+        public static string searchPharmacyItems(string searchText)
+        {
+            string result = string.Empty;
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            var itemsList = (from i in db.INV_Items
+                             where i.Pharmacy_Item == true && i.IsPharmacyItem == true && i.Services != true && i.Hospital_Services == false && i.Book_ID == 1 &&
+                             (i.Item_Code.Contains(searchText) || i.Description.Contains(searchText))
+                             select new { i.Item_ID, name = i.Item_Code.ToString() + '-' + i.Description })
+                            .ToList();
+
             if (itemsList != null)
             {
                 result = (new JavaScriptSerializer()).Serialize(itemsList);

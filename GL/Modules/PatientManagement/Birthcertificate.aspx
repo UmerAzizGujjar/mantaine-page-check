@@ -13,7 +13,25 @@
                 format: '_____-_______-_',
                 separator: '-'
             });
+            // 1. Initialize Date Picker
+            $('#txtBirthDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "dd/mm/yy",
+                yearRange: "-100:+0"
+            });
 
+            // Mask it so users can type manually if they want
+            $('#txtBirthDate').mask("99/99/9999");
+
+            // 2. Initialize Time Picker
+            // Note: Standard jQuery UI doesn't have a timepicker. 
+            // This assumes you have a plugin like 'jquery-timepicker' included in your Site.Master
+            $('#txtBirthTime').ptTimeSelect({
+                onClose: function () {
+                    $('#txtBirthTime').focus();
+                }
+            });
 
             $('#txt_cnic').attr('placeholder', '_____-_______-_');
             $('#txt_Othercnic').attr('placeholder', '_____-_______-_');
@@ -678,7 +696,7 @@
 
             var finalDate = dob.format("DD/MM/YYYY");
 
-            var $input = $('#txtAge_yearss');
+            var $input = $('#txtBirthDate');
             if (!$input.hasClass('hasDatepicker')) {
                 $input.datepicker({
                     changeMonth: true,
@@ -707,7 +725,7 @@
             var data = {};
             $.ajax({
                 type: "POST",
-                url: "Birthcertificate.aspx/Getmr_no",
+                url: "Birthcertificate.aspx/Getmr_noss",
                 data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",

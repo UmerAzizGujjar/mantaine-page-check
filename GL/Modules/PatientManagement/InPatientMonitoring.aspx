@@ -1475,7 +1475,7 @@
                             otherIns = '';
                         }
 
-                        var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td> ' + $('#txtRecomended_Dosages').find('option:selected').text() + ' </td><td> ' + $('#txtInjections').val() + '</td>   <td> ' + $('#Route').find('option:selected').text() + ' </td><td> <input type="text" class="form-control routeInput" value="0"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="0"   name="RecQty"  placeholder="Enter value" /></td><td>' + completeStop + '</td> <td>' + otherIns + '</td><td> ' + $('#AttendingParamedicalStaffs').val() + ' </td>' + '<td>' + username + '</td>' + '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
+                        var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#ddlDosage_Qty').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + '</td> <td> ' + $('#txtRecomended_Dosages').find('option:selected').text() + ' </td><td> ' + $('#txtInjections').val() + '</td>   <td> ' + $('#Route').find('option:selected').text() + ' </td><td> <input type="text" class="form-control routeInput" value="0"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="0"   name="RecQty"  placeholder="Enter value" /></td><td>' + completeStop + '</td> <td>' + otherIns + '</td><td> ' + $('#AttendingParamedicalStaffs').val() + ' </td>' + '<td>' + username + '</td><td> <input type="text" class="form-control routeInput" value="0"   name="RtnQty"  placeholder="Enter value" /></td>' + '<td><a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
 
                         if (localStorage.IsStat == 1) {
                             debugger;
@@ -1488,7 +1488,7 @@
                     }
                     else {
                         debugger;
-                        var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosages').find('option:selected').text() + '</td><td> ' + $('#Route').find('option:selected').text() + '</td><td> <input type="text" class="form-control routeInput" value="0"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="0"   name="RecQty"  placeholder="Enter value" /></td><td> ' + $('#txtInjections').val() + '</td><td>' + $('#AttendingParamedicalStaffs').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
+                        var row = '<tr> <td> <input type="hidden" name="testDate" value="' + complete + '">' + complete + ' </td><td><input type="hidden" name="hdnItemCode" value="0"> ' + pharmacyITem + '</td><td> ' + $('#txtRecomended_Dosages').find('option:selected').text() + '</td><td> ' + $('#Route').find('option:selected').text() + '</td><td> <input type="text" class="form-control routeInput" value="0"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="0"   name="RecQty"  placeholder="Enter value" /></td><td> ' + $('#txtInjections').val() + '</td><td>' + $('#AttendingParamedicalStaffs').val() + '</td><td> ' + $('#ddlDosage_From').find('option:selected').text() + ' </td> <td> ' + $('#ddlDosage_Qty').val() + ' </td>' + '<td> ' + $('#ddlOther_Instruction').find('option:selected').text() + ' </td>' + '<td>' + username + '</td><td> <input type="text" class="form-control routeInput" value="0"   name="RtnQty"  placeholder="Enter value" /></td><td> <a href="#" onclick="editMedicine(this)"> Edit </a> | <a href="#" onclick="deleteMedicine(this)"> Delete </a> <input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + itemCode + '</td></tr>';
 
                         if (localStorage.IsStat == 1) {
                             debugger;
@@ -1572,7 +1572,8 @@
                             $(row).find('td')[10].innerText = rdRiskY;
                             $(row).find('td')[11].innerText = $('#ddlOther_Instruction').find('option:selected').text();
                             $(row).find('td')[12].innerText = $('#AttendingParamedicalStaff').val();
-                            $(row).find('td')[13].innerText = $('#txtPharmacyItem').val();
+                            $(row).find('td')[14].innerText = $('#txtPharmacyItem').val();
+                            $(row).find('td')[13].innerText = $('#MedicationModel input[name=RtnQty]').val();;
 
 
                         }
@@ -2183,6 +2184,7 @@
                     'Oral': $($(value).find('td')[6]).text(),
                     'Issue_Qty': $(value).find('td:eq(7) input').val(),
                     'Rec_Qty': $(value).find('td:eq(8) input').val(),
+                    'Rtn_Qty': $(value).find('td:eq(13) input').val(),
                     'Injection': $($(value).find('td')[5]).text(),
                     'AttendingParamedical_Staff': $($(value).find('td')[11]).text(),
                     'Dosage_From': $($(value).find('td')[3]).text(),
@@ -2535,6 +2537,10 @@
                         if (Rcv_Qty == null || Rcv_Qty == 'null') {
                             Rcv_Qty = 0
                         }
+                        var Rtn_Qty = value.Rtn_Qty
+                        if (Rtn_Qty == null || Rtn_Qty == 'null') {
+                            Rtn_Qty = 0
+                        }
                         debugger;
                         if (value.Regular == true || value.Regular == "1") {
                             if (value.Stop_Date_Time == null) {
@@ -2544,7 +2550,7 @@
                                 var s2 = parseInt(value.Stop_Date_Time.substr(6, 10));
                                 var Stop_Date = moment.unix(s2).format('MM/DD/YYYY hh:mm:ss A');
                             }
-                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td>  <td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td> <td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + value.Item_Code +'</td></tr>';
+                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td>  <td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td> <td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput" value="' + Rtn_Qty+'"   name="RtnQty"  placeholder="Enter value" /></td><td><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;">' + value.Item_Code +'</td></tr>';
 
                         }
                         else if (value.PRN == true) {
@@ -2615,6 +2621,10 @@
                         if (Rcv_Qty == null || Rcv_Qty == 'null') {
                             Rcv_Qty = 0
                         }
+                        var Rtn_Qty = value.Rtn_Qty
+                        if (Rtn_Qty == null || Rtn_Qty == 'null') {
+                            Rtn_Qty = 0
+                        }
                         debugger;
                         if (value.Regular == true || value.Regular == "1") {
                             if (value.Stop_Date_Time == null) {
@@ -2624,7 +2634,7 @@
                                 var s2 = parseInt(value.Stop_Date_Time.substr(6, 10));
                                 var Stop_Date = moment.unix(s2).format('MM/DD/YYYY hh:mm:ss A');
                             }
-                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td>  <td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty +'"   name="RecQty"  placeholder="Enter value" /></td> <td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;"></td></tr>';
+                            rowsRegular += '<tr> <td> <input type="hidden" name="testDate" value="' + Start_Date + '">' + Start_Date + ' </td><td> ' + value.Medicine_Name + '</td><td> ' + value.Dosage_Qty + '</td><td> ' + value.Dosage_From + '</td> <td> ' + value.Frequency + ' </td><td> ' + value.Injections + '</td>   <td> ' + value.Oral + ' </td>  <td> <input type="text" class="form-control routeInput" value="' + Req_Qty + '"   name="IssueQty"  placeholder="Enter value" /></td><td> <input type="text" class="form-control routeInput" value="' + Rcv_Qty + '"   name="RecQty"  placeholder="Enter value" /></td> <td>' + Stop_Date + '</td> <td> ' + value.Other_Instruction + ' </td>' + '<td>' + value.AttendingParamedical_Staff + '</td><td>' + value.Username + '</td><td> <input type="text" class="form-control routeInput"  value="' + Rtn_Qty +'"   name="RtnQty"  placeholder="Enter value" /></td><td><input type="hidden" name="uurowid" value=' + uuid() + ' />  </td><td style="display:none;"></td></tr>';
 
                         }
                         else if (value.PRN == true) {
@@ -4702,6 +4712,7 @@
                                                 <th>Other Instruction</th>
                                                  <th>Special Instructions </th>
                                                 <th>Username</th>
+                                                <th>Rtn Qty</th>
                                                 <th style="width: 100PX;">Edit</th>
                                             </tr>
                                         </thead>

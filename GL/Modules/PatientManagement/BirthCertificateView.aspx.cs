@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Linq.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -39,7 +40,92 @@ namespace PMS.Modules.PatientManagement
                 return "";
             }
         }
+        [WebMethod]
+        public static string GetGeneralItemsFiltered(string searchTerm, int page)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            int pageSize = 20;
 
+            var query = from i in db.INV_Items
+                        where i.Pharmacy_Item == false
+                        && i.IsPharmacyItem == false
+                        && i.Hospital_Services == false
+                        && i.Services != true
+                        && i.Book_ID == 1
+                        select i;
+
+            // Apply search filter if search term is provided (minimum 3 characters)
+            if (!string.IsNullOrEmpty(searchTerm) && searchTerm.Length >= 3)
+            {
+                query = query.Where(i => i.Item_Code.Contains(searchTerm) ||
+                                         i.Description.Contains(searchTerm));
+            }
+            else
+            {
+                // Return empty results if search term is less than 3 characters
+                var emptyResult = new { results = new List<object>(), pagination = new { more = false } };
+                return (new JavaScriptSerializer()).Serialize(emptyResult);
+            }
+
+            int totalCount = query.Count();
+            bool hasMore = (page * pageSize) < totalCount;
+
+            var items = query
+                .OrderBy(i => i.Item_Code)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(i => new {
+                    id = i.Item_ID,
+                    text = i.Item_Code + " - " + i.Description  // IMPORTANT: Use 'text' property
+                })
+                .ToList();
+
+            var result = new { results = items, pagination = new { more = hasMore } };
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
+
+        [WebMethod]
+        public static string GetPharmacyItemsFiltered(string searchTerm, int page)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            int pageSize = 20;
+
+            var query = from i in db.INV_Items
+                        where (i.Pharmacy_Item == true || i.IsPharmacyItem == true)
+                        && i.Services != true
+                        && i.Hospital_Services == false
+                        && i.Book_ID == 1
+                        select i;
+
+            // Apply search filter if search term is provided (minimum 3 characters)
+            if (!string.IsNullOrEmpty(searchTerm) && searchTerm.Length >= 3)
+            {
+                query = query.Where(i => i.Item_Code.Contains(searchTerm) ||
+                                         i.Description.Contains(searchTerm));
+            }
+            else
+            {
+                // Return empty results if search term is less than 3 characters
+                var emptyResult = new { results = new List<object>(), pagination = new { more = false } };
+                return (new JavaScriptSerializer()).Serialize(emptyResult);
+            }
+
+            int totalCount = query.Count();
+            bool hasMore = (page * pageSize) < totalCount;
+
+            var items = query
+                .OrderBy(i => i.Item_Code)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(i => new {
+                    id = i.Item_ID,
+                    text = i.Item_Code + " - " + i.Description  // IMPORTANT: Use 'text' property
+                })
+                .ToList();
+
+            var result = new { results = items, pagination = new { more = hasMore } };
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {

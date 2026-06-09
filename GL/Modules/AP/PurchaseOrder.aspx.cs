@@ -1,4 +1,5 @@
 ﻿using AjaxControlToolkit.HTMLEditor.ToolbarButton;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -84,6 +85,17 @@ namespace PMS.AP
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
             var dept = (from data in db.sys_Parms
                         where data.Name == "WareHouse For PO"
+                        select
+                          data.Code
+                        ).FirstOrDefault();
+            return (new JavaScriptSerializer()).Serialize(dept);
+        }
+        [WebMethod]
+        public static string Getprojection()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var dept = (from data in db.sys_Parms
+                        where data.Name == "Projection"
                         select
                           data.Code
                         ).FirstOrDefault();
@@ -295,6 +307,12 @@ namespace PMS.AP
             ddlpayment.DataValueField = "DataValue_Name";
             ddlpayment.Items.Add(new ListItem("Please Select", "0"));
             ddlpayment.DataBind();
+            valueset = DBClass.GetValueSet("Projection Type");
+            ddlprojection.DataSource = valueset;
+            ddlprojection.DataTextField = "DataValue_Description";
+            ddlprojection.DataValueField = "DataValue_Name";
+            ddlprojection.Items.Add(new ListItem("Please Select", "0"));
+            ddlprojection.DataBind();
             #endregion
         }
 
@@ -797,7 +815,108 @@ namespace PMS.AP
                 return "{ 'error': '" + ex.Message + "' }";
             }
         }
+        [WebMethod]
+        public static string GetBatchProjectedQuantities(string itemIdsJson, string projectionDate, string warehouseId)
+        {
+            try
+            {
+                List<int> itemIds = new List<int>();
+                if (!string.IsNullOrEmpty(itemIdsJson))
+                {
+                    itemIds = new JavaScriptSerializer().Deserialize<List<int>>(itemIdsJson);
+                }
 
+                Dictionary<int, decimal> projectedQtys = new Dictionary<int, decimal>();
+
+                if (itemIds.Count > 0 && !string.IsNullOrEmpty(projectionDate) && !string.IsNullOrEmpty(warehouseId) && warehouseId != "0")
+                {
+                    using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                    {
+                        // Convert front-end date (DD MMM YYYY) to SQL format (YYYY-MM-DD)
+                        DateTime parsedDate = DateTime.ParseExact(projectionDate, "dd MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                        string sqlDate = parsedDate.ToString("yyyy-MM-dd");
+                        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+                        // Create a comma-separated list of IDs for the IN clause
+                        string idList = string.Join(",", itemIds);
+
+                        // Query for bills between projection date and current date
+                        string query = $@"
+                               SELECT bd.Item_ID, ISNULL(SUM(bd.Qty), 0) as TotalQty
+                    FROM AR_Billing_Details bd
+                    INNER JOIN Ar_Billings b ON bd.Bill_ID = b.Bill_ID
+                    WHERE bd.Item_ID IN (5952)
+                    AND b.Ware_House = '008'
+                  AND CONVERT(DATE, b.Invoice_Date) BETWEEN CONVERT(DATE, '2026-05-01') AND CONVERT(DATE, '2026-06-08')
+                    AND (b.isCancel = 0 OR b.isCancel IS NULL)
+                    and b.IsPharmacy =1
+                    GROUP BY bd.Item_ID";
+
+                        DataTable dt = DBClass.getDataTable(query);
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            int itemId = Convert.ToInt32(row["Item_ID"]);
+                            decimal qty = Convert.ToDecimal(row["TotalQty"]);
+                            projectedQtys[itemId] = qty;
+                        }
+                    }
+
+                    // Set default 0 for items without projected quantity
+                    foreach (int itemId in itemIds)
+                    {
+                        if (!projectedQtys.ContainsKey(itemId))
+                        {
+                            projectedQtys[itemId] = 0;
+                        }
+                    }
+                }
+
+                return new JavaScriptSerializer().Serialize(projectedQtys);
+            }
+            catch (Exception ex)
+            {
+                return "{}";
+            }
+        }
+
+        [WebMethod]
+        public static string GetVendorItems(string vendorId)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+
+                // Get items from AP_Vendor_Pharmacy_Items table for this vendor
+                var query = (from vi in db.AP_Vendor_Pharmacy_Items
+                             join i in db.INV_Items on vi.ItemId equals i.Item_ID
+                             where vi.Vendor_Id == Convert.ToInt32(vendorId)
+                                   && i.Active == true
+                                   && (i.Services == null || i.Services != true)
+                             select new
+                             {
+                                 i.Item_ID,
+                                 i.Item_Code,
+                                 Description = i.Description,
+                                 Unit = db.GetDataValueName("UOM", i.Unit) ?? "",
+                                 Purchase_Rate = i.Purchase_Rate != null ? i.Purchase_Rate : 0,
+                                 UOM_Qty = i.UOM_Qty != null ? i.UOM_Qty : 1,
+                                 Qty = 1, // Default quantity
+                                 TotalStock = db.GetInvenrtoryItemUomTotalStock(i.Item_ID, i.InventoryOrg) ?? 0,
+                                 vi.Vendor_Id
+                             })
+                             .Distinct()
+                             .OrderBy(x => x.Item_Code)
+                             .ToList();
+
+                return (new JavaScriptSerializer()).Serialize(query);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return (new JavaScriptSerializer()).Serialize(new List<object>());
+            }
+        }
         [WebMethod]
         public static string GetAllitem(string searchText, string warehouseId)
         {
