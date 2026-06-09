@@ -1127,7 +1127,17 @@
                 if (userC == userCode && userP == UserPass) {
                     debugger;
                     if (validateSaleReturn()) {
-                        var BillId = $('#ddlInvoiceNumber').val() || 0;
+
+                        var Bill_Id = $('#ddlInvoiceNumber').val() || 0;
+                        var ReturnBillId = $("#hdnReturnBillID").val();
+                        if (ReturnBillId == undefined || ReturnBillId == "") {
+                            ReturnBillId = 0;
+                        }
+                        if (Bill_Id == 0) {
+                            BillId = ReturnBillId
+                        }
+                        //var BillId = $('#ddlInvoiceNumber').val() || 0;
+
                         var Patient_id = $('#ddlpat_no').val() || 0;
                         var warehouse = $("#ddl_Warehouse").val();
                         var InvNo = $('#ddlInvoiceNumber option:selected').text() || '';
@@ -2845,8 +2855,11 @@
         function openQueue() {
             debugger;
             fillPendingPatientsLists();
+          
             $('#queueModal').modal('show');
+           
         }
+
         function RefreshQueue() {
             $("#txtSearchmodal").val('')
             fillPendingPatientsLists()
@@ -2907,8 +2920,196 @@
                 console.log(err);
             });
         }
+        function openReturnQueue() {
+            debugger;
+            fillReturnPatientsLists();
+            $('#SaleReturnModal').modal('hide');
+            $('#ReturnqueueModal').modal('show');
+        }
+        function RefreshReturnQueue() {
+            $("#txtReturnSearchmodal").val('')
+            fillReturnPatientsLists()
+        }
+       
+        //function fillReturnPatientsLists() {
+        //    debugger;
+        //    var SearchString = $("#txtReturnSearchmodal").val();
+        //    PageMethods.ReturnPatients(SearchString, function (data) {
+        //        var parsedData = JSON.parse(data);
+        //        var rows = '';
+        //        debugger;
+        //        $.each(parsedData, function (key, value) {
+        //            debugger;
+        //            var TrnsDate = new Date(parseInt(value.Invoice_Date.substr(6)));
+        //            var retdate = moment(TrnsDate).format('LLLL');
+        //            var WardName = (value.Ward_Name !== null && value.Ward_Name !== undefined) ? value.Ward_Name : '';
+        //            var BedNo = (value.Bed_No !== null && value.Bed_No !== undefined && value.Bed_No !== 0) ? value.Bed_No : '';
+
+        //            // Check if status is rejected (handles both string 'rejected' and numeric values)
+
+        //            // Set row color for rejected entries
+        //            var rowClass = isRejected ? 'rejected-row' : '';
+        //            var rowStyle = isRejected ? 'style="background-color: #ffe6e6;"' : '';
+
+        //            // Hide edit and reject actions for rejected entries
+        //            var actionButtons = '';
+
+        //                actionButtons = '<a href="#" class="btnEdit" ' +
+        //                    'data-patid="' + value.pat_id + '" ' +
+        //                    'data-mrno="' + value.mr_no_sequence + '">' +
+        //                    '<i class="fa fa-edit fa-2x" style="color:green;"></i>' +
+        //                    '</a>&nbsp;&nbsp;' +
+        //                    '<a href="#" onclick="RejectMedicineRequest(\'' + value.In_Patient_Medicine_ID + '\', this)" title="Closed">' +
+        //                    '<i class="fa fa-times-circle fa-2x" style="color:red;"></i>' +
+        //                    '</a>';
+        //            rows += '<tr class="' + rowClass + '" ' + rowStyle + '>' +
+        //                '<td>' + value.mr_no_sequence + '</td>' +
+        //                '<td>' + value.Full_Name + '</td>' +
+        //                '<td>' + WardName + '</td>' +
+        //                '<td>' + BedNo + '</td>' +
+        //                '<td>' + retdate + '</td>' +
+        //                '<td>' + actionButtons + '</td>' +
+        //                '</tr>';
+        //        });
+        //        debugger;
+        //        $('#tblIPDReturnMed tbody').html(rows);
+        //        $(".se-pre-con").fadeOut("slow");
+        //    }, function (err) {
+        //        console.log(err);
+        //    });
+        //}
+
+        function fillReturnPatientsLists() {
+            var SearchString = $("#txtReturnSearchmodal").val();
+
+            PageMethods.ReturnPatients(SearchString, function (data) {
+
+                var parsedData = JSON.parse(data);
+                var rows = '';
+
+                $.each(parsedData, function (key, value) {
+
+                    var TrnsDate = '';
+
+                    if (value.Invoice_Date) {
+                        var dateMatch = value.Invoice_Date.match(/\d+/);
+                        if (dateMatch) {
+                            TrnsDate = moment(new Date(parseInt(dateMatch[0]))).format('DD-MMM-YYYY hh:mm A');
+                        }
+                    }
+
+                    rows += '<tr>' +
+                        '<td>' + (value.mr_no_sequence || '') + '</td>' +
+                        '<td>' + (value.Full_Name || '') + '</td>' +
+                        '<td>' + (value.Bill_No || '') + '</td>' +
+                        '<td>' + (value.Item_Name || '') + '</td>' +
+                        '<td>' + (value.Ward_Name || '') + '</td>' +
+                        '<td>' + (value.Bed_No || '') + '</td>' +
+                        '<td>' + TrnsDate + '</td>' +
+                        '<td>' +
+                        '<a href="#" onclick="LoadReturnMedicine(' +
+                        
+                        value.Bill_ID + ',' +
+                        '\'' + value.Item_Code + '\'' +
+                        ')">' +
+                        '<i class="fa fa-edit fa-2x" style="color:green;"></i>' +
+                        '</a>' +
+                        '</td>' +
+                        '</tr>';
+                });
+
+                $('#tblIPDReturnMed tbody').html(rows);
+
+                $(".se-pre-con").fadeOut("slow");
+
+            }, function (err) {
+                console.log(err);
+            });
+        }
+        function AddSaleReturnInvoiceMaster() {
+            debugger
+         
+   
+            
+
+        }
+        function LoadReturnMedicine(Bill_Id, Item_Id) {
+            $('#SaleReturnModal').modal('show');
+            $('#ReturnqueueModal').modal('hide');
+            $.ajax({
+                type: "post",
+                url: "IssueMedicine.aspx/GetReturnMedicine",
+                data: JSON.stringify({ "Bill_Id": Bill_Id }),
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (msg) {
+                    debugger
+                    var data = JSON.parse(msg.d);
+                    $("#ddlpat_no").val(data[0].Patient_ID).trigger('change')
+                    $("#ddl_Warehouse").val(data[0].Ware_House).trigger('change')
+                    $("#hdnReturnBillID").val(data[0].Bill_ID)
+                    LoadReturnMedicineDetail(Bill_Id, Item_Id);
+                },
+            });
+        }
+
         debugger;
-    
+        function LoadReturnMedicineDetail(Bill_Id, Item_Id) {
+            
+
+
+            debugger
+
+                $('#saleReturnTableBody').empty();
+                $.ajax({
+                    type: "post",
+                    url: "IssueMedicine.aspx/GetReturnMedicineDetail", 
+                    data: JSON.stringify({ "Bill_Id": Bill_Id, "Item_Id": Item_Id }),
+                    dataType: 'JSON',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (msg) {
+                        var data = JSON.parse(msg.d);
+                        data.forEach(function (item, index) {
+                            var rowIndex = index + 1;
+                            var NetAmount = item.Qty * item.Amount
+                            var row = '<tr>' +
+                                '<td>' + rowIndex + '</td>' +
+                                '<td style="display:none"><input type="text" value="' + item.Bill_Details_ID + '" name="txtRBill_Details_ID" id="txtRBill_Details_ID"></td>' +
+                                '<td><input type="hidden" value="' + item.Description + '" name="txtRItemDescription" id="txtRItemDescription">' + item.Description + '</td>' +
+                                '<td style="display:none"><input type="text" name="txtRCheckQty" id="txtRCheckQty"  value="' + item.Qty + '" style="width: 100% !important; height: 22px; text-align: right;" ></td>' +
+                                '<td><input type="text" name="txtRQty" value="' + item.Qty + '"  style="width: 100% !important; height: 22px; text-align: right;" autocomplete="off"></td>' +
+                                '<td><input type="text" name="txtRStock" value="' + item.Total_Stock + '" style="width: 100% !important; height: 22px; text-align: center;" readonly></td>' +
+                                '<td><input type="text" name="txtRSalerate" value="' + item.Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
+                                '<td><input type="text" name="txtRDisPer" value="' + item.Discount_Percentage + '" style="width: 100% !important; height: 22px; text-align: right;" readonly autocomplete="off"></td>' +
+                                '<td><input type="text" name="txtRDisAmount" value="' + item.Discount_Amount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
+                                '<td><input type="text" name="txtRnet" value="' + NetAmount + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
+                                '<td ><input type="text" name="txtRBatch_No" value="' + item.Batch_No + '" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
+                                '<td style="display: none"><input type="hidden" value="' + item.Item_ID + '" name="txtRItemID" id="txtRItemID"></td>' +
+                                '<td style="display: none"><input type="hidden" value="' + item.CGSRate + '" name="txtRCGSRate" id="txtRCGSRate"></td>' +
+                                '<td style="display:none;"><input type="hidden" value="' + data[0].Item_ID + '" name="hdnItemID" id="hdnItemID" > ' + data[0].Item_ID + '</td>' +
+                                '<td><input type="text" name="txtLineTotal" value="0" style="width: 100% !important; height: 22px; text-align: right;" readonly></td>' +
+                                '<td style="text-align: center;"><a href="javascript:void(0)" onclick="ExcludeFromSaleReturn(this)"><i class="fa fa-trash-o" style="font-size:17px"></i></a></td>' +
+                                '</tr>';
+                            $('#saleReturnTableBody').append(row);
+                        });
+                        $('#saleReturnTableBody').on('change keyup', 'input[name="txtRQty"], input[name="txtRSalerate"], input[name="txtRDisPer"]', function () {
+                            var $row = $(this).closest('tr');
+                            calculateNetAmount($row);
+                            $('#txtSaleReturnFlatDisc').val(0)
+
+                        });
+                        CalculateSaleReturnLineDiscounts();
+                        setTimeout(function () {
+                            $('#ddlSaleReturnItems').select2('close');
+                            $('input[name="txtRQty"]').focus().select();
+                        }, 5);
+                    },
+                });
+            
+
+        }
         function RejectMedicineRequest(medicineId, element) {
                 debugger;
                 Swal.fire({
@@ -3698,6 +3899,7 @@
                     <label>MR No:</label>
                     <input type="hidden" id="hdPatientID" />
                     <input type="hidden" id="hdndiscountType" />
+                    <input type="hidden" id="hdnReturnBillID" />
                     <input type="text" id="txtMRNo" tabindex="1" class="form-control" />
                     <input type="text" id="txtTransType" style="display: none" tabindex="1" class="form-control" />
                 </div>
@@ -3943,6 +4145,60 @@
         </div>
     </div>
 
+    <%--Return Que Start--%>
+    <div id="ReturnqueueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                                            <fieldset class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="txtSearchmodal">Search Your Patients:</label>
+                                <input type="text" id="txtReturnSearchmodal" class="form-control" onkeyup="fillPendingPatientsLists();" autocomplete="off" placeholder="Enter search text" />
+                            </div>
+                                                       
+                            <div class="col-lg-2 text-end" style=" margin-top:28px !important;">
+                                <a onclick="RefreshQueue()">
+                                    <i class="fa fa-refresh fa-2x"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div id="ReturnQueueList">
+                        <div class="table-responsive previewTable">
+                            <table class="table table-bordered table-custom" id="tblIPDReturnMed" style="overflow: auto;">
+                                <thead id="ishead">
+                                    <tr>
+                                        <th>MR No</th>
+                                        <th>Bill No</th>
+                                        <th>Patient Name</th>                                   
+                                        <th>Medicine</th>                                   
+                                        <th>Ward</th>
+                                        <th>Bed</th>
+                                        <th style="width: 173px;">Created Time</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="isbody">
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%--Return Que Ends--%>
+
     <%--Patient Que Start--%>
     <div id="queueModal" class="modal fade scrollable-modal" data-backdrop="static" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -4070,11 +4326,16 @@
                                     </td>
                                 </tr>
                             </table>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6" style="margin-top:-7% !important">
+                        </div>    
+                        
+
+                        <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top:-7% !important">
                             <label>Remarks</label>
                             <input type="text" id="txtSaleReturnRemarks" class="form-control" placeholder="Enter remarks" />
                         </div>
+                          <div class="col-lg-2 col-md-4 col-sm-6" style="margin-top: -64px; margin-left: 320px;">
+                    <input type="button" class="btn-primry" value="Queue" id="ReturnQueue" onclick="openReturnQueue()"  />
+                </div>
                     </div>
                     <table id="saleReturnTable" class="table table-bordered table-responsive-lg table-responsive-md">
                         <thead>
