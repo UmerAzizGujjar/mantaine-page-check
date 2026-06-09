@@ -3576,6 +3576,7 @@ namespace PMS
                     txtEnd_Date.Visible = true;
                     tr_Export.Visible = false;
                     tr_Summary.Visible = false;
+                    tr_Export.Visible = true;
 
                     object valusets;
                     lblDepartment.Text = "Reason";
@@ -4251,11 +4252,11 @@ namespace PMS
                     lblMainDepartment.Visible = false;
                     lblMedical.Visible = false;
                     DateDiv.Visible = true;
+                    tr_Export.Visible = true;
                     Time_Row.Visible = true;
                     SetDepartent();
                     dpROw.Visible = false;
-
-                    // ✅ ADD THIS CODE TO POPULATE ITEM DROPDOWN:
+                    
                     td11.Text = "Item Name";
                     td11.Visible = true;
                     ddlItemName.Visible = true;
@@ -4271,6 +4272,25 @@ namespace PMS
                     ddlItemName.DataTextField = "Description";
                     ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlItemName.DataBind();
+
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
 
                 }
                 if (this.PageTitle == "Category_Wise_Profitability_Report")
