@@ -2153,8 +2153,8 @@ function cleanPrint() {
 
 <!-- PAGE FOOTER -->
 <div class="page-footer">
-    <div class="footer-col">${data.Report_Footer1 || ''}</div>
-    <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
+    <div class="footer-col">${data.Report_Footer || ''}</div>
+    <div class="footer-col right">${data.Report_Footer_tow || ''}</div>
 </div>
 
 <button class="print-btn" onclick="cleanPrint()">🖨 Print Report</button>

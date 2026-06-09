@@ -473,6 +473,38 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(Header);
         }
         [WebMethod]
+        public static string LoadGLAccount(int AccountID)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var account = (from a in db.GL_Accounts
+                           where a.Account_ID == AccountID
+                           select new
+                           {
+                               a.Account_ID,
+                               a.Account_Code,
+                               a.Account_Name,
+                               a.Parent_Code,
+                               a.Account_Serial,
+                               a.Levels,
+                               txtAccount_Code_Name = a.Account_Code + " - " + a.Account_Name,
+                               hdfAccount_Name = a.Account_Name,
+                               hdfAccount_Code = a.Account_Code,
+                               hdfParent_Code = a.Parent_Code,
+                               hdfAccount_Serial = a.Account_Serial,
+                               hdfLevel = a.Levels,
+                               hdfAccount_ID = a.Account_ID
+                           }).FirstOrDefault();
+
+            if (account != null)
+            {
+                return (new JavaScriptSerializer()).Serialize(account);
+            }
+            else
+            {
+                return (new JavaScriptSerializer()).Serialize(new { });
+            }
+        }
+        [WebMethod]
         public static string LoadVendorCompanies(int VenId)
         {
             DataBaseDataContext db = new DataBaseDataContext();

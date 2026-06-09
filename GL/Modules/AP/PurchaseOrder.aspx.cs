@@ -1,4 +1,5 @@
 ﻿using AjaxControlToolkit.HTMLEditor.ToolbarButton;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -815,6 +816,70 @@ namespace PMS.AP
             }
         }
         [WebMethod]
+        public static string GetBatchProjectedQuantities(string itemIdsJson, string projectionDate, string warehouseId)
+        {
+            try
+            {
+                List<int> itemIds = new List<int>();
+                if (!string.IsNullOrEmpty(itemIdsJson))
+                {
+                    itemIds = new JavaScriptSerializer().Deserialize<List<int>>(itemIdsJson);
+                }
+
+                // Use Dictionary with string keys for JSON serialization
+                Dictionary<string, decimal> projectedQtys = new Dictionary<string, decimal>();
+
+                if (itemIds.Count > 0 && !string.IsNullOrEmpty(projectionDate) && !string.IsNullOrEmpty(warehouseId) && warehouseId != "0")
+                {
+                    using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                    {
+                        // Convert front-end date (DD MMM YYYY) to SQL format (YYYY-MM-DD)
+                        DateTime parsedDate = DateTime.ParseExact(projectionDate, "dd MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                        string sqlDate = parsedDate.ToString("yyyy-MM-dd");
+                        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+                        // Create a comma-separated list of IDs for the IN clause
+                        string idList = string.Join(",", itemIds);
+
+                        // Query for bills between projection date and current date
+                        string query = $@"
+                    SELECT bd.Item_ID, ISNULL(SUM(bd.Qty), 0) as TotalQty
+                    FROM AR_Billing_Details bd
+                    INNER JOIN Ar_Billings b ON bd.Bill_ID = b.Bill_ID
+                    WHERE bd.Item_ID IN ({idList})
+                    AND b.Ware_House = '{warehouseId}'
+                    AND CONVERT(DATE, b.Invoice_Date) BETWEEN CONVERT(DATE, '{sqlDate}') AND CONVERT(DATE, '{currentDate}')
+                    AND ISNULL(b.isCancel, 0) = 0
+                    AND ISNULL(b.IsPharmacy, 0) = 1
+                    GROUP BY bd.Item_ID";
+
+                        DataTable dt = DBClass.getDataTable(query);
+
+                        // Initialize all items with 0 first
+                        foreach (int itemId in itemIds)
+                        {
+                            projectedQtys[itemId.ToString()] = 0;
+                        }
+
+                        // Update with actual quantities from query
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string itemId = row["Item_ID"].ToString();
+                            decimal qty = Convert.ToDecimal(row["TotalQty"]);
+                            projectedQtys[itemId] = qty;
+                        }
+                    }
+                }
+
+                return new JavaScriptSerializer().Serialize(projectedQtys);
+            }
+            catch (Exception ex)
+            {
+                return "{}";
+            }
+        }
+
+        [WebMethod]
         public static string GetVendorItems(string vendorId)
         {
             try
@@ -849,6 +914,69 @@ namespace PMS.AP
             {
                 // Log the error
                 return (new JavaScriptSerializer()).Serialize(new List<object>());
+            }
+        }
+        [WebMethod]
+        public static string GetProjectedConsumptionForItems(string itemIdsJson, string projectionDate, string warehouseId)
+        {
+            try
+            {
+                List<int> itemIds = new List<int>();
+                if (!string.IsNullOrEmpty(itemIdsJson))
+                {
+                    itemIds = new JavaScriptSerializer().Deserialize<List<int>>(itemIdsJson);
+                }
+
+                Dictionary<string, decimal> consumedQtys = new Dictionary<string, decimal>();
+
+                if (itemIds.Count > 0 && !string.IsNullOrEmpty(projectionDate) && !string.IsNullOrEmpty(warehouseId) && warehouseId != "0")
+                {
+                    using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                    {
+                        // Parse projection date
+                        DateTime parsedDate = DateTime.ParseExact(projectionDate, "dd MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                        string sqlProjectionDate = parsedDate.ToString("yyyy-MM-dd");
+                        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+                        // Create comma-separated list of IDs
+                        string idList = string.Join(",", itemIds);
+
+                        // Query for consumed quantities from bills between projection date and current date
+                        string query = $@"
+                    SELECT bd.Item_ID, ISNULL(SUM(bd.Qty), 0) as TotalConsumedQty
+                    FROM AR_Billing_Details bd
+                    INNER JOIN Ar_Billings b ON bd.Bill_ID = b.Bill_ID
+                    WHERE bd.Item_ID IN ({idList})
+                    AND b.Ware_House = '{warehouseId}'
+                    AND CONVERT(DATE, b.Invoice_Date) >= CONVERT(DATE, '{sqlProjectionDate}')
+                    AND CONVERT(DATE, b.Invoice_Date) <= CONVERT(DATE, '{currentDate}')
+                    AND ISNULL(b.isCancel, 0) = 0
+                    AND ISNULL(b.IsPharmacy, 0) = 1
+                    GROUP BY bd.Item_ID";
+
+                        DataTable dt = DBClass.getDataTable(query);
+
+                        // Initialize all items with 0
+                        foreach (int itemId in itemIds)
+                        {
+                            consumedQtys[itemId.ToString()] = 0;
+                        }
+
+                        // Update with actual consumed quantities
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string itemId = row["Item_ID"].ToString();
+                            decimal qty = Convert.ToDecimal(row["TotalConsumedQty"]);
+                            consumedQtys[itemId] = qty;
+                        }
+                    }
+                }
+
+                return new JavaScriptSerializer().Serialize(consumedQtys);
+            }
+            catch (Exception ex)
+            {
+                return "{}";
             }
         }
         [WebMethod]

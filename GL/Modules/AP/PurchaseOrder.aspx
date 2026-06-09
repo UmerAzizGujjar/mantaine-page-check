@@ -102,123 +102,6 @@
     <script type="text/javascript">
         var poid = '<% =Request.QueryString["PO_ID"] %>';
 
-        function loadVendorItems(vendorId) {
-            debugger;
-            var isEditMode = '<% =Request.QueryString["PO_ID"] %>' !== '';
-
-           // Skip projection check in edit mode
-           if (!isEditMode) {
-               var projectiontype = $("#ctl00_MainContent_ddlprojection").val();
-
-               // Check if projection is required (ProjCond == '01') and not selected
-               if (ProjCond == '01' && (projectiontype === "0" || projectiontype === "" || projectiontype === null)) {
-                   Swal.fire({
-                       icon: 'warning',
-                       title: 'Projection Required',
-                       text: 'Please select Projection first before selecting vendor.',
-                       timer: 3000,
-                       showConfirmButton: true,
-                       confirmButtonText: 'OK'
-                   }).then((result) => {
-                       if (result.isConfirmed) {
-                           $('#ctl00_MainContent_ddlprojection').select2('open');
-                       }
-                   });
-                   // Reset vendor dropdown back to default "Select" option
-                   $('#ctl00_MainContent_ddlVendor').val('0').trigger('change.select2');
-                   return; // Exit function - DO NOT load items
-               }
-           }
-
-           if (!vendorId || vendorId === '0') {
-               return;
-           }
-
-           showLoader('Loading vendor items...', false);
-
-           PageMethods.GetVendorItems(vendorId, function (response) {
-               try {
-                   var items = JSON.parse(response);
-
-                   if (!items || items.length === 0) {
-                       Swal.fire({
-                           icon: 'info',
-                           title: 'No Items Found',
-                           text: 'No items found for this vendor.',
-                           timer: 2000,
-                           showConfirmButton: false
-                       });
-                       hideLoader();
-                       return;
-                   }
-
-                   // Process each item and add to grid
-                   var itemsAdded = 0;
-                   var totalItems = items.length;
-
-                   $.each(items, function (index, item) {
-                       // Check if item already exists
-                       var exists = false;
-                       $('#tblItemDescription tbody tr').each(function () {
-                           if ($(this).find('input[name=txtItemCode]').val() == item.Item_Code) {
-                               exists = true;
-                               return false;
-                           }
-                       });
-
-                       if (!exists) {
-                           appendVendorItem(item);
-                           itemsAdded++;
-                       }
-                   });
-
-                   updateLoaderProgress(100, 'Completed');
-
-                   setTimeout(function () {
-                       hideLoader();
-                       if (itemsAdded > 0) {
-                           Swal.fire({
-                               icon: 'success',
-                               title: 'Success',
-                               text: itemsAdded + ' item(s) added successfully.',
-                               timer: 1500,
-                               showConfirmButton: false
-                           });
-                       } else {
-                           Swal.fire({
-                               icon: 'info',
-                               title: 'No New Items',
-                               text: 'All vendor items are already added.',
-                               timer: 1500,
-                               showConfirmButton: false
-                           });
-                       }
-                   }, 500);
-
-               } catch (e) {
-                   console.error('Error parsing vendor items:', e);
-                   hideLoader();
-                   Swal.fire({
-                       icon: 'error',
-                       title: 'Error',
-                       text: 'Failed to load vendor items.',
-                       timer: 2000,
-                       showConfirmButton: false
-                   });
-               }
-           }, function (error) {
-               hideLoader();
-               console.error('Error loading vendor items:', error);
-               Swal.fire({
-                   icon: 'error',
-                   title: 'Error',
-                   text: 'Failed to load vendor items.',
-                   timer: 2000,
-                   showConfirmButton: false
-               });
-           });
-       }
-
         // Function to append a single vendor item
         function appendVendorItem(item) {
             var length = $("#tblItemDescription tr:gt(0)").length + 1;
@@ -713,18 +596,114 @@
             });
         }
         $(document).ready(function () {
+          
             // Show loader immediately
             showLoader('Initializing...', false);
 
             // Initialize page
             UserRights();
             GetWareHouseCondition();
-            Getprojection();
+            GetprojectionCondition();
+     
             $('#ctl00_MainContent_ddlVendor').change(function () {
+                debugger;
+                if (vendorChanging) return;
+
                 var vendorId = $(this).val();
-                if (vendorId && vendorId !== '0') {
+                if (!vendorId || vendorId === '0') return;
+
+                // Edit mode - skip everything
+                var existingPOId = '<%= Request.QueryString["PO_ID"] %>';
+                if (existingPOId !== null && existingPOId !== '') {
+                    loadVendorItems(vendorId);
+                    return;
+                }
+
+                // Not answered yet - wait
+                if (!projectionAnswered) {
+                    setTimeout(function () {
+                        vendorChanging = true;
+                        $('#ctl00_MainContent_ddlVendor').val('0').trigger('change');
+                        vendorChanging = false;
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Please wait',
+                            text: 'Please answer the projection question first.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }, 100);
+                    return;
+                }
+                debugger;
+                // User said NO - load directly
+                if (!projectionChosen) {
+                    debugger;
+                    loadVendorItems(vendorId);
+                    return;
+                }
+                var projTypes = $('#ctl00_MainContent_ddlprojection').val();
+                if (projTypes == "001") {
+                    if (warehouseCond === '01') {
+                        var warehouse = $('#ddlWarehouse').val();
+                        if (!warehouse || warehouse === '0') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning!',
+                                text: 'Please select Warehouse first.',
+                                timer: 2500,
+                                showConfirmButton: false
+                            });
+                            vendorChanging = true;
+                            $('#ctl00_MainContent_ddlVendor').val('0').trigger('change');
+                            vendorChanging = false;
+                            return;
+                        }
+                    }
+
+                    // Validate projection date
+                    var projDate = $('#ctl00_MainContent_txtProjection_Date').val();
+                    if (!projDate || projDate.trim() === '') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: 'Please select Projection Date first.',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                        vendorChanging = true;
+                        $('#ctl00_MainContent_ddlVendor').val('0').trigger('change');
+                        vendorChanging = false;
+                        return;
+                    }
+
+                    // Validate projection type
+                    var projType = $('#ctl00_MainContent_ddlprojection').val();
+                    if (!projType || projType === '0' || projType === '') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: 'Please select Projection Type first.',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                        vendorChanging = true;
+                        $('#ctl00_MainContent_ddlVendor').val('0').trigger('change');
+                        vendorChanging = false;
+                        return;
+                    }
+                }
+                // User said YES - validate warehouse
+              
+                debugger;
+                // All good
+                if (projType == "001") {
                     loadVendorItems(vendorId);
                 }
+                else if (projType == "002") {
+                    return;
+                }
+           
             });
             $('#ddlWarehouse').change(function () {
                 $("#ddlWarehouse").attr('disabled', true);
@@ -776,7 +755,7 @@
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#ctl00_MainContent_txtPurchase_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
-            $("#ctl00_MainContent_txtProjection_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
+            $("#ctl00_MainContent_txtProjection_Date").val('').datepicker({ dateFormat: 'dd M yy', readOnly: true });
             $("#ctl00_MainContent_txtdueDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
 
         // Load PO data ONLY if PO_ID exists in query string
@@ -1058,9 +1037,94 @@
                 }
             });
         }
+        function loadVendorItems(vendorId) {
+            if (!vendorId || vendorId === '0') return;
 
+            // If projection not chosen, just return - no vendor items to load
+            // (vendor items are loaded via PR items or Items modal)
+            if (!projectionChosen) {
+                return;
+            }
 
+            $.ajax({
+                type: "POST",
+                url: "PurchaseOrder.aspx/GetVendorItems",
+                data: JSON.stringify({ vendorId: vendorId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var items = JSON.parse(response.d);
 
+                    if (!items || items.length === 0) {
+                        console.log('No vendor items returned for vendorId: ' + vendorId);
+                        return;
+                    }
+
+                    // Append all vendor items
+                    $.each(items, function (index, item) {
+                        appendVendorItem(item);
+                    });
+
+                    // Get projection fields
+                    var projDate = $('#ctl00_MainContent_txtProjection_Date').val();
+                    var warehouseId = $('#ddlWarehouse').val();
+
+                    if (!projDate || projDate.trim() === '' || !warehouseId || warehouseId === '0') return;
+
+                    // Collect item IDs
+                    var itemIds = [];
+                    $.each(items, function (index, item) {
+                        if (item.Item_ID && item.Item_ID !== 0) {
+                            itemIds.push(item.Item_ID);
+                        }
+                    });
+
+                    if (itemIds.length === 0) return;
+
+                    // Call GetBatchProjectedQuantities
+                    $.ajax({
+                        type: "POST",
+                        url: "PurchaseOrder.aspx/GetBatchProjectedQuantities",
+                        data: JSON.stringify({
+                            itemIdsJson: JSON.stringify(itemIds),
+                            projectionDate: projDate,
+                            warehouseId: warehouseId
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (projResponse) {
+                            var projQtys = JSON.parse(projResponse.d);
+
+                            $('#tblItemDescription tbody tr').each(function () {
+                                var $row = $(this);
+                                var itemCode = $row.find('input[name=txtItemCode]').val();
+
+                                $.each(items, function (index, item) {
+                                    if (item.Item_Code === itemCode) {
+                                        var itemIdStr = item.Item_ID.toString();
+                                        if (projQtys.hasOwnProperty(itemIdStr)) {
+                                            var projQty = projQtys[itemIdStr];
+                                            if (projQty > 0) {
+                                                $row.find('input[name=txtQty]').val(projQty).toFixed(2);
+                                            }
+                                        }
+                                        return false;
+                                    }
+                                });
+                            });
+
+                            calcTotal();
+                        },
+                        error: function (error) {
+                            console.error("Error loading projected quantities", error);
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.error("Error loading vendor items", error);
+                }
+            });
+        }
         function GetNewPurchaseNo() {
             PageMethods.GetNewPurchaseNo(function (resp) {
                 $('#ctl00_MainContent_txtPurchase_No').val(resp);
@@ -1546,8 +1610,7 @@ function scheduleCalcTotal(delay) {
             );
         }
 
-        // Promise-based Sales Tax population
-        // Progress-tracking Sales Tax population
+       
         function populateTaxddlWithProgress(rowId, onComplete) {
             PageMethods.getwtaxtype(function (response) {
                 var options = '<option value="0">0</option>';
@@ -1593,10 +1656,6 @@ function scheduleCalcTotal(delay) {
                 }
             });
         }
-        // Keep original functions for backward compatibility
-        //function populateTaxddl(rowId) {
-        //    populateTaxddlWithPromise(rowId, null);
-        //}
 
         function populateAdvanceTaxddl(rowId, callback) {
             populateAdvanceTaxddlWithPromise(rowId, callback);
@@ -1654,6 +1713,11 @@ function scheduleCalcTotal(delay) {
             });
         }
         var warehouseCond;
+        var ProjCond;
+        var projectionAnswered = false;
+        var projectionChosen = false;
+        var vendorChanging = false;
+
         function GetWareHouseCondition() {
 
             $.ajax({
@@ -1678,9 +1742,8 @@ function scheduleCalcTotal(delay) {
                 }
             });
         }
-        var ProjCond;
-        function GetprojectionCondition() {
 
+        function GetprojectionCondition() {
             $.ajax({
                 type: "POST",
                 url: "PurchaseOrder.aspx/Getprojection",
@@ -1688,23 +1751,53 @@ function scheduleCalcTotal(delay) {
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    debugger;
                     ProjCond = JSON.parse(response.d);
-                    if (ProjCond == '01') {
+                    if (ProjCond === '01') {
                         $('#projectiontype').show();
                         $('#projectiondate').show();
-                    }
-                    else {
-                        $('#projectiontype').hide();
-                        $('#projectiondate').hide();
-                    
-                    }
-                },
-                error: function (error) {
-                    console.error("Error fetching items", error);
+
+                        var existingPOId = '<%= Request.QueryString["PO_ID"] %>';
+                if (existingPOId === '' || existingPOId === null) {
+                    setTimeout(function () {
+                        Swal.fire({
+                            icon: 'question',
+                            title: 'Projection',
+                            text: 'Do you want to add a projection?',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#aaa',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then(function (result) {
+                            projectionChosen = result.isConfirmed;
+                            projectionAnswered = true;
+                            if (!projectionChosen) {
+                                // User said NO - hide projection fields
+                                $('#projectiontype').hide();
+                                $('#projectiondate').hide();
+                            }
+                        });
+                    }, 800);
+                } else {
+                    projectionAnswered = true;
+                    projectionChosen = false;
                 }
-            });
+            } else {
+                $('#projectiontype').hide();
+                $('#projectiondate').hide();
+                projectionAnswered = true;
+                projectionChosen = false;
+            }
+        },
+        error: function (error) {
+            console.error("Error fetching items", error);
+            projectionAnswered = true;
+            projectionChosen = false;
         }
+    });
+      }
 
 
 
@@ -2701,14 +2794,14 @@ function scheduleCalcTotal(delay) {
     <input type="hidden" id="txttranstype" name="txttranstype" />
     <form id="item">
 
-<!-- PAGE LOADER - Make sure this is right after the form tag or at the top of content -->
-<div id="page-loader" style="display: none;">
-    <div class="loader-spinner"></div>
-    <div class="loader-text">Loading Purchase Order...</div>
-    <div class="loader-progress">
-        <div class="loader-progress-bar"></div>
-    </div>
-</div>
+        <!-- PAGE LOADER - Make sure this is right after the form tag or at the top of content -->
+        <div id="page-loader" style="display: none;">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Loading Purchase Order...</div>
+            <div class="loader-progress">
+                <div class="loader-progress-bar"></div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="LabelPurchase_No" runat="server" Text="PO No."></asp:Label>
@@ -2740,7 +2833,7 @@ function scheduleCalcTotal(delay) {
 
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="lblSupplier_ID" runat="server" Text="Vendor">Vendor <span style="color: red;">*</span></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlVendor"  class="form-control"  AppendDataBoundItems="true"></asp:DropDownList>
+                <asp:DropDownList runat="server" ID="ddlVendor" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
             </div>
 
 
@@ -2754,7 +2847,7 @@ function scheduleCalcTotal(delay) {
             <div class="col-lg-1 col-md-2 col-sm-4">
                 <input type="button" value="Items" id="btnGetAllItems" class="btn btn-gray" style="margin-top: 16px;" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6" id ="warehouse">
+            <div class="col-lg-2 col-md-4 col-sm-6" id="warehouse">
                 <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
                 <select id="ddlWarehouse" onchange="getprNoBy_WareHouse(this)" class="form-select">
                     <option value="0">Please Select</option>
@@ -2763,15 +2856,15 @@ function scheduleCalcTotal(delay) {
         </div>
 
         <div class="row">
-           
+
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="lblDelivery" runat="server" Text="Delivery Terms"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlDelivery" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
             </div>
-             <div class="col-lg-3 col-md-6 col-sm-12">
-     <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
-     <asp:TextBox runat="server" ID="txtPurchase_Reference" class="form-control" />
- </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
+                <asp:TextBox runat="server" ID="txtPurchase_Reference" class="form-control" />
+            </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="lblFreight" runat="server" Text="Freight Amount"></asp:Label>
                 <asp:TextBox runat="server" ID="Freight" onkeyup="calcTotal()" class="form-control" />
@@ -2803,8 +2896,8 @@ function scheduleCalcTotal(delay) {
                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
             </div>
             <div class="col-lg-1 col-md-6 col-sm-12">
-                 <label class="form-check-label" for="chkByDefault">By Default</label>
-                 <input class="form-check-input" type="checkbox" id="chkByDefault" />
+                <label class="form-check-label" for="chkByDefault">By Default</label>
+                <input class="form-check-input" type="checkbox" id="chkByDefault" />
             </div>
             <div class="col-lg-1 col-md-6 col-sm-12">
                 <label class="form-check-label" for="chkManual">Manual</label>
@@ -2816,19 +2909,19 @@ function scheduleCalcTotal(delay) {
                 <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
                 <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
             </div>
-              <div class="col-lg-3 col-md-6 col-sm-12" id="projectiondate">
-              <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
-             
-              <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
-          </div>
-              <div class="col-lg-3 col-md-6 col-sm-12" id="projectiontype">
-                  <asp:Label ID="lblddlprojection" runat="server" Text="Projection" Style="">Projection<span style="color: red">*</span></asp:Label>
-                  <asp:DropDownList runat="server" ID="ddlprojection" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
-              </div>
+            <div class="col-lg-3 col-md-6 col-sm-12" id="projectiondate">
+                <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
+
+                <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12" id="projectiontype">
+                <asp:Label ID="lblddlprojection" runat="server" Text="Projection" Style="">Projection<span style="color: red">*</span></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlprojection" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
         </div>
     </form>
-    <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />   
-        <div class="row" style=" height: 276px !important; height: auto;overflow:scroll">
+    <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />
+    <div class="row" style="height: 276px !important; height: auto; overflow: scroll">
         <table class="table responstable table-bordered" id="tblItemDescription" style="font-size: 9px !important; overflow: scroll; height: auto;">
             <thead>
                 <tr style="position: sticky; top: 0px; z-index: 10;">
@@ -2855,7 +2948,7 @@ function scheduleCalcTotal(delay) {
                     <th style="width: 75px;">Bonus Tax</th>
                     <th style="width: 75px;">Total</th>
                     <th style="width: 75px;">Delivery Date</th>
-                     <th style="width: 60px; text-align: center;">Stock</th>
+                    <th style="width: 60px; text-align: center;">Stock</th>
                     <th style="width: 45px;">Action</th>
                 </tr>
             </thead>
@@ -2931,7 +3024,7 @@ function scheduleCalcTotal(delay) {
                     <asp:TextBox runat="server" ID="Net_Amount" ReadOnly="true" SkinID="UserDefineWidth" Style="text-align: right;" />
                 </div>
                 <div>
-                    <asp:TextBox ID="txtAdv_amou"  runat="server"  ClientIDMode="Static"  Style="display: none;" ReadOnly="true" />
+                    <asp:TextBox ID="txtAdv_amou" runat="server" ClientIDMode="Static" Style="display: none;" ReadOnly="true" />
                 </div>
                 <div>
                     <asp:TextBox ID="txtFurther_amou" runat="server" ClientIDMode="Static" Style="display: none;" ReadOnly="true" />
@@ -3125,46 +3218,53 @@ function scheduleCalcTotal(delay) {
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 
-        <!-- Add this NEW modal for Item Search -->
-<div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
-                <div style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-bordered table-striped table-responsive-md table-responsive-lg">
-                        <thead>
-                            <tr>
-                                <th>Select</th>          <!-- td:eq(0) -->
-                                <th style="display:none;">Item ID</th>  <!-- td:eq(1) -->
-                                <th>Item Code</th>       <!-- td:eq(2) -->
-                                <th>Description</th>     <!-- td:eq(3) -->
-                                <th>Unit</th>            <!-- td:eq(4) -->
-                                <th style="display:none;">Rate</th>      <!-- td:eq(5) -->
-                                <th style="display:none;">UOM Qty</th>   <!-- td:eq(6) -->
-                                <th>Stock</th> 
-                            </tr>
-                        </thead>
-                        <tbody id="itemsTableBody">
-                        </tbody>
-                    </table>
+    <!-- Add this NEW modal for Item Search -->
+    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <div class="col-lg-10 col-md-10 col-sm-10"> </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 float-end">
-                    <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                <div class="modal-body">
+                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-bordered table-striped table-responsive-md table-responsive-lg">
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <!-- td:eq(0) -->
+                                    <th style="display: none;">Item ID</th>
+                                    <!-- td:eq(1) -->
+                                    <th>Item Code</th>
+                                    <!-- td:eq(2) -->
+                                    <th>Description</th>
+                                    <!-- td:eq(3) -->
+                                    <th>Unit</th>
+                                    <!-- td:eq(4) -->
+                                    <th style="display: none;">Rate</th>
+                                    <!-- td:eq(5) -->
+                                    <th style="display: none;">UOM Qty</th>
+                                    <!-- td:eq(6) -->
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-lg-10 col-md-10 col-sm-10"></div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 float-end">
+                        <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </asp:Content>

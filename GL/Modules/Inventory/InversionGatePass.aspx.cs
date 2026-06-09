@@ -421,5 +421,38 @@ namespace PMS.Inventory
             var Details = db.spUnApproveIgp(Convert.ToInt32(IgpId));
             return (new JavaScriptSerializer()).Serialize(Details);
         }
+
+        [WebMethod]
+        public static string BatchValidation()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var Batch = (from tbl in db.sys_Parms
+                                      where tbl.Name == "IGP Batch Validation"
+                                      select tbl.Code)
+                              .FirstOrDefault();
+
+                    return Batch ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        [WebMethod]
+        public static bool CheckBatchExists(int itemCode, string batchNo, int igpId)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var exists = db.Igp_Details.Any(x => x.Item_Code == itemCode
+                                                   && x.BatchNum == batchNo
+                                                   && x.Igp_Id != igpId);
+                return exists;
+            }
+        }
     }
 }

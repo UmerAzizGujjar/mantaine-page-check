@@ -278,9 +278,11 @@
             var _this = $(row).closest('tr')[0];
             var batch = $(_this).find('td input[name="Isbatch"]').val();
             var batch_no = $(_this).find('td input[name="BatchNo"]').val();
+            var item_code = $(_this).find('td input[name="txtItemCode"]').val();
+            var igp_id = '<%= Request.QueryString["IGP_ID"] %>';
+
             if (batch == "false" || batch == 'null' || batch == null) {
                 if (batch_no != "") {
-
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -296,6 +298,30 @@
                     $(_this).find('td input[name=BatchNo]').val('');
                     $(_this).find('td input[name=BatchNo]').prop('readonly', true);
                 }
+            } else if (batch == "true" && batch_no != "") {
+                PageMethods.BatchValidation(function (result) {
+                    var batchValidationCode = result;
+
+                    if (batchValidationCode == "01") {
+                        PageMethods.CheckBatchExists(parseInt(item_code), batch_no, igp_id ? parseInt(igp_id) : 0, function (exists) {
+                            if (exists) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Batch number "' + batch_no + '" already exists for Item Code "' + item_code + '". Please use a different batch number.',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    customClass: {
+                                        popup: 'swal-big-popup',
+                                        title: 'swal-big-title',
+                                        htmlContainer: 'swal-big-text'
+                                    }
+                                });
+                                $(_this).find('td input[name=BatchNo]').val('');
+                            }
+                        });
+                    }
+                });
             }
         }
         function BatchValidation2() {
@@ -360,6 +386,9 @@
             }
             if (document.getElementById('tblItemDescription').rows.length > 1) {
                 debugger
+                if (!validateBatchDuplicates()) {
+                    return false;
+                }
                 $.each($('#tblItemDescription tbody tr'), function (key, value) {
                     debugger
                     var GRNdate = new Date(date).setHours(0, 0, 0, 0);
@@ -746,6 +775,9 @@
                     });
                     $('#tblItemDescription').append(rows);
                     BatchValidation2();
+                    $(document).on('blur', 'input[name="BatchNo"]', function () {
+                        BatchValidation(this);
+                    });
                     //$('input[name="txtMfgdate"]').datepicker({ dateFormat: 'dd M yy' });
                     //$('input[name="Expdate"]').datepicker({ dateFormat: 'dd M yy' });
                     $(document).on('focus', 'input[name="txtMfgdate"], input[name="Expdate"]', function () {
@@ -1076,6 +1108,40 @@
                     location.reload();
                 }
             });
+        }
+
+        function validateBatchDuplicates() {
+            var isValid = true;
+            var batches = [];
+
+            $.each($('#tblItemDescription tbody tr'), function (key, value) {
+                var item_code = $($(value).find('td input[name=txtItemCode]')[0]).val();
+                var batch_no = $($(value).find('td input[name=BatchNo]')[0]).val();
+                var isBatch = $($(value).find('td input[name=Isbatch]')[0]).val();
+
+                if (isBatch == "true" && batch_no && batch_no != "") {
+                    var key = item_code + '|' + batch_no;
+                    if (batches.indexOf(key) !== -1) {
+                        isValid = false;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Duplicate batch number "' + batch_no + '" found for Item Code "' + item_code + '". Please use unique batch numbers.',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            customClass: {
+                                popup: 'swal-big-popup',
+                                title: 'swal-big-title',
+                                htmlContainer: 'swal-big-text'
+                            }
+                        });
+                        return false;
+                    }
+                    batches.push(key);
+                }
+            });
+
+            return isValid;
         }
     </script>
 </asp:Content>
