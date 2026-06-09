@@ -826,7 +826,8 @@ namespace PMS.AP
                     itemIds = new JavaScriptSerializer().Deserialize<List<int>>(itemIdsJson);
                 }
 
-                Dictionary<int, decimal> projectedQtys = new Dictionary<int, decimal>();
+                // Use Dictionary with string keys for JSON serialization
+                Dictionary<string, decimal> projectedQtys = new Dictionary<string, decimal>();
 
                 if (itemIds.Count > 0 && !string.IsNullOrEmpty(projectionDate) && !string.IsNullOrEmpty(warehouseId) && warehouseId != "0")
                 {
@@ -842,32 +843,30 @@ namespace PMS.AP
 
                         // Query for bills between projection date and current date
                         string query = $@"
-                               SELECT bd.Item_ID, ISNULL(SUM(bd.Qty), 0) as TotalQty
+                    SELECT bd.Item_ID, ISNULL(SUM(bd.Qty), 0) as TotalQty
                     FROM AR_Billing_Details bd
                     INNER JOIN Ar_Billings b ON bd.Bill_ID = b.Bill_ID
-                    WHERE bd.Item_ID IN (5952)
-                    AND b.Ware_House = '008'
-                  AND CONVERT(DATE, b.Invoice_Date) BETWEEN CONVERT(DATE, '2026-05-01') AND CONVERT(DATE, '2026-06-08')
-                    AND (b.isCancel = 0 OR b.isCancel IS NULL)
-                    and b.IsPharmacy =1
+                    WHERE bd.Item_ID IN ({idList})
+                    AND b.Ware_House = '{warehouseId}'
+                    AND CONVERT(DATE, b.Invoice_Date) BETWEEN CONVERT(DATE, '{sqlDate}') AND CONVERT(DATE, '{currentDate}')
+                    AND ISNULL(b.isCancel, 0) = 0
+                    AND ISNULL(b.IsPharmacy, 0) = 1
                     GROUP BY bd.Item_ID";
 
                         DataTable dt = DBClass.getDataTable(query);
 
+                        // Initialize all items with 0 first
+                        foreach (int itemId in itemIds)
+                        {
+                            projectedQtys[itemId.ToString()] = 0;
+                        }
+
+                        // Update with actual quantities from query
                         foreach (DataRow row in dt.Rows)
                         {
-                            int itemId = Convert.ToInt32(row["Item_ID"]);
+                            string itemId = row["Item_ID"].ToString();
                             decimal qty = Convert.ToDecimal(row["TotalQty"]);
                             projectedQtys[itemId] = qty;
-                        }
-                    }
-
-                    // Set default 0 for items without projected quantity
-                    foreach (int itemId in itemIds)
-                    {
-                        if (!projectedQtys.ContainsKey(itemId))
-                        {
-                            projectedQtys[itemId] = 0;
                         }
                     }
                 }
@@ -915,6 +914,69 @@ namespace PMS.AP
             {
                 // Log the error
                 return (new JavaScriptSerializer()).Serialize(new List<object>());
+            }
+        }
+        [WebMethod]
+        public static string GetProjectedConsumptionForItems(string itemIdsJson, string projectionDate, string warehouseId)
+        {
+            try
+            {
+                List<int> itemIds = new List<int>();
+                if (!string.IsNullOrEmpty(itemIdsJson))
+                {
+                    itemIds = new JavaScriptSerializer().Deserialize<List<int>>(itemIdsJson);
+                }
+
+                Dictionary<string, decimal> consumedQtys = new Dictionary<string, decimal>();
+
+                if (itemIds.Count > 0 && !string.IsNullOrEmpty(projectionDate) && !string.IsNullOrEmpty(warehouseId) && warehouseId != "0")
+                {
+                    using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+                    {
+                        // Parse projection date
+                        DateTime parsedDate = DateTime.ParseExact(projectionDate, "dd MMM yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                        string sqlProjectionDate = parsedDate.ToString("yyyy-MM-dd");
+                        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+                        // Create comma-separated list of IDs
+                        string idList = string.Join(",", itemIds);
+
+                        // Query for consumed quantities from bills between projection date and current date
+                        string query = $@"
+                    SELECT bd.Item_ID, ISNULL(SUM(bd.Qty), 0) as TotalConsumedQty
+                    FROM AR_Billing_Details bd
+                    INNER JOIN Ar_Billings b ON bd.Bill_ID = b.Bill_ID
+                    WHERE bd.Item_ID IN ({idList})
+                    AND b.Ware_House = '{warehouseId}'
+                    AND CONVERT(DATE, b.Invoice_Date) >= CONVERT(DATE, '{sqlProjectionDate}')
+                    AND CONVERT(DATE, b.Invoice_Date) <= CONVERT(DATE, '{currentDate}')
+                    AND ISNULL(b.isCancel, 0) = 0
+                    AND ISNULL(b.IsPharmacy, 0) = 1
+                    GROUP BY bd.Item_ID";
+
+                        DataTable dt = DBClass.getDataTable(query);
+
+                        // Initialize all items with 0
+                        foreach (int itemId in itemIds)
+                        {
+                            consumedQtys[itemId.ToString()] = 0;
+                        }
+
+                        // Update with actual consumed quantities
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string itemId = row["Item_ID"].ToString();
+                            decimal qty = Convert.ToDecimal(row["TotalConsumedQty"]);
+                            consumedQtys[itemId] = qty;
+                        }
+                    }
+                }
+
+                return new JavaScriptSerializer().Serialize(consumedQtys);
+            }
+            catch (Exception ex)
+            {
+                return "{}";
             }
         }
         [WebMethod]
