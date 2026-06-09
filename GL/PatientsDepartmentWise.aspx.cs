@@ -4211,6 +4211,7 @@ namespace PMS
                     Time_Row.Visible = true;
                     SetDepartent();
                     dpROw.Visible = false;
+                    tr_Export.Visible = true;
 
                     //ADDING NEW WAREHOUSE
 
