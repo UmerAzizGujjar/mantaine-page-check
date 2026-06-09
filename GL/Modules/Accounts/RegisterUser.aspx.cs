@@ -94,8 +94,9 @@ namespace PMS.Modules.Accounts
                              AllowActiveItems = p.AllowActiveItems,
                              AllowBirthCertificate = p.IPD_Allow_birth_Certifcate,
                              AllowDeathDetails = p.IPD_ALlow_Death_Details,
-                             AllowRateEdit = p.AllowRateEdit,
-                             AllowRadiologylist = p.Radiology_result,
+                              AllowRateEdit = p.AllowRateEdit,
+                              AllowRegisterRefund = p.AllowRegisterRefund,
+                              AllowRadiologylist = p.Radiology_result,
                              AllowLineDiscount = p.AllowLineDiscount,
                              AllowTestlistDoctor = p.AllowTestlistDoctor,
                              AllowReferIPD = p.Refer_IPD,
@@ -220,6 +221,7 @@ namespace PMS.Modules.Accounts
                     user.IPD_ALlow_Death_Details = data.AllowDeathDetails;
                     user.cashier = data.ddlcasher;
                     user.AllowRateEdit = data.AllowRateEdit;
+                    user.AllowRegisterRefund = data.AllowRegisterRefund;
                     user.allow_undischarge = data.AllowUndischarge;
                     user.All_doctor_template = data.AllDoctorTemplate;
                     user.user_till = data.AllowTill;
@@ -310,6 +312,7 @@ namespace PMS.Modules.Accounts
                 newuser.IPD_ALlow_Death_Details = data.AllowDeathDetails;
                 newuser.cashier = data.ddlcasher;
                 newuser.AllowRateEdit = data.AllowRateEdit;
+                newuser.AllowRegisterRefund = data.AllowRegisterRefund;
                 newuser.allow_undischarge = data.AllowUndischarge;
           
                  newuser.All_doctor_template = data.AllDoctorTemplate;
@@ -434,6 +437,7 @@ namespace PMS.Modules.Accounts
             public bool Allowradiologyapprove { get; set; }
             public bool Rejectradiology { get; set; }
             public bool AllowRateEdit { get; set; }
+            public bool AllowRegisterRefund { get; set; }
             public bool AllowUndischarge { get; set; }
             public bool AllDoctorTemplate { get; set; }
             public bool AllowTill { get; set; }
