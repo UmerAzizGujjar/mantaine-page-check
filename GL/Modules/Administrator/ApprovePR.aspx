@@ -83,12 +83,14 @@ function highlightPendingRows() {
         CssClass="gridview-style"
         PagerStyle-CssClass="pagination-container"
         PagerSettings-Mode="Numeric"
-        OnPageIndexChanging="GridView1_PageIndexChanging">
+        OnPageIndexChanging="GridView1_PageIndexChanging"
+        OnRowCommand="GridView1_RowCommand">
      
         <Columns>
             <asp:TemplateField HeaderStyle-Width="30px">
                 <ItemTemplate>
                     <asp:CheckBox ID="chkSelect" Text="" runat="server" ItemStyle-HorizontalAlign="Center" />
+                    <asp:Button ID="btnBypass" runat="server" Text="Bypass" CssClass="btn-primry btn" Visible="false" CommandName="Bypass" CommandArgument='<%# Eval("PR_Id") %>' OnClientClick="var r = prompt('Enter Bypass Remarks:'); if (r == null || r.trim() == '') return false; $(this).closest('tr').find('.approval-remarks-textbox').val(r); return true;" />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="PR ID" Visible="False">

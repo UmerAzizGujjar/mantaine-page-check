@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 78.5, 165.875" name="DataBase">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 78.5, 167.5" name="DataBase">
   <DataContextMoniker Name="/DataBaseDataContext" />
   <nestedChildShapes>
     <classShape Id="fa9019b7-a859-464e-8cc1-67828fbc07fe" isExpanded="false" absoluteBounds="3.875, 9.125, 2, 0.45">
@@ -2124,12 +2124,6 @@
         <classShapeMoniker Id="2415a1f1-a123-4b64-a2c5-e3bf8866298f" />
       </nodes>
     </associationConnector>
-    <classShape Id="e699b786-a119-4c47-99c8-9d48a43c3c26" absoluteBounds="14.625, 158.125, 2, 7.5399397786458326">
-      <DataClassMoniker Name="/DataBaseDataContext/In_Patient_Medicine" />
-      <nestedChildShapes>
-        <elementListCompartment Id="660d070a-e918-482f-b76d-308830510001" absoluteBounds="14.64, 158.585, 1.9700000000000002, 6.979939778645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="1e8dc9d0-adfe-40fa-bb39-739e666030b5" absoluteBounds="61.625, 21.875, 2, 14.0781884765625">
       <DataClassMoniker Name="/DataBaseDataContext/Lab_Test_Detail" />
       <nestedChildShapes>
@@ -2185,12 +2179,18 @@
         <elementListCompartment Id="df5201ee-d96b-4835-a750-7b5862fac66e" absoluteBounds="46.515, 60.335, 1.9700000000000002, 5.6338297526041661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(48.15625 : 59.875); (48.15625 : 42.1843082682292)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(48.15625 : 59.875); (48.15625 : 42.1843082682292)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/DataBaseDataContext/Pharmacy_SaleReturn/Pharmacy_SaleReturn_Pharmacy_SaleReturn_Detail" />
       <nodes>
         <classShapeMoniker Id="cdcd31bd-599b-4e52-ae31-a93decacb740" />
         <classShapeMoniker Id="97a9e187-9554-4a53-9c5d-8c6655ea44ad" />
       </nodes>
     </associationConnector>
+    <classShape Id="6ac7e011-8768-45f7-ad7c-319dcf5a6531" absoluteBounds="14, 159.5, 2, 7.7322412109375005">
+      <DataClassMoniker Name="/DataBaseDataContext/In_Patient_Medicine" />
+      <nestedChildShapes>
+        <elementListCompartment Id="0576c734-884d-4c22-8de8-0ddbe3138aa8" absoluteBounds="14.015, 159.96, 1.9700000000000002, 7.1722412109375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

@@ -100,7 +100,224 @@
     </style>
 
     <script type="text/javascript">
+        var poid = '<% =Request.QueryString["PO_ID"] %>';
 
+       function loadVendorItems(vendorId) {
+    debugger;
+    var isEditMode = '<% =Request.QueryString["PO_ID"] %>' !== '';
+
+    if (!isEditMode) {
+        if (ProjCond != '01') {
+            return;
+        }
+        
+        if (ProjCond == '01') {
+            var projectiontype = $("#ctl00_MainContent_ddlprojection").val();
+            
+            if (projectiontype === "0" || projectiontype === "" || projectiontype === null) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Projection Required',
+                    text: 'Please select Projection first before selecting vendor.',
+                    timer: 3000,
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#ctl00_MainContent_ddlprojection').select2('open');
+                    }
+                });
+                $('#ctl00_MainContent_ddlVendor').val('0').trigger('change.select2');
+                return;
+            }
+        }
+    }
+
+    if (!vendorId || vendorId === '0') {
+        return;
+    }
+
+    showLoader('Loading vendor items and calculating projected quantities...', false);
+    var projectiondate = $("#ctl00_MainContent_txtProjection_Date").val();
+    var warehouse = $("#ddlWarehouse").val();
+
+    PageMethods.GetVendorItems(vendorId, function (response) {
+        try {
+            var items = JSON.parse(response);
+
+            if (!items || items.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'No Items Found',
+                    text: 'No items found for this vendor.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                hideLoader();
+                return;
+            }
+
+            // Prepare items for batch projection query
+            var itemIds = [];
+            $.each(items, function(index, item) {
+                itemIds.push(item.Item_ID);
+            });
+            
+            // Get projected quantities for all items in one call
+            PageMethods.GetBatchProjectedQuantities(JSON.stringify(itemIds), projectiondate, warehouse, function(response) {
+                try {
+                    var projectedQtys = JSON.parse(response);
+                    var itemsAdded = 0;
+                    
+                    $.each(items, function (index, item) {
+                        var exists = false;
+                        $('#tblItemDescription tbody tr').each(function () {
+                            if ($(this).find('input[name=txtItemCode]').val() == item.Item_Code) {
+                                exists = true;
+                                return false;
+                            }
+                        });
+                        
+                        if (!exists) {
+                            // Update quantity with projected value if available
+                            if (projectedQtys[item.Item_ID] && projectedQtys[item.Item_ID] > 0) {
+                                item.Qty = projectedQtys[item.Item_ID];
+                            } else {
+                                item.Qty = item.Qty || 1;
+                            }
+                            
+                            appendVendorItem(item);
+                            itemsAdded++;
+                        }
+                    });
+                    
+                    updateLoaderProgress(100, 'Completed');
+                    
+                    setTimeout(function () {
+                        hideLoader();
+                        if (itemsAdded > 0) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: itemsAdded + ' item(s) added with projected quantities.',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'No New Items',
+                                text: 'All vendor items are already added.',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    }, 500);
+                    
+                } catch (e) {
+                    console.error('Error parsing projected quantities:', e);
+                    hideLoader();
+                }
+            }, function(error) {
+                console.error('Error getting batch projected quantities:', error);
+                hideLoader();
+            });
+            
+        } catch (e) {
+            console.error('Error parsing vendor items:', e);
+            hideLoader();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to load vendor items.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+    }, function (error) {
+        hideLoader();
+        console.error('Error loading vendor items:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to load vendor items.',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    });
+}
+        // Function to append a single vendor item
+        function appendVendorItem(item) {
+            var length = $("#tblItemDescription tr:gt(0)").length + 1;
+
+            var newRow = buildNewRow(
+                length,
+                "", // PR_Num (empty for direct vendor items)
+                item.Item_Code,
+                item.Description,
+                item.Unit,
+                item.Qty || 1,
+                item.UOM_Qty || 1,
+                item.Purchase_Rate || 0,
+                0, // pr_detail_id (0 for direct items)
+                item.TotalStock || 0
+            );
+
+            $("#tblItemDescription tbody").append(newRow);
+
+            // Populate dropdowns for the new row
+            var staxLoaded = false;
+            var advTaxLoaded = false;
+
+            function checkBothLoaded() {
+                if (staxLoaded && advTaxLoaded) {
+                    CulculateAmonutWithQty(length);
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $('#txtddate' + length).datepicker({ dateFormat: 'dd M yy' }).attr('readonly', 'readonly');
+                    calcTotal();
+                }
+            }
+
+            // Populate Sales Tax dropdown
+            PageMethods.getwtaxtype(function (response) {
+                var options = '<option value="0">0</option>';
+                try {
+                    var taxData = JSON.parse(response);
+                    $.each(taxData, function (key, value) {
+                        options += '<option value="' + value.Sales_Tax_ID + '">' + value.Sales_Tax_Perc + '</option>';
+                    });
+                } catch (e) {
+                    console.error('Error parsing tax data:', e);
+                }
+                $('#ddlSTAX' + length).html(options);
+                staxLoaded = true;
+                checkBothLoaded();
+            }, function (error) {
+                console.error('Error loading Sales Tax:', error);
+                staxLoaded = true;
+                checkBothLoaded();
+            });
+
+            // Populate Advance Tax dropdown
+            PageMethods.getAdvanceTaxType(function (response) {
+                var options = '<option value="0">0</option>';
+                try {
+                    var taxData = JSON.parse(response);
+                    $.each(taxData, function (key, value) {
+                        options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
+                    });
+                } catch (e) {
+                    console.error('Error parsing advance tax data:', e);
+                }
+                $('#ddlAdvanceTax' + length).html(options);
+                advTaxLoaded = true;
+                checkBothLoaded();
+            }, function (error) {
+                console.error('Error loading Advance Tax:', error);
+                advTaxLoaded = true;
+                checkBothLoaded();
+            });
+        }
         function FillStaxtype() {
             debugger;
             var options = '<option value="0">0</option>';
@@ -523,13 +740,23 @@
             });
         }
         $(document).ready(function () {
+            var ProjCond;
             // Show loader immediately
             showLoader('Initializing...', false);
 
             // Initialize page
             UserRights();
             GetWareHouseCondition();
-
+            GetprojectionCondition();
+            $('#ctl00_MainContent_ddlVendor').change(function () {
+                var vendorId = $(this).val();
+             
+                     if (vendorId && vendorId !== '0') {
+                     loadVendorItems(vendorId);
+             
+                }
+               
+            });
             $('#ddlWarehouse').change(function () {
                 $("#ddlWarehouse").attr('disabled', true);
             });
@@ -580,6 +807,7 @@
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#ctl00_MainContent_txtPurchase_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
+            $("#ctl00_MainContent_txtProjection_Date").val('').datepicker({ dateFormat: 'dd M yy', readOnly: true });
             $("#ctl00_MainContent_txtdueDate").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });
 
         // Load PO data ONLY if PO_ID exists in query string
@@ -1474,6 +1702,33 @@ function scheduleCalcTotal(delay) {
                     else {
                         $('#warehouse').hide();
                         getprNoBy();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching items", error);
+                }
+            });
+        }
+
+        function GetprojectionCondition() {
+
+            $.ajax({
+                type: "POST",
+                url: "PurchaseOrder.aspx/Getprojection",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    ProjCond = JSON.parse(response.d);
+                    if (ProjCond == '01') {
+                        $('#projectiontype').show();
+                        $('#projectiondate').show();
+                    }
+                    else {
+                        $('#projectiontype').hide();
+                        $('#projectiondate').hide();
+                    
                     }
                 },
                 error: function (error) {
@@ -2477,14 +2732,14 @@ function scheduleCalcTotal(delay) {
     <input type="hidden" id="txttranstype" name="txttranstype" />
     <form id="item">
 
-<!-- PAGE LOADER - Make sure this is right after the form tag or at the top of content -->
-<div id="page-loader" style="display: none;">
-    <div class="loader-spinner"></div>
-    <div class="loader-text">Loading Purchase Order...</div>
-    <div class="loader-progress">
-        <div class="loader-progress-bar"></div>
-    </div>
-</div>
+        <!-- PAGE LOADER - Make sure this is right after the form tag or at the top of content -->
+        <div id="page-loader" style="display: none;">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Loading Purchase Order...</div>
+            <div class="loader-progress">
+                <div class="loader-progress-bar"></div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="LabelPurchase_No" runat="server" Text="PO No."></asp:Label>
@@ -2530,7 +2785,7 @@ function scheduleCalcTotal(delay) {
             <div class="col-lg-1 col-md-2 col-sm-4">
                 <input type="button" value="Items" id="btnGetAllItems" class="btn btn-gray" style="margin-top: 16px;" />
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-6" id ="warehouse">
+            <div class="col-lg-2 col-md-4 col-sm-6" id="warehouse">
                 <label id="LblWarehouse">WareHouse<span style="color: red">*</span></label>
                 <select id="ddlWarehouse" onchange="getprNoBy_WareHouse(this)" class="form-select">
                     <option value="0">Please Select</option>
@@ -2539,15 +2794,15 @@ function scheduleCalcTotal(delay) {
         </div>
 
         <div class="row">
-           
+
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="lblDelivery" runat="server" Text="Delivery Terms"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlDelivery" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
             </div>
-             <div class="col-lg-3 col-md-6 col-sm-12">
-     <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
-     <asp:TextBox runat="server" ID="txtPurchase_Reference" class="form-control" />
- </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <asp:Label ID="lblReference" runat="server" Text="Ref. No"></asp:Label>
+                <asp:TextBox runat="server" ID="txtPurchase_Reference" class="form-control" />
+            </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <asp:Label ID="lblFreight" runat="server" Text="Freight Amount"></asp:Label>
                 <asp:TextBox runat="server" ID="Freight" onkeyup="calcTotal()" class="form-control" />
@@ -2579,8 +2834,8 @@ function scheduleCalcTotal(delay) {
                 <asp:HyperLink ID="HyperLink1" runat="server">Download</asp:HyperLink>
             </div>
             <div class="col-lg-1 col-md-6 col-sm-12">
-                 <label class="form-check-label" for="chkByDefault">By Default</label>
-                 <input class="form-check-input" type="checkbox" id="chkByDefault" />
+                <label class="form-check-label" for="chkByDefault">By Default</label>
+                <input class="form-check-input" type="checkbox" id="chkByDefault" />
             </div>
             <div class="col-lg-1 col-md-6 col-sm-12">
                 <label class="form-check-label" for="chkManual">Manual</label>
@@ -2588,14 +2843,23 @@ function scheduleCalcTotal(delay) {
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-9 col-md-12 col-sm-12">
+            <div class="col-lg-6 col-md-8 col-sm-12">
                 <asp:Label ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
                 <asp:TextBox runat="server" ID="txtRemarks" class="form-control" />
             </div>
+            <div class="col-lg-3 col-md-6 col-sm-12" id="projectiondate">
+                <asp:Label ID="lblprojectiondate" runat="server" Text="Projection Date"></asp:Label>
+
+                <asp:TextBox runat="server" ID="txtProjection_Date" class="form-control" />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12" id="projectiontype">
+                <asp:Label ID="lblddlprojection" runat="server" Text="Projection" Style="">Projection<span style="color: red">*</span></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlprojection" class="form-control" AppendDataBoundItems="true"></asp:DropDownList>
+            </div>
         </div>
     </form>
-    <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />   
-        <div class="row" style=" height: 276px !important; height: auto;overflow:scroll">
+    <asp:HiddenField ID="hdfItem_ID" runat="server" ClientIDMode="Static" />
+    <div class="row" style="height: 276px !important; height: auto; overflow: scroll">
         <table class="table responstable table-bordered" id="tblItemDescription" style="font-size: 9px !important; overflow: scroll; height: auto;">
             <thead>
                 <tr style="position: sticky; top: 0px; z-index: 10;">
@@ -2622,7 +2886,7 @@ function scheduleCalcTotal(delay) {
                     <th style="width: 75px;">Bonus Tax</th>
                     <th style="width: 75px;">Total</th>
                     <th style="width: 75px;">Delivery Date</th>
-                     <th style="width: 60px; text-align: center;">Stock</th>
+                    <th style="width: 60px; text-align: center;">Stock</th>
                     <th style="width: 45px;">Action</th>
                 </tr>
             </thead>
@@ -2698,7 +2962,7 @@ function scheduleCalcTotal(delay) {
                     <asp:TextBox runat="server" ID="Net_Amount" ReadOnly="true" SkinID="UserDefineWidth" Style="text-align: right;" />
                 </div>
                 <div>
-                    <asp:TextBox ID="txtAdv_amou"  runat="server"  ClientIDMode="Static"  Style="display: none;" ReadOnly="true" />
+                    <asp:TextBox ID="txtAdv_amou" runat="server" ClientIDMode="Static" Style="display: none;" ReadOnly="true" />
                 </div>
                 <div>
                     <asp:TextBox ID="txtFurther_amou" runat="server" ClientIDMode="Static" Style="display: none;" ReadOnly="true" />
@@ -2892,46 +3156,53 @@ function scheduleCalcTotal(delay) {
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 
-        <!-- Add this NEW modal for Item Search -->
-<div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
-                <div style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-bordered table-striped table-responsive-md table-responsive-lg">
-                        <thead>
-                            <tr>
-                                <th>Select</th>          <!-- td:eq(0) -->
-                                <th style="display:none;">Item ID</th>  <!-- td:eq(1) -->
-                                <th>Item Code</th>       <!-- td:eq(2) -->
-                                <th>Description</th>     <!-- td:eq(3) -->
-                                <th>Unit</th>            <!-- td:eq(4) -->
-                                <th style="display:none;">Rate</th>      <!-- td:eq(5) -->
-                                <th style="display:none;">UOM Qty</th>   <!-- td:eq(6) -->
-                                <th>Stock</th> 
-                            </tr>
-                        </thead>
-                        <tbody id="itemsTableBody">
-                        </tbody>
-                    </table>
+    <!-- Add this NEW modal for Item Search -->
+    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="itemsModalLabel">Item Details</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -11px !important">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <div class="col-lg-10 col-md-10 col-sm-10"> </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 float-end">
-                    <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                <div class="modal-body">
+                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Search items..." />
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-bordered table-striped table-responsive-md table-responsive-lg">
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <!-- td:eq(0) -->
+                                    <th style="display: none;">Item ID</th>
+                                    <!-- td:eq(1) -->
+                                    <th>Item Code</th>
+                                    <!-- td:eq(2) -->
+                                    <th>Description</th>
+                                    <!-- td:eq(3) -->
+                                    <th>Unit</th>
+                                    <!-- td:eq(4) -->
+                                    <th style="display: none;">Rate</th>
+                                    <!-- td:eq(5) -->
+                                    <th style="display: none;">UOM Qty</th>
+                                    <!-- td:eq(6) -->
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-lg-10 col-md-10 col-sm-10"></div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 float-end">
+                        <input type="button" value="Close" class="btn-gray" data-dismiss="modal" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </asp:Content>

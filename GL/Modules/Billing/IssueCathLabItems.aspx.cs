@@ -610,7 +610,7 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId, hdndiscountType, Batch, warehouse).ToList();
+                var query = db.spCathLabDetails(itemId, hdndiscountType, Batch, warehouse).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -719,7 +719,7 @@ namespace PMS.Modules.Billing
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spMedicinesDetails(itemId, hdndiscountType, batchNumber, warehouse).ToList();
+                var query = db.spCathLabDetails(itemId, hdndiscountType, batchNumber, warehouse).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;
@@ -1191,7 +1191,7 @@ namespace PMS.Modules.Billing
                          on patient.pat_id equals billing.Patient_ID into billingJoin
                          from bill in billingJoin.DefaultIfEmpty()  // LEFT JOIN
                          where bill != null  // Only patients who have billing records
-                            && bill.IsPharmacy == true
+                            && bill.IsCathLab == true
                             && bill.Invoice_No != null
                             && (bill.isCancel == false || bill.isCancel == null)
                          orderby bill.Bill_ID descending
@@ -1257,7 +1257,7 @@ namespace PMS.Modules.Billing
             string result = string.Empty;
             using (DataBaseDataContext db = new DataBaseDataContext())
             {
-                var query = db.spSaleReturnMedicinesDetails(itemId).ToList();
+                var query = db.spSaleReturncathDetails(itemId).ToList();
                 result = (new JavaScriptSerializer()).Serialize(query).ToString();
             }
             return result;

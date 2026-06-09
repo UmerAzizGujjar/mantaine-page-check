@@ -1024,6 +1024,7 @@ namespace PMS
             public string Dosage_Qty;
             public string Other_Instruction;
             public string Rec_Qty;
+            public string Rtn_Qty;
             public string Issue_Qty;
 
             public string Regular;
@@ -1073,6 +1074,7 @@ namespace PMS
                                          inPatmedicineList.STAT,
                                          inPatmedicineList.Rcv_Qty,
                                          inPatmedicineList.Req_Qty,
+                                         inPatmedicineList.Rtn_Qty,
                                          inPatmedicineList.Username,
                                          inPatmedicineList.Max_PRN_Dose,
                                          inPatmedicineList.Start_Date_Time,
@@ -1132,6 +1134,7 @@ namespace PMS
                                          inPatmedicineList.STAT,
                                          inPatmedicineList.Rcv_Qty,
                                          inPatmedicineList.Req_Qty,
+                                         inPatmedicineList.Rtn_Qty,
                                          inPatmedicineList.Username,
                                          inPatmedicineList.Max_PRN_Dose,
                                          inPatmedicineList.Start_Date_Time,
@@ -1188,31 +1191,95 @@ namespace PMS
 
                     if (targetPatientId > 0)
                     {
-                        // Get existing medicines with Transaction_Type = "InPatient"
-                        var existingNames = db.In_Patient_Medicines
+                        var existingMedicines = db.In_Patient_Medicines
                             .Where(p => p.Patient_ID == targetPatientId && p.Transaction_Type == "InPatient")
-                            .Select(p => p.Medicine_Name.Trim())
                             .ToList();
 
                         System.Diagnostics.Debug.WriteLine("=== SaveMedicinesforMon Debug ===");
                         System.Diagnostics.Debug.WriteLine("Target Patient ID: " + targetPatientId);
                         System.Diagnostics.Debug.WriteLine("Transaction Type: InPatient");
-                        System.Diagnostics.Debug.WriteLine("Existing medicines: " + string.Join(", ", existingNames));
+                        System.Diagnostics.Debug.WriteLine("Existing medicines count: " + existingMedicines.Count);
 
                         int insertedCount = 0;
+                        int updatedCount = 0;
 
                         foreach (MedicineDetails oIn_Patient_Medicine in MedicineDetail.MedicineList)
                         {
                             string medicineName = oIn_Patient_Medicine.Medicine_Name?.Trim() ?? "";
-
                             if (string.IsNullOrEmpty(medicineName)) continue;
+                            var existingMedicine = existingMedicines
+                                .FirstOrDefault(p => p.Medicine_Name.Trim() == medicineName);
 
-                            // Only insert if name NOT in existing list
-                            if (!existingNames.Contains(medicineName))
+                            if (existingMedicine != null)
+                            {
+                                bool hasChanges = false;
+                                if (existingMedicine.Frequency != oIn_Patient_Medicine.Frequency) hasChanges = true;
+                                else if (existingMedicine.Injections != oIn_Patient_Medicine.Injection) hasChanges = true;
+                                else if (existingMedicine.Oral != oIn_Patient_Medicine.Oral) hasChanges = true;
+                                else if (existingMedicine.Dosage_From != oIn_Patient_Medicine.Dosage_From) hasChanges = true;
+                                else if (existingMedicine.Dosage_Qty != oIn_Patient_Medicine.Dosage_Qty) hasChanges = true;
+                                else if (existingMedicine.Other_Instruction != oIn_Patient_Medicine.Other_Instruction) hasChanges = true;
+                                else if (existingMedicine.AttendingParamedical_Staff != oIn_Patient_Medicine.AttendingParamedical_Staff) hasChanges = true;
+                                else if (existingMedicine.Req_Qty != Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty)) hasChanges = true;
+                                else if (existingMedicine.Rcv_Qty != Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty)) hasChanges = true;
+                                else if (existingMedicine.Rtn_Qty != Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty)) hasChanges = true;
+                                else if (existingMedicine.Regular != Convert.ToBoolean(oIn_Patient_Medicine.Regular)) hasChanges = true;
+                                else if (existingMedicine.STAT != Convert.ToBoolean(oIn_Patient_Medicine.STAT)) hasChanges = true;
+                                else if (existingMedicine.PRN != Convert.ToBoolean(oIn_Patient_Medicine.PRN)) hasChanges = true;
+
+                                if (hasChanges)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("UPDATING inpatient medicine: " + medicineName);
+
+                                    existingMedicine.Frequency = oIn_Patient_Medicine.Frequency;
+                                    existingMedicine.Injections = oIn_Patient_Medicine.Injection;
+                                    existingMedicine.Oral = oIn_Patient_Medicine.Oral;
+                                    existingMedicine.Dosage_From = oIn_Patient_Medicine.Dosage_From;
+                                    existingMedicine.Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty;
+                                    existingMedicine.Other_Instruction = oIn_Patient_Medicine.Other_Instruction;
+                                    existingMedicine.AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff;
+                                    existingMedicine.Req_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty);
+                                    existingMedicine.Rcv_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty);
+                                    existingMedicine.Rtn_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty);
+                                    existingMedicine.Regular = Convert.ToBoolean(oIn_Patient_Medicine.Regular);
+                                    existingMedicine.STAT = Convert.ToBoolean(oIn_Patient_Medicine.STAT);
+                                    existingMedicine.PRN = Convert.ToBoolean(oIn_Patient_Medicine.PRN);
+                                    existingMedicine.Username = oIn_Patient_Medicine.User ?? AppConfig.UserName;
+                                    existingMedicine.High_Risk_Drug = oIn_Patient_Medicine.High_Risk;
+                                    existingMedicine.Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN;
+
+                                    if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Start_Date_Time) &&
+                                        oIn_Patient_Medicine.Start_Date_Time != "null" &&
+                                        oIn_Patient_Medicine.Start_Date_Time != "1/1/0001")
+                                    {
+                                        DateTime startDate;
+                                        if (DateTime.TryParse(oIn_Patient_Medicine.Start_Date_Time, out startDate) && startDate > DateTime.MinValue)
+                                        {
+                                            existingMedicine.Start_Date_Time = startDate;
+                                        }
+                                    }
+
+                                    if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Stop_Date_Time) &&
+                                        oIn_Patient_Medicine.Stop_Date_Time != "null")
+                                    {
+                                        DateTime stopDateTime;
+                                        if (DateTime.TryParse(oIn_Patient_Medicine.Stop_Date_Time, out stopDateTime))
+                                        {
+                                            existingMedicine.Stop_Date_Time = stopDateTime;
+                                        }
+                                    }
+
+                                    updatedCount++;
+                                }
+                                else
+                                {
+                                    System.Diagnostics.Debug.WriteLine("SKIPPING (no changes) inpatient medicine: " + medicineName);
+                                }
+                            }
+                            else
                             {
                                 System.Diagnostics.Debug.WriteLine("INSERTING new inpatient medicine: " + medicineName);
 
-                                // Get Item_ID from inventory
                                 var inventoryItem = db.INV_Items
                                     .Where(p => p.Item_Code == oIn_Patient_Medicine.ItemCode || p.Description == medicineName)
                                     .FirstOrDefault();
@@ -1224,7 +1291,7 @@ namespace PMS
                                     Patient_ID = targetPatientId,
                                     Item_Code = itemId,
                                     Medicine_Name = medicineName,
-                                    Transaction_Type = "InPatient",  // Use "InPatient" for inpatient medicines
+                                    Transaction_Type = "InPatient",
                                     Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
                                     Oral = oIn_Patient_Medicine.Oral,
                                     Injections = oIn_Patient_Medicine.Injection,
@@ -1232,6 +1299,7 @@ namespace PMS
                                     AttendingParamedical_Staff = oIn_Patient_Medicine.AttendingParamedical_Staff,
                                     Frequency = oIn_Patient_Medicine.Frequency,
                                     Dosage_Qty = oIn_Patient_Medicine.Dosage_Qty,
+                                    Rtn_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rtn_Qty),
                                     Rcv_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Rec_Qty),
                                     Req_Qty = Convert.ToDecimal(oIn_Patient_Medicine.Issue_Qty),
                                     Other_Instruction = oIn_Patient_Medicine.Other_Instruction,
@@ -1244,7 +1312,6 @@ namespace PMS
                                     Max_PRN_Dose = oIn_Patient_Medicine.Max_PRN
                                 };
 
-                                // Handle Start_Date_Time
                                 if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Start_Date_Time) &&
                                     oIn_Patient_Medicine.Start_Date_Time != "null" &&
                                     oIn_Patient_Medicine.Start_Date_Time != "1/1/0001")
@@ -1256,7 +1323,6 @@ namespace PMS
                                     }
                                 }
 
-                                // Handle Stop_Date_Time
                                 if (!string.IsNullOrEmpty(oIn_Patient_Medicine.Stop_Date_Time) &&
                                     oIn_Patient_Medicine.Stop_Date_Time != "null")
                                 {
@@ -1270,14 +1336,10 @@ namespace PMS
                                 db.In_Patient_Medicines.InsertOnSubmit(oIn_Patient_Medicine1);
                                 insertedCount++;
                             }
-                            else
-                            {
-                                System.Diagnostics.Debug.WriteLine("SKIPPING existing inpatient medicine: " + medicineName);
-                            }
                         }
 
                         db.SubmitChanges();
-                        System.Diagnostics.Debug.WriteLine($"=== SaveMedicinesforMon Complete - Inserted {insertedCount} new medicines ===");
+                        System.Diagnostics.Debug.WriteLine($"=== SaveMedicinesforMon Complete - Inserted {insertedCount}, Updated {updatedCount} medicines ===");
                     }
                 }
             }

@@ -4,6 +4,9 @@
 
  <script type="text/javascript">
      $(document).ready(function () {
+         FillDoctors();
+         debugger;
+
          $('#btnSaveLab').click(function () {
              debugger;
              var Labfooter = CKEDITOR.instances.labFooter.getData();
@@ -34,15 +37,10 @@
                      alert("Not Successfull");
                  }
              });
+             window.location.href = "UltraSoundfooterList.aspx";
          });
-         FillDoctors();
-         debugger;
-         var id = '<%= Request.QueryString["id"] %>'
-         if (id != "") {
-             debugger;
-             loadLabFooter(id);
-             loadLabFooterTwo(id);
-         }
+    
+
      });
      function FillDoctors() {
          var options = '<option value="0">Select Doctor</option>';
@@ -66,21 +64,34 @@
                  $('#ddlDoctor').html(options);
                  $('#ddlDoctor').select2();
              }
+
          });
+         var id = '<%= Request.QueryString["id"] %>'
+         if (id != "") {
+             debugger;
+             loadLabFooterTem(id)
+             //loadLabFooter(id);
+             //loadLabFooterTwo(id);
+         }
+     }
+     function loadLabFooterTem(id) {
+         PageMethods.LoadLabFooterTEmandid(id,function (data) {
+             debugger;
+             var res = JSON.parse(data);
+             $('#templateName').val(res.TemplateName);
+             $('#ddlDoctor').val(res.DoctorId).trigger('change');
+         });
+         loadLabFooter(id)
      }
      function loadLabFooter(id) {
          PageMethods.LoadLabFooter(id,function (data) {
              debugger;
              var res = JSON.parse(data);
-
              // Set footer
-             $('#labFooterTwo').text(res.DataValue_Description);
-             CKEDITOR.instances.labFooterTwo.setData(res.DataValue_Description);
-
-             $('#TemplateName').val(res.TemplateName);
-
-             $('#ddlDoctor').val(res.DoctorId).trigger('change');
+             $('#labFooter').text(res.DataValue_Description);
+             CKEDITOR.instances.labFooter.setData(res.DataValue_Description);
          });
+         loadLabFooterTwo(id)
      }
      function loadLabFooterTwo(id) {
          PageMethods.LoadLabFooterTwo(id,function (data) {
