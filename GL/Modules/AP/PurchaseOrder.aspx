@@ -604,7 +604,49 @@
             UserRights();
             GetWareHouseCondition();
             GetprojectionCondition();
-     
+              $('#ctl00_MainContent_ddlprojection').change(function() {
+                  
+    currentProjectionType = $(this).val();
+    $('#ctl00_MainContent_ddlprojection').attr('disabled',true);
+    if (currentProjectionType === '002') {
+        var projectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
+        var warehouseId = $('#ddlWarehouse').val();
+        
+        if (!projectionDate || projectionDate.trim() === '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Projection Date Required',
+                text: 'Please select a Projection Date for Type item wise projection. This date will be used to calculate consumption.',
+                confirmButtonText: 'Select Date',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#ctl00_MainContent_txtProjection_Date').focus();
+                    $('#ctl00_MainContent_txtProjection_Date').datepicker('show');
+                }
+            });
+        } else if (!warehouseId || warehouseId === '0') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warehouse Required',
+                text: 'Please select a Warehouse for Projection Type 002.',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            Swal.fire({
+                icon: 'info',
+                title: 'Projection Type 002: Consumption Based',
+                html: 'Quantities will be automatically calculated based on:<br/>' +
+                      '• Consumption data from <strong>' + projectionDate + '</strong><br/>' +
+                      '• To current date<br/>' +
+                      '• For selected warehouse',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+    }
+});
             $('#ctl00_MainContent_ddlVendor').change(function () {
                 debugger;
                 if (vendorChanging) return;
@@ -1037,94 +1079,137 @@
                 }
             });
         }
-        function loadVendorItems(vendorId) {
-            if (!vendorId || vendorId === '0') return;
+ function loadVendorItems(vendorId) {
+    if (!vendorId || vendorId === '0') return;
 
-            // If projection not chosen, just return - no vendor items to load
-            // (vendor items are loaded via PR items or Items modal)
-            if (!projectionChosen) {
+    if (!projectionChosen) {
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "PurchaseOrder.aspx/GetVendorItems",
+        data: JSON.stringify({ vendorId: vendorId }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var items = JSON.parse(response.d);
+
+            if (!items || items.length === 0) {
+                console.log('No vendor items returned for vendorId: ' + vendorId);
                 return;
             }
 
-            $.ajax({
-                type: "POST",
-                url: "PurchaseOrder.aspx/GetVendorItems",
-                data: JSON.stringify({ vendorId: vendorId }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    var items = JSON.parse(response.d);
-
-                    if (!items || items.length === 0) {
-                        console.log('No vendor items returned for vendorId: ' + vendorId);
-                        return;
-                    }
-
-                    // Append all vendor items
-                    $.each(items, function (index, item) {
-                        appendVendorItem(item);
-                    });
-
-                    // Get projection fields
-                    var projDate = $('#ctl00_MainContent_txtProjection_Date').val();
-                    var warehouseId = $('#ddlWarehouse').val();
-
-                    if (!projDate || projDate.trim() === '' || !warehouseId || warehouseId === '0') return;
-
-                    // Collect item IDs
-                    var itemIds = [];
-                    $.each(items, function (index, item) {
-                        if (item.Item_ID && item.Item_ID !== 0) {
-                            itemIds.push(item.Item_ID);
-                        }
-                    });
-
-                    if (itemIds.length === 0) return;
-
-                    // Call GetBatchProjectedQuantities
-                    $.ajax({
-                        type: "POST",
-                        url: "PurchaseOrder.aspx/GetBatchProjectedQuantities",
-                        data: JSON.stringify({
-                            itemIdsJson: JSON.stringify(itemIds),
-                            projectionDate: projDate,
-                            warehouseId: warehouseId
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (projResponse) {
-                            var projQtys = JSON.parse(projResponse.d);
-
-                            $('#tblItemDescription tbody tr').each(function () {
-                                var $row = $(this);
-                                var itemCode = $row.find('input[name=txtItemCode]').val();
-
-                                $.each(items, function (index, item) {
-                                    if (item.Item_Code === itemCode) {
-                                        var itemIdStr = item.Item_ID.toString();
-                                        if (projQtys.hasOwnProperty(itemIdStr)) {
-                                            var projQty = projQtys[itemIdStr];
-                                            if (projQty > 0) {
-                                                $row.find('input[name=txtQty]').val(projQty).toFixed(2);
-                                            }
-                                        }
-                                        return false;
-                                    }
-                                });
-                            });
-
-                            calcTotal();
-                        },
-                        error: function (error) {
-                            console.error("Error loading projected quantities", error);
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.error("Error loading vendor items", error);
-                }
+            // Append all vendor items
+            $.each(items, function (index, item) {
+                appendVendorItem(item);
             });
+
+            var projType = $('#ctl00_MainContent_ddlprojection').val();
+            var projDate = $('#ctl00_MainContent_txtProjection_Date').val();
+            var warehouseId = $('#ddlWarehouse').val();
+
+            // For projection type 002, fetch consumed quantities
+            if (projType === '002' && projDate && projDate.trim() !== '' && warehouseId && warehouseId !== '0') {
+                var itemIds = [];
+                $.each(items, function (index, item) {
+                    if (item.Item_ID && item.Item_ID !== 0) {
+                        itemIds.push(item.Item_ID);
+                    }
+                });
+
+                if (itemIds.length === 0) return;
+
+                $.ajax({
+                    type: "POST",
+                    url: "PurchaseOrder.aspx/GetProjectedConsumptionForItems",
+                    data: JSON.stringify({
+                        itemIdsJson: JSON.stringify(itemIds),
+                        projectionDate: projDate,
+                        warehouseId: warehouseId
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (projResponse) {
+                        var consumedQtys = JSON.parse(projResponse.d);
+
+                        $('#tblItemDescription tbody tr').each(function () {
+                            var $row = $(this);
+                            var itemCode = $row.find('input[name=txtItemCode]').val();
+
+                            $.each(items, function (index, item) {
+                                if (item.Item_Code === itemCode) {
+                                    var itemIdStr = item.Item_ID.toString();
+                                    if (consumedQtys.hasOwnProperty(itemIdStr) && consumedQtys[itemIdStr] > 0) {
+                                        // Convert to integer (remove decimal places)
+                                        var intQty = Math.floor(consumedQtys[itemIdStr]);
+                                        $row.find('input[name=txtQty]').val(intQty);
+                                        CulculateAmonutWithQty($row.find('input[name=txtQty]')[0]);
+                                    }
+                                    return false;
+                                }
+                            });
+                        });
+
+                        calcTotal();
+                    },
+                    error: function (error) {
+                        console.error("Error loading projected quantities", error);
+                    }
+                });
+            } else if (projType === '001' && projDate && warehouseId && warehouseId !== '0') {
+                // For type 001, use existing GetBatchProjectedQuantities
+                var itemIds = [];
+                $.each(items, function (index, item) {
+                    if (item.Item_ID && item.Item_ID !== 0) {
+                        itemIds.push(item.Item_ID);
+                    }
+                });
+
+                if (itemIds.length === 0) return;
+
+                $.ajax({
+                    type: "POST",
+                    url: "PurchaseOrder.aspx/GetBatchProjectedQuantities",
+                    data: JSON.stringify({
+                        itemIdsJson: JSON.stringify(itemIds),
+                        projectionDate: projDate,
+                        warehouseId: warehouseId
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (projResponse) {
+                        var projQtys = JSON.parse(projResponse.d);
+
+                        $('#tblItemDescription tbody tr').each(function () {
+                            var $row = $(this);
+                            var itemCode = $row.find('input[name=txtItemCode]').val();
+
+                            $.each(items, function (index, item) {
+                                if (item.Item_Code === itemCode) {
+                                    var itemIdStr = item.Item_ID.toString();
+                                    if (projQtys.hasOwnProperty(itemIdStr) && projQtys[itemIdStr] > 0) {
+                                        // For type 001, keep as is (might be decimal)
+                                        $row.find('input[name=txtQty]').val(projQtys[itemIdStr].toFixed(2));
+                                    }
+                                    return false;
+                                }
+                            });
+                        });
+
+                        calcTotal();
+                    },
+                    error: function (error) {
+                        console.error("Error loading projected quantities", error);
+                    }
+                });
+            }
+        },
+        error: function (error) {
+            console.error("Error loading vendor items", error);
         }
+    });
+}
         function GetNewPurchaseNo() {
             PageMethods.GetNewPurchaseNo(function (resp) {
                 $('#ctl00_MainContent_txtPurchase_No').val(resp);
@@ -2658,115 +2743,280 @@ function scheduleCalcTotal(delay) {
             });
         }
 
-        function appendSearchItem(anchor) {
-            debugger;
-            var row = $(anchor).closest('tr');
-            var item_id = $(row).find('td:eq(1)').text().trim();
-            var item_code = $(row).find('td:eq(2)').text().trim();
-            var item_name = $(row).find('td:eq(3)').text().trim();
-            var unit = $(row).find('td:eq(4)').text().trim();
-            var rate = $(row).find('td:eq(5)').text().trim() || '0';
-            var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
-            var total_stock = $(row).find('td:eq(7)').text().trim() || '0';
-            var isChecked = $(anchor).prop('checked');
+        var currentProjectionType = '';
 
-            if (!isChecked) {
-                $('#tblItemDescription tbody tr').each(function () {
-                    if ($(this).find('input[name=txtItemCode]').val() === item_code) {
-                        $(this).remove();
-                    }
-                });
-                return;
-            }
+// Call this when projection type changes
+var currentProjectionType = '';
+var isProcessingProjection002 = false;
 
-            var exists = false;
-            $('#tblItemDescription tbody tr').each(function () {
-                if ($(this).find('input[name=txtItemCode]').val() === item_code) {
-                    exists = true;
-                    return false;
+// Call this when projection type changes
+function onProjectionTypeChange() {
+    currentProjectionType = $('#ctl00_MainContent_ddlprojection').val();
+    
+    if (currentProjectionType === '002') {
+        var projectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
+        var warehouseId = $('#ddlWarehouse').val();
+        
+        if (!projectionDate || projectionDate.trim() === '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Projection Date Required',
+                text: 'Please select a Projection Date before adding items for Projection Type 002.',
+                confirmButtonText: 'Select Date',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#ctl00_MainContent_txtProjection_Date').focus();
+                    $('#ctl00_MainContent_txtProjection_Date').datepicker('show');
                 }
             });
+        } else if (!warehouseId || warehouseId === '0') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warehouse Required',
+                text: 'Please select a Warehouse before adding items for Projection Type 002.',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            // Optional: Show info message that projection type 002 is active
+            Swal.fire({
+                icon: 'info',
+                title: 'Projection Type 002 Active',
+                text: 'Quantities will be auto-loaded from consumption data between Projection Date and current date.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+    }
+}
+// Modified appendSearchItem function with projection type 002 support
+function appendSearchItem(anchor) {
+    debugger;
+    
+    // Check for projection type 002 requirements before adding item
+    var projectionType = $('#ctl00_MainContent_ddlprojection').val();
+    var projectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
+    var warehouseId = $('#ddlWarehouse').val();
+    
+    if (projectionType === '002') {
+        if (!projectionDate || projectionDate.trim() === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Cannot Add Item!',
+                text: 'Please select a Projection Date first before adding items.',
+                confirmButtonText: 'Select Date',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#ctl00_MainContent_txtProjection_Date').focus();
+                    $('#ctl00_MainContent_txtProjection_Date').datepicker('show');
+                }
+            });
+            $(anchor).prop('checked', false);
+            return false;
+        }
+        
+        if (!warehouseId || warehouseId === '0') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Cannot Add Item!',
+                text: 'Please select a Warehouse first before adding items for Projection Type 002.',
+                confirmButtonText: 'OK'
+            });
+            $(anchor).prop('checked', false);
+            return false;
+        }
+    }
+    
+    var row = $(anchor).closest('tr');
+    var item_id = $(row).find('td:eq(1)').text().trim();
+    var item_code = $(row).find('td:eq(2)').text().trim();
+    var item_name = $(row).find('td:eq(3)').text().trim();
+    var unit = $(row).find('td:eq(4)').text().trim();
+    var rate = $(row).find('td:eq(5)').text().trim() || '0';
+    var uom_qty = $(row).find('td:eq(6)').text().trim() || '1';
+    var total_stock = $(row).find('td:eq(7)').text().trim() || '0';
+    var isChecked = $(anchor).prop('checked');
 
-            if (exists) {
+    if (!isChecked) {
+        $('#tblItemDescription tbody tr').each(function () {
+            if ($(this).find('input[name=txtItemCode]').val() === item_code) {
+                $(this).remove();
+            }
+        });
+        calcTotal();
+        return;
+    }
+
+    var exists = false;
+    $('#tblItemDescription tbody tr').each(function () {
+        if ($(this).find('input[name=txtItemCode]').val() === item_code) {
+            exists = true;
+            return false;
+        }
+    });
+
+    if (exists) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Item already added!',
+            timer: 2000,
+            showConfirmButton: false
+        });
+        $(anchor).prop('checked', false);
+        return;
+    }
+
+    var length = $("#tblItemDescription tr:gt(0)").length + 1;
+    var defaultQty = '1';
+
+    // For projection type 002, set default to 0 and show loading indicator
+    if (projectionType === '002' && projectionDate && warehouseId && warehouseId !== '0') {
+        defaultQty = '0';
+        
+        // Show loading indicator in the quantity field
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Fetching consumption data for this item...',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    }
+
+    var newRow = '<tr>' +
+        '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="0" />' + length + '</td>' +
+        '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="" /></td>' +
+        '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" /></td>' +
+        '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + item_code + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + item_code + '   </td>' +
+        '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + '   </td>' +
+        '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + '   </td>' +
+        '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="' + defaultQty + '"/></td>' +
+        '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + uom_qty + '" /></td>' +
+        '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
+        '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + rate + '" /></td>' +
+        '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +
+        '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
+        '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
+        '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
+        '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="0" /></td>' +
+        '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +
+        '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
+        '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
+        '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;"><option value="0">0</option></select></td>' +
+        '<td style="display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
+        '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
+        '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
+        '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
+        '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
+        '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>   </td>' +
+        '</tr>';
+
+    $('#tblItemDescription tbody').append(newRow);
+
+    initializeDatePickers();
+    populateTaxddl(length);
+    
+    // Populate Advance Tax dropdown
+    PageMethods.getAdvanceTaxType(function (response) {
+        var options = '<option value="0">0</option>';
+        try {
+            var taxData = JSON.parse(response);
+            $.each(taxData, function (key, value) {
+                options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
+            });
+        } catch (e) {
+            console.error('Error parsing advance tax data:', e);
+        }
+        $('#ddlAdvanceTax' + length).html(options);
+    }, function (error) {
+        console.error('Error loading Advance Tax:', error);
+    });
+
+    populateFurtherTaxddl(length);
+    $('[data-toggle="tooltip"]').tooltip();
+
+    setTimeout(function () {
+        $('#txtddate' + length).datepicker({
+            dateFormat: 'dd M yy',
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true
+        }).attr('readonly', 'readonly').focus(function () {
+            $(this).datepicker('show');
+        });
+    }, 100);
+
+    // If projection type is 002, fetch consumed quantity
+    if (projectionType === '002' && projectionDate && warehouseId && warehouseId !== '0') {
+        var itemIdsArray = [parseInt(item_id)];
+        
+        $.ajax({
+            type: "POST",
+            url: "PurchaseOrder.aspx/GetProjectedConsumptionForItems",
+            data: JSON.stringify({ 
+                itemIdsJson: JSON.stringify(itemIdsArray), 
+                projectionDate: projectionDate, 
+                warehouseId: warehouseId 
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                Swal.close(); // Close the loading Swal
+                
+                var consumedQtys = JSON.parse(response.d);
+                var consumedQty = consumedQtys[item_id] || 0;
+                
+                if (consumedQty > 0) {
+                    // Convert to integer (remove decimal places)
+                    var intQty = Math.floor(consumedQty);
+                    $('#txtQty' + length).val(intQty);
+                    CulculateAmonutWithQty(length);
+                    calcTotal();
+                    
+                    // Show success notification
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Quantity Loaded',
+                        html: '<strong>' + item_name + '</strong><br/>Quantity: <strong>' + intQty + '</strong><br/>Loaded from consumption data between ' + projectionDate + ' and today.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    // No consumption data found
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'No Consumption Data',
+                        html: '<strong>' + item_name + '</strong><br/>No consumption records found for this item between ' + projectionDate + ' and today.<br/>Quantity set to 0.',
+                        timer: 2500,
+                        showConfirmButton: false
+                    });
+                }
+            },
+            error: function (error) {
+                Swal.close();
+                console.error("Error fetching projected consumption", error);
+                
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error!',
-                    text: 'Item already added!',
+                    title: 'Error Loading Data',
+                    text: 'Failed to fetch consumption data for this item. Quantity set to 0.',
                     timer: 2000,
                     showConfirmButton: false
                 });
-                $(anchor).prop('checked', false);
-                return;
             }
+        });
+    }
 
-            var length = $("#tblItemDescription tr:gt(0)").length + 1;
-
-            // FIXED: Properly structured row with opening <tr> tag
-            var newRow = '<tr>' +
-                '<td style="padding-top:7px!important;"><input type="hidden" id="txtPRDId' + length + '" name="txtPRDId" value="0" />' + length + '</td>' +
-                '<td style="padding-top: 7px!important;"><input type="hidden" name="txtPRNo" id="txtPRNO' + length + '" value="" />  </td>' +
-                '<td style="padding-top: 7px!important;text-align:right!important;"><input type="hidden" name="txtcsno" id="txtcsno' + length + '" value="" /></td>' +
-                '<td style="padding-top: 7px!important;padding-right: 3px!important;text-align:right!important;"><input type="hidden" name="txtItemCode" id="txtItemCode' + length + '" value="' + item_code + '" style="width:50px !important;text-align:right;font-size:9px;height:20px;"/> ' + item_code + '  </td>' +
-                '<td style="padding-left: 8px!important;padding-top: 7px!important;text-align:left!important;"><input type="hidden" name="txtItemName" id="txtItemName' + length + '" value="' + item_name + '"/> ' + item_name + '  </td>' +
-                '<td style="text-align:left!important;"> <input type="hidden" name="txtUnit" id="txtUnit' + length + '" value="' + unit + '" />' + unit + '  </td>' +
-                '<td><input type="text" id="txtQty' + length + '" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtQty" onkeyup="CulculateAmonutWithQty(this)" value="1"/></td>' +
-                '<td><input type="text" id="txtUOMQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtUOMQty" value="' + uom_qty + '" /></td>' +
-                '<td><input type="text" id="txtBonusQty' + length + '" style="text-align:right;width:50px!important;font-size:9px;height:20px;" name="txtBonusQty" value="0" data-toggle="tooltip" data-placement="bottom" title="Enter Bonus quantity in Loose"/></td>' +
-                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" onkeyup="CulculateAmonutWithQty(this)" name="txtRate" id="txtRate' + length + '" value="' + rate + '" /></td>' +
-                '<td><input type="text" autocomplete="off" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" name="txtDisPer" readonly="readonly" id="txtDisPer' + length + '" value="0" /></td>' +
-                '<td style="text-align:right;padding-top: 7px!important"><input type="text" onkeyup="calcTotal()" style="width: 50px !important;text-align:right;font-size:9px;height:20px;text-align:right!important;" id="txtDisAmount' + length + '" name="txtDisAmount" value="0"></input></td>' +
-                '<td><select id="ddlSTAX' + length + '" name="ddlSTAX" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
-                '<td style="padding-top: 7px!important;text-align:right!important"><input type="text" style="text-align:right!important; width:50px !important;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtSalAmount' + length + '" name="txtSalAmount" /></td>' +
-                '<td><input type="text" id="ddlFurtherTax' + length + '" name="ddlFurtherTax" onkeyup="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;" value="0" /></td>' +
-                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtFurtherTaxAmount' + length + '" name="txtFurtherTaxAmount"></td>' +
-                '<td><select id="ddlAdvanceTax' + length + '" name="ddlAdvanceTax" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;"><option value="0">0</option></select></td>' +
-                '<td><input type="text" readonly="readonly" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" id="txtAdvanceTaxAmount' + length + '" name="txtAdvanceTaxAmount"></td>' +
-                '<td style="display:none;"><select id="ddlFed' + length + '" onchange="calcTotal()" style="text-align:right ;width:50px !important;font-size:9px;height:20px;margin-left: 6px;"><option value="0">0</option></select></td>' +
-                '<td style="display:none;"><input type="text" value="0" style="width: 50px !important;text-align:right;font-size:9px;height:20px;" id="txtFedAmount' + length + '" name="txtFedAmount"></input></td>' +
-                '<td><input type="text" readonly style="width:50px!important;text-align:right;font-size:9px;height:20px;" value="0" id="txtBonusAmount' + length + '" name="txtBonusAmount" /></td>' +
-                '<td style="text-align:right ;width:50px !important;font-size:9px;height:20px;padding-top: 7px!important;"><input type="text" style="width:50px !important;text-align:right;font-size:9px;height:20px;" value="0" readonly="readonly" id="txtTotalAmount' + length + '" name="txtTotalAmount"></input></td>' +
-                '<td><input type="text" name="txtddate" id="txtddate' + length + '" class="row-date-picker" style="width:64px !important;text-align:center;font-size:9px;height:20px;" /></td>' +
-                '<td style="text-align:center; font-weight:bold; color:#555;">' + total_stock + '</td>' +
-                '<td style="padding-top: 7px!important;"><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="font-size: 13px;margin-left: 16px; color: #f30a0a;position:relative;left: -10px;"></i></a>  </td>' +
-                '</tr>';
-
-            $('#tblItemDescription tbody').append(newRow);
-
-            initializeDatePickers();
-            populateTaxddl(length);
-            PageMethods.getAdvanceTaxType(function (response) {
-                var options = '<option value="0">0</option>';
-                try {
-                    var taxData = JSON.parse(response);
-                    $.each(taxData, function (key, value) {
-                        options += '<option value="' + value.Advance_Tax_ID + '">' + value.Advance_Tax_Perc + '</option>';
-                    });
-                } catch (e) {
-                    console.error('Error parsing advance tax data:', e);
-                }
-                $('#ddlAdvanceTax' + length).html(options);
-            }, function (error) {
-                console.error('Error loading Advance Tax:', error);
-            });
-
-            populateFurtherTaxddl(length);
-
-            $('[data-toggle="tooltip"]').tooltip();
-
-            setTimeout(function () {
-                $('#txtddate' + length).datepicker({
-                    dateFormat: 'dd M yy',
-                    changeMonth: true,
-                    changeYear: true,
-                    showButtonPanel: true
-                }).attr('readonly', 'readonly').focus(function () {
-                    $(this).datepicker('show');
-                });
-            }, 100);
-
-            CulculateAmonutWithQty(length);
-            calcTotal();
-        }
+    CulculateAmonutWithQty(length);
+    calcTotal();
+}
 
         function initializeDatePickers() {
             $('.row-date-picker').not('.hasDatepicker').datepicker({
