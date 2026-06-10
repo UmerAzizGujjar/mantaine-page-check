@@ -135,56 +135,67 @@ namespace PMS.Modules.PatientManagement
                 {
                     string userId = HttpContext.Current.Session["UserId"].ToString();
 
-                    var Total_Patients = _dbContext.Birth_Certificates.Count();
-                    var BirthCertificate = from P in _dbContext.Reg_patients
-                                        join IP in _dbContext.Birth_Certificates on P.pat_id equals IP.Patient_ID
-                                        where  (
-                                            IP.Birth_Certificate_ID.ToString().Contains(searchValue) ||
-                                            P.mr_no_sequence.Contains(searchValue) ||
-                                            P.Full_Name.Contains(searchValue) ||
-                                          
-                                            SqlMethods.DateDiffDay(IP.Registration_Date, DateTime.Now).ToString().Contains(searchValue)
-                                        )
-                                        select new
-                                        {
-                                            In_Patient_ID = IP.Birth_Certificate_ID,
-                                            Admission_Date = IP.Registration_Date,
-                                            mr_no_sequence = P.mr_no_sequence,
-                                            Full_Name = P.Full_Name,
-                                            Father_Name = P.Father_Name,
-                                            Birth_Date = IP.Date_of_Birth,
+                    var baseQuery = from P in _dbContext.Reg_patients
+                                    join IP in _dbContext.Birth_Certificates on P.pat_id equals IP.Patient_ID
+                                    select new
+                                    {
+                                        In_Patient_ID = IP.Birth_Certificate_ID,
+                                        Admission_Date = IP.Registration_Date,
+                                        mr_no_sequence = P.mr_no_sequence,
+                                        Full_Name = P.Full_Name,
+                                        Father_Name = P.Father_Name,
+                                        Birth_Date = IP.Date_of_Birth,
+                                        Created_By = IP.Created_By
+                                    };
 
-                                            Created_by = Convert.ToString(_dbContext.getUserName(Convert.ToString(IP.Created_By))),
-                      
-                                        };
+                    var Total_Patients = baseQuery.Count();
 
-                    var FilteredCount = BirthCertificate.Count();
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        baseQuery = baseQuery.Where(x =>
+                            x.mr_no_sequence.Contains(searchValue) ||
+                            x.Full_Name.Contains(searchValue) ||
+                            x.Father_Name.Contains(searchValue));
+                    }
+
                     switch (sortColumn)
                     {
                         case "In_Patient_ID":
-                            BirthCertificate = sortColumnDirection == "asc" ? BirthCertificate.OrderBy(a => a.In_Patient_ID) : BirthCertificate.OrderByDescending(a => a.In_Patient_ID);
+                            baseQuery = sortColumnDirection == "asc" ? baseQuery.OrderBy(a => a.In_Patient_ID) : baseQuery.OrderByDescending(a => a.In_Patient_ID);
                             break;
                         case "mr_no_sequence":
-                            BirthCertificate = sortColumnDirection == "asc" ? BirthCertificate.OrderBy(b => b.mr_no_sequence) : BirthCertificate.OrderByDescending(a => a.mr_no_sequence);
+                            baseQuery = sortColumnDirection == "asc" ? baseQuery.OrderBy(b => b.mr_no_sequence) : baseQuery.OrderByDescending(b => b.mr_no_sequence);
                             break;
-
                         case "Admission_Date":
-                            BirthCertificate = sortColumnDirection == "asc" ? BirthCertificate.OrderBy(b => b.Admission_Date) : BirthCertificate.OrderByDescending(a => a.Admission_Date);
+                            baseQuery = sortColumnDirection == "asc" ? baseQuery.OrderBy(b => b.Admission_Date) : baseQuery.OrderByDescending(b => b.Admission_Date);
                             break;
                         default:
-                            BirthCertificate = BirthCertificate.OrderByDescending(a => a.In_Patient_ID);
+                            baseQuery = baseQuery.OrderByDescending(a => a.In_Patient_ID);
                             break;
                     }
 
-                    var patientList = BirthCertificate.Skip(start).Take(length).ToList();
+                    var FilteredCount = baseQuery.Count();
+                    var patientList = baseQuery.Skip(start).Take(length).ToList();
 
-                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Patients, data = patientList };
+                    var result = patientList.Select(p => new
+                    {
+                        In_Patient_ID = p.In_Patient_ID,
+                        Admission_Date = p.Admission_Date,
+                        mr_no_sequence = p.mr_no_sequence,
+                        Full_Name = p.Full_Name,
+                        Father_Name = p.Father_Name,
+                        Birth_Date = p.Birth_Date,
+                        Created_by = p.Created_By.HasValue ? Convert.ToString(_dbContext.getUserName(p.Created_By.Value.ToString())) : ""
+                    }).ToList();
+
+                    var jsonData = new { draw = draw, recordsFiltered = FilteredCount, recordsTotal = Total_Patients, data = result };
                     return jsonData;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching patient list", ex);
+                System.Diagnostics.Debug.WriteLine("ViewList Error: " + ex.Message + " | " + ex.StackTrace);
+                return new { draw = draw, recordsFiltered = 0, recordsTotal = 0, data = new List<object>() };
             }
         }
 

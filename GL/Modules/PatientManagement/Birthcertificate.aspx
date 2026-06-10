@@ -33,6 +33,18 @@
                 }
             });
 
+            $(document).on('mousedown', function (e) {
+                var $popup = $('.ui-timepicker-div, .ptTimeSelectContainer');
+                var $input = $('#txtBirthTime');
+                if ($popup.length && !$popup.is(e.target) && $popup.has(e.target).length === 0 && !$input.is(e.target)) {
+                    $popup.remove();
+                }
+            });
+
+            $(document).on('click', '.ui-timepicker-div button, .ptTimeSelectContainer button, .ui_tpicker_set', function () {
+                $('.ui-timepicker-div, .ptTimeSelectContainer').remove();
+            });
+
             $('#txt_cnic').attr('placeholder', '_____-_______-_');
             $('#txt_Othercnic').attr('placeholder', '_____-_______-_');
             MaskedInput({
