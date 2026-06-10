@@ -108,7 +108,8 @@ namespace PMS
                                                    join pr_inner in db.Purchase_Requisitions on prd_inner.PR_ID equals pr_inner.PR_Id
                                                    where pr_inner.Status == "Approved" && pr_inner.Department == g.Key.Department
                                                    select (decimal?)prd_inner.EstimateCost).Sum() ?? 0m)
-                           });
+                           })
+                           .OrderByDescending(x => x.PO_No); // Added OrderByDescending to sort by PO_Number descending
 
                 bool hasEntryBudgetViewBtnRights = false;
                 var uid = AppConfig.UserID;
@@ -242,8 +243,8 @@ namespace PMS
 
 
 
-                        var Budget = (from s in db.sys_Parms                                    
-                                        where s.Name == "Budget Working"
+                        var Budget = (from s in db.sys_Parms
+                                      where s.Name == "Budget Working"
                                       select s.Code).FirstOrDefault();
 
                         if (Budget == "01")
