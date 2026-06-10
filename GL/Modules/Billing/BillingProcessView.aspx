@@ -262,13 +262,25 @@
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px; color: white; padding: 5px 8px 5px 8px;" onclick=cancelPatient(this)><i class="fa fa-trash" aria-hidden="true"></i></a>';
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling(' + full.Bill_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
+
                             var print1 = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling1(' + full.Bill_ID + ')" id="btnprint1"><i class="fa fa-print"></i></a>';
-                            //var print2 = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintBilling2(' + full.Bill_ID + ')" id="btnprint2"><i class="fa fa-print"></i></a>';
+
+                            // Check if Balance_Amount is greater than 0 before showing receipt button
+                            var receipt = '';
+                            var balanceAmount = parseFloat(full.Balance_Amount);
+                            if (balanceAmount > 0) {
+                                receipt = '<a class="editListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="openReceipt(\'' + full.Bill_No + '\', ' + full.Bill_ID + ')" title="Add Receipt"><i class="fa fa-money"></i></a>';
+                            } else {
+                                // Optional: Show a disabled receipt button or just nothing
+                                // receipt = '<a class="disabledBtn" style="border-radius: 4px;margin-left: 4px;color: gray;padding: 5px 8px 5px 8px; cursor: not-allowed; opacity: 0.5;" title="Balance is zero - No receipt needed"><i class="fa fa-money"></i></a>';
+                            }
+
                             var result;
-                            result = res + Del + print + print1;
+                            result = res + Del + print + print1 + receipt;
                             return result;
-                            ;
-                        }, "width": "23%", "orderable": false
+                        },
+                        "width": "25%",
+                        "orderable": false
                     }
 
                 ],
@@ -368,7 +380,11 @@
                 }
             });
         }
-
+        function openReceipt(billNo, billId) {
+            debugger;
+         
+            window.location.href = 'Receipts.aspx?Bill_No=' + encodeURIComponent(billNo) + '&Bill_ID=' + billId;
+        }
         function BuildDetailsHTML(details) {
             var html = '<div class="detail-container">';
             var categories = {
