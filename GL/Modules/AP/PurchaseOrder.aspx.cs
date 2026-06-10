@@ -424,6 +424,8 @@ namespace PMS.AP
             public string POType { get; set; }
             public string WareHouse { get; set; }
             public string Further_amount { get; set; }
+            public DateTime? ProjectionDate { get; set; }
+            public string ProjectionType { get; set; }
             public bool IsManual { get; set; }
             public bool IsByDefault { get; set; }
             public List<DetailItemList> ItemList { get; set; }
@@ -512,7 +514,11 @@ namespace PMS.AP
                     {
                         existingItem.Total_Further_Amt = Convert.ToDecimal(record.Further_amount);
                     }
-
+                    if (record.ProjectionDate != null)
+                    {
+                        existingItem.projection = Convert.ToDateTime(record.ProjectionDate);
+                    }
+                    existingItem.projection_type = record.ProjectionType;
                     existingItem.PO_Date = Convert.ToDateTime(record.Purchase_Date);
                     existingItem.Due_Date = Convert.ToDateTime(record.Due_Date);
                     existingItem.PO_No = int.Parse(record.Purchase_No);
@@ -576,6 +582,11 @@ namespace PMS.AP
                 {
                     PO.Frieght_Charges = Convert.ToDecimal(record.FreightCharges);
                 }
+                if (record.ProjectionDate != null)
+                {
+                    PO.projection = Convert.ToDateTime(record.ProjectionDate);
+                }
+                PO.projection_type = record.ProjectionType;
                 PO.Delivery_Terms = record.DeliveryTerms;
                 PO.PO_Type = record.POType;
                 PO.Status = "Created";

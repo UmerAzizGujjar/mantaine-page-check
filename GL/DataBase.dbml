@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="H_P_National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="AsSiraat(10June26)" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7949,19 +7949,20 @@
       <Column Name="Radiology_result_Approval" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Allow_RadiologyAllList" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="adjustment_Allow" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Approve_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="UnApprove_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Reject_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="UnApprove_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Approve_radiology" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="IPD_ALlow_Death_Details" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="IPD_Allow_birth_Certifcate" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="allow_undischarge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="All_doctor_template" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="allow_undischarge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="user_till" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowAddPatient" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AllowLineDiscount" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Allow_Sample_list" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowLineDiscount" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowAddPatient" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="AllowTestlistDoctor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="AllowRegisterRefund" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Allow_Return_Queue" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="aspnet_User_aspnet_PersonalizationPerUser" Member="aspnet_PersonalizationPerUsers" ThisKey="UserId" OtherKey="UserId" Type="aspnet_PersonalizationPerUser" />
       <Association Name="aspnet_User_aspnet_Profile" Member="aspnet_Profile" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Profile" Cardinality="One" />
       <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_UsersInRoles" ThisKey="UserId" OtherKey="UserId" Type="aspnet_UsersInRole" />
