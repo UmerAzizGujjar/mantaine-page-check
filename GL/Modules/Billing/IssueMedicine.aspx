@@ -57,6 +57,7 @@
             fillPanel();
             BalanceAmountCondition();
             CheckSaleReturnAllow();
+            CheckSaleReturnQueue();
             CheckShowTemplateOnSale();
             $('#chkbatch').on('change', function () {
                 var btch = $('#chkbatch').prop("checked");
@@ -1822,6 +1823,32 @@
                     }
                     else {
                         $('#SSearchReturnPop').attr('disabled', true)
+                    }
+
+                },
+                failure: function () {
+                    alert(bi);
+                }
+            });
+        }
+        function CheckSaleReturnQueue() {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/CheckSaleReturnQueue",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    debugger;
+                    var checkActive = data.d;
+
+                    if (checkActive == "true") {
+                        $('#ReturnQueue').show()
+                    }
+                    else {
+                        $('#ReturnQueue').hide()
                     }
 
                 },

@@ -96,6 +96,7 @@ namespace PMS.Modules.Accounts
                              AllowDeathDetails = p.IPD_ALlow_Death_Details,
                               AllowRateEdit = p.AllowRateEdit,
                               AllowRegisterRefund = p.AllowRegisterRefund,
+                             Allow_Return_Queue = p.Allow_Return_Queue,
                               AllowRadiologylist = p.Radiology_result,
                              AllowLineDiscount = p.AllowLineDiscount,
                              AllowTestlistDoctor = p.AllowTestlistDoctor,
@@ -222,6 +223,7 @@ namespace PMS.Modules.Accounts
                     user.cashier = data.ddlcasher;
                     user.AllowRateEdit = data.AllowRateEdit;
                     user.AllowRegisterRefund = data.AllowRegisterRefund;
+                    user.Allow_Return_Queue = data.Allow_Return_Queue;
                     user.allow_undischarge = data.AllowUndischarge;
                     user.All_doctor_template = data.AllDoctorTemplate;
                     user.user_till = data.AllowTill;
@@ -313,6 +315,7 @@ namespace PMS.Modules.Accounts
                 newuser.cashier = data.ddlcasher;
                 newuser.AllowRateEdit = data.AllowRateEdit;
                 newuser.AllowRegisterRefund = data.AllowRegisterRefund;
+                newuser.Allow_Return_Queue = data.Allow_Return_Queue;
                 newuser.allow_undischarge = data.AllowUndischarge;
           
                  newuser.All_doctor_template = data.AllDoctorTemplate;
@@ -438,6 +441,7 @@ namespace PMS.Modules.Accounts
             public bool Rejectradiology { get; set; }
             public bool AllowRateEdit { get; set; }
             public bool AllowRegisterRefund { get; set; }
+            public bool Allow_Return_Queue { get; set; }
             public bool AllowUndischarge { get; set; }
             public bool AllDoctorTemplate { get; set; }
             public bool AllowTill { get; set; }

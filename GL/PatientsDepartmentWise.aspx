@@ -306,6 +306,7 @@
                     }
                     else if (rptTitle == "YearlyPharmacyOverallSummary") {
                         debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         $('#<%= YearDiv.ClientID %>').show();
                         $('#<%= DateDiv.ClientID %>').hide();
                         $('#<%= Time_Row.ClientID %>').hide();
@@ -315,16 +316,17 @@
                             alert('Please select a year');
                             return;
                         }
-                        var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "SAR") {
                         debugger;
-                       // var exporttopdf = $('#chkExportPDF')[0].checked;
+                        // var exporttopdf = $('#chkExportPDF')[0].checked;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         var sDate = ($("#ctl00_MainContent_txtStart_Date").val());
                         var eDate = ($("#ctl00_MainContent_txtEnd_Date").val());
                         var department = ($("#ctl00_MainContent_ddlDepartments").val());
-                        var url = 'ReportViewer.aspx?ReportName=StockAdjustment&ReportTitle= ' + rptTitle + '&startDate=' + sDate + '&endDate=' + eDate + '&Department=' + department + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        var url = 'ReportViewer.aspx?ReportName=StockAdjustment&ReportTitle= ' + rptTitle + '&startDate=' + sDate + '&endDate=' + eDate + '&Department=' + department + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "STM") {
@@ -1352,7 +1354,8 @@
                     }
                     else if (rptTitle == "Item_Wise_Gross_Profit_Report") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=Item_Wise_Gross_Profit&ReportTitle=Item Wise Gross Profit Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val();
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
+                        var url = 'ReportViewer.aspx?ReportName=Item_Wise_Gross_Profit&ReportTitle=Item Wise Gross Profit Report From ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&ItemID=' + $('#ctl00_MainContent_ddlItemName').val() + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Category_Wise_Profitability_Report") {

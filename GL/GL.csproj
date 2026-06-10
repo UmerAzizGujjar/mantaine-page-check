@@ -373,6 +373,7 @@
     <Content Include="Modules\Dashboards\PharmacySection.aspx" />
     <Content Include="Modules\Dashboards\PurchaseSection.aspx" />
     <Content Include="Modules\Dashboards\Sales_Dashboard.aspx" />
+    <Content Include="Modules\Dashboards\AnnexureDashboard.aspx" />
     <Content Include="Modules\Dashboards\ShortCuts.aspx" />
     <Content Include="Modules\GL\FinancialLogs.aspx" />
     <Content Include="Modules\Inventory\AdvanceTaxDefinition.aspx" />
@@ -3249,6 +3250,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\Sales_Dashboard.aspx.designer.cs">
       <DependentUpon>Sales_Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\AnnexureDashboard.aspx.cs">
+      <DependentUpon>AnnexureDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\AnnexureDashboard.aspx.designer.cs">
+      <DependentUpon>AnnexureDashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\ShortCuts.aspx.cs">
       <DependentUpon>ShortCuts.aspx</DependentUpon>

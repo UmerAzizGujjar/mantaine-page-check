@@ -2536,6 +2536,8 @@ function scheduleCalcTotal(delay) {
                 var txtst_amou = $('#txtst_amou').val();
                 var Adv_amount = $('#txtAdv_amou').val();
                 var Further_amount = $('#txtFurther_amou').val();
+                var ProjectionDate = $('#ctl00_MainContent_txtProjection_Date').val();
+                var ProjectionType = $('#ctl00_MainContent_ddlprojection').val();
                 var IsManual = $('#chkManual').is(':checked');
                 var IsByDefault = $('#chkByDefault').is(':checked');
                 var Item_list = [];
@@ -2577,7 +2579,7 @@ function scheduleCalcTotal(delay) {
                 }
                 else {
                     var AllItemDetail = {
-                        'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Further_amount': Further_amount, 'IsManual': IsManual,
+                        'txtst_amou': txtst_amou, 'Adv_amount': Adv_amount, 'transtype': transtype, 'txtcsmasterid': txtcsmasterid, 'PO_ID': PO_ID, 'SubTotal': SubTotal, 'DiscountAmount': DiscountAmount, 'NetAmount': NetAmount, 'Purchase_Date': Purchase_Date, 'Purchase_No': Purchase_No, 'RefNo': RefNo, 'VendorName': VendorName, 'Remarks': Remarks, 'Warranty': Warranty, 'Disclaimer': Disclaimer, 'PaymentTerms': PaymentTerms, 'Term_ID': Term_ID, 'DeliveryTerms': DeliveryTerms, 'FreightCharges': Freight, 'POType': POType, 'Due_Date': Due_Date, 'ItemList': Item_list, 'Warehouse': Warehouse, 'Further_amount': Further_amount, 'ProjectionDate': ProjectionDate,'ProjectionType': ProjectionType, 'IsManual': IsManual,
                         'IsByDefault': IsByDefault };
                     PageMethods.SavePurchaseItemDetail(btnSave, JSON.stringify(AllItemDetail), function (res) {
                         debugger;

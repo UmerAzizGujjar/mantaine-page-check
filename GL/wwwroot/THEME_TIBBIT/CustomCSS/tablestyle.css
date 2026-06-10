@@ -224,6 +224,11 @@ body {
     font-weight: bold;
     font-size: 15px;
 }
+.fa-money {
+    color: black !important;
+    font-weight: bold;
+    font-size: 15px;
+}
 
 .fa-print {
     color: Black !important;

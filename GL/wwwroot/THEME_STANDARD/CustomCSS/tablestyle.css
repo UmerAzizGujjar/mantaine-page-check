@@ -29,7 +29,11 @@ table.dataTable thead > tr > th.sorting_asc:before, table.dataTable thead > tr >
     padding: 0px 10px;
     width: 300px;
 }
-
+.fa-money {
+    color: black !important;
+    font-weight: bold;
+    font-size: 15px;
+}
 .dataTables_filter input {
     border: none;
     outline: none;

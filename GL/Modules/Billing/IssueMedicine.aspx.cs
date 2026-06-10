@@ -41,6 +41,16 @@ namespace PMS
             return (new JavaScriptSerializer()).Serialize(ups);
         }
         [WebMethod]
+        public static string CheckSaleReturnQueue()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.Allow_Return_Queue).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+        [WebMethod]
         public static string GetWardAndBed(int Pat_Id)
         {
             DataBaseDataContext db = new DataBaseDataContext();
