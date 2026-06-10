@@ -27,23 +27,18 @@
             // 2. Initialize Time Picker
             // Note: Standard jQuery UI doesn't have a timepicker. 
             // This assumes you have a plugin like 'jquery-timepicker' included in your Site.Master
-            $('#txtBirthTime').ptTimeSelect({
-                onClose: function () {
-                    $('#txtBirthTime').focus();
-                }
-            });
+            $('#txtBirthTime').ptTimeSelect();
 
             $(document).on('mousedown', function (e) {
                 var $popup = $('.ui-timepicker-div, .ptTimeSelectContainer');
                 var $input = $('#txtBirthTime');
                 if ($popup.length && !$popup.is(e.target) && $popup.has(e.target).length === 0 && !$input.is(e.target)) {
+                    $input.blur();
                     $popup.remove();
                 }
             });
 
-            $(document).on('click', '.ui-timepicker-div button, .ptTimeSelectContainer button, .ui_tpicker_set', function () {
-                $('.ui-timepicker-div, .ptTimeSelectContainer').remove();
-            });
+
 
             $('#txt_cnic').attr('placeholder', '_____-_______-_');
             $('#txt_Othercnic').attr('placeholder', '_____-_______-_');
