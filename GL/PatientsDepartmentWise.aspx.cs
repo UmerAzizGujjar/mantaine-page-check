@@ -5017,6 +5017,7 @@ namespace PMS
                     lblMedical.Visible = false;
                     dpROw.Visible = false;
                     YearDiv.Visible = true;
+                    tr_Export.Visible = true;
 
                     //ADDING NEW WAREHOUSE
 

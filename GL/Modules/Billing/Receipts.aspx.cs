@@ -18,7 +18,95 @@ namespace PMS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                string billNo = Request.QueryString["Bill_No"];
+                string billId = Request.QueryString["Bill_ID"];
 
+                if (!string.IsNullOrEmpty(billNo))
+                {
+                    // Store in session or ViewState for JavaScript to access
+                    ViewState["AutoLoadBillNo"] = billNo;
+                    ViewState["AutoLoadBillId"] = billId;
+
+                    // Register startup script to auto-load the bill
+                    string script = $@"
+                <script type='text/javascript'>
+                    $(document).ready(function() {{
+                        setTimeout(function() {{
+                            var billNo = '{billNo}';
+                            var billId = '{billId}';
+                            if (billNo && billNo !== '') {{
+                                // Auto-select the bill
+                                if (typeof AutoLoadBill === 'function') {{
+                                    AutoLoadBill(billNo, billId);
+                                }}
+                            }}
+                        }}, 500);
+                    }});
+                </script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "AutoLoadBill", script);
+                }
+            }
+        }
+        [WebMethod]
+        public static string GetBillByNumber(string billNo, string billId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext())
+                {
+                    // Find the bill by Bill_No
+                    var bill = (from b in db.Ar_Billings
+                                join p in db.Reg_patients on b.Patient_ID equals p.pat_id
+                                where b.Bill_No == billNo
+                                select new
+                                {
+                                    id = b.Bill_ID,
+                                    name = b.Bill_No + " - " + p.Full_Name,
+                                    type = p.pat_id,
+                                    patientId = p.pat_id,
+                                    patientName = p.Full_Name,
+                                    mrNo = p.Patient_No,
+                                    billId = b.Bill_ID
+                                }).FirstOrDefault();
+
+                    if (bill != null)
+                    {
+                        return new JavaScriptSerializer().Serialize(bill);
+                    }
+
+                    // If not found by Bill_No, try by Bill_ID
+                    if (!string.IsNullOrEmpty(billId) && billId != "0")
+                    {
+                        int id = Convert.ToInt32(billId);
+                        var billById = (from b in db.Ar_Billings
+                                        join p in db.Reg_patients on b.Patient_ID equals p.pat_id
+                                        where b.Bill_ID == id
+                                        select new
+                                        {
+                                            id = b.Bill_ID,
+                                            name = b.Bill_No + " - " + p.Full_Name,
+                                            type = p.pat_id,
+                                            patientId = p.pat_id,
+                                            patientName = p.Full_Name,
+                                            mrNo = p.Patient_No,
+                                            billId = b.Bill_ID
+                                        }).FirstOrDefault();
+
+                        if (billById != null)
+                        {
+                            return new JavaScriptSerializer().Serialize(billById);
+                        }
+                    }
+
+                    return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
         }
         [WebMethod]
         public static int SaveRecord(int Receipt_ID, int Patient_ID, DateTime Receipt_Date, string Remarks, decimal Receipt_Amount, int Bill_ID)
