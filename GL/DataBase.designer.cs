@@ -22,7 +22,7 @@ namespace PMS
     using System;
 
 
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "H_P_National_Hospital")]
+    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "AsSiraat(10June26)")]
     public partial class DataBaseDataContext : System.Data.Linq.DataContext
     {
 
@@ -1010,7 +1010,7 @@ namespace PMS
         partial void Deleteaspnet_User(aspnet_User instance);
         #endregion
         public DataBaseDataContext() :
-    base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -176569,31 +176569,33 @@ namespace PMS
 
         private System.Nullable<bool> _adjustment_Allow;
 
-        private System.Nullable<bool> _Approve_radiology;
+        private System.Nullable<bool> _Reject_radiology;
 
         private System.Nullable<bool> _UnApprove_radiology;
 
-        private System.Nullable<bool> _Reject_radiology;
+        private System.Nullable<bool> _Approve_radiology;
 
         private System.Nullable<bool> _IPD_ALlow_Death_Details;
 
         private System.Nullable<bool> _IPD_Allow_birth_Certifcate;
 
-        private System.Nullable<bool> _allow_undischarge;
-
         private System.Nullable<bool> _All_doctor_template;
+
+        private System.Nullable<bool> _allow_undischarge;
 
         private System.Nullable<bool> _user_till;
 
-        private System.Nullable<bool> _AllowAddPatient;
+        private System.Nullable<bool> _Allow_Sample_list;
 
         private System.Nullable<bool> _AllowLineDiscount;
 
-        private System.Nullable<bool> _Allow_Sample_list;
+        private System.Nullable<bool> _AllowAddPatient;
 
         private System.Nullable<bool> _AllowTestlistDoctor;
 
         private System.Nullable<bool> _AllowRegisterRefund;
+
+        private System.Nullable<bool> _Allow_Return_Queue;
 
         private EntitySet<aspnet_PersonalizationPerUser> _aspnet_PersonalizationPerUsers;
 
@@ -176707,32 +176709,34 @@ namespace PMS
         partial void OnAllow_RadiologyAllListChanged();
         partial void Onadjustment_AllowChanging(System.Nullable<bool> value);
         partial void Onadjustment_AllowChanged();
-        partial void OnApprove_radiologyChanging(System.Nullable<bool> value);
-        partial void OnApprove_radiologyChanged();
-        partial void OnUnApprove_radiologyChanging(System.Nullable<bool> value);
-        partial void OnUnApprove_radiologyChanged();
         partial void OnReject_radiologyChanging(System.Nullable<bool> value);
         partial void OnReject_radiologyChanged();
+        partial void OnUnApprove_radiologyChanging(System.Nullable<bool> value);
+        partial void OnUnApprove_radiologyChanged();
+        partial void OnApprove_radiologyChanging(System.Nullable<bool> value);
+        partial void OnApprove_radiologyChanged();
         partial void OnIPD_ALlow_Death_DetailsChanging(System.Nullable<bool> value);
         partial void OnIPD_ALlow_Death_DetailsChanged();
         partial void OnIPD_Allow_birth_CertifcateChanging(System.Nullable<bool> value);
         partial void OnIPD_Allow_birth_CertifcateChanged();
-        partial void Onallow_undischargeChanging(System.Nullable<bool> value);
-        partial void Onallow_undischargeChanged();
         partial void OnAll_doctor_templateChanging(System.Nullable<bool> value);
         partial void OnAll_doctor_templateChanged();
+        partial void Onallow_undischargeChanging(System.Nullable<bool> value);
+        partial void Onallow_undischargeChanged();
         partial void Onuser_tillChanging(System.Nullable<bool> value);
         partial void Onuser_tillChanged();
-        partial void OnAllowAddPatientChanging(System.Nullable<bool> value);
-        partial void OnAllowAddPatientChanged();
-        partial void OnAllowLineDiscountChanging(System.Nullable<bool> value);
-        partial void OnAllowLineDiscountChanged();
         partial void OnAllow_Sample_listChanging(System.Nullable<bool> value);
         partial void OnAllow_Sample_listChanged();
+        partial void OnAllowLineDiscountChanging(System.Nullable<bool> value);
+        partial void OnAllowLineDiscountChanged();
+        partial void OnAllowAddPatientChanging(System.Nullable<bool> value);
+        partial void OnAllowAddPatientChanged();
         partial void OnAllowTestlistDoctorChanging(System.Nullable<bool> value);
         partial void OnAllowTestlistDoctorChanged();
         partial void OnAllowRegisterRefundChanging(System.Nullable<bool> value);
         partial void OnAllowRegisterRefundChanged();
+        partial void OnAllow_Return_QueueChanging(System.Nullable<bool> value);
+        partial void OnAllow_Return_QueueChanged();
         #endregion
 
         public aspnet_User()
@@ -177729,22 +177733,22 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Approve_radiology", DbType = "Bit")]
-        public System.Nullable<bool> Approve_radiology
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reject_radiology", DbType = "Bit")]
+        public System.Nullable<bool> Reject_radiology
         {
             get
             {
-                return this._Approve_radiology;
+                return this._Reject_radiology;
             }
             set
             {
-                if ((this._Approve_radiology != value))
+                if ((this._Reject_radiology != value))
                 {
-                    this.OnApprove_radiologyChanging(value);
+                    this.OnReject_radiologyChanging(value);
                     this.SendPropertyChanging();
-                    this._Approve_radiology = value;
-                    this.SendPropertyChanged("Approve_radiology");
-                    this.OnApprove_radiologyChanged();
+                    this._Reject_radiology = value;
+                    this.SendPropertyChanged("Reject_radiology");
+                    this.OnReject_radiologyChanged();
                 }
             }
         }
@@ -177769,22 +177773,22 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reject_radiology", DbType = "Bit")]
-        public System.Nullable<bool> Reject_radiology
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Approve_radiology", DbType = "Bit")]
+        public System.Nullable<bool> Approve_radiology
         {
             get
             {
-                return this._Reject_radiology;
+                return this._Approve_radiology;
             }
             set
             {
-                if ((this._Reject_radiology != value))
+                if ((this._Approve_radiology != value))
                 {
-                    this.OnReject_radiologyChanging(value);
+                    this.OnApprove_radiologyChanging(value);
                     this.SendPropertyChanging();
-                    this._Reject_radiology = value;
-                    this.SendPropertyChanged("Reject_radiology");
-                    this.OnReject_radiologyChanged();
+                    this._Approve_radiology = value;
+                    this.SendPropertyChanged("Approve_radiology");
+                    this.OnApprove_radiologyChanged();
                 }
             }
         }
@@ -177829,26 +177833,6 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_undischarge", DbType = "Bit")]
-        public System.Nullable<bool> allow_undischarge
-        {
-            get
-            {
-                return this._allow_undischarge;
-            }
-            set
-            {
-                if ((this._allow_undischarge != value))
-                {
-                    this.Onallow_undischargeChanging(value);
-                    this.SendPropertyChanging();
-                    this._allow_undischarge = value;
-                    this.SendPropertyChanged("allow_undischarge");
-                    this.Onallow_undischargeChanged();
-                }
-            }
-        }
-
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_All_doctor_template", DbType = "Bit")]
         public System.Nullable<bool> All_doctor_template
         {
@@ -177865,6 +177849,26 @@ namespace PMS
                     this._All_doctor_template = value;
                     this.SendPropertyChanged("All_doctor_template");
                     this.OnAll_doctor_templateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_allow_undischarge", DbType = "Bit")]
+        public System.Nullable<bool> allow_undischarge
+        {
+            get
+            {
+                return this._allow_undischarge;
+            }
+            set
+            {
+                if ((this._allow_undischarge != value))
+                {
+                    this.Onallow_undischargeChanging(value);
+                    this.SendPropertyChanging();
+                    this._allow_undischarge = value;
+                    this.SendPropertyChanged("allow_undischarge");
+                    this.Onallow_undischargeChanged();
                 }
             }
         }
@@ -177889,22 +177893,22 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowAddPatient", DbType = "Bit")]
-        public System.Nullable<bool> AllowAddPatient
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_Sample_list", DbType = "Bit")]
+        public System.Nullable<bool> Allow_Sample_list
         {
             get
             {
-                return this._AllowAddPatient;
+                return this._Allow_Sample_list;
             }
             set
             {
-                if ((this._AllowAddPatient != value))
+                if ((this._Allow_Sample_list != value))
                 {
-                    this.OnAllowAddPatientChanging(value);
+                    this.OnAllow_Sample_listChanging(value);
                     this.SendPropertyChanging();
-                    this._AllowAddPatient = value;
-                    this.SendPropertyChanged("AllowAddPatient");
-                    this.OnAllowAddPatientChanged();
+                    this._Allow_Sample_list = value;
+                    this.SendPropertyChanged("Allow_Sample_list");
+                    this.OnAllow_Sample_listChanged();
                 }
             }
         }
@@ -177929,22 +177933,22 @@ namespace PMS
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_Sample_list", DbType = "Bit")]
-        public System.Nullable<bool> Allow_Sample_list
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_AllowAddPatient", DbType = "Bit")]
+        public System.Nullable<bool> AllowAddPatient
         {
             get
             {
-                return this._Allow_Sample_list;
+                return this._AllowAddPatient;
             }
             set
             {
-                if ((this._Allow_Sample_list != value))
+                if ((this._AllowAddPatient != value))
                 {
-                    this.OnAllow_Sample_listChanging(value);
+                    this.OnAllowAddPatientChanging(value);
                     this.SendPropertyChanging();
-                    this._Allow_Sample_list = value;
-                    this.SendPropertyChanged("Allow_Sample_list");
-                    this.OnAllow_Sample_listChanged();
+                    this._AllowAddPatient = value;
+                    this.SendPropertyChanged("AllowAddPatient");
+                    this.OnAllowAddPatientChanged();
                 }
             }
         }
@@ -177985,6 +177989,26 @@ namespace PMS
                     this._AllowRegisterRefund = value;
                     this.SendPropertyChanged("AllowRegisterRefund");
                     this.OnAllowRegisterRefundChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Allow_Return_Queue", DbType = "Bit")]
+        public System.Nullable<bool> Allow_Return_Queue
+        {
+            get
+            {
+                return this._Allow_Return_Queue;
+            }
+            set
+            {
+                if ((this._Allow_Return_Queue != value))
+                {
+                    this.OnAllow_Return_QueueChanging(value);
+                    this.SendPropertyChanging();
+                    this._Allow_Return_Queue = value;
+                    this.SendPropertyChanged("Allow_Return_Queue");
+                    this.OnAllow_Return_QueueChanged();
                 }
             }
         }

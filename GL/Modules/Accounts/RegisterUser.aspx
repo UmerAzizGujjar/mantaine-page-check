@@ -84,15 +84,15 @@
                     $('#Allowradiologyapprove').prop('checked', data.Allowradiologyapprove);
                     $('#Rejectradiology').prop('checked', data.Rejectradiology);
                     $('#AlllowPAtientAdd').prop('checked', data.AllowAddPatient);
-                                    $('#AllowSamplelist').prop('checked', data.AllowSamplelist);
-                                    $('#AllowRegisterRefund').prop('checked', data.AllowRegisterRefund);
-                                    $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
+                    $('#AllowSamplelist').prop('checked', data.AllowSamplelist);
+                    $('#AllowRegisterRefund').prop('checked', data.AllowRegisterRefund);
+                    $('#Allow_Return_Queue').prop('checked', data.Allow_Return_Queue);
+                    $('#AllowRateEdit').prop('checked', data.AllowRateEdit);
                     $('#AllowUndischarge').prop('checked', data.AllowUndischarge);
                     $('#AllDoctorTemplate').prop('checked', data.AllDoctorTemplate);
                     $('#AllowTill').prop('checked', data.AllowTill);
                     $('#AllowLineDiscount').prop('checked', data.AllowLineDiscount);
-                    $('#AllowTestlistDoctor').prop('checked', data.AllowTestlistDoctor);
-                    
+                    $('#AllowTestlistDoctor').prop('checked', data.AllowTestlistDoctor);             
                 },
                 error: function (xhr, status, error) {
                     alert("Error: " + xhr.responseText);
@@ -153,6 +153,7 @@
             var AlllowPAtientAdd = $('#AlllowPAtientAdd').prop('checked');
             var AllowSamplelist = $('#AllowSamplelist').prop('checked');
             var AllowRegisterRefund = $('#AllowRegisterRefund').prop('checked');
+            var Allow_Return_Queue = $('#Allow_Return_Queue').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var AllowUndischarge = $('#AllowUndischarge').prop('checked');
             var AllDoctorTemplate = $('#AllDoctorTemplate').prop('checked');
@@ -293,6 +294,7 @@
                 "AlllowPAtientAdd": AlllowPAtientAdd,
                 "AllowSamplelist": AllowSamplelist,
                 "AllowRegisterRefund": AllowRegisterRefund,
+                "Allow_Return_Queue": Allow_Return_Queue,
                 "AllowRateEdit": AllowRateEdit,
                 "ddlcasher": ddlcasher,
                 "AllowUndischarge": AllowUndischarge,
@@ -721,6 +723,9 @@
                                                       <div class="form-check">
                                                           <input type="checkbox" class="form-check-input" id="AllowRegisterRefund" name="AllowRegisterRefund" />
                                                       </div>
+                                                      <div class="form-check">
+                                                          <input type="checkbox" class="form-check-input" id="Allow_Return_Queue" name="Allow_Return_Queue" />
+                                                      </div>
 
 
                                                  </div>
@@ -800,6 +805,9 @@
                                                        </div>
                                                        <div class="form-check">
                                                            <label class="form-check-label" for="AllowRegisterRefund">Allow Register Refund</label>
+                                                       </div>
+                                                       <div class="form-check">
+                                                           <label class="form-check-label" for="Allow_Return_Queue">Allow Return Queue</label>
                                                        </div>
                                                  </div>
                                             </div>
