@@ -9,7 +9,7 @@
           $(document).ready(function () {
               loadCardfee();
               checkMonitoringVisibility();
-              allowRefunds();
+              AllowRefund();
               var reg_id = '<%= Request.QueryString["Reg_id"] %>'
          if (reg_id != "") {
             
@@ -37,6 +37,36 @@
 
                        
           });
+          var refund;
+          function AllowRefund() {
+              debugger;
+              $.ajax({
+                  type: "POST",
+                  url: "RegisterPatient.aspx/checkRightsForRefund",
+                  data: "",
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  async: true,
+                  success: function (data) {
+                      debugger;
+                      refund = data.d;
+
+                      if (refund == "true") {
+                     
+                          $('#btnRefund').show();
+                      }
+                      else {
+                          $('#btnRefund').hide();
+                      }
+
+                  },
+                  failure: function () {
+                      alert("Error");
+                  }
+              });
+
+
+          }
 
         
           function PrintVoucher() {
@@ -113,27 +143,7 @@
                   }
               });
           }
-          function allowRefunds() {
-              $.ajax({
-                  type: "POST",
-                  url: "RegisterPatient.aspx/AllowRefund",
-                  contentType: "application/json; charset=utf-8",
-                  dataType: "json",
-                  success: function (response) {
-
-                      if (response.d === "01") {
-                          $('#btnRefund').show(); 
-                      } else {
-                          $('#btnRefund').hide();
-                      }
-
-                  },
-                  error: function (xhr, status, error) {
-                      console.error("Error checking Monitoring checkbox:", error);
-                      $('#btnRefund').hide();
-                  }
-              });
-          }
+         
           function RefundRegisterFee() {
               var reg_id = '<%= Request.QueryString["Reg_id"] %>';
 
