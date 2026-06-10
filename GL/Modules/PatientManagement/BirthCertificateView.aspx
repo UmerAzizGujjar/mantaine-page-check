@@ -46,7 +46,7 @@
                             text: 'Add',
                             className: 'dt-button buttons-copy buttons-html5 btn-primary',
                             action: function () {
-                                window.location = 'InPatientsAdmission.aspx';
+                                window.location = 'Birthcertificate.aspx';
                             }
                         },
                         {
