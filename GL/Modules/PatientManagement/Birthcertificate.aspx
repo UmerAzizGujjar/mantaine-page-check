@@ -1124,18 +1124,21 @@
                     }
 
                     // Success
+                    var savedId = response;
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
                         text: 'Data Successfully Saved',
                         showConfirmButton: false,
-                        timer: 2500
+                        timer: 1500
                     });
 
                     $('#btnsave').val("Update");
 
-                    // Saved ID
-                    console.log("Saved ID:", response);
+                    setTimeout(function () {
+                        window.location.href = 'Birthcertificate.aspx?BC_ID=' + savedId;
+                    }, 1600);
 
                 },
 

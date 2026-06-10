@@ -811,7 +811,7 @@ bool isCertificateGenrate)
                         : BirthGender.Trim();
 
                     DateTime dob;
-                    if (DateTime.TryParse(BirthDate, out dob))
+                    if (DateTime.TryParseExact(BirthDate, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dob))
                         OPD.Date_of_Birth = dob;
                     else
                         OPD.Date_of_Birth = null;

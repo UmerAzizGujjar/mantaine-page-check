@@ -140,10 +140,10 @@ namespace PMS.Modules.PatientManagement
                                     select new
                                     {
                                         In_Patient_ID = IP.Birth_Certificate_ID,
-                                        Admission_Date = IP.Registration_Date,
+                                        Admission_Date = IP.Created_Time,
                                         mr_no_sequence = P.mr_no_sequence,
-                                        Full_Name = P.Full_Name,
-                                        Father_Name = P.Father_Name,
+                                        Full_Name = IP.Child_Name,
+                                        Father_Name = IP.Father_Name,
                                         Birth_Date = IP.Date_of_Birth,
                                         Created_By = IP.Created_By
                                     };

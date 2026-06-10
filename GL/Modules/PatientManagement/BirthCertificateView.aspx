@@ -96,7 +96,7 @@
                     },
                     "columns": [
                        
-                        { "data": "In_Patient_ID", "visible": false, "width": "0%" },
+                        { "data": "In_Patient_ID", "name": "In_Patient_ID", "visible": false, "width": "0%" },
                         {
                             "data": "Admission_Date", "name": "Admission_Date",
                             "render": function (data, type, full) {
@@ -114,11 +114,11 @@
                             "render": function (data, type, full) {
                                 var res = '<a href="#" onclick="editOpen(' + full.In_Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
                                 var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;color:white;padding: 5px 8px;" onclick="deleteConfirm(this)"><i class="fa fa-trash"></i></a>';
-                               // var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color:white;padding: 5px 8px;" href="#" onclick="PrintSlip(' + full.In_Patient_ID + ')"><i class="fa fa-print"></i></a>';
+                                var printBtn = '';
                                 if (full.Birth_Date) {
                                     printBtn = '<a class="printListBtn" href="#" style="border-radius: 4px; margin-left: 4px; color: white; padding: 5px 8px;" onclick="PrintBirthCertificate(' + full.In_Patient_ID + ')"><i class="fa fa-print"></i></a>';
                                 }
-                                return res + Del  + printBtn;
+                                return res + Del + printBtn;
                             },
                             "width": "13%", "orderable": false
                         }
@@ -186,8 +186,8 @@
                    <th>Certificate ID</th>
                    <th>Date</th>
                    <th>MR No.</th>
-                   <th>Patient Name</th> 
-                   <th>Father/Husband Name</th>                              
+                    <th>Child's Name</th> 
+                    <th>Father's Name</th>   
                    <th>Created By</th>                              
                    <th>Actions</th>
                </tr>
