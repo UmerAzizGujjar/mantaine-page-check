@@ -540,6 +540,23 @@
                 $('#section').hide();
                 $('#emp_id').hide();
             }
+            else if (Category == "12") {
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').hide();
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#refference').hide();
+
+                $('#discount').show();
+                $('#empname').hide();
+                $('#designation').hide();
+                $('#dependent').hide();
+                $('#rollno').hide();
+                $('#class').hide();
+                $('#section').hide();
+                $('#emp_id').hide();
+            }
             else if (Category == "52") {
                 $('#fees').show();
                 $('#department').show();
@@ -818,6 +835,7 @@
                             (type === "04" && type_text === "Employee") ||
                             (type === "05" && type_text === "Student") ||
                             (type === "11" && type_text === "CAMP") ||
+                            (type === "12" ) ||
                             (type === "06" && type_text === "Refer")
                         ) {
                             $('#txtdiscount').val(100);
