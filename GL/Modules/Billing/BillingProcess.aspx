@@ -8550,49 +8550,42 @@
                     <button type="button" style="width: auto;" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Add Test</h4>
                 </div>
-                <table style="margin-left: 60px;">
-                    <tr>
-                        <td>
-                             <div style="margin-top: 2px;">
+                <div style="margin-left: 60px;">
                     <h2>Main Tests Department : </h2>
                 </div>
-                        </td>
-                    </tr>
-                    </table>
-                <table  style="margin-left: 60px;">
-                    <tr>
-                        <td>
-                         <select id="ddlMainTestDepartment" tabindex="" onchange="LoadTestByDepartment()" autofocus="autofocus" style="width: 180px !important;">
-                                    <option value="">Select Department</option>
-                                </select>
-                        </td>
-                         <td style="width: 205px;">
-                             <span class="paper_help_note" tabindex="1" onFocus="document.querySelector('.autofocus2').focus()"></span>
-                            <select id="ddlTestList" class="paper_update autofocus1" tabindex="1" >
-                                </select>
-                             <div id="divRotation">
-                                    <select id="ddlRotation" style="display: none; width: 100px">
-                                    </select>
-                                </div>
-                                <div id="divX_Ray">
-                                    <select id="ddlXRayLF" style="display: none;width: 73px !important;margin-left: 101px;margin-top: -28px;height: 28px;">
-                                      <option value="0"></option>
-                                        <option value="L">Left</option>
-                                        <option value="R">Right</option>
-                                    </select>
-                                </div>
-                        </td>
-                         <td>
-                                <input type="button"  style="border: 3px solid white !important;height: 42px !important;" value="Add Test" tabindex="2" class="paper_update autofocus2 Faddbtn btn btn-primry" id="btnAddAllTest" onclick="AddAllTest()"/>
-                             <span class="paper_help_note" tabindex="2" onFocus="document.querySelector('.autofocus1').focus()"></span>
-                            </td>
-                    </tr>
-                    <tr>
-                    <td>Remarks:
-                            <input type="text" id="Remarks" tabindex="3" />
-                            </td>
-                        </tr>
-                </table>
+                <div class="row" style="margin-left: 45px; margin-right: 30px;">
+                    <div class="col-md-4">
+                        <select id="ddlMainTestDepartment" tabindex="" onchange="LoadTestByDepartment()" autofocus="autofocus" style="width: 180px !important;">
+                            <option value="">Select Department</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="paper_help_note" tabindex="1" onFocus="document.querySelector('.autofocus2').focus()"></span>
+                        <select id="ddlTestList" class="paper_update autofocus1" tabindex="1">
+                        </select>
+                        <div id="divRotation">
+                            <select id="ddlRotation" style="display: none; width: 100px">
+                            </select>
+                        </div>
+                        <div id="divX_Ray">
+                            <select id="ddlXRayLF" style="display: none;width: 73px !important;margin-left: 101px;margin-top: -28px;height: 28px;">
+                                <option value="0"></option>
+                                <option value="L">Left</option>
+                                <option value="R">Right</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="button" value="Add Test" tabindex="2" class="paper_update autofocus2 Faddbtn btn btn-primry" id="btnAddAllTest" onclick="AddAllTest()" />
+                        <span class="paper_help_note" tabindex="2" onFocus="document.querySelector('.autofocus1').focus()"></span>
+                    </div>
+                </div>
+                <div class="row" style="margin-left: 45px; margin-right: 30px; margin-top: 10px;">
+                    <div class="col-md-12">
+                        Remarks:
+                        <input type="text" id="Remarks" tabindex="3" />
+                    </div>
+                </div>
            
                  <div style="width: 742px; overflow: scroll; height: 250px !important; height: auto;margin-left: 60px;margin-top: 20px;">
                 <table class="table blank" style="width: 724px; height: 146px !important; height: auto; overflow: scroll;" id="tbltestModelTable">
@@ -8611,6 +8604,7 @@
                     </tbody>
                 </table>
             </div>
+             
              <div class="modal-footer">
                     <input type="button" class="btn btn-primry" style="width:14% !important" id="Button1" name="saveENT" value="Save" data-dismiss="modal" />
                 </div>
