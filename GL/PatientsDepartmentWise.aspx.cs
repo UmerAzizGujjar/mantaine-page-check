@@ -1226,6 +1226,26 @@ namespace PMS
                     MRDiv.Visible = true;
                     lblMRNo.Visible = true;
                     txtMRNo.Visible = true;
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
                 }
 
                 //Pharmacy Cash Report Summary
@@ -7672,6 +7692,7 @@ namespace PMS
                     ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlTestName.DataBind();
                     SetDepartent();
+
                 }
                 //else if (PageTitle == "Patient_Trans_Detail")
                 //{

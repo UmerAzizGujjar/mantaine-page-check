@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="AsSiraat(10June26)" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="National_Hospital" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Ar_Customers" Member="Ar_Customers">
     <Type Name="Ar_Customer">
       <Column Name="Customer_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -2620,27 +2620,6 @@
       <Column Name="File_Type" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
       <Column Name="File_Path" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="IsNotificationViewed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Sys_Approval_Logs" Member="Sys_Approval_Logs">
-    <Type Name="Sys_Approval_Log">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Approval_Template_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Approval_Stage_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Entry_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Form_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="From_Name" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="IsFinalAprroval" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Entry_Status" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Approve_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Approve_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="IsRejected" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Rejected_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Rejected_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Approval_Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="Rejection_Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.OutPatients_Protos" Member="OutPatients_Protos">
@@ -7968,6 +7947,28 @@
       <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_UsersInRoles" ThisKey="UserId" OtherKey="UserId" Type="aspnet_UsersInRole" />
       <Association Name="aspnet_User_aspnet_Membership" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" Cardinality="One" />
       <Association Name="aspnet_Application_aspnet_User" Member="aspnet_Application" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Application" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Sys_Approval_Logs" Member="Sys_Approval_Logs">
+    <Type Name="Sys_Approval_Log">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Approval_Template_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Approval_Stage_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Entry_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Form_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="From_Name" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IsFinalAprroval" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Entry_Status" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Approve_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Approve_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsRejected" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Rejected_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Rejected_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Approval_Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Rejection_Remarks" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Is_ByPassed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetDataValueName" Method="GetDataValueName" IsComposable="true">
