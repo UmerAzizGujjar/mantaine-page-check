@@ -366,6 +366,7 @@
     <Content Include="Modules\Dashboards\DashPatientsCountertoClinic.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
     <Content Include="Modules\Dashboards\InventorySection.aspx" />
+    <Content Include="Modules\Dashboards\LaboratoryTimeSlab.aspx" />
     <Content Include="Modules\Dashboards\OPD_Utilization_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\Inventory_ProcurementDashboard.aspx" />
     <Content Include="Modules\Dashboards\Inventory_Dashboard.aspx" />
@@ -3202,6 +3203,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\InventorySection.aspx.designer.cs">
       <DependentUpon>InventorySection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\LaboratoryTimeSlab.aspx.cs">
+      <DependentUpon>LaboratoryTimeSlab.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\LaboratoryTimeSlab.aspx.designer.cs">
+      <DependentUpon>LaboratoryTimeSlab.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\OPD_Utilization_Dashboard.aspx.cs">
       <DependentUpon>OPD_Utilization_Dashboard.aspx</DependentUpon>

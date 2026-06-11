@@ -4863,13 +4863,6 @@ namespace PMS
             return ((ISingleResult<sp_GetDialysisPatientCountsResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetProcedureCounts")]
-        public ISingleResult<sp_GetProcedureCountsResult> sp_GetProcedureCounts([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
-            return ((ISingleResult<sp_GetProcedureCountsResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetReferCount")]
         public ISingleResult<sp_GetReferCountResult> sp_GetReferCount([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "DateTime")] System.Nullable<System.DateTime> startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "DateTime")] System.Nullable<System.DateTime> endDate)
         {
@@ -5626,6 +5619,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), bill_Id, item_Id);
             return ((ISingleResult<spMedicineReturnfromIPDDetailsResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetProcedureCounts")]
+        public ISingleResult<sp_GetProcedureCountsResult> sp_GetProcedureCounts([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
+            return ((ISingleResult<sp_GetProcedureCountsResult>)(result.ReturnValue));
         }
     }
 
@@ -194591,50 +194591,6 @@ namespace PMS
         }
     }
 
-    public partial class sp_GetProcedureCountsResult
-    {
-
-        private string _Item_Name;
-
-        private System.Nullable<int> _TotalCount;
-
-        public sp_GetProcedureCountsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(200)")]
-        public string Item_Name
-        {
-            get
-            {
-                return this._Item_Name;
-            }
-            set
-            {
-                if ((this._Item_Name != value))
-                {
-                    this._Item_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Int")]
-        public System.Nullable<int> TotalCount
-        {
-            get
-            {
-                return this._TotalCount;
-            }
-            set
-            {
-                if ((this._TotalCount != value))
-                {
-                    this._TotalCount = value;
-                }
-            }
-        }
-    }
-
     public partial class sp_GetReferCountResult
     {
 
@@ -233838,6 +233794,50 @@ namespace PMS
                 if ((this._CGSRate != value))
                 {
                     this._CGSRate = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetProcedureCountsResult
+    {
+
+        private string _Item_Name;
+
+        private System.Nullable<decimal> _TotalCount;
+
+        public sp_GetProcedureCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(200)")]
+        public string Item_Name
+        {
+            get
+            {
+                return this._Item_Name;
+            }
+            set
+            {
+                if ((this._Item_Name != value))
+                {
+                    this._Item_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Decimal(38,2)")]
+        public System.Nullable<decimal> TotalCount
+        {
+            get
+            {
+                return this._TotalCount;
+            }
+            set
+            {
+                if ((this._TotalCount != value))
+                {
+                    this._TotalCount = value;
                 }
             }
         }

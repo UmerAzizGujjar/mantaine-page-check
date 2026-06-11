@@ -9714,14 +9714,6 @@
       <Column Name="Active" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_GetProcedureCounts" Method="sp_GetProcedureCounts">
-    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
-    <ElementType Name="sp_GetProcedureCountsResult">
-      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="TotalCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_GetReferCount" Method="sp_GetReferCount">
     <Parameter Name="StartDate" Parameter="startDate" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="EndDate" Parameter="endDate" Type="System.DateTime" DbType="DateTime" />
@@ -12468,6 +12460,14 @@
       <Column Name="Net_Amount" Type="System.Decimal" DbType="Decimal(18,4) NOT NULL" CanBeNull="false" />
       <Column Name="Total_Stock" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_GetProcedureCounts" Method="sp_GetProcedureCounts">
+    <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="sp_GetProcedureCountsResult">
+      <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="TotalCount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
