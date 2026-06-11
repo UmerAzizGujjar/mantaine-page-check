@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ItemSelection.aspx.cs" Inherits="PMS.Modules.Inventory.ItemSelection" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
     <script type="text/javascript">
         let currentSelectionID = 0;
@@ -832,7 +832,258 @@ function loadGRNDropdownForEdit(grnId) {
             $('#btnGenerateBarcodes').click(generateBarcodes);
             $('#btnPrintBarcodes').click(printBarcodes);
             //$('#btnReset').click(resetForm);
+
+            $('#btnPrintWithBarcode').hide();
         });
+
+
+
+
+
+
+        function updatePrintWithBarcodeButton() {
+            const selectedCheckboxes = $('#barcodesTable tbody .chkBarcodeRow:checked');
+            if (selectedCheckboxes.length > 0) {
+                $('#btnPrintWithBarcode').show();
+            } else {
+                $('#btnPrintWithBarcode').hide();
+            }
+        }
+
+        function printWithRealBarcode() {
+            const selectedIds = [];
+            const selectedBarcodes = [];
+
+            $('#barcodesTable tbody .chkBarcodeRow:checked').each(function () {
+                const barcodeId = $(this).val();
+                const row = $(`#barcodesTable tbody tr[data-barcode-id="${barcodeId}"]`);
+
+                selectedIds.push(barcodeId);
+                selectedBarcodes.push({
+                    barcodeId: barcodeId,
+                    barcodeNumber: row.find('code').text().trim(),
+                    itemCode: row.find('td:eq(3)').text().trim(),
+                    itemName: row.find('td:eq(4)').text().trim(),
+                    serialNumber: row.find('td:eq(5) .badge').text().trim(),
+                    quantity: row.find('td:eq(6) .badge').text().trim()
+                });
+            });
+
+            if (selectedIds.length === 0) {
+                showToast('Please select at least one barcode to print', 'warning');
+                return;
+            }
+
+            
+            const printWindow = window.open('', '_blank', 'width=400,height=800');
+            printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Print Barcodes</title>
+            <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script>
+            <style>
+                @media print {
+                    @page {
+                        size: 4in 6in;
+                        margin: 5mm;
+                    }
+                    body { 
+                        margin: 0; 
+                        padding: 0; 
+                    }
+                    .no-print {
+                        display: none;
+                    }
+                }
+                
+                * { 
+                    margin: 0; 
+                    padding: 0; 
+                    box-sizing: border-box; 
+                }
+                
+                body { 
+                    font-family: 'Segoe UI', Arial, sans-serif; 
+                    padding: 10px;
+                    background: #f5f5f5;
+                }
+                
+                .barcode-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                    margin-top: 10px;
+                }
+                
+                .barcode-card {
+                    background: white;
+                    border: 2px solid #333;
+                    border-radius: 5px;
+                    padding: 15px;
+                    text-align: center;
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                    width: 100%;
+                    max-width: 350px;
+                    margin: 0 auto;
+                }
+                
+                .barcode-item-code {
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #000;
+                    margin-bottom: 8px;
+                    padding-bottom: 8px;
+                    border-bottom: 1px solid #ddd;
+                }
+                
+                .barcode-item-name {
+                    font-size: 14px;
+                    color: #333;
+                    margin-bottom: 5px;
+                }
+                
+                .barcode-serial {
+                    font-size: 12px;
+                    color: #666;
+                    margin-bottom: 15px;
+                }
+                
+                .barcode-svg-container {
+                    margin: 15px 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                
+                .barcode-number {
+                    font-family: 'Courier New', monospace;
+                    font-size: 16px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    margin-top: 10px;
+                    color: #000;
+                    padding: 5px;
+                    background: #f9f9f9;
+                    border-radius: 3px;
+                }
+                
+                .barcode-footer {
+                    margin-top: 10px;
+                    padding-top: 8px;
+                    border-top: 1px solid #eee;
+                    font-size: 10px;
+                    color: #999;
+                }
+                
+                .print-btn {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    padding: 12px 25px;
+                    background: #667eea;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    z-index: 1000;
+                }
+                
+                .print-btn:hover {
+                    background: #5568d3;
+                }
+                
+                @media print {
+                    .print-btn {
+                        display: none;
+                    }
+                    body {
+                        background: white;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="barcode-container" id="barcodeContainer">
+                ${selectedBarcodes.map((bc, index) => `
+                    <div class="barcode-card">
+                        <div class="barcode-item-code">${bc.itemCode}</div>
+                        <div class="barcode-item-name">${bc.itemName}</div>
+                        <div class="barcode-serial">S/N: ${bc.serialNumber} | Qty: ${bc.quantity}</div>
+                        <div class="barcode-svg-container">
+                            <svg class="barcode-${index}"
+                                 jsbarcode-format="CODE128"
+                                 jsbarcode-value="${bc.barcodeNumber}"
+                                 jsbarcode-textposition="bottom"
+                                 jsbarcode-width="2"
+                                 jsbarcode-height="50"
+                                 jsbarcode-displayValue="false"
+                                 jsbarcode-margin="0">
+                            </svg>
+                        </div>
+                        <div class="barcode-number">${bc.barcodeNumber}</div>
+                        <div class="barcode-footer">
+                            ${new Date().toLocaleString('en-PK')}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <button class="print-btn no-print" onclick="window.print();">
+                <i class="fa fa-print"></i> Print
+            </button>
+            
+            <script>
+                // Initialize all barcodes
+                window.onload = function() {
+                    try {
+                        ${selectedBarcodes.map((bc, index) => `
+                            JsBarcode(".barcode-${index}").init();
+                        `).join('')}
+                        
+                        // Auto-trigger print dialog
+                        setTimeout(function() {
+                            if (confirm('Barcodes ready! Click OK to print.')) {
+                                window.print();
+                            }
+                        }, 500);
+                    } catch(e) {
+                        console.error('Error generating barcodes:', e);
+                        alert('Error: ' + e.message);
+                    }
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
+            printWindow.document.close();
+
+            showToast(`${selectedBarcodes.length} barcode(s) ready for printing`, 'success');
+        }
+
+        
+        function bindBarcodeCheckboxEvents(tableInstance) {
+            $('#chkSelectAllBarcodes').off('change').on('change', function () {
+                const isChecked = $(this).prop('checked');
+                if (tableInstance && $.fn.DataTable.isDataTable('#barcodesTable')) {
+                    tableInstance.rows().nodes().to$().find('.chkBarcodeRow').prop('checked', isChecked);
+                } else {
+                    $('#barcodesTable tbody .chkBarcodeRow').prop('checked', isChecked);
+                }
+                updatePrintWithBarcodeButton();
+            });
+
+            $(document).off('change', '.chkBarcodeRow').on('change', '.chkBarcodeRow', function () {
+                const totalRows = $('#barcodesTable tbody .chkBarcodeRow').length;
+                const checkedRows = $('#barcodesTable tbody .chkBarcodeRow:checked').length;
+                $('#chkSelectAllBarcodes').prop('checked', checkedRows === totalRows && totalRows > 0);
+                $('#chkSelectAllBarcodes').prop('indeterminate', checkedRows > 0 && checkedRows < totalRows);
+                updatePrintWithBarcodeButton();
+            });
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -920,6 +1171,9 @@ function loadGRNDropdownForEdit(grnId) {
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <input type="button" id="btnlist" class="btn btn-primry" value="LIST VIEW" onclick="window.location.href='ItemSelectionList.aspx';" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" id="btnPrintWithBarcode" class="btn btn-primry" value="PRINT WITH BARCODE" onclick="printWithRealBarcode();" style="display: none;" />
                     </div>
                 </div>
             </div>
