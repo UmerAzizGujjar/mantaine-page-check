@@ -27,11 +27,18 @@
             // 2. Initialize Time Picker
             // Note: Standard jQuery UI doesn't have a timepicker. 
             // This assumes you have a plugin like 'jquery-timepicker' included in your Site.Master
-            $('#txtBirthTime').ptTimeSelect({
-                onClose: function () {
-                    $('#txtBirthTime').focus();
+            $('#txtBirthTime').ptTimeSelect();
+
+            $(document).on('mousedown', function (e) {
+                var $popup = $('.ui-timepicker-div, .ptTimeSelectContainer');
+                var $input = $('#txtBirthTime');
+                if ($popup.length && !$popup.is(e.target) && $popup.has(e.target).length === 0 && !$input.is(e.target)) {
+                    $input.blur();
+                    $popup.remove();
                 }
             });
+
+
 
             $('#txt_cnic').attr('placeholder', '_____-_______-_');
             $('#txt_Othercnic').attr('placeholder', '_____-_______-_');
@@ -1117,18 +1124,21 @@
                     }
 
                     // Success
+                    var savedId = response;
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
                         text: 'Data Successfully Saved',
                         showConfirmButton: false,
-                        timer: 2500
+                        timer: 1500
                     });
 
                     $('#btnsave').val("Update");
 
-                    // Saved ID
-                    console.log("Saved ID:", response);
+                    setTimeout(function () {
+                        window.location.href = 'Birthcertificate.aspx?BC_ID=' + savedId;
+                    }, 1600);
 
                 },
 

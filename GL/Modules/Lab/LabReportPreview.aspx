@@ -2887,7 +2887,7 @@
         </div>
         <div class="row">
              <div class="col-lg-6 col-md-3 sm-6" id="Resultlist">
-     <h1>Radiology Patients List </h1>
+     <h1>Pending Approval List </h1>
      <div class="row" style="overflow: scroll; height: 500px;">
          <table class="table test-table" id="tbl_Result" style="overflow: scroll; height: 500px;">
              <thead>

@@ -415,7 +415,47 @@
 
             });
         }
+        // Function to auto-load bill when opened from BillingProcessView
+        function AutoLoadBill(billNo, billId) {
+            debugger;
+            // Set the MR No / Bill No token input
+            if ($('#txtMRNo').length) {
+                // Try to set the token input value
+                var tokenInput = $('#txtMRNo');
 
+                // If token input exists, try to add the bill
+                if (tokenInput.tokenInput) {
+                    // Get bill details from server
+                    $.ajax({
+                        type: "POST",
+                        url: "Receipts.aspx/GetBillByNumber",
+                        data: JSON.stringify({ billNo: billNo, billId: billId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.d && response.d !== '') {
+                                var billData = JSON.parse(response.d);
+                                if (billData && billData.id) {
+                                    tokenInput.tokenInput("add", {
+                                        id: billData.id,
+                                        name: billData.name,
+                                        type: billData.type
+                                    });
+                                }
+                            }
+                        },
+                        error: function (err) {
+                            console.error("Error loading bill:", err);
+                        }
+                    });
+                } else {
+                    // If not using token input, just set the value
+                    tokenInput.val(billNo);
+                    // Trigger change event to load bill details
+                    tokenInput.trigger('change');
+                }
+            }
+        }
 
 
         function test_skill(Amount) {

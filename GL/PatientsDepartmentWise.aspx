@@ -306,6 +306,7 @@
                     }
                     else if (rptTitle == "YearlyPharmacyOverallSummary") {
                         debugger;
+                        var exporttopdf = document.getElementById('<%= chkExportPDF.ClientID %>').checked;
                         $('#<%= YearDiv.ClientID %>').show();
                         $('#<%= DateDiv.ClientID %>').hide();
                         $('#<%= Time_Row.ClientID %>').hide();
@@ -315,7 +316,7 @@
                             alert('Please select a year');
                             return;
                         }
-                        var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
+                        var url = 'ReportViewer.aspx?ReportName=YearlyPharmacyOverallSummaryReport&ReportTitle=Pharmacy Overall Summary Report FY' + '&Year=' + selectedYear + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val() + '&ExportPDF=' + exporttopdf;
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "SAR") {

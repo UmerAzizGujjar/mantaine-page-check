@@ -3683,13 +3683,17 @@
                     <label>Patient Name</label>
                     <input type="text" id="txtPatientName" class="form-control" readonly="readonly" style="font-weight: bold;" />
                 </div>
-                <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="col-sm-12 col-md-4 col-lg-2">
+                    <label id="LblCustomerName">Walk-in Customer:</label>
+                    <input type="text" id="CustomerName" tabindex="2" autocomplete="off" class="form-control" />
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-2">
                     <label>Referred By:</label>
                     <select class="form-control" tabindex="3" id="ddlDoctor">
                         <option></option>
                     </select>
                 </div>
-                <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="col-sm-6 col-md-4 col-lg-2">
                     <label id="lblDepartment">Department:</label>
                     <select class="form-control depName" tabindex="4" id="ddlDepartment">
                         <option></option>
@@ -3776,17 +3780,10 @@
                --%>
             </div>
 
-            <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%;display:none">
-    <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
-</div>
-            
-            <div class="row">
-                
-                <div class="col-sm-12 col-md-4 col-lg-3">
-    <label id="LblCustomerName">Walk-in Customer:</label>
-    <input type="text" id="CustomerName" tabindex="2" autocomplete="off" class="form-control" />
-</div>
+            <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%; display: none">
+                <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
             </div>
+            
             <!-- Checkboxes and Radio Buttons -->
             <div class="row mb-3 align-items-center" style="margin-top: 1%; margin-bottom: 1%">
                 <div class="col-lg-1 col-md-4 col-sm-6">

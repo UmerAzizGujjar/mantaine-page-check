@@ -894,8 +894,8 @@ namespace PMS.Modules.Inventory
         private static string GenerateUniqueBarcode(int selectionId, int detailId, int serialNumber)
         {
             Random random = new Random();
-            int randomNum = random.Next(1000, 9999);
-            return $"BC-{selectionId}-{detailId}-{serialNumber}-{randomNum}";
+            int randomNum = random.Next(1, 100);  
+            return $"{detailId}-{serialNumber}-{randomNum}";
         }
 
         private static Guid GetCurrentUserId(DataBaseDataContext db)
