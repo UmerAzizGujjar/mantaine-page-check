@@ -2768,27 +2768,83 @@
         var ItemCode;
         var Opd_ID;
         var pat_id;
-        function LoadTokenInputsDefaultMRNo() {
-            debugger;
+        //function LoadTokenInputsDefaultMRNo() {
+        //    debugger;
 
-            $("#txtMRNo").tokenInput("../../json.aspx?Table=PatientsForPharmacy", {
-                tokenLimit: 1,
-                onAdd: function (item) {
-                    debugger;
-                    try {
-                        pat_id = item.id;
-                        /*  LoadPriscription();*/
-                        out_Patient_Id = pat_id
-                        getOPDID(pat_id);
-                        getIPDID(pat_id);
-                        getOPDandIPDNO(pat_id)
+        //    $("#txtMRNo").tokenInput("../../json.aspx?Table=PatientsForPharmacy", {
+        //        tokenLimit: 1,
+        //        onAdd: function (item) {
+        //            debugger;
+        //            try {
+        //                pat_id = item.id;
+        //                /*  LoadPriscription();*/
+        //                out_Patient_Id = pat_id
+        //                getOPDID(pat_id);
+        //                getIPDID(pat_id);
+        //                getOPDandIPDNO(pat_id)
 
-                    } catch (err) {
-                        alert(err.message);
-                    }
-                }
-            });
-        }
+        //            } catch (err) {
+        //                alert(err.message);
+        //            }
+        //        }
+        //    });
+         //}
+         function LoadTokenInputsDefaultMRNo() {
+             debugger;
+             $("#txtMRNo").tokenInput("../../json.aspx?Table=PatientsForPharmacy", {
+                 tokenLimit: 1,
+                 onAdd: function (item) {
+                     debugger;
+                     try {
+                         pat_id = item.id;
+                         out_Patient_Id = pat_id;
+                         getOPDandIPDNO(pat_id);
+                         $('#lblPatientName').text('');
+                         $.ajax({
+                             type: "POST",
+                             url: "IssueCathLabItems.aspx/GetPatientFullDetails",
+                             data: JSON.stringify({ pat_id: pat_id }),
+                             contentType: "application/json; charset=utf-8",
+                             dataType: "json",
+                             success: function (response) {
+                                 debugger;
+                                 var data = response.d ? JSON.parse(response.d) : response;
+
+                                 if (data) {
+                                     $('#txtPatientName').val(data.PatientName || "");
+
+                                     if (data.DoctorID) {
+                                         $('#ddlDoctor').val(data.DoctorID).trigger('change');
+                                     }
+
+                                     if (data.Department) {
+                                         $('#ddlDepartment').val(data.Department).trigger('change');
+                                     }
+
+                                     $('#Ward_Name').val(data.WardName || "");
+
+                                     $('#BedName').val(data.BedNo || "");
+
+                                     $('#txtPatientType').val(data.DiscountType || "");
+
+                                     if (data.Type === 'IPD') {
+                                         $("#txtTransType").val('IPD Patient');
+                                     } else if (data.Type === 'OPD') {
+                                         $("#txtTransType").val('OPD Patient');
+                                     }
+                                 }
+                             },
+                             error: function (xhr, status, error) {
+                                 console.error("Error loading patient details:", error);
+                             }
+                         });
+
+                     } catch (err) {
+                         alert(err.message);
+                     }
+                 }
+             });
+         }
         var opdId;
         function getOPDID(pat_id) {
             debugger;
@@ -3619,20 +3675,25 @@
                     <label>MR No:</label>
                     <input type="hidden" id="hdPatientID" />
                     <input type="hidden" id="hdndiscountType" />
-                    <input type="text" id="txtMRNo" tabindex="1" class="form-control" />
+                    <input type="text" id="txtMRNo" tabindex="1" class="form-control" />                    
                     <input type="text" id="txtTransType" style="display: none" tabindex="1" class="form-control" />
                 </div>
-                <div class="col-sm-12 col-md-4 col-lg-3">
+                
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label>Patient Name</label>
+                    <input type="text" id="txtPatientName" class="form-control" readonly="readonly" style="font-weight: bold;" />
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-2">
                     <label id="LblCustomerName">Walk-in Customer:</label>
                     <input type="text" id="CustomerName" tabindex="2" autocomplete="off" class="form-control" />
                 </div>
-                <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="col-sm-12 col-md-4 col-lg-2">
                     <label>Referred By:</label>
                     <select class="form-control" tabindex="3" id="ddlDoctor">
                         <option></option>
                     </select>
                 </div>
-                <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="col-sm-6 col-md-4 col-lg-2">
                     <label id="lblDepartment">Department:</label>
                     <select class="form-control depName" tabindex="4" id="ddlDepartment">
                         <option></option>
@@ -3719,10 +3780,10 @@
                --%>
             </div>
 
-            <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%;display:none">
-    <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
-</div>
-
+            <div class="col-lg-1 col-sm-3 col-md-1 text-center" style="margin-top: 2%; margin-left: -5%; display: none">
+                <input type="checkbox" id="chkbatch" tabindex="8" onchange="loadmed();" />
+            </div>
+            
             <!-- Checkboxes and Radio Buttons -->
             <div class="row mb-3 align-items-center" style="margin-top: 1%; margin-bottom: 1%">
                 <div class="col-lg-1 col-md-4 col-sm-6">

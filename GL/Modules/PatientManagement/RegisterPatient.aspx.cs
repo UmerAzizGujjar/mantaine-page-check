@@ -191,7 +191,19 @@ namespace PMS.Modules.PatientManagement
                 return "*****-" + cnic.Substring(6, 7) + "-*";
             return "*****-*******-*";
         }
+        [WebMethod]
+        public static string checkRightsForRefund()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.AllowRegisterRefund).FirstOrDefault();
 
+            // If null, return false (0)
+            bool result = ups.HasValue ? ups.Value : false;
+
+            return (new JavaScriptSerializer()).Serialize(result);
+        }
         [WebMethod]
         public static string GetGender()
         {
@@ -631,25 +643,6 @@ namespace PMS.Modules.PatientManagement
                 return "0";
             }
         }
-        [WebMethod]
-        public static string AllowRefund()
-        {
-            try
-            {
-                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
-                {
-                    var linedisc = (from tbl in db.sys_Parms
-                                    where tbl.Name == "Refund Card"
-                                    select tbl.Code)
-                              .FirstOrDefault();
-
-                    return linedisc ?? "01";
-                }
-            }
-            catch (Exception ex)
-            {
-                return "0";
-            }
-        }
+        
     }
 }

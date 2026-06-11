@@ -1,4 +1,5 @@
-﻿using PMS.Modules.PatientManagement;
+﻿using Newtonsoft.Json;
+using PMS.Modules.PatientManagement;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -36,6 +37,16 @@ namespace PMS
             var ups = (from St in db.aspnet_Users
                        where St.UserName == AppConfig.UserName
                        select St.AllowSaleReturn).FirstOrDefault();
+
+            return (new JavaScriptSerializer()).Serialize(ups);
+        }
+        [WebMethod]
+        public static string CheckSaleReturnQueue()
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+            var ups = (from St in db.aspnet_Users
+                       where St.UserName == AppConfig.UserName
+                       select St.Allow_Return_Queue).FirstOrDefault();
 
             return (new JavaScriptSerializer()).Serialize(ups);
         }
@@ -494,6 +505,166 @@ namespace PMS
             }
             return result;
         }
+        [WebMethod]
+        public static string GetReturnMedicineDetail(int Bill_Id, int Item_Id)
+        {
+            string result = string.Empty;
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = db.spMedicineReturnfromIPDDetails(Bill_Id, Item_Id).ToList();
+                result = (new JavaScriptSerializer()).Serialize(query).ToString();
+            }
+            return result;
+        }
+        [WebMethod]
+        public static string GetReturnMedicine(int Bill_Id)
+        {
+            string result = string.Empty;
+            DataBaseDataContext db = new DataBaseDataContext();
+            var billdetails = (from i in db.Ar_Billings
+                               where i.Bill_ID == Bill_Id && (i.isCancel == false || i.isCancel == null)
+                               select new
+                               {
+                                   i.Bill_No,
+                                   i.Patient_ID,
+                                   i.Ware_House,
+                                   i.Bill_ID
+
+                               }).ToList();
+            if (billdetails != null)
+            {
+                result = (new JavaScriptSerializer()).Serialize(billdetails);
+            }
+            return result;
+        }
+
+        [WebMethod]
+        public static string ReturnPatients(string SearchString)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var query = from ipm in db.In_Patient_Medicines
+                            join ipd in db.In_Patients
+                                on ipm.Patient_ID equals ipd.In_Patient_ID
+
+                            join rp in db.Reg_patients
+                                on ipd.Patient_ID equals rp.pat_id
+
+                            join ab in db.Ar_Billings
+                                on ipd.In_Patient_ID equals ab.In_Patient_ID into abGroup
+                            from ab in abGroup.DefaultIfEmpty()
+
+                            join abd in db.Ar_Billing_Details
+                                on ab.Bill_ID equals abd.Bill_ID into abdGroup
+                            from abd in abdGroup.DefaultIfEmpty()
+
+                            join wd in db.Ward_Definitions
+                                on ipd.Ward_ID equals wd.Ward_ID into wdGroup
+                            from wd in wdGroup.DefaultIfEmpty()
+
+                            where (ipm.Rtn_Qty ?? 0) > 0
+                                  && ipm.Transaction_Type == "InPatient"
+
+                                  // ✅ NOT EXISTS equivalent
+                                  && !db.Pharmacy_SaleReturns
+                                        .Join(db.Pharmacy_SaleReturn_Details,
+                                              pr => pr.Return_ID,
+                                              prd => prd.Return_ID,
+                                              (pr, prd) => new { pr, prd })
+                                        .Any(x =>
+                                            x.pr.Patient_id == ipd.Patient_ID
+                                            && x.prd.Item_ID == Convert.ToInt32(ipm.Item_Code)
+                                            && x.prd.Qty == ipm.Rtn_Qty
+                                        )
+
+                                  // ✅ SEARCH FILTER
+                                  && (
+                                        string.IsNullOrEmpty(SearchString)
+                                        || rp.Full_Name.Contains(SearchString)
+                                        || rp.Father_Name.Contains(SearchString)
+                                        || ab.Bill_No.Contains(SearchString)
+                                        || abd.Item_Name.Contains(SearchString)
+                                        || rp.pat_id.ToString().Contains(SearchString)
+                                        || rp.mr_no_sequence.ToString().Contains(SearchString)
+                                  )
+
+                            select new
+                            {
+                                ipm.In_Patient_Medicine_ID,
+                                ipm.Item_Code,
+                                ipd.In_Patient_ID,
+                                rp.pat_id,
+                                rp.Full_Name,
+                                rp.Father_Name,
+                                ab.Bill_ID,
+                                ab.Bill_No,
+                                abd.Bill_Details_ID,
+                                abd.Item_Name,
+                                rp.mr_no_sequence,
+                                ab.Invoice_Date,
+                                ab.Seq_InvoiceNo,
+                                Ward_Name = wd.Ward_Type,
+                                ipd.Bed_No
+                            };
+
+                return JsonConvert.SerializeObject(query.ToList());
+            }
+        }
+        //[WebMethod]
+        //public static string ReturnPatients(string SearchString)
+        //{
+        //    using (DataBaseDataContext db = new DataBaseDataContext())
+        //    {
+        //        var query = from ipm in db.In_Patient_Medicines
+        //                    join ipd in db.In_Patients
+        //                        on ipm.Patient_ID equals ipd.In_Patient_ID
+
+        //                    join rp in db.Reg_patients
+        //                        on ipd.Patient_ID equals rp.pat_id
+
+        //                    join ab in db.Ar_Billings
+        //                        on ipd.In_Patient_ID equals ab.In_Patient_ID into abGroup
+        //                    from ab in abGroup.DefaultIfEmpty()
+
+        //                    join abd in db.Ar_Billing_Details
+        //                        on ab.Bill_ID equals abd.Bill_ID into abdGroup
+        //                    from abd in abdGroup.DefaultIfEmpty()
+
+        //                    where (ipm.Rtn_Qty ?? 0) > 0
+        //                          && ipm.Transaction_Type == "InPatient"
+        //                          && ipm.Item_Code ==Convert.ToString( abd.Item_ID)
+        //                          && (
+        //                                string.IsNullOrEmpty(SearchString)
+        //                                || rp.Full_Name.Contains(SearchString)
+        //                                || rp.Father_Name.Contains(SearchString)
+        //                                || ab.Bill_No.Contains(SearchString)
+        //                                || abd.Item_Name.Contains(SearchString)
+        //                                || rp.pat_id.ToString().Contains(SearchString)
+        //                                || rp.mr_no_sequence.ToString().Contains(SearchString)
+        //                             )
+
+        //                    select new
+        //                    {
+        //                        ipm.In_Patient_Medicine_ID,
+        //                        ipm.Item_Code,
+        //                        ipd.In_Patient_ID,
+        //                        rp.pat_id,
+        //                        rp.Full_Name,
+        //                        rp.Father_Name,
+        //                        ab.Bill_ID,
+        //                        ab.Bill_No,
+        //                        abd.Bill_Details_ID,
+        //                        abd.Item_Name,
+        //                        rp.mr_no_sequence,
+        //                        ab.Invoice_Date,
+        //                        ab.Seq_InvoiceNo,
+        //                        Ward_Name = (from w in db.Ward_Definitions where w.Ward_ID == ipd.Ward_ID select w.Ward_Type).FirstOrDefault(),
+        //                        ipd.Bed_No
+        //                    };
+
+        //        return JsonConvert.SerializeObject(query.ToList());
+        //    }
+        //}
         [WebMethod]
         public static string RejectMedicineRequest(string MedicineId)
         {

@@ -1405,5 +1405,67 @@ namespace PMS.Modules.Billing
             public decimal CGSAmount { get; set; }
             public string LineDiscount { get; set; }
         }
+
+        [WebMethod]
+        public static string GetPatientFullDetails(int pat_id)
+        {
+            DataBaseDataContext db = new DataBaseDataContext();
+
+            
+            var ipdData = (from ip in db.In_Patients
+                           join reg in db.Reg_patients on ip.Patient_ID equals reg.pat_id
+                           where ip.Patient_ID == pat_id && (ip.Discharge == false || ip.Discharge == null)
+                           orderby ip.Created_Time descending
+                           select new
+                           {
+                               Type = "IPD",
+                               PatientName = reg.Full_Name, 
+                               DoctorID = ip.Doctor,
+                               Department = ip.Department,
+                               WardName = (from w in db.Ward_Definitions where w.Ward_ID == ip.Ward_ID select w.Ward_Type).FirstOrDefault(),
+                               BedNo = ip.Bed_No,
+                               DiscountType = db.GetDataValueName("Patient Type", ip.Patient_Discount_Type),
+                               PanelCompany = ip.Panel_Company
+                           }).FirstOrDefault();
+
+            if (ipdData != null)
+            {
+                return new JavaScriptSerializer().Serialize(ipdData);
+            }
+
+            var opdData = (from op in db.Out_Patients
+                           join reg in db.Reg_patients on op.Reg_PatId equals reg.pat_id
+                           where op.Reg_PatId == pat_id && (op.Discharge == false || op.Discharge == null)
+                           orderby op.Created_Time descending
+                           select new
+                           {
+                               Type = "OPD",
+                               PatientName = reg.Full_Name, 
+                               DoctorID = op.Doctor_ID,
+                               Department = reg.filter_clinic, 
+                               WardName = "",
+                               BedNo = "",
+                               DiscountType = "",
+                               PanelCompany = ""
+                           }).FirstOrDefault();
+
+            if (opdData != null)
+            {
+                return new JavaScriptSerializer().Serialize(opdData);
+            }
+
+            // 3. Return empty object if nothing found
+            return new JavaScriptSerializer().Serialize(new
+            {
+                Type = "",
+                PatientName = "",
+                DoctorID = 0,
+                Department = "",
+                WardName = "",
+                BedNo = "",
+                DiscountType = "",
+                PanelCompany = ""
+            });
+        }
     }
 }

@@ -175,6 +175,7 @@ namespace PMS
                         accountDiv.Visible = false;
                         DateDiv.Visible = false;
                         warehouseDiv.Visible = true;
+                        tr_Export.Visible = true;
 
                         object valuset = DBClass.GetValueSet("Ware house");
                         ddlWarehouse.DataSource = valuset;
@@ -267,7 +268,7 @@ namespace PMS
                     query = "ReportName=Pharmacy_Stock_Consumption_Details&ReportTitle=Stock Consumption Detail From" + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Stock=" + ddlStock.SelectedValue + "";
                     break;
                 case "SIHBW":
-                    query = "ReportName=PharmacyStockBatchWise&ReportTitle=Stock In Hand  From" + "&Stock=" + ddlStock.SelectedValue + "" + "&WareHouse=" + ddlWarehouse.SelectedValue;   //  excluded + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text 
+                    query = "ReportName=PharmacyStockBatchWise&ReportTitle=Stock In Hand  From" + "&Stock=" + ddlStock.SelectedValue + "" + "&WareHouse=" + ddlWarehouse.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;   //  excluded + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text 
                     break;
                 //case "Ledger":
                 //    query = "ReportName=Ledger1&ReportTitle=Account ledger from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Account_ID=" + txtAccount_ID.Text.Trim() + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&DeptID=" + ddlVendor.SelectedValue;
