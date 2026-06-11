@@ -7650,6 +7650,7 @@ namespace PMS
                     ddlTestName.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlTestName.DataBind();
                     SetDepartent();
+
                 }
                 //else if (PageTitle == "Patient_Trans_Detail")
                 //{
