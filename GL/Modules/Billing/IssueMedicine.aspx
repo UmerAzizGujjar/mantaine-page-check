@@ -763,6 +763,10 @@
                     debugger;
                     $('#txtRStock' + counter).val(stock);
                     $('#txtRCGSRate' + counter).val(CGSRate);
+                    $('#txtRSalerate' + counter).val(rate);
+                    // Update the rate in the correct cell
+                    $(row).find('td input[name="txtRSalerate"]').val(rate);
+                    // $(row).find('td:eq(7)').text(rate);
                 },
                 error: function (xhr, status, error) {
                     console.log("Error fetching stock: " + error);
@@ -3053,13 +3057,7 @@
                 console.log(err);
             });
         }
-        function AddSaleReturnInvoiceMaster() {
-            debugger
-         
-   
-            
 
-        }
         function LoadReturnMedicine(Bill_Id, Item_Id) {
             $('#SaleReturnModal').modal('show');
             $('#ReturnqueueModal').modal('hide');
