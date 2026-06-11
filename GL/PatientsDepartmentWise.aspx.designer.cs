@@ -366,6 +366,33 @@ namespace PMS
         protected global::System.Web.UI.WebControls.DropDownList ddlItemName;
 
         /// <summary>
+        /// trMedicineDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl trMedicineDiv;
+
+        /// <summary>
+        /// tdMedName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label tdMedName;
+
+        /// <summary>
+        /// ddlMedName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlMedName;
+
+        /// <summary>
         /// dpROw control.
         /// </summary>
         /// <remarks>
