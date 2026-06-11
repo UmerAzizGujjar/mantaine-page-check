@@ -4680,6 +4680,8 @@ namespace PMS
                 string rptFileName = "AccountAndFinance/rptPharmacyCashReport.rpt";
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string MrNo = Request.QueryString["MRNo"].ToString();
+                string warehouse = Request.QueryString["WareHouse"].ToString();
                 reportPath += rptFileName;
 
                 rd.Load(reportPath);
@@ -4687,6 +4689,8 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@startDate", StartDateTime);
                 rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("@MrNo", MrNo);
+                rd.SetParameterValue("@WareHouse", warehouse);
             }
             else if (reportName == "PCRS")
             {

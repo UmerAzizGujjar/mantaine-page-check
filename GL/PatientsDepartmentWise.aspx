@@ -1404,7 +1404,7 @@
                     }
                     else if (rptTitle == "PCR") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=PCR&ReportTitle=Pharmacy Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MRNo=' + patid;
+                        var url = 'ReportViewer.aspx?ReportName=PCR&ReportTitle=Pharmacy Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MRNo=' + (patid || 0) + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();   
                         window.open(url, '_blank');
                     }
                     //else if (rptTitle == "PCRS") {
