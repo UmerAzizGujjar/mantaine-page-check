@@ -69,7 +69,7 @@
         debugger;
         function loadmed() {
             debugger
-            var med_Name = $('#ctl00_MainContent_ddlItemName').val();
+            var med_Name = $('#ctl00_MainContent_ddlMedName').val();
             if (med_Name == "0" || med_Name == null || med_Name == "null") {
                 med_Name = "";
             }
@@ -81,7 +81,7 @@
                 $.each(JSON.parse(data), function (key, value) {
                     options += '<option value="' + value.Item_ID + '">' + value.Description + '</option>';
                 });
-                $('#ctl00_MainContent_ddlItemName').html(options);
+                $('#ctl00_MainContent_ddlMedName').html(options);
             });
 
             return options;
@@ -1966,6 +1966,13 @@
             <div class="col-lg-3 col-md-4 col-sm-12" id="trSearch1" visible="false" runat="server">
                 <asp:Label runat="server" ID="td11" Text="Item Name"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlItemName" AppendDataBoundItems="true">
+                </asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="trMedicineDiv" visible="false" runat="server">
+                <asp:Label runat="server" ID="tdMedName" Text="Item Name"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlMedName" AppendDataBoundItems="true">
                 </asp:DropDownList>
             </div>
         </div>
