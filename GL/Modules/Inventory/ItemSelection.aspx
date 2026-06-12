@@ -511,11 +511,11 @@
                     <i class="fa fa-calendar-alt" style="color: #667eea;"></i> ${formattedDate}
                 </td>
                 <td style="text-align: center; padding: 10px;">
-                    <button class="btn btn-sm btn-info" 
-                        onclick="PrintINVBarcode(${barcode.Barcode_ID})" 
-                        style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;" title="Print Single">
-                        <i class="fa fa-print"></i>
-                    </button>
+                    <button class="btn btn-sm btn-info"
+    onclick="printSingleBarcode(${barcode.Barcode_ID})" 
+    style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;" title="Print Single">
+    <i class="fa fa-print"></i>
+</button>
                 </td>
             </tr>
         `;
@@ -560,6 +560,203 @@
                 bindBarcodeCheckboxEvents();
             }
         }
+
+        function printSingleBarcode(barcodeId) {
+            const row = $(`#barcodesTable tbody tr[data-barcode-id="${barcodeId}"]`);
+
+            if (row.length === 0) {
+                showToast('Barcode not found', 'error');
+                return;
+            }
+
+            const barcodeNumber = row.find('code').text().trim();
+            const itemCode = row.find('td:eq(3)').text().trim();
+            const itemName = row.find('td:eq(4)').text().trim();
+            const serialNumber = row.find('td:eq(5) .badge').text().trim();
+            const quantity = row.find('td:eq(6) .badge').text().trim();
+
+            const selectedBarcodes = [{
+                barcodeId: barcodeId,
+                barcodeNumber: barcodeNumber,
+                itemCode: itemCode,
+                itemName: itemName,
+                serialNumber: serialNumber,
+                quantity: quantity
+            }];
+
+            // Open an optimized print window width
+            const printWindow = window.open('', '_blank', 'width=450,height=400');
+            printWindow.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Print Barcode</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #ffffff;
+            -webkit-print-color-adjust: exact;
+        }
+
+        @page {
+            size: 1.60in 1.00in;
+            margin: 0;
+        }
+        
+        @media print {
+            body { 
+                margin: 0; 
+            }
+            .print-btn {
+                display: none !important;
+            }
+            .barcode-card {
+                page-break-after: always;
+                break-after: page;
+            }
+            .barcode-container {
+                margin: 0 !important;
+                gap: 0 !important;
+            }
+        }
+        
+        .barcode-container {
+            display: flex;
+            flex-direction: column;
+            width: 1.60in;
+        }
+        
+        .barcode-card {
+            width: 1.60in;
+            height: 1.00in;
+            padding: 3px 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            background: #fff;
+        }
+        
+        .barcode-item-code {
+            font-size: 8px;
+            font-weight: bold;
+            color: #000;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .barcode-item-name {
+            font-size: 7px;
+            color: #222;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: -1px;
+        }
+        
+        .barcode-serial {
+            font-size: 6.5px;
+            color: #333;
+            width: 100%;
+            white-space: nowrap;
+        }
+        
+        .barcode-svg-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1px 0;
+        }
+
+        .barcode-svg-container svg {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .barcode-number {
+            font-family: monospace;
+            font-size: 7px;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .barcode-footer {
+            font-size: 5.5px;
+            color: #666;
+        }
+        
+        .print-btn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="barcode-container" id="barcodeContainer">
+        <div class="barcode-card">
+            <div class="barcode-item-code">${itemCode}</div>
+            <div class="barcode-item-name">${itemName}</div>
+            <div class="barcode-serial">S/N: ${serialNumber} | Qty: ${quantity}</div>
+            <div class="barcode-svg-container">
+                <svg class="barcode-0"
+                     jsbarcode-format="CODE128"
+                     jsbarcode-value="${barcodeNumber}"
+                     jsbarcode-width="1"
+                     jsbarcode-height="22"
+                     jsbarcode-displayValue="false"
+                     jsbarcode-margin="0">
+                </svg>
+            </div>
+            <div class="barcode-number">${barcodeNumber}</div>
+            <div class="barcode-footer">${new Date().toLocaleString('en-PK')}</div>
+        </div>
+    </div>
+    
+    <button class="print-btn" onclick="window.print();">Print Label</button>
+    
+    <script>
+        window.onload = function() {
+            try {
+                JsBarcode(".barcode-0").init();
+                
+                setTimeout(function() {
+                    window.print();
+                }, 500);
+            } catch(e) {
+                console.error('Error generating barcode:', e);
+            }
+        };
+    <\/script>
+</body>
+</html>
+`);
+            printWindow.document.close();
+            showToast('Barcode ready for printing', 'success');
+        }
+
 
         function bindBarcodeCheckboxEvents(tableInstance) {
             $('#chkSelectAllBarcodes').off('change').on('change', function () {
@@ -1160,16 +1357,16 @@ function loadGRNDropdownForEdit(grnId) {
                         <input type="button" id="btnGenerateBarcodes" class="btn btn-primry" value="BARCODES" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" id="btnReset" class="btn btn-primry"  value="NEW" onclick="window.location.href='ItemSelection.aspx';" /> 
-                    </div>                    
-                    <div class="col-lg-2 col-md-4 col-sm-12">
-                        <input type="button" id="btnPrintSelected" class="btn btn-primry" value="PRINT SELECTED" onclick="printSelectedBarcodes();"  />
+                        <input type="button" id="btnReset" class="btn btn-primry" value="NEW" onclick="window.location.href='ItemSelection.aspx';" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <input type="button" id="btnlist" class="btn btn-primry" value="LIST VIEW" onclick="window.location.href='ItemSelectionList.aspx';" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-12">
                         <input type="button" id="btnPrintWithBarcode" class="btn btn-primry" value="PRINT WITH BARCODE" onclick="printWithRealBarcode();" style="display: none;" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <input type="button" id="btnPrintSelected" class="btn btn-primry" value="PRINT SELECTED" onclick="printSelectedBarcodes();" style="display: none" />
                     </div>
                 </div>
             </div>
