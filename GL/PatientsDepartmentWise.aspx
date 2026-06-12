@@ -1837,7 +1837,7 @@
                     else if (rptTitle == "SIH") {
                         var stock = $("#ctl00_MainContent_ddlStock").val();
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=SIH&ReportTitle=Stock In Hand ' + '&stock=' + stock ;
+                        var url = 'ReportViewer.aspx?ReportName=SIH&ReportTitle=Stock In Hand ' + '&stock=' + stock + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Overall_Stock_Consumption_Details") {

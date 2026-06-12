@@ -5197,12 +5197,14 @@ namespace PMS
             {
                 if (Request.QueryString["stock"] != null)
                 {
+                    string warehouse = Request.QueryString["WareHouse"].ToString();
                     var stock = Request.QueryString["stock"];
                     string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                     reportPath += "Inventory/rptStockInHand.rpt";
                     var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     rd.Load(reportPath);
                     rd.SetParameterValue("@Stock", stock);
+                    rd.SetParameterValue("@WareHouse", warehouse);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
                     rd.SetParameterValue("CompanyLogo", logoPath);
