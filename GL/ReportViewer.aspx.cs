@@ -4680,6 +4680,8 @@ namespace PMS
                 string rptFileName = "AccountAndFinance/rptPharmacyCashReport.rpt";
                 string StartDateTime = Request.QueryString["StartDateTime"].ToString();
                 string EndDateTime = Request.QueryString["EndDateTime"].ToString();
+                string MrNo = Request.QueryString["MRNo"].ToString();
+                string warehouse = Request.QueryString["WareHouse"].ToString();
                 reportPath += rptFileName;
 
                 rd.Load(reportPath);
@@ -4687,6 +4689,8 @@ namespace PMS
                 rd.SetParameterValue("Title", reportTitle);
                 rd.SetParameterValue("@startDate", StartDateTime);
                 rd.SetParameterValue("@endDate", EndDateTime);
+                rd.SetParameterValue("@MrNo", MrNo);
+                rd.SetParameterValue("@WareHouse", warehouse);
             }
             else if (reportName == "PCRS")
             {
@@ -5193,12 +5197,14 @@ namespace PMS
             {
                 if (Request.QueryString["stock"] != null)
                 {
+                    string warehouse = Request.QueryString["WareHouse"].ToString();
                     var stock = Request.QueryString["stock"];
                     string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                     reportPath += "Inventory/rptStockInHand.rpt";
                     var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     rd.Load(reportPath);
                     rd.SetParameterValue("@Stock", stock);
+                    rd.SetParameterValue("@WareHouse", warehouse);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
                     rd.SetParameterValue("CompanyLogo", logoPath);

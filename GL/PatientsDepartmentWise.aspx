@@ -69,7 +69,7 @@
         debugger;
         function loadmed() {
             debugger
-            var med_Name = $('#ctl00_MainContent_ddlItemName').val();
+            var med_Name = $('#ctl00_MainContent_ddlMedName').val();
             if (med_Name == "0" || med_Name == null || med_Name == "null") {
                 med_Name = "";
             }
@@ -81,7 +81,7 @@
                 $.each(JSON.parse(data), function (key, value) {
                     options += '<option value="' + value.Item_ID + '">' + value.Description + '</option>';
                 });
-                $('#ctl00_MainContent_ddlItemName').html(options);
+                $('#ctl00_MainContent_ddlMedName').html(options);
             });
 
             return options;
@@ -1404,7 +1404,7 @@
                     }
                     else if (rptTitle == "PCR") {
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=PCR&ReportTitle=Pharmacy Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MRNo=' + patid;
+                        var url = 'ReportViewer.aspx?ReportName=PCR&ReportTitle=Pharmacy Cash Report from ' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + ' to ' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&StartDateTime=' + $('#ctl00_MainContent_txtStart_Date').val() + ' ' + $('#ctl00_MainContent_txtSTime').val() + '&EndDateTime=' + $('#ctl00_MainContent_txtEnd_Date').val() + ' ' + $('#ctl00_MainContent_txtETime').val() + '&MRNo=' + (patid || 0) + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();   
                         window.open(url, '_blank');
                     }
                     //else if (rptTitle == "PCRS") {
@@ -1837,7 +1837,7 @@
                     else if (rptTitle == "SIH") {
                         var stock = $("#ctl00_MainContent_ddlStock").val();
                         debugger;
-                        var url = 'ReportViewer.aspx?ReportName=SIH&ReportTitle=Stock In Hand ' + '&stock=' + stock ;
+                        var url = 'ReportViewer.aspx?ReportName=SIH&ReportTitle=Stock In Hand ' + '&stock=' + stock + '&WareHouse=' + $('#ctl00_MainContent_ddlwareHouse').val();
                         window.open(url, '_blank');
                     }
                     else if (rptTitle == "Overall_Stock_Consumption_Details") {
@@ -1966,6 +1966,13 @@
             <div class="col-lg-3 col-md-4 col-sm-12" id="trSearch1" visible="false" runat="server">
                 <asp:Label runat="server" ID="td11" Text="Item Name"></asp:Label>
                 <asp:DropDownList runat="server" ID="ddlItemName" AppendDataBoundItems="true">
+                </asp:DropDownList>
+            </div>
+        </div>
+        <div class="row mb-3" runat="server">
+            <div class="col-lg-3 col-md-4 col-sm-12" id="trMedicineDiv" visible="false" runat="server">
+                <asp:Label runat="server" ID="tdMedName" Text="Item Name"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlMedName" AppendDataBoundItems="true">
                 </asp:DropDownList>
             </div>
         </div>

@@ -347,8 +347,10 @@
     <Content Include="Modules\Billing\DiscountAssignedList.aspx" />
     <Content Include="Modules\Billing\FBRBillingView.aspx" />
     <Content Include="Modules\Billing\DiscountAssigned.aspx" />
+    <Content Include="Modules\Billing\IPDMedicineHistory.aspx" />
     <Content Include="Modules\Billing\IssueCathLabItems.aspx" />
     <Content Include="Modules\Billing\IssueCathLabItemsView.aspx" />
+    <Content Include="Modules\Billing\Medicine_History.aspx" />
     <Content Include="Modules\Billing\ZakatDonationForm.aspx" />
     <Content Include="Modules\Billing\ZakatDonationList.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
@@ -365,6 +367,7 @@
     <Content Include="Modules\Dashboards\DashPatientsCountertoClinic.aspx" />
     <Content Include="Modules\Dashboards\EMR.aspx" />
     <Content Include="Modules\Dashboards\InventorySection.aspx" />
+    <Content Include="Modules\Dashboards\LaboratoryTimeSlab.aspx" />
     <Content Include="Modules\Dashboards\OPD_Utilization_Dashboard.aspx" />
     <Content Include="Modules\Dashboards\Inventory_ProcurementDashboard.aspx" />
     <Content Include="Modules\Dashboards\Inventory_Dashboard.aspx" />
@@ -3070,6 +3073,13 @@
     <Compile Include="Modules\Billing\DiscountAssigned.aspx.designer.cs">
       <DependentUpon>DiscountAssigned.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Billing\IPDMedicineHistory.aspx.cs">
+      <DependentUpon>IPDMedicineHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\IPDMedicineHistory.aspx.designer.cs">
+      <DependentUpon>IPDMedicineHistory.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Billing\IssueCathLabItems.aspx.cs">
       <DependentUpon>IssueCathLabItems.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3083,6 +3093,13 @@
     </Compile>
     <Compile Include="Modules\Billing\IssueCathLabItemsView.aspx.designer.cs">
       <DependentUpon>IssueCathLabItemsView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\Medicine_History.aspx.cs">
+      <DependentUpon>Medicine_History.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\Medicine_History.aspx.designer.cs">
+      <DependentUpon>Medicine_History.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\ZakatDonationForm.aspx.cs">
       <DependentUpon>ZakatDonationForm.aspx</DependentUpon>
@@ -3195,6 +3212,13 @@
     </Compile>
     <Compile Include="Modules\Dashboards\InventorySection.aspx.designer.cs">
       <DependentUpon>InventorySection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dashboards\LaboratoryTimeSlab.aspx.cs">
+      <DependentUpon>LaboratoryTimeSlab.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Dashboards\LaboratoryTimeSlab.aspx.designer.cs">
+      <DependentUpon>LaboratoryTimeSlab.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Dashboards\OPD_Utilization_Dashboard.aspx.cs">
       <DependentUpon>OPD_Utilization_Dashboard.aspx</DependentUpon>

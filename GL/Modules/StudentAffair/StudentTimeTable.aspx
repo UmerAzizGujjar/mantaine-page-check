@@ -29,6 +29,32 @@
         .mtop{
             margin-top:20px;
         }
+
+        /* Loader Styles */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loader-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
     </style>
 
     <script type="text/javascript"> 
@@ -652,6 +678,7 @@
         }
         function EditMasterSubject(Stu_ID) {
             debugger;
+            $('#editLoader').show();
             PageMethods.editMaster(Stu_ID, function (resp) {
                 var studata = JSON.parse(resp);
 
@@ -919,6 +946,8 @@
             } catch (error) {
                 console.error("Error in editDetail:", error);
                 alert("Data not transferred");
+            } finally {
+                $('#editLoader').hide();
             }
         }
 
@@ -1154,6 +1183,10 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    
+<div id="editLoader" class="loader-overlay" style="display: none;">
+    <div class="loader-spinner"></div>
+</div>
     <div class="row">
         <div class="col-lg-2 col-md-3 col-sm-3">
             <label><span style="color: red;">*</span>Program:</label>
