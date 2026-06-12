@@ -5498,9 +5498,9 @@ namespace PMS
                ISNULL(rp.Full_Name, '') AS Full_Name,
                ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
                ISNULL(rp.Gender, '') AS Gender
-        FROM ar_billings ab 
-        JOIN Reg_patient rp ON ab.patient_id = rp.pat_id
-        WHERE ab.bill_id = {billId}";
+        FROM Pharmacy_SaleReturns ps 
+        JOIN Reg_patient rp ON ps.patient_id = rp.pat_id
+        WHERE ps.Return_ID = {Return_ID}";
 
                     DataTable patientData = DBClass.getDataTable(sql);
 
@@ -5509,7 +5509,7 @@ namespace PMS
                         string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}";
 
                         // Save to temp file instead of passing bytes
-                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{billId}_{Guid.NewGuid()}.png");
+                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{Return_ID}_{Guid.NewGuid()}.png");
 
                         using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
                         {
