@@ -3533,25 +3533,32 @@ namespace PMS
                     string x = "Stock In Hand";
                     Master.Label2.Text = x;
                     Master.GetMenuName();
-                    object valusets;
-                    lblMainDepartment.Visible = false;
-                    ddlDepartments.Visible = false;
-                    lblPatientType.Visible = false;
-                    lblMultiSelect.Visible = false;
-                    ddlPatientType.Visible = false;
-                    trDoctor.Visible = false;
+
                     rowStock.Visible = true;
-                    tr_Summary.Visible = false;
-                    lblMainDepartment.Visible = false;
-                    tr1MedicalSubsidy.Visible = false;
-                    optRw.Visible = false;
-                    dpROw.Visible = false;
-                    Time_Row.Visible = false;
-                    sttDate.Visible = false;
-                    endDate.Visible = false;
 
                     txtStart_Date.Visible = false;
                     txtEnd_Date.Visible = false;
+
+
+                    //ADDING NEW WAREHOUSE
+
+                    object valuset;
+                    valuset = DBClass.GetValueSet("Ware house");
+                    ddlwareHouse.DataSource = valuset;
+                    ddlwareHouse.DataTextField = "DataValue_Description";
+                    ddlwareHouse.DataValueField = "DataValue_Name";
+                    ddlwareHouse.Items.Clear();
+                    ddlwareHouse.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlwareHouse.DataBind();
+                    Stock_Movement.Visible = true;
+
+
+                    ddlwareHouse.Visible = true;
+                    lblWarehouse.Visible = true;
+
+                    lbItemCategory.Visible = false;
+                    ddlItemCategory.Visible = false;
+
                 }
                 else if (PageTitle == "Overall_Stock_Consumption_Details")
                 {
