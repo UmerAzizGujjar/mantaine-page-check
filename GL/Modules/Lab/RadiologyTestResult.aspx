@@ -2113,7 +2113,7 @@ function cleanPrint() {
             </div>
             <div class="info-row">
                 <span class="info-label">Accession # :</span>
-                <span class="info-val">${data.Bill_No || ''}</span>
+                <span class="info-val">${data.Lab_Test_Detail_ID || ''}</span>
             </div>
         </div>
 
