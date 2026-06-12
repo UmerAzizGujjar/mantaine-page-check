@@ -347,6 +347,7 @@
     <Content Include="Modules\Billing\DiscountAssignedList.aspx" />
     <Content Include="Modules\Billing\FBRBillingView.aspx" />
     <Content Include="Modules\Billing\DiscountAssigned.aspx" />
+    <Content Include="Modules\Billing\IPDMedicineHistory.aspx" />
     <Content Include="Modules\Billing\IssueCathLabItems.aspx" />
     <Content Include="Modules\Billing\IssueCathLabItemsView.aspx" />
     <Content Include="Modules\Billing\Medicine_History.aspx" />
@@ -3070,6 +3071,13 @@
     </Compile>
     <Compile Include="Modules\Billing\DiscountAssigned.aspx.designer.cs">
       <DependentUpon>DiscountAssigned.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\IPDMedicineHistory.aspx.cs">
+      <DependentUpon>IPDMedicineHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\IPDMedicineHistory.aspx.designer.cs">
+      <DependentUpon>IPDMedicineHistory.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\IssueCathLabItems.aspx.cs">
       <DependentUpon>IssueCathLabItems.aspx</DependentUpon>

@@ -11221,24 +11221,6 @@
       <Column Name="G_Phone" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_YearlyInventorySummary" Method="sp_YearlyInventorySummary">
-    <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
-    <ElementType Name="sp_YearlyInventorySummaryResult">
-      <Column Name="Metric" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
-      <Column Name="Jan" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Feb" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Mar" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Apr" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="May" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Jun" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Jul" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Aug" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Sep" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Oct" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Nov" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-      <Column Name="Dec" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_YearlyPharmacyRevenue" Method="sp_YearlyPharmacyRevenue">
     <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
     <ElementType Name="sp_YearlyPharmacyRevenueResult">
@@ -12462,12 +12444,138 @@
       <Column Name="CGSRate" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.spLabReportQN" Method="spLabReportQN">
+    <Parameter Name="Test_IDs" Parameter="test_IDs" Type="System.String" DbType="VarChar(MAX)" />
+    <Parameter Name="Trans_IDs" Parameter="trans_IDs" Type="System.String" DbType="VarChar(MAX)" />
+    <Parameter Name="Patient_ID" Parameter="patient_ID" Type="System.Int64" DbType="BigInt" />
+    <Parameter Name="Bill_Details_IDs" Parameter="bill_Details_IDs" Type="System.String" DbType="VarChar(MAX)" />
+    <ElementType Name="spLabReportQNResult">
+      <Column Name="Company_Logo_Path" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Group_Category" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="[Test Unit]" Member="Test_Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Patient_No" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Full_Name" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="Father_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="REg_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Patient_Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="[Blood Group]" Member="Blood_Group" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="NIC" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Patient_Type" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="ReferredByDoctor" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Age_years" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="VarChar(6)" CanBeNull="true" />
+      <Column Name="Mobile1" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="address" Type="System.String" DbType="NVarChar(603) NOT NULL" CanBeNull="false" />
+      <Column Name="permanent_Address" Type="System.String" DbType="NVarChar(350)" CanBeNull="true" />
+      <Column Name="Lab_Test_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Approved_By_Raw" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="created_By_Raw" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Test_Approved_By" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="Test_Approved_By_Doctor_name" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="Test_Approved_By_Doctor_designation" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Test_Approved_By_Doctor_qualification" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Test_Charges" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="Test_Collected_By" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Test_Collected_By_Doctor_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Test_Collected_By_Doctor_designation" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Test_Collected_By_Doctor_qualification" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Test_Collected_On" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Test_Performed_By" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Test_Performed_By_Doctor_name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Test_Performed_By_Doctor_designation" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Test_Performed_By_Doctor_qualification" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Test_Ready_On" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Approved_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ApprovedBy" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="Acknowledgement_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Lab_Test_Detail_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Result_Value_Part1" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Result_Value_Part2" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Diagnosis" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Remark" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Master_Remarks" Type="System.String" DbType="NVarChar(3000) NOT NULL" CanBeNull="false" />
+      <Column Name="Notes" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="Test_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Status" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Test_Value" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Growth_Type" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="Billing_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Test_Name" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Result_Type_Fixed" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Result_Type_Image" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Result_Type_List" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Result_Type_Value" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Result_Value" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Levels" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Group_Department" Type="System.String" DbType="VarChar(157)" CanBeNull="true" />
+      <Column Name="Main_Department" Type="System.String" DbType="VarChar(157)" CanBeNull="true" />
+      <Column Name="Unit" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Template" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Start_Range" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="End_Range" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Fixed_Value" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Test_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="First_History_Date" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="First_History_Result" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Second_History_Date" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Second_History_Result" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Third_History_Date" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Third_History_Result" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Group_Order" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Group_Header_L1_Name" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Bill_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Sample_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Sample_Status" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Sample_No" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Mode_Of_Registration" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="DepartMent" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Patient_CreateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Patient_Created" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="Bill_CreateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Bill_Created" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="rn" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Company_Address" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Company_Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Company_Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Report_Footer" Type="System.String" DbType="VarChar(3000)" CanBeNull="true" />
+      <Column Name="Report_Footer_tow" Type="System.String" DbType="VarChar(3000)" CanBeNull="true" />
+      <Column Name="Report_Footer1" Type="System.String" DbType="VarChar(3000)" CanBeNull="true" />
+      <Column Name="Report_Footer_tow1" Type="System.String" DbType="VarChar(3000)" CanBeNull="true" />
+      <Column Name="Ward_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Ward_No" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Bed_No" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Room_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Room_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Room_Type" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="Ward_ID_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Contract_Number" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="Out_of_Range" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.sp_GetProcedureCounts" Method="sp_GetProcedureCounts">
     <Parameter Name="StartDate" Parameter="startDate" Type="System.String" DbType="VarChar(100)" />
     <Parameter Name="EndDate" Parameter="endDate" Type="System.String" DbType="VarChar(100)" />
     <ElementType Name="sp_GetProcedureCountsResult">
       <Column Name="Item_Name" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="TotalCount" Type="System.Decimal" DbType="Decimal(38,2)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_YearlyInventorySummary" Method="sp_YearlyInventorySummary">
+    <Parameter Name="Year" Parameter="year" Type="System.Int32" DbType="Int" />
+    <ElementType Name="sp_YearlyInventorySummaryResult">
+      <Column Name="Metric" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="Jan" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Feb" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Mar" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Apr" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="May" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Jun" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Jul" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Aug" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Sep" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Oct" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Nov" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
+      <Column Name="Dec" Type="System.Decimal" DbType="Decimal(38,4) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>
