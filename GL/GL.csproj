@@ -718,6 +718,7 @@
     <Content Include="wwwroot\lib\ace\ace-skins.min.css" />
     <Content Include="wwwroot\lib\ace\ace.min.css" />
     <Content Include="wwwroot\lib\ace\ace.min.js" />
+    <Content Include="wwwroot\lib\apexcharts\apexchart.js" />
     <Content Include="wwwroot\lib\bootstrap\bootstrap-datetimepicker.css" />
     <Content Include="wwwroot\lib\bootstrap\bootstrap-timepicker.css" />
     <Content Include="wwwroot\lib\bootstrap\bootstrap.min.css" />

@@ -402,7 +402,8 @@ namespace PMS
                                                select tbl).SingleOrDefault();
                     if (PR != null)
                     {
-                        PR.Status = "Bypassed";
+                        PR.Status = "Approved";
+                        
                         PR.Approved_Time = DateTime.Now;
                         PR.Approved_By = user_id;
                         db.SubmitChanges();
@@ -432,7 +433,8 @@ namespace PMS
                         SAL.From_Name = "Purcahse Requisition";
                         SAL.Remarks = Convert.ToString(PR.Remarks);
                         SAL.Company_ID = AppConfig.Company_ID;
-                        SAL.Entry_Status = "Bypassed";
+                        SAL.Entry_Status = "Approved";
+                        SAL.Is_ByPassed = true;
                         SAL.Approve_By = user_id;
                         SAL.Approve_Date = DateTime.Now;
                         SAL.IsRejected = false;

@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DashPatientsCountertoClinic.aspx.cs" Inherits="PMS.Modules.Dashboards.DashPatientsCountertoClinic" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js" type="text/javascript"></script>
-    <script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js" type="text/javascript"></script>
+    <script src="../../wwwroot/lib/apexcharts/apexchart.js" type="text/javascript"></script>
         <style type="text/css">
         .table tr {
             border: 1px solid #D9E4E6;
