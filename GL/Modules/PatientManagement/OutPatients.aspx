@@ -1666,6 +1666,7 @@
             var ids = '<%=Request.QueryString["ID"]%>';
             debugger;
             if (ids != "") {
+                debugger;
                 loaddoctor(id);
 
             }
