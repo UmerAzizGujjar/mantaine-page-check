@@ -5923,14 +5923,18 @@ namespace PMS
                     var advanceRecords = (from a in db.AR_Advances
                                           where a.In_Patient_ID == InPatientID
                                           select a).ToList();
+                    var previousRecords = (from a in db.Ar_Billings
+                                          where a.In_Patient_ID == InPatientID
+                                          select a).ToList();
 
                     decimal totalBillAmount = filteredBillingRecords.Sum(b => b.Total_Amount ?? 0);
                     decimal totalReceivedAmount = filteredBillingRecords.Sum(b => b.Received_Amount ?? 0);
                     decimal totalDiscountAmount = filteredBillingRecords.Sum(b => b.Discount_Amount ?? 0);
                     decimal totalAdvanceAmount = advanceRecords.Sum(a => a.Advance_Amount ?? 0);
+                    decimal totalPrevious = previousRecords.Sum(a => a.Previous_Paid ?? 0);
 
                     // Calculate pending balance
-                    decimal pendingBalance = totalBillAmount - (totalReceivedAmount + totalDiscountAmount + totalAdvanceAmount);
+                    decimal pendingBalance = totalBillAmount - (totalReceivedAmount + totalDiscountAmount + totalAdvanceAmount+ totalPrevious);
 
                     return (pendingBalance < 0 ? 0 : pendingBalance).ToString("F2");
                 }
