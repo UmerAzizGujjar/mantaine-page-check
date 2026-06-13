@@ -49,13 +49,23 @@ namespace PMS.Modules.Dashboards
         [WebMethod]
         public static string GetYearlyInventorySummary(int year)
         {
-            string result = string.Empty;
-            using (DataBaseDataContext db = new DataBaseDataContext())
+            try
             {
-                var query = db.sp_YearlyInventorySummary(year).ToList();
-                result = (new JavaScriptSerializer()).Serialize(query);
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var query = db.sp_YearlyInventorySummary(year).ToList();
+
+                    return (new JavaScriptSerializer()).Serialize(query);
+                }
             }
-            return result;
+            catch (Exception ex)
+            {
+                return (new JavaScriptSerializer()).Serialize(new
+                {
+                    Status = false,
+                    Message = ex.Message
+                });
+            }
         }
 
         [WebMethod]
