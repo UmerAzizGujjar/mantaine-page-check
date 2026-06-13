@@ -4,7 +4,7 @@
          <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"  type="text/javascript"></script>
 
     <link href="../../wwwroot/StandardTheme/CustomCSS/swalalert.css" rel="stylesheet" />
-    <script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js" type="text/javascript"></script>
+    <script src="../../wwwroot/lib/apexcharts/apexchart.js" type="text/javascript"></script>
 
 <style type="text/css">
         #Box1 {

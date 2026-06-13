@@ -5197,12 +5197,14 @@ namespace PMS
             {
                 if (Request.QueryString["stock"] != null)
                 {
+                    string warehouse = Request.QueryString["WareHouse"].ToString();
                     var stock = Request.QueryString["stock"];
                     string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                     reportPath += "Inventory/rptStockInHand.rpt";
                     var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                     rd.Load(reportPath);
                     rd.SetParameterValue("@Stock", stock);
+                    rd.SetParameterValue("@WareHouse", warehouse);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("Address", companyAddress);
                     rd.SetParameterValue("CompanyLogo", logoPath);
@@ -5451,6 +5453,63 @@ namespace PMS
 
                         // Save to temp file instead of passing bytes
                         string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{billId}_{Guid.NewGuid()}.png");
+
+                        using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                        {
+                            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+                            using (PngByteQRCode qrCodeImage = new PngByteQRCode(qrCodeData))
+                            {
+                                byte[] qrBytes = qrCodeImage.GetGraphic(10);
+                                File.WriteAllBytes(tempQrPath, qrBytes);
+                            }
+                        }
+
+                        // Pass FILE PATH as string parameter
+                        rd.SetParameterValue("QRImagePath", tempQrPath);
+                    }
+                    else
+                    {
+                        rd.SetParameterValue("QRImagePath", "");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    rd.SetParameterValue("QRImagePath", "");
+                }
+            }
+            else if (reportName == "CathLabSaleReturnPrint")
+            {
+                var Return_ID = Convert.ToInt32(Request.QueryString["Return_ID"]);
+                var user_id = AppConfig.UserID;
+                var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
+                reportPath += "PatientManagement/rptCathLabBasePrint.rpt";
+                var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
+                rd.Load(reportPath);
+                rd.SetParameterValue("@ReturnId", Return_ID);
+                rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
+                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                rd.SetParameterValue("CompanyLogo", logoPath);
+                rd.SetParameterValue("UserName", userName);
+
+                try
+                {
+                    string sql = $@"
+        SELECT ISNULL(rp.mr_no_sequence, '') AS mr_no_sequence,
+               ISNULL(rp.Full_Name, '') AS Full_Name,
+               ISNULL(CONVERT(VARCHAR, rp.Age_years), '') AS Age_years,
+               ISNULL(rp.Gender, '') AS Gender
+        FROM Pharmacy_SaleReturns ps 
+        JOIN Reg_patient rp ON ps.patient_id = rp.pat_id
+        WHERE ps.Return_ID = {Return_ID}";
+
+                    DataTable patientData = DBClass.getDataTable(sql);
+
+                    if (patientData.Rows.Count > 0)
+                    {
+                        string qrContent = $"MR:{patientData.Rows[0]["mr_no_sequence"]}|Name:{patientData.Rows[0]["Full_Name"]}|Age:{patientData.Rows[0]["Age_years"]}|Gender:{patientData.Rows[0]["Gender"]}";
+
+                        // Save to temp file instead of passing bytes
+                        string tempQrPath = Path.Combine(Path.GetTempPath(), $"QR_{Return_ID}_{Guid.NewGuid()}.png");
 
                         using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
                         {

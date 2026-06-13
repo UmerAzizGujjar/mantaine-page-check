@@ -5,7 +5,7 @@
     <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"></script>
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/EMR.css" rel="stylesheet" />
     <link href="../../wwwroot/StandardTheme/CustomCSS/swalalert.css" rel="stylesheet" />
-    <script src="../../wwwroot/THEME_TIBBIT/js/apexchart.js"></script>
+    <script src="../../wwwroot/lib/apexcharts/apexchart.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
