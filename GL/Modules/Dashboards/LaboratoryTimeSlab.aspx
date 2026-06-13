@@ -260,9 +260,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container-fluid">
-        <div class="row" style="text-align: center;">
-            <h1 id="h1">Laboratory Turnaround Time Slab</h1>
-        </div>
         <div class="row mb-4">
             <div class="col-md-4 offset-md-2">
                 <div class="card l-bg-orange-dark text-white" id="Box1">
