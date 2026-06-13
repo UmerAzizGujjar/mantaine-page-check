@@ -1784,6 +1784,17 @@
                         var url = 'ReportViewer.aspx?ReportName=Patient_Quality_Check_Report&ReportTitle=Patient Quality Check Detail Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime);
                         window.open(url, '_blank');
                     }
+                    if (rptTitle == "Gir_To_Po_Heirarchy") {
+                        debugger;
+                        var startDate = $('#ctl00_MainContent_txtStart_Date').val();
+                        var startTime = $('#ctl00_MainContent_txtSTime').val();
+                        var endDate = $('#ctl00_MainContent_txtEnd_Date').val();
+                        var endTime = $('#ctl00_MainContent_txtETime').val();
+                        var startDateTime = startDate + ' ' + startTime;
+                        var endDateTime = endDate + ' ' + endTime;
+                        var url = 'ReportViewer.aspx?ReportName=Gir_To_Po_Heirarchy&ReportTitle=Gir To Po Heirarchy Report From  ' + startDateTime + ' to ' + endDateTime + '&StartDateTime=' + encodeURIComponent(startDateTime) + '&EndDateTime=' + encodeURIComponent(endDateTime);
+                        window.open(url, '_blank');
+                    }
                     if (rptTitle == "Cath_Lab_Billing_Detail_Report") {
                         debugger;
                         var startDate = $('#ctl00_MainContent_txtStart_Date').val();
