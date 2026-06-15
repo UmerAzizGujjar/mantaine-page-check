@@ -2977,6 +2977,17 @@ namespace PMS
                     MRDiv.Visible = true;
 
                 }
+                else if (this.PageTitle == "Gir_To_Po_Heirarchy")
+                {
+                    string x = "Gir To Po Heirarchy Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = true;
+                    AllowPatientRecord = false;
+                    MRDiv.Visible = false;
+
+                }
                 else if (this.PageTitle == "Cath_Lab_Billing_Detail_Report")
                 {
                     string x = "Cath Lab Billing Detail Report";

@@ -1219,7 +1219,7 @@
                         PageMethods.SaveSaleReturnData(JSON.stringify(AllItemDetail), UserId, function (res) {
                             var btnSave = $('#SSearchReturnPop').val();
                           /*  if (btnSave == 'Save & Print' || btnSave == "Save & Print") {*/
-                                window.open('../../ReportViewer.aspx?ReportName=PharmacyReturnSlip&ReportTitle=Pharmacy Return Slip&Return_ID=' + JSON.parse(res));
+                                window.open('../../ReportViewer.aspx?ReportName=CathLabSaleReturnPrint&ReportTitle=Cath Lab Return Slip&Return_ID=' + JSON.parse(res));
                             //}
                             Swal.fire({
                                 icon: 'success',
