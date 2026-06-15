@@ -3528,7 +3528,7 @@ namespace PMS
                 string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
-                reportPath += "Patients/sp_Medical_Record_Quality_Check.rpt";
+                reportPath += "Inventory/rptGirToPoHeirarchy.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
