@@ -5479,10 +5479,10 @@ namespace PMS
             }
             else if (reportName == "CathLabSaleReturnPrint")
             {
-                var Return_ID = Convert.ToInt32(Request.QueryString["Return_ID"]);
+                var Return_ID = Request.QueryString["Return_ID"].ToString();
                 var user_id = AppConfig.UserID;
                 var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
-                reportPath += "PatientManagement/rptCathLabBasePrint.rpt";
+                reportPath += "PatientManagement/rptCathLabReturnSlipPrint.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 rd.Load(reportPath);
                 rd.SetParameterValue("@ReturnId", Return_ID);
