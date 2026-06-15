@@ -3528,7 +3528,7 @@ namespace PMS
                 string companyAddress = DBClass.getField("select Company_Address from sys_Companys where Company_ID = " + AppConfig.Company_ID + "").ToString();
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
 
-                reportPath += "Patients/sp_Medical_Record_Quality_Check.rpt";
+                reportPath += "Inventory/rptGirToPoHeirarchy.rpt";
                 rd.Load(reportPath);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", reportTitle);
@@ -5388,6 +5388,17 @@ namespace PMS
                 reportPath += "PatientManagement/rptBillBasePrintHalf.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 rd.Load(reportPath);
+                // ✅ Silently ignore if report doesn't have @IsDuplicate parameter
+                try
+                {
+                    int isDuplicate = 0;
+                    if (Request.QueryString["IsDuplicate"] != null)
+                    {
+                        int.TryParse(Request.QueryString["IsDuplicate"], out isDuplicate);
+                    }
+                    rd.SetParameterValue("IsDuplicate", isDuplicate);
+                }
+                catch { }
                 rd.SetParameterValue("@Bill_Id", billId);
                 rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
@@ -5496,10 +5507,10 @@ namespace PMS
             }
             else if (reportName == "CathLabSaleReturnPrint")
             {
-                var Return_ID = Convert.ToInt32(Request.QueryString["Return_ID"]);
+                var Return_ID = Request.QueryString["Return_ID"].ToString();
                 var user_id = AppConfig.UserID;
                 var userName = DBClass.getField($"SELECT dbo.getUserName('{user_id}')");
-                reportPath += "PatientManagement/rptCathLabBasePrint.rpt";
+                reportPath += "PatientManagement/rptCathLabReturnSlipPrint.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 rd.Load(reportPath);
                 rd.SetParameterValue("@ReturnId", Return_ID);
