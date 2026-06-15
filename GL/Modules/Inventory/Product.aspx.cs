@@ -355,7 +355,7 @@ string Locator, string NonStockItem, string Fixasset, string MinimumStock, strin
 string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes,
 string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired,
 string PattHistoryRequired, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure,string ShortItem,string CathLabItems,string HighRisk, string btnValue,
-string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate, string Discount_Block,
+string ItemId, string DepartmentId, string IsHospital, string IsService, string SehatSahulat, string SehatCardRate, string Discount_Block,string InfusionFluid,
 List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
         {
             string Id = "";
@@ -404,6 +404,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                     obj.Narcotics = Convert.ToBoolean(Narcotics);
                     obj.Refregrator = Convert.ToBoolean(Refregrator);
                     obj.IsPharmacyItem = Convert.ToBoolean(PharmacyItem);
+                    obj.Infusion_Fluid = Convert.ToBoolean(InfusionFluid);
                     obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
                     obj.Procedure_Type = ProcedureTypes;
                     obj.Notes = Notes;
@@ -532,6 +533,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                     obj.Narcotics = Convert.ToBoolean(Narcotics);
                     obj.Refregrator = Convert.ToBoolean(Refregrator);
                     obj.IsPharmacyItem = Convert.ToBoolean(PharmacyItem);
+                    obj.Infusion_Fluid = Convert.ToBoolean(InfusionFluid);
                     obj.Pharmacy_Item = Convert.ToBoolean(PharmacyItem);
                     obj.Procedure_Type = ProcedureTypes;
                     obj.Notes = Notes;
@@ -738,6 +740,7 @@ List<BatchNum> batchList, List<PatientTypeList> PatientTypeList)
                                      obj.Narcotics,
                                      obj.Refregrator,
                                      obj.IsPharmacyItem,
+                                     obj.Infusion_Fluid,
                                      obj.Procedure_Type,
                                      Procedure_Type_Text = db.GetDataValueName("Procedure Types", obj.Procedure_Type),
                                      obj.Notes,

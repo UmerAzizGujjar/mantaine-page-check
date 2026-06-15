@@ -2369,5 +2369,76 @@ AND (
 
         // code ends here
 
+        [WebMethod]
+        public static string AddendumWorking()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var Addendum = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Addendum Working"
+                                    select tbl.Code)
+                              .FirstOrDefault();
+
+                    return Addendum ?? "01";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
+
+        [WebMethod]
+        public static string SaveAddendum(string testDetailID, string addendumTemplate)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                Lab_Test_Detail test = (from t in db.Lab_Test_Details
+                                        where t.Lab_Test_Detail_ID == int.Parse(testDetailID)
+                                        select t).FirstOrDefault();
+
+                if (test != null)
+                {
+                    test.Is_Addendum = true;
+                    test.Addendum_Template = addendumTemplate;
+                    test.UnApproved_By = AppConfig.UserID;
+                    test.UnApproved_Time = DateTime.Now;
+                    test.isApproved = null;
+                    test.Approved_By = null;
+                    db.SubmitChanges();
+                    return "Success";
+                }
+                return "Error: Test not found";
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
+        [WebMethod]
+        public static string GetAddendumData(string testDetailID)
+        {
+            try
+            {
+                DataBaseDataContext db = new DataBaseDataContext();
+                var data = (from t in db.Lab_Test_Details
+                            where t.Lab_Test_Detail_ID == int.Parse(testDetailID)
+                            select new
+                            {
+                                t.Is_Addendum,
+                                t.Addendum_Template
+                            }).FirstOrDefault();
+
+                return (new JavaScriptSerializer()).Serialize(data);
+            }
+            catch (Exception ex)
+            {
+                return "{\"error\":\"" + ex.Message + "\"}";
+            }
+        }
     }
 }
