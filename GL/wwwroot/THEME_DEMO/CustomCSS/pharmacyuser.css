@@ -1,0 +1,8 @@
+
+#togglePassword {
+    position: relative;
+    float: right;
+    margin-top: -29px;
+    cursor: pointer;
+    margin-right: -21px !important;
+}
