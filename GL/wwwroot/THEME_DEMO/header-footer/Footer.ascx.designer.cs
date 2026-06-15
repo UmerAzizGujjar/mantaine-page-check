@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PMS.wwwroot.THEME_ASSIRAAT.header_footer
+namespace PMS.wwwroot.THEME_DEMO.header_footer
 {
 
 
