@@ -63,12 +63,12 @@
                 } else {
                     reportPath = 'ReportViewer.aspx'; // same folder
                 }
-                var url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id;
+                var url = "/ReportViewer.aspx?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=" + id + "&IsDuplicate=1";
                 if (!locationInfo.origin.includes('localhost')) {
                     var urlInfo = window.location.href.split('/');
                     var ip = urlInfo[2];
                     var foldername = urlInfo[3];
-                    url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + id;
+                    url = 'http://' + ip + '/' + foldername + '/' + reportPath + '?ReportName=BillingBaseReport&ReportTitle=Billing Base Report&Bill_ID=' + id + "&IsDuplicate=1";
                 }
                 window.open(url, '_blank');
 
