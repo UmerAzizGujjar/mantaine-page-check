@@ -3368,12 +3368,12 @@
             if (PatientID != '(New)') {
                 $('#tblHistoryTests tbody tr').remove();
                 PageMethods.GetTestListForHistory(PatientID, function (res) {
-                     
+                    debugger;
                     var test = JSON.parse(res);
                     var rows = '';
                     var Sample = 'No';
                     $.each(test, function (key, value) {
-                         
+
                         var Result = 'Pending';
                         var timeStamp = parseInt(value.Date.substr(6, 10));
                         var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
@@ -3381,6 +3381,8 @@
                             value.L_R_Rotation_ID = "";
                         var datearray = date.split("/");
                         var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+
+                        
                         if (value.Is_Result == true) {
                             Result = "Resulted";
                             Sample = "Yes";
@@ -3389,21 +3391,36 @@
                             Result = "Waiting";
                             Sample = "No";
                         }
+
+                        
+                        var previewAction = '';
+                        if (value.Is_Result == true) {
+                            var testIds = value.ListOfTestIDs || value.Test_ID;
+                            var labTestDetailId = value.Lab_Test_Detail_ID || '';
+                            var reportColumn = value.Report_Colum || '';
+                            var billDetailId = value.Bill_Details_ID || '';
+                            var transId = value.Lab_Test_ID || '';
+                            var patId = value.patient_ID || PatientID;
+
+                            previewAction = ' | <a href="javascript:void(0)" onclick="PreviewInPatientReport(\'' + testIds + '\', \'' + labTestDetailId + '\', \'' + reportColumn + '\', \'' + billDetailId + '\', \'' + transId + '\', \'' + patId + '\')" style="text-decoration: underline; color: #2a6496; font-size: 14px;">Preview</a>';
+                        }
+                        
+
                         if (value.Test_ID != 0) {
                             if (value.Department_ID == "001") {
-                                row = '<tr><td><input type="hidden" name="testDate" value="' + newdate + '">' + newdate + '</td><td>' + value.Status + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="0"> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.GroupName == null ? ' ' : ', ' + value.GroupName) + '</td>   <td>' + Sample + '</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + value.Special_Tests + '"/> ' + value.Special_Tests + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td> </tr>';
+                                row = '<tr><td><input type="hidden" name="testDate" value="' + newdate + '">' + newdate + '</td><td>' + value.Status + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="0"> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.GroupName == null ? ' ' : ', ' + value.GroupName) + '</td>   <td>' + Sample + '</td><td>' + Result + previewAction + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + value.Special_Tests + '"/> ' + value.Special_Tests + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td> </tr>';
                             }
                             else {
                                 if (value.Department_ID == "003") {
-                                    row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td><td>' + value.Status + '</td>   <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="' + value.DataValue_Name + '"> <input type="hidden" name="txtddlXRayLF_Name" value="' + value.L_R_Rotation_ID + '"><input type="hidden" name="txtGroupCategory" value="0"><input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.DataValue_Description == null ? ' ' : ', ' + value.DataValue_Description) + ',' + value.L_R_Rotation_ID + '</td>   <td>' + Sample + '</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + value.Special_Tests + '"/> ' + value.Special_Tests + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td></tr>';
+                                    row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td><td>' + value.Status + '</td>   <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="' + value.DataValue_Name + '"> <input type="hidden" name="txtddlXRayLF_Name" value="' + value.L_R_Rotation_ID + '"><input type="hidden" name="txtGroupCategory" value="0"><input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.DataValue_Description == null ? ' ' : ', ' + value.DataValue_Description) + ',' + value.L_R_Rotation_ID + '</td>   <td>' + Sample + '</td><td>' + Result + previewAction + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + value.Special_Tests + '"/> ' + value.Special_Tests + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td></tr>';
                                 }
                                 else {
-                                    row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td><td>' + value.Status + '</td>   <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /><input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/> <input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="0"><input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.Rotation == null ? ' ' : ', ' + value.Rotation) + '</td>   <td>' + Sample + '</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + value.Special_Tests + '"/> ' + value.Special_Tests + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td></tr>';
+                                    row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td><td>' + value.Status + '</td>   <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /><input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/> <input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="0"><input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.Rotation == null ? ' ' : ', ' + value.Rotation) + '</td>   <td>' + Sample + '</td><td>' + Result + previewAction + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + value.Special_Tests + '"/> ' + value.Special_Tests + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td></tr>';
                                 }
                             }
                         }
                         else {
-                            row = '<tr><td><input type="hidden" name="testDate" value="' + newdate + '">' + newdate + '</td><td>' + value.Status + '</td>   <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtValueType" value="' + value.Value_TypeGroup + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Catagory_ID + '"/>' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Group_Name + ' </td>   <td>' + Sample + '</td><td>' + Result + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td> </tr>';
+                            row = '<tr><td><input type="hidden" name="testDate" value="' + newdate + '">' + newdate + '</td><td>' + value.Status + '</td>   <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="txtValueType" value="' + value.Value_TypeGroup + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Catagory_ID + '"/>' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Group_Name + ' </td>   <td>' + Sample + '</td><td>' + Result + previewAction + '</td> <td> <input type="hidden" name="txtSpecial_Test" value="' + ctl00_MainContent_txtSpecialTests.value + '"/> ' + ctl00_MainContent_txtSpecialTests.value + '  </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td> </tr>';
                         }
                         $('#tblHistoryTests tbody').append(row);
                     });
@@ -3499,39 +3516,32 @@
         }
         var docfromNotes;
         function LoadTestList() {
-             
-
             var patientID = $('#<%= hdfPatient_ID.ClientID%>').val();
             docfromNotes = $('#tblDOctorNotes').find('tbody').find('td input[name=txtDoctorName]').val();
 
             if (patientID != "(New)") {
                 PageMethods.GetTestList(patientID, function (res) {
-
                     var test = JSON.parse(res);
-
                     var rows = '';
+
                     $.each(test, function (key, value) {
-                         
                         if (value.L_R_Rotation_ID == null)
                             value.L_R_Rotation_ID = "";
-
 
                         var timeStamp = parseInt(value.Date.substr(6, 10));
                         var date = moment.unix(timeStamp).format('M/D/YYYY h:m:s A');
                         var datearray = date.split("/");
                         var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+
                         var Result = 'Pendding';
                         var Sample = 'No';
+
                         if (value.Is_Result == true) {
                             Result = "View Result";
                             Sample = "Yes";
                         }
-
-
-
                         if (value.Is_Result == null || value.Is_Result == false) {
                             value.Is_Result = ""
-
                         }
                         if (value.Recieved_ID == null) {
                             value.Recieved_ID = ""
@@ -3541,10 +3551,8 @@
                             Result = "Bill Pending";
                         }
                         if (value.IsBilled == true) {
-
                             Result = "Sample Pending";
                         }
-
                         var isample = value.IsSample;
                         if (isample != "0") {
                             Sample = "Yes";
@@ -3553,7 +3561,6 @@
                         if (value.IsAknowledgment != "0") {
                             Sample = "Yes";
                             Result = "Result Pending";
-
                         }
                         if (value.isResult == "True") {
                             Result = "Approval Pending";
@@ -3564,37 +3571,70 @@
                             Sample = "Yes";
                         }
 
-
                         if (value.DoctorName == "" || value.DoctorName == null || value.DoctorName == "null" || value.DoctorName == 'null') {
                             value.DoctorName = "-";
                         }
 
-                        var deleteAction = (value.IsBilled == true)
-                            ? '<td><input type="hidden" name="rowid" value="' + uuid() + '" /></td></tr>'
-                            : '<td><input type="hidden" name="rowid" value="' + uuid() + '" /><a href="javascript:void(0)" onclick="deleteTest(this)">Delete</a></td></tr>';
+                        var hasResult = (value.Is_Result == true || value.isResult == "True");
+
+                        
+                        var actionContent = '<input type="hidden" name="rowid" value="' + uuid() + '" />';
+
+                        
+                        if (hasResult) {
+                            var testIds = value.ListOfTestIDs || value.Test_ID;
+                            var labTestDetailId = value.Lab_Test_Detail_ID || '';
+                            var reportColumn = value.Report_Colum || '';
+                            var billDetailId = value.Bill_Details_ID || '';
+                            var transId = value.Lab_Test_ID || '';
+                            var patId = value.patient_ID || patientID;
+
+                            actionContent += ' <a href="javascript:void(0)" onclick="PreviewInPatientReport(\'' + testIds + '\', \'' + labTestDetailId + '\', \'' + reportColumn + '\', \'' + billDetailId + '\', \'' + transId + '\', \'' + patId + '\')" style="text-decoration: underline; color: #28a745; font-size: 14px; margin-right: 5px;">Preview</a>';
+                        }
+
+                        
+                        if (value.IsBilled != true) {
+                            actionContent += ' <a href="javascript:void(0)" onclick="deleteTest(this)" style="text-decoration: underline; color: #dc3545; font-size: 14px;">Delete</a>';
+                        }
+
+                        var actionColumn = '<td>' + actionContent + '</td></tr>';
+                        
 
                         if (value.Test_ID != 0) {
                             if (value.Department_ID == "001") {
-                                 
-                                row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /><input type="hidden" name="LabtestDtID" value="' + value.Lab_Test_Detail_ID + '" /> <input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtIs_Result" value="' + value.Is_Result + '"/><input type="hidden" name="txtIsBIllied" value="' + value.IsBilled + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="0"> <input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.GroupName == null ? ' ' : ', ' + value.GroupName) + '</td><td>' + Sample + '</td><td>' + (value.Is_Result == true ? '<a href="javascript:void(0)"onclick="EditResultOPD(this)" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + Result + '</a>' : Result + '') + ' </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td> <td>' + value.DoctorName + ' <input type="hidden" name="Docid" value="' + value.Doctor + '" </td>' + deleteAction;
+                                var editLink = (value.Is_Result == true)
+                                    ? '<a href="javascript:void(0)" onclick="EditResultOPD(this)" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + Result + '</a>'
+                                    : Result;
+
+                                row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /><input type="hidden" name="LabtestDtID" value="' + value.Lab_Test_Detail_ID + '" /> <input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtIs_Result" value="' + value.Is_Result + '"/><input type="hidden" name="txtIsBIllied" value="' + value.IsBilled + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="0"> <input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.GroupName == null ? ' ' : ', ' + value.GroupName) + '</td><td>' + Sample + '</td><td>' + editLink + ' </td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td> <td>' + value.DoctorName + ' <input type="hidden" name="Docid" value="' + value.Doctor + '" </td>' + actionColumn;
                             }
                             else {
                                 if (value.Department_ID == "003") {
-                                    row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /><input type="hidden" name="LabtestDtID" value="' + value.Lab_Test_Detail_ID + '" /><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtIs_Result" value="' + value.Is_Result + '"/><input type="hidden" name="txtIsBIllied" value="' + value.IsBilled + '"/><input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtRotation" value="' + value.Rotation_ID + '"> <input type="hidden" name="txtddlXRayLF_Name" value="' + value.L_R_Rotation_ID + '"><input type="hidden" name="txtGroupCategory" value="0"><input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.DataValue_Description == null ? ' ' : ', ' + value.DataValue_Description) + ',' + value.L_R_Rotation_ID + '</td>   <td>' + Sample + '</td><td>' + (value.Is_Result == true ? '<a href="javascript:void(0)"onclick="EditResultOPD(this)" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + Result + '</a>' : Result + '') + '</td> <td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td> <td>' + value.DoctorName + ' <input type="hidden" name="Docid" value="' + value.Doctor + '" </td>' + deleteAction;
+                                    var editLink = (value.Is_Result == true)
+                                        ? '<a href="javascript:void(0)" onclick="EditResultOPD(this)" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + Result + '</a>'
+                                        : Result;
+
+                                    row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /><input type="hidden" name="LabtestDtID" value="' + value.Lab_Test_Detail_ID + '" /><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtIs_Result" value="' + value.Is_Result + '"/><input type="hidden" name="txtIsBIllied" value="' + value.IsBilled + '"/><input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtRotation" value="' + value.Rotation_ID + '"> <input type="hidden" name="txtddlXRayLF_Name" value="' + value.L_R_Rotation_ID + '"><input type="hidden" name="txtGroupCategory" value="0"><input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.DataValue_Description == null ? ' ' : ', ' + value.DataValue_Description) + ',' + value.L_R_Rotation_ID + '</td>   <td>' + Sample + '</td><td>' + editLink + '</td> <td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td> <td>' + value.DoctorName + ' <input type="hidden" name="Docid" value="' + value.Doctor + '" </td>' + actionColumn;
                                 }
                                 else {
-                                     
-                                    row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /><input type="hidden" name="LabtestDtID" value="' + value.Lab_Test_Detail_ID + '" /><input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtIs_Result" value="' + value.Is_Result + '"/><input type="hidden" name="txtIsBIllied" value="' + value.IsBilled + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="0"><input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.Rotation == null ? ' ' : ', ' + value.Rotation) + '</td>   <td>' + Sample + '</td><td>' + (value.Is_Result == true ? '<a href="javascript:void(0)"onclick="EditResultOPD(this)" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + Result + '</a>' : Result + '') + '</td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td> <td>' + value.DoctorName + ' <input type="hidden" name="Docid" value="' + value.Doctor + '" </td>' + deleteAction;
+                                    var editLink = (value.Is_Result == true)
+                                        ? '<a href="javascript:void(0)" onclick="EditResultOPD(this)" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + Result + '</a>'
+                                        : Result;
+
+                                    row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /><input type="hidden" name="LabtestDtID" value="' + value.Lab_Test_Detail_ID + '" /><input type="hidden" name="txtValueType" value="' + value.Value_Type + '"/><input type="hidden" name="txtIs_Result" value="' + value.Is_Result + '"/><input type="hidden" name="txtIsBIllied" value="' + value.IsBilled + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="0"><input type="hidden" name="txtDeptID" value="' + value.Department_ID + '"/> ' + (value.DepartmentName == null ? '' : value.DepartmentName + ', ') + ' ' + value.Test_Name + ' ' + (value.Rotation == null ? ' ' : ', ' + value.Rotation) + '</td>   <td>' + Sample + '</td><td>' + editLink + '</td><td><input type="hidden" name="txtArea_Of_Interest" value="' + value.Area_Of_Interest + '"/> ' + value.Area_Of_Interest + ' </td> <td>' + value.DoctorName + ' <input type="hidden" name="Docid" value="' + value.Doctor + '" </td>' + actionColumn;
                                 }
                             }
                         }
                         else {
-                             
-                            row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="LabtestDtID" value="' + value.Lab_Test_Detail_ID + '" /><input type="hidden" name="txtValueType" value="' + value.Value_TypeGroup + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtIs_Result" value="' + value.Is_Result + '"/><input type="hidden" name="txtIsBIllied" value="' + value.IsBilled + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Catagory_ID + '"/><input type="hidden" name="txtDeptID" value="' + value.Dept_ID + '"/>' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Group_Name + ' </td>   <td>' + Sample + '</td><td>' + (value.Is_Result == true ? '<a href="javascript:void(0)"onclick="EditResultOPD(this)" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + Result + '</a>' : Result + '') + '</td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td> <td>' + value.DoctorName + ' <input type="hidden" name="Docid" value="' + value.Doctor + '" </td>' + deleteAction;
+                            var editLink = (value.Is_Result == true)
+                                ? '<a href="javascript:void(0)" onclick="EditResultOPD(this)" style="text-decoration: underline; color: #2a6496; font-size: 14px;">' + Result + '</a>'
+                                : Result;
+
+                            row = '<tr><td><input type="hidden" name="testDate" value="' + date + '">' + newdate + '</td>  <td><input type="hidden" name="testID" value="' + value.Test_ID + '" /> <input type="hidden" name="LabtestDtID" value="' + value.Lab_Test_Detail_ID + '" /><input type="hidden" name="txtValueType" value="' + value.Value_TypeGroup + '"/><input type="hidden" name="txtRecievedID" value="' + value.Recieved_ID + '"/><input type="hidden" name="txtIs_Result" value="' + value.Is_Result + '"/><input type="hidden" name="txtIsBIllied" value="' + value.IsBilled + '"/><input type="hidden" name="txtRotation" value="0"><input type="hidden" name="txtGroupCategory" value="' + value.Catagory_ID + '"/><input type="hidden" name="txtDeptID" value="' + value.Dept_ID + '"/>' + (value.TestMainDepartmentName == null ? '' : value.TestMainDepartmentName + ', ') + ' ' + value.Group_Name + ' </td>   <td>' + Sample + '</td><td>' + editLink + '</td><td><input type="hidden" name="txtArea_Of_Interest" value="' + ctl00_MainContent_txtAreaOfInterest.value + '"/> ' + ctl00_MainContent_txtAreaOfInterest.value + ' </td> <td>' + value.DoctorName + ' <input type="hidden" name="Docid" value="' + value.Doctor + '" </td>' + actionColumn;
                         }
+
                         $('.tests-table').append(row);
                     });
-
                 });
             }
         }
@@ -7027,7 +7067,22 @@
             $('#Tab-20').hide(); 
         }
     });
-}
+        }
+
+
+        function PreviewInPatientReport(testIds, labTestDetailId, reportColumn, billDetailId, transId, patientId) {
+            var ChkLetterHead = true;
+            var url = '../../ReportViewer.aspx?ReportName=TestResultQ' +
+                '&ReportTitle=Department Of Pathalogy' +
+                '&Test_IDs=' + encodeURIComponent(testIds || '') +
+                '&test_wise_ids=' + encodeURIComponent(patientId || '') +
+                '&TransID=' + encodeURIComponent(transId || '') +
+                '&labTDetailsID=' + encodeURIComponent(labTestDetailId || '') +
+                '&BillDetailID=' + encodeURIComponent(billDetailId || '') +
+                '&ReportColumn=' + encodeURIComponent(reportColumn || '') +
+                '&ChkLetterHead=' + ChkLetterHead;
+            window.open(url, '_blank');
+        }
     </script>
 
 </asp:Content>
