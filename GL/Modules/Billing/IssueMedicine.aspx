@@ -1132,7 +1132,7 @@
                 if (userC == userCode && userP == UserPass) {
                     debugger;
                     if (validateSaleReturn()) {
-
+                        var BillId = 0;
                         var Bill_Id = $('#ddlInvoiceNumber').val() || 0;
                         var ReturnBillId = $("#hdnReturnBillID").val();
                         if (ReturnBillId == undefined || ReturnBillId == "") {
@@ -1140,6 +1140,9 @@
                         }
                         if (Bill_Id == 0) {
                             BillId = ReturnBillId
+                        }
+                        else {
+                            BillId = Bill_Id
                         }
                         //var BillId = $('#ddlInvoiceNumber').val() || 0;
 

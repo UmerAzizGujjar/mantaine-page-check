@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="js/select2.min.css" rel="stylesheet" />
     <script src="js/select2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="../../wwwroot/lib/apexcharts/apexchart.js"></script>
   <style>
       select{
           width:200px !important;
