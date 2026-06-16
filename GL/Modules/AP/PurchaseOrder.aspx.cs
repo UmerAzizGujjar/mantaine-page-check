@@ -1016,9 +1016,15 @@ namespace PMS.AP
                         Unit = db.GetDataValueName("UOM", x.Unit) ?? "",
                         Purchase_Rate = x.Purchase_Rate != null ? x.Purchase_Rate : 0,
                         UOM_Qty = x.UOM_Qty != null ? x.UOM_Qty : 1,
-                        TotalStock = db.GetInvenrtoryItemUomTotalStock(x.Item_ID, x.InventoryOrg)
-                    })
-                    .ToList();
+                        Last_PO_Rate = (from pd in db.AP_Purchase_Order_Items
+                                        join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
+                                        where pd.Item_Id == x.Item_ID
+                                        orderby ph.Creation_Time descending
+                                        select pd.Rate)
+                            .FirstOrDefault() ?? 0,
+                                TotalStock = db.GetInvenrtoryItemUomTotalStock(x.Item_ID, x.InventoryOrg)
+                            })
+                         .ToList();
 
                 return (new JavaScriptSerializer()).Serialize(Details);
             }

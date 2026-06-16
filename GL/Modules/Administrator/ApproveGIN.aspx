@@ -209,6 +209,7 @@
                 { "data": "Department", "width": "13%", "orderable": false },
                 { "data": "warehouse", "width": "13%", "orderable": false },
                 { "data": "CREATOR", "width": "13%", "orderable": false },
+                { "data": "RequestNo", "width": "13%", "orderable": false },
                 { "data": "STATUS", "width": "10%", "orderable": false },
                 { "data": "APPROVEBY", "width": "10%", "orderable": false },
                 {
@@ -261,6 +262,7 @@
                  <th>Department</th>
                  <th>warehouse</th>
                   <th>Creator</th>
+                  <th>RequestNo</th>
                   <th>Status</th>
                  <th>Approve By</th>
                  <th>Actions</th>

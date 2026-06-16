@@ -1904,6 +1904,12 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+        .addendum-content {
+            font-size: 11px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
 
         /* ── REPORT CONTENT ── */
         .report-content {
@@ -2129,6 +2135,11 @@ function cleanPrint() {
     <div class="report-content">
         ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
     </div>
+
+    <!-- Addendum CONTENT (Addendum_Template from CKEditor) -->
+<div class="addendum-content">
+    ${data.Addendum_Template || '<p style="color:#999; text-align:center;">No report Addendum Added.</p>'}
+</div>
 
 <!-- SIGNATURES -->
 <div class="signatures">

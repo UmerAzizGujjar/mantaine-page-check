@@ -285,6 +285,11 @@ namespace PMS
                                              SIID = a.Store_Issue_Id,
                                              SINO = a.Store_Issue_No,
                                              STATUS = a.Status,
+                                             RequestNo = (from gmm in db.MaterialIssueRequests
+                                                          where gmm.MaterialRequest_Id == (from gm in db.Store_Issue_Details
+                                                                                           where gm.Store_Issue_Id == a.Store_Issue_Id
+                                                                                           select gm.MIR_Id).FirstOrDefault()
+                                                          select gmm.Request_No).FirstOrDefault(),
                                              warehouse = db.GetDataValueName("Ware House", a.Organization_Id),
                                              CREATOR = db.aspnet_Users
                                                        .Where(x => x.UserId == (a.Created_by ?? Guid.Empty))
@@ -302,14 +307,14 @@ namespace PMS
                     if (!string.IsNullOrEmpty(searchValue))
                     {
                         formattedQuery = formattedQuery.Where(x =>
-                            x.SINO.ToString().Contains(searchValue) ||
-                            x.STATUS.ToString().Contains(searchValue) ||
-                            x.Department.Contains(searchValue) ||
-                            x.warehouse.Contains(searchValue) ||
+                            Convert.ToString(x.SINO).Contains(searchValue) ||
+                            x.STATUS.Contains(searchValue) ||
+                            (x.Department != null && x.Department.Contains(searchValue)) ||
+                            (x.warehouse != null && x.warehouse.Contains(searchValue)) ||
+                            (x.RequestNo != null && Convert.ToString(x.RequestNo).Contains(searchValue)) ||
                             (x.CREATOR != null && x.CREATOR.Contains(searchValue))
                         );
                     }
-
                     var FilteredCount = formattedQuery.Count();
 
                     // Sorting

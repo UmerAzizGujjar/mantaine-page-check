@@ -1502,6 +1502,18 @@ namespace PMS
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
 
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
+
                 }
                 if (this.PageTitle == "StockValuationReport")
                 {
@@ -1566,6 +1578,19 @@ namespace PMS
 
                     lblPatientType.Visible = true;
                     ddlPatientType.Visible = true;
+
+
+                                        DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
+
 
                 }
                 if (this.PageTitle == "IGP_Report")
@@ -1992,7 +2017,16 @@ namespace PMS
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
 
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
 
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
                 }
                 #endregion
                 #region General Patient Modules
@@ -4988,6 +5022,16 @@ namespace PMS
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
 
+                    DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
 
                 }
                 if (this.PageTitle == "Item_Wise_Purchase_Report")
@@ -5032,6 +5076,16 @@ namespace PMS
                     lbItemCategory.Visible = false;
                     ddlItemCategory.Visible = false;
 
+                     DataBaseDataContext dbs = new DataBaseDataContext(DBClass.ConnectionString());
+                    var serviceList = (from sl in dbs.INV_Items
+                                       where sl.Active == true
+                                       select new { sl.Item_ID, sl.Description }).ToList();
+
+                    ddlItemName.DataSource = serviceList;
+                    ddlItemName.DataValueField = "Item_ID";
+                    ddlItemName.DataTextField = "Description";
+                    ddlItemName.Items.Add(new ListItem() { Text = "All", Value = "0" });
+                    ddlItemName.DataBind();
 
                 }
                 if (this.PageTitle == "YearlyPharmacyOverallSummary")
