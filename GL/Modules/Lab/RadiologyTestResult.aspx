@@ -298,6 +298,7 @@
             $("#ddlrptColumns").val(4);
             AllowLabRights();
             LoadDoctorsForWaitingList();
+            checkAddendumMode();
             var PatientID = '<%=Request.QueryString["PatientID"]%>';
             if (PatientID != "") {
                 fillTokenInput(PatientID);
@@ -1903,6 +1904,12 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+        .addendum-content {
+            font-size: 11px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
 
         /* ── REPORT CONTENT ── */
         .report-content {
@@ -2128,6 +2135,11 @@ function cleanPrint() {
     <div class="report-content">
         ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
     </div>
+
+    <!-- Addendum CONTENT (Addendum_Template from CKEditor) -->
+<div class="addendum-content">
+    ${data.Addendum_Template || '<p style="color:#999; text-align:center;">No report Addendum Added.</p>'}
+</div>
 
 <!-- SIGNATURES -->
 <div class="signatures">
@@ -3026,6 +3038,7 @@ function cleanPrint() {
                                 $("#saveTest").val("Save");
                                 $("#btnApprove").hide();
                                 $("#btnReject").hide();
+                                $("#btnAddendum").hide();
                             }
                             else if (is_Result == "True" && (is_Approved == "False" || is_Approved == null)) {
 
@@ -3033,6 +3046,7 @@ function cleanPrint() {
                                 $("#saveTest").val("Update");
                                 $("#btnApprove").show();
                                 $("#btnReject").hide();
+                                $("#btnAddendum").hide(); 
                             }
 
                             else {
@@ -3041,6 +3055,13 @@ function cleanPrint() {
                                 $("#saveTest").hide();
                                 $("#btnApprove").hide();
                                 $("#btnReject").show();
+                                if (isAddendumMode) {
+                                    $("#btnAddendum").show();
+                                    $("#btnReject").hide();
+                                } else {
+                                    $("#btnAddendum").hide();
+                                    $("#btnReject").show();
+                                }
                             }
 
                             //setTimeout(function () {
@@ -3271,6 +3292,7 @@ function cleanPrint() {
                             $("#saveTest").val("Update");
                             $("#btnApprove").show();
                             $("#btnReject").hide();
+                            $("#btnAddendum").hide();
 
                         }
 
@@ -3282,12 +3304,20 @@ function cleanPrint() {
                             $("#saveTest").val("Save");
                             $("#btnApprove").hide();
                             $("#btnReject").hide();
+                            $("#btnAddendum").hide();
                         }
                         else if (parsedData[key].Is_Result == true && parsedData[key].Is_Approve == true) {
                             $('#txtvaluetype').prop("readonly", true);
                             $("#saveTest").hide();
                             $("#btnApprove").hide();
                             $("#btnReject").show();
+                            if (isAddendumMode) {
+                                $("#btnAddendum").show();
+                                $("#btnReject").hide();
+                            } else {
+                                $("#btnAddendum").hide();
+                                $("#btnReject").show();
+                            }
                         }
 
                     });
@@ -3890,6 +3920,166 @@ function cleanPrint() {
             return hasRights;
         }
 
+
+
+        var addendumEditor;
+        var isAddendumMode = false;
+
+        // Check addendum mode on page load
+        function checkAddendumMode() {
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/AddendumWorking",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var mode = response.d;
+                    isAddendumMode = (mode === "01");
+
+                    if (isAddendumMode) {
+                        $('#btnReject').hide(); // Hide reject button in addendum mode
+                        $('#btnAddendum').show(); // Show addendum button
+                    } else {
+                        $('#btnReject').show(); // Show reject button in normal mode
+                        $('#btnAddendum').hide(); // Hide addendum button
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking addendum mode:", error);
+                }
+            });
+        }
+
+        
+        function initializeAddendumEditor() {
+            if (CKEDITOR.instances['txtAddendumTemplate']) {
+                CKEDITOR.instances['txtAddendumTemplate'].destroy();
+            }
+
+            addendumEditor = CKEDITOR.replace('txtAddendumTemplate', {
+                height: 200, 
+                on: {
+                    instanceReady: function (ev) {
+                        ev.editor.document.getBody().setStyle('font-size', '14px');
+                    },
+                    contentDom: function (ev) {
+                        var body = ev.editor.document.getBody();
+                        if (body.getStyle('font-size') !== '14px') {
+                            body.setStyle('font-size', '14px');
+                        }
+                    }
+                }
+            });
+        }
+
+        // Show addendum editor
+        function showAddendumEditor() {
+            $('#divAddendumSection').show();
+            initializeAddendumEditor();
+
+            // Load existing addendum if any
+            var testDetailID = $('#hdtestdetailid').val();
+            if (testDetailID && testDetailID !== "0") {
+                $.ajax({
+                    type: "POST",
+                    url: "RadiologyTestResult.aspx/GetAddendumData",
+                    data: JSON.stringify({ testDetailID: testDetailID }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var data = typeof response.d === 'string' ? JSON.parse(response.d) : response.d;
+                        if (data && data.Addendum_Template) {
+                            addendumEditor.setData(data.Addendum_Template);
+                        } else {
+                            addendumEditor.setData('');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error loading addendum:", error);
+                    }
+                });
+            }
+        }
+
+        // Save addendum
+        function saveAddendum() {
+            var testDetailID = $('#hdtestdetailid').val();
+            var addendumContent = addendumEditor ? addendumEditor.getData() : '';
+
+            if (addendumContent.trim() === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Please enter addendum notes',
+                    showConfirmButton: true
+                });
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/SaveAddendum",
+                data: JSON.stringify({
+                    testDetailID: testDetailID,
+                    addendumTemplate: addendumContent
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d === "Success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Addendum saved successfully',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                       // $('#divAddendumSection').hide();
+
+                        if (typeof currentlyEditingElement !== 'undefined') {
+                            EditData(currentlyEditingElement);
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.d,
+                            showConfirmButton: true
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to save addendum: ' + error,
+                        showConfirmButton: true
+                    });
+                }
+            });
+        }
+
+        
+
+        function checkAddendumMode() {
+            $.ajax({
+                type: "POST",
+                url: "RadiologyTestResult.aspx/AddendumWorking",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var mode = response.d;
+                    isAddendumMode = (mode === "01");
+
+                    $('#btnReject').hide();
+                    $('#btnAddendum').hide();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error checking addendum mode:", error);
+                }
+            });
+        }
+
     </script>
 
 
@@ -4232,6 +4422,7 @@ function cleanPrint() {
                             </tr>
                         </tbody>
                     </table>
+
                     <table id="tblgroupTestlist" class="table">
                         <thead>
                             <tr>
@@ -4246,6 +4437,23 @@ function cleanPrint() {
                         </thead>
                         <tbody></tbody>
                     </table>
+                    <div id="divAddendumSection" style="display: none; margin-top: 20px; border-top: 2px solid #ddd; padding-top: 15px;">
+                        <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                            <strong style="color: #856404;">📝 Addendum Notes</strong>
+                            <small style="color: #856404; display: block;">Add supplementary information or corrections to this report</small>
+                        </div>
+
+                        <textarea id="txtAddendumTemplate" name="txtAddendumTemplate" rows="6"></textarea>
+
+                        <div class="row" style="margin-top: 10px; text-align: right;">
+                            <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn btn-primry" value="Cancel" onclick="$('#divAddendumSection').hide();" style="margin-right: 10px;" />
+                                </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6">
+                            <input type="button" class="btn btn-primry" value="Save Addendum" onclick="saveAddendum();" />
+                        </div>
+                    </div>
+                    </div>
                 </div>
 
 
@@ -4284,6 +4492,10 @@ function cleanPrint() {
                         </div>
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input type="button" id="btnApprove" class="btn btn-primry" name="btnApprove" value="Approve" />
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-12">
+                            <input type="button" id="btnAddendum" class="btn btn-primry" name="btnAddendum" value="Addendum"
+                                onclick="showAddendumEditor();" style="display: none;" />
                         </div>
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input type="button" id="btnReject" class="btn btn-primry" name="btnReject" value="Reject" />
