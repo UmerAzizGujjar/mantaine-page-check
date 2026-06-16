@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -17,51 +18,68 @@ namespace PMS.Modules.Dashboards
 
         }
 
-        [WebMethod]
-        public static string GetHospitalRevenue(string period)
+        private static void ResolveDates(string period, string startDateStr, string endDateStr, out DateTime startDate, out DateTime endDate)
+        {
+            DateTime now = DateTime.Now;
+            startDate = DateTime.Today;
+            endDate = DateTime.Now;
+
+            switch (period.ToLower())
+            {
+                case "yesterday":
+                    startDate = DateTime.Today.AddDays(-1);
+                    endDate = DateTime.Today.AddDays(-1).AddDays(1).AddTicks(-1);
+                    break;
+                case "week":
+                    int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
+                    startDate = now.AddDays(-1 * diff).Date;
+                    endDate = now;
+                    break;
+                case "month":
+                    startDate = new DateTime(now.Year, now.Month, 1);
+                    endDate = now;
+                    break;
+                case "year":
+                    startDate = new DateTime(now.Year, 1, 1);
+                    endDate = now;
+                    break;
+                case "custom":
+                    DateTime ps, pe;
+                    if (!string.IsNullOrEmpty(startDateStr) && DateTime.TryParseExact(startDateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ps))
+                        startDate = ps;
+                    if (!string.IsNullOrEmpty(endDateStr) && DateTime.TryParseExact(endDateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out pe))
+                        endDate = pe.Date.AddDays(1).AddTicks(-1);
+                    break;
+                default:
+                    startDate = DateTime.Today;
+                    endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                    break;
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetHospitalRevenue(string period, string startDate = null, string endDate = null)
         {
             try
             {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                DateTime now = DateTime.Now;
-                switch (period.ToLower())
-                {
-                    case "week":
-                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                        startDate = now.AddDays(-1 * diff).Date;
-                        endDate = now; 
-                        break;
-                    case "month":
-                        startDate = new DateTime(now.Year, now.Month, 1);
-                        endDate = now;
-                        break;
-                    case "year":
-                        startDate = new DateTime(now.Year, 1, 1);
-                        endDate = now;
-                        break;
-                    default:
-                        startDate = DateTime.Today;
-                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                        break;
-                }
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     decimal patientSum = (from p in db.Patients
-                                          where p.Created_Time >= startDate && p.Created_Time <= endDate
+                                          where p.Created_Time >= sDate && p.Created_Time <= eDate
                                           select (decimal?)p.Receipt_Amount).Sum() ?? 0;
 
                     decimal billingSum = (from b in db.Ar_Billings
-                                          where b.Creation_Date >= startDate && b.Creation_Date <= endDate
+                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate
                                           select (decimal?)b.Received_Amount).Sum() ?? 0;
 
                     decimal totalRevenue = patientSum + billingSum;
 
                     return new JavaScriptSerializer().Serialize(new
                     {
-                        TotalHospitalRevenue = totalRevenue,
-                        DateRange = startDate.ToString("MMM dd, yyyy") + " - " + DateTime.Now.ToString("MMM dd, yyyy")
+                        TotalHospitalRevenue = totalRevenue
                     });
                 }
             }
@@ -71,43 +89,23 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        [WebMethod]
-        public static string GetOPDSaleRevenue(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetOPDSaleRevenue(string period, string startDate = null, string endDate = null)
         {
             try
             {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Now;
-                DateTime now = DateTime.Now;
-
-                switch (period.ToLower())
-                {
-                    case "week":
-                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                        startDate = now.AddDays(-1 * diff).Date;
-                        break;
-                    case "month":
-                        startDate = new DateTime(now.Year, now.Month, 1);
-                        break;
-                    case "year":
-                        startDate = new DateTime(now.Year, 1, 1);
-                        break;
-                    default:
-                        startDate = DateTime.Today;
-                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                        break;
-                }
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     decimal opdRevenue = (from p in db.Patients
-                                          where p.Created_Time >= startDate && p.Created_Time <= endDate
+                                          where p.Created_Time >= sDate && p.Created_Time <= eDate
                                           select (decimal?)p.Receipt_Amount).Sum() ?? 0;
 
                     return new JavaScriptSerializer().Serialize(new
                     {
-                        OPDRevenue = opdRevenue,
-                        DateRange = startDate.ToString("MMM dd, yyyy") + " - " + DateTime.Now.ToString("MMM dd, yyyy")
+                        OPDRevenue = opdRevenue
                     });
                 }
             }
@@ -117,45 +115,25 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        [WebMethod]
-        public static string GetPharmacyRevenue(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetPharmacyRevenue(string period, string startDate = null, string endDate = null)
         {
             try
             {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Now;
-                DateTime now = DateTime.Now;
-
-                switch (period.ToLower())
-                {
-                    case "week":
-                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                        startDate = now.AddDays(-1 * diff).Date;
-                        break;
-                    case "month":
-                        startDate = new DateTime(now.Year, now.Month, 1);
-                        break;
-                    case "year":
-                        startDate = new DateTime(now.Year, 1, 1);
-                        break;
-                    default:
-                        startDate = DateTime.Today;
-                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                        break;
-                }
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     decimal pharmacySum = (from b in db.Ar_Billings
-                                           where b.Creation_Date >= startDate &&
-                                                 b.Creation_Date <= endDate &&
+                                           where b.Creation_Date >= sDate &&
+                                                 b.Creation_Date <= eDate &&
                                                  b.IsPharmacy == true 
                                            select (decimal?)b.Received_Amount).Sum() ?? 0;
 
                     return new JavaScriptSerializer().Serialize(new
                     {
-                        PharmacyRevenue = pharmacySum,
-                        DateRange = startDate.ToString("MMM dd, yyyy") + " - " + DateTime.Now.ToString("MMM dd, yyyy")
+                        PharmacyRevenue = pharmacySum
                     });
                 }
             }
@@ -165,46 +143,26 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        [WebMethod]
-        public static string GetLabRadiologyRevenue(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetLabRadiologyRevenue(string period, string startDate = null, string endDate = null)
         {
             try
             {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Now;
-                DateTime now = DateTime.Now;
-
-                switch (period.ToLower())
-                {
-                    case "week":
-                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                        startDate = now.AddDays(-1 * diff).Date;
-                        break;
-                    case "month":
-                        startDate = new DateTime(now.Year, now.Month, 1);
-                        break;
-                    case "year":
-                        startDate = new DateTime(now.Year, 1, 1);
-                        break;
-                    default:
-                        startDate = DateTime.Today;
-                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                        break;
-                }
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     string[] deptCodes = { "001", "002", "003", "008", "005" };
 
                     var labSum = (from b in db.Ar_Billings
-                                  where b.Creation_Date >= startDate && b.Creation_Date <= endDate
+                                  where b.Creation_Date >= sDate && b.Creation_Date <= eDate
                                   where db.Ar_Billing_Details.Any(d => d.Bill_ID == b.Bill_ID && deptCodes.Contains(d.Test_Main_Department))
                                   select (decimal?)b.Received_Amount).Sum() ?? 0;
 
                     return new JavaScriptSerializer().Serialize(new
                     {
-                        LabRevenue = labSum,
-                        DateRange = startDate.ToString("MMM dd, yyyy") + " - " + DateTime.Now.ToString("MMM dd, yyyy")
+                        LabRevenue = labSum
                     });
                 }
             }
@@ -214,97 +172,95 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        [WebMethod]
-        public static string GetOPDChartData(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetOPDChartData(string period, string startDate = null, string endDate = null)
         {
             try
             {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Now;
-                DateTime now = DateTime.Now;
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
-                switch (period.ToLower())
+                using (var conn = new System.Data.SqlClient.SqlConnection(System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
                 {
-                    case "week":
-                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                        startDate = now.AddDays(-1 * diff).Date;
-                        break;
-                    case "month":
-                        startDate = new DateTime(now.Year, now.Month, 1);
-                        break;
-                    case "year":
-                        startDate = new DateTime(now.Year, 1, 1);
-                        break;
-                    default:
-                        startDate = DateTime.Today;
-                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                        break;
-                }
+                    // Optimized Query: 
+                    // 1. Gets all visits in the period and numbers them per patient (PeriodSeq).
+                    // 2. LEFT JOINs to a distinct list of patients who visited BEFORE the start date.
+                    // 3. Counts as "New" only if it's their 1st visit in the period AND they have no prior history.
+                    string query = @"
+                SELECT 
+                    ISNULL(COUNT(curr.Reg_PatId), 0) AS TotalPatients,
+                    ISNULL(SUM(CASE WHEN curr.PeriodSeq = 1 AND prev.Reg_PatId IS NULL THEN 1 ELSE 0 END), 0) AS NewPatients
+                FROM (
+                    SELECT 
+                        Reg_PatId,
+                        ROW_NUMBER() OVER(PARTITION BY Reg_PatId ORDER BY Created_Time ASC) as PeriodSeq
+                    FROM Patients 
+                    WHERE Created_Time >= @s AND Created_Time <= @e
+                      AND Reg_PatId IS NOT NULL
+                ) curr
+                LEFT JOIN (
+                    SELECT Reg_PatId
+                    FROM Patients
+                    WHERE Created_Time < @s
+                    GROUP BY Reg_PatId
+                ) prev ON curr.Reg_PatId = prev.Reg_PatId";
 
-                using (DataBaseDataContext db = new DataBaseDataContext())
-                {
-                    var visitsInPeriod = db.Patients
-                        .Where(p => p.Created_Time >= startDate && p.Created_Time <= endDate && p.Reg_PatId != null)
-                        .Select(p => new { p.Reg_PatId, p.Created_Time })
-                        .ToList();
-
-                    int newOPD = visitsInPeriod
-                        .GroupBy(p => p.Reg_PatId)
-                        .Count(g => !db.Patients.Any(prev => prev.Reg_PatId == g.Key && prev.Created_Time < startDate));
-                    int totalPatients = visitsInPeriod.Count;
-                    int revisitOPD = totalPatients - newOPD;
-
-                    return new JavaScriptSerializer().Serialize(new
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(query, conn))
                     {
-                        TotalPatients = totalPatients,
-                        NewOPD = newOPD,
-                        RevisitOPD = revisitOPD
-                    });
+                        cmd.CommandTimeout = 30; // Reduced timeout since this will run in milliseconds
+
+                        cmd.Parameters.AddWithValue("@s", sDate);
+                        cmd.Parameters.AddWithValue("@e", eDate);
+
+                        conn.Open();
+
+                        int totalPatients = 0;
+                        int newOPD = 0;
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                totalPatients = Convert.ToInt32(reader["TotalPatients"]);
+                                newOPD = Convert.ToInt32(reader["NewPatients"]);
+                            }
+                        }
+
+                        int revisitOPD = totalPatients - newOPD;
+
+                        return new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(new
+                        {
+                            TotalPatients = totalPatients,
+                            NewOPD = newOPD,
+                            RevisitOPD = revisitOPD
+                        });
+                    }
                 }
             }
             catch (Exception ex)
             {
-                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+                return new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(new { Error = ex.Message });
             }
         }
-
-        [WebMethod]
-        public static string GetOPDVolumeData(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetOPDVolumeData(string period, string startDate = null, string endDate = null)
         {
             try
             {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Now;
-                DateTime now = DateTime.Now;
-
-                switch (period.ToLower())
-                {
-                    case "week":
-                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                        startDate = now.AddDays(-1 * diff).Date;
-                        break;
-                    case "month":
-                        startDate = new DateTime(now.Year, now.Month, 1);
-                        break;
-                    case "year":
-                        startDate = new DateTime(now.Year, 1, 1);
-                        break;
-                    default:
-                        startDate = DateTime.Today;
-                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                        break;
-                }
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    var patients = db.Patients
-                        .Where(p => p.Created_Time >= startDate && p.Created_Time <= endDate)
-                        .Select(p => p.Patient_Type)
+                    var typeCounts = db.Patients
+                        .Where(p => p.Created_Time >= sDate && p.Created_Time <= eDate)
+                        .GroupBy(p => p.Patient_Type)
+                        .Select(g => new { Type = g.Key, Count = g.Count() })
                         .ToList();
 
-                    int total = patients.Count;
-                    int generalCount = patients.Count(t => t == "01");
-                    int privateCount = patients.Count(t => t == "02");
+                    int generalCount = typeCounts.Where(t => t.Type == "01").Select(t => t.Count).FirstOrDefault();
+                    int privateCount = typeCounts.Where(t => t.Type == "02").Select(t => t.Count).FirstOrDefault();
+                    int total = generalCount + privateCount;
 
                     double generalPerc = total > 0 ? ((double)generalCount / total) * 100 : 0;
                     double privatePerc = total > 0 ? ((double)privateCount / total) * 100 : 0;
@@ -325,105 +281,69 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        [WebMethod]
-        public static string GetWaitTimeAndSnapshot(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetWaitTimeAndSnapshot(string period, string startDate = null, string endDate = null)
         {
             try
             {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Now;
-                DateTime now = DateTime.Now;
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
+                int avgGeneral = 0, avgPrivate = 0, diagCount = 0, physioCount = 0;
 
-                switch (period.ToLower())
+                using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(
+                    System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
                 {
-                    case "week":
-                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                        startDate = now.AddDays(-1 * diff).Date;
-                        endDate = now;
-                        break;
-                    case "month":
-                        startDate = new DateTime(now.Year, now.Month, 1);
-                        endDate = now;
-                        break;
-                    case "year":
-                        startDate = new DateTime(now.Year, 1, 1);
-                        endDate = now;
-                        break;
-                    default: 
-                        startDate = DateTime.Today;
-                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                        break;
-                }
+                    conn.Open();
 
-                using (DataBaseDataContext db = new DataBaseDataContext())
-                {
-                    var patientsInPeriod = (from p in db.Patients
-                                            join opd in db.Out_Patients on p.Patient_ID equals opd.Patient_ID into opdJoin
-                                            from opd in opdJoin.DefaultIfEmpty()
-                                            where p.Created_Time >= startDate && p.Created_Time <= endDate
-                                            select new
-                                            {
-                                                p.Patient_ID,
-                                                p.Patient_Type,
-                                                p.Created_Time, 
-                                                OutPatientID = opd != null ? (int?)opd.Out_Patient_ID : null,
-                                                DischargeDate = opd != null ? opd.discharge_date : null,
-                                                OpdCreatedTime = opd != null ? (DateTime?)opd.Created_Time : null
-                                            }).ToList();
-
-                    List<double> generalMinutes = new List<double>();
-                    List<double> privateMinutes = new List<double>();
-
-                    foreach (var item in patientsInPeriod)
+                    using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(@"
+SELECT
+    AVG(CASE WHEN p.Patient_Type = '01' THEN DATEDIFF(MINUTE, p.Entry_Date, op.Created_Time) END) AS AvgGeneral,
+    AVG(CASE WHEN p.Patient_Type = '02' THEN DATEDIFF(MINUTE, p.Entry_Date, op.Created_Time) END) AS AvgPrivate
+FROM Patients p
+INNER JOIN Out_Patient op ON p.Patient_ID = op.Patient_ID
+WHERE p.Created_Time >= @s AND p.Created_Time <= @e", conn))
                     {
-                        DateTime? effectiveEndTime;
-
-                        if (item.DischargeDate.HasValue)
+                        cmd.Parameters.AddWithValue("@s", sDate);
+                        cmd.Parameters.AddWithValue("@e", eDate);
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            effectiveEndTime = item.DischargeDate.Value;
+                            if (reader.Read())
+                            {
+                                avgGeneral = reader["AvgGeneral"] != DBNull.Value ? Convert.ToInt32(reader["AvgGeneral"]) : 0;
+                                avgPrivate = reader["AvgPrivate"] != DBNull.Value ? Convert.ToInt32(reader["AvgPrivate"]) : 0;
+                            }
                         }
-                        else if (item.OutPatientID.HasValue)
-                        {
-                            string outPatientIdStr = item.OutPatientID.Value.ToString();
-
-                            var labTime = db.Laboratory_Tests.Where(lt => lt.Patient_ID == item.OutPatientID).Max(lt => (DateTime?)lt.Created_Time);
-                            var medTime = db.In_Patient_Medicines.Where(m => m.Patient_ID == item.OutPatientID).Max(m => (DateTime?)m.Medicine_Date);
-                            var svcTime = db.InPatientServices.Where(s => s.Ou_Patient_Id == outPatientIdStr).Max(s => (DateTime?)s.CreatedDate);
-
-                            DateTime?[] times = { labTime, medTime, svcTime, item.OpdCreatedTime };
-
-                            effectiveEndTime = times.Max() ?? item.Created_Time;
-                        }
-                        else
-                        {
-                            effectiveEndTime = item.Created_Time;
-                        }
-
-                        double totalMinutes = ((TimeSpan)(effectiveEndTime.Value - item.Created_Time)).TotalMinutes;
-
-                        if (totalMinutes < 0) totalMinutes = 0;
-
-                        if (item.Patient_Type == "01") generalMinutes.Add(totalMinutes);
-                        else if (item.Patient_Type == "02") privateMinutes.Add(totalMinutes);
                     }
 
-                    var billingDetailsInPeriod = from master in db.Ar_Billings
-                                                 join detail in db.Ar_Billing_Details on master.Bill_ID equals detail.Bill_ID
-                                                 where master.Creation_Date >= startDate && master.Creation_Date <= endDate
-                                                 select detail;
-
-                    int diagCount = billingDetailsInPeriod.Count(d => d.Test_Main_Department == "001");
-                    int physioCount = billingDetailsInPeriod.Count(d => d.Test_Main_Department == "005");
-
-                    return new JavaScriptSerializer().Serialize(new
+                    using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(@"
+SELECT
+    COUNT(CASE WHEN d.Test_Main_Department = '001' THEN 1 END) AS DiagCount,
+    COUNT(CASE WHEN d.Test_Main_Department = '005' THEN 1 END) AS PhysioCount
+FROM Ar_Billings m
+INNER JOIN Ar_Billing_Details d ON m.Bill_ID = d.Bill_ID
+WHERE m.Creation_Date >= @s AND m.Creation_Date <= @e", conn))
                     {
-                        AvgGeneral = generalMinutes.Any() ? Math.Round(generalMinutes.Average()) : 0,
-                        AvgPrivate = privateMinutes.Any() ? Math.Round(privateMinutes.Average()) : 0,
-                        DiagCount = diagCount,
-                        PhysioCount = physioCount
-                    });
+                        cmd.Parameters.AddWithValue("@s", sDate);
+                        cmd.Parameters.AddWithValue("@e", eDate);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                diagCount = Convert.ToInt32(reader["DiagCount"]);
+                                physioCount = Convert.ToInt32(reader["PhysioCount"]);
+                            }
+                        }
+                    }
                 }
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    AvgGeneral = avgGeneral,
+                    AvgPrivate = avgPrivate,
+                    DiagCount = diagCount,
+                    PhysioCount = physioCount
+                });
             }
             catch (Exception ex)
             {
@@ -431,38 +351,19 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        [WebMethod]
-        public static string GetBillingSnapshot(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetBillingSnapshot(string period, string startDate = null, string endDate = null)
         {
             try
             {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Now;
-                DateTime now = DateTime.Now;
-
-                switch (period.ToLower())
-                {
-                    case "week":
-                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                        startDate = now.AddDays(-1 * diff).Date;
-                        break;
-                    case "month":
-                        startDate = new DateTime(now.Year, now.Month, 1);
-                        break;
-                    case "year":
-                        startDate = new DateTime(now.Year, 1, 1);
-                        break;
-                    default:
-                        startDate = DateTime.Today;
-                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                        break;
-                }
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     var billingData = from master in db.Ar_Billings
                                       join detail in db.Ar_Billing_Details on master.Bill_ID equals detail.Bill_ID
-                                      where master.Creation_Date >= startDate && master.Creation_Date <= endDate
+                                      where master.Creation_Date >= sDate && master.Creation_Date <= eDate
                                       select detail;
 
                     return new JavaScriptSerializer().Serialize(new
@@ -481,39 +382,20 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        [WebMethod]
-        public static string GetPharmacySnapshot(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetPharmacySnapshot(string period, string startDate = null, string endDate = null)
         {
             try
             {
-                DateTime startDate = DateTime.Today;
-                DateTime endDate = DateTime.Now;
-                DateTime now = DateTime.Now;
-
-                switch (period.ToLower())
-                {
-                    case "week":
-                        int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                        startDate = now.AddDays(-1 * diff).Date;
-                        break;
-                    case "month":
-                        startDate = new DateTime(now.Year, now.Month, 1);
-                        break;
-                    case "year":
-                        startDate = new DateTime(now.Year, 1, 1);
-                        break;
-                    default:
-                        startDate = DateTime.Today;
-                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                        break;
-                }
+                DateTime sDate, eDate;
+                ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
                     var pharmacyBills = from bill in db.Ar_Billings
                                         where bill.IsPharmacy == true
-                                        && bill.Creation_Date >= startDate
-                                        && bill.Creation_Date <= endDate
+                                        && bill.Creation_Date >= sDate
+                                        && bill.Creation_Date <= eDate
                                         select bill;
 
                     return new JavaScriptSerializer().Serialize(new
@@ -530,47 +412,27 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        [WebMethod]
-        public static string GetDialysisSnapshot(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetDialysisSnapshot(string period, string startDate = null, string endDate = null)
         {
             try
             {
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    DateTime startDate = DateTime.Today;
-                    DateTime endDate = DateTime.Now;
-                    DateTime now = DateTime.Now;
-
-
-                    switch (period.ToLower())
-                    {
-                        case "week":
-                            int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                            startDate = now.AddDays(-1 * diff).Date;
-                            break;
-                        case "month":
-                            startDate = new DateTime(now.Year, now.Month, 1);
-                            break;
-                        case "year":
-                            startDate = new DateTime(now.Year, 1, 1);
-                            break;
-                        default:
-                            startDate = DateTime.Today;
-                            endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                            break;
-                    }
+                    DateTime sDate, eDate;
+                    ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
                     var registrations = db.Patients.Where(p =>
                         p.Patient_Main_Category == "042" &&
-                        p.Entry_Date >= startDate &&
-                        p.Entry_Date <= endDate
+                        p.Entry_Date >= sDate &&
+                        p.Entry_Date <= eDate
                     ).ToList();
 
                     var regIds = registrations.Select(p => p.Reg_PatId).ToList();
                     var sessions = db.Out_Patients.Where(op =>
                         regIds.Contains(op.Reg_PatId) &&
-                        op.Created_Time >= startDate &&
-                        op.Created_Time <= endDate
+                        op.Created_Time >= sDate &&
+                        op.Created_Time <= eDate
                     ).ToList();
 
                     int performedCount = registrations.Count;
@@ -596,39 +458,19 @@ namespace PMS.Modules.Dashboards
             }
         }
 
-        [WebMethod]
-        public static string GetRegionalHeatmap(string period)
+        [WebMethod(EnableSession = false)]
+        public static string GetRegionalHeatmap(string period, string startDate = null, string endDate = null)
         {
             try
             {
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    DateTime startDate = DateTime.Today;
-                    DateTime endDate = DateTime.Now;
-                    DateTime now = DateTime.Now;
-
-                    switch (period.ToLower())
-                    {
-                        case "week":
-                            int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-                            startDate = now.AddDays(-1 * diff).Date;
-                            break;
-                        case "month":
-                            startDate = new DateTime(now.Year, now.Month, 1);
-                            break;
-                        case "year":
-                            startDate = new DateTime(now.Year, 1, 1);
-                            break;
-                        case "today":
-                        default:
-                            startDate = DateTime.Today;
-                            endDate = DateTime.Today.AddDays(1).AddTicks(-1);
-                            break;
-                    }
+                    DateTime sDate, eDate;
+                    ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
                     var groupedData = (from rg in db.Reg_patients
                                        join p in db.Patients on rg.pat_id equals p.Reg_PatId
-                                       where p.Created_Time >= startDate && p.Created_Time <= endDate
+                                       where p.Created_Time >= sDate && p.Created_Time <= eDate
                                        group rg by rg.val_area into g
                                        select new
                                        {
@@ -656,6 +498,325 @@ namespace PMS.Modules.Dashboards
             }
         }
 
+        [WebMethod(EnableSession = false)]
+        public static string GetDepartments()
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var departments = (from dv in db.DataValues
+                                       join vs in db.ValueSets on dv.ValueSet_ID equals vs.ValueSet_ID
+                                       where vs.ValueSet_Name == "Patient Main Category"
+                                       select new
+                                       {
+                                           dv.DataValue_Name,
+                                           dv.DataValue_Description
+                                       }).ToList();
 
+                    return new JavaScriptSerializer().Serialize(departments);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetClinicalOutcomes(string period, string department, string startDate = null, string endDate = null)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    DateTime sDate, eDate;
+                    ResolveDates(period, startDate, endDate, out sDate, out eDate);
+
+                    var query = db.Emergency_Patients.Where(ep =>
+                        ep.Admission_Date >= sDate && ep.Admission_Date <= eDate);
+
+                    if (!string.IsNullOrEmpty(department) && department != "0")
+                        query = query.Where(ep => ep.Department == department);
+
+                    var patients = query.ToList();
+
+                    var er = patients.Where(p => p.Department == "01").ToList();
+                    var ipd = patients.Where(p => p.Department != "01").ToList();
+
+                    var result = new
+                    {
+                        ER = new
+                        {
+                            Discharges = er.Count(p => p.Discharge == true),
+                            Deaths = er.Count(p => p.DateOfDeath != null),
+                            Referrals = er.Count(p => p.isReferred == true)
+                        },
+                        IPD = new
+                        {
+                            Discharges = ipd.Count(p => p.Discharge == true),
+                            Deaths = ipd.Count(p => p.DateOfDeath != null),
+                            Referrals = ipd.Count(p => p.isReferred == true)
+                        }
+                    };
+
+                    return new JavaScriptSerializer().Serialize(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetYearlyPharmacySummary(int year)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var query = db.sp_YearlyPharmacySummary(year).ToList();
+                    return new JavaScriptSerializer().Serialize(query);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetYearlyPharmacyRevenue(int year)
+        {
+            try
+            {
+                using (DataBaseDataContext db = new DataBaseDataContext())
+                {
+                    var query = db.sp_YearlyPharmacyRevenue(year).ToList();
+                    return new JavaScriptSerializer().Serialize(query);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string GetYearlyInventorySummary(int year)
+        {
+            try
+            {
+                var rows = new List<Dictionary<string, object>>();
+                using (var conn = new System.Data.SqlClient.SqlConnection(System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
+                {
+                    using (var cmd = new System.Data.SqlClient.SqlCommand("dbo.sp_YearlyInventorySummary", conn))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Year", year);
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var row = new Dictionary<string, object>();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                    row[reader.GetName(i)] = reader[i];
+                                rows.Add(row);
+                            }
+                        }
+                    }
+                }
+                return new JavaScriptSerializer().Serialize(rows);
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message + "|" + ex.GetType().Name + "|" + (ex.InnerException?.Message ?? "") + "|" + (ex.InnerException?.GetType().Name ?? "") });
+            }
+        }
+
+        [WebMethod(EnableSession = false)]
+        public static string GetRevenueTrends(string period, string startDate = null, string endDate = null)
+        {
+            try
+            {
+                DateTime endPointDate, endPointEnd;
+
+                switch (period.ToLower())
+                {
+                    case "yesterday":
+                        endPointDate = DateTime.Today.AddDays(-1);
+                        endPointEnd = endPointDate.AddDays(1).AddTicks(-1);
+                        break;
+                    case "custom":
+                        DateTime pe;
+                        if (!string.IsNullOrEmpty(endDate) && DateTime.TryParseExact(endDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out pe))
+                            endPointDate = pe;
+                        else
+                            endPointDate = DateTime.Today;
+                        endPointEnd = endPointDate.AddDays(1).AddTicks(-1);
+                        break;
+                    default:
+                        endPointDate = DateTime.Today;
+                        endPointEnd = DateTime.Now;
+                        break;
+                }
+
+                DateTime endMonthStart = new DateTime(endPointDate.Year, endPointDate.Month, 1);
+                DateTime trendStart = endMonthStart.AddMonths(-4);
+                DateTime trendEnd = endMonthStart;
+
+                var monthPatients = new Dictionary<string, decimal>();
+                var monthBillings = new Dictionary<string, decimal>();
+                var monthPharmacy = new Dictionary<string, decimal>();
+                var monthLab = new Dictionary<string, decimal>();
+
+                using (var conn = new System.Data.SqlClient.SqlConnection(
+                    System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
+                {
+                    conn.Open();
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT YEAR(Created_Time) AS Yr, MONTH(Created_Time) AS Mn, ISNULL(SUM(Receipt_Amount), 0) AS val
+                          FROM Patients WHERE Created_Time >= @ts AND Created_Time < @te
+                          GROUP BY YEAR(Created_Time), MONTH(Created_Time)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ts", trendStart);
+                        cmd.Parameters.AddWithValue("@te", trendEnd);
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read())
+                            {
+                                string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
+                                monthPatients[key] = (decimal)r["val"];
+                            }
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT YEAR(Creation_Date) AS Yr, MONTH(Creation_Date) AS Mn, ISNULL(SUM(Received_Amount), 0) AS val
+                          FROM Ar_Billings WHERE Creation_Date >= @ts AND Creation_Date < @te
+                          GROUP BY YEAR(Creation_Date), MONTH(Creation_Date)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ts", trendStart);
+                        cmd.Parameters.AddWithValue("@te", trendEnd);
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read())
+                            {
+                                string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
+                                monthBillings[key] = (decimal)r["val"];
+                            }
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT YEAR(Creation_Date) AS Yr, MONTH(Creation_Date) AS Mn, ISNULL(SUM(Received_Amount), 0) AS val
+                          FROM Ar_Billings WHERE Creation_Date >= @ts AND Creation_Date < @te AND IsPharmacy = 1
+                          GROUP BY YEAR(Creation_Date), MONTH(Creation_Date)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ts", trendStart);
+                        cmd.Parameters.AddWithValue("@te", trendEnd);
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read())
+                            {
+                                string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
+                                monthPharmacy[key] = (decimal)r["val"];
+                            }
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT YEAR(b.Creation_Date) AS Yr, MONTH(b.Creation_Date) AS Mn, ISNULL(SUM(b.Received_Amount), 0) AS val
+                          FROM Ar_Billings b
+                          WHERE b.Creation_Date >= @ts AND b.Creation_Date < @te AND EXISTS (
+                              SELECT 1 FROM Ar_Billing_Details d
+                              WHERE d.Bill_ID = b.Bill_ID AND d.Test_Main_Department IN ('001','002','003','008','005'))
+                          GROUP BY YEAR(b.Creation_Date), MONTH(b.Creation_Date)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ts", trendStart);
+                        cmd.Parameters.AddWithValue("@te", trendEnd);
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read())
+                            {
+                                string key = r["Yr"].ToString() + "-" + r["Mn"].ToString().PadLeft(2, '0');
+                                monthLab[key] = (decimal)r["val"];
+                            }
+                    }
+
+                    decimal curP = 0, curB = 0, curPh = 0, curL = 0;
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        "SELECT ISNULL(SUM(Receipt_Amount), 0) FROM Patients WHERE Created_Time >= @cs AND Created_Time <= @ce", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
+                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
+                        curP = (decimal)cmd.ExecuteScalar();
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
+                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
+                        curB = (decimal)cmd.ExecuteScalar();
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce AND IsPharmacy = 1", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
+                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
+                        curPh = (decimal)cmd.ExecuteScalar();
+                    }
+
+                    using (var cmd = new System.Data.SqlClient.SqlCommand(
+                        @"SELECT ISNULL(SUM(b.Received_Amount), 0)
+                          FROM Ar_Billings b
+                          WHERE b.Creation_Date >= @cs AND b.Creation_Date <= @ce AND EXISTS (
+                              SELECT 1 FROM Ar_Billing_Details d
+                              WHERE d.Bill_ID = b.Bill_ID AND d.Test_Main_Department IN ('001','002','003','008','005'))", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
+                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
+                        curL = (decimal)cmd.ExecuteScalar();
+                    }
+
+                    string[] shortMonths = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+                    var labels = new List<string>();
+                    var hospital = new List<decimal>();
+                    var opd = new List<decimal>();
+                    var pharmacy = new List<decimal>();
+                    var lab = new List<decimal>();
+
+                    for (var d = trendStart; d < trendEnd; d = d.AddMonths(1))
+                    {
+                        string key = d.Year.ToString() + "-" + d.Month.ToString().PadLeft(2, '0');
+                        decimal pv = monthPatients.ContainsKey(key) ? monthPatients[key] : 0;
+                        decimal bv = monthBillings.ContainsKey(key) ? monthBillings[key] : 0;
+                        labels.Add(shortMonths[d.Month - 1]);
+                        hospital.Add(pv + bv);
+                        opd.Add(pv);
+                        pharmacy.Add(monthPharmacy.ContainsKey(key) ? monthPharmacy[key] : 0);
+                        lab.Add(monthLab.ContainsKey(key) ? monthLab[key] : 0);
+                    }
+
+                    labels.Add(shortMonths[endPointDate.Month - 1]);
+                    hospital.Add(curP + curB);
+                    opd.Add(curP);
+                    pharmacy.Add(curPh);
+                    lab.Add(curL);
+
+                    return new JavaScriptSerializer().Serialize(new
+                    {
+                        labels = labels,
+                        hospital = hospital,
+                        opd = opd,
+                        pharmacy = pharmacy,
+                        lab = lab
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { Error = ex.Message });
+            }
+        }
     }
 }

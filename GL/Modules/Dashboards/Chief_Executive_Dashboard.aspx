@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Chief_Executive_Dashboard.aspx.cs" Inherits="PMS.Modules.Dashboards.Chief_Executive_Dashboard" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+   
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
     <script type="text/javascript">
         var opdChartInstance = null;
@@ -7,43 +8,256 @@
         var pharmacyChartInstance = null;
         var clinicalChartInstance = null;
         var satisfactionChartInstance = null;
+        var _sparkCharts = {};
 
+        function setPeriod(period, startDate, endDate) {
+            $(".period-pill").removeClass("active");
+            $(".period-pill[data-period='" + period + "']").addClass("active");
+            if (period === "custom") {
+                $(".custom-date-range").addClass("visible");
+                if (startDate) $("#txtStartDate").val(startDate);
+                if (endDate) $("#txtEndDate").val(endDate);
+            } else {
+                $(".custom-date-range").removeClass("visible");
+            }
+            showAllLoading();
+            LoadHospitalRevenue(period, startDate, endDate);
+            LoadOPDSaleRevenue(period, startDate, endDate);
+            LoadPharmacyRevenue(period, startDate, endDate);
+            LoadLabRadiologyRevenue(period, startDate, endDate);
+            LoadOPDChart(period, startDate, endDate);
+            LoadOPDVolume(period, startDate, endDate);
+            LoadWaitTimeTrends(period, startDate, endDate);
+            LoadDialysisLive(period, startDate, endDate);
+            loadSummaryCards();
+            loadRevenueTrends(period, startDate, endDate);
+            LoadPharmacySnapshot(period, startDate, endDate);
+            LoadBillingData(period, startDate, endDate);
+            LoadClinicalOutcomes(period, startDate, endDate);
+            LoadRegionalHeatmap(period, startDate, endDate);
+        }
+
+        function setCardLoading(id, loading) {
+            var el = $("#" + id);
+            if (el.length) el.toggleClass("card-loading", loading);
+        }
+        function showAllLoading() {
+            $(".bento-item").not(".period-bar").addClass("card-loading");
+            setTimeout(function () { $(".bento-item").removeClass("card-loading"); }, 120000);
+        }
+
+        $(document).ajaxStop(function () { $(".bento-item").removeClass("card-loading"); });
+        $(document).ajaxError(function (e, xhr, settings, error) {
+            var match = settings.url ? settings.url.match(/\/(\w+)$/) : null;
+            var wm = match ? match[1] : 'unknown';
+            console.error("[" + wm + "] AJAX Error: " + error + " | Response: " + (xhr.responseText || '').substring(0, 200));
+        });
         $(document).ready(function () {
-            LoadHospitalRevenue("today");
-            LoadOPDSaleRevenue("today");
-            LoadPharmacyRevenue("today");
-            LoadLabRadiologyRevenue("today");
-            LoadOPDChart("today");
-            LoadOPDVolume("today");
-            LoadWaitTimeTrends("today");
-            LoadBillingData("today");
-            LoadPharmacySnapshot("today");
-            LoadDialysisLive("today");
-            LoadRegionalHeatmap("today");
-            renderClinicalOutcomes();
+            $("#trendMonth").val(String(new Date().getMonth()));
+            setPeriod("today");
             renderSatisfaction();
 
-            $("#ddlPeriod").change(function () {
-                var period = $(this).val();
-                LoadHospitalRevenue(period);
-                LoadOPDSaleRevenue(period);
-                LoadPharmacyRevenue(period);
-                LoadLabRadiologyRevenue(period);
-                LoadOPDChart(period);
-                LoadOPDVolume(period);
-                LoadWaitTimeTrends(period);
-                LoadBillingData(period);
-                LoadPharmacySnapshot(period);
-                LoadDialysisLive(period);
-                LoadRegionalHeatmap(period);
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetDepartments",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var depts = JSON.parse(response.d);
+                    var opts = '<option value="0">All Departments</option>';
+                    depts.forEach(function (d) { opts += '<option value="' + d.DataValue_Name + '">' + d.DataValue_Description + '</option>'; });
+                    $("#ddlClinDept").html(opts);
+                }
+            });
+
+            $(".period-pill").click(function () {
+                var period = $(this).data("period");
+                $(".card-filter input.datepicker, #txtClinStart, #txtClinEnd").val("");
+                $(".card-filter select").val("");
+                $("#trendMonth").val(String(new Date().getMonth()));
+                $(".period-pill").removeClass("active");
+                $(this).addClass("active");
+                if (period === "custom") {
+                    $(".custom-date-range").addClass("visible");
+                } else {
+                    $(".custom-date-range").removeClass("visible");
+                    setPeriod(period);
+                }
+            });
+
+            $(".datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "dd/mm/yy",
+                yearRange: "-100:+0"
+            });
+
+            $("#btnApplyCustom").click(function () {
+                var s = $("#txtStartDate").val();
+                var e = $("#txtEndDate").val();
+                if (s && e) {
+                    setPeriod("custom", s, e);
+                }
+            });
+
+            $("#btnClinApply").click(function () {
+                var period = $(".period-pill.active").data("period");
+                LoadClinicalOutcomes(period, null, null);
+            });
+
+            $(".modal-overlay").click(function (e) {
+                if ($(e.target).hasClass('modal-overlay')) $(this).removeClass('open');
+            });
+
+            function getMasterState() {
+                var pill = $(".period-pill.active");
+                var p = pill.data("period");
+                var s = null, e = null;
+                if (p === "custom") { s = $("#txtStartDate").val(); e = $("#txtEndDate").val(); }
+                return { period: p, startDate: s, endDate: e };
+            }
+
+            $(".card-apply").click(function () {
+                var card = $(this).data("card");
+                if (card === "trend") { applyTrendFilter(); return; }
+                var from = $("#" + card + "From").val();
+                var to = $("#" + card + "To").val();
+                if (!from || !to) return;
+                var targetId = card === "opd" ? "opd-area" : card === "heat" ? "trend-area" : card;
+                setCardLoading(targetId, true);
+                setTimeout(function () { setCardLoading(targetId, false); }, 120000);
+                switch (card) {
+                    case "opd":
+                        LoadOPDChart("custom", from, to);
+                        LoadOPDVolume("custom", from, to);
+                        LoadWaitTimeTrends("custom", from, to);
+                        break;
+                    case "heat": LoadRegionalHeatmap("custom", from, to); break;
+                    case "dia": LoadDialysisLive("custom", from, to); break;
+                    case "ph": LoadPharmacySnapshot("custom", from, to); break;
+                    case "lab": LoadBillingData("custom", from, to); break;
+                }
+            });
+            function applyTrendFilter() {
+                var m = $("#trendMonth").val();
+                if (m === "") return;
+                setCardLoading("trend-area", true);
+                var y = new Date().getFullYear();
+                var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                var cm = months[parseInt(m)];
+                $.ajax({
+                    type: "POST",
+                    url: "Chief_Executive_Dashboard.aspx/GetYearlyInventorySummary",
+                    data: JSON.stringify({ year: y }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        var data = JSON.parse(res.d);
+                        if (data.Error) return;
+                        var openingRow, purchaseRow, purchaseRetRow, saleRow, closingRow;
+                        data.forEach(function (r) {
+                            if (r.Metric === 'Opening_Value') openingRow = r;
+                            else if (r.Metric === 'Purchase_Value') purchaseRow = r;
+                            else if (r.Metric === 'PurchaseReturn_Value') purchaseRetRow = r;
+                            else if (r.Metric === 'Sale_Value') saleRow = r;
+                            else if (r.Metric === 'Closing_Value') closingRow = r;
+                        });
+                        $('#invBadge').text('Month-end Closing (' + cm + ')');
+                        $('#invOpening').text('Rs. ' + fmt(openingRow ? (openingRow[cm]||0) : 0));
+                        $('#invPurchase').text('Rs. ' + fmt(purchaseRow ? (purchaseRow[cm]||0) : 0));
+                        $('#invPurchaseReturn').text('Rs. ' + fmt(purchaseRetRow ? (purchaseRetRow[cm]||0) : 0));
+                        $('#invSale').text('Rs. ' + fmt(saleRow ? (saleRow[cm]||0) : 0));
+                        $('#invClosing').text('Rs. ' + fmt(closingRow ? (closingRow[cm]||0) : 0));
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummary",
+                    data: JSON.stringify({ year: y }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        var data = JSON.parse(res.d);
+                        if (data.Error) return;
+                        var openingRow, purchaseRow, saleRow, closingRow;
+                        data.forEach(function (r) {
+                            if (r.Metric === 'Opening_Value') openingRow = r;
+                            else if (r.Metric === 'Purchase_Value') purchaseRow = r;
+                            else if (r.Metric === 'Sale_Value') saleRow = r;
+                            else if (r.Metric === 'Closing_Value') closingRow = r;
+                        });
+                        var po = openingRow ? (openingRow[cm]||0) : 0;
+                        var pp = purchaseRow ? (purchaseRow[cm]||0) : 0;
+                        var ps = saleRow ? (saleRow[cm]||0) : 0;
+                        var pc = closingRow ? (closingRow[cm]||0) : 0;
+                        $('#pharmOpening').text('Rs. ' + fmt(po));
+                        $('#pharmPurchase').text('Rs. ' + fmt(pp));
+                        $('#pharmSale').text('Rs. ' + fmt(ps));
+                        $('#pharmClosing').text('Rs. ' + fmt(pc));
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacyRevenue",
+                    data: JSON.stringify({ year: y }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        var data = JSON.parse(res.d);
+                        if (data.Error) return;
+                        var grossRow, discRow, adjRow, retRow, netRow, cogsRow, gpRow;
+                        data.forEach(function (r) {
+                            if (r.Metric === 'Gross_Sale') grossRow = r;
+                            else if (r.Metric === 'Discount_Value') discRow = r;
+                            else if (r.Metric === 'Adjustment_Value') adjRow = r;
+                            else if (r.Metric === 'SaleReturn') retRow = r;
+                            else if (r.Metric === 'Net_Sale') netRow = r;
+                            else if (r.Metric === 'CGS_Value') cogsRow = r;
+                            else if (r.Metric === 'Gross_Profit') gpRow = r;
+                        });
+                        $('#revBadge').text('Month-end Closing (' + cm + ')');
+                        $('#revGrossSale').text('Rs. ' + fmt(grossRow ? (grossRow[cm]||0) : 0));
+                        $('#revDiscount').text('Rs. ' + fmt(discRow ? (discRow[cm]||0) : 0));
+                        $('#revAdjustment').text('Rs. ' + fmt(adjRow ? (adjRow[cm]||0) : 0));
+                        $('#revSaleReturn').text('Rs. ' + fmt(retRow ? (retRow[cm]||0) : 0));
+                        $('#revNetSale').text('Rs. ' + fmt(netRow ? (netRow[cm]||0) : 0));
+                        $('#revCogs').text('Rs. ' + fmt(cogsRow ? (cogsRow[cm]||0) : 0));
+                        $('#revGrossProfit').text('Rs. ' + fmt(gpRow ? (gpRow[cm]||0) : 0));
+                    }
+                });
+            }
+
+            $(".card-trash").click(function () {
+                var card = $(this).data("card");
+                if (card === "trend") { $("#trendMonth").val(""); loadSummaryCards(); return; }
+                $("#" + card + "From, #" + card + "To").val("");
+                var m = getMasterState();
+                switch (card) {
+                    case "opd":
+                        LoadOPDChart(m.period, m.startDate, m.endDate);
+                        LoadOPDVolume(m.period, m.startDate, m.endDate);
+                        LoadWaitTimeTrends(m.period, m.startDate, m.endDate);
+                        break;
+                    case "heat": LoadRegionalHeatmap(m.period, m.startDate, m.endDate); break;
+                    case "dia": LoadDialysisLive(m.period, m.startDate, m.endDate); break;
+                    case "ph": LoadPharmacySnapshot(m.period, m.startDate, m.endDate); break;
+                    case "lab": LoadBillingData(m.period, m.startDate, m.endDate); break;
+                }
+            });
+
+            $("#clinTrash").click(function () {
+                $("#txtClinStart, #txtClinEnd").val("");
+                var m = getMasterState();
+                LoadClinicalOutcomes(m.period, m.startDate, m.endDate);
             });
         });
 
-        function LoadHospitalRevenue(period) {
+        function LoadHospitalRevenue(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetHospitalRevenue",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
@@ -66,11 +280,12 @@
             });
         }
 
-        function LoadOPDSaleRevenue(period) {
+        function LoadOPDSaleRevenue(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetOPDSaleRevenue",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
@@ -93,11 +308,12 @@
             });
         }
 
-        function LoadPharmacyRevenue(period) {
+        function LoadPharmacyRevenue(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetPharmacyRevenue",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
@@ -120,11 +336,12 @@
             });
         }
 
-        function LoadLabRadiologyRevenue(period) {
+        function LoadLabRadiologyRevenue(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetLabRadiologyRevenue",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
@@ -147,11 +364,12 @@
             });
         }
 
-        function LoadOPDChart(period) {
-            $.ajax({
+        function LoadOPDChart(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
+            return $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetOPDChartData",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
@@ -208,11 +426,12 @@
             opdChartInstance.setOption(option);
         }
 
-        function LoadOPDVolume(period) {
-            $.ajax({
+        function LoadOPDVolume(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
+            return $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetOPDVolumeData",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -228,11 +447,12 @@
             });
         }
 
-        function LoadWaitTimeTrends(period) {
-            $.ajax({
+        function LoadWaitTimeTrends(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
+            return $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetWaitTimeAndSnapshot",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -247,11 +467,12 @@
             });
         }
 
-        function LoadBillingData(period) {
+        function LoadBillingData(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetBillingSnapshot",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -294,11 +515,12 @@
             });
         }
 
-        function LoadPharmacySnapshot(period) {
+        function LoadPharmacySnapshot(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetPharmacySnapshot",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -329,45 +551,61 @@
             });
         }
 
-        function renderClinicalOutcomes() {
+        function LoadClinicalOutcomes(period, startDate, endDate) {
+            var dept = $("#ddlClinDept").val() || "0";
+            var s = startDate, e = endDate, p = period;
+            var ms = $("#txtClinStart").val(), me = $("#txtClinEnd").val();
+            if (ms && me) { s = ms; e = me; p = 'custom'; }
+            var data = { 'period': p, 'department': dept, 'startDate': s || null, 'endDate': e || null };
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetClinicalOutcomes",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var r = JSON.parse(response.d);
+                    if (r.Error) { console.error(r.Error); return; }
+                    renderClinicalOutcomes(r);
+                },
+                error: function () { console.error("Clinical Outcomes Error"); }
+            });
+        }
+
+        function renderClinicalOutcomes(r) {
+            var categories = ["IPD", "ER"];
+            var ipdD = r.IPD ? r.IPD.Discharges : 0;
+            var ipdR = r.IPD ? r.IPD.Referrals : 0;
+            var ipdDe = r.IPD ? r.IPD.Deaths : 0;
+            var erD = r.ER ? r.ER.Discharges : 0;
+            var erR = r.ER ? r.ER.Referrals : 0;
+            var erDe = r.ER ? r.ER.Deaths : 0;
+            var discharges = [ipdD, erD];
+            var referrals = [ipdR, erR];
+            var deaths = [ipdDe, erDe];
             var dom = document.querySelector("#chartClinicalOutcomes");
             if (clinicalChartInstance) clinicalChartInstance.dispose();
             clinicalChartInstance = echarts.init(dom);
             var option = {
-                tooltip: { trigger: 'axis' },
-                legend: { data: ['Deaths', 'Discharges', 'Referrals'], top: 0, right: 0, icon: 'circle', itemWidth: 6, itemHeight: 6, textStyle: { fontSize: 9 } },
-                grid: { left: 25, right: 5, top: 18, bottom: 5 },
+                tooltip: { trigger: 'axis', formatter: function (params) {
+                    var s = params[0].axisValue + '<br/>';
+                    params.forEach(function (p) { s += p.marker + ' ' + p.seriesName + ': ' + p.value + '<br/>'; });
+                    return s;
+                } },
+                legend: { data: ['Discharges', 'Referrals', 'Deaths'], top: 0, right: 0, icon: 'circle', itemWidth: 6, itemHeight: 6, textStyle: { fontSize: 9 } },
+                grid: { left: 28, right: 5, top: 20, bottom: 5 },
                 xAxis: {
                     type: 'category',
-                    data: ['IPD', 'ER'],
+                    data: categories,
                     axisLine: { show: false },
                     axisTick: { show: false },
                     axisLabel: { fontSize: 10, fontWeight: 600 }
                 },
                 yAxis: { type: 'value', show: false, min: 0 },
                 series: [
-                    {
-                        name: 'Deaths',
-                        type: 'bar',
-                        data: [5, 3],
-                        itemStyle: { color: '#ef4444', borderRadius: [2,2,0,0] },
-                        barWidth: 18,
-                        barGap: '15%'
-                    },
-                    {
-                        name: 'Discharges',
-                        type: 'bar',
-                        data: [120, 85],
-                        itemStyle: { color: '#10b981', borderRadius: [2,2,0,0] },
-                        barWidth: 18
-                    },
-                    {
-                        name: 'Referrals',
-                        type: 'bar',
-                        data: [15, 10],
-                        itemStyle: { color: '#f97316', borderRadius: [2,2,0,0] },
-                        barWidth: 18
-                    }
+                    { name: 'Discharges', type: 'bar', data: discharges, itemStyle: { color: '#10b981', borderRadius: [2,2,0,0] }, barWidth: 14, barGap: '10%' },
+                    { name: 'Referrals', type: 'bar', data: referrals, itemStyle: { color: '#f97316', borderRadius: [2,2,0,0] }, barWidth: 14 },
+                    { name: 'Deaths', type: 'bar', data: deaths, itemStyle: { color: '#ef4444', borderRadius: [2,2,0,0] }, barWidth: 14 }
                 ]
             };
             clinicalChartInstance.setOption(option);
@@ -395,7 +633,8 @@
             satisfactionChartInstance.setOption(option);
         }
 
-        function LoadDialysisLive(period) {
+        function LoadDialysisLive(period, startDate, endDate) {
+            var loadData = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             let periodLabel = "Today's Snapshot";
             if (period === 'week') periodLabel = "Weekly Overview";
             if (period === 'month') periodLabel = "Monthly Overview";
@@ -404,7 +643,7 @@
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetDialysisSnapshot",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(loadData),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -421,11 +660,12 @@
             });
         }
 
-        function LoadRegionalHeatmap(period) {
+        function LoadRegionalHeatmap(period, startDate, endDate) {
+            var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
                 url: "Chief_Executive_Dashboard.aspx/GetRegionalHeatmap",
-                data: JSON.stringify({ 'period': period }),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -451,6 +691,292 @@
                     });
                 },
                 error: function () { console.error("Heatmap Error"); }
+            });
+        }
+
+        function renderSparkline(id, values, labels) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            if (_sparkCharts[id]) _sparkCharts[id].dispose();
+            var chart = echarts.init(el);
+            _sparkCharts[id] = chart;
+            var up = values.length > 1 && values[values.length-1] >= values[values.length-2];
+            var pts = values.map(function(v,i){
+                if (i === values.length-1) return {value:v, itemStyle:{color:up?'#3b82f6':'#ef4444'}};
+                return {value:v, itemStyle:{color:'#3b82f6'}};
+            });
+            var cum = [], s = 0;
+            values.forEach(function(v){ s += v; cum.push(s); });
+            chart.setOption({
+                grid: { left:0, right:0, top:0, bottom:0 },
+                xAxis: { show:false, type:'category', data:labels },
+                yAxis: { show:false, min:function(v){return Math.max(0,v.min-(v.max-v.min)*0.15);} },
+                tooltip: {
+                    trigger:'item', confine:false, z:9999,
+                    extraCssText:'z-index:99999;background:#fff;border:1px solid #d1d5db;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.15);pointer-events:none;',
+                    formatter:function(p){
+                        var i = p.dataIndex;
+                        var fmt = function(n){ return Math.round(n).toLocaleString(); };
+                        return '<div style="font-size:12px;line-height:1.6;padding:8px 12px;background:#fff;">' +
+                            '<b>' + labels[i] + '</b>: RS ' + fmt(values[i]) + '<br/>' +
+                            labels[0] + '\u2013' + labels[i] + ': <b>RS ' + fmt(cum[i]) + '</b></div>';
+                    }
+                },
+                series: [{
+                    type:'line', data:pts, smooth:false, showSymbol:true, symbolSize:5,
+                    lineStyle:{width:2.5,color:'#3b82f6'},
+                    animation:false
+                }]
+            });
+        }
+
+        function checkBlink(id, values) {
+            if (values.length < 4) return;
+            var last = values.length - 1;
+            var recent = (values[last] + values[last-1]) / 2;
+            var prior = values.slice(0, last-1).reduce(function(a,b){return a+b;},0) / (values.length - 2);
+            if (recent > 0 && recent < prior * 0.85)
+                $("#" + id).closest(".rev-item").addClass("blink-red");
+        }
+
+        function loadRevenueTrends(period, startDate, endDate) {
+            $.ajax({
+                type:"POST",
+                url:"Chief_Executive_Dashboard.aspx/GetRevenueTrends",
+                data:JSON.stringify({period:period, startDate:startDate||null, endDate:endDate||null}),
+                contentType:"application/json; charset=utf-8",
+                dataType:"json",
+                success:function(res){
+                    var d = JSON.parse(res.d);
+                    if (d.Error) return;
+                    renderSparkline("sparkRevenue", d.hospital, d.labels);
+                    renderSparkline("sparkOPD", d.opd, d.labels);
+                    renderSparkline("sparkPharmacy", d.pharmacy, d.labels);
+                    renderSparkline("sparkLab", d.lab, d.labels);
+                    checkBlink("sparkRevenue", d.hospital);
+                    checkBlink("sparkOPD", d.opd);
+                    checkBlink("sparkPharmacy", d.pharmacy);
+                    checkBlink("sparkLab", d.lab);
+                }
+            });
+        }
+
+        function fmt(n) { return parseFloat(n).toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+        function loadYearSelect(selId) {
+            var y = new Date().getFullYear();
+            var opts = '';
+            for (var i = y; i >= y - 10; i--) opts += '<option value="' + i + '">' + i + '</option>';
+            $('#' + selId).html(opts).val(y);
+        }
+
+        function loadSummaryCards() {
+            var y = new Date().getFullYear();
+            var m = new Date().getMonth();
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            var curMon = months[m];
+
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetYearlyInventorySummary",
+                data: JSON.stringify({ year: y }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    var data = JSON.parse(res.d);
+                    if (data.Error) return;
+                    $('#invBadge').text('Month-end Closing (' + curMon + ')');
+                    var openingRow, purchaseRow, purchaseRetRow, saleRow, closingRow;
+                    data.forEach(function (r) {
+                        if (r.Metric === 'Opening_Value') openingRow = r;
+                        else if (r.Metric === 'Purchase_Value') purchaseRow = r;
+                        else if (r.Metric === 'PurchaseReturn_Value') purchaseRetRow = r;
+                        else if (r.Metric === 'Sale_Value') saleRow = r;
+                        else if (r.Metric === 'Closing_Value') closingRow = r;
+                    });
+                    $('#invOpening').text('Rs. ' + fmt(openingRow ? (openingRow[curMon]||0) : 0));
+                    $('#invPurchase').text('Rs. ' + fmt(purchaseRow ? (purchaseRow[curMon]||0) : 0));
+                    $('#invPurchaseReturn').text('Rs. ' + fmt(purchaseRetRow ? (purchaseRetRow[curMon]||0) : 0));
+                    $('#invSale').text('Rs. ' + fmt(saleRow ? (saleRow[curMon]||0) : 0));
+                    $('#invClosing').text('Rs. ' + fmt(closingRow ? (closingRow[curMon]||0) : 0));
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummary",
+                data: JSON.stringify({ year: y }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    var data = JSON.parse(res.d);
+                    if (data.Error) return;
+                    var openingRow, purchaseRow, saleRow, closingRow;
+                    data.forEach(function (r) {
+                        if (r.Metric === 'Opening_Value') openingRow = r;
+                        else if (r.Metric === 'Purchase_Value') purchaseRow = r;
+                        else if (r.Metric === 'Sale_Value') saleRow = r;
+                        else if (r.Metric === 'Closing_Value') closingRow = r;
+                    });
+                    var po = openingRow ? (openingRow[curMon]||0) : 0;
+                    var pp = purchaseRow ? (purchaseRow[curMon]||0) : 0;
+                    var ps = saleRow ? (saleRow[curMon]||0) : 0;
+                    var pc = closingRow ? (closingRow[curMon]||0) : 0;
+                    $('#pharmOpening').text('Rs. ' + fmt(po));
+                    $('#pharmPurchase').text('Rs. ' + fmt(pp));
+                    $('#pharmSale').text('Rs. ' + fmt(ps));
+                    $('#pharmClosing').text('Rs. ' + fmt(pc));
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacyRevenue",
+                data: JSON.stringify({ year: y }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    var data = JSON.parse(res.d);
+                    if (data.Error) return;
+                    $('#revBadge').text('Month-end Closing (' + curMon + ')');
+
+                    var grossRow, discRow, adjRow, retRow, netRow, cogsRow, gpRow;
+                    data.forEach(function (r) {
+                        if (r.Metric === 'Gross_Sale') grossRow = r;
+                        else if (r.Metric === 'Discount_Value') discRow = r;
+                        else if (r.Metric === 'Adjustment_Value') adjRow = r;
+                        else if (r.Metric === 'SaleReturn') retRow = r;
+                        else if (r.Metric === 'Net_Sale') netRow = r;
+                        else if (r.Metric === 'CGS_Value') cogsRow = r;
+                        else if (r.Metric === 'Gross_Profit') gpRow = r;
+                    });
+
+                    var gs = grossRow ? (grossRow[curMon] || 0) : 0;
+                    var dc = discRow ? (discRow[curMon] || 0) : 0;
+                    var ad = adjRow ? (adjRow[curMon] || 0) : 0;
+                    var rt = retRow ? (retRow[curMon] || 0) : 0;
+                    var ns = netRow ? (netRow[curMon] || 0) : 0;
+                    var cg = cogsRow ? (cogsRow[curMon] || 0) : 0;
+                    var gp = gpRow ? (gpRow[curMon] || 0) : 0;
+
+                    $('#revGrossSale').text('Rs. ' + fmt(gs));
+                    $('#revDiscount').text('Rs. ' + fmt(dc));
+                    $('#revAdjustment').text('Rs. ' + fmt(ad));
+                    $('#revSaleReturn').text('Rs. ' + fmt(rt));
+                    $('#revNetSale').text('Rs. ' + fmt(ns));
+                    $('#revCogs').text('Rs. ' + fmt(cg));
+                    $('#revGrossProfit').text('Rs. ' + fmt(gp));
+                }
+            });
+        }
+
+        function buildFullYearTable(tblId, data, metricLabels) {
+            var allMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            var maxMonth = new Date().getMonth();
+            var months = allMonths.slice(0, maxMonth + 1);
+            var $tbl = $('#' + tblId);
+            $tbl.find('thead').empty();
+            $tbl.find('tbody').empty();
+
+            var hdr = '<tr><th style="text-align:left;">Metric</th>';
+            months.forEach(function (m) { hdr += '<th>' + m + '</th>'; });
+            hdr += '</tr>';
+            $tbl.find('thead').append(hdr);
+
+            data.forEach(function (r) {
+                var label = metricLabels[r.Metric] || r.Metric.replace(/_/g, ' ');
+                var row = '<tr><td class="metric-label">' + label + '</td>';
+                months.forEach(function (m) {
+                    var v = r[m] !== null && r[m] !== undefined ? parseFloat(r[m]) : 0;
+                    row += '<td>' + fmt(v) + '</td>';
+                });
+                row += '</tr>';
+                $tbl.find('tbody').append(row);
+            });
+        }
+
+        function openInventoryModal() {
+            $('#invModal').addClass('open');
+            loadYearSelect('invYear');
+            loadInventoryModal();
+        }
+        function closeInventoryModal() { $('#invModal').removeClass('open'); }
+        function loadInventoryModal() {
+            var y = $('#invYear').val();
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetYearlyInventorySummary",
+                data: JSON.stringify({ year: parseInt(y) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    var data = JSON.parse(res.d);
+                    if (data.Error) return;
+                    buildFullYearTable('tblInventory', data, {
+                        'Opening_Value': 'Opening Value',
+                        'Purchase_Value': 'Purchase Value',
+                        'PurchaseReturn_Value': 'Purchase Return',
+                        'Sale_Value': 'Sale Value',
+                        'Closing_Value': 'Closing Value'
+                    });
+                }
+            });
+        }
+
+        function openPharmacyModal() {
+            $('#pharmModal').addClass('open');
+            loadYearSelect('pharmYear');
+            loadPharmacyModal();
+        }
+        function closePharmacyModal() { $('#pharmModal').removeClass('open'); }
+        function loadPharmacyModal() {
+            var y = $('#pharmYear').val();
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummary",
+                data: JSON.stringify({ year: parseInt(y) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    var data = JSON.parse(res.d);
+                    if (data.Error) return;
+                    buildFullYearTable('tblPharmacy', data, {
+                        'Opening_Value': 'Opening Stock Value',
+                        'Purchase_Value': 'Purchase Value',
+                        'Sale_Value': 'Sale Value',
+                        'Closing_Value': 'Closing Value'
+                    });
+                }
+            });
+        }
+
+        function openRevenueModal() {
+            $('#revModal').addClass('open');
+            loadYearSelect('revYear');
+            loadRevenueModal();
+        }
+        function closeRevenueModal() { $('#revModal').removeClass('open'); }
+        function loadRevenueModal() {
+            var y = $('#revYear').val();
+            $.ajax({
+                type: "POST",
+                url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacyRevenue",
+                data: JSON.stringify({ year: parseInt(y) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    var data = JSON.parse(res.d);
+                    if (data.Error) return;
+                    buildFullYearTable('tblRevenue', data, {
+                        'Gross_Sale': 'Gross Sale',
+                        'Discount_Value': 'Discount',
+                        'Adjustment_Value': 'Adjustment',
+                        'SaleReturn': 'Sale Return',
+                        'Net_Sale': 'Net Sale',
+                        'CGS_Value': 'COGS',
+                        'Gross_Profit': 'Gross Profit'
+                    });
+                }
             });
         }
     </script>
@@ -482,9 +1008,7 @@
             color: #111827;
         }
         #left-stack .rev-item .rev-date {
-            font-size: 9px;
-            color: #9ca3af;
-            margin-top: 3px;
+            display: none;
         }
         .bento-item {
             background: #fff;
@@ -529,9 +1053,17 @@
             color: #111827;
         }
         .bento-item.rev-item .rev-date {
-            font-size: 9px;
-            color: #9ca3af;
-            margin-top: 3px;
+            display: none;
+        }
+        .rev-chart { position:absolute; bottom:4px; right:4px; width:100px; height:35px; z-index:1; }
+        .bento-item.rev-item { position:relative; }
+        @keyframes blink-red-border {
+            0%, 100% { border-color:#ef4444!important; box-shadow:0 0 8px rgba(239,68,68,0.5)!important; }
+            50% { border-color:transparent!important; box-shadow:none!important; }
+        }
+        .rev-item.blink-red {
+            animation:blink-red-border 1s infinite;
+            border:2px solid #ef4444;
         }
 
         #opd-area { grid-area: opd; align-self: start; }
@@ -939,44 +1471,222 @@
             color: #1e293b;
             text-align: right;
         }
+
+        .period-pills {
+            display: flex;
+            gap: 6px;
+        }
+        .period-pill {
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            padding: 4px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #fff;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .period-pill:hover {
+            border-color: #8e0016;
+            color: #8e0016;
+        }
+        .period-pill.active {
+            background: #8e0016;
+            border-color: #8e0016;
+            color: #fff;
+        }
+        .custom-date-range {
+            display: none;
+            gap: 8px;
+            align-items: center;
+        }
+        .custom-date-range.visible {
+            display: flex !important;
+        }
+        .ui-datepicker { z-index: 9999 !important; }
+
+        .ts-big-number {
+            font-size: 22px;
+            font-weight: 900;
+            color: #111827;
+            margin: 6px 0 10px 0;
+            line-height: 1.2;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-overlay.open { display: flex; align-items: center; justify-content: center; }
+        .modal-box {
+            background: #fff;
+            padding: 20px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 85vh;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .modal-close {
+            position: absolute;
+            right: 16px; top: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #6b7280;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover { color: #111; }
+        .modal-header {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 12px;
+            padding-right: 30px;
+        }
+        .modal-header .year-select {
+            margin-left: 12px;
+            padding: 4px 8px;
+            font-size: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .modal-table-wrap {
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+        .modal-table th {
+            background: #f3f4f6;
+            color: #374151;
+            font-weight: 700;
+            padding: 5px 3px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+        }
+        .modal-table td {
+            padding: 4px 3px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+            color: #4b5563;
+        }
+        .modal-table tr:nth-child(even) td { background: #f9fafb; }
+        .modal-table .metric-label {
+            text-align: left;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .card-filter {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 8px;
+            justify-content: flex-end;
+        }
+        .card-filter .datepicker,
+        .card-filter select,
+        .card-filter .btn,
+        .card-filter button {
+            vertical-align: middle;
+        }
+        .btn-trash {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #ef4444;
+            cursor: pointer;
+            padding: 0;
+            font-size: 13px;
+            line-height: 1;
+            display: inline;
+            opacity: 0.6;
+            width: auto;
+            height: auto;
+        }
+        .btn-trash:hover { opacity: 1; }
+
+        .card-loading { opacity: 0.35; pointer-events: none; transition: opacity 0.2s; position: relative; }
+        .card-loading::after {
+            content: '';
+            position: absolute; inset: 50% auto auto 50%;
+            width: 28px; height: 28px; margin: -14px 0 0 -14px;
+            border: 3px solid #e5e7eb; border-top-color: #3b82f6;
+            border-radius: 50%; animation: spin 0.7s linear infinite;
+            z-index: 10;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="bento-grid">
         <div class="bento-item period-bar">
             <label>Select Period</label>
-            <select id="ddlPeriod" class="form-control">
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="year">This Year</option>
-            </select>
+            <div class="period-pills">
+                <button type="button" class="period-pill active" data-period="today">Today</button>
+                <button type="button" class="period-pill" data-period="yesterday">Yesterday</button>
+                <button type="button" class="period-pill" data-period="custom">Custom</button>
+            </div>
+            <div class="custom-date-range" style="display:none;margin-left:12px;">
+                <input type="text" id="txtStartDate" class="form-control datepicker" placeholder="Start Date" style="width:130px;" readonly />
+                <span style="color:#6b7280;">to</span>
+                <input type="text" id="txtEndDate" class="form-control datepicker" placeholder="End Date" style="width:130px;" readonly />
+                <button type="button" id="btnApplyCustom" class="btn btn-sm btn-primry">Apply</button>
+            </div>
         </div>
 
         <div id="left-stack">
             <div class="bento-item rev-item">
                 <div class="rev-label">Total Hospital Revenue</div>
                 <div class="rev-value">Rs. <span id="lblRevenue">0</span></div>
-                <div class="rev-date" id="lblRevenueDate">Loading...</div>
+                <div class="rev-chart" id="sparkRevenue"></div>
             </div>
             <div class="bento-item rev-item">
                 <div class="rev-label">OPD Sale Revenue</div>
                 <div class="rev-value">Rs. <span id="lblOPDRevenue">0</span></div>
-                <div class="rev-date" id="lblOPDDate">Loading...</div>
+                <div class="rev-chart" id="sparkOPD"></div>
             </div>
             <div class="bento-item rev-item">
                 <div class="rev-label">Pharmacy Revenue</div>
                 <div class="rev-value">Rs. <span id="lblPharmacyRevenue">0</span></div>
-                <div class="rev-date" id="lblPharmacyDate">Loading...</div>
+                <div class="rev-chart" id="sparkPharmacy"></div>
             </div>
             <div class="bento-item rev-item">
                 <div class="rev-label">Lab & Radiology Revenue</div>
                 <div class="rev-value">Rs. <span id="lblLabRevenue">0</span></div>
-                <div class="rev-date" id="lblLabDate">Loading...</div>
+                <div class="rev-chart" id="sparkLab"></div>
             </div>
-            <div class="bento-item">
-                <div class="sect-title" style="margin-bottom:6px;">Clinical Outcomes (IPD/ER)</div>
-                <div id="chartClinicalOutcomes" style="height:140px;width:100%;"></div>
+            <div class="bento-item" style="padding:10px;">
+                <div class="sect-title" style="margin:0 0 6px 0;">Clinical Outcomes (IPD/ER)</div>
+                <select id="ddlClinDept" class="form-control" style="width:100%;font-size:10px;padding:2px 4px;height:24px;margin-bottom:6px;">
+                    <option value="0">All Dept</option>
+                </select>
+                <div class="card-filter">
+                    <input type="text" id="txtClinStart" class="form-control datepicker" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                    <span style="font-size:10px;color:#6b7280;">-</span>
+                    <input type="text" id="txtClinEnd" class="form-control datepicker" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                    <button type="button" id="btnClinApply" class="btn btn-sm btn-primry" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                    <button type="button" class="btn btn-sm btn-trash" id="clinTrash" title="Reset to master"><i class="fa fa-trash"></i></button>
+                </div>
+                <div id="chartClinicalOutcomes" style="height:130px;width:100%;"></div>
+                <div style="display:flex;justify-content:space-around;margin-top:4px;font-size:10px;font-weight:700;color:#374151;">
+                    <span>IPD</span>
+                    <span>ER</span>
+                </div>
             </div>
             <div class="bento-item" style="padding:10px;">
                 <div style="display:flex;align-items:center;gap:10px;">
@@ -995,6 +1705,13 @@
 
         <div class="bento-item" id="opd-area">
             <div class="main-heading">OPD Operation Hub</div>
+            <div class="card-filter">
+                <input type="text" class="form-control datepicker" id="opdFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <span style="font-size:10px;color:#6b7280;">-</span>
+                <input type="text" class="form-control datepicker" id="opdTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <button type="button" class="btn btn-sm btn-primry card-apply" data-card="opd" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                <button type="button" class="btn btn-sm btn-trash card-trash" data-card="opd" title="Reset to master"><i class="fa fa-trash"></i></button>
+            </div>
             <div class="main-inner">
                 <div class="main-sub">
                     <div class="ms-title">New vs Returning Patients</div>
@@ -1065,41 +1782,52 @@
 
         <div class="bento-item" id="trend-area">
             <div class="main-heading">Trend Records &amp; Stock Analytics</div>
+            <div class="card-filter">
+                <select id="trendMonth" class="form-control" style="width:90px;font-size:10px;padding:2px 4px;height:24px;">
+                    <option value="">All</option>
+                    <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
+                    <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
+                </select>
+                <button type="button" class="btn btn-sm btn-primry card-apply" data-card="trend" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                <button type="button" class="btn btn-sm btn-trash card-trash" data-card="trend" title="Reset to master"><i class="fa fa-trash"></i></button>
+            </div>
             <div class="main-inner">
-                <div class="main-sub trend-sub">
+                <div class="main-sub trend-sub" id="invRecordCard">
                     <div class="ms-title">Inventory Record</div>
-                    <div class="ts-badge">Month-end Closing</div>
-                    <div class="ts-metrics">
-                        <div class="ts-row"><span class="ts-lbl">Opening Value</span><span class="ts-val">Rs. 12,50,000</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val">Rs. 3,20,000</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Purchase Return</span><span class="ts-val">Rs. 12,000</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val">Rs. 4,80,000</span></div>
-                        <div class="ts-row ts-total"><span class="ts-lbl">Closing Value</span><span class="ts-val">Rs. 11,58,000</span></div>
+                    <div class="ts-badge" id="invBadge">Month-end Closing</div>
+                    <div class="ts-big-number" id="invOpening">Rs. 0.00</div>
+                    <div class="ts-metrics" id="invMetrics">
+                        <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="invPurchase">Rs. 0.00</span></div>
+                        <div class="ts-row"><span class="ts-lbl">Purchase Return</span><span class="ts-val" id="invPurchaseReturn">Rs. 0.00</span></div>
+                        <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val" id="invSale">Rs. 0.00</span></div>
+                        <div class="ts-row ts-total"><span class="ts-lbl">Closing Value</span><span class="ts-val" id="invClosing">Rs. 0.00</span></div>
                     </div>
-                    <div class="ts-expand">&#9655; View Detailed Report</div>
+                    <div class="ts-expand" onclick="openInventoryModal()">&#9655; View Detailed Report</div>
                 </div>
-                <div class="main-sub trend-sub">
+                <div class="main-sub trend-sub" id="pharmStockCard">
                     <div class="ms-title">Pharmacy Stock Analytics</div>
-                    <div class="ts-badge">PB-1</div>
-                    <div class="ts-metrics">
-                        <div class="ts-row"><span class="ts-lbl">Opening Stock Value</span><span class="ts-val">Rs. 5,80,000</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val">Rs. 1,90,000</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val">Rs. 2,60,000</span></div>
-                        <div class="ts-row ts-total"><span class="ts-lbl">Closing Stock Value</span><span class="ts-val">Rs. 5,10,000</span></div>
+                    <div class="ts-badge" id="pharmBadge">PB-1</div>
+                    <div class="ts-big-number" id="pharmOpening">Rs. 0.00</div>
+                    <div class="ts-metrics" id="pharmMetrics">
+                        <div class="ts-row"><span class="ts-lbl">Purchase Value</span><span class="ts-val" id="pharmPurchase">Rs. 0.00</span></div>
+                        <div class="ts-row"><span class="ts-lbl">Sale Value</span><span class="ts-val" id="pharmSale">Rs. 0.00</span></div>
+                        <div class="ts-row ts-total"><span class="ts-lbl">Closing Value</span><span class="ts-val" id="pharmClosing">Rs. 0.00</span></div>
                     </div>
-                    <div class="ts-expand">&#9655; Stock Movement Report</div>
+                    <div class="ts-expand" onclick="openPharmacyModal()">&#9655; Stock Movement Report</div>
                 </div>
-                <div class="main-sub trend-sub">
+                <div class="main-sub trend-sub" id="revPnLCard">
                     <div class="ms-title">Revenue P&amp;L Summary</div>
-                    <div class="ts-badge">Last 2 Months</div>
-                    <div class="ts-metrics">
-                        <div class="ts-row"><span class="ts-lbl">Gross Sale</span><span class="ts-val">Rs. 15,80,000</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Discount</span><span class="ts-val">Rs. 1,05,000</span></div>
-                        <div class="ts-row"><span class="ts-lbl">Net Sale</span><span class="ts-val">Rs. 14,75,000</span></div>
-                        <div class="ts-row"><span class="ts-lbl">COGS</span><span class="ts-val">Rs. 9,80,000</span></div>
-                        <div class="ts-row ts-total"><span class="ts-lbl">Gross Profit</span><span class="ts-val">Rs. 4,95,000</span></div>
+                    <div class="ts-badge" id="revBadge">Month-end Closing</div>
+                    <div class="ts-big-number" id="revGrossSale">Rs. 0.00</div>
+                    <div class="ts-metrics" id="revMetrics">
+                        <div class="ts-row"><span class="ts-lbl">Discount</span><span class="ts-val" id="revDiscount">Rs. 0.00</span></div>
+                        <div class="ts-row"><span class="ts-lbl">Adjustment</span><span class="ts-val" id="revAdjustment">Rs. 0.00</span></div>
+                        <div class="ts-row"><span class="ts-lbl">Sale Return</span><span class="ts-val" id="revSaleReturn">Rs. 0.00</span></div>
+                        <div class="ts-row"><span class="ts-lbl">Net Sale</span><span class="ts-val" id="revNetSale">Rs. 0.00</span></div>
+                        <div class="ts-row"><span class="ts-lbl">COGS</span><span class="ts-val" id="revCogs">Rs. 0.00</span></div>
+                        <div class="ts-row ts-total"><span class="ts-lbl">Gross Profit</span><span class="ts-val" id="revGrossProfit">Rs. 0.00</span></div>
                     </div>
-                    <div class="ts-expand">&#9655; View 12-Month Report</div>
+                    <div class="ts-expand" onclick="openRevenueModal()">&#9655; View 12-Month Report</div>
                 </div>
             </div>
             <div class="heat-card">
@@ -1109,6 +1837,13 @@
                         <div class="heat-title">Regional Patient Heatmap</div>
                         <div class="heat-subtitle">Distribution by Location</div>
                     </div>
+                </div>
+                <div class="card-filter">
+                    <input type="text" class="form-control datepicker" id="heatFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                    <span style="font-size:10px;color:#6b7280;">-</span>
+                    <input type="text" class="form-control datepicker" id="heatTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                    <button type="button" class="btn btn-sm btn-primry card-apply" data-card="heat" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                    <button type="button" class="btn btn-sm btn-trash card-trash" data-card="heat" title="Reset to master"><i class="fa fa-trash"></i></button>
                 </div>
                 <div id="heatmapContainer"></div>
             </div>
@@ -1121,6 +1856,13 @@
                     <div style="font-size: 13px; font-weight: 800; color: #4b5563; text-transform: uppercase; letter-spacing: 0.5px;">Dialysis</div>
                     <small id="lblPeriodText">Today's Snapshot</small>
                 </div>
+            </div>
+            <div class="card-filter">
+                <input type="text" class="form-control datepicker" id="diaFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <span style="font-size:10px;color:#6b7280;">-</span>
+                <input type="text" class="form-control datepicker" id="diaTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <button type="button" class="btn btn-sm btn-primry card-apply" data-card="dia" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                <button type="button" class="btn btn-sm btn-trash card-trash" data-card="dia" title="Reset to master"><i class="fa fa-trash"></i></button>
             </div>
             <div class="dia-bar-group">
                 <div class="dia-bar-header">
@@ -1151,6 +1893,13 @@
 
         <div class="bento-item" id="ph">
             <div class="sect-title"><i class="fa fa-database" style="color:#10b981;"></i>Pharmacy Branch 1</div>
+            <div class="card-filter">
+                <input type="text" class="form-control datepicker" id="phFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <span style="font-size:10px;color:#6b7280;">-</span>
+                <input type="text" class="form-control datepicker" id="phTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <button type="button" class="btn btn-sm btn-primry card-apply" data-card="ph" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                <button type="button" class="btn btn-sm btn-trash card-trash" data-card="ph" title="Reset to master"><i class="fa fa-trash"></i></button>
+            </div>
             <div class="ph-chart-wrap"><div id="chartPharmacyDistribution" style="height: 100%; width: 100%;"></div></div>
             <div class="ph-stats">
                 <div class="ph-stat-box">
@@ -1166,6 +1915,13 @@
 
         <div class="bento-item" id="lab">
             <div class="lab-icon-header"><i class="fa fa-file-text-o"></i>Lab & Radiology</div>
+            <div class="card-filter">
+                <input type="text" class="form-control datepicker" id="labFrom" placeholder="From" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <span style="font-size:10px;color:#6b7280;">-</span>
+                <input type="text" class="form-control datepicker" id="labTo" placeholder="To" style="width:85px;font-size:10px;padding:2px 4px;height:24px;" readonly />
+                <button type="button" class="btn btn-sm btn-primry card-apply" data-card="lab" style="font-size:10px;height:24px;display:flex;align-items:center;justify-content:center;padding:0 10px;">Apply</button>
+                <button type="button" class="btn btn-sm btn-trash card-trash" data-card="lab" title="Reset to master"><i class="fa fa-trash"></i></button>
+            </div>
             <div class="lab-chart-wrap"><div id="billingChart" style="height: 100%; width: 100%;"></div></div>
             <div class="lab-order-row">
                 <span class="lab-order-label">LAB</span>
@@ -1186,5 +1942,53 @@
         </div>
 
 
+    </div>
+
+    <!-- Inventory Record Modal -->
+    <div class="modal-overlay" id="invModal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeInventoryModal()">&times;</span>
+            <div class="modal-header">
+                <span>Inventory Report <select class="year-select" id="invYear" onchange="loadInventoryModal()"></select></span>
+            </div>
+            <div class="modal-table-wrap">
+                <table class="modal-table" id="tblInventory">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pharmacy Stock Modal -->
+    <div class="modal-overlay" id="pharmModal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closePharmacyModal()">&times;</span>
+            <div class="modal-header">
+                <span>Pharmacy Stock Report <select class="year-select" id="pharmYear" onchange="loadPharmacyModal()"></select></span>
+            </div>
+            <div class="modal-table-wrap">
+                <table class="modal-table" id="tblPharmacy">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue P&L Modal -->
+    <div class="modal-overlay" id="revModal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeRevenueModal()">&times;</span>
+            <div class="modal-header">
+                <span>Revenue P&L Report <select class="year-select" id="revYear" onchange="loadRevenueModal()"></select></span>
+            </div>
+            <div class="modal-table-wrap">
+                <table class="modal-table" id="tblRevenue">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </asp:Content>

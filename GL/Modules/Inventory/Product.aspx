@@ -554,6 +554,7 @@
                 var controllerDrug = $('#controller_drug').prop('checked');
                 var narcotics = $('#Narcotics').prop('checked');
                 var PharmacyItem = $('#PharmacyItem').prop('checked');
+                var InfusionFluid = $('#InfusionFluid').prop('checked');
                 var refregrator = $('#Refregrator').prop('checked');
                 var procedureTypes = $('#ddlProcedureTypes').val();
                 if (procedureTypes === "Please select" || procedureTypes === "Please Select" || procedureTypes === "0") {
@@ -695,6 +696,7 @@
                         "Discount_Block": Discount_Block,
                         "batchList": batchList,
                         "PatientTypeList": PatientTypeList,
+                        "InfusionFluid": InfusionFluid,
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -1007,6 +1009,10 @@
                     if (parse.IsPharmacyItem == 1) {
                         $("#PharmacyItem").prop('checked', true);
                     }
+                    if (parse.Infusion_Fluid == 1) {
+                        $("#InfusionFluid").prop('checked', true);
+                    }
+                    
                     if (parse.Hospital_Services == 1) {
                         $("#chkIsHospital").prop('checked', true);
                     }
@@ -1413,6 +1419,9 @@
                     <td style="width: 5px;">
                         <input type="checkbox" id="PharmacyItem" name="PharmacyItem" /></td>
                     <td style="width: 93px;">Pharmacy Item</td>
+                    <td style="width: 5px;">
+                    <input type="checkbox" id="InfusionFluid" name="InfusionFluid" /></td>
+                    <td style="width: 93px;">Infusion Fluid</td>
                 </tr>
             </table>
             <table>
