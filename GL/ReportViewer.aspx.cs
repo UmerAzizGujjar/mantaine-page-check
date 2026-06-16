@@ -5388,6 +5388,17 @@ namespace PMS
                 reportPath += "PatientManagement/rptBillBasePrintHalf.rpt";
                 var logoPath = DBClass.getField("SELECT dbo.GetCompanyLogo()");
                 rd.Load(reportPath);
+                // ✅ Silently ignore if report doesn't have @IsDuplicate parameter
+                try
+                {
+                    int isDuplicate = 0;
+                    if (Request.QueryString["IsDuplicate"] != null)
+                    {
+                        int.TryParse(Request.QueryString["IsDuplicate"], out isDuplicate);
+                    }
+                    rd.SetParameterValue("IsDuplicate", isDuplicate);
+                }
+                catch { }
                 rd.SetParameterValue("@Bill_Id", billId);
                 rd.SetParameterValue("@CompanyID", AppConfig.Company_ID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
