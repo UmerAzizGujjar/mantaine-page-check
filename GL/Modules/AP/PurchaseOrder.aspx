@@ -3502,6 +3502,8 @@ function appendSearchItem(anchor) {
                                     <th style="display: none;">Rate</th>
                                     <!-- td:eq(5) -->
                                     <th style="display: none;">UOM Qty</th>
+
+                                    <th>Last Purchase Rate</th>
                                     <!-- td:eq(6) -->
                                     <th>Stock</th>
                                 </tr>
