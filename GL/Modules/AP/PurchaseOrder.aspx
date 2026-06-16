@@ -2732,6 +2732,7 @@ function scheduleCalcTotal(delay) {
                             '<td>' + item.Unit + '</td>' +
                             '<td style="display:none;">' + (item.Purchase_Rate || 0) + '</td>' +
                             '<td style="display:none;">' + (item.UOM_Qty || 1) + '</td>' +
+                            '<td style="">' + (item.Last_PO_Rate) + '</td>' +
                             '<td>' + (item.TotalStock || 0) + '</td>' +
                             '</tr>';
                         tableBody.append(row);
