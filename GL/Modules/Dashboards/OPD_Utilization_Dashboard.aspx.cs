@@ -62,5 +62,26 @@ namespace PMS.Modules.Dashboards
 
             return result;
         }
+        [WebMethod]
+        public static string GetMonthlyTrends()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var months = new List<string>();
+                var patients = new List<int>();
+                var revenue = new List<decimal>();
+                var now = DateTime.Now;
+                for (int i = 11; i >= 0; i--)
+                {
+                    var monthStart = new DateTime(now.Year, now.Month, 1).AddMonths(-i);
+                    var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+                    var data = db.sp_OPD_Utilization(monthStart.ToString("yyyy-MM-dd"), monthEnd.ToString("yyyy-MM-dd")).FirstOrDefault();
+                    months.Add(monthStart.ToString("MMM"));
+                    patients.Add(data?.Total_patients_Count ?? 0);
+                    revenue.Add(data?.Total_Revenu ?? 0);
+                }
+                return new JavaScriptSerializer().Serialize(new { labels = months, patients, revenue });
+            }
+        }
     }
 }
