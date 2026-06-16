@@ -2327,6 +2327,7 @@ AND (
                     // Test
                     Test_Name = data.Test_Name ?? data.Group_Department ?? "Radiology Report",
                     Fixed_Value = data.Fixed_Value ?? "",
+                    Addendum_Template = data.Addendum_Template ?? "",
                     Lab_Test_Detail_Id = data.Lab_Test_Detail_ID.ToString(),
 
                     // Patient
