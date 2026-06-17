@@ -1011,7 +1011,7 @@ namespace PMS
         #endregion
 
         public DataBaseDataContext() :
-                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
+        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
@@ -5607,13 +5607,6 @@ namespace PMS
             return ((ISingleResult<spMedicineReturnfromIPDDetailsResult>)(result.ReturnValue));
         }
 
-        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spLabReportQN")]
-        public ISingleResult<spLabReportQNResult> spLabReportQN([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Test_IDs", DbType = "VarChar(MAX)")] string test_IDs, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Trans_IDs", DbType = "VarChar(MAX)")] string trans_IDs, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Patient_ID", DbType = "BigInt")] System.Nullable<long> patient_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_Details_IDs", DbType = "VarChar(MAX)")] string bill_Details_IDs)
-        {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), test_IDs, trans_IDs, patient_ID, bill_Details_IDs);
-            return ((ISingleResult<spLabReportQNResult>)(result.ReturnValue));
-        }
-
         [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.sp_GetProcedureCounts")]
         public ISingleResult<sp_GetProcedureCountsResult> sp_GetProcedureCounts([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "StartDate", DbType = "VarChar(100)")] string startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "EndDate", DbType = "VarChar(100)")] string endDate)
         {
@@ -5633,6 +5626,13 @@ namespace PMS
         {
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, endDate);
             return ((ISingleResult<sp_GetPatientCountsAndNetAmountByDateResult>)(result.ReturnValue));
+        }
+
+        [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.spLabReportQN")]
+        public ISingleResult<spLabReportQNResult> spLabReportQN([global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Test_IDs", DbType = "VarChar(MAX)")] string test_IDs, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Trans_IDs", DbType = "VarChar(MAX)")] string trans_IDs, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Patient_ID", DbType = "BigInt")] System.Nullable<long> patient_ID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name = "Bill_Details_IDs", DbType = "VarChar(MAX)")] string bill_Details_IDs)
+        {
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), test_IDs, trans_IDs, patient_ID, bill_Details_IDs);
+            return ((ISingleResult<spLabReportQNResult>)(result.ReturnValue));
         }
     }
 
@@ -233538,6 +233538,390 @@ namespace PMS
         }
     }
 
+    public partial class sp_GetProcedureCountsResult
+    {
+
+        private string _Item_Name;
+
+        private System.Nullable<decimal> _TotalCount;
+
+        public sp_GetProcedureCountsResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(200)")]
+        public string Item_Name
+        {
+            get
+            {
+                return this._Item_Name;
+            }
+            set
+            {
+                if ((this._Item_Name != value))
+                {
+                    this._Item_Name = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Decimal(38,2)")]
+        public System.Nullable<decimal> TotalCount
+        {
+            get
+            {
+                return this._TotalCount;
+            }
+            set
+            {
+                if ((this._TotalCount != value))
+                {
+                    this._TotalCount = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_YearlyInventorySummaryResult
+    {
+
+        private string _Metric;
+
+        private decimal _Jan;
+
+        private decimal _Feb;
+
+        private decimal _Mar;
+
+        private decimal _Apr;
+
+        private decimal _May;
+
+        private decimal _Jun;
+
+        private decimal _Jul;
+
+        private decimal _Aug;
+
+        private decimal _Sep;
+
+        private decimal _Oct;
+
+        private decimal _Nov;
+
+        private decimal _Dec;
+
+        public sp_YearlyInventorySummaryResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Metric", DbType = "NVarChar(128)")]
+        public string Metric
+        {
+            get
+            {
+                return this._Metric;
+            }
+            set
+            {
+                if ((this._Metric != value))
+                {
+                    this._Metric = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Jan", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Jan
+        {
+            get
+            {
+                return this._Jan;
+            }
+            set
+            {
+                if ((this._Jan != value))
+                {
+                    this._Jan = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Feb", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Feb
+        {
+            get
+            {
+                return this._Feb;
+            }
+            set
+            {
+                if ((this._Feb != value))
+                {
+                    this._Feb = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mar", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Mar
+        {
+            get
+            {
+                return this._Mar;
+            }
+            set
+            {
+                if ((this._Mar != value))
+                {
+                    this._Mar = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Apr", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Apr
+        {
+            get
+            {
+                return this._Apr;
+            }
+            set
+            {
+                if ((this._Apr != value))
+                {
+                    this._Apr = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_May", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal May
+        {
+            get
+            {
+                return this._May;
+            }
+            set
+            {
+                if ((this._May != value))
+                {
+                    this._May = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Jun", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Jun
+        {
+            get
+            {
+                return this._Jun;
+            }
+            set
+            {
+                if ((this._Jun != value))
+                {
+                    this._Jun = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Jul", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Jul
+        {
+            get
+            {
+                return this._Jul;
+            }
+            set
+            {
+                if ((this._Jul != value))
+                {
+                    this._Jul = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Aug", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Aug
+        {
+            get
+            {
+                return this._Aug;
+            }
+            set
+            {
+                if ((this._Aug != value))
+                {
+                    this._Aug = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sep", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Sep
+        {
+            get
+            {
+                return this._Sep;
+            }
+            set
+            {
+                if ((this._Sep != value))
+                {
+                    this._Sep = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Oct", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Oct
+        {
+            get
+            {
+                return this._Oct;
+            }
+            set
+            {
+                if ((this._Oct != value))
+                {
+                    this._Oct = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Nov", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Nov
+        {
+            get
+            {
+                return this._Nov;
+            }
+            set
+            {
+                if ((this._Nov != value))
+                {
+                    this._Nov = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dec", DbType = "Decimal(38,4) NOT NULL")]
+        public decimal Dec
+        {
+            get
+            {
+                return this._Dec;
+            }
+            set
+            {
+                if ((this._Dec != value))
+                {
+                    this._Dec = value;
+                }
+            }
+        }
+    }
+
+    public partial class sp_GetPatientCountsAndNetAmountByDateResult
+    {
+
+        private string _Category;
+
+        private System.Nullable<int> _Total_Count;
+
+        private System.Nullable<decimal> _Discount_Amount;
+
+        private decimal _Receipt_Amount;
+
+        private System.Nullable<decimal> _Gross_Amount;
+
+        public sp_GetPatientCountsAndNetAmountByDateResult()
+        {
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Category", DbType = "VarChar(3) NOT NULL", CanBeNull = false)]
+        public string Category
+        {
+            get
+            {
+                return this._Category;
+            }
+            set
+            {
+                if ((this._Category != value))
+                {
+                    this._Category = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Count", DbType = "Int")]
+        public System.Nullable<int> Total_Count
+        {
+            get
+            {
+                return this._Total_Count;
+            }
+            set
+            {
+                if ((this._Total_Count != value))
+                {
+                    this._Total_Count = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(38,6)")]
+        public System.Nullable<decimal> Discount_Amount
+        {
+            get
+            {
+                return this._Discount_Amount;
+            }
+            set
+            {
+                if ((this._Discount_Amount != value))
+                {
+                    this._Discount_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
+        public decimal Receipt_Amount
+        {
+            get
+            {
+                return this._Receipt_Amount;
+            }
+            set
+            {
+                if ((this._Receipt_Amount != value))
+                {
+                    this._Receipt_Amount = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Gross_Amount", DbType = "Decimal(38,6)")]
+        public System.Nullable<decimal> Gross_Amount
+        {
+            get
+            {
+                return this._Gross_Amount;
+            }
+            set
+            {
+                if ((this._Gross_Amount != value))
+                {
+                    this._Gross_Amount = value;
+                }
+            }
+        }
+    }
+
     public partial class spLabReportQNResult
     {
 
@@ -233576,6 +233960,8 @@ namespace PMS
         private string _permanent_Address;
 
         private int _Lab_Test_ID;
+
+        private string _Addendum_Template;
 
         private System.Nullable<System.Guid> _Approved_By_Raw;
 
@@ -234029,6 +234415,22 @@ namespace PMS
                 if ((this._Lab_Test_ID != value))
                 {
                     this._Lab_Test_ID = value;
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Addendum_Template", DbType = "NVarChar(MAX)")]
+        public string Addendum_Template
+        {
+            get
+            {
+                return this._Addendum_Template;
+            }
+            set
+            {
+                if ((this._Addendum_Template != value))
+                {
+                    this._Addendum_Template = value;
                 }
             }
         }
@@ -235341,390 +235743,6 @@ namespace PMS
                 if ((this._Out_of_Range != value))
                 {
                     this._Out_of_Range = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetProcedureCountsResult
-    {
-
-        private string _Item_Name;
-
-        private System.Nullable<decimal> _TotalCount;
-
-        public sp_GetProcedureCountsResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Item_Name", DbType = "VarChar(200)")]
-        public string Item_Name
-        {
-            get
-            {
-                return this._Item_Name;
-            }
-            set
-            {
-                if ((this._Item_Name != value))
-                {
-                    this._Item_Name = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_TotalCount", DbType = "Decimal(38,2)")]
-        public System.Nullable<decimal> TotalCount
-        {
-            get
-            {
-                return this._TotalCount;
-            }
-            set
-            {
-                if ((this._TotalCount != value))
-                {
-                    this._TotalCount = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_YearlyInventorySummaryResult
-    {
-
-        private string _Metric;
-
-        private decimal _Jan;
-
-        private decimal _Feb;
-
-        private decimal _Mar;
-
-        private decimal _Apr;
-
-        private decimal _May;
-
-        private decimal _Jun;
-
-        private decimal _Jul;
-
-        private decimal _Aug;
-
-        private decimal _Sep;
-
-        private decimal _Oct;
-
-        private decimal _Nov;
-
-        private decimal _Dec;
-
-        public sp_YearlyInventorySummaryResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Metric", DbType = "NVarChar(128)")]
-        public string Metric
-        {
-            get
-            {
-                return this._Metric;
-            }
-            set
-            {
-                if ((this._Metric != value))
-                {
-                    this._Metric = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Jan", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Jan
-        {
-            get
-            {
-                return this._Jan;
-            }
-            set
-            {
-                if ((this._Jan != value))
-                {
-                    this._Jan = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Feb", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Feb
-        {
-            get
-            {
-                return this._Feb;
-            }
-            set
-            {
-                if ((this._Feb != value))
-                {
-                    this._Feb = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Mar", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Mar
-        {
-            get
-            {
-                return this._Mar;
-            }
-            set
-            {
-                if ((this._Mar != value))
-                {
-                    this._Mar = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Apr", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Apr
-        {
-            get
-            {
-                return this._Apr;
-            }
-            set
-            {
-                if ((this._Apr != value))
-                {
-                    this._Apr = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_May", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal May
-        {
-            get
-            {
-                return this._May;
-            }
-            set
-            {
-                if ((this._May != value))
-                {
-                    this._May = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Jun", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Jun
-        {
-            get
-            {
-                return this._Jun;
-            }
-            set
-            {
-                if ((this._Jun != value))
-                {
-                    this._Jun = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Jul", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Jul
-        {
-            get
-            {
-                return this._Jul;
-            }
-            set
-            {
-                if ((this._Jul != value))
-                {
-                    this._Jul = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Aug", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Aug
-        {
-            get
-            {
-                return this._Aug;
-            }
-            set
-            {
-                if ((this._Aug != value))
-                {
-                    this._Aug = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sep", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Sep
-        {
-            get
-            {
-                return this._Sep;
-            }
-            set
-            {
-                if ((this._Sep != value))
-                {
-                    this._Sep = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Oct", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Oct
-        {
-            get
-            {
-                return this._Oct;
-            }
-            set
-            {
-                if ((this._Oct != value))
-                {
-                    this._Oct = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Nov", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Nov
-        {
-            get
-            {
-                return this._Nov;
-            }
-            set
-            {
-                if ((this._Nov != value))
-                {
-                    this._Nov = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Dec", DbType = "Decimal(38,4) NOT NULL")]
-        public decimal Dec
-        {
-            get
-            {
-                return this._Dec;
-            }
-            set
-            {
-                if ((this._Dec != value))
-                {
-                    this._Dec = value;
-                }
-            }
-        }
-    }
-
-    public partial class sp_GetPatientCountsAndNetAmountByDateResult
-    {
-
-        private string _Category;
-
-        private System.Nullable<int> _Total_Count;
-
-        private System.Nullable<decimal> _Discount_Amount;
-
-        private decimal _Receipt_Amount;
-
-        private System.Nullable<decimal> _Gross_Amount;
-
-        public sp_GetPatientCountsAndNetAmountByDateResult()
-        {
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Category", DbType = "VarChar(3) NOT NULL", CanBeNull = false)]
-        public string Category
-        {
-            get
-            {
-                return this._Category;
-            }
-            set
-            {
-                if ((this._Category != value))
-                {
-                    this._Category = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Total_Count", DbType = "Int")]
-        public System.Nullable<int> Total_Count
-        {
-            get
-            {
-                return this._Total_Count;
-            }
-            set
-            {
-                if ((this._Total_Count != value))
-                {
-                    this._Total_Count = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Discount_Amount", DbType = "Decimal(38,6)")]
-        public System.Nullable<decimal> Discount_Amount
-        {
-            get
-            {
-                return this._Discount_Amount;
-            }
-            set
-            {
-                if ((this._Discount_Amount != value))
-                {
-                    this._Discount_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Receipt_Amount", DbType = "Decimal(38,6) NOT NULL")]
-        public decimal Receipt_Amount
-        {
-            get
-            {
-                return this._Receipt_Amount;
-            }
-            set
-            {
-                if ((this._Receipt_Amount != value))
-                {
-                    this._Receipt_Amount = value;
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Gross_Amount", DbType = "Decimal(38,6)")]
-        public System.Nullable<decimal> Gross_Amount
-        {
-            get
-            {
-                return this._Gross_Amount;
-            }
-            set
-            {
-                if ((this._Gross_Amount != value))
-                {
-                    this._Gross_Amount = value;
                 }
             }
         }

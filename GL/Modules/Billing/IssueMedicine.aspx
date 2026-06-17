@@ -1964,7 +1964,10 @@
       function AddnonBatchItems() {
     debugger;
     var itemId = $('#medName').val();
-
+          var pat_Id = $('#ddlPatient_No').val() || 0;
+          var PatNo = $('#ddlPatient_No option:selected').text();
+          var parts = PatNo.split('-');
+          var prefix = parts.length > 0 ? parts[0] : '';
     var rowIndex = parseInt($('#tblDetails tbody tr').length);
     let rows;
     var expdate = '';
@@ -1975,14 +1978,13 @@
         var existingItemId = $(this).find('input[name="ItemID"]').val();
 
     });
-
-
-
     $.ajax({
         type: "post",
         url: "IssueMedicine.aspx/MedicineDetailgetfromOPD",
         data: JSON.stringify({
-            "itemId": itemId
+            "itemId": itemId,
+            "patientId": pat_Id,
+            "visitType": prefix
 
         }),
         dataType: 'JSON',
