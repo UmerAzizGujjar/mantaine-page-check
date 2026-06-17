@@ -73,7 +73,7 @@ tr, td {
 }
 
 #tabs ul li a {
-    background-color: #c11718  !important;
+    /*background-color: #c11718  !important;*/
     color: white;
     background: none;
     border: none;

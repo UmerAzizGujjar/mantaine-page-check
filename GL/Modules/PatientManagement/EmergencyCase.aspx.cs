@@ -5106,7 +5106,7 @@ namespace PMS
 
                         if (existingRecord != null)
                         {
-                            // UPDATE: It exists in DB and UI. Overwrite with new UI values.
+                            // UPDATE: It exists in DB and UI. Overwrite with new UI values. 
                             System.Diagnostics.Debug.WriteLine("UPDATING existing medicine: " + medicineName);
 
                             existingRecord.Medicine_Date = newMed.Medicine_Date;
