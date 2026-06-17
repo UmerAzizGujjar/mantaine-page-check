@@ -240,7 +240,7 @@
 
         $.ajax({
             type: "POST",
-            url: "RadiologyTestResult.aspx/GetDynamicReportHTML",
+            url: "ApproveTest.aspx/GetDynamicReportHTML",
             data: JSON.stringify({
                 Test_IDs: String(Test_ID),
                 Trans_IDs: String(Lab_Test_ID),
@@ -386,6 +386,12 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+        .addendum-content {
+            font-size: 11px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            text-align: justify;
         }
 
         /* ── REPORT CONTENT ── */
@@ -597,7 +603,7 @@ function cleanPrint() {
             </div>
             <div class="info-row">
                 <span class="info-label">Accession # :</span>
-                <span class="info-val">${data.Bill_No || ''}</span>
+                <span class="info-val">${data.Lab_Test_Detail_Id || ''}</span>
             </div>
         </div>
 
@@ -613,6 +619,11 @@ function cleanPrint() {
         ${data.Fixed_Value || '<p style="color:#999; text-align:center;">No report content available.</p>'}
     </div>
 
+    <!-- Addendum CONTENT (Addendum_Template from CKEditor) -->
+<div class="addendum-content">
+    ${data.Addendum_Template || '<p style="color:#999; text-align:center;">No report Addendum Added.</p>'}
+</div>
+
 <!-- SIGNATURES -->
 <div class="signatures">
     <div class="sig-block">
@@ -623,23 +634,22 @@ function cleanPrint() {
     </div>
     <div class="sig-block right">
         <div class="sig-line">
-            <div class="sig-qual">${data.Test_Approved_By_Doctor_qualificationf || ''}</div>
+            <div class="sig-name">Approved By: ${data.Test_Approved_By_Doctor_name || ''}</div>
+            <div class="sig-qual">${data.Test_Approved_By_Doctor_qualification || ''}</div>
         </div>
     </div>
 </div>
 
 <!-- REPORT FOOTER (from DB — shown between signatures and page footer) -->
 <div class="page-footer" style="margin-top:10px; border-top: 1px solid #ccc; padding-top:6px;">
-    <div class="sig-name"><b>Created By</b>: ${data.Test_Approved_By_Doctor_name || ''}</div>
-    <div class="footer-col">${data.Report_Footer || ''}</div>
-    <div class="footer-col right">${data.Report_Footer_tow || ''}</div>
+    <div class="footer-col">${data.Report_Footer1 || ''}</div>
+    <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
 </div>
 
 <!-- PAGE FOOTER -->
-<div class="page-footer" style="margin-top:16px; border-top: 1px ; padding-top:6px;">
-    <div class="sig-name"><b>Approved By</b>: ${data.Test_Approved_By_Doctor_name || ''}</div>
-    <div class="footer-col">${data.Report_Footer1 || ''}</div>
-    <div class="footer-col right">${data.Report_Footer_tow1 || ''}</div>
+<div class="page-footer">
+    <div class="footer-col">${data.Report_Footer || ''}</div>
+    <div class="footer-col right">${data.Report_Footer_tow || ''}</div>
 </div>
 
 <button class="print-btn" onclick="cleanPrint()">🖨 Print Report</button>
