@@ -2,11 +2,49 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
-        .textarea, input[type="text"] {
-            box-shadow: none !important;
-        }
+    .textarea, input[type="text"] {
+        box-shadow: none !important;
+    }
 
-    </style>
+    .token-input-dropdown {
+        z-index: 9999 !important;
+        position: absolute !important;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .token-input-dropdown ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .token-input-dropdown ul li {
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    .token-input-dropdown ul li.token-input-selected-item {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .token-input-dropdown ul li.token-input-selected-item2 {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .modal {
+        z-index: 1050 !important;
+    }
+
+    .token-input-dropdown {
+        z-index: 10000 !important;
+    }
+</style>
 
 
     <script type="text/javascript">

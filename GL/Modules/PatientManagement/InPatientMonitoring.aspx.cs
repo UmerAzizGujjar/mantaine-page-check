@@ -1210,6 +1210,8 @@ namespace PMS
                             var existingMedicine = existingMedicines
                                 .FirstOrDefault(p => p.Medicine_Name.Trim() == medicineName);
 
+
+
                             if (existingMedicine != null)
                             {
                                 bool hasChanges = false;
@@ -1280,16 +1282,28 @@ namespace PMS
                             {
                                 System.Diagnostics.Debug.WriteLine("INSERTING new inpatient medicine: " + medicineName);
 
-                                var inventoryItem = db.INV_Items
-                                    .Where(p => p.Item_Code == oIn_Patient_Medicine.ItemCode || p.Description == medicineName)
-                                    .FirstOrDefault();
+                                //var inventoryItem = db.INV_Items
+                                //    .Where(p => p.Item_Code == oIn_Patient_Medicine.ItemCode || p.Description == medicineName)
+                                //    .FirstOrDefault();
 
-                                string itemId = inventoryItem != null ? inventoryItem.Item_ID.ToString() : oIn_Patient_Medicine.ItemCode;
+                                //string itemId = inventoryItem != null ? inventoryItem.Item_ID.ToString() : oIn_Patient_Medicine.ItemCode;
+
+                                string Item_Id;
+                                if (oIn_Patient_Medicine.ItemCode == "0")
+                                {
+                                  int  Item_Ids = (from inv in db.INV_Items where inv.Description == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
+                                    Item_Id = Convert.ToString(Item_Ids);
+                                }
+                                else
+                                {
+                                    Item_Id = oIn_Patient_Medicine.ItemCode;
+                                }
+                            
 
                                 In_Patient_Medicine oIn_Patient_Medicine1 = new In_Patient_Medicine
                                 {
                                     Patient_ID = targetPatientId,
-                                    Item_Code = itemId,
+                                    Item_Code = Item_Id,
                                     Medicine_Name = medicineName,
                                     Transaction_Type = "InPatient",
                                     Medicine_Date = oIn_Patient_Medicine.Medicine_Date,
