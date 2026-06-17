@@ -1289,9 +1289,10 @@ namespace PMS
                                 //string itemId = inventoryItem != null ? inventoryItem.Item_ID.ToString() : oIn_Patient_Medicine.ItemCode;
 
                                 string Item_Id;
-                                if (oIn_Patient_Medicine.ItemCode == 0)
+                                if (oIn_Patient_Medicine.ItemCode == "0")
                                 {
-                                    Item_Id = (from inv in db.INV_Items where inv.Description == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
+                                  int  Item_Ids = (from inv in db.INV_Items where inv.Description == medicineName && inv.Is_Active == true && (inv.isCancel == null || inv.isCancel == false) select inv.Item_ID).FirstOrDefault();
+                                    Item_Id = Convert.ToString(Item_Ids);
                                 }
                                 else
                                 {
