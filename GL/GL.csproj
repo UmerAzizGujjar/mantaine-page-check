@@ -351,6 +351,7 @@
     <Content Include="Modules\Billing\IssueCathLabItems.aspx" />
     <Content Include="Modules\Billing\IssueCathLabItemsView.aspx" />
     <Content Include="Modules\Billing\Medicine_History.aspx" />
+    <Content Include="Modules\Billing\MR_Receipts.aspx" />
     <Content Include="Modules\Billing\ZakatDonationForm.aspx" />
     <Content Include="Modules\Billing\ZakatDonationList.aspx" />
     <Content Include="Modules\Billing\SaleReturnList.aspx" />
@@ -3201,6 +3202,13 @@
     </Compile>
     <Compile Include="Modules\Billing\Medicine_History.aspx.designer.cs">
       <DependentUpon>Medicine_History.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\MR_Receipts.aspx.cs">
+      <DependentUpon>MR_Receipts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\MR_Receipts.aspx.designer.cs">
+      <DependentUpon>MR_Receipts.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\ZakatDonationForm.aspx.cs">
       <DependentUpon>ZakatDonationForm.aspx</DependentUpon>
