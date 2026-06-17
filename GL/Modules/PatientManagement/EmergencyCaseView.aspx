@@ -227,7 +227,7 @@
 
 
         function editOpen(id) {
-            window.open("NewEmergencyCase.aspx?ID=" + id + "");
+            window.open("EmergencyCase.aspx?ID=" + id + "");
         }
 
         function deleteConfirm(anchorTag) {

@@ -1,335 +1,368 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LaboratoryTimeSlab.aspx.cs" Inherits="PMS.Modules.Dashboards.LaboratoryTimeSlab" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-    /* Base Styling */
-    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
-    
-    /* CRITICAL FIX: Force datepicker above everything */
-    .ui-datepicker, #ui-datepicker-div {
-        z-index: 999999 !important;
-        position: absolute !important;
-    }
-    
-    /* Header */
-    .dashboard-header {
-        background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
-        color: white;
-        padding: 24px 30px;
-        border-radius: 12px;
-        margin-bottom: 25px;
-        box-shadow: 0 8px 20px rgba(13, 148, 136, 0.15);
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    .dashboard-header h1 { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-    .dashboard-header i { font-size: 28px; opacity: 0.9; }
-
-    /* Stat Cards */
-    .stat-card {
-        background: white;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-        border: 1px solid #e2e8f0;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: visible !important; /* Changed from hidden to visible */
-        z-index: 1;
-    }
-    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08); }
-    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
-    .stat-card.blue::before { background: #3b82f6; }
-    .stat-card.teal::before { background: #14b8a6; }
-
-    .stat-icon {
-        width: 50px; height: 50px; border-radius: 12px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 22px; margin-bottom: 16px;
-    }
-    .stat-card.blue .stat-icon { background: #eff6ff; color: #3b82f6; }
-    .stat-card.teal .stat-icon { background: #f0fdfa; color: #14b8a6; }
-
-    .stat-value { font-size: 32px; font-weight: 700; color: #0f172a; line-height: 1; }
-    .stat-label { font-size: 14px; color: #64748b; font-weight: 600; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    /* Filter Panel - CRITICAL: Make it visible above table */
-    .filter-panel {
-        background: white;
-        padding: 20px 24px;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
-        border: 1px solid #e2e8f0;
-        margin-bottom: 25px;
-        display: flex;
-        align-items: flex-end;
-        gap: 20px;
-        flex-wrap: wrap;
-        position: relative;
-        z-index: 100; /* Higher than table header */
-    }
-    .filter-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 180px; position: relative; z-index: 100; }
-    .filter-group label { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
-    .filter-group input {
-        padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px;
-        font-size: 14px; font-family: 'Inter', sans-serif; transition: all 0.2s;
-        position: relative;
-        z-index: 100;
-    }
-    .filter-group input:focus { outline: none; border-color: #0d9488; box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
-    
-    .btn-search {
-        background: #0d9488; color: white; border: none; padding: 10px 24px;
-        border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer;
-        transition: all 0.2s; display: flex; align-items: center; gap: 8px; height: 42px;
-        position: relative;
-        z-index: 100;
-    }
-    .btn-search:hover { background: #0f766e; transform: translateY(-1px); }
-
-    /* Modern Table */
-    .table-container {
-        background: white; border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
-        border: 1px solid #e2e8f0; overflow: visible !important; /* Changed to visible */
-        position: relative;
-        z-index: 1; /* Lower than filter panel */
-    }
-    .table-scroll { 
-        overflow-x: auto; 
-        max-height: 600px; 
-        overflow-y: auto; 
-        position: relative;
-    }
-    .modern-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 1000px; }
-    .modern-table thead { background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
-    .modern-table th {
-        padding: 16px; text-align: left; font-weight: 700; color: #475569;
-        text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;
-        position: sticky; 
-        top: 0; 
-        z-index: 10 !important; /* Keep sticky but lower than datepicker */
-        background: #f8fafc;
-    }
-    .modern-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: middle; }
-    .modern-table tbody tr { transition: background-color 0.15s; }
-    .modern-table tbody tr:hover { background-color: #f8fafc; }
-    .modern-table tbody tr:last-child td { border-bottom: none; }
-
-    /* Dynamic Time Badges */
-    .time-badge {
-        display: inline-flex; align-items: center; padding: 5px 12px;
-        border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.3px;
-    }
-    .time-badge.fast { background: #dcfce7; color: #166534; }
-    .time-badge.normal { background: #fef3c7; color: #92400e; }
-    .time-badge.slow { background: #fee2e2; color: #991b1b; }
-
-    /* Loading Spinner */
-    .loading-spinner {
-        border: 3px solid #f1f5f9; border-top: 3px solid #0d9488;
-        border-radius: 50%; width: 32px; height: 32px;
-        animation: spin 0.8s linear infinite; margin: 30px auto;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-</style>
-
-
-
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
+    <style>
+        .row-dash { margin: 0; }
+        .row-dash > [class^="col-"] { padding: 0 8px; }
+        .dash-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin: 0; }
+        .card-dash { border-radius: 12px; border: 1px solid #e4e7ec; background: #fff; margin-bottom: 16px; position:relative; }
+        .rev-chart { position:absolute; bottom:4px; right:4px; width:100px; height:35px; z-index:1; }
+        .card-dash .card-body { padding: 18px 20px; }
+        .kpi-label { font-size: 12px; font-weight: 600; color: #667085; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+        .kpi-value { font-size: 28px; font-weight: 700; color: #1a1a2e; line-height: 1.2; }
+        .kpi-sub { font-size: 12px; color: #667085; margin-top: 2px; }
+        .kpi-trend { font-size: 12px; margin-top: 4px; }
+        .kpi-trend.up { color: #12b76a; }
+        .kpi-trend.down { color: #f04438; }
+        .kpi-warn .kpi-value { color: #dc6803; }
+        .wf-section { padding: 16px 20px; }
+        .wf-section h3 { font-size: 15px; font-weight: 700; color: #000; margin: 0 0 16px 0; }
+        .wf-bar { display: flex; height: 44px; border-radius: 8px; }
+        .wf-seg { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; position: relative; min-width: 56px; cursor: default; transition: transform .2s, box-shadow .2s, z-index 0s; border-radius: 6px; margin: 0 2px; }
+        .wf-seg:hover { transform: scale(1.08); z-index: 10; box-shadow: 0 4px 16px rgba(0,0,0,.25); }
+        .wf-seg .wf-time { font-size: 11px; opacity: .9; margin-left: 3px; }
+        .wf-bill { background: #98a2b3; }
+        .wf-samp { background: #667085; }
+        .wf-lab { background: #475467; }
+        .wf-rept { background: #344054; }
+        .wf-appr { background: #dc6803; }
+        .wf-appr.bn { background: #dc6803; box-shadow: inset 0 0 0 2px rgba(255,255,255,.3); }
+        .table-container { overflow-x: auto; max-height: 600px; }
+        .kpi-row > [class^="col-"] { display: flex; }
+        .kpi-row .card-dash { width: 100%; height: 100%; display: flex; flex-direction: column; }
+        .kpi-row .card-dash .card-body { flex: 1; }
+        .table-nb { border-collapse: collapse !important; border: none !important; }
+        .table-nb thead th, .table-nb tbody td { border: none !important; }
+        .period-pills { display: flex; gap: 6px; }
+        .period-pill { border:1px solid #d1d5db; border-radius:20px; padding:4px 16px; font-size:12px; font-weight:600; background:#fff; color:#374151; cursor:pointer; transition:all .2s; }
+        .period-pill:hover { border-color:#8e0016; color:#8e0016; }
+        .period-pill.active { background:#8e0016; border-color:#8e0016; color:#fff; }
+        .custom-date-range { display:none; gap:8px; align-items:center; }
+        .custom-date-range.visible { display:flex !important; }
+    </style>
     <script type="text/javascript">
-
-
-
+        var _dt = '', _dts = '', _sparkCharts = {};
         $(document).ready(function () {
-            
-            var today = new Date();
-            var formattedToday = today.getFullYear() + '-' +
-                String(today.getMonth() + 1).padStart(2, '0') + '-' +
-                String(today.getDate()).padStart(2, '0');
-
-            $("#txtsdate").val(formattedToday).datepicker({
-                dateFormat: 'yy-mm-dd',
-                changeMonth: true,
-                changeYear: true
-            }).attr('readonly', 'readonly');
-
-            $("#txtedate").val(formattedToday).datepicker({
-                dateFormat: 'yy-mm-dd',
-                changeMonth: true,
-                changeYear: true
-            }).attr('readonly', 'readonly');
-
-
-
-            
-            LoadDashboard(formattedToday, formattedToday);
+            $(".datepicker").datepicker({ changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy" });
+            $(".period-pill").click(function () {
+                var period = $(this).data("period");
+                $(".period-pill").removeClass("active");
+                $(this).addClass("active");
+                if (period === "custom") {
+                    $(".custom-date-range").addClass("visible");
+                } else {
+                    $(".custom-date-range").removeClass("visible");
+                    setPeriod(period);
+                }
+            });
+            $("#btnApplyCustom").click(function () {
+                var s = $("#txtStartDate").val();
+                var e = $("#txtEndDate").val();
+                if (s && e) setPeriod("custom", s, e);
+            });
+            setPeriod("today");
         });
-
-
-        function Loadsearchboard() {
-            var dt = $('#txtsdate').val();
-            var dts = $('#txtedate').val();
-
-            if (dt === "" || dts === "") {
-                alert("Please select both Start and End dates.");
-                return;
+        function setPeriod(period, startDate, endDate) {
+            $(".period-pill").removeClass("active");
+            $(".period-pill[data-period='" + period + "']").addClass("active");
+            var today = new Date();
+            var fmt = function (d) {
+                return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            };
+            if (period === "today") {
+                _dt = fmt(today); _dts = fmt(today);
+                $(".custom-date-range").removeClass("visible");
+            } else if (period === "yesterday") {
+                var yest = new Date(today); yest.setDate(yest.getDate() - 1);
+                _dt = fmt(yest); _dts = fmt(yest);
+                $(".custom-date-range").removeClass("visible");
+            } else if (period === "custom") {
+                if (startDate && endDate) {
+                    var p = startDate.split('/');
+                    _dt = p[2] + '-' + p[1] + '-' + p[0];
+                    p = endDate.split('/');
+                    _dts = p[2] + '-' + p[1] + '-' + p[0];
+                }
+                $(".custom-date-range").addClass("visible");
             }
-
-            LoadDashboard(dt, dts);
+            if (_dt && _dts) refreshAll();
         }
-
-        $("#txtsdate, #txtedate").datepicker({
-            dateFormat: 'yy-mm-dd',
-            changeMonth: true,
-            changeYear: true,
-            showOn: "both",
-            buttonImageOnly: null,
-            beforeShow: function (input, inst) {
-                setTimeout(function () {
-                    $('#ui-datepicker-div').css({
-                        'z-index': '999999',
-                        'position': 'absolute'
-                    });
-                }, 0);
+        function refreshAll() {
+            LoadDashboard();
+            if ($.fn.DataTable.isDataTable('#tbl')) {
+                $('#tbl').DataTable().ajax.reload();
+            } else {
+                LoadTable();
             }
-        }).attr('readonly', 'readonly').css('z-index', '100');
-        function LoadDashboard(startdate, Enddate) {
-            
-            $('#regdetail tbody').html('<tr><td colspan="9" style="text-align:center; padding: 20px;">Loading data...</td></tr>');
-
+        }
+        function LoadDashboard() {
             $.ajax({
                 type: "POST",
-                url: "LaboratoryTimeSlab.aspx/ViewList",
-                data: JSON.stringify({ 'txt_sdate': startdate, 'txt_edate': Enddate }),
+                url: "LaboratoryTimeSlab.aspx/GetDashboardData",
+                data: JSON.stringify({ txt_sdate: _dt, txt_edate: _dts }),
+                contentType: "application/json; charset=utf-8",
+                success: function (r) {
+                    var d = JSON.parse(r.d);
+                    $('#totalTests').text(d.totalTests);
+                    var th = d.testTrend === 'up'
+                        ? '<span class="kpi-trend up">\u25B2 ' + d.testTrendPercent + '%</span>'
+                        : '<span class="kpi-trend down">\u25BC ' + d.testTrendPercent + '%</span>';
+                    $('#testTrend').html(th);
+                    $('#avgTat').text(d.avgTat);
+                    var tatArrow = d.tatTrend === 'up' ? '\u25B2' : '\u25BC';
+                    var tatCls = d.tatTrend === 'up' ? 'up' : 'down';
+                    $('#tatTrend').html('<span class="kpi-trend ' + tatCls + '">' + tatArrow + ' ' + d.tatTrendPercent + '% vs previous</span>');
+                    if (d.bottleneckMinutes === 0) {
+                        $('#bottleneck').text('No Bottleneck').css('color', '#12b76a');
+                        $('#bottleneckTime').text('');
+                        $('#bottleneck').closest('.card-body').css('border-left-color', '#12b76a');
+                        $('#bottleneck').siblings('.kpi-label').css('color', '#12b76a').text('Critical Bottleneck');
+                    } else {
+                        $('#bottleneck').text(d.bottleneckName).css('color', '#dc6803');
+                        $('#bottleneckTime').text(d.bottleneckTime + ' avg');
+                        $('#bottleneck').closest('.card-body').css('border-left-color', '#dc6803');
+                        $('#bottleneck').siblings('.kpi-label').css('color', '#dc6803').text('Critical Bottleneck');
+                    }
+                    renderWF(d.workflowStages);
+                    LoadTrendData();
+                },
+                error: function (xhr) { console.log(xhr.responseText); }
+            });
+        }
+        function renderWF(stages) {
+            var total = stages.reduce(function (s, st) { return s + Math.max(st.minutes, 1); }, 0) || 1;
+            var cls = ['wf-bill', 'wf-samp', 'wf-lab', 'wf-rept', 'wf-appr'];
+            var html = '';
+            $.each(stages, function (i, s) {
+                var pct = Math.max(8, (s.minutes / total) * 100);
+                var c = cls[i] || '';
+                if (s.isBottleneck) c += ' bn';
+                var segHtml = '<div class="wf-seg ' + c + '" style="flex:' + pct + '">';
+                segHtml += s.name;
+                if (s.avgTime) segHtml += ' <span class="wf-time">' + s.avgTime + '</span>';
+                segHtml += '</div>';
+                html += segHtml;
+            });
+            $('#wfBar').html(html);
+        }
+        function renderSparkline(id, values, labels) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            if (_sparkCharts[id]) { _sparkCharts[id].dispose(); delete _sparkCharts[id]; }
+            if (typeof echarts === 'undefined') return;
+            var chart = echarts.init(el);
+            _sparkCharts[id] = chart;
+            var up = values.length > 0;
+            var pts = values.map(function (v, i) {
+                if (i === values.length - 1) return { value: v, itemStyle: { color: up ? '#3b82f6' : '#ef4444' } };
+                return { value: v, itemStyle: { color: '#3b82f6' } };
+            });
+            chart.setOption({
+                grid: { left: 0, right: 0, top: 0, bottom: 0 },
+                xAxis: { show: false, type: 'category', data: labels },
+                yAxis: { show: false, min: function (v) { return Math.max(0, v.min - (v.max - v.min) * 0.15); } },
+                tooltip: {
+                    trigger: 'item', confine: false, z: 9999,
+                    extraCssText: 'z-index:99999;background:#fff;border:1px solid #d1d5db;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.15);pointer-events:none;',
+                    formatter: function (p) {
+                        var i = p.dataIndex;
+                        var fmt = function (n) { return Math.round(n).toLocaleString(); };
+                        return '<div style="font-size:12px;line-height:1.6;padding:8px 12px;background:#fff;">' +
+                            '<b>' + labels[i] + '</b>: ' + fmt(values[i]) + '</div>';
+                    }
+                },
+                series: [{
+                    type: 'line', data: pts, smooth: false, showSymbol: true, symbolSize: 5,
+                    lineStyle: { width: 2.5, color: '#3b82f6' },
+                    animation: false
+                }]
+            });
+        }
+        function LoadTrendData() {
+            $.ajax({
+                type: "POST",
+                url: "LaboratoryTimeSlab.aspx/GetMonthlyTrends",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (response) {
-                    
-                    var parsedData = JSON.parse(response.d);
-                    var rows = '';
-                    var srNo = 1;
-                    var totalTests = parsedData.length;
-                    var totalTimeSpentMinutes = 0;
-
-                    $('#regdetail tbody').empty();
-
-                    if (totalTests === 0) {
-                        $('#regdetail tbody').html('<tr><td colspan="9" style="text-align:center; padding: 20px; color: #666;">No records found for the selected date range.</td></tr>');
-                    } else {
-                        $.each(parsedData, function (key, value) {
-                            
-                            var mins = parseInt(value.Total_Time_Spent_Minutes) || 0;
-                            totalTimeSpentMinutes += mins;
-
-                            rows += '<tr>' +
-                                '<td>' + srNo + '</td>' +
-                                '<td style="text-align:left; font-weight:600;">' + (value.MR_No || '-') + '</td>' +
-                                '<td style="text-align:left;">' + (value.Patient_Name || '-') + '</td>' +
-                                '<td>' + (value.Bill_Date || '-') + '</td>' +
-                                '<td>' + (value.Sample_Date || '-') + '</td>' +
-                                '<td>' + (value.Lab_Date || '-') + '</td>' +
-                                '<td>' + (value.Report_Date || '-') + '</td>' +
-                                '<td>' + (value.Approve_Date || '-') + '</td>' +
-                                '<td><span class="badge badge-info" style="background-color: #17a2b8; color: white; padding: 5px 10px; border-radius: 4px;">' + value.Total_Time_Spent + '</span></td>' +
-                                '</tr>';
-                            srNo++;
-                        });
-
-                        $('#regdetail tbody').append(rows);
-                    }
-
-                    
-                    var avgMinutes = totalTests > 0 ? Math.round(totalTimeSpentMinutes / totalTests) : 0;
-                    var avgHours = Math.floor(avgMinutes / 60);
-                    var avgMins = avgMinutes % 60;
-                    var avgTimeFormatted = avgHours + 'h ' + avgMins + 'm';
-
-                    
-                    $('#totalPatients').text(totalTests);
-                    $('#avgTimeSpent').text(avgTimeFormatted);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error occurred: " + status + " " + error);
-                    $('#regdetail tbody').html('<tr><td colspan="9" style="text-align:center; padding: 20px; color: red;">Error loading data. Please check console for details.</td></tr>');
+                success: function (res) {
+                    var d = typeof res.d === 'string' ? JSON.parse(res.d) : res.d;
+                    if (!d || !d.labels) return;
+                    renderSparkline("sparkLabTests", d.tests, d.labels);
+                    renderSparkline("sparkLabTat", d.avgTat, d.labels);
                 }
             });
         }
-
+        function LoadTable() {
+            if ($.fn.DataTable.isDataTable('#tbl')) {
+                $('#tbl').DataTable().destroy();
+            }
+            $('#tbl').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "lengthChange": true,
+                "buttons": ['copy', 'excel', 'pdf'],
+                "filter": true,
+                "ajax": function (data, callback, settings) {
+                    $.ajax({
+                        type: "POST",
+                        url: "LaboratoryTimeSlab.aspx/ViewList",
+                        data: JSON.stringify({
+                            draw: data.draw,
+                            start: data.start,
+                            length: data.length,
+                            sortColumn: data.columns[data.order[0].column].name,
+                            sortColumnDirection: data.order[0].dir,
+                            searchValue: data.search.value,
+                            txt_sdate: _dt,
+                            txt_edate: _dts
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            callback({
+                                draw: response.d.draw,
+                                recordsTotal: response.d.recordsTotal,
+                                recordsFiltered: response.d.recordsFiltered,
+                                data: response.d.data
+                            });
+                        },
+                        error: function (xhr) { console.log(xhr.responseText); }
+                    });
+                },
+                "columns": [
+                    { "data": "srNo", "name": "srNo", "width": "5%", "orderable": true },
+                    { "data": "mrNo", "name": "mrNo", "width": "8%", "orderable": true },
+                    { "data": "patientName", "name": "patientName", "width": "16%", "orderable": true },
+                    { "data": "billDate", "name": "billDate", "width": "10%", "orderable": true },
+                    { "data": "sampleDate", "name": "sampleDate", "width": "10%", "orderable": true },
+                    { "data": "labDate", "name": "labDate", "width": "10%", "orderable": true },
+                    { "data": "reportDate", "name": "reportDate", "width": "10%", "orderable": true },
+                    { "data": "approveDate", "name": "approveDate", "width": "10%", "orderable": true },
+                    { "data": "totalTime", "name": "totalTimeMinutes", "width": "11%", "orderable": true,
+                        "render": function (data, type, full) {
+                            if (type === 'display') {
+                                var mins = full.totalTimeMinutes || 0;
+                                var c = mins > 120 ? 'badge-red' : (mins > 90 ? 'badge-orange' : 'badge-green');
+                                return '<span class="time-badge ' + c + '">' + data + '</span>';
+                            }
+                            return data;
+                        }
+                    }
+                ],
+                "order": [[0, "asc"]],
+                "initComplete": function () {
+                    var dd = document.querySelector('#tbl_length select');
+                    var lbl = document.querySelector('#tbl_length label');
+                    if (dd && lbl) {
+                        var s = document.createElement('span');
+                        s.textContent = 'Show entries ';
+                        s.style.marginTop = '10px';
+                        s.style.display = 'inline-block';
+                        dd.style.width = '60px';
+                        lbl.innerHTML = '';
+                        lbl.style.display = 'inline-flex';
+                        lbl.style.marginTop = '17px';
+                        lbl.appendChild(s);
+                        lbl.appendChild(dd);
+                    }
+                }
+            });
+        }
     </script>
-
+    <style>
+        .time-badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .time-badge.badge-green { background: #ecfdf3; color: #067647; }
+        .time-badge.badge-orange { background: #fffaeb; color: #b54708; }
+        .time-badge.badge-red { background: #fef3f2; color: #b42318; }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container-fluid">
-        <div class="row mb-4">
-            <div class="col-md-4 offset-md-2">
-                <div class="card l-bg-orange-dark text-white" id="Box1">
-                    <div class="card-header">
-                        <h3>Total Lab Tests</h3>
-                        <i class="fas fa-flask" style="position: absolute; right: 15px; font-size: 20px; opacity: 0.8;"></i>
-                    </div>
-                    <div class="card-body">         
-                        <span id="totalPatients" class="stat-value">0</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card l-bg-green-dark text-white" id="Box2">
-                    <div class="card-header">
-                        <h3>Avg Turnaround Time</h3>
-                        <i class="fas fa-clock" style="position: absolute; right: 15px; font-size: 20px; opacity: 0.8;"></i>
-                    </div>
-                    <div class="card-body">
-                        <span id="avgTimeSpent" class="stat-value">0h 0m</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row mb-3 align-items-end">
-            <div class="col-lg-2 col-md-4">
-                <label class="font-weight-bold">Start Date:</label>
-                <input type="text" id="txtsdate" class="form-control" placeholder="YYYY-MM-DD" />
-            </div>
-            <div class="col-lg-2 col-md-4">
-                <label class="font-weight-bold">End Date:</label>
-                <input type="text" id="txtedate" class="form-control" placeholder="YYYY-MM-DD" />
-            </div>
-            <div class="col-lg-1 col-md-4">
-                <label></label>
-                <input type="button" id="btnSearch" class="btn btn-primry" value="Search" onclick="Loadsearchboard()" />
-            </div>
-        </div>
-
-        <!-- Data Table -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card shadow-sm">
-                    <div class="card-body p-0">
-                        <div style="overflow-x: auto; max-height: 600px; overflow-y: auto;">
-                            <table class="table table-hover mb-0" id="regdetail" style="min-width: 1000px;">
-                                <thead style="position: sticky; top: 0; z-index: 10;">
-                                    <tr>
-                                        <th style="width: 50px;">SR No</th>
-                                        <th style="width: 120px;">MR No</th>
-                                        <th style="width: 200px;">Patient Name</th>
-                                        <th>Bill Date</th>
-                                        <th>Sample Date</th>
-                                        <th>Lab Date</th>
-                                        <th>Report Date</th>
-                                        <th>Approve Date</th>
-                                        <th style="width: 120px;">Total Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                </tbody>
-                            </table>
+    <div class="row-dash">
+        <div class="row" style="margin:0 0 16px 0;">
+            <div class="col-lg-12" style="padding:0 8px;">
+                <div class="card-dash">
+                    <div class="card-body" style="display:flex;align-items:center;flex-wrap:wrap;gap:12px;">
+                        <div class="period-pills">
+                            <button type="button" class="period-pill active" data-period="today">Today</button>
+                            <button type="button" class="period-pill" data-period="yesterday">Yesterday</button>
+                            <button type="button" class="period-pill" data-period="custom">Custom</button>
+                        </div>
+                        <div class="custom-date-range">
+                            <input type="text" id="txtStartDate" class="form-control datepicker" placeholder="Start Date" style="width:130px;" readonly />
+                            <span style="color:#6b7280;">to</span>
+                            <input type="text" id="txtEndDate" class="form-control datepicker" placeholder="End Date" style="width:130px;" readonly />
+                            <button type="button" id="btnApplyCustom" class="btn btn-sm btn-primry">Apply</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row kpi-row" style="margin:0 0 16px 0;">
+            <div class="col-md-4" style="padding:0 8px;">
+                <div class="card-dash">
+                    <div class="card-body">
+                        <div class="kpi-label">Total Tests</div>
+                        <div class="kpi-value" id="totalTests">0</div>
+                        <div id="testTrend"></div>
+                        <div class="rev-chart" id="sparkLabTests"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="padding:0 8px;">
+                <div class="card-dash">
+                    <div class="card-body">
+                        <div class="kpi-label">Avg. Turnaround Time</div>
+                        <div class="kpi-value" id="avgTat">0</div>
+                        <div id="tatTrend"></div>
+                        <div class="rev-chart" id="sparkLabTat"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="padding:0 8px;">
+                <div class="card-dash">
+                    <div class="card-body" style="border-left:4px solid #dc6803;">
+                        <div class="kpi-label" style="color:#dc6803;">Critical Bottleneck</div>
+                        <div class="kpi-value" style="color:#dc6803;" id="bottleneck">--</div>
+                        <div class="kpi-sub" id="bottleneckTime"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin:0 0 16px 0;">
+            <div class="col-lg-12" style="padding:0 8px;">
+                <div class="card-dash">
+                    <div class="wf-section">
+                        <h3>Average Time by Stage</h3>
+                        <div class="wf-bar" id="wfBar">
+                            <div class="wf-seg wf-bill" style="flex:1">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin:0;">
+            <div class="col-lg-12" style="padding:0 8px;">
+                <div class="card-dash">
+                    <div class="table-container">
+                        <table id="tbl" class="table table-hover table-striped table-nb" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>SR No</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Bill Date</th>
+                                    <th>Sample Date</th>
+                                    <th>Lab Date</th>
+                                    <th>Report Date</th>
+                                    <th>Approve Date</th>
+                                    <th>Total Time</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
 </asp:Content>

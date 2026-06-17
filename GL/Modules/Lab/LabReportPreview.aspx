@@ -2647,7 +2647,7 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5 col-sm-6 text-center">
                                 <div class="image-container">
-                                    <img src="~../../../../wwwroot/Pakred/images/dashboard_Icons/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
+                                    <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/Lab2.png" alt="Patient Image" class="img-fluid rounded-circle patient-image" />
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-6">
