@@ -905,6 +905,13 @@
                 window.open('../../ReportViewer.aspx?ReportName=AdminissionSlip&ReportTitle=Admission Slip Report&Inpatient_ID=' + PATID);
             }
         }
+        function PrintEstimatedBill() {
+            debugger;
+            var PATID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
+            if (PATID != "") {
+                window.open('../../ReportViewer.aspx?ReportName=InPatient_Advance_Bill&ReportTitle=Estimated Bill Report&Inpatient_ID=' + PATID);
+            }
+        }
         function PrintGenrateCertificate() {
             debugger;
             var PATID = $('#ctl00_MainContent_txtIn_Patient_ID').val();
@@ -3923,6 +3930,7 @@
             var dischargechk = document.getElementById("ctl00_MainContent_cbDicharg_Slip").checked;
             if (dischargechk == true) {
                 $('#btnDischargePrint').attr('disabled', false);
+                $('#btnPrintEstimatedBill').hide();   // added this new line
             }
             if ($('#<%= hdfPatient_ID.ClientID%>').val() != '(New)') {
 
@@ -8646,6 +8654,9 @@
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2">
                 <input type="button" class="btn btn-primry" value="Print" id="btnPrintAdmisionDetail" onclick="PrintSlip()" />
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" class="btn btn-primry" value="Estimated Bill" id="btnPrintEstimatedBill" onclick="PrintEstimatedBill()" />
             </div>
         </div>
     </div>
