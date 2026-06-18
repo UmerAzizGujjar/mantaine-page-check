@@ -170,6 +170,11 @@
                 });
             }
 
+             setTimeout(function() {
+            LoadSavedProcedureData();
+              }, 1500);
+
+                  
 
             $('#ctl00_MainContent_ctl00_MainContent_txtEOR').on('focus click', function () {
                 $(this)[0].setSelectionRange(0, 0);
@@ -414,6 +419,22 @@
             });
 
 
+                  function LoadSavedProcedureData() {
+                  var levelId = $('#hdnProcedureLevelID').val();
+                  var content = $('#hdnProcedureContent').val();
+    
+                  if (levelId && levelId != "") {
+                        $('#ddlProcedureTemplates').val(levelId).trigger('change');
+                    }
+    
+                    if (content && content != "") {
+                        if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['txtViewTemplateContent']) {
+                            CKEDITOR.instances['txtViewTemplateContent'].setData(content);
+                        } else {
+                            $('#txtViewTemplateContent').val(content);
+                        }
+                    }
+                }
 
             var id = '<%=Request.QueryString["ID"]%>';
             if (id == "") {
@@ -6998,6 +7019,7 @@
             }
         }
 
+        
 
         function LoadProcedureTemplates() {
             PageMethods.GetProcedureTemplates(function (res) {
@@ -13103,6 +13125,8 @@
             <asp:HiddenField ID="queryString" runat="server"/>
             <input type="hidden" id="hdfReceivingNoteID" value="0" />
 <input type="hidden" id="hdfVitalDischargeID" value="0" />
+            <input type="hidden" id="hdnProcedureLevelID" value="" />
+<input type="hidden" id="hdnProcedureContent" value="" />
         </div>
     </div>
 </asp:Content>
